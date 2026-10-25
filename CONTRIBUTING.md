@@ -37,6 +37,8 @@ python unity/prepare.py
 node unity/bake_puppets.cjs
 ```
 
+只调整界面纹理或舆图画法时，运行 `python unity/bake_ui.py` 即可（`--ui-only` 只重做界面纹理）；重建内置字体子集用 `python unity/build_fonts.py`。
+
 如果需要让 Windows 成品自带 Python，在 Windows 的 CPython 安装环境运行 `python unity/prepare.py --bundle-python`，再使用 Unity 菜单「江湖 / 构建 Windows 游戏」。打包运行时和游戏成品不提交到源码仓库，CPython 的许可证随打包运行时保留。其他 Unity 安装路径可以通过 Unity Hub 打开，或给构建脚本传入 `-EditorPath`。
 
 ## 提交前验证

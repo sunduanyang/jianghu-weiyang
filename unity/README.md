@@ -47,6 +47,16 @@ Windows 程序可选择附带私有 CPython 运行时，不安装系统服务。
 
 重生成资源需要 `python -m pip install -r requirements-dev.txt` 与 `npm ci`，再执行 `python unity/prepare.py` 和 `node unity/bake_puppets.cjs`。完整贡献步骤见根目录 [CONTRIBUTING.md](../CONTRIBUTING.md)。
 
+## 界面风格：戏与书
+
+界面分两种模式。**戏**是事情发生的地方（山海舆图、城中行旅、功法演武、皮影换装），中间区域是木框围着的一块透光皮影幕布；**书**是查阅的地方（行囊货栈、天下势力、世界年谱），中间区域是印本书页的双线版框。左右两栏的名册和人物档案始终是书页。两种模式之间切换时，戏有开幕动画，书有翻页动画。本地模型和存档设置放在页签栏右侧的小链接里。
+
+皮肤代码在 `Assets/Scripts/Theme.cs`（字体、九宫格样式、面板、页头页签和转场）。纹理全部由 `unity/bake_ui.py` 程序生成，固定随机种子，可反复重跑；字体是思源宋体（Noto Serif CJK SC）的子集，由 `unity/build_fonts.py` 生成，许可证见 `Assets/Resources/Fonts/LICENSE-OFL.txt`。字库缺字时，Unity 会退回系统里的微软雅黑或宋体。
+
+山海舆图改为绢本画法：`Map/atlas_base.png` 是海面晕染与纸本陆地，`Map/atlas_ink.png` 是海岸墨线、水纹、河流和青绿山形；两者之间按当前归属给各辖区上水彩（`Map/cell-*.png` 在边缘加深，像颜料在纸上积在边缘）。驿道是赭色虚线，航路是青色长虚线，城镇是印章式标记，首府用朱印。山脉、沙漠、草原和林海的位置是按经纬度手工概括的示意，不是测绘数据。
+
+只改颜色或图案时运行 `python unity/bake_ui.py`（加 `--ui-only` 跳过较慢的舆图），需要 Pillow、NumPy 和 SciPy；`prepare.py` 也会自动调用它。
+
 `UnitySmoke.cs` 仅在显式传入 `-smokeDir` 时运行验收。验收必须同时指定独立 `-saveDir`，会执行交易、战斗、移动、月结、导入和另起世界；不得将正式存档目录传给它。验收结果和渲染截图保存在 `unity/validation/`，具体覆盖和限制见 `VALIDATION.md`。
 
 公开源码不提供作者的旧存档快照，因此验收会明确记录跳过旧档导入往返，其余检查继续执行。`VALIDATION.md` 是历史迁移验收记录，引用的本机日志、摘要与存档不随源码发布；日常回归步骤以贡献指南为准。

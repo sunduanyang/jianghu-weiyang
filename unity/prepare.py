@@ -89,6 +89,11 @@ def prepare(backend_only=False, bundle_python=False, include_local_save=False):
             draw.polygon(poly, fill=255)
         mask = ImageChops.multiply(mask, territories[cell['native_country']])
         save_mask(ImageChops.multiply(mask, land), maps / f"cell-{cell['place']}.png")
+    # Paper/ink skin, painted atlas and watercolour territory washes (overwrites the flat masks above).
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import bake_ui
+    bake_ui.bake_ui()
+    bake_ui.bake_atlas()
     reference = assets / 'StreamingAssets' / 'OriginalPuppets'
     reference.mkdir(parents=True, exist_ok=True)
     for name in ('puppet.js', 'rig-spec.json'):

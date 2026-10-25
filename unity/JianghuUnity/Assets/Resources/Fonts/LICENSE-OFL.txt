@@ -1,0 +1,8 @@
+Noto Serif CJK SC — subset used by 江湖未央 (NotoSerifSC-Regular.ttf, NotoSerifSC-Bold.ttf)
+
+© 2017-2023 Adobe (http://www.adobe.com/).
+
+These files are Modified Versions: subset to GB2312 plus the characters used by the game,
+OpenType layout tables removed and outlines converted to TrueType, by unity/build_fonts.py. They remain under the SIL Open Font License 1.1.
+
+

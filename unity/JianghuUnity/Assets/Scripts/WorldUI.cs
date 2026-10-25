@@ -9,7 +9,7 @@ public partial class JianghuApp {
     bool creatingHero;
     J geography=new J(),campaignOptions=new J();
     readonly Dictionary<int,Texture2D> mapMasks=new Dictionary<int,Texture2D>();
-    Texture2D landMask,diamond,roof;
+    Texture2D landMask,diamond,roof,atlasBase,atlasInk,cityMark,capitalMark,ringMark,pennantMark,compassMark;
     float mapZoom=1;Vector2 mapPan;bool dragging;Vector2 dragMouse;
     int chosenRow=-1,chosenCol=-1,originRow=-1,originCol=-1;
     string cityKind="全部设施";
@@ -27,7 +27,12 @@ public partial class JianghuApp {
         }
         GUILayout.EndVertical();
     }
-    void InitMap(){if(geography.Has)return;geography=J.Parse(Resources.Load<TextAsset>("geography").text);landMask=Resources.Load<Texture2D>("Map/land");foreach(var c in geography["cells"].A)mapMasks[c["place"].I]=Resources.Load<Texture2D>("Map/cell-"+c["place"].S);}
+    void InitMap(){
+        if(geography.Has)return;geography=J.Parse(Resources.Load<TextAsset>("geography").text);landMask=Resources.Load<Texture2D>("Map/land");
+        foreach(var c in geography["cells"].A)mapMasks[c["place"].I]=Resources.Load<Texture2D>("Map/cell-"+c["place"].S);
+        atlasBase=Resources.Load<Texture2D>("Map/atlas_base");atlasInk=Resources.Load<Texture2D>("Map/atlas_ink");
+        cityMark=Resources.Load<Texture2D>("Map/city");capitalMark=Resources.Load<Texture2D>("Map/capital");ringMark=Resources.Load<Texture2D>("Map/ring");pennantMark=Resources.Load<Texture2D>("Map/pennant");compassMark=Resources.Load<Texture2D>("Map/compass");
+    }
     void DrawAtlas(){
         InitMap();mainScroll=GUILayout.BeginScrollView(mainScroll);DrawHero();
         GUILayout.BeginHorizontal();H("山海舆图");GUILayout.FlexibleSpace();foreach(string layer in new[]{"疆域","州路","门派","行路"})if(GUILayout.Button(layer,mapLayer==layer?selected:chip))mapLayer=layer;if(Btn("全图")){mapZoom=1;mapPan=Vector2.zero;}GUILayout.EndHorizontal();
@@ -50,18 +55,54 @@ public partial class JianghuApp {
         }
     }
     Vector2 MapPoint(J p,Rect r)=>new Vector2((float)p["x"].N,(float)p["y"].N);
+    // Silk-scroll atlas: painted base (sea wash + paper land), territory washes tinted by current owner,
+    // then the ink layer (coast, rivers, mountains), dashed roads, town seals and halo labels.
     void DrawMap(Rect r){
-        GUI.BeginGroup(r);Rect local=new Rect(0,0,r.width,r.height);Fill(local,new Color(.77f,.84f,.81f));
+        GUI.BeginGroup(r);Rect local=new Rect(0,0,r.width,r.height);Paper(local,"paper");
         float k=Mathf.Min(r.width/1280f,r.height/760f)*mapZoom;Vector2 center=new Vector2(r.width/2,r.height/2);Vector2 offset=center-new Vector2(640,380)*k+mapPan*k;
         Func<float,float,Vector2> pos=(x,y)=>new Vector2(x*k+offset.x,y*k+offset.y);
-        var mapRect=new Rect(offset.x,offset.y,1280*k,760*k);var prev=GUI.color;GUI.color=new Color(.86f,.87f,.75f);GUI.DrawTexture(mapRect,landMask);GUI.color=prev;
-        if(mapLayer=="疆域"||mapLayer=="州路")foreach(var c in geography["cells"].A){if(!mapMasks.TryGetValue(c["place"].I,out var tex)||tex==null)continue;GUI.color=Hex(Country(Place(c["place"].I)["country"].I)["color"].S,.72f);GUI.DrawTexture(mapRect,tex);GUI.color=prev;}
-        foreach(var river in geography["rivers"].A)DrawVectorPath(river["path"].S,pos,new Color(.35f,.57f,.61f,.8f),1.4f);
-        foreach(var route in W["routes"].A){var a=Place(route["a"].I);var b=Place(route["b"].I);Line(pos((float)a["x"].N,(float)a["y"].N),pos((float)b["x"].N,(float)b["y"].N),route["sea"].B?new Color(.33f,.51f,.57f,.8f):new Color(.46f,.40f,.27f,mapLayer=="行路"?.8f:.25f),mapLayer=="行路"?2:1);}
-        if(mapLayer=="州路")foreach(var region in geography["regions"].A){Vector2 q=pos((float)region["x"].N,(float)region["y"].N);GUI.Label(new Rect(q.x-30,q.y-21,100,18),region["name"].S,small);}
-        var placedLabels=new List<Rect>();foreach(var p in W["locations"].A){Vector2 q=pos((float)p["x"].N,(float)p["y"].N);Fill(new Rect(q.x-3,q.y-3,6,6),Hex(Country(p["country"].I)["color"].S));if(p["id"].I==SelectedPlace){Fill(new Rect(q.x-6,q.y-6,12,2),gold);Fill(new Rect(q.x-6,q.y+5,12,2),gold);}var labelStyle=new GUIStyle(chip){fontSize=12,padding=new RectOffset(4,4,2,2),wordWrap=false};float labelWidth=Mathf.Clamp(labelStyle.CalcSize(new GUIContent(p["name"].S)).x+12,55,110);Rect labelRect=new Rect(q.x+6,q.y-10,labelWidth,22);for(int attempt=0;attempt<18&&placedLabels.Any(a=>a.Overlaps(labelRect));attempt++){int step=(attempt/2+1)*22;labelRect.y=q.y-10+(attempt%2==0?step:-step);labelRect.x=q.x+6+(attempt>=10?-labelWidth-12:0);}placedLabels.Add(labelRect);if(Vector2.Distance(labelRect.center,q)>60)Line(q,labelRect.center,new Color(.35f,.4f,.3f,.4f));if(GUI.Button(labelRect,p["name"].S,labelStyle)){SelectedPlace=p["id"].I;campaignOptions=new J();}}
-        if(mapLayer=="门派")foreach(var f in W["factions"].A){var p=Place(f["place"].I);Vector2 q=pos((float)p["x"].N,(float)p["y"].N);if(GUI.Button(new Rect(q.x-12,q.y+16+(f["id"].I%3)*18,100,20),f["name"].S,small))OpenInstitution(false,f["id"].I);}
-        if(Hero["created"].B){var p=Place(Hero["place"].I);Vector2 q=pos((float)p["x"].N,(float)p["y"].N);Fill(new Rect(q.x-3,q.y-24,6,13),new Color(.65f,.25f,.17f));GUI.Label(new Rect(q.x-45,q.y-44,150,22),"◎ "+Hero["name"].S,sub);}
+        var mapRect=new Rect(offset.x,offset.y,1280*k,760*k);var prev=GUI.color;
+        if(atlasBase!=null)GUI.DrawTexture(mapRect,atlasBase,ScaleMode.StretchToFill);
+        else{GUI.color=new Color(.86f,.87f,.75f);GUI.DrawTexture(mapRect,landMask);GUI.color=prev;}
+        if(mapLayer=="疆域"||mapLayer=="州路")foreach(var c in geography["cells"].A){if(!mapMasks.TryGetValue(c["place"].I,out var tex)||tex==null)continue;GUI.color=Hex(Country(Place(c["place"].I)["country"].I)["color"].S,mapLayer=="州路"?.34f:.52f);GUI.DrawTexture(mapRect,tex);GUI.color=prev;}
+        GUI.color=prev;
+        if(atlasInk!=null)GUI.DrawTexture(mapRect,atlasInk,ScaleMode.StretchToFill);
+        else foreach(var river in geography["rivers"].A)DrawVectorPath(river["path"].S,pos,new Color(.35f,.57f,.61f,.8f),1.4f);
+        foreach(var route in W["routes"].A){
+            var a=Place(route["a"].I);var b=Place(route["b"].I);Vector2 pa=pos((float)a["x"].N,(float)a["y"].N),pb=pos((float)b["x"].N,(float)b["y"].N);
+            bool roads=mapLayer=="行路";
+            if(route["sea"].B)DashedLine(pa,pb,new Color(.20f,.38f,.44f,roads?.85f:.45f),roads?1.8f:1.2f,9,6);
+            else DashedLine(pa,pb,new Color(.45f,.22f,.14f,roads?.85f:.35f),roads?2f:1.2f,5,4);
+        }
+        if(mapLayer=="州路")foreach(var region in geography["regions"].A){Vector2 q=pos((float)region["x"].N,(float)region["y"].N);HaloLabel(new Rect(q.x-30,q.y-21,110,18),region["name"].S,caption,mapHalo);}
+        var placedLabels=new List<Rect>();
+        foreach(var p in W["locations"].A){
+            Vector2 q=pos((float)p["x"].N,(float)p["y"].N);bool chosen=p["id"].I==SelectedPlace;bool capital=p["kind"].S=="capital";
+            float ms=capital?16:12;Rect markRect=new Rect(q.x-ms/2,q.y-ms/2,ms,ms);
+            Texture2D mark=capital?capitalMark:cityMark;
+            if(mark!=null)GUI.DrawTexture(markRect,mark);else Fill(new Rect(q.x-3,q.y-3,6,6),Hex(Country(p["country"].I)["color"].S));
+            Fill(new Rect(q.x-ms/2,q.y+ms/2+1,ms,2),Hex(Country(p["country"].I)["color"].S,.9f));
+            if(chosen&&ringMark!=null)GUI.DrawTexture(new Rect(q.x-15,q.y-15,30,30),ringMark);
+            GUIStyle style=chosen?mapLabelOn:mapLabel;GUIStyle halo=chosen?mapHaloBold:mapHalo;
+            float labelWidth=Mathf.Clamp(style.CalcSize(new GUIContent(p["name"].S)).x+6,30,120);
+            Rect labelRect=new Rect(q.x+ms/2+3,q.y-10,labelWidth,20);
+            for(int attempt=0;attempt<18&&placedLabels.Any(a=>a.Overlaps(labelRect));attempt++){int step=(attempt/2+1)*20;labelRect.y=q.y-10+(attempt%2==0?step:-step);labelRect.x=q.x+ms/2+3+(attempt>=10?-labelWidth-ms-6:0);}
+            placedLabels.Add(labelRect);
+            if(Vector2.Distance(labelRect.center,q)>60)Line(q,labelRect.center,new Color(.17f,.14f,.11f,.35f));
+            HaloLabel(labelRect,p["name"].S,style,halo);
+            bool hit=GUI.Button(labelRect,GUIContent.none,GUIStyle.none);hit|=GUI.Button(markRect,GUIContent.none,GUIStyle.none);if(hit){SelectedPlace=p["id"].I;campaignOptions=new J();}
+        }
+        if(mapLayer=="门派")foreach(var f in W["factions"].A){var p=Place(f["place"].I);Vector2 q=pos((float)p["x"].N,(float)p["y"].N);Rect fr=new Rect(q.x-12,q.y+14+(f["id"].I%3)*17,110,18);Fill(new Rect(fr.x-6,fr.y+6,4,4),vermilion);HaloLabel(fr,f["name"].S,caption,mapHalo);if(GUI.Button(fr,GUIContent.none,GUIStyle.none))OpenInstitution(false,f["id"].I);}
+        if(Hero["created"].B){
+            var p=Place(Hero["place"].I);Vector2 q=pos((float)p["x"].N,(float)p["y"].N);
+            if(pennantMark!=null)GUI.DrawTexture(new Rect(q.x-9,q.y-34,28,28),pennantMark);else Fill(new Rect(q.x-3,q.y-24,6,13),vermilion);
+            HaloLabel(new Rect(q.x+12,q.y-40,150,20),Hero["name"].S,mapLabelOn,mapHaloBold);
+        }
+        // fixed overlays: double rule, compass rose and title cartouche
+        Frame(local,"frame_book",12);
+        if(compassMark!=null)GUI.DrawTexture(new Rect(local.xMax-84,14,68,68),compassMark);
+        Rect cart=new Rect(16,14,40,118);Paper(cart,"paper_light");Outline(cart,new Color(.17f,.14f,.11f,.8f));Outline(new Rect(cart.x+3,cart.y+3,cart.width-6,cart.height-6),new Color(.17f,.14f,.11f,.4f));
+        GUI.Label(new Rect(cart.x,cart.y+8,cart.width,cart.height-16),"山\n海\n舆\n图",mapTitle);
         Event ev=Event.current;if(local.Contains(ev.mousePosition)){
             if(ev.type==EventType.ScrollWheel){float old=mapZoom;mapZoom=Mathf.Clamp(mapZoom*(ev.delta.y>0?.85f:1.18f),.8f,5);Vector2 mouse=ev.mousePosition-center;mapPan+=mouse*(1/(k*(mapZoom/old))-1/k);ev.Use();}
             if(ev.type==EventType.MouseDown&&ev.button==0){dragging=true;dragMouse=ev.mousePosition;}
@@ -69,6 +110,7 @@ public partial class JianghuApp {
         }if(ev.rawType==EventType.MouseUp)dragging=false;
         GUI.EndGroup();
     }
+    void DashedLine(Vector2 a,Vector2 b,Color c,float width,float dash,float gap){if(Event.current.type!=EventType.Repaint)return;float length=Vector2.Distance(a,b);if(length<1)return;Vector2 dir=(b-a)/length;for(float s=0;s<length;s+=dash+gap)Line(a+dir*s,a+dir*Mathf.Min(length,s+dash),c,width);}
     void DrawVectorPath(string path,Func<float,float,Vector2> pos,Color color,float width){var tokens=System.Text.RegularExpressions.Regex.Matches(path,@"[MLZmlz]|-?\d+(?:\.\d+)?");Vector2 last=Vector2.zero,start=Vector2.zero;bool move=true;for(int i=0;i<tokens.Count;i++){string t=tokens[i].Value;if(t=="M"||t=="m"){move=true;continue;}if(t=="L"||t=="l")continue;if(t=="Z"||t=="z"){Line(last,start,color,width);continue;}if(i+1>=tokens.Count)break;float x=float.Parse(t,System.Globalization.CultureInfo.InvariantCulture),y=float.Parse(tokens[++i].Value,System.Globalization.CultureInfo.InvariantCulture);var next=pos(x,y);if(move){start=next;move=false;}else Line(last,next,color,width);last=next;}}
     void DrawCity(){
         if(!City.Has){T("正在展开城中街巷…");return;}
@@ -94,16 +136,16 @@ public partial class JianghuApp {
     void InitTiles(){if(diamond!=null)return;diamond=new Texture2D(96,48);roof=new Texture2D(96,48);for(int y=0;y<48;y++)for(int x=0;x<96;x++){bool inside=Mathf.Abs(x-47.5f)/48+Mathf.Abs(y-23.5f)/24<=1;diamond.SetPixel(x,y,inside?Color.white:Color.clear);roof.SetPixel(x,y,inside?Color.white:Color.clear);}diamond.Apply();roof.Apply();}
     void Tile(Vector2 q,float tw,float th,Color c){var old=GUI.color;GUI.color=c;GUI.DrawTexture(new Rect(q.x-tw,q.y-th,tw*2,th*2),diamond);GUI.color=old;}
     void DrawCityBoard(Rect r){
-        InitTiles();GUI.BeginGroup(r);Fill(new Rect(0,0,r.width,r.height),new Color(.88f,.89f,.79f));int size=City["size"].I;float tw=Mathf.Min(31,430f/size),th=tw*.47f;Vector2 center=new Vector2(r.width*.48f,37);
+        InitTiles();GUI.BeginGroup(r);Paper(new Rect(0,0,r.width,r.height),"paper_light");int size=City["size"].I;float tw=Mathf.Min(31,430f/size),th=tw*.47f;Vector2 center=new Vector2(r.width*.48f,37);
         Func<int,int,Vector2> xy=(row,col)=>center+new Vector2((col-row)*tw,(col+row)*th);
         var gate=City["nodes"].A.First(n=>n["id"].S==City["entrance"].S);bool local=Hero["created"].B&&City["place"].I==Hero["place"].I;int sr=local?Hero["row"].I:originRow>=0?originRow:gate["row"].I,sc=local?Hero["col"].I:originCol>=0?originCol:gate["col"].I;
         var route=chosenRow>=0?CityPath(sr,sc,chosenRow,chosenCol,out _):new List<Vector2Int>();
-        for(int sum=0;sum<size*2;sum++)for(int row=0;row<size;row++){int col=sum-row;if(col<0||col>=size)continue;char tile=City["rows"][row].S[col];Vector2 p=xy(row,col);Color c=tile=='~'?new Color(.56f,.70f,.68f):tile=='^'?new Color(.62f,.68f,.57f):tile=='#'?new Color(.66f,.66f,.56f):tile=='t'?new Color(.64f,.73f,.55f):tile==','?new Color(.76f,.80f,.57f):tile=='+'||tile=='='?new Color(.78f,.70f,.53f):new Color(.82f,.84f,.68f);Tile(p,tw-1,th-1,c);if(route.Contains(new Vector2Int(row,col)))Tile(p,tw*.65f,th*.65f,new Color(.82f,.57f,.28f,.65f));
-            var n=City["nodes"].A.FirstOrDefault(n=>n["row"].I==row&&n["col"].I==col);if(n!=null){Color house=n["kind"].S=="government"?new Color(.53f,.33f,.25f):n["kind"].S=="temple"?new Color(.64f,.54f,.33f):new Color(.39f,.48f,.40f);Fill(new Rect(p.x-17,p.y-21,34,20),new Color(.84f,.77f,.58f));Tile(p+new Vector2(0,-23),24,12,house);Fill(new Rect(p.x-3,p.y-10,7,9),new Color(.35f,.34f,.27f));GUI.Label(new Rect(p.x-31,p.y+8,75,22),n["label"].S,small);if(n["residents"].A.Count>0)GUI.Label(new Rect(p.x+13,p.y-30,30,19),n["residents"].A.Count.ToString(),small);}
-            else if(tile=='t'){Line(p,p+new Vector2(0,-24),green,3);Tile(p+new Vector2(0,-21),11,14,new Color(.36f,.49f,.33f));}else if(tile=='^'){Tile(p+new Vector2(0,-12),tw*.8f,25,new Color(.48f,.57f,.45f));}
+        for(int sum=0;sum<size*2;sum++)for(int row=0;row<size;row++){int col=sum-row;if(col<0||col>=size)continue;char tile=City["rows"][row].S[col];Vector2 p=xy(row,col);Color c=tile=='~'?new Color(.66f,.74f,.70f):tile=='^'?new Color(.58f,.66f,.57f):tile=='#'?new Color(.60f,.54f,.45f):tile=='t'?new Color(.62f,.69f,.55f):tile==','?new Color(.85f,.80f,.62f):tile=='+'||tile=='='?new Color(.80f,.70f,.54f):new Color(.90f,.86f,.74f);Tile(p,tw-1,th-1,c);if(route.Contains(new Vector2Int(row,col)))Tile(p,tw*.65f,th*.65f,new Color(.56f,.19f,.13f,.45f));
+            var n=City["nodes"].A.FirstOrDefault(n=>n["row"].I==row&&n["col"].I==col);if(n!=null){Color house=n["kind"].S=="government"?new Color(.56f,.19f,.13f):n["kind"].S=="temple"?new Color(.66f,.50f,.26f):new Color(.30f,.37f,.36f);Fill(new Rect(p.x-17,p.y-21,34,20),new Color(.93f,.88f,.76f));Outline(new Rect(p.x-17,p.y-21,34,20),new Color(.17f,.14f,.11f,.5f));Tile(p+new Vector2(0,-23),24,12,house);Fill(new Rect(p.x-3,p.y-10,7,9),new Color(.35f,.34f,.27f));GUI.Label(new Rect(p.x-31,p.y+8,75,22),n["label"].S,small);if(n["residents"].A.Count>0)GUI.Label(new Rect(p.x+13,p.y-30,30,19),n["residents"].A.Count.ToString(),small);}
+            else if(tile=='t'){Line(p,p+new Vector2(0,-24),green,3);Tile(p+new Vector2(0,-21),11,14,new Color(.33f,.46f,.36f));}else if(tile=='^'){Tile(p+new Vector2(0,-12),tw*.8f,25,new Color(.40f,.55f,.52f));}
         }
-        if(local){var p=xy(Hero["row"].I,Hero["col"].I);Fill(new Rect(p.x-5,p.y-24,10,20),green);Fill(new Rect(p.x-4,p.y-32,8,8),new Color(.82f,.65f,.42f));GUI.Label(new Rect(p.x-32,p.y-55,120,24),Hero["name"].S,sub);}
-        if(chosenRow>=0){Vector2 p=xy(chosenRow,chosenCol);Tile(p,tw,th,new Color(.89f,.60f,.22f,.30f));}
+        if(local){var p=xy(Hero["row"].I,Hero["col"].I);Fill(new Rect(p.x-5,p.y-24,10,20),vermilion);Fill(new Rect(p.x-4,p.y-32,8,8),new Color(.82f,.65f,.42f));GUI.Label(new Rect(p.x-32,p.y-55,120,24),Hero["name"].S,sub);}
+        if(chosenRow>=0){Vector2 p=xy(chosenRow,chosenCol);Tile(p,tw,th,new Color(.56f,.19f,.13f,.28f));}
         Event e=Event.current;if(e.type==EventType.MouseDown&&e.button==0&&new Rect(0,0,r.width,r.height).Contains(e.mousePosition)){var p=e.mousePosition-center;int col=Mathf.RoundToInt((p.x/tw+p.y/th)*.5f),row=Mathf.RoundToInt((p.y/th-p.x/tw)*.5f);if(row>=0&&row<size&&col>=0&&col<size){chosenRow=row;chosenCol=col;GUI.FocusControl(null);e.Use();}}
         GUI.Label(new Rect(10,r.height-24,r.width-20,24),City["road_name"].S+"    /    "+City["note"].S,small);GUI.EndGroup();
     }
