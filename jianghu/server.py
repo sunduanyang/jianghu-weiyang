@@ -36,7 +36,7 @@ class Game:
         self.next_step = 0
         self.autoplay = False
         self.closed = False
-        if self.world.month == 0 and prehistory:
+        if self.world.month == 0 and prehistory and not (self.world.battle and self.world.battle['status'] == 'active'):
             self.job = {'remaining': prehistory*12, 'total': prehistory*12, 'completed': 0,
                         'fast': True, 'label': f'{prehistory}年历史预演 · 规则', 'error': ''}
         self.thread = threading.Thread(target=self.loop, daemon=True)
@@ -80,6 +80,8 @@ class Game:
 
     def control(self, body):
         action = body.get('action', 'advance')
+        if action in ('auto', 'advance') and self.world.battle and self.world.battle['status'] == 'active':
+            raise ValueError('切磋尚未结束，请先收招或认输')
         if action == 'pause':
             self.autoplay = False
             self.job['remaining'] = 0
@@ -143,6 +145,8 @@ def handler_for(game):
                     with game.lock:
                         if path == '/api/state':
                             data = game.state()
+                        elif path == '/api/martial':
+                            data = game.world.martial_view()
                         elif path.startswith('/api/npc/'):
                             data = game.world.npc_detail(int(path.rsplit('/', 1)[1]))
                             data['history'] = game.world.store.history(data['id'], limit=60)
@@ -167,7 +171,7 @@ def handler_for(game):
                             return
                     self.json_response(data)
                     return
-                files = {'/': 'index.html', '/index.html': 'index.html', '/style.css': 'style.css', '/app.js': 'app.js', '/inventory.js': 'inventory.js', '/map.js': 'map.js', '/geography.json': 'geography.json'}
+                files = {'/': 'index.html', '/index.html': 'index.html', '/style.css': 'style.css', '/app.js': 'app.js', '/inventory.js': 'inventory.js', '/map.js': 'map.js', '/geography.json': 'geography.json', '/martial.js': 'martial.js'}
                 filename = files.get(path)
                 if not filename:
                     self.send_error(404)
@@ -195,12 +199,22 @@ def handler_for(game):
                     if self.path == '/api/control':
                         data = game.control(body)
                     elif self.path == '/api/intervene':
+                        if body['action'] == 'challenge' and (game.autoplay or game.job['remaining']):
+                            raise ValueError('请先暂停江湖，再进行切磋')
                         data = game.world.intervene(int(body['npc_id']), body['action'], body.get('text', ''))
                         game.ai.schedule(game.world, int(body['npc_id']))
                     elif self.path == '/api/items':
+                        if game.world.battle and game.world.battle['status'] == 'active':
+                            raise ValueError('请先结束切磋，再整理或使用物品')
                         data = items.perform(game.world, 'player', body['operation'], body.get('item_id'),
                                              body.get('target'), body.get('recipe'))
                         game.world.checkpoint()
+                    elif self.path == '/api/martial':
+                        if game.autoplay or game.job['remaining']:
+                            raise ValueError('请先暂停江湖，再闭关练武')
+                        data = game.world.martial_action(body.get('action'), body.get('art'))
+                    elif self.path == '/api/battle':
+                        data = game.world.battle_action(body.get('battle_id'), body.get('round'), body.get('action'))
                     elif self.path == '/api/ai/config':
                         data = game.configure(body)
                     elif self.path == '/api/ai/review':
@@ -212,6 +226,8 @@ def handler_for(game):
                         game.world.checkpoint()
                         data = {'saved': str(game.path)}
                     elif self.path == '/api/new':
+                        if game.world.battle and game.world.battle['status'] == 'active':
+                            raise ValueError('请先结束当前切磋')
                         if game.ai.pending:
                             raise ValueError('请等待当前推理完成后开新江湖')
                         population = int(body.get('population', 100))

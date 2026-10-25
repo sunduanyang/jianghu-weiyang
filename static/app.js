@@ -42,6 +42,7 @@ function renderWorld(){
  $('#ai-note').innerHTML=esc(ai.last_error?`推理失败，规则继续运行：${ai.last_error}`:ai.config.enabled?`已完成 ${ai.successes} · 失败 ${ai.failed} · 拒收 ${ai.rejected} · ${ai.prompt_tokens+ai.completion_tokens} tokens。模型仅提交提案，规则结算后果。`:'当前全部行为由规则驱动。启用本地模型后，人物会基于自身经历决定计划并提出心理变化。')+`<br>已评审 ${ai.coverage??0}/${ai.eligible??0}人 · 近12个月实际执行AI计划 ${world.activity?.active_ai_people??0}人 · 累计AI行动 ${world.metrics.ai_executed_actions??0}项。<br>每月预算 ${ai.config.reviews_per_month}人，按当前均值约需 ${num(ai.average_ms*ai.config.reviews_per_month/1000)}秒推理；普通行动由引擎直接结算。<br>¹ 不含存档与推理耗时；规则快进跳过模型。`;
  $('#footer-status').textContent=`种子 ${world.seed} · ${world.total_people} 份人生档案 · 每月自动存档`;
  if(!selected&&world.npcs.length){selected=world.npcs.find(n=>n.alive&&n.spouse)?.id??world.npcs[0].id;loadNPC()}
+ if(typeof renderMartialSummary==='function')renderMartialSummary();
 }
 function renderPeople(){
  if(!world)return;

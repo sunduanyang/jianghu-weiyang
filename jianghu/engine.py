@@ -11,6 +11,7 @@ from . import social
 from . import politics
 from .atlas import PLACES, FACTIONS, COUNTRIES, ROUTES, NEIGHBORS, MAP_VERSION, ERA
 from . import careers
+from . import martial, combat
 
 TRAITS = {'compassion': '仁厚', 'ambition': '进取', 'caution': '谨慎',
           'sociability': '外向', 'loyalty': '忠诚', **social.EXTRA_TRAITS}
@@ -53,8 +54,10 @@ class World:
         self.government = self.governments[0]
         self.economy = {'gaming_house': 200.}
         self.player = {'name': '过客', 'wealth': 160., 'reputation': 0, 'ties': {}}
+        martial.initialize(self.player, player=True)
+        self.battle = None
         self.metrics = {'steps': 0, 'simulation_ms': 0., 'actions': {}, 'goals_completed': 0,
-                        'births': 0, 'deaths': 0, 'invalid_actions': 0,
+                        'births': 0, 'deaths': 0, 'death_causes': {}, 'invalid_actions': 0,
                         'ai_applied': 0, 'ai_changed_actions': 0, 'ai_stale': 0}
         self.population_limit = max(1200, population * 2)
         self.residents = {}
@@ -144,6 +147,7 @@ class World:
         self.npcs[i] = n
         demography.initialize(self, n)
         social.initialize(self, n)
+        martial.initialize(n)
         n['office'] = None
         items.prepare(n)
         n['office_country'] = None
@@ -419,14 +423,14 @@ class World:
                             'kind': kind, 'target': target, 'label': ACTIONS[kind] + (f' · {detail}' if detail else ''), **extra})
         add('rest', detail='恢复体力')
         if n['age_months'] < 120:
-            if n['age_months'] >= 60:
+            if n['age_months'] >= 60 and n['health'] > 30 and n['martial']['stamina'] >= 12:
                 add('train', detail='练习基本功')
             actions += social.actions(self,n,[])
             return self.available_actions(n,actions,planning)
         actions.extend(items.candidates(self, n))
         add('work', detail=n['job'])
         actions.extend(careers.actions(self, n))
-        if n['wealth'] >= 1.5 and n['health'] > 30:
+        if n['wealth'] >= 1.5 and n['health'] > 30 and n['martial']['stamina'] >= 12:
             add('train', detail='花费1.5银，练功一周')
         local = self.residents.get(n['place'], [])
         known = [int(i) for i in n['relationships'] if int(i) in self.npcs and
@@ -458,7 +462,7 @@ class World:
                 add('trade', i, q['name'])
             if q['wealth'] >= 20 and r['trust'] >= 18 and n['wealth'] < 80 and n['age_months'] >= 216:
                 add('betray', i, q['name'])
-            if r['affinity'] < -25 and n['health'] > 55 and q['health'] > 25 and n['age_months'] >= 216:
+            if r['affinity'] < -25 and n['health'] > 55 and q['health'] > 25 and n['age_months'] >= 216 and q['age_months'] >= 216:
                 add('duel', i, q['name'])
             if n['age_months'] >= 120 and q['skill'] > n['skill'] + 12 and not n['mentor'] and r['affinity'] >= 6:
                 add('mentor', i, q['name'])
@@ -647,20 +651,21 @@ class World:
             facts.update({'teacher': q['id'], 'payment': 2, 'career_practice': practice})
             text, imp = f"{name}花2银向{q['name']}学习{job}手艺，熟练度增长{practice['gain']:.2f}。", .35
         elif k == 'rest':
+            martial.recover(n, 10)
             n['health'] = clamp(n['health'] + (1 if settlement.get('food_shortfall', 0) else 3 if n['illness'] else 5) + gear['recovery']*.5)
             text = f'{name}休养一周，恢复体力。'
         elif k == 'train':
             n['wealth'] -= 1.5 if n['age_months'] >= 120 else 0
-            gain = (self.rng.uniform(.2, .525)+gear['training']*.5)*(1-n['skill']/120)
             school = self.factions[n['faction']] if n['faction'] is not None else None
             bonus = 1.25 if school and school['kind'] == 'sect' and school['place'] == n['place'] else 1
-            gain *= bonus
-            facts.update({'school': n['faction'], 'training_multiplier': bonus})
-            n['skill'] = clamp(n['skill'] + gain)
+            training = martial.auto_practice(n, self.rng, scale=.5*bonus, equipment=gear)
+            facts.update(training=training, school=n['faction'], training_multiplier=bonus)
             if n['career']['profession'] in ('镖师', '猎户'):
-                facts['career_practice'] = careers.gain(n, n['career']['profession'], .3)
+                facts['career_practice'] = careers.gain(n, n['career']['profession'], .15)
             n['health'] = clamp(n['health'] - .7)
-            text = f'{name}苦练基本功，武学增长{gain:.2f}。'
+            text = (f"{name}修习{training['name']}，" +
+                    (f"突破至{martial.REALMS[training['after']['realm']]}。" if training['breakthrough'] else
+                     f"进度达到{training['after']['practice']:.1f}。")) if not training.get('mastered') else f'{name}温习已臻化境的武学。'
         elif k == 'travel':
             old = n['place']
             self.residents[old].remove(n['id'])
@@ -798,19 +803,22 @@ class World:
                               [secret['id']], {'amount': silver})
                     return self.finish_action(n,a,secret)
             elif k == 'duel':
-                opponent_gear = items.bonuses(self, q['id'])
-                facts['opponent_equipment_bonuses'] = opponent_gear
-                won = n['skill'] + gear['attack'] + self.rng.uniform(-10, 10) > q['skill'] + opponent_gear['attack'] + self.rng.uniform(-10, 10)
-                winner, loser = (n, q) if won else (q, n)
-                protection = items.bonuses(self, loser['id'])['defense']
-                loser['health'] = clamp(loser['health'] - max(4, self.rng.uniform(14, 30)-protection))
-                winner['health'] = clamp(winner['health'] - 6)
-                winner['reputation'] = clamp(winner['reputation'] + 3)
+                bout = combat.autoplay(combat.start(n, q, self.rng.getrandbits(63), spar=False, equipment=(gear, items.bonuses(self, q['id']))))
+                facts['combat'] = bout
+                for actor, f in zip((n, q), bout['fighters']):
+                    loss = (f['vigor_max']-f['vigor'])/f['vigor_max']
+                    actor['health'] = clamp(actor['health']-4-loss*24)
+                winner = (n, q)[bout['winner']] if bout['winner'] is not None else None
+                loser = (q if winner is n else n) if winner else None
+                if winner:
+                    winner['reputation'] = clamp(winner['reputation'] + 3)
                 self.link(n, q, -4, -3)
                 # Winning revenge settles part of a grievance; it does not erase the opponent's memory.
-                self.relation(winner, loser['id'])['affinity'] = clamp(self.relation(winner, loser['id'])['affinity'] + 20, -100, 100)
-                text, imp = f"{name}因旧怨向{q['name']}挑战，{winner['name']}取胜讨回颜面，{loser['name']}负伤。", .8
-                facts.update({'winner': winner['id'], 'loser': loser['id']})
+                if winner:
+                    self.relation(winner, loser['id'])['affinity'] = clamp(self.relation(winner, loser['id'])['affinity'] + 20, -100, 100)
+                result = f"{winner['name']}取胜讨回颜面" if winner else '双方六十合未分胜负'
+                text, imp = f"{name}因旧怨向{q['name']}挑战，{result}。", .8
+                facts.update({'winner': winner['id'] if winner else None, 'loser': loser['id'] if loser else None})
             elif k == 'mentor':
                 qloyal = q['traits']['loyalty']
                 accepted = qloyal + q['traits']['compassion'] > 65
@@ -818,11 +826,13 @@ class World:
                     n['mentor'] = i
                     self.link(n, q, 9, 8, label='师徒')
                     n['skill'] = clamp(n['skill'] + 1)
+                    facts['transmission'] = martial.transmit(q, n)
                 else:
                     n.setdefault('cooldowns', {})[a['id']] = self.month + 24
                 text, imp = f"{name}向{q['name']}拜师，{'获准入门' if accepted else '未获应允'}。", .7 if accepted else .35
                 facts['accepted'] = accepted
             elif k == 'teach':
+                facts['transmission'] = martial.transmit(n, q)
                 gain = min(1.5, max(.1, (n['skill']-q['skill'])*.05))
                 q['skill'] = clamp(q['skill'] + gain)
                 self.link(n, q, 3, 2, label='师徒')
@@ -860,9 +870,12 @@ class World:
                                          'source':'回应合作','time_cost':1,'role':'合营伙伴'})
         if k == 'duel':
             n['cooldowns'][a['id']]=self.month+max(2,int(n['traits']['caution']/15))
-            loser['wound'] = {'remaining': 5, 'event_id': e['id']}
-            if loser['health'] <= 0:
-                self.die(loser, 'injury', e['id'])
+            for actor, f in zip((n, q), bout['fighters']):
+                if f['outer_wounds'] + f['inner_wounds'] > 0:
+                    actor['wound'] = {'remaining': 5, 'event_id': e['id'],
+                                      'external': f['outer_wounds'], 'internal': f['inner_wounds']}
+                if actor['health'] <= 0:
+                    self.die(actor, 'injury', e['id'])
         demography.accident(self, n, e)
         return e
 
@@ -881,6 +894,8 @@ class World:
         return e
 
     def month_step(self):
+        if self.battle and self.battle['status'] == 'active':
+            raise ValueError('切磋尚未结束，请先收招或认输')
         started = time.perf_counter()
         self.month += 1
         self.reindex()
@@ -896,6 +911,7 @@ class World:
             if not n['alive']:
                 continue
             n['age_months'] += 1
+            martial.recover(n)
             for k in n['mood']:
                 n['mood'][k] *= .72
             upkeep = 2.3 if n['age_months'] >= 144 else 1.2
@@ -947,6 +963,7 @@ class World:
         self.metrics['simulation_ms'] += (time.perf_counter()-started)*1000
         if self.month % 12 == 0:
             self.player['wealth'] += 24
+        martial.recover(self.player)
         self.player['health'] = clamp(self.player['health']+6+items.bonuses(self, 'player')['recovery'])
         if self.durable:
             self.checkpoint()
@@ -1082,6 +1099,8 @@ class World:
         n = self.npcs.get(npc_id)
         if not n or not n['alive']:
             raise ValueError('人物不在世或不存在')
+        if action == 'challenge':
+            return self.start_battle(npc_id)
         tie = self.player['ties'].setdefault(str(npc_id), {'affinity': 0., 'trust': 0.})
         cause = n['last_event']
         if action == 'gift':
@@ -1093,29 +1112,6 @@ class World:
             tie['trust'] += 3
             e = self.emit('player_gift', [npc_id], f"过客赠给{n['name']}10银，银两已实际交付。", .75,
                           [cause], {'player_cost': 10, 'npc_gain': 10}, '有人在意我的处境，这份情我会记住。')
-        elif action == 'challenge':
-            if n['health'] <= 30 or n['age_months'] < 216:
-                raise ValueError('对方目前不适合切磋')
-            if self.player['health'] <= 20:
-                raise ValueError('你的体力不足，请服用药食或推进一月休养')
-            gear = items.bonuses(self, npc_id)
-            player_gear = items.bonuses(self, 'player')
-            player_cost = max(2, 8-player_gear['defense'])
-            player_gain = .4+player_gear['training']
-            player_won = self.player['skill']+player_gear['attack']+self.rng.uniform(-10, 10) > n['skill']+gear['attack']+self.rng.uniform(-10, 10)
-            self.player['health'] -= player_cost
-            self.player['skill'] = clamp(self.player['skill']+player_gain)
-            health_cost = max(2, 8-gear['defense'])
-            n['health'] -= health_cost
-            n['skill'] = clamp(n['skill'] + .6)
-            tie['affinity'] += 2
-            e = self.emit('player_duel', [npc_id], f"过客与{n['name']}依约切磋，{'过客' if player_won else n['name']}占得上风。"
-                          f"双方体力各消耗{player_cost:g}、{health_cost:g}，武学各增长{player_gain:g}、0.6。", .65,
-                          [cause], {'health_cost': health_cost, 'skill_gain': .6,
-                                    'player_won': player_won, 'player_health_cost': player_cost,
-                                    'player_skill_gain': player_gain, 'player_equipment_bonuses': player_gear,
-                                    'player_equipment_wear': items.wear(self, 'player', ['weapon', 'armor'], 2),
-                                    'equipment_wear': items.wear(self, npc_id, ['weapon', 'armor'], 2)})
         elif action == 'talk':
             # Player text is a recorded utterance, never a command to mutate state.
             text = text.strip()[:280]
@@ -1133,11 +1129,101 @@ class World:
         self.checkpoint()
         return e
 
+    def martial_view(self):
+        known = self.player['martial']['arts']
+        return {'player': {**deepcopy(self.player), 'martial': martial.view(self.player, items.bonuses(self, 'player'))},
+                'catalog': [{**deepcopy(art), 'id': key} for key, art in martial.ARTS.items() if key not in known],
+                'battle': combat.view(self.battle)}
+
+    def martial_action(self, action, art_id=None):
+        if self.battle and self.battle['status'] == 'active':
+            raise ValueError('切磋期间无法修习或换装')
+        p = self.player
+        facts = {'action': action}
+        if action == 'equip':
+            martial.equip(p, art_id)
+        elif action == 'learn':
+            if p['wealth'] < 12:
+                raise ValueError('研读手抄谱需要12银')
+            martial.learn(p, art_id)
+            p['wealth'] -= 12
+            facts.update(art=art_id, cost=12)
+        elif action in ('practice', 'breakthrough'):
+            if p['wealth'] < 3:
+                raise ValueError('闭关一月需要3银')
+            facts['training'] = martial.practice(p, self.rng, art_id, action == 'breakthrough', equipment=items.bonuses(self, 'player'))
+            p['wealth'] -= 3
+            facts['cost'] = 3
+            facts['equipment_wear'] = items.wear(self, 'player', ['weapon'], 2)
+            self.month_step()
+        elif action == 'rest':
+            martial.recover(p, 30)
+            p['health'] = clamp(p['health'] + 18)
+            self.month_step()
+        else:
+            raise ValueError('未知练武指令')
+        self.store.append({'month': self.month, 'date': date(self.month), 'kind': 'player_training',
+                           'people': [], 'summary': '过客' + {'equip': '调整了功法装配。', 'learn': '研读手抄武谱。',
+                           'practice': '闭关修习一月。', 'breakthrough': '闭关突破武学关隘。', 'rest': '调养一月。'}[action],
+                           'importance': .3, 'causes': [], 'facts': facts})
+        self.checkpoint()
+        return self.martial_view()
+
+    def start_battle(self, npc_id):
+        if self.battle and self.battle['status'] == 'active':
+            raise ValueError('已有切磋正在进行')
+        n = self.npcs.get(npc_id)
+        if not n or not n['alive'] or n['health'] <= 30 or n['age_months'] < 216:
+            raise ValueError('对方目前不适合切磋')
+        if self.player['health'] <= 30 or self.player['martial']['stamina'] < 12:
+            raise ValueError('你伤疲过重，请先调养')
+        battle_id = f'{self.seed}-{self.month}-{self.store.next_id}'
+        self.battle = combat.start(self.player, n, self.rng.getrandbits(63), battle_id, equipment=(items.bonuses(self, 'player'), items.bonuses(self, npc_id)))
+        e = self.emit('spar_start', [npc_id], f"过客与{n['name']}约定点到为止，摆开切磋架势。", .3,
+                      [n['last_event']], {'battle_id': battle_id})
+        self.battle['cause'] = e['id']
+        self.checkpoint()
+        return self.martial_view()
+
+    def battle_action(self, battle_id, round_number, action):
+        b = self.battle
+        if not b or b['status'] != 'active':
+            raise ValueError('目前没有进行中的切磋')
+        if battle_id != b['id'] or round_number != b['round']:
+            raise ValueError('战局已变化，请刷新后再出招')
+        combat.step(b, action)
+        if b['status'] == 'finished':
+            n = self.npcs[b['fighters'][1]['id']]
+            costs = []
+            rewards = self.player.setdefault('spar_rewards', {})
+            practiced = (b['round'] >= 3 and any(row.get('damage', 0) > 0 and row['side'] == 0 for row in b['log']))
+            gain = .3 if practiced and rewards.get(str(n['id'])) != self.month else 0.
+            if gain:
+                rewards[str(n['id'])] = self.month
+            for actor, f in zip((self.player, n), b['fighters']):
+                cost = round(2 + 6*(1-f['vigor']/f['vigor_max']), 4)
+                actor['health'] = max(1., actor['health']-cost)
+                actor['skill'] = clamp(actor['skill']+gain)
+                actor['martial']['stamina'] = clamp(actor['martial']['stamina']-12)
+                costs.append(cost)
+            tie = self.player['ties'].setdefault(str(n['id']), {'affinity': 0., 'trust': 0.})
+            tie['affinity'] = clamp(tie['affinity']+2, -100, 100)
+            result = '双方平手' if b['winner'] is None else b['fighters'][b['winner']]['name']+'胜出'
+            gear_wear = {'player': items.wear(self, 'player', ['weapon', 'armor'], 2),
+                         'npc': items.wear(self, n['id'], ['weapon', 'armor'], 2)}
+            b['settled'] = True
+            e = self.emit('player_duel', [n['id']], f"过客与{n['name']}切磋，{result}，点到为止。", .7,
+                          [b['cause']], {'combat': deepcopy(b), 'player_health_cost': costs[0],
+                                         'npc_health_cost': costs[1], 'skill_gain': gain, 'equipment_wear': gear_wear})
+            b['event_id'] = e['id']
+        self.checkpoint()
+        return self.martial_view()
+
     def export(self):
         return {'seed': self.seed, 'month': self.month, 'npcs': self.npcs,
                 'factions': self.factions, 'government': self.government, 'governments': self.governments,
                 'countries': self.countries, 'map_version': MAP_VERSION, 'atlas_history': self.atlas_history, 'player': self.player, 'items': self.items, 'economy': self.economy, 'metrics': self.metrics,
-                'population_limit': self.population_limit, 'random_state': self.rng.getstate()}
+                'population_limit': self.population_limit, 'random_state': self.rng.getstate(), 'battle': self.battle}
 
     def restore(self, state):
         self.seed, self.month = state['seed'], state['month']
@@ -1146,6 +1232,7 @@ class World:
             n['ai_pending'] = False
             demography.initialize(self, n)
             social.initialize(self,n)
+            martial.initialize(n)
             n.setdefault('office', None)
             careers.initialize(self, n, legacy=True)
             n.setdefault('office_country', 0 if n['office'] else None)
@@ -1172,6 +1259,8 @@ class World:
             n.setdefault('identity', careers.identity(self, n))
             if not n['alive']:
                 n.setdefault('final_identity', deepcopy(n['identity']))
+        martial.initialize(self.player, player=True)
+        self.battle = state.get('battle')
         self.metrics.setdefault('death_causes', {})
         self.population_limit = state['population_limit']
         def tuples(x):
@@ -1218,6 +1307,7 @@ class World:
                                'generations': dict(Counter(n['generation'] for n in living)),
                                'max_generation': max((n['generation'] for n in self.npcs.values()), default=0),
                                'deaths': self.metrics.get('death_causes', {})}, 'player': self.player,
+                'battle_active': bool(self.battle and self.battle['status'] == 'active'),
                 'npcs': [self.npc_summary(n) for n in self.npcs.values()]}
 
     def npc_detail(self, npc_id):
@@ -1225,6 +1315,7 @@ class World:
         n['career_view'] = careers.view(self, self.npcs[npc_id])
         n['identity'] = careers.identity(self, self.npcs[npc_id])
         n['career_options'] = careers.catalog(self, self.npcs[npc_id])
+        n['martial_view'] = martial.view(n, items.bonuses(self, npc_id))
         n['legal_actions'] = self.legal_actions(self.npcs[npc_id])
         n['possessions'] = items.view(self, npc_id)
         n['relations_view'] = [dict(other=int(i), name=self.npcs[int(i)]['name'],
