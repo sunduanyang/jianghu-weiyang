@@ -1,0 +1,375 @@
+{
+  "id": "f-swordswoman",
+  "index": 24,
+  "description": "二十岁门派女弟子，身形修长；高髻发带飘在脑后（发带保持与头茬相连）；藏青劲装，领缘竹叶纹，佩剑",
+  "source": "parts-sheet.png",
+  "source_sha256": "6d5606d5b97a9ae9c09d802505fb47b0e8dd956ce8f69a4fd7f73fab1c581c95",
+  "canvas": {
+    "width": 1024,
+    "height": 1536
+  },
+  "method": "Isolate each connected artwork region and its two-pixel antialias fringe. Preserve retained source RGBA; clear pixels of neighboring parts and background. No redraw, scaling, or recoloring.",
+  "status": "exported; visual identity and assembly compatibility require review",
+  "parts": [
+    {
+      "index": 1,
+      "id": "head-neck",
+      "name": "头茬与颈部",
+      "file": "01-head-neck.png",
+      "source_bbox": [
+        28,
+        29,
+        300,
+        388
+      ],
+      "crop": {
+        "left": 20,
+        "top": 21,
+        "width": 288,
+        "height": 375
+      },
+      "source_component_area": 52517,
+      "retained_pixels": 56816,
+      "rgba_match": true
+    },
+    {
+      "index": 2,
+      "id": "torso",
+      "name": "上身躯干",
+      "file": "02-torso.png",
+      "source_bbox": [
+        341,
+        50,
+        529,
+        429
+      ],
+      "crop": {
+        "left": 333,
+        "top": 42,
+        "width": 204,
+        "height": 395
+      },
+      "source_component_area": 43221,
+      "retained_pixels": 45898,
+      "rgba_match": true
+    },
+    {
+      "index": 3,
+      "id": "front-skirt",
+      "name": "前裙片/前裤腰片",
+      "file": "03-front-skirt.png",
+      "source_bbox": [
+        559,
+        61,
+        767,
+        393
+      ],
+      "crop": {
+        "left": 551,
+        "top": 53,
+        "width": 224,
+        "height": 348
+      },
+      "source_component_area": 45543,
+      "retained_pixels": 47574,
+      "rgba_match": true
+    },
+    {
+      "index": 4,
+      "id": "back-skirt",
+      "name": "后裙片/后裤腰片",
+      "file": "04-back-skirt.png",
+      "source_bbox": [
+        792,
+        60,
+        997,
+        393
+      ],
+      "crop": {
+        "left": 784,
+        "top": 52,
+        "width": 221,
+        "height": 349
+      },
+      "source_component_area": 47114,
+      "retained_pixels": 49159,
+      "rgba_match": true
+    },
+    {
+      "index": 5,
+      "id": "near-upper-arm",
+      "name": "近侧上臂",
+      "file": "05-near-upper-arm.png",
+      "source_bbox": [
+        57,
+        424,
+        193,
+        666
+      ],
+      "crop": {
+        "left": 49,
+        "top": 416,
+        "width": 152,
+        "height": 258
+      },
+      "source_component_area": 18595,
+      "retained_pixels": 20075,
+      "rgba_match": true
+    },
+    {
+      "index": 6,
+      "id": "far-upper-arm",
+      "name": "远侧上臂",
+      "file": "06-far-upper-arm.png",
+      "source_bbox": [
+        349,
+        424,
+        484,
+        666
+      ],
+      "crop": {
+        "left": 341,
+        "top": 416,
+        "width": 151,
+        "height": 258
+      },
+      "source_component_area": 18660,
+      "retained_pixels": 20158,
+      "rgba_match": true
+    },
+    {
+      "index": 7,
+      "id": "near-forearm",
+      "name": "近侧前臂",
+      "file": "07-near-forearm.png",
+      "source_bbox": [
+        557,
+        423,
+        685,
+        666
+      ],
+      "crop": {
+        "left": 549,
+        "top": 415,
+        "width": 144,
+        "height": 259
+      },
+      "source_component_area": 18703,
+      "retained_pixels": 20224,
+      "rgba_match": true
+    },
+    {
+      "index": 8,
+      "id": "far-forearm",
+      "name": "远侧前臂",
+      "file": "08-far-forearm.png",
+      "source_bbox": [
+        849,
+        423,
+        975,
+        666
+      ],
+      "crop": {
+        "left": 841,
+        "top": 415,
+        "width": 142,
+        "height": 259
+      },
+      "source_component_area": 18581,
+      "retained_pixels": 20077,
+      "rgba_match": true
+    },
+    {
+      "index": 9,
+      "id": "near-hand",
+      "name": "近侧手",
+      "file": "09-near-hand.png",
+      "source_bbox": [
+        104,
+        688,
+        195,
+        936
+      ],
+      "crop": {
+        "left": 96,
+        "top": 680,
+        "width": 107,
+        "height": 264
+      },
+      "source_component_area": 15617,
+      "retained_pixels": 17081,
+      "rgba_match": true
+    },
+    {
+      "index": 10,
+      "id": "far-hand",
+      "name": "远侧手",
+      "file": "10-far-hand.png",
+      "source_bbox": [
+        345,
+        689,
+        435,
+        937
+      ],
+      "crop": {
+        "left": 337,
+        "top": 681,
+        "width": 106,
+        "height": 264
+      },
+      "source_component_area": 15633,
+      "retained_pixels": 17126,
+      "rgba_match": true
+    },
+    {
+      "index": 11,
+      "id": "near-thigh",
+      "name": "近侧大腿",
+      "file": "11-near-thigh.png",
+      "source_bbox": [
+        578,
+        680,
+        709,
+        966
+      ],
+      "crop": {
+        "left": 570,
+        "top": 672,
+        "width": 147,
+        "height": 302
+      },
+      "source_component_area": 25054,
+      "retained_pixels": 26768,
+      "rgba_match": true
+    },
+    {
+      "index": 12,
+      "id": "far-thigh",
+      "name": "远侧大腿",
+      "file": "12-far-thigh.png",
+      "source_bbox": [
+        813,
+        680,
+        946,
+        966
+      ],
+      "crop": {
+        "left": 805,
+        "top": 672,
+        "width": 149,
+        "height": 302
+      },
+      "source_component_area": 24805,
+      "retained_pixels": 26438,
+      "rgba_match": true
+    },
+    {
+      "index": 13,
+      "id": "near-shin",
+      "name": "近侧小腿",
+      "file": "13-near-shin.png",
+      "source_bbox": [
+        97,
+        969,
+        193,
+        1251
+      ],
+      "crop": {
+        "left": 89,
+        "top": 961,
+        "width": 112,
+        "height": 298
+      },
+      "source_component_area": 19023,
+      "retained_pixels": 20567,
+      "rgba_match": true
+    },
+    {
+      "index": 14,
+      "id": "far-shin",
+      "name": "远侧小腿",
+      "file": "14-far-shin.png",
+      "source_bbox": [
+        346,
+        969,
+        441,
+        1251
+      ],
+      "crop": {
+        "left": 338,
+        "top": 961,
+        "width": 111,
+        "height": 298
+      },
+      "source_component_area": 18939,
+      "retained_pixels": 20475,
+      "rgba_match": true
+    },
+    {
+      "index": 15,
+      "id": "near-foot",
+      "name": "近侧脚",
+      "file": "15-near-foot.png",
+      "source_bbox": [
+        544,
+        1086,
+        741,
+        1237
+      ],
+      "crop": {
+        "left": 536,
+        "top": 1078,
+        "width": 213,
+        "height": 167
+      },
+      "source_component_area": 15214,
+      "retained_pixels": 16581,
+      "rgba_match": true
+    },
+    {
+      "index": 16,
+      "id": "far-foot",
+      "name": "远侧脚",
+      "file": "16-far-foot.png",
+      "source_bbox": [
+        794,
+        1088,
+        990,
+        1238
+      ],
+      "crop": {
+        "left": 786,
+        "top": 1080,
+        "width": 212,
+        "height": 166
+      },
+      "source_component_area": 15481,
+      "retained_pixels": 16867,
+      "rgba_match": true
+    },
+    {
+      "index": 17,
+      "id": "sheathed-sword",
+      "name": "佩剑：一件完整独立长剑与剑鞘组合，横向平放底行，不连腰或手",
+      "file": "17-sheathed-sword.png",
+      "source_bbox": [
+        118,
+        1296,
+        942,
+        1505
+      ],
+      "crop": {
+        "left": 110,
+        "top": 1288,
+        "width": 840,
+        "height": 225
+      },
+      "source_component_area": 54285,
+      "retained_pixels": 60343,
+      "rgba_match": true
+    }
+  ],
+  "raw_source_sha256": "51a9418c61a77e6ac88c33a608172b799a642f1a6ea8b1e97a1072dae684eb8b",
+  "atlas_background_isolated": true,
+  "atlas_note": "Atlas contains exactly the retained split-part RGBA pixels at original coordinates; empty background and neighboring pixels cleared. Original generated sheet preserved in workspace evidence."
+}

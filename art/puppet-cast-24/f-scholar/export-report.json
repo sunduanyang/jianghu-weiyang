@@ -1,0 +1,188 @@
+{
+  "id": "f-scholar",
+  "size": [
+    1024,
+    1536
+  ],
+  "threshold": 32,
+  "minArea": 300,
+  "expected": 17,
+  "actual": 17,
+  "transparentPixels": 1085078,
+  "components": [
+    {
+      "label": 1,
+      "area": 52197,
+      "bbox": [
+        29,
+        22,
+        299,
+        372
+      ]
+    },
+    {
+      "label": 2,
+      "area": 46788,
+      "bbox": [
+        556,
+        32,
+        759,
+        387
+      ]
+    },
+    {
+      "label": 3,
+      "area": 45899,
+      "bbox": [
+        793,
+        37,
+        998,
+        387
+      ]
+    },
+    {
+      "label": 4,
+      "area": 35363,
+      "bbox": [
+        347,
+        56,
+        524,
+        400
+      ]
+    },
+    {
+      "label": 7,
+      "area": 15909,
+      "bbox": [
+        586,
+        416,
+        686,
+        652
+      ]
+    },
+    {
+      "label": 8,
+      "area": 15475,
+      "bbox": [
+        835,
+        419,
+        936,
+        652
+      ]
+    },
+    {
+      "label": 5,
+      "area": 22449,
+      "bbox": [
+        58,
+        407,
+        227,
+        671
+      ]
+    },
+    {
+      "label": 6,
+      "area": 21312,
+      "bbox": [
+        362,
+        410,
+        523,
+        668
+      ]
+    },
+    {
+      "label": 11,
+      "area": 12948,
+      "bbox": [
+        123,
+        708,
+        216,
+        912
+      ]
+    },
+    {
+      "label": 12,
+      "area": 12910,
+      "bbox": [
+        365,
+        708,
+        458,
+        912
+      ]
+    },
+    {
+      "label": 9,
+      "area": 28572,
+      "bbox": [
+        579,
+        681,
+        703,
+        993
+      ]
+    },
+    {
+      "label": 10,
+      "area": 29098,
+      "bbox": [
+        809,
+        684,
+        933,
+        992
+      ]
+    },
+    {
+      "label": 13,
+      "area": 19937,
+      "bbox": [
+        106,
+        986,
+        201,
+        1265
+      ]
+    },
+    {
+      "label": 14,
+      "area": 19783,
+      "bbox": [
+        344,
+        986,
+        439,
+        1265
+      ]
+    },
+    {
+      "label": 15,
+      "area": 16605,
+      "bbox": [
+        787,
+        1087,
+        988,
+        1241
+      ]
+    },
+    {
+      "label": 16,
+      "area": 16467,
+      "bbox": [
+        531,
+        1096,
+        732,
+        1248
+      ]
+    },
+    {
+      "label": 17,
+      "area": 47381,
+      "bbox": [
+        54,
+        1285,
+        465,
+        1518
+      ]
+    }
+  ],
+  "pixel_checks": "All retained artwork RGBA values match the source; other pixels are transparent zero; decoded PNG pixels match the planned isolation exactly.",
+  "parts": 17,
+  "atlas_background_isolated": true,
+  "atlas_rgba_check": "Decoded cleaned atlas exactly matches the union of retained PNG part pixels."
+}

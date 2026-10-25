@@ -1,0 +1,25 @@
+{
+  "review_scope": "All 24 source sheets and separated part images; user approved the 16-core-piece construction.",
+  "review_basis": {
+    "01-06": "Root visually checked each generated atlas and core ordering; export isolation and alpha checks performed.",
+    "07-12": "Assigned agent visually checked child proportions, body row order, empty separate hands, book, cloud shoulder, purse and abacus. Six roles, 100 parts.",
+    "13-18": "Independent read-only review inspected all 105 actual PNG files; no missing parts, neighbor residue, joined limb segments or accessory name swaps. Healer full blue hair wrap and artisan tied short headcloth subsequently corrected with image_gen and rechecked.",
+    "19-24": "All six complete, 102 parts. Monk bald head, connected separate prayer-bead ring and separate kasaya checked after one controlled retry of a hung request; all other identity accessories and core limb splits checked."
+  },
+  "material_limitations": [
+    "No skeleton binding, anchor calibration or motion acceptance.",
+    "Torso parts use the approved unfolded double-shoulder cutout construction, not an exact side-projection chest silhouette.",
+    "Some generative color, fill and ornament details differ from strict initial values."
+  ],
+  "pending": [],
+  "status": "All 24 role sheets visually reviewed; 405 independent PNGs exported and checked.",
+  "final_integrity_checks": {
+    "roles": 24,
+    "body_parts": 384,
+    "accessories": 21,
+    "total": 405,
+    "canvas": "1024x1536 for every atlas",
+    "alpha": "present; per-part borders transparent; atlas background reduced to the exact union of exported part pixels",
+    "rgba": "All retained part pixels match atlas source coordinates exactly; all final PNGs decoded and nonempty."
+  }
+}
