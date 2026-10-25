@@ -31,7 +31,7 @@ def context_for(world, n):
             'self': {k: deepcopy(n[k]) for k in ('name', 'age_months', 'wealth', 'health', 'skill', 'job',
                                                   'traits', 'mood', 'beliefs', 'desires', 'goal',
                                                   'pregnancy', 'illness', 'office', 'generation',
-                                                  'spouse', 'children', 'family_size')},
+                                                  'spouse', 'children', 'family_size', 'martial')},
             'public_institutions': {'name': world.government['name'], 'tax_rate': world.government['tax_rate'],
                                     'offices': world.government['offices'].copy()},
             'current_plan': deepcopy(n['plan']),
