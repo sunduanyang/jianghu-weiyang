@@ -41,7 +41,7 @@ function renderWorld(){
  occupationFilter.innerHTML='<option value="">百业皆看</option>'+Object.keys(world.professions??{}).sort().map(k=>`<option value="${esc(k)}">${esc(k)}</option>`).join('');
  occupationFilter.value=occupationValue;
  if($('#identity-filter').options.length===1)[...'一二三四五六七八九'].forEach((s,i)=>$('#identity-filter').add(new Option(s+'品',i+1)));
- renderPeople();renderMap();renderFactions();renderSociety();if(typeof refreshInventoryIfNeeded==='function')refreshInventoryIfNeeded();$('#month-activity').textContent=`平均每人每月 ${num(world.activity?.mean_actions??1,1)} 项活动 · 四周时段制`;
+ renderPeople();renderMap();renderFactions();renderSociety();if(typeof cityUI!=='undefined')cityUI.refresh();if(typeof refreshInventoryIfNeeded==='function')refreshInventoryIfNeeded();$('#month-activity').textContent=`平均每人每月 ${num(world.activity?.mean_actions??1,1)} 项活动 · 四周时段制`;
  $('#stats').innerHTML=[['friendships','相知'],['marriages','婚姻'],['feuds','仇怨'],['events','真实事件']].map(([k,l])=>`<div class="stat"><strong>${world[k]>9999?(world[k]/10000).toFixed(1)+'万':world[k]}</strong><small>${l}</small></div>`).join('');
  if(!allEvents)$('#world-events').innerHTML=world.world_events.length?world.world_events.map(eventHTML).join(''):'<p class="note">江湖初立，往后的岁月将留下故事。</p>';
  const ai=world.ai, ms=world.metrics.simulation_ms/Math.max(1,world.metrics.steps);

@@ -12,6 +12,7 @@ from . import politics, territory
 from .atlas import PLACES, FACTIONS, COUNTRIES, ROUTES, NEIGHBORS, MAP_VERSION, ERA
 from . import careers
 from . import martial, combat
+from . import city_maps
 
 TRAITS = {'compassion': '仁厚', 'ambition': '进取', 'caution': '谨慎',
           'sociability': '外向', 'loyalty': '忠诚', **social.EXTRA_TRAITS}
@@ -52,6 +53,8 @@ class World:
         self.countries = politics.new()
         self.territory = territory.new()
         self.campaigns = {'last_attack': {}, 'history': []}
+        self.city_map_version = city_maps.VERSION
+        self.city_positions = {}
         self.governments = [government.new(c['id']) for c in COUNTRIES]
         self.government = self.governments[0]
         self.economy = {'gaming_house': 200.}
@@ -170,7 +173,7 @@ class World:
         return PLACES[place]['name']
 
     def summary_place(self, place):
-        return territory.place_view(self, place)
+        return {**territory.place_view(self, place), 'interior_authored': PLACES[place]['name'] in city_maps.PLANS}
 
     def local_government(self, n):
         return government.for_npc(self, n)
@@ -878,6 +881,7 @@ class World:
             q['action_counts']['trade']=q['action_counts'].get('trade',0)+1
             q['monthly_actions'].append({**a,'month':self.month,'week':self.phase,'event_id':e['id'],
                                          'source':'回应合作','time_cost':1,'role':'合营伙伴'})
+            city_maps.record_action(self,q,a,e)
         if k == 'duel':
             n['cooldowns'][a['id']]=self.month+max(2,int(n['traits']['caution']/15))
             for actor, f in zip((n, q), bout['fighters']):
@@ -894,6 +898,7 @@ class World:
         n['action_counts'][a['kind']]=n['action_counts'].get(a['kind'],0)+1
         n['last_action']={**a,'month':self.month,'week':self.phase,'event_id':e['id'],'source':n['choice_source']}
         n['monthly_actions'].append(n['last_action'].copy())
+        city_maps.record_action(self,n,a,e)
         n['settlement_logged']=True
         self.metrics['actions'][a['kind']]=self.metrics['actions'].get(a['kind'],0)+1
         if a['kind'] in ('befriend','court','propose','rumor','care','family'):
@@ -1232,6 +1237,7 @@ class World:
 
     def export(self):
         return {'seed': self.seed, 'month': self.month, 'npcs': self.npcs,
+                'city_map_version': self.city_map_version, 'city_positions': self.city_positions,
                 'territory': self.territory, 'campaigns': self.campaigns,
                 'factions': self.factions, 'government': self.government, 'governments': self.governments,
                 'countries': self.countries, 'map_version': MAP_VERSION, 'atlas_history': self.atlas_history, 'player': self.player, 'items': self.items, 'economy': self.economy, 'metrics': self.metrics,
@@ -1239,6 +1245,8 @@ class World:
 
     def restore(self, state):
         self.seed, self.month = state['seed'], state['month']
+        self.city_map_version = state.get('city_map_version', city_maps.VERSION)
+        self.city_positions = deepcopy(state.get('city_positions', {}))
         self.npcs = {int(i): n for i, n in state['npcs'].items()}
         for n in self.npcs.values():
             n['ai_pending'] = False

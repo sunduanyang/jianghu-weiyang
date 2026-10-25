@@ -10,7 +10,7 @@ from urllib.parse import parse_qs, urlparse
 from .ai import AIManager, DEFAULT_CONFIG
 from .engine import World
 from .store import Store
-from . import items, territory
+from . import items, territory, city_maps
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -150,6 +150,8 @@ def handler_for(game):
                         elif path == '/api/campaign':
                             target = int(query.get('place', ['-1'])[0])
                             data = {'options': territory.attack_options(game.world, target)}
+                        elif path == '/api/city':
+                            data = city_maps.view(game.world, int(query.get('place', ['-1'])[0]))
                         elif path.startswith('/api/npc/'):
                             data = game.world.npc_detail(int(path.rsplit('/', 1)[1]))
                             data['history'] = game.world.store.history(data['id'], limit=60)
@@ -174,7 +176,7 @@ def handler_for(game):
                             return
                     self.json_response(data)
                     return
-                files = {'/': 'index.html', '/index.html': 'index.html', '/style.css': 'style.css', '/app.js': 'app.js', '/inventory.js': 'inventory.js', '/map.js': 'map.js', '/geography.json': 'geography.json', '/martial.js': 'martial.js', '/art.css': 'art.css', '/assets/river-valley.png': 'assets/river-valley.png', '/assets/portraits.png': 'assets/portraits.png'}
+                files = {'/': 'index.html', '/index.html': 'index.html', '/style.css': 'style.css', '/app.js': 'app.js', '/inventory.js': 'inventory.js', '/map.js': 'map.js', '/city.js': 'city.js', '/city.css': 'city.css', '/geography.json': 'geography.json', '/martial.js': 'martial.js', '/art.css': 'art.css', '/assets/river-valley.png': 'assets/river-valley.png', '/assets/portraits.png': 'assets/portraits.png'}
                 filename = files.get(path)
                 if not filename:
                     self.send_error(404)
