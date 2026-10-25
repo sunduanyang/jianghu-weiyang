@@ -104,6 +104,11 @@ class RicherLivesTests(unittest.TestCase):
             budget=4 if n['age_months']>=120 else 2
             self.assertLessEqual(sum(a['time_cost'] for a in n['monthly_actions']),budget)
             self.assertGreaterEqual(n['time_left'],0)
+            occupied=[]
+            for a in n['monthly_actions']:
+                occupied.extend(range(a['week'],a['week']+a['time_cost']))
+            self.assertEqual(len(occupied),len(set(occupied)))
+            self.assertTrue(all(1<=week<=4 for week in occupied))
 
     def test_model_request_does_not_include_rule_recommendation_or_other_personas(self):
         w=self.world();ctx=context_for(w,w.npcs[1]);captured=[]
@@ -114,6 +119,9 @@ class RicherLivesTests(unittest.TestCase):
         wire=json.loads(captured[0]['messages'][1]['content'])
         self.assertNotIn('baseline_action',wire);self.assertNotIn('npcs',wire);self.assertNotIn('agents',wire)
         self.assertEqual(wire['npc_id'],1)
+        schema=captured[0]['response_format']['json_schema']['schema']
+        event_schema=schema['properties']['reflection']['properties']['event_ids']
+        self.assertEqual(event_schema['items']['enum'],[m['event_id'] for m in ctx['memories']])
 
     def test_review_budget_rotates_to_different_people(self):
         w=self.world(100)

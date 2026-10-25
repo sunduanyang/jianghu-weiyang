@@ -35,6 +35,11 @@ def cost(kind):
     return COSTS.get(kind, 1)
 
 
+def available(w, n):
+    return not w.phase or not any(a['week'] <= w.phase < a['week']+a['time_cost']
+                                  for a in n['monthly_actions'])
+
+
 def reset_month(w, n):
     n['time_left'] = 4 if n['age_months'] >= 120 else 2
     if n['probation_until']>=w.month:n['time_left']=min(2,n['time_left'])

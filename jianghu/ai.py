@@ -51,13 +51,15 @@ def context_for(world, n):
 
 def response_schema(ctx):
     ids = [a['id'] for a in ctx['allowed_actions']]
+    event_ids = [m['event_id'] for m in ctx['memories']]
     return {'type': 'object', 'properties': {
         'action_id': {'type': 'string', 'enum': ids},
         'plan': {'type': 'array', 'items': {'type': 'string', 'enum': ids}, 'minItems': 1, 'maxItems': 4},
         'goal': {'type': 'string', 'enum': ctx['allowed_goals']},
         'reason': {'type': 'string', 'maxLength': 90},
         'reflection': {'type': 'object', 'properties': {
-            'event_ids': {'type': 'array', 'items': {'type': 'integer'}, 'maxItems': 3},
+            'event_ids': {'type': 'array', 'items': {'type': 'integer', 'enum': event_ids or [0]},
+                          'maxItems': min(3,len(event_ids))},
             'interpretation': {'type': 'string', 'maxLength': 90},
             'trait': {'type': 'string', 'enum': ['none']+list(TRAITS)},
             'direction': {'type': 'integer', 'enum': [-1, 0, 1]},

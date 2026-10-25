@@ -379,7 +379,7 @@ class World:
                 self.set_goal(n, best, n['last_event'])
 
     def legal_actions(self, n, planning=False):
-        if not n['alive']:
+        if not n['alive'] or (not planning and not social.available(self,n)):
             return []
         actions = []
         def add(kind, target=None, detail='', **extra):
@@ -420,7 +420,7 @@ class World:
             if n['wealth'] >= 14 and q['wealth'] < 20 and r['affinity'] > -10:
                 add('aid', i, q['name'])
             if (n['age_months']>=192 and q['age_months']>=192 and n['wealth'] >= 10 and q['wealth'] >= 10 and r['trust'] >= 8 and
-                    (planning or (q['time_left']>=1 and q['action_counts'].get('trade',0)<1))):
+                    (planning or (q['time_left']>=1 and social.available(self,q) and q['action_counts'].get('trade',0)<1))):
                 add('trade', i, q['name'])
             if q['wealth'] >= 20 and r['trust'] >= 18 and n['wealth'] < 80 and n['age_months'] >= 216:
                 add('betray', i, q['name'])
@@ -460,6 +460,7 @@ class World:
                 if n.get('cooldowns',{}).get(a['id'],-1)<=self.month and
                 (n['probation_until']<self.month or a['kind'] not in ('steal','extort','smear','embezzle','travel','duel','betray')) and
                 (planning or (social.cost(a['kind'])<=n['time_left'] and
+                              (not self.phase or self.phase+social.cost(a['kind'])<=5) and
                               n['action_counts'].get(a['kind'],0)<social.LIMITS.get(a['kind'],4)))]
 
     def close_kin(self, a, b):
@@ -825,7 +826,7 @@ class World:
             self.rng.shuffle(ids)
             for i in ids:
                 n=self.npcs[i]
-                if not n['alive'] or n['time_left']<=0:
+                if not n['alive'] or n['time_left']<=0 or not social.available(self,n):
                     continue
                 actions=self.legal_actions(n)
                 if actions:
