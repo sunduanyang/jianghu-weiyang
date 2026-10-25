@@ -1,4 +1,4 @@
-"""Bake the paper/ink UI skin and the silk-scroll atlas textures for the Unity client.
+"""Bake the dark ink-and-lamplight UI skin and the silk-scroll atlas textures for the Unity client.
 
 All textures are generated procedurally and deterministically (fixed seeds), so the
 script can be re-run after tweaking colours.  Requires Pillow, NumPy and SciPy.
@@ -248,44 +248,96 @@ def rough_rect(d, box, color, width, seed, wobble=.6):
         d.line(edge(a, b), fill=color, width=width, joint='curve')
 
 
+BG = (24, 30, 30)
+PANEL = (30, 37, 36)
+LINE = (88, 102, 98)
+TEXT = (226, 217, 196)
+JADE = (62, 143, 123)
+BRASS = (201, 163, 90)
+RED = (142, 42, 32)
+
+
+def cloud_swirls(d, w, h, rng, count, col, wrap=True):
+    for _ in range(count):
+        cx, cy, r = rng.uniform(0, w), rng.uniform(0, h), rng.uniform(10, 34)
+        offs = [(dx, dy) for dx in (-w, 0, w) for dy in (-h, 0, h)] if wrap else [(0, 0)]
+        for dx, dy in offs:
+            x, y = cx + dx, cy + dy
+            d.arc((x - r, y - r, x + r, y + r), 160, 470, fill=col, width=2)
+            d.arc((x - r * .5, y - r * .5, x + r * .5, y + r * .5), 0, 300, fill=col, width=2)
+            d.line((x + r, y, x + r * 2.6, y), fill=col, width=2)
+
+
+def dark_field(w, h, base, seed, swirls=0, wrap=True):
+    if wrap and w == h:
+        low, grain = tile_noise(w, 46, seed), tile_noise(w, .9, seed + 1)
+    else:
+        low, grain = noise((h, w), 46, seed), noise((h, w), .9, seed + 1)
+    shade = (low - .5) * 12 + (grain - .5) * 5
+    img = from_array(np.dstack([np.full((h, w), c, float) for c in base]) + shade[..., None])
+    if swirls:
+        layer = Image.new('RGBA', (w, h), (0, 0, 0, 0))
+        cloud_swirls(ImageDraw.Draw(layer), w, h, np.random.default_rng(seed + 5), swirls, (255, 255, 255, 9), wrap)
+        img = Image.alpha_composite(img, layer)
+    return img
+
+
 def bake_ui():
     UI.mkdir(parents=True, exist_ok=True)
     write_folder_meta(UI)
 
-    # tileable papers -------------------------------------------------
+    # backgrounds -------------------------------------------------------------
+    save(dark_field(512, 512, BG, 201, swirls=18), UI / 'bg.png', wrap=True, mipmaps=True)
     save(paper_field(512, PAPER, 11), UI / 'paper.png', wrap=True, mipmaps=True)
     save(paper_field(512, (246, 240, 225), 12), UI / 'paper_light.png', wrap=True, mipmaps=True)
 
-    # dark stage lacquer / wood (header and stage frame fill) ----------
     s = 512
     grain = tile_noise(s, 1.2, 21)
     streak = ndimage.gaussian_filter(np.random.default_rng(22).random((s, s)), (40, 0.7), mode='wrap')
     streak = (streak - streak.min()) / (streak.max() - streak.min())
-    low = tile_noise(s, 50, 23)
-    shade = (streak - .5) * 26 + (grain - .5) * 8 + (low - .5) * 16
-    wood = np.dstack([np.full((s, s), c, float) for c in WOOD]) + shade[..., None]
-    save(from_array(wood), UI / 'stage.png', wrap=True, mipmaps=True)
+    shade = (streak - .5) * 26 + (grain - .5) * 8 + (tile_noise(s, 50, 23) - .5) * 16
+    save(from_array(np.dstack([np.full((s, s), c, float) for c in WOOD]) + shade[..., None]), UI / 'stage.png', wrap=True, mipmaps=True)
 
-    # warm lit shadow-play screen (stretched in 戏 mode) ----------------
     s = 256
     yy, xx = np.mgrid[0:s, 0:s] / (s - 1)
-    r = np.sqrt(((xx - .5) / .62) ** 2 + ((yy - .42) / .7) ** 2)
-    t = np.clip(r, 0, 1) ** 1.6
-    c0, c1 = np.array([250, 234, 200.]), np.array([214, 168, 104.])
-    glow = c0[None, None] * (1 - t[..., None]) + c1[None, None] * t[..., None]
-    glow += (noise((s, s), 0.7, 31)[..., None] - .5) * 6
+    t = np.clip(np.sqrt(((xx - .5) / .62) ** 2 + ((yy - .42) / .7) ** 2), 0, 1) ** 1.6
+    c0, c1 = np.array([250, 234, 200.]), np.array([186, 132, 72.])
+    glow = c0[None, None] * (1 - t[..., None]) + c1[None, None] * t[..., None] + (noise((s, s), .7, 31)[..., None] - .5) * 6
     save(from_array(glow), UI / 'screen.png')
 
-    # book frame: thick outer rule + thin inner rule (文武边), transparent centre
-    s, img = 128, Image.new('RGBA', (128, 128), (0, 0, 0, 0))
+    # screen vignette (drawn over the full-screen map) -------------------------
+    s = 256
+    yy, xx = np.mgrid[0:s, 0:s] / (s - 1)
+    r = np.sqrt(((xx - .5) / .5) ** 2 + ((yy - .5) / .5) ** 2)
+    a = np.clip((r - .62) / .55, 0, 1) ** 1.5 * 215
+    save(from_array(np.zeros((s, s, 3)) + np.array(BG)[None, None] * .5, a), UI / 'vignette.png')
+
+    # panels ------------------------------------------------------------------
+    def panel(name, fill, alpha, border, inner=True, corners=True, size=64):
+        img = dark_field(size, size, fill, 211 + len(name), wrap=False)
+        img.putalpha(alpha)
+        d = ImageDraw.Draw(img)
+        d.rectangle((0, 0, size - 1, size - 1), outline=rgba(border, 255), width=1)
+        if inner:
+            d.rectangle((3, 3, size - 4, size - 4), outline=rgba(border, 90), width=1)
+        if corners:
+            for cx, cy in ((3, 3), (size - 4, 3), (3, size - 4), (size - 4, size - 4)):
+                d.polygon([(cx, cy - 3), (cx + 3, cy), (cx, cy + 3), (cx - 3, cy)], fill=rgba(BRASS, 200))
+        save(img, UI / name)
+    panel('panel.png', PANEL, 236, LINE)
+    panel('card.png', (40, 49, 47), 215, (74, 88, 84), inner=False, corners=False)
+    panel('panel_solid.png', (27, 33, 33), 255, LINE)
+
+    # thin light double rule with transparent centre (map frame, sections)
+    img = Image.new('RGBA', (128, 128), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    rough_rect(d, (3, 3, s - 4, s - 4), rgba(INK, 235), 3, 41)
-    rough_rect(d, (9, 9, s - 10, s - 10), rgba(INK, 190), 1, 42)
+    d.rectangle((2, 2, 125, 125), outline=rgba(LINE, 230), width=2)
+    d.rectangle((7, 7, 120, 120), outline=rgba(LINE, 120), width=1)
+    for cx, cy in ((7, 7), (120, 7), (7, 120), (120, 120)):
+        d.polygon([(cx, cy - 4), (cx + 4, cy), (cx, cy + 4), (cx - 4, cy)], fill=rgba(BRASS, 220))
     save(img, UI / 'frame_book.png')
 
-    # stage frame: wood band with gold hairline, transparent centre -----
-    s = 128
-    band = 12
+    s, band = 128, 12
     wood_tile = Image.open(UI / 'stage.png').crop((0, 0, s, s))
     mask = Image.new('L', (s, s), 0)
     ImageDraw.Draw(mask).rectangle((0, 0, s - 1, s - 1), fill=255)
@@ -293,114 +345,194 @@ def bake_ui():
     img = Image.new('RGBA', (s, s), (0, 0, 0, 0))
     img.paste(wood_tile, (0, 0), mask)
     d = ImageDraw.Draw(img)
-    d.rectangle((0, 0, s - 1, s - 1), outline=(24, 15, 10, 255), width=2)
-    d.rectangle((band - 3, band - 3, s - band + 2, s - band + 2), outline=rgba(GOLD, 230), width=1)
-    d.rectangle((band - 1, band - 1, s - band, s - band), outline=(20, 12, 8, 255), width=1)
+    d.rectangle((0, 0, s - 1, s - 1), outline=(14, 10, 8, 255), width=2)
+    d.rectangle((band - 3, band - 3, s - band + 2, s - band + 2), outline=rgba(BRASS, 230), width=1)
     save(img, UI / 'frame_stage.png')
 
-    # card: translucent light paper + hairline --------------------------
-    s = 64
-    base = paper_field(64, (248, 243, 230), 51, fibre=False)
-    base.putalpha(150)
-    d = ImageDraw.Draw(base)
-    d.rectangle((0, 0, s - 1, s - 1), outline=(168, 146, 108, 200), width=1)
-    save(base, UI / 'card.png')
-
-    # buttons -------------------------------------------------------------
-    def button(fill, border, name, inner=None, bottom=None, alpha=255, seed=61):
-        b = paper_field(64, fill, seed, fibre=False)
+    # buttons -------------------------------------------------------------------
+    def button(name, fill, border, top=None, bottom=None, alpha=255):
+        b = dark_field(64, 64, fill, 231 + len(name), wrap=False)
         b.putalpha(alpha)
         d = ImageDraw.Draw(b)
         d.rectangle((0, 0, 63, 63), outline=rgba(border, 255), width=1)
-        if inner:
-            d.line((1, 1, 62, 1), fill=inner, width=1)
+        if top:
+            d.line((1, 1, 62, 1), fill=top, width=1)
         if bottom:
             d.line((1, 62, 62, 62), fill=bottom, width=1)
         save(b, UI / name)
-    button((236, 226, 202), (168, 144, 104), 'btn.png', inner=(250, 245, 232, 160), bottom=(150, 126, 90, 255))
-    button((245, 236, 214), (110, 90, 62), 'btn_hover.png', inner=(255, 250, 240, 180), bottom=(110, 90, 62, 255))
-    button((218, 203, 172), (110, 90, 62), 'btn_active.png', bottom=(200, 186, 156, 255))
-    button(VERMILION, (92, 28, 20), 'btn_on.png', inner=(190, 100, 80, 160))
-    button((228, 220, 200), (190, 176, 148), 'btn_off.png', alpha=170)
+    button('btn.png', (42, 51, 49), (86, 101, 96), top=(120, 134, 128, 90), bottom=(14, 18, 18, 255))
+    button('btn_hover.png', (55, 66, 63), (150, 140, 110), top=(170, 170, 150, 110), bottom=(14, 18, 18, 255))
+    button('btn_active.png', (28, 34, 33), (150, 140, 110), top=(10, 12, 12, 255))
+    button('btn_on.png', RED, (90, 22, 16), top=rgba(BRASS, 170), bottom=(70, 18, 12, 255))
+    button('btn_off.png', (34, 40, 39), (60, 70, 67), alpha=200)
 
-    # page tabs: plain text, ink underline on hover ----------------------
     img = Image.new('RGBA', (64, 64), (0, 0, 0, 0))
-    ImageDraw.Draw(img).rectangle((4, 60, 59, 61), fill=rgba(INK, 140))
+    ImageDraw.Draw(img).rectangle((6, 59, 57, 60), fill=rgba(BRASS, 170))
     save(img, UI / 'tab_hover.png')
 
-    # list rows ------------------------------------------------------------
+    # vermilion brush swash for the selected tab (ragged ends, dry-brush streaks)
+    w, h = 256, 64
+    m = np.zeros((h, w))
+    yy, xx = np.mgrid[0:h, 0:w]
+    rng = np.random.default_rng(241)
+    top = 10 + noise((1, w), 6, 242)[0] * 6
+    bot = 54 - noise((1, w), 6, 243)[0] * 6
+    left = 6 + noise((h, 1), 3, 244)[:, 0] * 22
+    right = w - 6 - noise((h, 1), 3, 245)[:, 0] * 22
+    m = ((yy > top[None, :]) & (yy < bot[None, :]) & (xx > left[:, None]) & (xx < right[:, None])).astype(float)
+    streaks = noise((h, w), (0.6), 246)
+    streaks = ndimage.gaussian_filter(np.random.default_rng(247).random((h, w)), (0.5, 18))
+    streaks = (streaks - streaks.min()) / (streaks.max() - streaks.min())
+    m *= np.where(streaks > .78, .55, 1)
+    m = ndimage.gaussian_filter(m, .7)
+    col = np.dstack([np.full((h, w), c, float) for c in (150, 40, 30)]) + (noise((h, w), 4, 248)[..., None] - .5) * 40
+    save(from_array(col, m * 255), UI / 'tab_brush.png')
+
+    # list rows ------------------------------------------------------------------
     img = Image.new('RGBA', (64, 64), (0, 0, 0, 0))
-    ImageDraw.Draw(img).line((2, 63, 61, 63), fill=(150, 128, 92, 110), width=1)
+    ImageDraw.Draw(img).line((2, 63, 61, 63), fill=rgba(LINE, 120), width=1)
     save(img, UI / 'row.png')
-    img = Image.new('RGBA', (64, 64), (255, 250, 238, 120))
-    ImageDraw.Draw(img).line((2, 63, 61, 63), fill=(150, 128, 92, 140), width=1)
+    img = Image.new('RGBA', (64, 64), (255, 255, 255, 14))
+    ImageDraw.Draw(img).line((2, 63, 61, 63), fill=rgba(LINE, 160), width=1)
     save(img, UI / 'row_hover.png')
-    img = Image.new('RGBA', (64, 64), (226, 204, 178, 200))
+    img = Image.new('RGBA', (64, 64), (120, 36, 28, 120))
     d = ImageDraw.Draw(img)
-    d.rectangle((0, 0, 3, 63), fill=rgba(VERMILION, 255))
-    d.line((4, 63, 63, 63), fill=(150, 110, 80, 160), width=1)
+    d.rectangle((0, 0, 3, 63), fill=rgba(BRASS, 255))
+    d.line((4, 63, 63, 63), fill=rgba(LINE, 160), width=1)
     save(img, UI / 'row_on.png')
 
-    # text field -------------------------------------------------------------
-    img = Image.new('RGBA', (64, 64), (252, 248, 238, 235))
+    img = Image.new('RGBA', (64, 64), (18, 23, 23, 240))
     d = ImageDraw.Draw(img)
-    d.rectangle((0, 0, 63, 63), outline=(200, 186, 156, 255), width=1)
-    d.line((0, 62, 63, 62), fill=rgba(INK, 200), width=2)
+    d.rectangle((0, 0, 63, 63), outline=rgba(LINE, 255), width=1)
+    d.line((0, 62, 63, 62), fill=rgba(BRASS, 150), width=1)
     save(img, UI / 'field.png')
 
-    # seal: vermilion square with eroded edges ---------------------------
+    # seal -------------------------------------------------------------------------
     s = 128
     m = np.zeros((s, s))
     m[6:s - 6, 6:s - 6] = 1
-    erosion = noise((s, s), 1.4, 71)
     edge = ndimage.distance_transform_edt(m)
-    m = np.where(edge < 5, (erosion > .45 - edge * .06).astype(float), m)
+    m = np.where(edge < 5, (noise((s, s), 1.4, 71) > .45 - edge * .06).astype(float), m)
     m *= np.where(noise((s, s), 2.5, 72) > .86, .55, 1)
     m = ndimage.gaussian_filter(m, .6)
     rgb = np.dstack([np.full((s, s), c, float) for c in (152, 46, 32)]) + (noise((s, s), 3, 73)[..., None] - .5) * 30
     save(from_array(rgb, m * 255), UI / 'seal.png')
 
-    # scrollbar thumb ------------------------------------------------------
+    # scrollbars, sliders, toggles ---------------------------------------------------
     img = Image.new('RGBA', (16, 64), (0, 0, 0, 0))
-    ImageDraw.Draw(img).rounded_rectangle((5, 2, 10, 61), radius=3, fill=rgba(INK, 110))
+    ImageDraw.Draw(img).rounded_rectangle((5, 2, 10, 61), radius=3, fill=rgba(BRASS, 150))
     save(img, UI / 'scroll_thumb.png')
     img = Image.new('RGBA', (16, 64), (0, 0, 0, 0))
-    ImageDraw.Draw(img).line((7, 0, 7, 63), fill=rgba(INK, 40), width=1)
+    ImageDraw.Draw(img).line((7, 0, 7, 63), fill=rgba(LINE, 120), width=1)
     save(img, UI / 'scroll_track.png')
-
-    # slider ---------------------------------------------------------------
     img = Image.new('RGBA', (64, 16), (0, 0, 0, 0))
-    ImageDraw.Draw(img).line((0, 8, 63, 8), fill=rgba(INK, 120), width=2)
+    ImageDraw.Draw(img).line((0, 8, 63, 8), fill=rgba(LINE, 220), width=2)
     save(img, UI / 'slider_track.png')
     img = Image.new('RGBA', (32, 32), (0, 0, 0, 0))
-    d = ImageDraw.Draw(img)
-    d.ellipse((6, 6, 25, 25), fill=rgba(VERMILION), outline=(80, 24, 16, 255))
+    ImageDraw.Draw(img).ellipse((6, 6, 25, 25), fill=rgba(RED), outline=rgba(BRASS))
     save(img, UI / 'slider_thumb.png')
-
-    # toggle: 16x16, box in the top-left 14px so IMGUI's toggle border (15,0,15,0) keeps it square
     for name, on in (('toggle.png', False), ('toggle_on.png', True)):
         img = Image.new('RGBA', (16, 16), (0, 0, 0, 0))
         d = ImageDraw.Draw(img)
-        d.rectangle((1, 1, 13, 13), fill=(252, 248, 238, 255), outline=rgba(INK, 220), width=1)
+        d.rectangle((1, 1, 13, 13), fill=(18, 23, 23, 255), outline=rgba(LINE, 255), width=1)
         if on:
-            d.rectangle((4, 4, 10, 10), fill=rgba(VERMILION))
+            d.rectangle((4, 4, 10, 10), fill=rgba(BRASS))
         save(img, UI / name)
 
-    # stage curtain (戏 mode opening) ------------------------------------
+    # curtain + ornament ---------------------------------------------------------------
     w, h = 128, 256
-    x = np.arange(w) / w
-    folds = .5 + .5 * np.cos(x * math.pi * 2 * 3)
+    folds = .5 + .5 * np.cos(np.arange(w) / w * math.pi * 6)
     shade = folds[None, :] * 36 - 18 + (noise((h, w), 1, 81) - .5) * 6
-    cur = np.dstack([np.full((h, w), c, float) for c in (96, 28, 22)]) + shade[..., None]
-    save(from_array(cur), UI / 'curtain.png', wrap=True)
-
-    # ornament: small cloud scroll for headings ------------------------
+    save(from_array(np.dstack([np.full((h, w), c, float) for c in (96, 28, 22)]) + shade[..., None]), UI / 'curtain.png', wrap=True)
     img = Image.new('RGBA', (64, 32), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    d.arc((4, 6, 24, 26), 200, 520, fill=rgba(VERMILION, 230), width=2)
-    d.arc((10, 12, 20, 22), 0, 300, fill=rgba(VERMILION, 230), width=2)
-    d.line((24, 16, 60, 16), fill=rgba(VERMILION, 200), width=1)
+    d.arc((4, 6, 24, 26), 200, 520, fill=rgba(BRASS, 230), width=2)
+    d.arc((10, 12, 20, 22), 0, 300, fill=rgba(BRASS, 230), width=2)
+    d.line((24, 16, 60, 16), fill=rgba(BRASS, 200), width=1)
     save(img, UI / 'ornament.png')
+
+    # top bar: dark band, brass rule and a row of small diamonds at the bottom edge ---------
+    w, h = 512, 64
+    bar = dark_field(w, h, (17, 22, 22), 261, wrap=False)
+    g = np.linspace(1, .55, h)[:, None]
+    arr = np.array(bar).astype(float)
+    arr[..., 3] = 255 * np.clip(g * 1.0 + .2, 0, 1)
+    bar = from_array(arr[..., :3], arr[..., 3])
+    d = ImageDraw.Draw(bar)
+    d.line((0, h - 6, w, h - 6), fill=rgba(BRASS, 160), width=1)
+    d.line((0, h - 3, w, h - 3), fill=rgba(LINE, 120), width=1)
+    save(bar, UI / 'topbar.png', wrap=True)
+
+    # bottom bar: dark band with a raised central arch for the month dial -----------------
+    W2, H2 = 2048, 192
+    yy, xx = np.mgrid[0:H2, 0:W2]
+    arch = 64 - 40 * np.exp(-((xx - W2 / 2) / 330.0) ** 2)          # top edge of the band
+    wing = np.where(np.abs(xx - W2 / 2) < 900, 0, 0)
+    inside = yy > arch + wing
+    base = np.array(dark_field(W2, H2, (21, 27, 27), 271, swirls=60, wrap=False).convert('RGB'), float)
+    alpha = np.where(inside, 248, 0).astype(float)
+    alpha = ndimage.gaussian_filter(alpha, .8)
+    img = from_array(base, alpha)
+    d = ImageDraw.Draw(img)
+    pts = [(x, float(64 - 40 * math.exp(-((x - W2 / 2) / 330.0) ** 2))) for x in range(0, W2, 4)]
+    d.line(pts, fill=rgba(BRASS, 200), width=2)
+    d.line([(x, y + 6) for x, y in pts], fill=rgba(LINE, 140), width=1)
+    save(img, UI / 'bottombar.png')
+
+    # month dial: brass disc with a dark rim and an outer ornament ring -------------------
+    s = 256
+    yy, xx = np.mgrid[0:s, 0:s] - (s - 1) / 2
+    r = np.sqrt(xx ** 2 + yy ** 2) / (s / 2)
+    light = np.clip(1 - np.sqrt((xx + 30) ** 2 + (yy + 40) ** 2) / (s * .55), 0, 1)
+    disc = np.array([168, 120, 44.])[None, None] + (np.array([238, 206, 120.]) - np.array([168, 120, 44.]))[None, None] * light[..., None]
+    disc += (noise((s, s), 2.2, 281)[..., None] - .5) * 26
+    col = np.where((r < .80)[..., None], disc, np.array([22, 27, 27.])[None, None])
+    col = np.where(((r > .80) & (r < .84))[..., None], np.array(BRASS, float)[None, None], col)
+    col = np.where(((r > .93) & (r < .96))[..., None], np.array(BRASS, float)[None, None] * .8, col)
+    a = np.where(r < .98, 255, 0).astype(float)
+    save(from_array(col, ndimage.gaussian_filter(a, .7)), UI / 'moon.png')
+
+    # icon medallion and the big world/city toggle --------------------------------------
+    def medal(name, s, rim, fill, ring2=True):
+        yy, xx = np.mgrid[0:s, 0:s] - (s - 1) / 2
+        r = np.sqrt(xx ** 2 + yy ** 2) / (s / 2)
+        shade = np.clip(1.15 - r * .6 - yy / s * .5, .4, 1.2)
+        col = np.array(fill, float)[None, None] * shade[..., None]
+        col = np.where(((r > .86) & (r < .95))[..., None], np.array(rim, float)[None, None], col)
+        if ring2:
+            col = np.where(((r > .74) & (r < .77))[..., None], np.array(rim, float)[None, None] * .7, col)
+        a = np.where(r < .96, 245, 0).astype(float)
+        save(from_array(col, ndimage.gaussian_filter(a, .7)), UI / name)
+    medal('medallion.png', 128, BRASS, (40, 50, 48))
+    medal('medallion_on.png', 128, BRASS, (120, 36, 28))
+    medal('globe.png', 256, BRASS, (34, 44, 42))
+
+    # portrait ring: jade ring, outside filled with the screen background colour ---------
+    s = 256
+    yy, xx = np.mgrid[0:s, 0:s] - (s - 1) / 2
+    r = np.sqrt(xx ** 2 + yy ** 2) / (s / 2)
+    col = np.zeros((s, s, 3)) + np.array(BG, float)[None, None]
+    col = np.where(((r > .86) & (r < .93))[..., None], np.array(JADE, float)[None, None], col)
+    col = np.where(((r > .93) & (r < .95))[..., None], np.array(BRASS, float)[None, None] * .8, col)
+    a = np.where(r > .86, 255, 0).astype(float)
+    save(from_array(col, ndimage.gaussian_filter(a, .6)), UI / 'ring_portrait.png')
+
+    # close button (crossed brushes) -------------------------------------------------
+    img = Image.new('RGBA', (256, 256), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    for a1, a2 in (((40, 40), (216, 216)), ((216, 40), (40, 216))):
+        d.line((a1, a2), fill=rgba(TEXT, 235), width=14)
+    for cx, cy in ((128, 30), (128, 226), (30, 128), (226, 128)):
+        d.polygon([(cx, cy - 14), (cx + 14, cy), (cx, cy + 14), (cx - 14, cy)], fill=rgba(TEXT, 200))
+    save(img.resize((64, 64), Image.LANCZOS), UI / 'close.png')
+
+    # map label plate --------------------------------------------------------------------
+    img = Image.new('RGBA', (32, 32), (18, 23, 23, 200))
+    ImageDraw.Draw(img).rectangle((0, 0, 31, 31), outline=rgba(LINE, 220), width=1)
+    save(img, UI / 'tag.png')
+    img = Image.new('RGBA', (32, 32), (120, 36, 28, 230))
+    ImageDraw.Draw(img).rectangle((0, 0, 31, 31), outline=rgba(BRASS, 255), width=1)
+    save(img, UI / 'tag_on.png')
 
 
 # ---------------------------------------------------------------- atlas

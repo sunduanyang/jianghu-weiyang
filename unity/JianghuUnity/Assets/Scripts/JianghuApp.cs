@@ -17,7 +17,7 @@ public partial class JianghuApp : MonoBehaviour {
     GUIStyle title, sub, small, text, heading, chip, selected, card, field, seal;
     Texture2D portraits, valley;
     readonly Dictionary<string,bool> folds=new Dictionary<string,bool>();
-    readonly Color ink=new Color(.17f,.22f,.20f), paper=new Color(.94f,.92f,.85f), green=new Color(.25f,.36f,.29f), gold=new Color(.68f,.49f,.27f);
+    readonly Color ink=new Color(.89f,.85f,.77f), paper=new Color(.094f,.118f,.118f), green=new Color(.25f,.36f,.29f), gold=new Color(.68f,.49f,.27f);
     public J W=>Client.World;
     public J Hero=>W["hero"];
     public bool Paused=>!W["autoplay"].B && W["job"]["remaining"].I==0 && !W["battle_active"].B;
@@ -38,64 +38,86 @@ public partial class JianghuApp : MonoBehaviour {
     public void OnGUI(){
         InitSkin();GUI.skin=skin;
         float scale=Mathf.Min(Screen.width/1680f,Screen.height/960f);GUI.matrix=Matrix4x4.TRS(new Vector3((Screen.width-1680*scale)/2,(Screen.height-960*scale)/2,0),Quaternion.identity,new Vector3(scale,scale,1));
-        Paper(new Rect(0,0,1680,960),"paper");
-        DrawHeader();DrawTabs();
-        if(!Client.Ready){Rect wait=new Rect(400,280,880,340);BookPanel(wait);GUILayout.BeginArea(new Rect(440,316,800,280));H("山河正在展开");T(string.IsNullOrEmpty(Client.Error)?Client.Status:Client.Error);T("首次启动会将原世界副本放入 Unity 的独立存档目录。",small);if(!string.IsNullOrEmpty(Client.Error)&&GUILayout.Button("打开日志目录"))Application.OpenURL(Client.SaveDir);GUILayout.EndArea();return;}
-        Rect strip=new Rect(18,163,1644,52);Paper(strip,"paper_light");Frame(strip,"card",6);Fill(new Rect(strip.x,strip.yMax-2,strip.width,2),new Color(.56f,.19f,.13f,.55f));
-        GUILayout.BeginArea(new Rect(30,170,1620,40));GUILayout.BeginHorizontal();
-        T(W["date"].S+"  /  "+(W["battle_active"].B?"切磋进行中":W["autoplay"].B?"自行演化":W["job"]["remaining"].I>0?"推演中 · 余"+W["job"]["remaining"].S+"月":"江湖已暂停"),sub);
-        GUILayout.FlexibleSpace();GUI.enabled=!Client.Busy;
-        if(Btn("结束本月",Paused&&Hero["created"].B))HeroAction("end_turn");
-        if(Btn("一月",!W["battle_active"].B))Control("advance",1);if(Btn("一年",!W["battle_active"].B))Control("advance",12);if(Btn("十年",!W["battle_active"].B))Control("advance",120);if(Btn("五十年",!W["battle_active"].B))Control("advance",600);
-        if(Btn("自行演化",!W["battle_active"].B))Control("auto");if(Btn("暂停"))Control("pause");if(Btn("保存"))Client.Act("/api/save",J.O());GUI.enabled=true;
-        GUILayout.EndHorizontal();GUILayout.EndArea();
-        Rect center=new Rect(276,225,1010,693);
-        BookPanel(new Rect(18,225,246,693));BookPanel(new Rect(1298,225,364,693));
-        if(IsStagePage(Page))StagePanel(center);else BookPanel(center);
-        DrawRoster();DrawPerson();
-        GUILayout.BeginArea(new Rect(291,239,980,665));
-        switch(Page){case 0:DrawAtlas();break;case 1:DrawCity();break;case 2:DrawInventory();break;case 3:DrawMartial();break;case 4:DrawInstitutions();break;case 5:DrawPuppets();break;case 6:DrawEvents();break;case 7:DrawAI();break;case 8:DrawSettings();break;}
-        GUILayout.EndArea();
-        DrawTransition(center);
-        Fill(new Rect(18,925,1644,1),hairline);
-        GUI.Label(new Rect(23,929,1630,26),!string.IsNullOrEmpty(Client.Error)?"提示："+Client.Error:Client.Busy?"正在结算，请稍候…":Client.Status+"   /   每月自动存档 · "+(W["ai"]["config"]["enabled"].B?"本地模型已启用":"规则世界"),small);
+        Rect screen=new Rect(0,0,1680,960);
+        if(!Client.Ready){Tile(screen,"bg");Tex(screen,"vignette");Rect wait=new Rect(400,300,880,300);Panel(wait);GUILayout.BeginArea(new Rect(440,330,800,250));H("山河正在展开");T(string.IsNullOrEmpty(Client.Error)?Client.Status:Client.Error);T("首次启动会将原世界副本放入 Unity 的独立存档目录。",small);if(!string.IsNullOrEmpty(Client.Error)&&GUILayout.Button("打开日志目录"))Application.OpenURL(Client.SaveDir);GUILayout.EndArea();return;}
+        if(dialogueOpen&&Person.Has){DrawDialogue();DrawTransition(screen);return;}
+        if(personScreen){DrawPersonScreen();DrawTransition(screen);return;}
+        if(Page==3&&battleView){DrawBattleScreen();DrawTransition(screen);return;}
+        if(!IsStagePage(Page)){
+            Rect body=BookScreen(Pages[Page]);
+            Rect area=Page==5?new Rect(200,118,1280,760):new Rect(260,118,1160,760);
+            GUILayout.BeginArea(area);
+            switch(Page){case 2:DrawInventory();break;case 3:DrawMartial();break;case 4:DrawInstitutions();break;case 5:DrawPuppets();break;case 6:DrawEvents();break;case 7:DrawAI();break;case 8:DrawSettings();break;}
+            GUILayout.EndArea();DrawTransition(screen);return;
+        }
+        // 戏: full-screen map or city, with floating panels
+        basePage=Page;
+        if(Page==0)DrawWorld(screen);else DrawCityScreen(screen);
+        Tex(screen,"vignette");
+        DrawTopBar();if(Page==0)DrawLayerRow();
+        DrawRoster();DrawTracker();
+        if(Page==0)DrawPlaceCard();else DrawNodeCard();
+        DrawDock();DrawHeroCreation();DrawAdvance();
+        DrawTransition(screen);
     }
     public void Go(int page){BeginTransition(page);Page=page;mainScroll=Vector2.zero;ReloadPage();}
     public void ReloadPage(){if(!Client.Ready)return;switch(Page){case 1:LoadCity(SelectedPlace);break;case 2:LoadInventory();break;case 3:Client.Fetch("/api/martial",j=>Martial=j);break;case 6:Client.Fetch("/api/events",j=>Events=j);break;case 7:Client.Fetch("/api/ai/logs",j=>Logs=j);break;}}
-    public void SelectPerson(int id){SelectedPerson=id;Client.Fetch("/api/npc/"+id,j=>Person=j);}
+    public void SelectPerson(int id){SelectedPerson=id;RememberPerson(id);Client.Fetch("/api/npc/"+id,j=>Person=j);}
     public void HeroAction(string action,params object[] extra){Client.Act("/api/hero",Client.HeroBody(action,extra),j=>{Client.StartCoroutine(AfterHero());});}
     System.Collections.IEnumerator AfterHero(){yield return null;yield return Client.Refresh();if(Page==1)LoadCity(Hero["place"].I);}
     void Control(string action,int months=1){Client.Act("/api/control",J.O("action",action,"months",months,"fast",fastMode));}
+    string rosterMode="人物";
     void DrawRoster(){
-        GUILayout.BeginArea(new Rect(32,240,218,664));H("江湖中人");query=GUILayout.TextField(query,field);GUILayout.BeginHorizontal();showFilters=GUILayout.Toggle(showFilters,"筛选");includeDead=GUILayout.Toggle(includeDead,"故人");GUILayout.EndHorizontal();
-        if(showFilters){countryFilter=Cycle(countryFilter,new[]{"全部势力"}.Concat(W["countries"].A.Select(x=>x["name"].S)).ToArray());placeFilter=Cycle(placeFilter,new[]{"全部城镇"}.Concat(W["locations"].A.Select(x=>x["name"].S)).ToArray());factionFilter=Cycle(factionFilter,new[]{"全部门派"}.Concat(W["factions"].A.Select(x=>x["name"].S)).ToArray());circuitFilter=Cycle(circuitFilter,new[]{"全部州路"}.Concat(W["locations"].A.Select(x=>x["region"].S).Distinct()).ToArray());jobFilter=Cycle(jobFilter,new[]{"百业"}.Concat(W["professions"].D.Keys).ToArray());gradeFilter=Cycle(gradeFilter,new[]{"全部品级"}.Concat(W["identity_grades"].D.Keys).ToArray());rosterSort=Cycle(rosterSort,new[]{"乡籍","财富","武学","年岁","身份"});}
-        var people=W["npcs"].A.Where(n=>(includeDead||n["alive"].B)&&(string.IsNullOrEmpty(query)||n["name"].S.Contains(query)||n["job"].S.Contains(query))&&(placeFilter=="全部城镇"||Place(n["place"].I)["name"].S==placeFilter)&&(countryFilter=="全部势力"||Country(Place(n["place"].I)["country"].I)["name"].S==countryFilter)&&(factionFilter=="全部门派"||W["factions"].A.Any(f=>f["id"].I==n["faction"].I&&n["faction"].Has&&f["name"].S==factionFilter))&&(jobFilter=="百业"||n["job"].S==jobFilter)&&(gradeFilter=="全部品级"||n["identity"]["grade_label"].S==gradeFilter)&&(circuitFilter=="全部州路"||Place(n["place"].I)["region"].S==circuitFilter));
-        if(rosterSort!="乡籍")people=people.OrderByDescending(n=>rosterSort=="财富"?n["wealth"].N:rosterSort=="武学"?n["skill"].N:rosterSort=="年岁"?n["age_months"].N:-n["identity"]["grade"].N);
-        var rows=people.ToList();T(rows.Count+"人  ·  点击查阅一生",small);
-        rosterScroll=GUILayout.BeginScrollView(rosterScroll);foreach(var n in rows){if(GUILayout.Button(n["name"].S+"   "+(n["age_months"].I/12)+"岁\n"+n["identity"]["title"].S+" · "+Place(n["place"].I)["name"].S,n["id"].I==SelectedPerson?rowOnStyle:rowStyle,GUILayout.MinHeight(54)))SelectPerson(n["id"].I);}GUILayout.EndScrollView();GUILayout.EndArea();
+        Rect lp=LeftPanel;
+        if(!rosterOpen){Panel(lp);if(GUI.Button(lp,"›",linkStyle))rosterOpen=true;return;}
+        Panel(lp);
+        GUILayout.BeginArea(new Rect(lp.x+10,lp.y+8,lp.width-20,lp.height-14));
+        GUILayout.BeginHorizontal();foreach(string m in new[]{"人物","此地","地区"})if(GUILayout.Button(m,rosterMode==m?selected:chip))rosterMode=m;GUILayout.FlexibleSpace();if(GUILayout.Button("‹",linkStyle,GUILayout.Width(24)))rosterOpen=false;GUILayout.EndHorizontal();
+        if(rosterMode=="地区"){
+            rosterScroll=GUILayout.BeginScrollView(rosterScroll);
+            foreach(var c in W["countries"].A){var towns=W["locations"].A.Where(x=>x["country"].I==c["id"].I).ToList();if(towns.Count==0)continue;
+                GUILayout.BeginHorizontal();Rect sw=GUILayoutUtility.GetRect(10,22,GUILayout.Width(10));Fill(new Rect(sw.x,sw.y+6,8,10),Hex(c["color"].S));GUILayout.Label(c["name"].S+"  "+towns.Count+"城",sub);GUILayout.EndHorizontal();
+                foreach(var t in towns)if(GUILayout.Button(t["name"].S+"   "+t["population"].S+"人",t["id"].I==SelectedPlace?rowOnStyle:rowStyle)){SelectedPlace=t["id"].I;campaignOptions=new J();mapPan=new Vector2(640-(float)t["x"].N,380-(float)t["y"].N);if(mapZoom<1.4f)mapZoom=1.4f;if(Page==1)LoadCity(SelectedPlace);}
+            }
+            GUILayout.EndScrollView();GUILayout.EndArea();return;
+        }
+        query=GUILayout.TextField(query,field);
+        IEnumerable<J> people;
+        if(rosterMode=="此地"){people=W["npcs"].A.Where(n=>n["alive"].B&&n["place"].I==SelectedPlace&&(string.IsNullOrEmpty(query)||n["name"].S.Contains(query)||n["job"].S.Contains(query)));GUILayout.Label(Place(SelectedPlace)["name"].S+" · 此地中人",small);}
+        else{
+            GUILayout.BeginHorizontal();showFilters=GUILayout.Toggle(showFilters,"筛选");includeDead=GUILayout.Toggle(includeDead,"故人");GUILayout.EndHorizontal();
+            if(showFilters){countryFilter=Cycle(countryFilter,new[]{"全部势力"}.Concat(W["countries"].A.Select(x=>x["name"].S)).ToArray());placeFilter=Cycle(placeFilter,new[]{"全部城镇"}.Concat(W["locations"].A.Select(x=>x["name"].S)).ToArray());factionFilter=Cycle(factionFilter,new[]{"全部门派"}.Concat(W["factions"].A.Select(x=>x["name"].S)).ToArray());circuitFilter=Cycle(circuitFilter,new[]{"全部州路"}.Concat(W["locations"].A.Select(x=>x["region"].S).Distinct()).ToArray());jobFilter=Cycle(jobFilter,new[]{"百业"}.Concat(W["professions"].D.Keys).ToArray());gradeFilter=Cycle(gradeFilter,new[]{"全部品级"}.Concat(W["identity_grades"].D.Keys).ToArray());rosterSort=Cycle(rosterSort,new[]{"乡籍","财富","武学","年岁","身份"});}
+            people=W["npcs"].A.Where(n=>(includeDead||n["alive"].B)&&(string.IsNullOrEmpty(query)||n["name"].S.Contains(query)||n["job"].S.Contains(query))&&(placeFilter=="全部城镇"||Place(n["place"].I)["name"].S==placeFilter)&&(countryFilter=="全部势力"||Country(Place(n["place"].I)["country"].I)["name"].S==countryFilter)&&(factionFilter=="全部门派"||W["factions"].A.Any(f=>f["id"].I==n["faction"].I&&n["faction"].Has&&f["name"].S==factionFilter))&&(jobFilter=="百业"||n["job"].S==jobFilter)&&(gradeFilter=="全部品级"||n["identity"]["grade_label"].S==gradeFilter)&&(circuitFilter=="全部州路"||Place(n["place"].I)["region"].S==circuitFilter));
+            if(rosterSort!="乡籍")people=people.OrderByDescending(n=>rosterSort=="财富"?n["wealth"].N:rosterSort=="武学"?n["skill"].N:rosterSort=="年岁"?n["age_months"].N:-n["identity"]["grade"].N);
+        }
+        var rows=people.ToList();GUILayout.Label(rows.Count+"人  ·  点击查阅一生",small);
+        rosterScroll=GUILayout.BeginScrollView(rosterScroll);
+        int first=Mathf.Max(0,(int)(rosterScroll.y/60)-2),last=Mathf.Min(rows.Count,first+16);
+        GUILayout.Space(first*60);
+        for(int k=first;k<last;k++){var n=rows[k];
+            Rect rr=GUILayoutUtility.GetRect(200,60,GUILayout.ExpandWidth(true));
+            if(GUI.Button(rr,GUIContent.none,n["id"].I==SelectedPerson?rowOnStyle:rowStyle)){SelectPerson(n["id"].I);OpenPersonScreen();}
+            Portrait(new Rect(rr.x+6,rr.y+6,38,48),n["id"].I,n["sex"].S,n["age_months"].I,!n["alive"].B);
+            GUI.Label(new Rect(rr.x+52,rr.y+6,rr.width-56,24),n["name"].S+"   "+(n["age_months"].I/12)+"岁",sub);
+            GUI.Label(new Rect(rr.x+52,rr.y+31,rr.width-56,22),n["identity"]["title"].S+" · "+Place(n["place"].I)["name"].S,small);
+        }
+        GUILayout.Space(Mathf.Max(0,rows.Count-last)*60);
+        GUILayout.EndScrollView();GUILayout.EndArea();
     }
-    void DrawPerson(){
-        GUILayout.BeginArea(new Rect(1312,240,336,664));
-        if(!Person.Has){H("择一人，观其一生");T("看他为何远行，为何结怨，\n又为何在多年之后改变心意。",small);GUILayout.EndArea();return;}
-        GUILayout.BeginHorizontal();if(portraits!=null){Rect pr=GUILayoutUtility.GetRect(60,76,GUILayout.Width(60));bool female=Person["sex"].S=="女";int years=Person["age_months"].I/12;int idx=years<16?(female?5:4):years>=60?(female?3:2):Person["id"].I%3==0?(female?7:6):(female?1:0);GUI.DrawTextureWithTexCoords(pr,portraits,new Rect((idx%4)/4f,(1-idx/4)/2f,.25f,.5f));Outline(pr,new Color(.17f,.14f,.11f,.75f));Outline(new Rect(pr.x-3,pr.y-3,pr.width+6,pr.height+6),new Color(.17f,.14f,.11f,.35f));}GUILayout.BeginVertical();H(Person["name"].S);T(Person["sex"].S+" · "+Person["age_months"].I/12+"岁 · "+(Person["alive"].B?"在世":"已故"));T(Place(Person["place"].I)["name"].S,small);GUILayout.EndVertical();GUILayout.EndHorizontal();
-        personTab=GUILayout.SelectionGrid(personTab,new[]{"此刻","心性","身份","物品","关系","门中","武学","年谱"},4,chip);
-        personScroll=GUILayout.BeginScrollView(personScroll);
+    void DrawPersonTab(){
         switch(personTab){
             case 0:Metric("家资",Num(Person["wealth"])+"银");Bar("体力",Person["health"].N,100);Bar("武学",Person["skill"].N,100);Metric("声望",Num(Person["reputation"]));T(Person["goal"]["title"].S,sub);T(Person["last_action"]["label"].S);Details("本月四周行程",Person["monthly_actions"]);Details("生活近况",J.O("illness",Person["illness"],"wound",Person["wound"],"pregnancy",Person["pregnancy"],"plan",Person["plan"]));break;
             case 1:Details("稳定心性",Person["traits"],true);Details("当前情绪",Person["mood"],true);Details("世界信念",Person["beliefs"],true);Details("心中所欲",Person["desires"],true);Metric("压力",Num(Person["pressure"]));Metric("孤独",Num(Person["loneliness"]));Details("长远心愿",Person["goal"],true);Details("心性变化",Person["personality_changes"]);Details("记忆与理解",Person["memories"]);break;
             case 2:Details("身份与营生",Person["identity"],true);Details("各业本领",Person["career_view"],true);Details("可学营生",Person["career_options"]);Details("旧业履历",Person["career"]);break;
-            case 3:T(Person["possessions"]["items"].A.Count+"件物品 · "+Num(Person["possessions"]["weight"])+"斤");foreach(var item in Person["possessions"]["items"].A){T(item["name"].S+(item["equipped"].B?" · 已装备":""),sub);T(item["description"].S,small);T("耐久 "+item["durability"].S+" · "+item["origin"].S,small);}if(Btn("从我的行囊赠物")){giftTarget=SelectedPerson;Go(2);}break;
+            case 3:T(Person["possessions"]["items"].A.Count+"件物品 · "+Num(Person["possessions"]["weight"])+"斤");foreach(var item in Person["possessions"]["items"].A){T(item["name"].S+(item["equipped"].B?" · 已装备":""),sub);T(item["description"].S,small);T("耐久 "+item["durability"].S+" · "+item["origin"].S,small);}if(Btn("从我的行囊赠物")){giftTarget=SelectedPerson;personScreen=false;Go(2);}break;
             case 4:relationQuery=GUILayout.TextField(relationQuery);relationFilter=Cycle(relationFilter,new[]{"全部","朋友","义亲","仇怨","故人"});foreach(var r in Person["relations_view"].A.Where(r=>r["name"].S.Contains(relationQuery)&&(relationFilter=="全部"||(relationFilter=="朋友"&&r["affinity"].N>20)||(relationFilter=="义亲"&&r["sworn"].B)||(relationFilter=="仇怨"&&r["affinity"].N<0)||(relationFilter=="故人"&&!r["alive"].B)))){if(GUILayout.Button(r["name"].S+" · "+r["label"].S+"\n情分 "+Num(r["affinity"])+" / 信任 "+Num(r["trust"]),rowStyle))SelectPerson(r["other"].I);}Details("与过客交情",Person["player_relation"],true);break;
             case 5:Details("门中身份",Person["membership_view"],true);if(Person["faction"].Has&&Btn("查看所属门派"))OpenInstitution(false,Person["faction"].I);Details("离合履历",Person["membership_history"]);break;
             case 6:DrawArtList(Person["martial_view"]["arts"],false);break;
             case 7:DrawEventList(Person["history"]);if(Btn("更早年谱")&&Person["history"].A.Count>0)Client.Fetch("/api/events?npc="+SelectedPerson+"&before="+Person["history"].A.Last()["id"].S,j=>Person["history"]=new J(Person["history"].A.Concat(j.A).ToList()));break;
         }
-        GUILayout.Space(10);T("以过客之身介入",sub);GUILayout.BeginHorizontal();if(Btn("拜访"))Intervene("visit");if(Btn("赠银10"))Intervene("gift");if(Btn("切磋",Paused&&Person["alive"].B))Intervene("challenge");GUILayout.EndHorizontal();
-        talk=GUILayout.TextField(talk);if(Btn("交谈",talk.Length>0))Intervene("talk");if(Btn("请其反思",W["ai"]["config"]["enabled"].B))Client.Act("/api/ai/review",J.O("npc_id",SelectedPerson));
-        GUILayout.EndScrollView();GUILayout.EndArea();
     }
-    void Intervene(string action){Client.Act("/api/intervene",J.O("action",action,"npc_id",SelectedPerson,"text",talk),j=>{if(action=="challenge"){Martial=j;Page=3;battleView=true;}else{Client.Status=j["reply"].S;SelectPerson(SelectedPerson);}});}
-    public void OpenEvent(int id){Page=6;Client.Fetch("/api/event/"+id,j=>EventDetail=j);}
+    void Intervene(string action){Client.Act("/api/intervene",J.O("action",action,"npc_id",SelectedPerson,"text",talk),j=>{if(action=="challenge"){Martial=j;Page=3;battleView=true;personScreen=false;dialogueOpen=false;}else{Client.Status=j["reply"].S;dialogueText=j["reply"].S;if(action=="talk")talk="";SelectPerson(SelectedPerson);}});}
+    public void OpenEvent(int id){personScreen=false;dialogueOpen=false;Page=6;Client.Fetch("/api/event/"+id,j=>EventDetail=j);}
     void DrawEventList(J list){foreach(var e in list.A){if(GUILayout.Button(e["date"].S+"  "+e["summary"].S,rowStyle))OpenEvent(e["id"].I);}}
     public J Place(int id)=>W["places"].A.FirstOrDefault(p=>p["id"].I==id)??new J();
     public J Country(int id)=>W["countries"].A.FirstOrDefault(p=>p["id"].I==id)??new J();

@@ -70,6 +70,28 @@ public partial class JianghuApp {
             int sx=Mathf.Clamp((int)((lx-bx)/bw*texture.width),0,texture.width-1),sy=Mathf.Clamp(texture.height-1-(int)((ly-by)/bh*texture.height),0,texture.height-1);Color32 s=pixels[sy*texture.width+sx];if(s.a==0)continue;int at=(619-y)*900+x;Color32 d=puppetCanvas[at];float sa=s.a/255f*opacity,da=d.a/255f,oa=sa+da*(1-sa);if(oa<=0)continue;float tail=da*(1-sa);puppetCanvas[at]=new Color32((byte)((s.r*sa+d.r*tail)/oa),(byte)((s.g*sa+d.g*tail)/oa),(byte)((s.b*sa+d.b*tail)/oa),(byte)(oa*255));
         }
     }
+    readonly Dictionary<string,Texture2D> puppetSnapshots=new Dictionary<string,Texture2D>();
+    // Renders a whole puppet (one identity for every slot) into its own cached texture, for the dock and the duel stage.
+    Texture2D PuppetSnapshot(string type,string facing,string expression,string pose,float step){
+        if(!puppetIndex.Has){puppetIndex=J.Parse(Resources.Load<TextAsset>("Puppets/index").text);LoadPuppet();}
+        string key=type+"|"+facing+"|"+expression+"|"+pose+"|"+Mathf.RoundToInt(step);
+        if(puppetSnapshots.TryGetValue(key,out var cached))return cached;
+        if(Event.current==null||Event.current.type!=EventType.Repaint||!puppetIndex["states"][type+"-"+facing+"-"+expression].Has)return null;
+        string head=puppetHead,upper=puppetUpper,lower=puppetLower,waist=puppetWaist,face=puppetFacing,mood=puppetExpression,stance=puppetPose;bool animate=puppetAnimate;float wear=puppetWear;var canvas=puppetCanvas;
+        puppetHead=puppetUpper=puppetLower=puppetWaist=type;puppetFacing=facing;puppetExpression=expression;puppetPose=pose;puppetAnimate=false;puppetWear=0;puppetCanvas=new Color32[900*620];
+        try{
+            foreach(var piece in Pieces(Geometry(step))){var part=Part(piece.slot);RasterPart(piece,part,part["base"].S,1);}
+            var texture=new Texture2D(900,620,TextureFormat.RGBA32,false){filterMode=FilterMode.Bilinear};texture.SetPixels32(puppetCanvas);texture.Apply(false);
+            puppetSnapshots[key]=texture;cached=texture;
+        } finally {
+            puppetHead=head;puppetUpper=upper;puppetLower=lower;puppetWaist=waist;puppetFacing=face;puppetExpression=mood;puppetPose=stance;puppetAnimate=animate;puppetWear=wear;puppetCanvas=canvas;
+        }
+        return cached;
+    }
+    void DrawPuppetFigure(Rect r,string type,string facing,string expression,string pose,float step,Color tint){
+        var t=PuppetSnapshot(type,facing,expression,pose,step);if(t==null)return;var old=GUI.color;GUI.color=tint;GUI.DrawTexture(r,t,ScaleMode.ScaleToFit);GUI.color=old;
+    }
+    string PuppetTypeFor(string sex,int ageMonths)=>ageMonths>=55*12?"daoist":sex=="女"?"escort":"traveller";
     void SavePuppet(){var j=J.O("head",puppetHead,"upper",puppetUpper,"lower",puppetLower,"waist",puppetWaist,"facing",puppetFacing,"expression",puppetExpression,"pose",puppetPose,"step",puppetStep,"wear",puppetWear,"joints",puppetJoints);PlayerPrefs.SetString("jianghu.puppet.v3",j.ToString());PlayerPrefs.Save();Client.Status="皮影搭配已保存";}
     void LoadPuppet(){if(puppetLoaded)return;puppetLoaded=true;try{var j=J.Parse(PlayerPrefs.GetString("jianghu.puppet.v3","{}"));if(!j["head"].Has)return;puppetHead=j["head"].S;puppetUpper=j["upper"].S;puppetLower=j["lower"].S;puppetWaist=j["waist"].S;puppetFacing=j["facing"].S;puppetExpression=j["expression"].S;puppetPose=j["pose"].S;puppetStep=(float)j["step"].N;puppetWear=(float)j["wear"].N;puppetJoints=j["joints"].B;}catch{}}
     void ExportPuppet(){var b=new StringBuilder("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-450 -330 900 620\">");foreach(var p in Pieces(Geometry(puppetStep))){J part=Part(p.slot);b.Append("<g transform=\"translate(").Append(p.point.x.ToString("0.#####",CultureInfo.InvariantCulture)).Append(' ').Append(p.point.y.ToString("0.#####",CultureInfo.InvariantCulture)).Append(") rotate(").Append(p.angle.ToString("0.#####",CultureInfo.InvariantCulture)).Append(")\">").Append(part["svg"].S);if(puppetWear>0)b.Append("<g opacity=\"").Append((puppetWear/100).ToString("0.###",CultureInfo.InvariantCulture)).Append("\">").Append(part[puppetWear>35?"wearHigh":"wearLow"].S).Append("</g>");b.Append("</g>");}b.Append("</svg>");string path=Path.Combine(Client.SaveDir,"puppet-"+DateTime.Now.ToString("yyyyMMdd-HHmmss")+".svg");File.WriteAllText(path,b.ToString());Client.Status="皮影已导出："+path;}

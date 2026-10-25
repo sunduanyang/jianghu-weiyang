@@ -56,7 +56,7 @@ public partial class JianghuApp {
         else if(b["event_id"].Has&&Btn("查看此战年谱"))OpenEvent(b["event_id"].I);
         T("拆招记录",sub);foreach(var row in b["log"].A.AsEnumerable().Reverse())T(row["round"].S+"合 · "+(row["side"].I==0?"我":"客")+" · "+row["text"].S,small);
     }
-    public void OpenInstitution(bool country,int id){Page=4;institutionKind=country?"政权":"门派";Client.Fetch("/api/"+(country?"country/":"faction/")+id,j=>Institution=j);}
+    public void OpenInstitution(bool country,int id){personScreen=false;dialogueOpen=false;Page=4;institutionKind=country?"政权":"门派";Client.Fetch("/api/"+(country?"country/":"faction/")+id,j=>Institution=j);}
     void DrawInstitutions(){
         GUILayout.BeginHorizontal();H("天下势力簿");institutionKind=Cycle(institutionKind,new[]{"政权","门派"});institutionQuery=GUILayout.TextField(institutionQuery);GUILayout.EndHorizontal();
         GUILayout.BeginHorizontal();GUILayout.BeginVertical(GUILayout.Width(275));itemScroll=GUILayout.BeginScrollView(itemScroll);foreach(var f in W[institutionKind=="政权"?"countries":"factions"].A.Where(f=>f["name"].S.Contains(institutionQuery))){if(GUILayout.Button(f["name"].S+"\n"+(institutionKind=="政权"?f["population"].S+"人 · "+f["settlements"].S+"城":"成员"+f["members"].S+"人 · 库银"+Num(f["fund"])),rowStyle))OpenInstitution(institutionKind=="政权",f["id"].I);}GUILayout.EndScrollView();GUILayout.EndVertical();
