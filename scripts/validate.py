@@ -44,6 +44,14 @@ def probe(population, months, seed, durable):
     office_errors=sum(not w.npcs[i]['alive'] or w.npcs[i]['office'] != office or
                       w.npcs[i]['office_country'] != g['country']
                       for g in w.governments for office, i in g['offices'].items() if i)
+    faction_treasury_errors=sum(f['fund'] < -.0001 or abs(f['fund']-f['opening_fund']-f['revenue']+f['expenses']) > .001
+                               for f in w.factions)
+    faction_leader_errors=sum(not w.npcs[f['leader']]['alive'] or w.npcs[f['leader']]['faction'] != f['id']
+                              for f in w.factions if f['leader'])
+    diplomacy_errors=sum(w.countries[int(other)]['relations'].get(str(c['id'])) != status
+                         for c in w.countries for other,status in c['relations'].items())
+    sworn_errors=sum(not w.npcs[int(other)]['relationships'].get(str(n['id']),{}).get('sworn')
+                     for n in w.npcs.values() for other,r in n['relationships'].items() if r.get('sworn'))
     held=[]; ownership_errors=0
     for owner in ['player','market','government']+list(w.npcs):
         actor=items.actor(w,owner)
@@ -69,6 +77,8 @@ def probe(population, months, seed, durable):
                    'marriage_errors':marriage_errors,'treasury_errors':treasury_errors,
                    'office_errors':office_errors,'database':str(path)})
     result.update(item_ownership_errors=ownership_errors, schedule_errors=schedule_errors,
+                  faction_treasury_errors=faction_treasury_errors, faction_leader_errors=faction_leader_errors,
+                  diplomacy_errors=diplomacy_errors, sworn_errors=sworn_errors,
                   active_items=len(w.items['objects']), real_model_calls=0)
     w.store.close()
     return result

@@ -4,13 +4,31 @@ from . import social
 from .atlas import PLACES, COUNTRIES
 
 OFFICES = ['县令', '捕头', '主簿']
+POLICIES = {
+    'balanced': {'name': '均衡施政', 'description': '按长官秉性议税，巡防与公医并重。', 'security_share': .5, 'relief': 4},
+    'relief': {'name': '安民轻赋', 'description': '税率6%，优先缓解民困，每次救济5银。', 'security_share': .35, 'relief': 5},
+    'security': {'name': '巡防肃盗', 'description': '税率11%，七成公共维护经费用于巡防。', 'security_share': .7, 'relief': 4},
+    'health': {'name': '医养济民', 'description': '税率9%，七成公共维护经费用于公医。', 'security_share': .3, 'relief': 5},
+}
+
+
+def prepare(g):
+    for k, v in dict(policy='balanced', policy_since=None, policy_reason='沿用既有施政，待年度公议。',
+                     records=[], budget_security=0., budget_health=0.).items():
+        g.setdefault(k, v)
+    return g
+
+
+def record(g, e):
+    g['last_event'] = e['id']
+    g['records'] = (g['records'] + [e['id']])[-24:]
 
 
 def new(country=0):
-    return {'name': COUNTRIES[country]['government_name'], 'country': country, 'fund': 80., 'opening_fund': 80., 'tax_rate': .09,
+    return prepare({'name': COUNTRIES[country]['government_name'], 'country': country, 'fund': 80., 'opening_fund': 80., 'tax_rate': .09,
             'security': .5, 'sanitation': .45, 'offices': {k: None for k in OFFICES},
             'appointed': {}, 'last_appointments': {}, 'cases': [], 'last_event': None,
-            'revenue': 0., 'expenses': 0., 'relief': 0., 'closed_cases': 0, 'succession_count': 0}
+            'revenue': 0., 'expenses': 0., 'relief': 0., 'closed_cases': 0, 'succession_count': 0})
 
 
 def for_npc(w, n):
@@ -28,7 +46,7 @@ def establish(w, g=None):
         return
     e = w.emit('government_founded', [], f"{g['name']}立档，辖地库银80银用于治安、救济和公医。", .85,
                facts={'opening_fund': 80, 'jurisdiction': [p['id'] for p in PLACES if p['country'] == g['country']], 'initial_condition': True})
-    g['last_event'] = e['id']
+    record(g, e)
     appoint(w, g)
 
 
@@ -51,6 +69,7 @@ def appoint(w, g=None):
                            f"{current['name']}的{office}任期届满，暂无合资格继任者，此职暂缺。", .75,
                            [g['last_appointments'].get(office)], {'office': office, 'previous': current['id']})
                 g['last_appointments'][office] = e['id']
+                record(g, e)
                 g.setdefault('departed', {})[office] = current['id']
             continue
         def merit(n):
@@ -69,7 +88,7 @@ def appoint(w, g=None):
                    [g['last_appointments'].get(office), chosen['last_event']],
                    {'office': office, 'holder': chosen['id'], 'previous': old, 'merit': round(merit(chosen), 2)})
         g['last_appointments'][office] = e['id']
-        g['last_event'] = e['id']
+        record(g, e)
         g['succession_count'] += int(old is not None and old != chosen['id'])
 
 
@@ -91,9 +110,10 @@ def grant(w, n, amount, purpose, cause=None):
     g['expenses'] += amount
     g['relief'] += amount
     n['wealth'] += amount
-    w.emit('government_relief', [n['id']], f"{g['name']}拨{amount:.1f}银给{n['name']}，用于{purpose}。", .65,
+    e = w.emit('government_relief', [n['id']], f"{g['name']}拨{amount:.1f}银给{n['name']}，用于{purpose}。", .65,
            [cause, g['last_event']], {'receiver': n['id'], 'silver': amount, 'purpose': purpose,
                                    'treasury_after': round(g['fund'], 4)})
+    record(g, e)
     return amount
 
 
@@ -118,7 +138,7 @@ def monthly(w, g=None):
     for n in needy:
         if g['fund'] < 3:
             break
-        grant(w, n, 4, '育幼口粮' if n['age_months'] < 192 else '贫困口粮', n['last_event'])
+        grant(w, n, POLICIES[g['policy']]['relief'], '育幼口粮' if n['age_months'] < 192 else '贫困口粮', n['last_event'])
     for case in g['cases']:
         if case['status'] != '待审' or w.month-case['month'] < 2 or g['offices']['捕头'] is None or g['fund'] < 2:
             continue
@@ -153,6 +173,7 @@ def monthly(w, g=None):
                     'offender':offender['id'],'victim':victim['id'],'public_money':case.get('public_money',False),
                     'restricted_months':restraint})
         case.update({'status': '已判决', 'judgment': e['id'], 'restitution': restitution})
+        record(g, e)
         g['closed_cases'] += 1
     holders = [i for i in g['offices'].values() if i and w.npcs[i]['alive']]
     if holders and g['fund'] >= len(holders):
@@ -169,21 +190,42 @@ def annual(w, g=None):
         for item in w.governments:
             annual(w, item)
         return
-    population = sum(n['alive'] and PLACES[n['place']]['country'] == g['country'] for n in w.npcs.values())
+    residents = [n for n in w.npcs.values() if n['alive'] and PLACES[n['place']]['country'] == g['country']]
+    population = len(residents)
     magistrate = w.npcs.get(g['offices']['县令'])
     if magistrate:
         t = magistrate['traits']
-        g['tax_rate'] = round(max(.05, min(.15, .07+(100-t['compassion'])*.0006)), 4)
+        poor = sum(n['wealth'] < 10 for n in residents) / max(1, population)
+        patients = sum(bool(n['illness']) or n['health'] < 55 for n in residents) / max(1, population)
+        if patients >= .2:
+            policy, reason = 'health', f'本国病弱占比{patients:.0%}，增拨公医'
+        elif poor >= .3:
+            policy, reason = 'relief', f'本国家资不足10银者占{poor:.0%}，减赋济困'
+        elif g['security'] < .4:
+            policy, reason = 'security', '本国治安低于40，增拨巡防'
+        else:
+            policy, reason = 'balanced', '民生与治安未达紧急阈值，兼顾巡防公医'
+        previous = g['policy']
+        g['policy'], g['policy_reason'] = policy, reason
+        if previous != policy or g['policy_since'] is None:
+            g['policy_since'] = w.month
+        g['tax_rate'] = ({'relief': .06, 'security': .11, 'health': .09}.get(policy)
+                         or round(max(.05, min(.15, .07+(100-t['compassion'])*.0006)), 4))
         budget = min(g['fund']*.2, max(12, population*.15))
         g['fund'] -= budget
         g['expenses'] += budget
         improvement = .12 * min(1, budget/max(12, population*.15))
-        g['security'] = min(.95, g['security']+improvement)
-        g['sanitation'] = min(.95, g['sanitation']+improvement)
-        w.emit('public_budget', [magistrate['id']],
-               f"{g['name']}议定来年税率{g['tax_rate']*100:.1f}%，支出{budget:.1f}银维护治安与公医。", .75,
-               [g['last_appointments'].get('县令')], {'budget': budget, 'tax_rate': g['tax_rate'],
-                                                    'security': g['security'], 'sanitation': g['sanitation']})
+        share = POLICIES[policy]['security_share']
+        g['budget_security'], g['budget_health'] = round(budget * share, 4), round(budget * (1-share), 4)
+        g['security'] = min(.95, g['security']+improvement * 2 * share)
+        g['sanitation'] = min(.95, g['sanitation']+improvement * 2 * (1-share))
+        e = w.emit('public_budget', [magistrate['id']],
+               f"{g['name']}议定「{POLICIES[policy]['name']}」，税率{g['tax_rate']*100:.1f}%，支出{budget:.1f}银维护巡防与公医。", .75,
+               [g['last_appointments'].get('县令'), g['last_event']],
+               {'country': g['country'], 'budget': budget, 'tax_rate': g['tax_rate'], 'policy': policy,
+                'previous_policy': previous, 'reason': reason, 'security_budget': g['budget_security'],
+                'health_budget': g['budget_health'], 'security': g['security'], 'sanitation': g['sanitation']})
+        record(g, e)
     if w.rng.random() < .24:
         place = w.rng.choice([p['id'] for p in PLACES if p['country'] == g['country']])
         sick = [w.npcs[i] for i in w.residents[place] if w.rng.random() < .18 and not w.npcs[i]['illness']]
@@ -207,4 +249,5 @@ def report(w, n, crime_event, extra=None):
                                   'offender': crime['facts']['offender'], 'victim': n['id'],
                                   'amount': crime['facts']['transfer'], 'status': '待审',
                                   'public_money':crime['facts'].get('public_money',False)})
+    record(g, e)
     return e

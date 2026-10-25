@@ -190,11 +190,10 @@ def identity(w, n):
         grade = max(grade, 8) if n['reputation'] < -10 else grade
         roles.append({'kind': 'livelihood', 'title': f'{job}·{title}', 'grade': grade})
     if n['faction'] is not None:
+        from .organizations import rank
         f = w.factions[n['faction']]
-        leader = f['leader'] == n['id']
-        title = '主持' if leader else '骨干' if n['contribution'] >= 30 else '成员'
-        grade = 5 if leader else 7 if n['contribution'] >= 30 else 8
-        roles.append({'kind': 'faction', 'title': f'{f["name"]}{title}', 'grade': grade})
+        standing = rank(w, n)
+        roles.append({'kind': 'faction', 'title': f'{f["name"]}{standing["title"]}', 'grade': standing['grade']})
     if n['office']:
         roles.append({'kind': 'office', 'title': n['office'], 'grade': OFFICE_GRADES[n['office']]})
     if n['spouse']:

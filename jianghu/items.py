@@ -380,6 +380,8 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
     facts['item_id'] = item['id']
     facts['item_after'] = deepcopy(item) if item['id'] in w.items['objects'] else None
     e = w.emit('item_'+operation, people, text, .65 if operation == 'gift' else .25, parents, facts)
+    if operation == 'gift' and owner == 'player':
+        tie['last_event'], tie['last_contact'] = e['id'], w.month
     if item['id'] in w.items['objects']:
         item['last_event'] = e['id']
         if operation == 'craft':

@@ -10,7 +10,7 @@ from urllib.parse import parse_qs, urlparse
 from .ai import AIManager, DEFAULT_CONFIG
 from .engine import World
 from .store import Store
-from . import items
+from . import items, government
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -150,6 +150,17 @@ def handler_for(game):
                         elif path.startswith('/api/npc/'):
                             data = game.world.npc_detail(int(path.rsplit('/', 1)[1]))
                             data['history'] = game.world.store.history(data['id'], limit=60)
+                        elif path.startswith('/api/faction/'):
+                            faction_id = int(path.rsplit('/', 1)[1])
+                            if not 0 <= faction_id < len(game.world.factions):
+                                raise ValueError('组织不存在')
+                            data = game.world.faction_detail(faction_id)
+                        elif path.startswith('/api/country/'):
+                            country_id = int(path.rsplit('/', 1)[1])
+                            if not 0 <= country_id < len(game.world.countries):
+                                raise ValueError('国家不存在')
+                            data = game.world.country_detail(country_id)
+                            data['policy_catalog'] = government.POLICIES
                         elif path == '/api/events':
                             npc = int(query['npc'][0]) if 'npc' in query else None
                             before = int(query['before'][0]) if 'before' in query else None
@@ -171,7 +182,7 @@ def handler_for(game):
                             return
                     self.json_response(data)
                     return
-                files = {'/': 'index.html', '/index.html': 'index.html', '/style.css': 'style.css', '/app.js': 'app.js', '/inventory.js': 'inventory.js', '/map.js': 'map.js', '/geography.json': 'geography.json', '/martial.js': 'martial.js', '/art.css': 'art.css', '/assets/river-valley.png': 'assets/river-valley.png', '/assets/portraits.png': 'assets/portraits.png'}
+                files = {'/': 'index.html', '/index.html': 'index.html', '/style.css': 'style.css', '/app.js': 'app.js', '/society.js': 'society.js', '/inventory.js': 'inventory.js', '/map.js': 'map.js', '/geography.json': 'geography.json', '/martial.js': 'martial.js', '/art.css': 'art.css', '/assets/river-valley.png': 'assets/river-valley.png', '/assets/portraits.png': 'assets/portraits.png'}
                 filename = files.get(path)
                 if not filename:
                     self.send_error(404)
