@@ -38,4 +38,3 @@ catalog.json               每位角色与所有零件的机器可读索引
 cast-spec.json             用户24项角色需求及独立配件约定
 index.html                 离线图片目录
 contact-sheet.png          带ID的总览（仅用于浏览，标签不写入角色素材）
-

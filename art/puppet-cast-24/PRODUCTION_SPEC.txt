@@ -14,4 +14,3 @@
 每个角色目录写 generation-prompt.txt / parts-sheet.png / 01..16及配件png / parts-manifest.json。生成图必须先用内置image_gen。后续只机械导出PNG，不重画或改色，保留alpha。
 统一导出工具将由主代理提供 _tools/export-atlas.cjs，调用参数是 sourcePNG角色ID，--inspect只检查组件而不导出。
 不要改其他代理的角色目录或根目录清单。报告完成ID、零件数、问题/验证限制。禁止把生成张数、测试数量当作画质合格。
-
