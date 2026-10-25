@@ -12,7 +12,7 @@ from . import politics, territory
 from .atlas import PLACES, FACTIONS, COUNTRIES, ROUTES, NEIGHBORS, MAP_VERSION, ERA
 from . import careers
 from . import martial, combat
-from . import city_maps, relationships, organizations
+from . import city_maps, relationships, organizations, protagonist, settlements
 
 TRAITS = {'compassion': '仁厚', 'ambition': '进取', 'caution': '谨慎',
           'sociability': '外向', 'loyalty': '忠诚', **social.EXTRA_TRAITS}
@@ -43,12 +43,15 @@ def date(month):
 
 
 class World:
-    def __init__(self, seed=42, population=100, store=None, load=True, durable=True):
+    def __init__(self, seed=42, population=100, store=None, load=True, durable=True, compact=False):
         self.store = store or Store()
         self.rng = random.Random(seed)
         self.seed, self.month = seed, 0
+        self.compact_requested = compact
+        self.settlements = settlements.profile() if compact else None
         self.phase = 0
         self.npcs, self.factions = {}, deepcopy(FACTIONS)
+        settlements.align_factions(self)
         organizations.initialize(self)
         self.atlas_history = []
         self._atlas_migration = None
@@ -62,6 +65,7 @@ class World:
         self.economy = {'gaming_house': 200.}
         self.player = {'name': '过客', 'wealth': 160., 'reputation': 0, 'ties': {}}
         martial.initialize(self.player, player=True)
+        protagonist.initialize(self)
         self.battle = None
         self.metrics = {'steps': 0, 'simulation_ms': 0., 'actions': {}, 'goals_completed': 0,
                         'births': 0, 'deaths': 0, 'death_causes': {}, 'invalid_actions': 0,
@@ -99,8 +103,8 @@ class World:
             if state.get('map_version', 1) < MAP_VERSION or 'government' not in state:
                 self.checkpoint()
         else:
-            for _ in range(population):
-                self.make_npc()
+            for index in range(population):
+                self.make_npc(place=self.active_places[index % len(self.active_places)]['id'] if self.settlements else None)
             self.reindex()
             # Census is an honest initial condition, not invented life history.
             for n in self.npcs.values():
@@ -109,6 +113,8 @@ class World:
                               facts={'age_months': n['age_months'], 'wealth': n['wealth'],
                                      'skill': n['skill'], 'initial_condition': True})
                 self.set_goal(n, self.best_goal(n), e['id'], initial=True)
+                if self.settlements:
+                    settlements.register_position(self, n, e['id'])
             government.establish(self)
             items.initialize(self)
             self.checkpoint()
@@ -134,7 +140,7 @@ class World:
                 cursor += 1
         age = 0 if parents else self.rng.randint(7 * 12, 48 * 12)
         n = {'id': i, 'name': name, 'sex': self.rng.choice(['女', '男']), 'age_months': age,
-             'alive': True, 'place': place if place is not None else self.rng.choices(PLACES, weights=[p['weight'] for p in PLACES], k=1)[0]['id'],
+             'alive': True, 'place': settlements.canonical(self, place) if place is not None else self.rng.choices(self.active_places, weights=[p['weight'] for p in self.active_places], k=1)[0]['id'],
              'job': self.rng.choice(JOBS), 'wealth': round(self.rng.uniform(20, 95), 2) if not parents else 0.,
              'skill': self.rng.uniform(4, 32) if age > 180 else 2., 'health': 100., 'reputation': 0.,
              'traits': traits, 'initial_traits': traits.copy(), 'mood': {'joy': 0., 'anger': 0., 'fear': 0.},
@@ -174,6 +180,18 @@ class World:
 
     def place_name(self, place):
         return PLACES[place]['name']
+
+    @property
+    def active_places(self):
+        return [PLACES[h] for h in settlements.HUBS] if self.settlements else PLACES
+
+    @property
+    def routes(self):
+        return settlements.COMPACT_ROUTES if self.settlements else ROUTES
+
+    @property
+    def neighbors(self):
+        return settlements.COMPACT_NEIGHBORS if self.settlements else NEIGHBORS
 
     def summary_place(self, place):
         return {**territory.place_view(self, place), 'interior_authored': PLACES[place]['name'] in city_maps.PLANS}
@@ -503,7 +521,7 @@ class World:
             add('duty', n['faction'], self.factions[n['faction']]['name'])
         actions += organizations.candidates(self, n, planning)
         if n['health'] > 40 and n['age_months'] >= 192:
-            for destination in NEIGHBORS[n['place']]:
+            for destination in self.neighbors[n['place']]:
                 p = PLACES[destination]
                 trip = politics.journey(self, n['place'], destination)
                 if n['wealth'] >= trip['cost'] + 7 and (not n['office'] or territory.owner(self, destination) == n['office_country']):
@@ -1009,6 +1027,7 @@ class World:
             self.player['wealth'] += 24
         martial.recover(self.player)
         self.player['health'] = clamp(self.player['health']+6+items.bonuses(self, 'player')['recovery'])
+        protagonist.on_month(self)
         if self.durable:
             self.checkpoint()
         else:
@@ -1100,7 +1119,7 @@ class World:
                 if q['alive']:
                     self.know(n, q)
         if self.rng.random() < .55:
-            place = self.rng.randrange(len(PLACES))
+            place = self.rng.choice(self.active_places)['id']
             local = [self.npcs[i] for i in self.residents[place] if self.npcs[i]['alive']]
             affected, losses, fatalities = [], {}, []
             for n in local:
@@ -1260,6 +1279,7 @@ class World:
 
     def export(self):
         return {'seed': self.seed, 'month': self.month, 'npcs': self.npcs,
+                'settlements': self.settlements,
                 'city_map_version': self.city_map_version, 'city_positions': self.city_positions,
                 'territory': self.territory, 'campaigns': self.campaigns,
                 'factions': self.factions, 'government': self.government, 'governments': self.governments,
@@ -1268,6 +1288,7 @@ class World:
 
     def restore(self, state):
         self.seed, self.month = state['seed'], state['month']
+        self.settlements = deepcopy(state.get('settlements'))
         self.city_map_version = state.get('city_map_version', city_maps.VERSION)
         self.city_positions = deepcopy(state.get('city_positions', {}))
         self.npcs = {int(i): n for i, n in state['npcs'].items()}
@@ -1310,6 +1331,7 @@ class World:
         existing = {f['id']: f for f in self.factions}
         self.factions = [{**deepcopy(f), **{k: v for k, v in existing.get(f['id'], {}).items()
                                               if k in organizations.STATE_FIELDS}} for f in FACTIONS]
+        settlements.align_factions(self)
         organizations.initialize(self)
         for g in self.governments:
             government.prepare(g)
@@ -1322,6 +1344,7 @@ class World:
             if not n['alive']:
                 n.setdefault('final_identity', deepcopy(n['identity']))
         martial.initialize(self.player, player=True)
+        protagonist.initialize(self)
         self.battle = state.get('battle')
         self.metrics.setdefault('death_causes', {})
         self.population_limit = state['population_limit']
@@ -1332,6 +1355,8 @@ class World:
         self.items = state.get('items')
         if items.initialize(self, legacy=True):
             self.checkpoint()
+        if self.compact_requested and not self.settlements:
+            settlements.activate(self)
 
     def checkpoint(self):
         self.store.save(self.export())
@@ -1352,9 +1377,14 @@ class World:
                 'goals': dict(Counter(n['goal']['kind'] for n in living)), 'metrics': self.metrics,
                 'professions': dict(Counter(n['job'] for n in living)),
                 'identity_grades': dict(Counter(careers.identity(self, n)['grade_label'] for n in living)),
-                'places': [{**self.summary_place(p['id']), 'population': len(self.residents[p['id']])} for p in PLACES],
+                'places': [{**self.summary_place(p['id']), 'hub': settlements.canonical(self, p['id']),
+                            'active': not self.settlements or p['id'] in settlements.HUBS,
+                            'population': len(self.residents[p['id']])} for p in PLACES],
+                'locations': [{**self.summary_place(p['id']), 'population': len(self.residents[p['id']]),
+                               'districts': [q['name'] for q in PLACES if settlements.canonical(self, q['id']) == p['id']]}
+                              for p in self.active_places],
                 'factions': [organizations.view(self, f) for f in self.factions],
-                'map_version': MAP_VERSION, 'era': ERA, 'routes': ROUTES,
+                'map_version': MAP_VERSION, 'era': ERA, 'routes': self.routes,
                 'campaigns': deepcopy(self.campaigns['history'][-12:]),
                 'countries': [{**c, 'population': sum(territory.owner(self, n['place']) == c['id'] for n in living),
                                'settlements': len(territory.controlled(self, c['id'])),
@@ -1370,6 +1400,7 @@ class World:
                                'generations': dict(Counter(n['generation'] for n in living)),
                                'max_generation': max((n['generation'] for n in self.npcs.values()), default=0),
                                'deaths': self.metrics.get('death_causes', {})}, 'player': self.player,
+                'hero': protagonist.view(self),
                 'battle_active': bool(self.battle and self.battle['status'] == 'active'),
                 'npcs': [self.npc_summary(n) for n in self.npcs.values()]}
 
@@ -1406,6 +1437,6 @@ class World:
                 'poor': sum(n['wealth'] < 10 for n in residents),
                 'patients': sum(bool(n['illness']) or n['health'] < 55 for n in residents),
                 'settlements': len(territory.controlled(self, country_id)),
-                'places': [self.summary_place(p['id']) for p in PLACES if territory.owner(self, p['id']) == country_id],
+                'places': [self.summary_place(p['id']) for p in self.active_places if territory.owner(self, p['id']) == country_id],
                 'factions': [organizations.view(self, f) for f in self.factions if f['country'] == country_id],
                 'events': [e for i in reversed(g['records']) if (e := self.store.event(i))]}

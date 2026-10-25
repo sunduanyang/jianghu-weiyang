@@ -23,14 +23,14 @@ def stop(pid):
 
 
 try:
-    with urllib.request.urlopen('http://127.0.0.1:8765/api/state', timeout=5) as response:
+    with urllib.request.urlopen('http://127.0.0.1:8782/api/state', timeout=5) as response:
         state = json.load(response)
     if not Path(state['database']).resolve().is_relative_to((ROOT/'data').resolve()):
-        raise RuntimeError('Port 8765 belongs to another workspace; left running')
-    req = urllib.request.Request('http://127.0.0.1:8765/api/control', b'{"action":"pause"}', {'Content-Type': 'application/json'})
+        raise RuntimeError('Port 8782 belongs to another workspace; left running')
+    req = urllib.request.Request('http://127.0.0.1:8782/api/control', b'{"action":"pause"}', {'Content-Type': 'application/json'})
     if not DRY_RUN:
         urllib.request.urlopen(req, timeout=15).close()
-    pid = listening_process(8765)
+    pid = listening_process(8782)
     if pid:
         stop(pid)
         print('Game service verified.' if DRY_RUN else 'World saved; game service stopped.')

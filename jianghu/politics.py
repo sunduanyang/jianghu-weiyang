@@ -58,7 +58,7 @@ def annual(w):
         c['border_activity'] = {}
     territory.refresh_relations(w)
     pairs = sorted({tuple(sorted((territory.owner(w, r['a']), territory.owner(w, r['b']))))
-                    for r in ROUTES if territory.owner(w, r['a']) != territory.owner(w, r['b'])})
+                    for r in w.routes if territory.owner(w, r['a']) != territory.owner(w, r['b'])})
     # At most one change per year; both sides always see the same public relation.
     if not pairs or w.rng.random() >= .55:
         return

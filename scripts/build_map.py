@@ -64,16 +64,16 @@ def clip_halfplane(poly, a, b, c):
     return result
 
 
-def political_layers():
+def political_layers(places=PLACES):
     territories = [{'country': t['country'], 'name': COUNTRIES[t['country']]['name'],
                     'kind': COUNTRIES[t['country']]['kind'],
                     'path': ' '.join(path(ring) for ring in t['rings'])} for t in TERRITORIES]
     regions = [dict(country=c, name=name, x=project(lon, lat)[0], y=project(lon, lat)[1])
                for c, name, lon, lat in REGIONS]
     cells = []
-    for p in PLACES:
+    for p in places:
         cell = [(-80, -70), (1320, -70), (1320, 830), (-80, 830)]
-        for q in PLACES:
+        for q in places:
             if p['id'] == q['id'] or p['country'] != q['country']:
                 continue
             a, b = 2*(q['x']-p['x']), 2*(q['y']-p['y'])

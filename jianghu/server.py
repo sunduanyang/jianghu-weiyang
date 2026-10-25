@@ -10,13 +10,13 @@ from urllib.parse import parse_qs, urlparse
 from .ai import AIManager, DEFAULT_CONFIG
 from .engine import World
 from .store import Store
-from . import items, territory, city_maps, government
+from . import items, territory, city_maps, government, protagonist
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class Game:
-    def __init__(self, path, seed=42, population=500, prehistory=18):
+    def __init__(self, path, seed=42, population=800, prehistory=0):
         self.lock = threading.RLock()
         self.path = Path(path)
         config_path = ROOT / 'data' / 'ai_config.json'
@@ -30,7 +30,7 @@ class Game:
             config={**config,'reviews_per_month':24,'cooldown_months':3,'queue_limit':48,'config_version':3,
                     'max_tokens':360}
         self.ai = AIManager(config)
-        self.world = World(seed, population, Store(path))
+        self.world = World(seed, population, Store(path), compact=True)
         self.ai.restore_stats(self.world.store)
         self.job = {'remaining': 0, 'total': 0, 'completed': 0, 'fast': True, 'label': '已暂停', 'error': ''}
         self.next_step = 0
@@ -152,6 +152,8 @@ def handler_for(game):
                             data = {'options': territory.attack_options(game.world, target)}
                         elif path == '/api/city':
                             data = city_maps.view(game.world, int(query.get('place', ['-1'])[0]))
+                        elif path == '/api/hero':
+                            data = protagonist.view(game.world)
                         elif path.startswith('/api/npc/'):
                             data = game.world.npc_detail(int(path.rsplit('/', 1)[1]))
                             data['history'] = game.world.store.history(data['id'], limit=60)
@@ -188,6 +190,9 @@ def handler_for(game):
                     self.json_response(data)
                     return
                 files = {'/': 'index.html', '/index.html': 'index.html', '/style.css': 'style.css', '/app.js': 'app.js', '/society.js': 'society.js', '/inventory.js': 'inventory.js', '/map.js': 'map.js', '/city.js': 'city.js', '/city.css': 'city.css', '/geography.json': 'geography.json', '/martial.js': 'martial.js', '/art.css': 'art.css', '/assets/river-valley.png': 'assets/river-valley.png', '/assets/portraits.png': 'assets/portraits.png'}
+                files.update({'/hero.js': 'hero.js', '/hero.css': 'hero.css'})
+                if game.world.settlements:
+                    files['/geography.json'] = 'geography-compact.json'
                 filename = files.get(path)
                 if not filename:
                     self.send_error(404)
@@ -216,6 +221,10 @@ def handler_for(game):
                 with game.lock:
                     if self.path == '/api/control':
                         data = game.control(body)
+                    elif self.path == '/api/hero':
+                        if game.autoplay or game.job['remaining']:
+                            raise ValueError('请先暂停世界推演，再安排行程')
+                        data = protagonist.perform(game.world, body)
                     elif self.path == '/api/intervene':
                         if body['action'] == 'challenge' and (game.autoplay or game.job['remaining']):
                             raise ValueError('请先暂停江湖，再进行切磋')
@@ -253,8 +262,8 @@ def handler_for(game):
                             raise ValueError('请先结束当前切磋')
                         if game.ai.pending:
                             raise ValueError('请等待当前推理完成后开新江湖')
-                        population = int(body.get('population', 100))
-                        years = int(body.get('prehistory', 18))
+                        population = int(body.get('population', 800))
+                        years = int(body.get('prehistory', 0))
                         if not 30 <= population <= 1000 or not 0 <= years <= 50:
                             raise ValueError('人数30至1000，预演0至50年')
                         seed = int(body.get('seed', 42))
@@ -264,7 +273,7 @@ def handler_for(game):
                         # Each new society gets its own file; previous evidence remains intact.
                         game.path = ROOT / 'data' / f'world-{time.time_ns()}.sqlite'
                         (ROOT / 'data' / 'active_world.txt').write_text(str(game.path), encoding='utf-8')
-                        game.world = World(seed, population, Store(game.path))
+                        game.world = World(seed, population, Store(game.path), compact=True)
                         game.ai.reset_stats()
                         game.job = {'remaining': years*12, 'total': years*12, 'completed': 0,
                                     'fast': True, 'label': '历史预演 · 规则', 'error': ''}
@@ -286,7 +295,7 @@ def game_ai_wait(ai, month):
                 month-min(ai.submitted_months.values()) >= 1)
 
 
-def serve(path, host='127.0.0.1', port=8765, seed=42, population=500, prehistory=18):
+def serve(path, host='127.0.0.1', port=8782, seed=42, population=800, prehistory=0):
     game = Game(path, seed, population, prehistory)
     server = ThreadingHTTPServer((host, port), handler_for(game))
     print(f'江湖已开启: http://{host}:{port}  存档: {path}', flush=True)

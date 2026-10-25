@@ -1,0 +1,2 @@
+# Needed only when regenerating Unity map assets.
+Pillow==12.2.0

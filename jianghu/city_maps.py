@@ -124,7 +124,7 @@ def _generated(p, rng):
 
 
 @lru_cache(maxsize=512, typed=True)
-def _layout(seed, place, version=VERSION):
+def _layout(seed, place, version=VERSION, compact=False):
     if type(place) is not int or not 0 <= place < len(PLACES):
         raise ValueError('地点不存在')
     if type(version) is not int or version != VERSION:
@@ -180,8 +180,9 @@ def _layout(seed, place, version=VERSION):
         add('garden', 'garden', '郊野草场' if theme == 'steppe' else '城郊林圃', (1,1))
     if theme in ('port','island','coast','water','river') and 'dock' not in {n['id'] for n in nodes}:
         add('dock', 'dock', '水岸舟埠', (size-3,size-2))
+    from .settlements import HUB_FOR
     for f in FACTIONS:
-        if f['place'] == place:
+        if (HUB_FOR[f['place']] if compact else f['place']) == place:
             add(f"faction_{f['id']}", 'faction', f['name'], (middle-1,middle+1), faction=f['id'])
     for n in nodes:
         route, _ = path_between(rows, entrance, (n['row'],n['col']))
@@ -201,8 +202,13 @@ def layout(seed, place, version=VERSION):
     return deepcopy(_layout(seed, place, version))
 
 
+def world_layout(w, place):
+    from .settlements import canonical
+    return deepcopy(_layout(w.seed, canonical(w, place), w.city_map_version, bool(w.settlements)))
+
+
 def venue(w, n, action):
-    city = _layout(w.seed, n['place'], w.city_map_version)
+    city = world_layout(w, n['place'])
     ids = {node['id'] for node in city['nodes']}
     kind = action['kind']
     if kind == 'travel':
@@ -237,7 +243,11 @@ def record_action(w, n, action, event):
 
 
 def view(w, place):
-    city = layout(w.seed, place, w.city_map_version)
+    if type(place) is not int or not 0 <= place < len(PLACES):
+        raise ValueError('地点不存在')
+    from .settlements import canonical
+    place = canonical(w, place)
+    city = world_layout(w, place)
     owner = w.countries[territory.owner(w, place)]
     city.update(country=owner['id'], country_name=owner['name'], color=owner['color'], month=w.month,
                 occupied=territory.owner(w,place)!=PLACES[place]['country'],
@@ -249,7 +259,7 @@ def view(w, place):
         recorded = bool(pos and pos['place'] == place and pos['node'] in present)
         node = pos['node'] if recorded else 'residence'
         present[node].append(dict(id=npc_id,name=n['name'],job=n['job'],
-                                  source='行动落点' if recorded else '乡籍居所',
+                                  source=pos.get('source', '行动落点') if recorded else '乡籍居所',
                                   event_id=pos['event_id'] if recorded else None,
                                   month=pos['month'] if recorded else None))
     for node in city['nodes']:
@@ -263,5 +273,5 @@ def view(w, place):
                                   (node['row'],node['col']))
         node['path'], node['walk_cost'] = route, cost
     city['connections'] = [dict(place=r['b'] if r['a']==place else r['a'],sea=r['sea'],km=r['km'])
-                           for r in ROUTES if place in (r['a'],r['b'])]
+                           for r in w.routes if place in (r['a'],r['b'])]
     return city

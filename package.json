@@ -1,0 +1,17 @@
+{
+  "name": "jianghu-weiyang-assets",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Asset authoring tools for the Jianghu Weiyang Unity project",
+  "license": "MIT",
+  "scripts": {
+    "bake:puppets": "node unity/bake_puppets.cjs",
+    "test:puppets": "node prototypes/shadow-puppets/verify.cjs"
+  },
+  "devDependencies": {
+    "sharp": "0.35.5"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  }
+}

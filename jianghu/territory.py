@@ -15,15 +15,17 @@ def new():
 
 
 def owner(w, place):
+    from .settlements import canonical
+    place = canonical(w, place)
     return w.territory[place]['owner']
 
 
 def controlled(w, country):
-    return [p['id'] for p in PLACES if owner(w, p['id']) == country]
+    return [p['id'] for p in w.active_places if owner(w, p['id']) == country]
 
 
 def refresh_relations(w):
-    for r in ROUTES:
+    for r in w.routes:
         a, b = owner(w, r['a']), owner(w, r['b'])
         if a != b:
             status = w.countries[a]['relations'].get(str(b),
@@ -33,7 +35,8 @@ def refresh_relations(w):
 
 
 def place_view(w, place):
-    p, t = PLACES[place], w.territory[place]
+    from .settlements import canonical
+    p, t = PLACES[place], w.territory[canonical(w, place)]
     return {**p, **t, 'country': t['owner'], 'native_country': p['country'],
             'color': w.countries[t['owner']]['color'],
             'guard_max': GUARDS[p['kind']], 'occupied': t['owner'] != p['country']}
@@ -42,12 +45,14 @@ def place_view(w, place):
 def attack_options(w, target):
     if type(target) is not int or not 0 <= target < len(PLACES):
         return []
+    if target not in w.neighbors:
+        return []
     best = {}
-    for origin in NEIGHBORS[target]:
+    for origin in w.neighbors[target]:
         attacker = owner(w, origin)
         if attacker == owner(w, target):
             continue
-        route = ROUTE_INDEX[tuple(sorted((origin, target)))]
+        route = next(r for r in w.routes if {r['a'], r['b']} == {origin, target})
         cost = round(12 + min(18, route['km']*.018) + (10 if route['sea'] else 0), 2)
         reasons = []
         if w.governments[attacker]['fund'] < cost + 8:
@@ -74,7 +79,7 @@ def capture(w, target, attacker, event):
     t.update(owner=attacker, guard=min(30., GUARDS[PLACES[target]['kind']]*.4),
              stability=35., changed_month=w.month, event_id=event['id'])
     # Officials do not silently change allegiance or govern inside enemy territory.
-    active = {t['owner'] for t in w.territory}
+    active = {owner(w, p['id']) for p in w.active_places}
     for g in w.governments:
         for role, npc_id in g['offices'].items():
             n = w.npcs.get(npc_id)
@@ -151,12 +156,13 @@ def campaign(w, attacker, target, *, declare=False):
 
 
 def monthly(w):
-    for p, t in zip(PLACES, w.territory):
+    for p in w.active_places:
+        t = w.territory[p['id']]
         t['guard'] = min(GUARDS[p['kind']], t['guard']+2)
         t['stability'] = min(100., t['stability']+5)
     if w.month % 3:
         return
-    fronts = [o for p in PLACES for o in attack_options(w, p['id']) if o['ready'] and
+    fronts = [o for p in w.active_places for o in attack_options(w, p['id']) if o['ready'] and
               w.countries[o['attacker']]['relations'].get(str(owner(w, p['id']))) == '交恶']
     w.rng.shuffle(fronts)
     battles = 0
