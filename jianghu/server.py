@@ -155,14 +155,18 @@ def handler_for(game):
                             return
                     self.json_response(data)
                     return
-                files = {'/': 'index.html', '/index.html': 'index.html', '/style.css': 'style.css', '/app.js': 'app.js'}
+                files = {'/': 'index.html', '/index.html': 'index.html', '/style.css': 'style.css', '/app.js': 'app.js', '/art.css': 'art.css',
+                         '/assets/river-valley.png': 'assets/river-valley.png',
+                         '/assets/portraits.png': 'assets/portraits.png'}
                 filename = files.get(path)
                 if not filename:
                     self.send_error(404)
                     return
                 payload = (ROOT / 'static' / filename).read_bytes()
                 self.send_response(200)
-                self.send_header('Content-Type', {'html': 'text/html', 'css': 'text/css', 'js': 'text/javascript'}[filename.split('.')[-1]]+'; charset=utf-8')
+                content_type = {'html': 'text/html; charset=utf-8', 'css': 'text/css; charset=utf-8',
+                                'js': 'text/javascript; charset=utf-8', 'png': 'image/png'}[filename.split('.')[-1]]
+                self.send_header('Content-Type', content_type)
                 self.send_header('Content-Length', str(len(payload)))
                 self.end_headers()
                 self.wfile.write(payload)

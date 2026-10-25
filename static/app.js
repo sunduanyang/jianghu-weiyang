@@ -14,6 +14,13 @@ const person=id=>world?.npcs.find(n=>n.id===Number(id));
 const place=id=>world?.places.find(p=>p.id===Number(id))?.name??'未知';
 const shortAction=id=>{const [k,t]=id.split(':');return (actionNames[k]??k)+(t==='self'?'':` · ${k==='travel'?place(t):['join','duty'].includes(k)?world.factions[Number(t)]?.name:k==='report'?'证据 #'+t:person(t)?.name??t}`)};
 
+// Portraits are decorative archetypes; identity and history come from the save.
+function portrait(n){
+ const female=n.sex==='女', years=Math.floor(n.age_months/12);
+ const slot=years<16?(female?5:4):years>=60?(female?3:2):((Number(n.id)%3===0)?(female?7:6):(female?1:0));
+ return `<div class="avatar portrait ${n.alive?'':'dead'}" aria-hidden="true" style="--portrait-x:${slot%4/3*100}%;--portrait-y:${slot<4?0:100}%"></div>`;
+}
+
 async function api(path,body){const r=await fetch(path,body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const data=await r.json();if(!r.ok)throw Error(data.error??'请求失败');return data}
 function toast(s,error=false){$('#toast').textContent=s;$('#toast').style.background=error?'#8f5344':'#29493d';$('#toast').classList.add('show');clearTimeout(timer);timer=setTimeout(()=>$('#toast').classList.remove('show'),3500)}
 async function act(path,body,message){try{const r=await api(path,body);if(message)toast(message);await refresh(true);return r}catch(e){toast(e.message,true)}}
@@ -35,8 +42,51 @@ function renderWorld(){
  $('#footer-status').textContent=`种子 ${world.seed} · ${world.total_people} 份人生档案 · 每月自动存档`;
  if(!selected&&world.npcs.length){selected=world.npcs.find(n=>n.alive&&n.spouse)?.id??world.npcs[0].id;loadNPC()}
 }
-function renderPeople(){if(!world)return;const q=$('#search').value.trim(),f=$('#place-filter').value,alive=$('#alive-filter').value,sort=$('#sort').value;let list=world.npcs.filter(n=>(alive!=='alive'||n.alive)&&(f===''||n.place===Number(f))&&(!q||n.name.includes(q)||n.job.includes(q)));list.sort((a,b)=>sort==='id'?a.id-b.id:b[sort]-a[sort]);$('#people').innerHTML=list.map(n=>`<div class="person-row ${n.id===selected?'selected':''}" data-person="${n.id}" tabindex="0" role="button" aria-label="查看${esc(n.name)}"><div class="avatar ${n.alive?'':'dead'}">${esc(n.name[0])}</div><div><b>${esc(n.name)}</b><small>${esc(n.job)} · ${place(n.place)}</small></div><span class="age">${Math.floor(n.age_months/12)}岁${n.alive?'':' · 故'}</span></div>`).join('')||'<p class="note" style="padding:15px">未寻到此人。</p>'}
-function renderMap(){const mountains=[[16,18,9],[26,12,7],[45,9,12],[63,17,8],[75,8,10],[90,30,7],[10,77,9],[85,80,8]];const paths=mountains.map(([x,y,r])=>`<path d="M${x-r} ${y+r} Q${x-r/2} ${y-2} ${x} ${y-r} Q${x+4} ${y-4} ${x+r} ${y+r} M${x-r*.65} ${y+r} Q${x} ${y} ${x+r*.7} ${y+r}" fill="none" stroke="#becbb180" stroke-width=".6"/>`).join('');let dots='';world.places.forEach(p=>{const locals=world.npcs.filter(n=>n.alive&&n.place===p.id);locals.forEach((n,i)=>{const angle=i*2.399963,r=3.8+Math.sqrt(i)*.7,x=p.x+Math.cos(angle)*r,y=p.y+Math.sin(angle)*r;dots+=`<circle class="map-npc" data-person="${n.id}" cx="${x}" cy="${y}" r="${n.id===selected?1.25:.65}" fill="${n.id===selected?'#a4513f':p.color}" opacity=".9"><title>${esc(n.name)} · ${esc(n.goal.title)}</title></circle>`})});$('#map').innerHTML=`<div class="map-title">山河故人</div><svg viewBox="0 0 100 95" aria-label="五地江湖人物分布图"><defs><linearGradient id="river"><stop stop-color="#a5c5bd"/><stop offset="1" stop-color="#ccdfd2"/></linearGradient></defs>${paths}<path d="M5 38 C35 17 27 61 54 52 S69 81 101 69" fill="none" stroke="url(#river)" stroke-width="3" opacity=".6"/><path d="M25 66 Q20 40 39 23 L80 20 Q65 34 74 55 L50 77 Z M25 66 L74 55" fill="none" stroke="#c6c8af" stroke-width=".35" stroke-dasharray="1 1.2"/>${dots}${world.places.map(p=>`<g class="map-site" data-place="${p.id}"><circle class="site-ring" cx="${p.x}" cy="${p.y}" r="2.5" fill="#f7f6ed" stroke="#8fa183" stroke-width=".45"/><path d="M${p.x-1.1} ${p.y+.8} v-1.3 l1.1-1 1.1 1 v1.3 z" fill="#6f8466"/><text class="site-label" x="${p.x}" y="${p.y+13}" text-anchor="middle">${p.name}</text><text class="site-count" x="${p.x}" y="${p.y+16.5}" text-anchor="middle">${p.population}人驻足</text></g>`).join('')}<text x="2" y="93" font-size="1.8" fill="#94a18b" letter-spacing=".5">江湖舆图 / 景和纪年</text></svg><div class="map-legend">● 一点一人 &nbsp; <span style="color:var(--red)">●</span> 当前人物</div>`}
+function renderPeople(){
+ if(!world)return;
+ const q=$('#search').value.trim(), f=$('#place-filter').value, alive=$('#alive-filter').value, sort=$('#sort').value;
+ const list=world.npcs.filter(n=>(alive!=='alive'||n.alive)&&(f===''||n.place===Number(f))&&(!q||n.name.includes(q)||n.job.includes(q)));
+ list.sort((a,b)=>sort==='id'?a.id-b.id:b[sort]-a[sort]);
+ // Keep focus and portrait DOM stable while a paused world is being polled.
+ const key=JSON.stringify([selected,list.map(n=>[n.id,n.name,n.job,n.place,n.age_months,n.alive,n.sex])]);
+ if(renderPeople.lastKey===key)return;
+ renderPeople.lastKey=key;
+ const focusedPerson=document.activeElement?.closest('.person-row')?.dataset.person;
+ $('#people').innerHTML=list.map(n=>`<div class="person-row ${n.id===selected?'selected':''}" data-person="${n.id}" tabindex="0" role="button" aria-label="查看${esc(n.name)}">${portrait(n)}<div><b>${esc(n.name)}</b><small>${esc(n.job)} · ${esc(place(n.place))}</small></div><span class="age">${Math.floor(n.age_months/12)}岁${n.alive?'':' · 故'}</span></div>`).join('')||'<p class="note" style="padding:15px">未寻到此人。</p>';
+ if(focusedPerson!==undefined)$('#people').querySelector(`[data-person="${Number(focusedPerson)}"]`)?.focus({preventScroll:true});
+}
+
+function renderMap(){
+ const currentPlace=$('#place-filter').value;
+ const key=`${world.database}/${world.month}/${world.population}/${selected}/${currentPlace}`;
+ if(renderMap.lastKey===key)return;
+ renderMap.lastKey=key;
+ const focusedPlace=document.activeElement?.closest('.map-site')?.dataset.place;
+ // Illustration coordinates only; simulation geography remains in world.places.
+ const artPlaces=[{x:34,y:78},{x:24,y:18},{x:82,y:52},{x:132,y:86},{x:138,y:28}];
+ const at=p=>artPlaces[p.id]??{x:12+p.x*1.36,y:4+p.y*1.06};
+ const locations=world.places.map(p=>({...p,...at(p)}));
+ let dots='';
+ locations.forEach(p=>{
+  const locals=world.npcs.filter(n=>n.alive&&n.place===p.id);
+  locals.forEach((n,i)=>{
+   const angle=i*2.399963, radius=4.5+Math.sqrt(i)*.52;
+   const x=p.x+Math.cos(angle)*radius,y=p.y+Math.sin(angle)*radius;
+   dots+=`<g data-person="${n.id}"><title>${esc(n.name)} · ${esc(n.goal.title)}</title><circle cx="${x}" cy="${y}" r="1.65" fill="transparent"/><circle class="map-npc ${n.id===selected?'current':''}" cx="${x}" cy="${y}" r="${n.id===selected?1.1:.55}" fill="${n.id===selected?'#994c39':'#54664d'}" opacity="${n.id===selected?1:.72}"/></g>`;
+  });
+ });
+ const buildings=[
+  'M-2.4 0 L0-1.8 2.4 0 M-1.9-.3 V2 H1.9 V-.3 M-.4 2 V.6 H.4 V2',
+  'M-2.6 0 Q0-1 2.6 0 L0-2.2 Z M-1.6 .1 V2 H1.6 V.1 M-2 1 H2 M0-2.2 V-3',
+  'M-2.7 2 V-1 H-1.7 V-.3 H-.8 V-1 H.2 V-.3 H1.2 V-1 H2.7 V2 Z M-.5 2 V.6 H.5 V2',
+  'M-3 1 Q0 3 3 1 L2.2 2 H-2.2 Z M0 1 V-2.5 L2 -.2 H0',
+  'M-2.7 2 V-1 L-1.5-2 -1-1 V2 M1 2 V-1 L1.6-2 2.7-1 V2 M-1 0 H1 M-.5 2 V1 H.5 V2'
+ ];
+ const sites=locations.map((p,i)=>`<g class="map-site" data-place="${p.id}" tabindex="0" role="button" aria-label="筛选${esc(p.name)}，${p.population}人"><title>${esc(p.name)} · ${p.population}人在世，点击筛选</title><circle class="site-ring" cx="${p.x}" cy="${p.y}" r="3.8" style="${String(p.id)===currentPlace?'stroke:#994c39;stroke-width:.8':''}"/><path class="site-building" transform="translate(${p.x} ${p.y})" d="${buildings[i%buildings.length]}"/><rect class="site-nameplate" x="${p.x-10}" y="${p.y+8}" width="20" height="9" rx=".3"/><text class="site-label" x="${p.x}" y="${p.y+11.7}" text-anchor="middle">${esc(p.name)}</text><text class="site-count" x="${p.x}" y="${p.y+15}" text-anchor="middle">${p.population}人驻足</text></g>`).join('');
+ $('#map').innerHTML=`<div class="map-title">山河故人<small>临川五地舆图</small></div><span class="map-seal" aria-hidden="true">景和山河</span><svg viewBox="0 0 160 106.6667" preserveAspectRatio="xMidYMid meet" role="group" aria-label="五地江湖人物分布图"><path d="${locations.map((p,i)=>`${i?'L':'M'}${p.x} ${p.y}`).join(' ')} Z" fill="none" stroke="#8a7950" stroke-width=".22" stroke-dasharray=".8 1.5" opacity=".5"/>${dots}${sites}</svg><div class="map-legend">● 在世之人 &nbsp; <span style="color:var(--red)">◆</span> 当前人物 &nbsp; · 聚落可筛选</div>`;
+ if(focusedPlace!==undefined)$('#map').querySelector(`[data-place="${Number(focusedPlace)}"]`)?.focus();
+}
+
 function changeText(c){return `${(c.domain==='belief'?beliefs[c.axis]:traits[c.axis])??c.axis} ${c.delta>0?'+':''}${num(c.delta,2)}`}
 function lifeStatus(n){return `${n.death?`<p class="life-status">${when(n.death.month)} · 因${esc(n.death.cause_label)}离世 · <span class="fact-link" data-event="${n.death.event_id}">死因与继承 ↗</span></p>`:''}${n.pregnancy?`<p class="life-status">正在妊娠 · 预计${when(n.pregnancy.due)}生产 · 伴侣 ${esc(person(n.pregnancy.father)?.name)}</p>`:''}${n.illness?`<p class="life-status">染病中 · 病情 ${num(n.illness.severity)} / 100 · <span class="fact-link" data-event="${n.illness.event_id}">起因 ↗</span></p>`:''}`}
 function renderSociety(){
@@ -48,7 +98,7 @@ function renderSociety(){
 function eventHTML(e){return `<div class="event" data-event="${e.id}"><div class="event-time">${esc(e.date)}</div><div class="event-text"><span class="event-kind">${kinds[e.kind]??esc(e.kind)}</span>${esc(e.summary)}${e.perspective?`<blockquote class="historical-thought">“${esc(e.perspective.interpretation)}”<small>${e.perspective.ai?'AI解释':'当时理解'} · ${esc(e.perspective.source)}</small></blockquote>${e.perspective.changes.length?`<small>${e.perspective.changes.map(changeText).join(' · ')}</small>`:''}`:''}</div></div>`}
 async function selectNPC(id){selected=Number(id);lastDetailKey='';tab='life';history=[];$$('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));renderPeople();renderMap();await loadNPC();if(innerWidth<950)$('#npc-content').scrollIntoView({behavior:'smooth',block:'start'})}
 async function loadNPC(){if(selectedBusy||!selected)return;selectedBusy=true;const id=selected;try{const n=await api('/api/npc/'+id);if(id!==selected)return;npc=n;history=n.history;$('#npc-empty').hidden=true;$('#npc-content').hidden=false;renderNPC()}catch(e){toast(e.message,true)}finally{selectedBusy=false}}
-function renderNPC(){if(!npc)return;const n=npc;$('#npc-heading').innerHTML=`<div class="npc-heading"><div class="avatar ${n.alive?'':'dead'}">${esc(n.name[0])}</div><div><p>${n.alive?'此生仍在继续':'此生已入史册'} / 乡籍 ${String(n.id).padStart(3,'0')}</p><h2>${esc(n.name)}</h2><p>${n.sex} · ${Math.floor(n.age_months/12)}岁 · 第${(n.generation??0)+1}代 · ${esc(n.job)}${n.office?" · "+esc(n.office):""} · ${place(n.place)}${n.faction!==null?' · '+world.factions[n.faction].name:''}</p></div></div><div class="npc-summary"><span>银两<strong>${num(n.wealth)}</strong></span><span>武学<strong>${num(n.skill,1)}</strong></span><span>体力<strong>${num(n.health)}</strong></span><span>声望<strong>${num(n.reputation)}</strong></span></div>`;$('#player-money').textContent=`行囊 ${num(world.player.wealth)} 银`;if(tab==='life')renderLife();if(tab==='mind')renderMind();if(tab==='relations')renderRelations();if(tab==='history')renderHistory();$('#review').textContent=n.age_months<120?'幼年照护中':n.ai_pending?'反思排队中…':'请其反思 ↗';$('#review').disabled=n.ai_pending||!n.alive||n.age_months<120;$('#gift').disabled=!n.alive;$('#challenge').disabled=!n.alive||n.age_months<216||n.health<=30}
+function renderNPC(){if(!npc)return;const n=npc;$('#npc-heading').innerHTML=`<div class="npc-heading">${portrait(n)}<div><p>${n.alive?'此生仍在继续':'此生已入史册'} / 乡籍 ${String(n.id).padStart(3,'0')}</p><h2>${esc(n.name)}</h2><p>${n.sex} · ${Math.floor(n.age_months/12)}岁 · 第${(n.generation??0)+1}代 · ${esc(n.job)}${n.office?" · "+esc(n.office):""} · ${place(n.place)}${n.faction!==null?' · '+world.factions[n.faction].name:''}</p></div></div><div class="npc-summary"><span>银两<strong>${num(n.wealth)}</strong></span><span>武学<strong>${num(n.skill,1)}</strong></span><span>体力<strong>${num(n.health)}</strong></span><span>声望<strong>${num(n.reputation)}</strong></span></div>`;$('#player-money').textContent=`行囊 ${num(world.player.wealth)} 银`;if(tab==='life')renderLife();if(tab==='mind')renderMind();if(tab==='relations')renderRelations();if(tab==='history')renderHistory();$('#review').textContent=n.age_months<120?'幼年照护中':n.ai_pending?'反思排队中…':'请其反思 ↗';$('#review').disabled=n.ai_pending||!n.alive||n.age_months<120;$('#gift').disabled=!n.alive;$('#challenge').disabled=!n.alive||n.age_months<216||n.health<=30}
 function renderLife(){const n=npc,g=n.goal,p=n.plan;$('#npc-body').innerHTML=lifeStatus(n)+`<div class="section-label">一生所求 <span>始于${when(g.since)}</span></div><div class="goal-card"><h3>${esc(g.title)}</h3><p>愿在${g.horizon_years}年间走近此志 · 已坚持${(((n.death?.month??world.month)-g.since)/12).toFixed(1)}年</p><div class="progress"><i style="width:${g.progress*100}%"></i></div><p>当前资源 / 关系进展 ${num(g.progress*100)}% · ${g.kind==='wealth'?'家资期望 '+num(g.target)+' 银':g.kind==='mastery'?'武学期望 '+num(g.target):g.kind==='renown'?'声望期望 '+num(g.target):'须经多年持续追求'}${g.cause?` · <span class="fact-link" data-event="${g.cause}">缘起 #${g.cause} ↗</span>`:''}</p></div><div class="section-label">眼前打算 <span>${p?esc(p.source):'等待下月'}</span></div>${p?`<div class="plan-card"><small>${when(p.created)} · ${p.horizon}</small><p>${esc(p.reason)}</p><div class="plan-steps">${p.steps.map(s=>`<span class="plan-step">${esc(shortAction(s))}</span>`).join('')||'<span class="muted">计划已执行，待下月调整</span>'}</div></div>`:'<p class="note">尚未开始行动。</p>'}<div class="section-label">最近亲历 <span>事实与理解分开保存</span></div>${[...n.memories].sort((a,b)=>b.event_id-a.event_id).slice(0,4).map(memoryHTML).join('')}${n.reviews.length?`<div class="section-label">最近 AI 决策</div>${n.reviews.slice(-1).map(r=>`<div class="plan-card"><p>${esc(r.reason)}</p><small>规则参考：${esc(shortAction(r.baseline))} → AI：${esc(shortAction(r.action_id))}</small></div>`).join('')}`:''}`}
 function memoryHTML(m){return `<div class="memory"><p class="fact-link" data-event="${m.event_id}"><small>${when(m.month)} · #${m.event_id} · ${esc(m.source)}</small><br>${esc(m.fact)}</p><blockquote>“${esc(m.interpretation)}”</blockquote><small>${m.ai?'本地AI解释 · 变化由心理机制结算':'规则解释 · 当前为可观察的基础人格机制'}</small>${m.changes.length?`<div class="changes">${m.changes.map(changeText).join(' · ')}</div>`:''}</div>`}
 function bar(label,value,origin=null,max=100){return `<div class="trait-row"><span>${label}</span><div class="trait-track"><div class="trait-fill" style="width:${Math.max(0,Math.min(100,value/max*100))}%"></div>${origin!==null?`<i class="trait-origin" style="left:${origin/max*100}%" title="初始值 ${num(origin,1)}"></i>`:''}</div><span class="trait-number">${num(value,1)}${origin!==null?` (${value-origin>=0?'+':''}${num(value-origin,1)})`:''}</span></div>`}
@@ -62,14 +112,14 @@ async function showLogs(){try{const logs=await api('/api/ai/logs');$('#logs').in
 document.addEventListener('click',async e=>{
  const event=e.target.closest('[data-event]');if(event){await showEvent(Number(event.dataset.event));return}
  const personEl=e.target.closest('[data-person]');if(personEl){$$('dialog[open]').forEach(d=>d.close());await selectNPC(personEl.dataset.person);return}
- const placeEl=e.target.closest('[data-place]');if(placeEl){$('#place-filter').value=placeEl.dataset.place;renderPeople();return}
+ const placeEl=e.target.closest('[data-place]');if(placeEl){const filter=$('#place-filter');filter.value=filter.value===placeEl.dataset.place?'':placeEl.dataset.place;renderPeople();renderMap();return}
  const close=e.target.closest('[data-close]');if(close){close.closest('dialog').close();return}
  const month=e.target.closest('[data-months]');if(month){await act('/api/control',{months:Number(month.dataset.months),fast:$('#fast').checked});return}
  const tb=e.target.closest('[data-tab]');if(tb){tab=tb.dataset.tab;$$('.tabs button').forEach(b=>b.classList.toggle('active',b===tb));renderNPC();return}
  if(e.target.id==='more-history'){const more=await api(`/api/events?npc=${selected}&before=${history.at(-1)?.id??0}`);history.push(...more);renderHistory();if(!more.length)toast('已到此人生的起点。')}
 });
-document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.person-row')){e.preventDefault();selectNPC(e.target.dataset.person)}});
-['search','place-filter','alive-filter','sort'].forEach(id=>$('#'+id).addEventListener(id==='search'?'input':'change',renderPeople));
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.person-row,.map-site')){e.preventDefault();e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}))}});
+['search','place-filter','alive-filter','sort'].forEach(id=>$('#'+id).addEventListener(id==='search'?'input':'change',()=>{renderPeople();if(id==='place-filter')renderMap()}));
 $('#random').onclick=()=>{const living=world.npcs.filter(n=>n.alive);selectNPC(living[Math.floor(Math.random()*living.length)].id)};
 $('#auto').onclick=()=>act('/api/control',{action:'auto'});$('#pause').onclick=()=>act('/api/control',{action:'pause'},'江湖已暂停，存档已保存');$('#save').onclick=()=>act('/api/save',{},'已保存到本地 SQLite');
 $('#gift').onclick=()=>act('/api/intervene',{npc_id:selected,action:'gift'},'10银已交付，经历已入年谱');$('#challenge').onclick=()=>act('/api/intervene',{npc_id:selected,action:'challenge'},'切磋已由规则结算');
