@@ -188,7 +188,7 @@ class AtlasTests(unittest.TestCase):
             self.assertEqual(before[k], after[k], k)
         self.assertEqual(migrated.factions[1]['fund'], 347.5)
         self.assertEqual([f['name'] for f in migrated.factions[:3]], [f['name'] for f in FACTIONS[:3]])
-        self.assertEqual(len(migrated.factions), 25)
+        self.assertEqual(len(migrated.factions), len(FACTIONS))
         self.assertGreater(migrated.store.count(), count)
         migrated.checkpoint()
         migrated_again = World(store=w.store, durable=False)

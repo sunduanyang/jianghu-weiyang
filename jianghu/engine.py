@@ -8,7 +8,7 @@ import time
 from .store import Store
 from . import demography, government, items
 from . import social
-from . import politics
+from . import politics, territory
 from .atlas import PLACES, FACTIONS, COUNTRIES, ROUTES, NEIGHBORS, MAP_VERSION, ERA
 from . import careers
 from . import martial, combat
@@ -50,6 +50,8 @@ class World:
         self.atlas_history = []
         self._atlas_migration = None
         self.countries = politics.new()
+        self.territory = territory.new()
+        self.campaigns = {'last_attack': {}, 'history': []}
         self.governments = [government.new(c['id']) for c in COUNTRIES]
         self.government = self.governments[0]
         self.economy = {'gaming_house': 200.}
@@ -73,6 +75,14 @@ class World:
             if state.get('map_version') == 2:
                 self.emit('atlas_revised', [], '舆图改依约公元1200年宋金形势重绘；原有公帑按辖地转入各政权，人物财产与旧年谱保留。', .9,
                           facts=self._atlas_migration)
+            elif state.get('map_version') == 3:
+                self.emit('world_expansion', [], '东海舆图展开：补入高丽、日本与各地聚落，城镇开始独立记录控制权；'
+                          '旧有人物、财产、外交与年谱保留。', .9,
+                          facts={'from_version': 3, 'map_version': MAP_VERSION, 'places': len(PLACES),
+                                 'countries': len(COUNTRIES), 'factions': len(FACTIONS),
+                                 'new_government_opening_funds': 80*(len(COUNTRIES)-len(state['countries'])),
+                                 'new_faction_opening_funds': 100*(len(FACTIONS)-len(state['factions'])),
+                                 'initial_condition': True})
             elif state.get('map_version', 1) < MAP_VERSION:
                 self.emit('world_expansion', [], '全国舆图展开：旧五地归入南宋，新增各地府衙与江湖组织；'
                           '原有人物、财产和经历继续保留，新机构库银作为初始条件登记。', .9,
@@ -160,7 +170,7 @@ class World:
         return PLACES[place]['name']
 
     def summary_place(self, place):
-        return PLACES[place].copy()
+        return territory.place_view(self, place)
 
     def local_government(self, n):
         return government.for_npc(self, n)
@@ -491,7 +501,7 @@ class World:
             for destination in NEIGHBORS[n['place']]:
                 p = PLACES[destination]
                 trip = politics.journey(self, n['place'], destination)
-                if n['wealth'] >= trip['cost'] + 7 and (not n['office'] or p['country'] == n['office_country']):
+                if n['wealth'] >= trip['cost'] + 7 and (not n['office'] or territory.owner(self, destination) == n['office_country']):
                     add('travel', destination, f"{p['name']} · {trip['km']}公里 / {trip['cost']:.1f}银 / {trip['border']}", **trip)
         actions += social.actions(self,n,visible)
         return self.available_actions(n,actions,planning)
@@ -627,7 +637,7 @@ class World:
             tax = government.tax(self, n, earn) if n['age_months'] >= 192 else 0
             practice = careers.gain(n, n['career']['profession'], .4)
             facts.update({'career_practice': practice, 'gross_income': earn, 'tax': tax, 'guild_multiplier': bonus,
-                          'tax_country': PLACES[n['place']]['country']})
+                          'tax_country': territory.owner(self, n['place'])})
             n['health'] = clamp(n['health'] - self.rng.uniform(.5, 2))
             text = f"{name}在{PLACES[n['place']]['name']}以{n['job']}谋生，收入{earn:.1f}银，纳税{tax:.1f}银。"
         elif k == 'change_job':
@@ -903,6 +913,7 @@ class World:
             n['drift_month'] = {}
             social.reset_month(self,n)
         demography.households(self)
+        territory.monthly(self)
         government.monthly(self)
         ids = list(self.npcs)
         self.rng.shuffle(ids)
@@ -1061,7 +1072,7 @@ class World:
                 loss = min(n['wealth'], self.rng.uniform(7, 22))
                 n['wealth'] -= loss
                 n['health'] = clamp(n['health']-self.rng.uniform(3, 10))
-                if self.rng.random() < .004*(1-self.governments[PLACES[place]['country']]['security']):
+                if self.rng.random() < .004*(1-self.governments[territory.owner(self, place)]['security']):
                     fatalities.append(n['id'])
                 affected.append(n['id'])
                 losses[str(n['id'])] = round(loss, 2)
@@ -1221,6 +1232,7 @@ class World:
 
     def export(self):
         return {'seed': self.seed, 'month': self.month, 'npcs': self.npcs,
+                'territory': self.territory, 'campaigns': self.campaigns,
                 'factions': self.factions, 'government': self.government, 'governments': self.governments,
                 'countries': self.countries, 'map_version': MAP_VERSION, 'atlas_history': self.atlas_history, 'player': self.player, 'items': self.items, 'economy': self.economy, 'metrics': self.metrics,
                 'population_limit': self.population_limit, 'random_state': self.rng.getstate(), 'battle': self.battle}
@@ -1238,8 +1250,10 @@ class World:
             n.setdefault('office_country', 0 if n['office'] else None)
             n.setdefault('visited_places', [n['place']])
         self.factions, self.player, self.metrics = state['factions'], state['player'], state['metrics']
-        self.countries = state.get('countries', politics.new())
-        self.governments = state.get('governments', [government.new(c['id']) for c in COUNTRIES])
+        self.countries = deepcopy(state.get('countries', politics.new()))
+        self.territory = deepcopy(state.get('territory', territory.new()))
+        self.campaigns = deepcopy(state.get('campaigns', {'last_attack': {}, 'history': []}))
+        self.governments = deepcopy(state.get('governments', [government.new(c['id']) for c in COUNTRIES]))
         if 'governments' not in state:
             self.governments[0] = state.get('government', government.new())
             self.governments[0]['country'] = 0
@@ -1248,12 +1262,23 @@ class World:
         if state.get('map_version') == 2:
             from .atlas_migration import from_v2
             self._atlas_migration = from_v2(self, state)
+        defaults = politics.new()
+        for c in defaults[len(self.countries):]:
+            self.countries.append(c)
+            self.governments.append(government.new(c['id']))
+        territory.refresh_relations(self)
+        if state.get('map_version') == 3:
+            self.atlas_history = self.atlas_history + [
+                {'map_version': 3, 'month': self.month, 'countries': deepcopy(state['countries']),
+                 'governments': deepcopy(state['governments'])}]
         self.government = self.governments[0]
         self.government['name'] = COUNTRIES[0]['government_name']
         # Add metadata and new organizations without resetting funds, leaders or membership.
         existing = {f['id']: f for f in self.factions}
         self.factions = [{**deepcopy(f), **{k: v for k, v in existing.get(f['id'], {}).items()
                                               if k in ('leader', 'fund')}} for f in FACTIONS]
+        for f in self.factions:
+            f['country'] = territory.owner(self, f['place'])
         self.economy=state.get('economy',{'gaming_house':200.})
         for n in self.npcs.values():
             n.setdefault('identity', careers.identity(self, n))
@@ -1291,10 +1316,12 @@ class World:
                 'goals': dict(Counter(n['goal']['kind'] for n in living)), 'metrics': self.metrics,
                 'professions': dict(Counter(n['job'] for n in living)),
                 'identity_grades': dict(Counter(careers.identity(self, n)['grade_label'] for n in living)),
-                'places': [{**p, 'population': len(self.residents[p['id']])} for p in PLACES],
+                'places': [{**self.summary_place(p['id']), 'population': len(self.residents[p['id']])} for p in PLACES],
                 'factions': [{**f, 'members': sum(n['faction'] == f['id'] for n in living)} for f in self.factions],
                 'map_version': MAP_VERSION, 'era': ERA, 'routes': ROUTES,
-                'countries': [{**c, 'population': sum(PLACES[n['place']]['country'] == c['id'] for n in living),
+                'campaigns': deepcopy(self.campaigns['history'][-12:]),
+                'countries': [{**c, 'population': sum(territory.owner(self, n['place']) == c['id'] for n in living),
+                               'settlements': len(territory.controlled(self, c['id'])),
                                'government': {**self.governments[c['id']], 'cases': self.governments[c['id']]['cases'][-12:]}}
                               for c in self.countries],
                 'government': {**self.government, 'cases': self.government['cases'][-12:]},

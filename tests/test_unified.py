@@ -24,7 +24,7 @@ class UnifiedTests(unittest.TestCase):
             for job in careers.PROFESSIONS:
                 self.assertGreater(careers.income(n, profession=job), 0)
                 self.assertIsInstance(careers.entry_blockers(w, n, job), list)
-        self.assertEqual(len(PLACES), 58)
+        self.assertGreaterEqual(len(PLACES), 150)
 
     def test_item_actions_consume_week_and_enter_the_same_itinerary(self):
         w = self.world()

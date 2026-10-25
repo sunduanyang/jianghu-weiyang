@@ -2,6 +2,7 @@
 from .demography import infect
 from . import social
 from .atlas import PLACES, COUNTRIES
+from . import territory
 
 OFFICES = ['县令', '捕头', '主簿']
 
@@ -14,7 +15,7 @@ def new(country=0):
 
 
 def for_npc(w, n):
-    return w.governments[PLACES[n['place']]['country']]
+    return w.governments[territory.owner(w, n['place'])]
 
 
 def office_government(w, n):
@@ -27,7 +28,7 @@ def establish(w, g=None):
             establish(w, item)
         return
     e = w.emit('government_founded', [], f"{g['name']}立档，辖地库银80银用于治安、救济和公医。", .85,
-               facts={'opening_fund': 80, 'jurisdiction': [p['id'] for p in PLACES if p['country'] == g['country']], 'initial_condition': True})
+               facts={'opening_fund': 80, 'jurisdiction': territory.controlled(w, g['country']), 'initial_condition': True})
     g['last_event'] = e['id']
     appoint(w, g)
 
@@ -40,7 +41,7 @@ def appoint(w, g=None):
             continue
         occupied = {i for k, i in g['offices'].items() if k != office and i}
         candidates = [n for n in w.npcs.values() if n['alive'] and 252 <= n['age_months'] <= 840 and n['id'] not in occupied
-                      and PLACES[n['place']]['country'] == g['country']
+                      and territory.owner(w, n['place']) == g['country']
                       and (not n['office'] or n.get('office_country', 0) == g['country'])]
         if not candidates:
             g['offices'][office] = None
@@ -107,7 +108,7 @@ def monthly(w, g=None):
     g['sanitation'] = max(.1, g['sanitation']-.002)
     needy = []
     for n in w.npcs.values():
-        if not n['alive'] or n['wealth'] >= 2.3 or PLACES[n['place']]['country'] != g['country']:
+        if not n['alive'] or n['wealth'] >= 2.3 or territory.owner(w, n['place']) != g['country']:
             continue
         supporters = set(n['parents'] + ([n['guardian']] if n['guardian'] else []))
         if n['age_months'] < 192 and any(w.npcs[i]['alive'] and w.npcs[i]['place'] == n['place']
@@ -169,7 +170,10 @@ def annual(w, g=None):
         for item in w.governments:
             annual(w, item)
         return
-    population = sum(n['alive'] and PLACES[n['place']]['country'] == g['country'] for n in w.npcs.values())
+    places = territory.controlled(w, g['country'])
+    if not places:
+        return
+    population = sum(n['alive'] and territory.owner(w, n['place']) == g['country'] for n in w.npcs.values())
     magistrate = w.npcs.get(g['offices']['县令'])
     if magistrate:
         t = magistrate['traits']
@@ -185,7 +189,7 @@ def annual(w, g=None):
                [g['last_appointments'].get('县令')], {'budget': budget, 'tax_rate': g['tax_rate'],
                                                     'security': g['security'], 'sanitation': g['sanitation']})
     if w.rng.random() < .24:
-        place = w.rng.choice([p['id'] for p in PLACES if p['country'] == g['country']])
+        place = w.rng.choice(places)
         sick = [w.npcs[i] for i in w.residents[place] if w.rng.random() < .18 and not w.npcs[i]['illness']]
         if sick:
             e = w.emit('epidemic', [n['id'] for n in sick], f"{w.place_name(place)}流行时疫，{len(sick)}人染病。", .9,

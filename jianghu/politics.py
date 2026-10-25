@@ -2,6 +2,7 @@
 from copy import deepcopy
 
 from .atlas import COUNTRIES, PLACES, ROUTES, distance
+from . import territory
 
 RELATIONS = {'通商': 2., '中立': 5., '交恶': 10.}
 
@@ -13,7 +14,9 @@ def new():
     for route in ROUTES:
         a, b = PLACES[route['a']]['country'], PLACES[route['b']]['country']
         if a != b:
-            status = '通商' if tuple(sorted((a, b))) in ((0, 6), (4, 7), (3, 4)) else '中立'
+            pair = tuple(sorted((a, b)))
+            status = ('交恶' if pair == (0, 1) else '通商' if pair in
+                      ((0, 6), (4, 7), (3, 4), (0, 10), (0, 11), (10, 11)) else '中立')
             countries[a]['relations'][str(b)] = status
             countries[b]['relations'][str(a)] = status
     return countries
@@ -21,16 +24,19 @@ def new():
 
 def journey(w, origin, target):
     a, b = PLACES[origin], PLACES[target]
+    ca, cb = territory.owner(w, origin), territory.owner(w, target)
     km = distance(origin, target)
-    status = '境内' if a['country'] == b['country'] else w.countries[a['country']]['relations'].get(str(b['country']), '中立')
+    status = '境内' if ca == cb else w.countries[ca]['relations'].get(str(cb), '中立')
     toll = RELATIONS.get(status, 0.)
     fare = round(3 + km / 110 + (2 if a['kind'] == 'mountain' or b['kind'] == 'mountain' else 0), 2)
     return {'km': km, 'fare': fare, 'toll': toll, 'cost': round(fare+toll, 2),
-            'border': status, 'origin_country': a['country'], 'destination_country': b['country']}
+            'border': status, 'origin_country': ca, 'destination_country': cb}
 
 
 def annual(w):
-    pairs = [(c['id'], int(other)) for c in w.countries for other in c['relations'] if c['id'] < int(other)]
+    territory.refresh_relations(w)
+    pairs = sorted({tuple(sorted((territory.owner(w, r['a']), territory.owner(w, r['b']))))
+                    for r in ROUTES if territory.owner(w, r['a']) != territory.owner(w, r['b'])})
     # At most one change per year; both sides always see the same public relation.
     if not pairs or w.rng.random() >= .55:
         return

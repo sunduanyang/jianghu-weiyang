@@ -2,8 +2,10 @@
 import math
 
 from .historical_map import COUNTRIES, ERA
+from . import atlas_expansion
 
-MAP_VERSION = 3
+MAP_VERSION = 4
+MAP_BOUNDS = [0, 0, 1280, 760]
 
 # name, longitude, latitude, country, region, kind, trade, population weight
 _SITES = [
@@ -72,6 +74,7 @@ def project(lon, lat):
     return round(25 + (lon - 73) * 16.5, 2), round(25 + (54 - lat) * 18.5, 2)
 
 
+_SITES.extend(atlas_expansion.SITES)
 PLACES = []
 for c in COUNTRIES:
     c['label_x'], c['label_y'] = project(*c['label'])
@@ -110,6 +113,9 @@ _FACTIONS = [
     ('岭南药谷', 51, '行医济世，百草入武', 'sect', '药理拳法', 'mastery'),
     ('琼海船帮', 53, '风浪同舟，海贸互济', 'guild', '南海航运', 'wealth'),
 ]
+_site_ids = {p['name']: p['id'] for p in PLACES}
+_FACTIONS.extend((name, _site_ids[home], ethos, kind, art, focus)
+                 for name, home, ethos, kind, art, focus in atlas_expansion.FACTIONS)
 FACTIONS = [dict(id=i, name=name, place=site, ethos=ethos, kind=kind, art=art, focus=focus,
                  country=PLACES[site]['country'], leader=None, fund=100.)
             for i, (name, site, ethos, kind, art, focus) in enumerate(_FACTIONS)]
@@ -124,17 +130,42 @@ def distance(a, b):
     return round(6371 * 2 * math.asin(min(1, math.sqrt(h))))
 
 
-# Every site connects to its four nearest neighbors, plus regional capitals and sea lanes.
+# Each landmass has local roads; crossing to an island requires named ports.
+def landmass(p):
+    if p['country'] == 8:
+        return 'haidong'
+    if p['country'] == 11:
+        if p['region'] == '九州':
+            return 'kyushu'
+        if p['region'] == '四国':
+            return 'shikoku'
+        if p['region'] == '西海道':
+            return 'tsushima'
+        return 'honshu'
+    if p['name'] == '耽罗':
+        return 'tamna'
+    if p['id'] == 53 or p['name'] == '儋州':
+        return 'hainan'
+    return 'mainland'
+
+
 _edges = set()
 for p in PLACES:
-    for q in sorted((q for q in PLACES if q['id'] != p['id']),
+    for q in sorted((q for q in PLACES if q['id'] != p['id'] and landmass(q) == landmass(p)),
                     key=lambda q: distance(p['id'], q['id']))[:4]:
         _edges.add(tuple(sorted((p['id'], q['id']))))
 _edges.update(tuple(sorted(e)) for e in [(29, 30), (29, 31), (28, 36), (36, 34), (34, 42),
                                         (25, 23), (23, 19), (19, 21), (21, 24),
-                                        (49, 50), (49, 51), (51, 53), (50, 53)])
+                                        (49, 50), (49, 51), (51, 53)])
+SEA_LANES = [('明州', '博多津'), ('登州', '西京平壤'), ('金州', '对马府中'),
+             ('对马府中', '博多津'), ('博多津', '长门府中'), ('难波津', '阿波国府'),
+             ('备前国府', '伊予国府'), ('金州', '耽罗'), ('泉州', '海东聚落'),
+             ('雷州', '琼州')]
+_sea_edges = {tuple(sorted((_site_ids[a], _site_ids[b]))) for a, b in SEA_LANES}
+_sea_edges.update({(49, 50), (51, 53)})
+_edges.update(_sea_edges)
 ROUTES = [{'a': a, 'b': b, 'km': distance(a, b),
-           'sea': a in (49, 50, 51, 53) and b in (49, 50, 51, 53)} for a, b in sorted(_edges)]
+           'sea': (a, b) in _sea_edges} for a, b in sorted(_edges)]
 NEIGHBORS = {p['id']: [] for p in PLACES}
 for route in ROUTES:
     NEIGHBORS[route['a']].append(route['b'])

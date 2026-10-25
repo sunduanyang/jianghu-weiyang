@@ -10,7 +10,7 @@ from urllib.parse import parse_qs, urlparse
 from .ai import AIManager, DEFAULT_CONFIG
 from .engine import World
 from .store import Store
-from . import items
+from . import items, territory
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -147,6 +147,9 @@ def handler_for(game):
                             data = game.state()
                         elif path == '/api/martial':
                             data = game.world.martial_view()
+                        elif path == '/api/campaign':
+                            target = int(query.get('place', ['-1'])[0])
+                            data = {'options': territory.attack_options(game.world, target)}
                         elif path.startswith('/api/npc/'):
                             data = game.world.npc_detail(int(path.rsplit('/', 1)[1]))
                             data['history'] = game.world.store.history(data['id'], limit=60)
@@ -215,6 +218,11 @@ def handler_for(game):
                         if game.autoplay or game.job['remaining']:
                             raise ValueError('请先暂停江湖，再闭关练武')
                         data = game.world.martial_action(body.get('action'), body.get('art'))
+                    elif self.path == '/api/campaign':
+                        if game.autoplay or game.job['remaining'] or (game.world.battle and game.world.battle['status'] == 'active'):
+                            raise ValueError('请先暂停江湖并结束切磋，再推演战事')
+                        data = territory.campaign(game.world, body.get('attacker'), body.get('place'), declare=True)
+                        game.world.checkpoint()
                     elif self.path == '/api/battle':
                         data = game.world.battle_action(body.get('battle_id'), body.get('round'), body.get('action'))
                     elif self.path == '/api/ai/config':

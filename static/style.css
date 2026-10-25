@@ -37,3 +37,24 @@ dialog.inventory-dialog{width:1040px;max-width:95vw;max-height:92vh;padding:25px
 .atlas-coast{fill:#e4e2d3;stroke:#a9b8aa;stroke-width:.7;vector-effect:non-scaling-stroke}.map-territory{stroke:#786a50;stroke-width:1.1;fill-opacity:.55}.map-territory.tribal-range{stroke-dasharray:4 3;fill-opacity:.32}.atlas-river{fill:none;stroke:#82a7a0;stroke-width:1.8;opacity:.8;vector-effect:non-scaling-stroke}.song-jin-frontier{fill:none;stroke:#8a5e42;stroke-width:2;stroke-dasharray:5 2;vector-effect:non-scaling-stroke;pointer-events:none}.frontier-label{font:11px var(--serif);fill:#8b6046;paint-order:stroke;stroke:#f3f0e1;stroke-width:2;pointer-events:none}.atlas-circuits{display:none}.layer-circuits .atlas-circuits{display:block}.circuit-label{font:12px var(--serif);fill:#685e42;text-anchor:middle;paint-order:stroke;stroke:#f2efdf;stroke-width:3;cursor:pointer}.layer-circuits .country-label{opacity:.2}.layer-circuits .atlas-site:not(.chosen) .atlas-site-label{display:none!important}.map-close .circuit-label{font-size:7px;stroke-width:1.5}.map-near .circuit-label{font-size:4px;stroke-width:1}.map-close .frontier-label{font-size:6px;stroke-width:1}.map-near .frontier-label{display:none}.atlas-caption{background:#edf0e6c9;padding:1px 4px}
 .layer-circuits .atlas-site-pop{display:none!important}
 .song-jin-frontier{stroke-dasharray:none}
+
+/* Settlement control: district colors use the current save, historical borders only in circuits. */
+.map-control{fill-opacity:.58;stroke:#f5f2e5;stroke-width:.35;vector-effect:non-scaling-stroke;cursor:pointer;transition:fill .2s}
+.map-control:hover{fill-opacity:.85;stroke:#526f5b;stroke-width:1.2}
+.map-control.occupied{fill-opacity:.85;stroke:#66583f;stroke-width:1.3}
+.atlas-historical-borders,.historical-frontier{display:none;pointer-events:none}
+.layer-circuits .atlas-historical-borders,.layer-circuits .historical-frontier{display:block}
+.atlas-historical-borders .map-territory{stroke-dasharray:5 3;stroke-opacity:.65}
+.atlas-site .site-symbol,.atlas-site.capital .site-symbol{fill:var(--site-color);stroke:#f9f7e9}
+.occupation-flag{fill:var(--site-color);stroke:#574832;stroke-width:.8;pointer-events:none}
+.map-close .occupation-flag{transform-box:fill-box;transform-origin:bottom;transform:scale(.65)}
+.map-near .occupation-flag{transform:scale(.4)}
+.settlement-status{display:flex;gap:6px 14px;flex-wrap:wrap;margin:8px 0}
+.settlement-status>span{padding:2px 6px;background:#e7eadf;border-radius:3px}
+#campaign-controls{margin-top:10px;max-width:100%}
+#campaign-controls small{display:block;font-size:10px;color:#8b8069;line-height:1.7;margin-top:5px}
+.campaign-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.campaign-row select{font-size:11px;min-width:0;max-width:100%;flex:1;width:auto}
+.campaign-row button{font-size:11px;white-space:nowrap;background:#e8decb;border-color:#cbb78d;color:#765b34}
+.campaign-recent{font-size:10px!important;margin:3px 0!important}
+.atlas-detail>div{min-width:0;flex:1}
