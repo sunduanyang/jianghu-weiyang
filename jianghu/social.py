@@ -9,9 +9,10 @@ POLES = {'compassion': ('冷漠自利', '共情怜悯'), 'ambition': ('知足退
 LABELS = {'steal': '行窃', 'extort': '勒索', 'smear': '造谣中伤', 'embezzle': '侵吞公帑',
           'gamble': '赌局', 'leisure': '消遣', 'care': '照料', 'meditate': '静思', 'play': '玩耍'}
 KINDS = set(LABELS)
-COSTS = {'work': 2, 'travel': 2, 'duel': 2, 'extort': 2}
+COSTS = {'work': 2, 'travel': 2, 'duel': 2, 'extort': 2, 'faction_task': 2}
 LIMITS = {'trade': 1, 'travel': 1, 'duel': 1, 'family': 1, 'report': 1,
-          'steal': 1, 'extort': 1, 'smear': 1, 'embezzle': 1, 'gamble': 1, 'join': 1}
+          'steal': 1, 'extort': 1, 'smear': 1, 'embezzle': 1, 'gamble': 1, 'join': 1,
+          'faction_task': 1, 'faction_study': 1, 'leave_faction': 1, 'reconcile': 1, 'swear': 1}
 CRIMES = {'betrayal', 'theft_exposed', 'extortion', 'extortion_resisted', 'slander_exposed', 'embezzlement_exposed'}
 
 

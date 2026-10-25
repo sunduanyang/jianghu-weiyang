@@ -234,7 +234,7 @@ function renderFactions() {
   const country = $('#country-filter').value, kind = $('#faction-kind').value;
   const factions = world.factions.filter(f=>(country===''||f.country===Number(country))&&(kind===''||f.kind===kind));
   const labels = {sect:'门派',guild:'商帮',society:'义社'};
-  $('#faction-directory').innerHTML = factions.map(f=>`<button class="faction-card ${$('#faction-filter').value===String(f.id)?'active':''}" data-faction="${f.id}">
+  $('#faction-directory').innerHTML = factions.map(f=>`<div class="faction-entry"><button class="faction-card ${$('#faction-filter').value===String(f.id)?'active':''}" data-faction="${f.id}">
     <span class="faction-type">${labels[f.kind]}</span><b>${esc(f.name)}</b><span>${esc(f.art)}</span>
-    <small>${esc(place(f.place))} · ${f.members}人在世 · ${esc(atlasUI.country(f.country).name)}</small></button>`).join('')||'<p class="note">此处没有该类组织。</p>';
+    <small>${esc(place(f.place))} · ${f.members}人在世 · ${esc(atlasUI.country(f.country).name)}</small></button><button class="faction-more" data-faction-detail="${f.id}">库银 ${num(f.fund,1)} · 门中事务 ↗</button></div>`).join('')||'<p class="note">此处没有该类组织。</p>';
 }

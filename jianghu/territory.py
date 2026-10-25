@@ -90,6 +90,7 @@ def capture(w, target, attacker, event):
 
 
 def campaign(w, attacker, target, *, declare=False):
+    from . import government
     if (type(attacker) is not int or not 0 <= attacker < len(w.countries)
             or type(target) is not int or not 0 <= target < len(PLACES)):
         raise ValueError('势力或地点不存在')
@@ -141,6 +142,8 @@ def campaign(w, attacker, target, *, declare=False):
         capture(w, target, attacker, event)
     else:
         defense['event_id'] = event['id']
+    government.record(w.governments[attacker], event)
+    government.record(w.governments[defender], event)
     w.campaigns['history'].append(dict(event_id=event['id'], month=w.month, attacker=attacker,
                                      defender=defender, place=target, captured=won))
     w.campaigns['history'] = w.campaigns['history'][-80:]

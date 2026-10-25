@@ -1,0 +1,187 @@
+{
+  "date": "2026-10-26",
+  "parents": [
+    "32b279275211f61ed107c04fc89cd74241b2fcc5",
+    "b92ba0ad9ea8713b043bde83a8dd725c4d1f689b"
+  ],
+  "merged_branch": "codex/social-nations-sects",
+  "destination": "main",
+  "places": 168,
+  "countries": 12,
+  "organizations": 34,
+  "tests": {
+    "passed": 148,
+    "integration_tests_added": 5,
+    "log": "reports/integration/social-map-merge-20261026/tests-final.log"
+  },
+  "integration_fixes": [
+    "current-control population and country directories",
+    "policy and organization operations follow conqueror",
+    "military expense records in government ledger",
+    "new social and organization actions record both interior participants",
+    "both city and institution UI refresh and assets",
+    "invalid ID tests use current catalog bounds"
+  ],
+  "population_probes": [
+    {
+      "initial_population": 100,
+      "population": 100,
+      "events": 3993,
+      "wall_seconds": 2.7293896000010136,
+      "bad_causal_edges": 0,
+      "private_memory_leaks": 0,
+      "marriage_errors": 0,
+      "treasury_errors": 0,
+      "office_errors": 0,
+      "item_ownership_errors": 0,
+      "schedule_errors": 0,
+      "faction_treasury_errors": 0,
+      "faction_leader_errors": 0,
+      "diplomacy_errors": 0,
+      "sworn_errors": 0,
+      "real_model_calls": 0
+    },
+    {
+      "initial_population": 500,
+      "population": 501,
+      "events": 19227,
+      "wall_seconds": 31.798199599994405,
+      "bad_causal_edges": 0,
+      "private_memory_leaks": 0,
+      "marriage_errors": 0,
+      "treasury_errors": 0,
+      "office_errors": 0,
+      "item_ownership_errors": 0,
+      "schedule_errors": 0,
+      "faction_treasury_errors": 0,
+      "faction_leader_errors": 0,
+      "diplomacy_errors": 0,
+      "sworn_errors": 0,
+      "real_model_calls": 0
+    },
+    {
+      "initial_population": 1000,
+      "population": 1000,
+      "events": 38113,
+      "wall_seconds": 72.42047900000034,
+      "bad_causal_edges": 0,
+      "private_memory_leaks": 0,
+      "marriage_errors": 0,
+      "treasury_errors": 0,
+      "office_errors": 0,
+      "item_ownership_errors": 0,
+      "schedule_errors": 0,
+      "faction_treasury_errors": 0,
+      "faction_leader_errors": 0,
+      "diplomacy_errors": 0,
+      "sworn_errors": 0,
+      "real_model_calls": 0
+    }
+  ],
+  "jurisdiction_audits": [
+    {
+      "initial_population": 100,
+      "territory_records": 168,
+      "official_jurisdiction_errors": 0,
+      "faction_jurisdiction_errors": 0,
+      "invalid_city_nodes": 0
+    },
+    {
+      "initial_population": 500,
+      "territory_records": 168,
+      "official_jurisdiction_errors": 0,
+      "faction_jurisdiction_errors": 0,
+      "invalid_city_nodes": 0
+    },
+    {
+      "initial_population": 1000,
+      "territory_records": 168,
+      "official_jurisdiction_errors": 0,
+      "faction_jurisdiction_errors": 0,
+      "invalid_city_nodes": 0
+    }
+  ],
+  "upgrade_probes": [
+    {
+      "source": "32b2792",
+      "original_unchanged": true,
+      "npcs_preserved": true,
+      "old_governments_preserved": true,
+      "old_organizations_preserved": true,
+      "items_preserved": true,
+      "player_preserved": true,
+      "rng_preserved": true,
+      "old_event_rows_preserved": true,
+      "new_opening_silver": 0.0,
+      "territory_preserved": true,
+      "city_positions_preserved": true,
+      "reload_idempotent": true,
+      "continued_months": 3,
+      "treasury_errors": 0
+    },
+    {
+      "source": "b92ba0a",
+      "original_unchanged": true,
+      "npcs_preserved": true,
+      "old_governments_preserved": true,
+      "old_organizations_preserved": true,
+      "items_preserved": true,
+      "player_preserved": true,
+      "rng_preserved": true,
+      "old_event_rows_preserved": true,
+      "new_opening_silver": 160.0,
+      "reload_idempotent": true,
+      "continued_months": 3,
+      "treasury_errors": 0
+    }
+  ],
+  "browser": {
+    "port": 8778,
+    "population": 100,
+    "month": 12,
+    "checks": [
+      "12 polities and 34 organizations in institution directory",
+      "Goryeo policy and treasury page",
+      "Kaegyong interior map",
+      "both city and society entry points",
+      "membership tab",
+      "relationship tab"
+    ],
+    "screenshot": "reports/integration/social-map-merge-20261026/merged-city.png"
+  },
+  "source_sha256": {
+    "jianghu/ai.py": "909160a85f2cb10ffb5d5ba798e9825c9183a8c81abc8e63ca6905cb41226a57",
+    "jianghu/atlas.py": "fe9215bab9cac2cf8133c64c4c65fd891a7c689a7d5b81a2644e9af3220113ba",
+    "jianghu/atlas_expansion.py": "48c19a4258c81a611d6fd3dcd5b63fa4ae134693ca10caa01c3564abfbf452fd",
+    "jianghu/atlas_migration.py": "c8f548da1c80323f57a999bfdebe5caf98bf29784fdc0d12021d2a61c72d4b5c",
+    "jianghu/careers.py": "1dd311ff15132744808035d63bdf8d16286a8d0097a0f9604d53fedf1349ea38",
+    "jianghu/city_maps.py": "b9a2e3a5844a55c6f12900b227767daa9b59931207e9df093cf024eb4c551b4a",
+    "jianghu/city_plans.py": "48cb31a3f7355449314e7c1936a6405b419dc7d8d176a774b085beb291659548",
+    "jianghu/combat.py": "a0499226f53275d72ae0ddee04be07309698e1ccc17aa496bc21e65f3fe0a680",
+    "jianghu/demography.py": "47fea0504faf27437fb70db3585c427521d1ff6c101989cf7b406c52b22c4f89",
+    "jianghu/engine.py": "dd7512335f57d9a1de7f16fcb36c39d2c6491245a0bf1a6d1688160590a4d25b",
+    "jianghu/government.py": "5392b1cf3ff273a2be934d8cd448c8b71be60c7928e959ede595d70b77c0fe0c",
+    "jianghu/historical_map.py": "98cb923700e6ca92bd4540c51cd3153cc5ef3245c9c26b6f3a2ada7f983ad65f",
+    "jianghu/items.py": "3bba00b6cfe79c48e2af39af374212e22a9adf975f365e823e17bdff144627ee",
+    "jianghu/martial.py": "ba619766b6ad61f5a79fcdd943cf4a5d0b2b6668854d893a53e7c244284d3ca3",
+    "jianghu/organizations.py": "cec0b223c8aa9d26940f9271fa14f08fd3d05c3a1ce26a6da164dc523c0033f4",
+    "jianghu/politics.py": "2a05b1c15c093ad20a31ee1e0bb7d7480cae205fd47413bf4916e6f32eb683b7",
+    "jianghu/relationships.py": "0b51546065f525967838cab3a967fbd2102903dca5b9b79864007169e0450fae",
+    "jianghu/server.py": "f53e4eb6967dd590f57fe25a50e062b59a28a0772c32ca51545626b66b0ceccc",
+    "jianghu/social.py": "17c4430fe4340aaadbd2b51a787fd195a413960229461214dffb5065d0ddf12b",
+    "jianghu/store.py": "f1e28ac64bb8a015e6fb15d776d58b183ee7577e4fbde46383911e52b7d5cfe8",
+    "jianghu/territory.py": "fe4a11479dc805d7250d4a73d4b5c234edba8f5dcd26597877ad8695b38956f0",
+    "jianghu/__init__.py": "fa4bb541ffb1012e31431d164c85942d7e66419ef2c01b38bcb64e142969b8d7",
+    "static/app.js": "82c78d2c3f544a04d24a4e5001b6efb5a26ff81d2b2da257ce7c922384da82fb",
+    "static/art.css": "bd23aa79997b376adee40fc16e39a7f35e763d2bd202e92a13c1eb4f0f1bd56d",
+    "static/city.css": "5012782dbb2e5daa740f33f3832c5c32e05e7a952731fa54c8e2a08428850b1b",
+    "static/city.js": "e6b47b26e3dd9b64869cc55c91cec005cfdb926c6c1fe427e40f9e4c01f1845a",
+    "static/geography.json": "a1900558cd4556922ee2800e5207b610aa95240ff911a4dd53c2450cb5d7291a",
+    "static/index.html": "a7442655722991e2f57e294f1f67c42295223d34009df563e42c2c7d4c7a524d",
+    "static/inventory.js": "4364c75080aaec422ffadd4e02275f025147889f934127576bb6fa6282e08a05",
+    "static/map.js": "e8527396bd05496c9490717ad7ce45c473eae075c557b8243d03d5f04ff1ec59",
+    "static/martial.js": "d301ae96e6a9dc377bae658ccd0495a67122e7c05fb891715aa17061e40fdefb",
+    "static/society.js": "f23628aa14cb0a45e9179f59b9de6d244c70401d3ea957d5020ec29330e8a57c",
+    "static/style.css": "fc3b39a02e2ef218db24e9df7f7081eef395d3cdc95703685d6e413c95112a3e"
+  }
+}
