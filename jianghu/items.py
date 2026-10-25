@@ -243,7 +243,7 @@ def market_view(w):
                         for k, v in RECIPES.items()]}
 
 
-def perform(w, owner, operation, item_id=None, target=None, recipe=None):
+def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=None):
     """Validate ownership, all costs and prerequisites before changing any state."""
     owner = str(owner)
     if owner != 'player' and owner not in {str(i) for i in w.npcs}:
@@ -257,9 +257,11 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None):
     consumed = []
     actor_before = {k: n[k] for k in ('wealth', 'health', 'skill')}
     facts = {'owner': owner, 'operation': operation}
+    if action:
+        facts.update(action=action['id'], actor=n['id'], decision_source=n['choice_source'], time_cost=action['time_cost'])
     people = [] if owner == 'player' else [int(owner)]
     settlement = n.get('monthly_settlement', {})
-    if settlement.get('month') == w.month:
+    if settlement.get('month') == w.month and not n.get('settlement_logged', False):
         facts['monthly_settlement'] = settlement.copy()
         if settlement.get('payer') != n.get('id') and settlement.get('paid', 0) > 0:
             people.append(settlement['payer'])
