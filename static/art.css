@@ -263,3 +263,19 @@ footer { color: #867452; padding: 5px 30px 22px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* Use one set of layout breakpoints for the atlas, portraits and inspector. */
+.world-column, .inspector { min-width: 0; }
+@media (min-width: 981px) {
+  .inspector { grid-column: auto; position: sticky; top: 15px; }
+}
+@media (min-width: 761px) and (max-width: 980px) {
+  .workspace { display: grid; grid-template-columns: 205px minmax(0, 1fr); }
+  .inspector { grid-column: 1 / -1; position: static; }
+  .roster { position: static; }
+}
+@media (max-width: 760px) {
+  .workspace { display: flex; flex-direction: column; }
+  .roster, .inspector { position: static; width: 100%; }
+  .world-column { width: 100%; }
+}

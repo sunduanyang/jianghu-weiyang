@@ -32,7 +32,7 @@ function renderMartial(){
 
 function renderNPCMartial(){
  const m=npc.martial_view;
- $('#npc-body').innerHTML=`<div class="section-label">所学与运功 <span>精力 ${num(m.stamina)}</span></div><p class="note">${esc(m.stats.inner)} · ${m.stats.affinity} · 内力 ${num(m.stats.qi)}<br>师承和修习均由人物的月度行动推进。</p><div class="npc-arts">${m.arts.map(a=>artCard(a,false)).join('')}</div>`;
+ $('#npc-body').innerHTML=`<div class="section-label">所学与运功 <span>精力 ${num(m.stamina)}</span></div><p class="note">${esc(m.stats.inner)} · ${m.stats.affinity} · 内力 ${num(m.stats.qi)}<br>师承和修习均由人物的周行程推进。</p><div class="npc-arts">${m.arts.map(a=>artCard(a,false)).join('')}</div>`;
 }
 const originalRenderNPC = renderNPC;
 renderNPC = function(){ originalRenderNPC(); if(npc&&tab==='martial')renderNPCMartial(); };

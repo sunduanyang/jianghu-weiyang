@@ -7,7 +7,7 @@ import unittest
 import urllib.error
 import urllib.request
 
-from jianghu import items
+from jianghu import items, martial
 from jianghu.ai import context_for
 from jianghu.engine import World
 from jianghu.server import handler_for
@@ -225,10 +225,12 @@ class ItemTests(unittest.TestCase):
         w = self.world()
         n = w.npcs[1]
         n['age_months'], n['health'] = 300, 100.
-        e = w.intervene(1, 'challenge')
-        self.assertEqual(e['facts']['player_health_cost'], 7)
-        self.assertAlmostEqual(e['facts']['player_skill_gain'], .48)
-        self.assertEqual(w.player['health'], 93)
+        state = w.intervene(1, 'challenge')
+        b = state['battle']
+        self.assertEqual(b['fighters'][0]['attack'], martial.stats(w.player)['attack']+2)
+        self.assertAlmostEqual(b['fighters'][0]['outer_guard'], martial.stats(w.player)['outer_guard']+1)
+        w.battle_action(b['id'], b['round'], 'surrender')
+        self.assertLess(w.player['health'], 100)
         self.assertEqual(self.find(w, 'wood_sword')['durability'], 98)
         w.month_step()
         self.assertEqual(w.player['health'], 100)
@@ -313,6 +315,17 @@ class ItemHTTPTests(unittest.TestCase):
         with self.assertRaises(urllib.error.HTTPError) as raised:
             self.request('/api/items', {'operation': 'craft', 'recipe': 'salve'}, origin='http://example.invalid')
         self.assertEqual(raised.exception.code, 403)
+        self.assertEqual(self.world.export(), before)
+
+    def test_items_cannot_change_during_interactive_battle(self):
+        n = self.world.npcs[1]
+        n['age_months'], n['health'] = 360, 100
+        self.world.start_battle(1)
+        sword = self.world.player['equipment']['weapon']
+        before = deepcopy(self.world.export())
+        with self.assertRaises(urllib.error.HTTPError) as raised:
+            self.request('/api/items', {'operation': 'unequip', 'item_id': sword})
+        self.assertEqual(raised.exception.code, 400)
         self.assertEqual(self.world.export(), before)
 
 

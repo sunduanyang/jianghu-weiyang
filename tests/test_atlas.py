@@ -4,7 +4,7 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch
 
-from jianghu import government, politics
+from jianghu import social, government, politics
 from jianghu.atlas import COUNTRIES, FACTIONS, NEIGHBORS, PLACES, ROUTES, distance
 from jianghu.engine import World
 from jianghu.historical_map import TERRITORIES, ERA
@@ -90,6 +90,7 @@ class AtlasTests(unittest.TestCase):
         w.execute(n, {'id': 'join:1'})
         event = w.execute(n, {'id': 'work:self'})
         self.assertEqual(event['facts']['guild_multiplier'], 1.12)
+        w.month += 1; social.reset_month(w, n)
         n['place'] = 31; w.reindex()
         event = w.execute(n, {'id': 'work:self'})
         self.assertEqual(event['facts']['guild_multiplier'], 1)

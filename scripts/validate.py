@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from jianghu.engine import World, TRAITS
 from jianghu.store import Store
+from jianghu import items
 
 
 def probe(population, months, seed, durable):
@@ -43,6 +44,19 @@ def probe(population, months, seed, durable):
     office_errors=sum(not w.npcs[i]['alive'] or w.npcs[i]['office'] != office or
                       w.npcs[i]['office_country'] != g['country']
                       for g in w.governments for office, i in g['offices'].items() if i)
+    held=[]; ownership_errors=0
+    for owner in ['player','market','government']+list(w.npcs):
+        actor=items.actor(w,owner)
+        held.extend(actor['inventory'])
+        ownership_errors += sum(str(owner)!=w.items['objects'][i]['owner'] for i in actor['inventory'])
+        ownership_errors += sum(i not in actor['inventory'] for i in actor['equipment'].values())
+    ownership_errors += len(held)-len(set(held))+len(set(held)^set(w.items['objects']))
+    schedule_errors=0
+    for n in w.npcs.values():
+        occupied=[]
+        for action in n['monthly_actions']:
+            occupied.extend(range(action['week'],action['week']+action['time_cost']))
+        schedule_errors += len(occupied)!=len(set(occupied)) or any(i<1 or i>4 for i in occupied) or n['time_left']<0
     result={k:v for k,v in w.summary().items() if k not in ('npcs','places','factions','player')}
     result.update({'initial_population':population,'simulated_years':months/12,'durable_monthly_snapshot':durable,
                    'source_sha256': {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT/'jianghu').glob('*.py')},
@@ -54,6 +68,8 @@ def probe(population, months, seed, durable):
                    'bad_causal_edges':bad_causes,'private_memory_leaks':private_leaks,
                    'marriage_errors':marriage_errors,'treasury_errors':treasury_errors,
                    'office_errors':office_errors,'database':str(path)})
+    result.update(item_ownership_errors=ownership_errors, schedule_errors=schedule_errors,
+                  active_items=len(w.items['objects']), real_model_calls=0)
     w.store.close()
     return result
 

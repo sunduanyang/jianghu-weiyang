@@ -2,7 +2,7 @@ from copy import deepcopy
 import json
 import unittest
 
-from jianghu import careers, government
+from jianghu import careers, government, items
 from jianghu.ai import context_for
 from jianghu.engine import World
 
@@ -39,12 +39,12 @@ class CareerTests(unittest.TestCase):
         self.assertGreater(careers.income(n), first)
 
     def test_work_books_tax_and_crossing_a_grade_has_a_real_cause(self):
-        n = self.person(xp=14.5)
-        money, treasury, estimate = n['wealth'], self.w.government['fund'], careers.income(n)
+        n = self.person(xp=14.7)
+        money, treasury, estimate = n['wealth'], self.w.government['fund'], (careers.income(n)+items.bonuses(self.w,n['id'])['income'])*.5
         e = self.w.execute(n, {'id': 'work:self'})
         self.assertAlmostEqual(n['wealth']-money, estimate-e['facts']['tax'])
         self.assertAlmostEqual(self.w.government['fund']-treasury, e['facts']['tax'])
-        self.assertEqual(careers.experience(n), 15.3)
+        self.assertEqual(careers.experience(n), 15.1)
         self.assertEqual(careers.identity(self.w, n)['grade'], 8)
         change = next(e for e in self.w.store.history(n['id']) if e['kind'] == 'identity_change')
         self.assertIn(e['id'], change['causes'])
@@ -118,7 +118,7 @@ class CareerTests(unittest.TestCase):
         n['age_months'] = 180
         self.assertAlmostEqual(careers.income(n), round(adult_income*.45, 4), places=4)
         n['age_months'] = 119
-        self.assertEqual({a['kind'] for a in self.w.legal_actions(n)}, {'rest', 'train'})
+        self.assertEqual({a['kind'] for a in self.w.legal_actions(n)}, {'rest', 'train', 'play'})
 
     def test_professional_doctor_skill_changes_real_healing_and_transfers_fee(self):
         n = self.person()

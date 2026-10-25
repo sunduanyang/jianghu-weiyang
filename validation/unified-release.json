@@ -1,0 +1,172 @@
+{
+  "version": "0.2",
+  "date": "2026-10-25",
+  "base_items_commit": "f9fb34bfb27548d47483b6a9ae7a7b0042d24fc1",
+  "sources": {
+    "china-map-factions": {
+      "path": "C:\\Users\\User\\.codex\\worktrees\\china-map-factions\\新游戏",
+      "original_head": "778b7d526035e0e7e86672f41afe88d894b45375",
+      "tree": "997e208671dc5f65d3a7104e36a8b439d0eea577",
+      "snapshot": "ecd17a3dc526761f9b83c55003d3ee4f5fd3df2d",
+      "ref": "refs/heads/codex/snapshot-china-map-factions-20261025-225644",
+      "status": "M README.md\n M jianghu/ai.py\n M jianghu/demography.py\n M jianghu/engine.py\n M jianghu/government.py\n M jianghu/server.py\n M run.py\n M scripts/validate.py\n M static/app.js\n M static/index.html\n M static/style.css\n M tests/test_generations.py\n M tests/test_simulation.py\n?? ATLAS_VALIDATION.md\n?? jianghu/atlas.py\n?? jianghu/atlas_migration.py\n?? jianghu/historical_map.py\n?? jianghu/politics.py\n?? scripts/build_map.py\n?? static/geography.json\n?? static/map.js\n?? tests/test_atlas.py",
+      "final_source_head": "778b7d526035e0e7e86672f41afe88d894b45375",
+      "final_tree_verified": true
+    },
+    "jianghu-art": {
+      "path": "C:\\Users\\User\\.codex\\worktrees\\jianghu-art\\新游戏",
+      "original_head": "0176f77da1d12c1ec5c75b19f3ae83ba8f1ac775",
+      "tree": "15038a58cb1650d2d7434b76502320e639beadb1",
+      "snapshot": "0176f77da1d12c1ec5c75b19f3ae83ba8f1ac775",
+      "ref": "refs/heads/codex/snapshot-jianghu-art-20261025-225644",
+      "status": "",
+      "final_source_head": "0176f77da1d12c1ec5c75b19f3ae83ba8f1ac775",
+      "final_tree_verified": true
+    },
+    "martial-combat": {
+      "path": "C:\\Users\\User\\.codex\\worktrees\\martial-combat\\新游戏",
+      "original_head": "778b7d526035e0e7e86672f41afe88d894b45375",
+      "tree": "064ce80e956cc3950165c1f27c97a74b3deb6022",
+      "snapshot": "7d7e5783e7858a959e0f7ca92fd011ff5f66e61d",
+      "ref": "refs/heads/codex/snapshot-martial-combat-20261025-225644",
+      "status": "M README.md\n M jianghu/ai.py\n M jianghu/engine.py\n M jianghu/server.py\n M static/app.js\n M static/index.html\n M static/style.css\n?? jianghu/combat.py\n?? jianghu/martial.py\n?? static/martial.js\n?? tests/test_martial.py",
+      "final_source_head": "778b7d526035e0e7e86672f41afe88d894b45375",
+      "final_tree_verified": true
+    },
+    "npc-profession-identity": {
+      "path": "C:\\Users\\User\\.codex\\worktrees\\npc-profession-identity\\新游戏",
+      "original_head": "778b7d526035e0e7e86672f41afe88d894b45375",
+      "tree": "e80503f2f2bd49ea0adf97fc5388b63573a5918e",
+      "snapshot": "6c4f0656090f8710659e9cd60d38aa5c47fa6405",
+      "ref": "refs/heads/codex/snapshot-npc-profession-identity-20261025-225644",
+      "status": "M README.md\n M jianghu/ai.py\n M jianghu/engine.py\n M jianghu/government.py\n M static/app.js\n M static/index.html\n M static/style.css\n?? jianghu/careers.py\n?? scripts/validate_careers.py\n?? tests/test_careers.py",
+      "final_source_head": "778b7d526035e0e7e86672f41afe88d894b45375",
+      "final_tree_verified": true
+    },
+    "richer-lives": {
+      "path": "C:\\Users\\User\\.codex\\worktrees\\richer-lives\\新游戏",
+      "original_head": "12d4fb4fa2dee5c07708608ebcc9082c55f5f19b",
+      "tree": "d28180d2d1f30564cf89b2733d75d02e47eb66d8",
+      "snapshot": "12d4fb4fa2dee5c07708608ebcc9082c55f5f19b",
+      "ref": "refs/heads/codex/snapshot-richer-lives-20261025-225644",
+      "status": "",
+      "final_source_head": "12d4fb4fa2dee5c07708608ebcc9082c55f5f19b",
+      "final_tree_verified": true
+    }
+  },
+  "test_suite": {
+    "command": "python -m unittest discover -s tests -v",
+    "passed": 102,
+    "failed": 0,
+    "log": "reports/integration/tests-final.log"
+  },
+  "population_probes": [
+    {
+      "initial_population": 100,
+      "final_population": 100,
+      "months": 12,
+      "seed": 42,
+      "durable_monthly_snapshot": true,
+      "errors": {
+        "bad_causal_edges": 0,
+        "private_memory_leaks": 0,
+        "marriage_errors": 0,
+        "treasury_errors": 0,
+        "office_errors": 0,
+        "item_ownership_errors": 0,
+        "schedule_errors": 0
+      },
+      "database": "D:\\Desktop\\新游戏\\reports\\integration\\simulations\\simulation-100-12-seed42-1792940902212301300.sqlite"
+    },
+    {
+      "initial_population": 500,
+      "final_population": 501,
+      "months": 12,
+      "seed": 42,
+      "durable_monthly_snapshot": true,
+      "errors": {
+        "bad_causal_edges": 0,
+        "private_memory_leaks": 0,
+        "marriage_errors": 0,
+        "treasury_errors": 0,
+        "office_errors": 0,
+        "item_ownership_errors": 0,
+        "schedule_errors": 0
+      },
+      "database": "D:\\Desktop\\新游戏\\reports\\integration\\simulations\\simulation-500-12-seed42-1792940904753813300.sqlite"
+    },
+    {
+      "initial_population": 1000,
+      "final_population": 1003,
+      "months": 12,
+      "seed": 42,
+      "durable_monthly_snapshot": true,
+      "errors": {
+        "bad_causal_edges": 0,
+        "private_memory_leaks": 0,
+        "marriage_errors": 0,
+        "treasury_errors": 0,
+        "office_errors": 0,
+        "item_ownership_errors": 0,
+        "schedule_errors": 0
+      },
+      "database": "D:\\Desktop\\新游戏\\reports\\integration\\simulations\\simulation-1000-12-seed42-1792940935622777500.sqlite"
+    }
+  ],
+  "migration": {
+    "source_database": "D:\\Desktop\\新游戏\\data\\world-generations-v2-1792934615860461800.sqlite",
+    "upgraded_copy": "D:\\Desktop\\新游戏\\reports\\integration\\migration-copy-1792941060401900100.sqlite",
+    "source_month": 242,
+    "people_preserved": 113,
+    "old_journal_rows": {
+      "events": 26627,
+      "participants": 40064,
+      "experiences": 40098,
+      "ai_log": 6
+    },
+    "original_rows_unchanged": true,
+    "existing_item_instances_preserved": true,
+    "existing_traits_skills_wealth_health_preserved": true,
+    "idempotent_reload": true,
+    "continued_month": 243,
+    "map_places": 58,
+    "governments": 10,
+    "real_model_calls": 0
+  },
+  "browser_checks": [
+    "national atlas, portraits, career filters and identity page",
+    "inventory and equipment details",
+    "interactive guard, attack, opponent response and surrender",
+    "world advances after combat; item use, work and training share weekly itinerary"
+  ],
+  "real_model_calls": 0,
+  "limits": [
+    "single-seed population probes cover one year; not a balance or full-population AI acceptance",
+    "historical branch evidence remains separate from unified validation"
+  ],
+  "production_sha256": {
+    "jianghu/ai.py": "94c8ff69d6e3ca931a94c887e9b09c576925d4bf1aa3f622f8631dabf2594b81",
+    "jianghu/atlas.py": "017372abe7dfe51164e3b2cc370e42975313805caa04562251bea3c079d9a87c",
+    "jianghu/atlas_migration.py": "c8f548da1c80323f57a999bfdebe5caf98bf29784fdc0d12021d2a61c72d4b5c",
+    "jianghu/careers.py": "6608e7db57ba8164cd727baf4cb89da0a5b792d1ee627211ed68282eb3d18ced",
+    "jianghu/combat.py": "a0499226f53275d72ae0ddee04be07309698e1ccc17aa496bc21e65f3fe0a680",
+    "jianghu/demography.py": "47fea0504faf27437fb70db3585c427521d1ff6c101989cf7b406c52b22c4f89",
+    "jianghu/engine.py": "5e7b8f2068c1a5d8e0e2a3d655f0f99ac949f7fc8b09fa35e0cfd9cc88eb6494",
+    "jianghu/government.py": "018544fc8fb9211082340a405b2abff18235a2eb388663961c7ba44cff8c0511",
+    "jianghu/historical_map.py": "a1601dfc77e282fc0a93627e26886bf185322ceac7b9691c6fc6d3e5b66a3f7f",
+    "jianghu/items.py": "192cfe29a9f129a1f37e75ac2b5f0f4410fdf589ea5103b376c1cfc20d3d81dc",
+    "jianghu/martial.py": "ba619766b6ad61f5a79fcdd943cf4a5d0b2b6668854d893a53e7c244284d3ca3",
+    "jianghu/politics.py": "f40b3d0a7b9836661fc2342e959710c02a8f45b07c570000dfc4cc5c6d2374a2",
+    "jianghu/server.py": "4a2ab90d710c806ede7051567d01f105e087ea361d87451976744eef8a4834d5",
+    "jianghu/social.py": "f1f52f77c0380b18e2b803b18f1d78954f3994bc8f6cfd47a4e2e8f3c8a468ed",
+    "jianghu/store.py": "f1e28ac64bb8a015e6fb15d776d58b183ee7577e4fbde46383911e52b7d5cfe8",
+    "jianghu/__init__.py": "fa4bb541ffb1012e31431d164c85942d7e66419ef2c01b38bcb64e142969b8d7",
+    "static/app.js": "f52834a6125200dea76f7b009633780922a6cc9541a3a4fcb3bbc08568524846",
+    "static/inventory.js": "6e0d874b78213677f33d31b41d42ff5de897c747461c36f612010834cca24f10",
+    "static/map.js": "209473945add5301387b66f99999f5c3d7873eca0324531a7698329abfe7138e",
+    "static/martial.js": "3fc5603240f18f117e805c955e0edd12bfa953ddf2c744065bbdfb6f8e9094ed",
+    "static/art.css": "bd23aa79997b376adee40fc16e39a7f35e763d2bd202e92a13c1eb4f0f1bd56d",
+    "static/style.css": "e1dcd32209ebc3d6e7e725bc85f301984fea884271e2d4e215fa4763850a193b",
+    "static/index.html": "a7ca68879fc429ae4d78f913ae00a6f7642ce1d203a583a55aae0b910df95f78"
+  }
+}
