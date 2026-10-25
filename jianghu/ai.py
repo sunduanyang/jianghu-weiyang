@@ -9,6 +9,7 @@ from urllib.parse import urlparse
 
 from .engine import TRAITS, BELIEFS, DESIRES
 from . import items
+from . import careers
 
 DEFAULT_CONFIG = {'enabled': False, 'backend': 'llamacpp', 'url': 'http://127.0.0.1:11435',
                   'model': 'qwen3:4b', 'reviews_per_month': 24, 'cooldown_months': 3,
@@ -40,11 +41,12 @@ def context_for(world, n):
             'self': {k: deepcopy(n[k]) for k in ('name', 'age_months', 'wealth', 'health', 'skill', 'job',
                                                   'traits', 'mood', 'beliefs', 'desires', 'goal',
                                                   'pregnancy', 'illness', 'office', 'generation',
-                                                  'spouse', 'children', 'family_size')},
+                                                  'spouse', 'children', 'family_size', 'career')},
             'public_institutions': {'name': local_g['name'], 'tax_rate': local_g['tax_rate'],
                                     'offices': local_g['offices'].copy()},
             'location': {**world.summary_place(n['place']), 'country_name': world.countries[local_g['country']]['name']},
             'membership': deepcopy(world.factions[n['faction']]) if n['faction'] is not None else None,
+            'social_identity': careers.identity(world, n),
             'current_plan': deepcopy(n['plan']),
             'possessions': [{'id': i['id'], 'name': items.spec(i)['name'], 'durability': i['durability']}
                             for i in items.objects(world, n['id'])],

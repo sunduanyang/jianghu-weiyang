@@ -47,6 +47,11 @@ def appoint(w, g=None):
             if current:
                 current['office'] = None
                 current['office_country'] = None
+                e = w.emit('office_vacancy', [current['id']],
+                           f"{current['name']}的{office}任期届满，暂无合资格继任者，此职暂缺。", .75,
+                           [g['last_appointments'].get(office)], {'office': office, 'previous': current['id']})
+                g['last_appointments'][office] = e['id']
+                g.setdefault('departed', {})[office] = current['id']
             continue
         def merit(n):
             return n['reputation'] + n['contribution']*.15 + n['traits']['loyalty']*.25 + (
