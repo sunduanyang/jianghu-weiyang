@@ -7,7 +7,7 @@ if __name__ == '__main__':
     root = Path(__file__).resolve().parent
     parser = argparse.ArgumentParser(description='江湖 · 本地AI社会沙盒')
     parser.add_argument('--port', type=int, default=8765)
-    parser.add_argument('--population', type=int, default=100)
+    parser.add_argument('--population', type=int, default=500)
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--prehistory', type=int, default=18)
     parser.add_argument('--db', type=Path)

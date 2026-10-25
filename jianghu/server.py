@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class Game:
-    def __init__(self, path, seed=42, population=100, prehistory=18):
+    def __init__(self, path, seed=42, population=500, prehistory=18):
         self.lock = threading.RLock()
         self.path = Path(path)
         config_path = ROOT / 'data' / 'ai_config.json'
@@ -155,14 +155,14 @@ def handler_for(game):
                             return
                     self.json_response(data)
                     return
-                files = {'/': 'index.html', '/index.html': 'index.html', '/style.css': 'style.css', '/app.js': 'app.js'}
+                files = {'/': 'index.html', '/index.html': 'index.html', '/style.css': 'style.css', '/app.js': 'app.js', '/map.js': 'map.js', '/geography.json': 'geography.json'}
                 filename = files.get(path)
                 if not filename:
                     self.send_error(404)
                     return
                 payload = (ROOT / 'static' / filename).read_bytes()
                 self.send_response(200)
-                self.send_header('Content-Type', {'html': 'text/html', 'css': 'text/css', 'js': 'text/javascript'}[filename.split('.')[-1]]+'; charset=utf-8')
+                self.send_header('Content-Type', {'html': 'text/html', 'css': 'text/css', 'js': 'text/javascript', 'json': 'application/json'}[filename.split('.')[-1]]+'; charset=utf-8')
                 self.send_header('Content-Length', str(len(payload)))
                 self.end_headers()
                 self.wfile.write(payload)
@@ -231,7 +231,7 @@ def game_ai_wait(ai, month):
                 month-min(ai.submitted_months.values()) >= 3)
 
 
-def serve(path, host='127.0.0.1', port=8765, seed=42, population=100, prehistory=18):
+def serve(path, host='127.0.0.1', port=8765, seed=42, population=500, prehistory=18):
     game = Game(path, seed, population, prehistory)
     server = ThreadingHTTPServer((host, port), handler_for(game))
     print(f'江湖已开启: http://{host}:{port}  存档: {path}', flush=True)

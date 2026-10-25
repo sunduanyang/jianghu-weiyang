@@ -167,7 +167,7 @@ class SimulationTests(unittest.TestCase):
     def test_unfed_child_does_not_heal_through_starvation(self):
         w=self.world(population=1);n=w.npcs[1]
         n['age_months']=30;n['health']=20;n['wealth']=0
-        w.government['fund']=0
+        w.local_government(n)['fund']=0
         w.month_step()
         self.assertLess(n['health'],20)
 

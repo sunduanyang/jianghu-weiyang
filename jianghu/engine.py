@@ -6,20 +6,10 @@ import random
 import time
 
 from .store import Store
-from . import demography, government
+from . import demography, government, politics
 
-PLACES = [
-    {'id': 0, 'name': '青溪镇', 'x': 25, 'y': 66, 'trade': 1.05, 'color': '#a1b99c'},
-    {'id': 1, 'name': '栖云山', 'x': 39, 'y': 23, 'trade': .8, 'color': '#91abb4'},
-    {'id': 2, 'name': '临川城', 'x': 74, 'y': 55, 'trade': 1.3, 'color': '#d1b881'},
-    {'id': 3, 'name': '桃花渡', 'x': 50, 'y': 77, 'trade': .95, 'color': '#c59f9f'},
-    {'id': 4, 'name': '寒石寨', 'x': 80, 'y': 20, 'trade': .9, 'color': '#a99eaf'},
-]
-FACTIONS = [
-    {'id': 0, 'name': '栖云门', 'place': 1, 'ethos': '传艺修身', 'leader': None, 'fund': 100},
-    {'id': 1, 'name': '临川商会', 'place': 2, 'ethos': '互通有无', 'leader': None, 'fund': 100},
-    {'id': 2, 'name': '青溪义社', 'place': 0, 'ethos': '扶危济困', 'leader': None, 'fund': 100},
-]
+from .atlas import PLACES, FACTIONS, COUNTRIES, ROUTES, NEIGHBORS, MAP_VERSION, ERA
+
 TRAITS = {'compassion': '仁厚', 'ambition': '进取', 'caution': '谨慎',
           'sociability': '外向', 'loyalty': '重义'}
 BELIEFS = {'trust': '人可相托', 'justice': '善有善报', 'tradition': '传承有益'}
@@ -51,7 +41,11 @@ class World:
         self.rng = random.Random(seed)
         self.seed, self.month = seed, 0
         self.npcs, self.factions = {}, deepcopy(FACTIONS)
-        self.government = government.new()
+        self.atlas_history = []
+        self._atlas_migration = None
+        self.countries = politics.new()
+        self.governments = [government.new(c['id']) for c in COUNTRIES]
+        self.government = self.governments[0]
         self.player = {'name': '过客', 'wealth': 160., 'reputation': 0, 'ties': {}}
         self.metrics = {'steps': 0, 'simulation_ms': 0., 'actions': {}, 'goals_completed': 0,
                         'births': 0, 'deaths': 0, 'invalid_actions': 0,
@@ -64,6 +58,21 @@ class World:
             self.restore(state)
             if 'government' not in state:
                 government.establish(self)
+            elif 'governments' not in state:
+                for g in self.governments[1:]:
+                    government.establish(self, g)
+            if state.get('map_version') == 2:
+                self.emit('atlas_revised', [], '舆图改依约公元1200年宋金形势重绘；原有公帑按辖地转入各政权，人物财产与旧年谱保留。', .9,
+                          facts=self._atlas_migration)
+            elif state.get('map_version', 1) < MAP_VERSION:
+                self.emit('world_expansion', [], '全国舆图展开：旧五地归入南宋，新增各地府衙与江湖组织；'
+                          '原有人物、财产和经历继续保留，新机构库银作为初始条件登记。', .9,
+                          facts={'map_version': MAP_VERSION, 'places': len(PLACES),
+                                 'countries': len(COUNTRIES), 'factions': len(FACTIONS),
+                                 'new_government_opening_funds': 80 * (len(COUNTRIES)-1),
+                                 'new_faction_opening_funds': 100 * (len(FACTIONS)-3),
+                                 'initial_condition': True})
+            if state.get('map_version', 1) < MAP_VERSION or 'government' not in state:
                 self.checkpoint()
         else:
             for _ in range(population):
@@ -100,7 +109,7 @@ class World:
                 cursor += 1
         age = 0 if parents else self.rng.randint(7 * 12, 48 * 12)
         n = {'id': i, 'name': name, 'sex': self.rng.choice(['女', '男']), 'age_months': age,
-             'alive': True, 'place': place if place is not None else self.rng.randrange(5),
+             'alive': True, 'place': place if place is not None else self.rng.choices(PLACES, weights=[p['weight'] for p in PLACES], k=1)[0]['id'],
              'job': self.rng.choice(JOBS), 'wealth': round(self.rng.uniform(20, 95), 2) if not parents else 0.,
              'skill': self.rng.uniform(4, 32) if age > 180 else 2., 'health': 100., 'reputation': 0.,
              'traits': traits, 'initial_traits': traits.copy(), 'mood': {'joy': 0., 'anger': 0., 'fear': 0.},
@@ -128,16 +137,24 @@ class World:
         self.npcs[i] = n
         demography.initialize(self, n)
         n['office'] = None
+        n['office_country'] = None
+        n['visited_places'] = [n['place']]
         return n
 
     def place_name(self, place):
         return PLACES[place]['name']
 
+    def summary_place(self, place):
+        return PLACES[place].copy()
+
+    def local_government(self, n):
+        return government.for_npc(self, n)
+
     def government_grant(self, n, amount, purpose, cause=None):
         return government.grant(self, n, amount, purpose, cause)
 
     def reindex(self):
-        self.residents = {i: [] for i in range(5)}
+        self.residents = {i: [] for i in range(len(PLACES))}
         for n in self.npcs.values():
             if n['alive']:
                 self.residents[n['place']].append(n['id'])
@@ -424,9 +441,9 @@ class World:
             add('family', detail='与伴侣商议养育下一代')
         if n.get('grievance_cause'):
             cause = n['grievance_cause']
-            if not any(c['crime_event'] == cause for c in self.government['cases']):
+            if not any(c['crime_event'] == cause for g in self.governments for c in g['cases']):
                 add('report', cause, '提交已知侵吞证据')
-        if n['office'] and self.government['fund'] >= 4:
+        if n['office'] and government.office_government(self, n)['fund'] >= 4:
             add('public_service', detail='支用公帑4银巡防或防疫')
         if n['faction'] is None and n['skill'] >= 12 and n['age_months'] >= 192:
             for f in self.factions:
@@ -434,10 +451,12 @@ class World:
                     add('join', f['id'], f['name'])
         if n['faction'] is not None and n['wealth'] >= 4:
             add('duty', n['faction'], self.factions[n['faction']]['name'])
-        if n['wealth'] >= 16 and n['health'] > 40 and n['age_months'] >= 192:
-            for p in PLACES:
-                if p['id'] != n['place']:
-                    add('travel', p['id'], p['name'])
+        if n['health'] > 40 and n['age_months'] >= 192:
+            for destination in NEIGHBORS[n['place']]:
+                p = PLACES[destination]
+                trip = politics.journey(self, n['place'], destination)
+                if n['wealth'] >= trip['cost'] + 7 and (not n['office'] or p['country'] == n['office_country']):
+                    add('travel', destination, f"{p['name']} · {trip['km']}公里 / {trip['cost']:.1f}银 / {trip['border']}", **trip)
         return [a for a in actions if n.get('cooldowns', {}).get(a['id'], -1) <= self.month]
 
     def close_kin(self, a, b):
@@ -474,6 +493,12 @@ class World:
         if k in ('court', 'befriend'):
             r = n['relationships'].get(str(a['target']), {})
             score += (r.get('romance', 0)*.1 if k == 'court' else -r.get('affinity', 0)*.08)
+        if k == 'travel':
+            score -= a['cost'] * .16
+            score += 5 if a['target'] not in n.get('visited_places', []) else -2
+            score -= 6 if a['border'] == '交恶' else 0
+        if k == 'join':
+            score += 5 if self.factions[a['target']]['focus'] == g else 0
         if k == 'travel' and n['spouse']:
             score -= t['loyalty']*.22
         if k == 'travel' and (n['pregnancy'] or any(self.npcs[i]['alive'] and self.npcs[i]['age_months'] < 72 for i in n['children'])):
@@ -531,9 +556,13 @@ class World:
         name = n['name']
         if k == 'work':
             earn = (9 + n['skill']*.07 + (2 if n['job'] == '行商' else 0))*PLACES[n['place']]['trade']
+            school = self.factions[n['faction']] if n['faction'] is not None else None
+            bonus = 1.12 if school and school['kind'] == 'guild' and school['place'] == n['place'] else 1
+            earn *= bonus
             n['wealth'] += earn
             tax = government.tax(self, n, earn) if n['age_months'] >= 192 else 0
-            facts.update({'gross_income': earn, 'tax': tax})
+            facts.update({'gross_income': earn, 'tax': tax, 'guild_multiplier': bonus,
+                          'tax_country': PLACES[n['place']]['country']})
             n['health'] = clamp(n['health'] - self.rng.uniform(.5, 2))
             text = f"{name}在{PLACES[n['place']]['name']}以{n['job']}谋生，收入{earn:.1f}银，纳税{tax:.1f}银。"
         elif k == 'rest':
@@ -541,7 +570,10 @@ class World:
             text = f'{name}休养一月，恢复体力。'
         elif k == 'train':
             n['wealth'] -= 3 if n['age_months'] >= 120 else 0
-            gain = self.rng.uniform(.4, 1.05)*(1-n['skill']/120)
+            school = self.factions[n['faction']] if n['faction'] is not None else None
+            bonus = 1.25 if school and school['kind'] == 'sect' and school['place'] == n['place'] else 1
+            gain = self.rng.uniform(.4, 1.05)*(1-n['skill']/120)*bonus
+            facts.update({'school': n['faction'], 'training_multiplier': bonus})
             n['skill'] = clamp(n['skill'] + gain)
             n['health'] = clamp(n['health'] - .7)
             text = f'{name}苦练基本功，武学增长{gain:.2f}。'
@@ -551,9 +583,16 @@ class World:
             n['place'], n['moves'] = i, n['moves'] + 1
             self.residents[i].append(n['id'])
             people += demography.follow_guardian(self, n, old)
-            n['wealth'] -= 9
-            n['health'] = clamp(n['health'] - 2)
-            text = f"{name}离开{PLACES[old]['name']}，花9银来到{PLACES[i]['name']}。"
+            n['wealth'] -= a['cost']
+            destination_government = self.governments[a['destination_country']]
+            destination_government['fund'] += a['toll']
+            destination_government['revenue'] += a['toll']
+            n['health'] = clamp(n['health'] - min(10, 1+a['km']/300))
+            if i not in n['visited_places']:
+                n['visited_places'].append(i)
+            facts.update({key: a[key] for key in ('km', 'fare', 'toll', 'cost', 'border', 'origin_country', 'destination_country')})
+            facts.update({'origin': old, 'destination': i})
+            text = f"{name}离开{PLACES[old]['name']}，行经{a['km']}公里来到{PLACES[i]['name']}，花费{a['cost']:.1f}银（关税{a['toll']:.1f}银）。"
             imp = .4
         elif k == 'family':
             partner = self.npcs[n['spouse']]
@@ -579,15 +618,18 @@ class World:
             self.metrics['actions'][k] = self.metrics['actions'].get(k, 0)+1
             return e
         elif k == 'public_service':
-            self.government['fund'] -= 4
-            self.government['expenses'] += 4
-            self.government['security'] = min(.95, self.government['security']+.015)
-            self.government['sanitation'] = min(.95, self.government['sanitation']+.01)
+            g = government.office_government(self, n)
+            g['fund'] -= 4
+            g['expenses'] += 4
+            g['security'] = min(.95, g['security']+.015)
+            g['sanitation'] = min(.95, g['sanitation']+.01)
             n['reputation'] = clamp(n['reputation']+.8)
             text, imp = f"{name}以{n['office']}身份拨公帑4银巡防防疫。", .4
             facts.update({'public_cost': 4, 'office': n['office']})
         elif k == 'join':
             n['faction'] = i
+            facts.update({'faction': i, 'art': self.factions[i]['art'],
+                          'country': self.factions[i]['country']})
             text, imp = f"{name}加入{self.factions[i]['name']}，认同其「{self.factions[i]['ethos']}」之约。", .7
         elif k == 'duty':
             n['wealth'] -= 4
@@ -804,12 +846,14 @@ class World:
             for h in heirs:
                 h['wealth'] += estate / len(heirs)
         else:
-            self.government['fund'] += estate
-            self.government['revenue'] += estate
+            g = government.for_npc(self, n)
+            g['fund'] += estate
+            g['revenue'] += estate
         n['wealth'] = 0
         observers = [int(i) for i in n['relationships'] if self.npcs[int(i)]['alive'] and
                      (self.npcs[int(i)]['place'] == n['place'] or self.npcs[int(i)]['mentor'] == n['id'])]
-        office_causes = [self.government['last_appointments'].get(n['office'])] if n['office'] else []
+        office_g = government.office_government(self, n) if n['office'] else None
+        office_causes = [office_g['last_appointments'].get(n['office'])] if office_g else []
         e = self.emit('death', [n['id']] + [h['id'] for h in heirs],
                       f"{n['name']}于{n['age_months']//12}岁因{demography.DEATH_CAUSES[cause]}离世，遗产{estate:.1f}银"
                       + ('由在世亲人承继。' if heirs else '由县衙代管。'), 1.,
@@ -832,6 +876,7 @@ class World:
                 h['spouse'] = None
             if h['mentor'] == n['id']:
                 h['mentor'] = None
+        n['spouse'] = None
         for q in self.npcs.values():
             if q['mentor'] == n['id']:
                 q['mentor'] = None
@@ -845,28 +890,29 @@ class World:
         if n['id'] in self.residents.get(n['place'], []):
             self.residents[n['place']].remove(n['id'])
         if n['office']:
-            self.government['offices'][n['office']] = None
-            self.government['last_appointments'][n['office']] = e['id']
-            self.government['departed'] = {**self.government.get('departed', {}), n['office']: n['id']}
+            office_g['offices'][n['office']] = None
+            office_g['last_appointments'][n['office']] = e['id']
+            office_g['departed'] = {**office_g.get('departed', {}), n['office']: n['id']}
             n['office'] = None
         return e
 
     def annual(self):
         government.annual(self)
+        politics.annual(self)
         for n in self.npcs.values():
             if n['alive'] and n['spouse']:
                 q = self.npcs[n['spouse']]
                 if q['alive']:
                     self.know(n, q)
         if self.rng.random() < .55:
-            place = self.rng.randrange(5)
+            place = self.rng.randrange(len(PLACES))
             local = [self.npcs[i] for i in self.residents[place] if self.npcs[i]['alive']]
             affected, losses, fatalities = [], {}, []
             for n in local:
                 loss = min(n['wealth'], self.rng.uniform(7, 22))
                 n['wealth'] -= loss
                 n['health'] = clamp(n['health']-self.rng.uniform(3, 10))
-                if self.rng.random() < .004*(1-self.government['security']):
+                if self.rng.random() < .004*(1-self.governments[PLACES[place]['country']]['security']):
                     fatalities.append(n['id'])
                 affected.append(n['id'])
                 losses[str(n['id'])] = round(loss, 2)
@@ -942,7 +988,8 @@ class World:
 
     def export(self):
         return {'seed': self.seed, 'month': self.month, 'npcs': self.npcs,
-                'factions': self.factions, 'government': self.government, 'player': self.player, 'metrics': self.metrics,
+                'factions': self.factions, 'government': self.government, 'governments': self.governments,
+                'countries': self.countries, 'map_version': MAP_VERSION, 'atlas_history': self.atlas_history, 'player': self.player, 'metrics': self.metrics,
                 'population_limit': self.population_limit, 'random_state': self.rng.getstate()}
 
     def restore(self, state):
@@ -952,8 +999,25 @@ class World:
             n['ai_pending'] = False
             demography.initialize(self, n)
             n.setdefault('office', None)
+            n.setdefault('office_country', 0 if n['office'] else None)
+            n.setdefault('visited_places', [n['place']])
         self.factions, self.player, self.metrics = state['factions'], state['player'], state['metrics']
-        self.government = state.get('government', government.new())
+        self.countries = state.get('countries', politics.new())
+        self.governments = state.get('governments', [government.new(c['id']) for c in COUNTRIES])
+        if 'governments' not in state:
+            self.governments[0] = state.get('government', government.new())
+            self.governments[0]['country'] = 0
+        self.atlas_history = state.get('atlas_history', [])
+        self._atlas_migration = None
+        if state.get('map_version') == 2:
+            from .atlas_migration import from_v2
+            self._atlas_migration = from_v2(self, state)
+        self.government = self.governments[0]
+        self.government['name'] = COUNTRIES[0]['government_name']
+        # Add metadata and new organizations without resetting funds, leaders or membership.
+        existing = {f['id']: f for f in self.factions}
+        self.factions = [{**deepcopy(f), **{k: v for k, v in existing.get(f['id'], {}).items()
+                                              if k in ('leader', 'fund')}} for f in FACTIONS]
         self.metrics.setdefault('death_causes', {})
         self.population_limit = state['population_limit']
         def tuples(x):
@@ -967,7 +1031,7 @@ class World:
     def npc_summary(self, n):
         return {k: n[k] for k in ('id', 'name', 'sex', 'age_months', 'alive', 'place', 'job', 'wealth',
                                   'skill', 'health', 'reputation', 'goal', 'faction', 'spouse', 'last_action',
-                                  'generation', 'office', 'pregnancy', 'illness', 'death')}
+                                  'generation', 'office', 'office_country', 'pregnancy', 'illness', 'death')}
 
     def summary(self):
         living = [n for n in self.npcs.values() if n['alive']]
@@ -978,7 +1042,12 @@ class World:
                 'feuds': feuds, 'marriages': sum(bool(n['spouse']) for n in living)//2,
                 'goals': dict(Counter(n['goal']['kind'] for n in living)), 'metrics': self.metrics,
                 'places': [{**p, 'population': len(self.residents[p['id']])} for p in PLACES],
-                'factions': self.factions, 'government': {**self.government, 'cases': self.government['cases'][-12:]},
+                'factions': [{**f, 'members': sum(n['faction'] == f['id'] for n in living)} for f in self.factions],
+                'map_version': MAP_VERSION, 'era': ERA, 'routes': ROUTES,
+                'countries': [{**c, 'population': sum(PLACES[n['place']]['country'] == c['id'] for n in living),
+                               'government': {**self.governments[c['id']], 'cases': self.governments[c['id']]['cases'][-12:]}}
+                              for c in self.countries],
+                'government': {**self.government, 'cases': self.government['cases'][-12:]},
                 'demography': {'children': sum(n['age_months'] < 192 for n in living),
                                'elders': sum(n['age_months'] >= 720 for n in living),
                                'pregnancies': sum(bool(n['pregnancy']) for n in living),
