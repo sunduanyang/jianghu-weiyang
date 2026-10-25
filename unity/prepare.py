@@ -94,6 +94,8 @@ def prepare(backend_only=False, bundle_python=False, include_local_save=False):
     import bake_ui
     bake_ui.bake_ui()
     bake_ui.bake_atlas()
+    import bake_paper_cast
+    bake_paper_cast.bake()
     reference = assets / 'StreamingAssets' / 'OriginalPuppets'
     reference.mkdir(parents=True, exist_ok=True)
     for name in ('puppet.js', 'rig-spec.json'):

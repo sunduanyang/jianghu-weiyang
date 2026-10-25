@@ -83,8 +83,8 @@ public partial class JianghuApp {
         var p=Person;
         // hero (left) and NPC (right)
         Rect hl=new Rect(70,250,360,456),hr=new Rect(1250,250,360,456);
-        Portrait(hl,-1,Hero["created"].B?Hero["sex"].S:"男",Hero["created"].B?Hero["age_months"].I:216);Outline(hl,new Color(.79f,.64f,.35f,.6f));
-        Portrait(hr,p["id"].I,p["sex"].S,p["age_months"].I);Outline(hr,new Color(.79f,.64f,.35f,.6f));
+        DrawPaperPerson(hl,PaperPerson(-1,"男",216),true,"talk");
+        DrawPaperPerson(hr,p,false,"talk",true);
         Rect plateL=new Rect(40,716,420,150),plateR=new Rect(1220,716,420,150);Panel(plateL);Panel(plateR);
         GUI.Label(new Rect(plateL.x,plateL.y+10,plateL.width,28),Hero["created"].B?Hero["name"].S:"过客",new GUIStyle(sub){alignment=TextAnchor.MiddleCenter});
         GUI.Label(new Rect(plateL.x+20,plateL.y+46,plateL.width-40,22),"银两 "+Num(W["player"]["wealth"])+" · 声望 "+Num(W["player"]["reputation"]),centerSmall);
@@ -128,8 +128,8 @@ public partial class JianghuApp {
         for(int i=0;i<fighters.Count&&i<2;i++){
             var f=fighters[i];bool left=i==0;Rect c=left?new Rect(60,110,470,170):new Rect(1150,110,470,170);Panel(c);
             Rect pr=left?new Rect(c.x+14,c.y+14,112,142):new Rect(c.xMax-126,c.y+14,112,142);
-            int id=f["id"].Has?f["id"].I:(left?-1:SelectedPerson);J n=left?new J():Npc(id);
-            Portrait(pr,id,left?(Hero["created"].B?Hero["sex"].S:"男"):n["sex"].S,left?(Hero["created"].B?Hero["age_months"].I:216):n["age_months"].I);Outline(pr,new Color(.79f,.64f,.35f,.6f));
+            int id=left?-1:(f["id"].Has?f["id"].I:SelectedPerson);J n=left?PaperPerson(-1,"男",216):Npc(id);
+            DrawPaperPortrait(pr,n,left);Outline(pr,new Color(.79f,.64f,.35f,.6f));
             float tx=left?c.x+140:c.x+14;
             GUI.Label(new Rect(tx,c.y+12,316,28),f["name"].S,new GUIStyle(heading){alignment=left?TextAnchor.MiddleLeft:TextAnchor.MiddleRight});
             GUI.Label(new Rect(tx,c.y+42,316,20),f["inner"].S,new GUIStyle(small){alignment=left?TextAnchor.MiddleLeft:TextAnchor.MiddleRight});
@@ -140,14 +140,17 @@ public partial class JianghuApp {
         // round dial
         Rect dial=new Rect(770,108,140,140);Tex(dial,"moon");
         GUI.Label(new Rect(dial.x,dial.y+26,dial.width,60),b["round"].S,bigNumber);GUI.Label(new Rect(dial.x,dial.y+84,dial.width,24),"合",moonLabel);
-        // stage: lit screen with the two fighters as shadow puppets, spaced by distance
+        // Both fighters use the same coloured skin and articulated rig as their portraits.
         Rect stage=new Rect(160,300,1360,330);StagePanel(stage);
         int dist=Mathf.Clamp(b["distance"].I,0,12);float mid=stage.center.x,gap=60+dist*42;
         if(fighters.Count>=2){
             var f0=fighters[0];var f1=fighters[1];var n1=Npc(f1["id"].Has?f1["id"].I:SelectedPerson);
-            bool live=b["status"].S!="finished";
-            DrawPuppetFigure(new Rect(mid-gap/2-300,stage.y+14,320,240),PuppetTypeFor(Hero["created"].B?Hero["sex"].S:"男",Hero["created"].B?Hero["age_months"].I:216),"right",live?"angry":"calm",live?"lunge":"idle",live?55:100,shadowInk);
-            DrawPuppetFigure(new Rect(mid+gap/2-20,stage.y+14,320,240),PuppetTypeFor(n1["sex"].S,n1["age_months"].I),"left",live?"angry":"sad",live?"lunge":"idle",live?40:100,shadowInk);
+            string key=b["id"].S+":"+b["round"].S+":"+b["status"].S;
+            if(paperBattleKey!=key){paperBattleKey=key;paperBattleStart=Time.realtimeSinceStartup;}
+            float elapsed=Time.realtimeSinceStartup-paperBattleStart;
+            string myPose=PaperBattleAnimation(b,0,elapsed,out float myPhase),theirPose=PaperBattleAnimation(b,1,elapsed,out float theirPhase);
+            DrawPaperPerson(new Rect(mid-gap/2-270,stage.y+6,300,270),PaperPerson(-1,"男",216),true,myPose,false,myPhase);
+            DrawPaperPerson(new Rect(mid+gap/2-30,stage.y+6,300,270),n1,false,theirPose,true,theirPhase);
         }
         Fill(new Rect(stage.x+40,stage.yMax-46,stage.width-80,1),new Color(.30f,.18f,.08f,.6f));
         for(int d=0;d<=12;d++){float x=mid+(d-6)*((stage.width-120)/12f);Fill(new Rect(x,stage.yMax-50,1,9),new Color(.30f,.18f,.08f,.6f));}

@@ -6,6 +6,7 @@
 | --- | --- |
 | 海岸线及陆地轮廓 | [Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/)，公共领域。具体来源和原始摘要保存在 `static/geography*.json`，重建工具是 `scripts/build_map.py`。 |
 | 山水与人物小像 | 本项目通过 imagegen 生成并提供，原始提示词与接入记录见 `static/assets/ART.md`。没有提取其他游戏的美术文件。 |
+| 24 套皮影皮肤与 405 个独立部件 | 本项目通过内置 image_gen 生成；原始 PNG、提示词、来源摘要和部件清单见 `art/puppet-cast-24/`，按本仓库 MIT 许可证提供。运行图集仅机械打包原始 RGBA 像素，骨骼动画由项目代码实现。 |
 | Unity | 用户自行安装，适用 [Unity 软件条款](https://unity.com/legal)。仓库不分发 Unity 编辑器或许可证。 |
 | Python | 用户自行安装；可选 Windows 打包工具复制本机 CPython，并把其 `LICENSE.txt` 一同放入成品运行时。参见 [Python 许可](https://docs.python.org/3/license.html)。 |
 | Pillow | 仅用于开发时生成地图资源，参见 [Pillow LICENSE](https://github.com/python-pillow/Pillow/blob/main/LICENSE)。 |

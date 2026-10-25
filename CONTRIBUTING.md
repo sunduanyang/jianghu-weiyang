@@ -14,6 +14,8 @@ Unity 开发目前针对 Windows。安装 Unity 6000.6.7f1，在 Unity Hub 添�
 | --- | --- |
 | 社会模拟、地图、物品、战斗、模型与存档规则 | 根目录 `jianghu/` |
 | Unity 界面和皮影动画 | `unity/JianghuUnity/Assets/Scripts/` |
+| 共用皮影骨骼与动作关键帧 | `unity/paper-rig.json`、`PaperRig.cs` 与 `PaperCast.cs` |
+| 24 套皮影皮肤、原始部件、提示词与来源摘要 | `art/puppet-cast-24/` |
 | Unity 场景、资源和设置 | `unity/JianghuUnity/Assets/`、`Packages/`、`ProjectSettings/` |
 | 网页版本界面 | `static/` |
 | 皮影原始矢量轮廓 | `prototypes/shadow-puppets/puppet.js` |
@@ -38,6 +40,8 @@ node unity/bake_puppets.cjs
 ```
 
 只调整界面纹理或舆图画法时，运行 `python unity/bake_ui.py` 即可（`--ui-only` 只重做界面纹理）；重建内置字体子集用 `python unity/build_fonts.py`。
+
+修改皮影皮肤或通用动画后，运行 `python unity/bake_paper_cast.py`，提交更新后的 `Assets/Resources/PaperCast/` 与 `.meta`。原始素材保存在 `art/puppet-cast-24/`，共用动画不写入单个皮肤；新增标准部件皮肤无需重做动作。请在 Unity 的皮影衣橱检查左右朝向、各动作、关节与配饰，再检查人物头像、对话和演武中的形象一致性。
 
 如果需要让 Windows 成品自带 Python，在 Windows 的 CPython 安装环境运行 `python unity/prepare.py --bundle-python`，再使用 Unity 菜单「江湖 / 构建 Windows 游戏」。打包运行时和游戏成品不提交到源码仓库，CPython 的许可证随打包运行时保留。其他 Unity 安装路径可以通过 Unity Hub 打开，或给构建脚本传入 `-EditorPath`。
 

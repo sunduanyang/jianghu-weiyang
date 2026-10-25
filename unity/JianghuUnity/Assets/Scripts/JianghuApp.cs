@@ -15,16 +15,16 @@ public partial class JianghuApp : MonoBehaviour {
     Vector2 rosterScroll, personScroll, mainScroll, eventScroll;
     GUISkin skin;
     GUIStyle title, sub, small, text, heading, chip, selected, card, field, seal;
-    Texture2D portraits, valley;
+    Texture2D valley;
     readonly Dictionary<string,bool> folds=new Dictionary<string,bool>();
     readonly Color ink=new Color(.89f,.85f,.77f), paper=new Color(.094f,.118f,.118f), green=new Color(.25f,.36f,.29f), gold=new Color(.68f,.49f,.27f);
     public J W=>Client.World;
     public J Hero=>W["hero"];
     public bool Paused=>!W["autoplay"].B && W["job"]["remaining"].I==0 && !W["battle_active"].B;
-    public static readonly string[] Pages={"山海舆图","城中行旅","行囊货栈","功法演武","天下势力","皮影换装","世界年谱","本地模型","存档设置"};
+    public static readonly string[] Pages={"山海舆图","城中行旅","行囊货栈","功法演武","天下势力","皮影衣橱","世界年谱","本地模型","存档设置"};
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void Boot(){if(FindAnyObjectByType<JianghuApp>()!=null)return;var go=new GameObject("江湖未央 · Unity");DontDestroyOnLoad(go);go.AddComponent<JianghuApp>();}
-    void Awake(){Client=GetComponent<GameClient>()??gameObject.AddComponent<GameClient>();portraits=Resources.Load<Texture2D>("Art/portraits");valley=Resources.Load<Texture2D>("Art/river-valley");}
+    void Awake(){Client=GetComponent<GameClient>()??gameObject.AddComponent<GameClient>();valley=Resources.Load<Texture2D>("Art/river-valley");}
     void Update(){
         if(!Client.Ready)return;
         if(seenRevision!=Client.Revision){seenRevision=Client.Revision;if(W["month"].I!=lastMonth){lastMonth=W["month"].I;ReloadPage();if(SelectedPerson>=0)SelectPerson(SelectedPerson);} }

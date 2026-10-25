@@ -33,8 +33,11 @@ public class UnitySmoke : MonoBehaviour {
         double initialCalls=client.World["ai"]["calls"].N;
         foreach(string endpoint in new[]{"/api/state","/api/hero","/api/inventory","/api/market","/api/martial","/api/country/0","/api/faction/0","/api/events","/api/ai/logs"})yield return Call(endpoint,null);
         var adult=client.World["npcs"].A.First(n=>n["alive"].B&&n["age_months"].I>=192&&n["health"].N>=60);app.SelectPerson(adult["id"].I);
+        Check("24 skins share one rig and seven clips",app.ValidatePaperCast(out J paperFacts),paperFacts);
         yield return Snapshot(0,"01-atlas");app.SelectedPlace=client.World["hero"]["place"].I;yield return Snapshot(1,"02-city");yield return Snapshot(2,"03-inventory");yield return Snapshot(3,"04-martial");app.OpenInstitution(true,0);yield return Snapshot(4,"05-institutions");yield return Snapshot(5,"06-puppets");yield return Snapshot(6,"07-events");yield return Snapshot(7,"08-local-ai");yield return Snapshot(8,"09-saves");
-        Check("126 native rig poses match original",app.ValidateSourceRig(out double maxRigError),J.O("max_anchor_error",maxRigError));app.PuppetSmokeVariant();yield return Snapshot(5,"06b-puppets-mixed");
+        app.PaperSmokePerson();yield return Snapshot(0,"11-paper-character");Check("NPC portrait and figure resolve the same skin",app.PaperSkinFor(app.Person)==app.PaperSkinFor(client.World["npcs"].A.First(n=>n["id"].I==adult["id"].I)));app.PaperSmokeDialogue();yield return Snapshot(0,"12-paper-dialogue");app.PaperSmokeStage();
+        app.PaperSmokeGallery("idle",false);yield return Snapshot(5,"13-paper-cast-idle");app.PaperSmokeGallery("attack",true);yield return Snapshot(5,"14-paper-cast-attack-left");app.PaperSmokeStudio();yield return Snapshot(5,"15-paper-walk-bones");
+        Check("126 legacy vector rig poses preserved",app.ValidateSourceRig(out double maxRigError),J.O("max_anchor_error",maxRigError));
         if(GameClient.Arg("-smokePhase")=="visuals")yield break;
         yield return Call("/api/intervene",J.O("npc_id",adult["id"],"action","gift"));yield return Call("/api/intervene",J.O("npc_id",adult["id"],"action","talk","text","愿你在此地安顿生活。"));yield return Call("/api/intervene",J.O("npc_id",adult["id"],"action","visit"));
         J shop=new J(),pack=new J(),battle=new J();yield return Call("/api/market",null,j=>shop=j);var buy=shop["items"].A.First(i=>i["template"].S=="herb");yield return Call("/api/items",J.O("operation","buy","item_id",buy["id"]));yield return Call("/api/items",J.O("operation","sell","item_id",buy["id"]));

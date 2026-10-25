@@ -161,10 +161,8 @@ public partial class JianghuApp {
         if(advanceOpen&&AdvancePopup.Contains(m))return true;
         return false;
     }
-    Rect PortraitUV(int id,string sex,int ageMonths){bool female=sex=="女";int years=ageMonths/12;int idx=years<16?(female?5:4):years>=60?(female?3:2):id%3==0?(female?7:6):(female?1:0);return new Rect((idx%4)/4f,(1-idx/4)/2f,.25f,.5f);}
     void Portrait(Rect r,int id,string sex,int ageMonths,bool silhouette=false){
-        if(portraits==null){Fill(r,new Color(.2f,.24f,.23f));return;}
-        var old=GUI.color;if(silhouette)GUI.color=new Color(.42f,.42f,.42f,1);GUI.DrawTextureWithTexCoords(r,portraits,PortraitUV(id,sex,ageMonths));GUI.color=old;
+        DrawPaperPortrait(r,PaperPerson(id,sex,ageMonths),id<0,silhouette);
     }
 
     // ---------------------------------------------------------------- 戏 screen chrome
@@ -210,9 +208,9 @@ public partial class JianghuApp {
         var bar=UI("bottombar");if(bar!=null)GUI.DrawTexture(Dock,bar,ScaleMode.StretchToFill);else Fill(new Rect(0,850,1680,110),new Color(.08f,.10f,.10f,.96f));
         // hero (left)
         Rect hp=new Rect(4,712,200,240);
-        if(Hero["created"].B){DrawPuppetFigure(hp,PuppetTypeFor(Hero["sex"].S,Hero["age_months"].I),"right","calm","idle",100,Color.white);GUI.Label(new Rect(208,880,200,24),Hero["name"].S,sub);GUI.Label(new Rect(208,904,260,20),Hero["place_name"].S+" · "+Hero["position_name"].S,caption);
+        if(Hero["created"].B){DrawPaperPerson(hp,Hero,true);GUI.Label(new Rect(208,880,200,24),Hero["name"].S,sub);GUI.Label(new Rect(208,904,260,20),Hero["place_name"].S+" · "+Hero["position_name"].S,caption);
             if(GUI.Button(new Rect(208,926,90,24),"定位主角",linkStyle)){SelectedPlace=Hero["place"].I;mapZoom=1.6f;mapPan=new Vector2(640-(float)Place(SelectedPlace)["x"].N,380-(float)Place(SelectedPlace)["y"].N);if(Page!=0)Go(0);}}
-        else{DrawPuppetFigure(hp,PuppetTypeFor(heroSex,int.TryParse(heroAge,out int ha)?ha*12:216),"right","calm","idle",100,shadowInk);GUI.Label(new Rect(208,880,240,24),"尚未立主角",sub);if(GUI.Button(new Rect(208,906,110,30),"创建主角",selected))creatingHero=!creatingHero;}
+        else{DrawPaperPerson(hp,J.O("sex",heroSex,"age_months",int.TryParse(heroAge,out int ha)?ha*12:216),true);GUI.Label(new Rect(208,880,240,24),"尚未立主角",sub);if(GUI.Button(new Rect(208,906,110,30),"创建主角",selected))creatingHero=!creatingHero;}
         // month dial (centre)
         Rect moon=new Rect(765,812,150,150);Tex(moon,"moon");
         bool hero=Hero["created"].B;

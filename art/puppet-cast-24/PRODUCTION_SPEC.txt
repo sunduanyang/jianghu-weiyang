@@ -9,8 +9,8 @@
 配色限定 #E3C08A #1E1712 #2E3A55 #C8962E #A8322A #9A6B34，白发白须用#D8D2C4。米白/米色服装用#E3C08A，青色/青灰用#2E3A55，银簪/玉簪用浅皮色和细墨线，土褐用#9A6B34。渔人深肤可用#9A6B34，不能引入其他色。
 平面皮影片，细墨线+均匀平涂，铜铆钉画同心圆，不加光影噪点颗粒做旧。磨旧/补丁/百衲由整齐轮廓、缝线、几何补片表达，不加脏纹理。每角色只有衣领或冠饰一处最精细；云肩角色允许云肩为唯一精细区。脸颈手不镂空（机械连接端的孔除外）。
 透明PNG，禁止文字数字标签边框水印场景、组装好的人物、虚线箭头；输出只有彼此分离的零件。底图必须真实alpha。
-参考: D:/Desktop/新游戏/output/imagegen/shadow-puppet-peasant-youth-parts/parts-sheet.png (已批准的部件排布与风格)
-原始参考: C:/Users/User/AppData/Local/Temp/codex-clipboard-4afd5a39-cbcd-4f89-b215-59eae1fef500.png
+参考: m-youth-farmer/parts-sheet.png (已批准的部件排布与风格)
+原始参考图仅用于当时风格确认，不作为项目运行依赖。
 每个角色目录写 generation-prompt.txt / parts-sheet.png / 01..16及配件png / parts-manifest.json。生成图必须先用内置image_gen。后续只机械导出PNG，不重画或改色，保留alpha。
 统一导出工具将由主代理提供 _tools/export-atlas.cjs，调用参数是 sourcePNG角色ID，--inspect只检查组件而不导出。
 不要改其他代理的角色目录或根目录清单。报告完成ID、零件数、问题/验证限制。禁止把生成张数、测试数量当作画质合格。
