@@ -6,7 +6,7 @@ import random
 import time
 
 from .store import Store
-from . import demography, government
+from . import careers, demography, government
 
 PLACES = [
     {'id': 0, 'name': '青溪镇', 'x': 25, 'y': 66, 'trade': 1.05, 'color': '#a1b99c'},
@@ -29,8 +29,9 @@ ACTIONS = {'work': '谋生', 'train': '习武', 'rest': '休养', 'befriend': '�
            'court': '倾诉心意', 'propose': '提亲', 'aid': '接济', 'trade': '合营',
            'betray': '窃取托银', 'duel': '寻仇比武', 'mentor': '拜师', 'teach': '传艺',
            'join': '入会', 'duty': '尽责', 'travel': '远行', 'rumor': '交换见闻',
-           'family': '筹划育儿', 'treatment': '求医', 'report': '报官', 'public_service': '公务'}
-JOBS = ['农人', '行商', '药师', '匠人', '镖师']
+           'family': '筹划育儿', 'treatment': '求医', 'report': '报官', 'public_service': '公务',
+           'learn_trade': '学艺', 'change_job': '转业'}
+JOBS = list(careers.PROFESSIONS)
 FAMILY = '沈陆顾苏林萧温谢江柳叶裴唐宋秦孟钟楚傅白'
 GIVEN = ['知秋', '望舒', '行舟', '照野', '清和', '若水', '长宁', '归尘', '听澜', '云生',
          '怀瑾', '见山', '含章', '疏影', '停云', '临渊', '景明', '闻溪', '无咎', '星河',
@@ -128,6 +129,8 @@ class World:
         self.npcs[i] = n
         demography.initialize(self, n)
         n['office'] = None
+        careers.initialize(self, n)
+        n['identity'] = careers.identity(self, n)
         return n
 
     def place_name(self, place):
@@ -152,8 +155,12 @@ class World:
     def know(self, n, other):
         if n['id'] == other['id']:
             return
+        public_identity = careers.identity(self, other)
         n['knowledge'][str(other['id'])] = {'name': other['name'], 'place': other['place'],
                                             'seen_month': self.month,
+                                            'job': other['job'],
+                                            'identity': public_identity['title'],
+                                            'identity_grade': public_identity['grade'],
                                             'skill_band': int(other['skill'] // 20),
                                             'wealth_band': '拮据' if other['wealth'] < 15 else '有余'}
 
@@ -204,6 +211,9 @@ class World:
             for j in people:
                 if str(j) in n['relationships']:
                     n['relationships'][str(j)]['last_event'] = event['id']
+        if kind != 'identity_change':
+            for i in people:
+                careers.sync_identity(self, self.npcs[i], event['id'])
         return event
 
     def drift(self, n, axis, requested, major=False, event_id=None, source='经历累积'):
@@ -380,6 +390,7 @@ class World:
                 add('train', detail='练习基本功')
             return actions
         add('work', detail=n['job'])
+        actions.extend(careers.actions(self, n))
         if n['wealth'] >= 3 and n['health'] > 30:
             add('train', detail='花费3银，精进武艺')
         local = self.residents.get(n['place'], [])
@@ -418,7 +429,8 @@ class World:
                 add('teach', i, q['name'])
             if r['affinity'] > 5 and n['memories']:
                 add('rumor', i, q['name'])
-            if n['wealth'] >= 4 and q['job'] == '药师' and (n['illness'] or n['wound'] or n['health'] < 55):
+            if (n['wealth'] >= 4 and q['job'] == '药师' and q['age_months'] >= 192 and q['health'] > 30
+                    and (n['illness'] or n['wound'] or n['health'] < 55)):
                 add('treatment', i, q['name'])
         if demography.fertile_pair(self, n) and n['family_intent_until'] < self.month and n['age_months'] >= 216:
             add('family', detail='与伴侣商议养育下一代')
@@ -465,7 +477,9 @@ class World:
                  'family': 20+t['loyalty']*.15,
                  'treatment': 45+(100-n['health'])*.5 + (20 if n['illness'] else 0),
                  'report': 15+n['beliefs']['justice']*22+t['caution']*.2,
-                 'public_service': 15+t['loyalty']*.15}[k]
+                 'public_service': 15+t['loyalty']*.15}.get(k, 0)
+        if k in ('change_job', 'learn_trade'):
+            score = careers.score(self, n, a)
         boost = {'wealth': {'work': 16, 'trade': 18, 'betray': 12}, 'mastery': {'train': 23, 'mentor': 28, 'join': 15},
                  'belonging': {'befriend': 15, 'court': 25, 'propose': 34, 'aid': 5},
                  'renown': {'duty': 26, 'join': 25, 'teach': 15, 'aid': 10},
@@ -474,6 +488,10 @@ class World:
         if k in ('court', 'befriend'):
             r = n['relationships'].get(str(a['target']), {})
             score += (r.get('romance', 0)*.1 if k == 'court' else -r.get('affinity', 0)*.08)
+        if k == 'befriend':
+            observed = n['knowledge'].get(str(a['target']), {})
+            score += (9-observed.get('identity_grade', 9))*t['ambition']*.02
+            score += 2 if observed.get('job') == n['job'] else 0
         if k == 'travel' and n['spouse']:
             score -= t['loyalty']*.22
         if k == 'travel' and (n['pregnancy'] or any(self.npcs[i]['alive'] and self.npcs[i]['age_months'] < 72 for i in n['children'])):
@@ -519,7 +537,7 @@ class World:
             self.metrics['invalid_actions'] += 1
             return None
         k, i = a['kind'], a['target']
-        q = self.npcs.get(i) if k not in ('join', 'duty', 'travel', 'report') else None
+        q = self.npcs.get(i) if k not in ('join', 'duty', 'travel', 'report', 'change_job') else None
         parents = [n['last_event'], n['goal']['cause']]
         people, imp, facts, kind = [n['id']], .15, {'action': a['id']}, k
         settlement = n.get('monthly_settlement', {})
@@ -530,12 +548,33 @@ class World:
         before = {'wealth': n['wealth'], 'health': n['health'], 'skill': n['skill']}
         name = n['name']
         if k == 'work':
-            earn = (9 + n['skill']*.07 + (2 if n['job'] == '行商' else 0))*PLACES[n['place']]['trade']
+            earn = careers.income(n)
             n['wealth'] += earn
             tax = government.tax(self, n, earn) if n['age_months'] >= 192 else 0
-            facts.update({'gross_income': earn, 'tax': tax})
+            practice = careers.gain(n, n['career']['profession'], .8)
+            facts.update({'gross_income': earn, 'tax': tax, 'career_practice': practice})
             n['health'] = clamp(n['health'] - self.rng.uniform(.5, 2))
             text = f"{name}在{PLACES[n['place']]['name']}以{n['job']}谋生，收入{earn:.1f}银，纳税{tax:.1f}银。"
+        elif k == 'change_job':
+            previous = n['job']
+            cost = careers.PROFESSIONS[i]['cost']
+            n['wealth'] -= cost
+            n['job'] = i
+            n['career'].update({'profession': i, 'since': self.month, 'last_change': self.month, 'source': '自主转业'})
+            n['career']['experience'].setdefault(i, 0.)
+            n['plan'] = None
+            facts.update({'before': previous, 'after': i, 'setup_cost': cost,
+                          'experience': careers.experience(n), 'cooldown_months': 24})
+            text, imp = f'{name}花{cost}银置办生计，由{previous}转为{i}，旧业本领仍保留。', .7
+        elif k == 'learn_trade':
+            job = a['profession']
+            n['wealth'] -= 2
+            q['wealth'] += 2
+            practice = careers.gain(n, job, 2+careers.experience(q)*.03)
+            self.link(n, q, 2, 2)
+            people.append(q['id'])
+            facts.update({'teacher': q['id'], 'payment': 2, 'career_practice': practice})
+            text, imp = f"{name}花2银向{q['name']}学习{job}手艺，熟练度增长{practice['gain']:.2f}。", .35
         elif k == 'rest':
             n['health'] = clamp(n['health'] + (1 if settlement.get('food_shortfall', 0) else 5 if n['illness'] else 10))
             text = f'{name}休养一月，恢复体力。'
@@ -543,6 +582,8 @@ class World:
             n['wealth'] -= 3 if n['age_months'] >= 120 else 0
             gain = self.rng.uniform(.4, 1.05)*(1-n['skill']/120)
             n['skill'] = clamp(n['skill'] + gain)
+            if n['career']['profession'] in ('镖师', '猎户'):
+                facts['career_practice'] = careers.gain(n, n['career']['profession'], .3)
             n['health'] = clamp(n['health'] - .7)
             text = f'{name}苦练基本功，武学增长{gain:.2f}。'
         elif k == 'travel':
@@ -563,7 +604,8 @@ class World:
         elif k == 'treatment':
             n['wealth'] -= 4
             q['wealth'] += 4
-            n['health'] = clamp(n['health']+15)
+            healing = round(10+careers.experience(q)*.2, 4)
+            n['health'] = clamp(n['health']+healing)
             if n['illness']:
                 n['illness']['severity'] *= .45
                 n['illness']['remaining'] = min(2, n['illness']['remaining'])
@@ -571,8 +613,9 @@ class World:
                 n['wound']['remaining'] = 1
             people.append(q['id'])
             self.link(n, q, 4, 3)
-            text, imp = f"{name}花4银请{q['name']}诊治，体力恢复15，病伤得到缓解。", .6
-            facts.update({'doctor': q['id'], 'payment': 4})
+            text, imp = f"{name}花4银请{q['name']}诊治，体力恢复{healing:.1f}，病伤得到缓解。", .6
+            facts.update({'doctor': q['id'], 'payment': 4, 'healing': healing,
+                          'career_practice': careers.gain(q, '药师', .6)})
         elif k == 'report':
             e = government.report(self, n, i)
             n['last_action'] = {**a, 'month': self.month, 'event_id': e['id']}
@@ -642,14 +685,17 @@ class World:
                 n['wealth'] -= 3
                 q['wealth'] -= 3
                 success = self.rng.random() < .78
-                ret = self.rng.uniform(6, 11) if success else 1
+                merchant_bonus = sum(careers.experience(p) * .012 for p in (n, q)
+                                     if p['career']['profession'] == '行商') if success else 0
+                ret = (self.rng.uniform(6, 11) if success else 1) + merchant_bonus
                 n['wealth'] += ret
                 q['wealth'] += ret
                 facts['taxes'] = {str(p['id']): government.tax(self, p, max(0, ret-3))
                                   if p['age_months'] >= 192 else 0 for p in (n, q)}
                 self.link(n, q, 4 if success else -5, 3 if success else -2)
                 text, imp = f"{name}与{q['name']}各出3银合营，{'获利' if success else '失利'}，各收回{ret:.1f}银。", .45
-                facts.update({'success': success, 'investment_each': 3, 'return_each': ret})
+                facts.update({'success': success, 'investment_each': 3, 'return_each': ret,
+                              'merchant_bonus_each': merchant_bonus})
             elif k == 'betray':
                 silver = min(20, q['wealth'] * .4)
                 n['wealth'] += silver
@@ -713,6 +759,8 @@ class World:
                 raise ValueError(k)
         facts['actor_delta'] = {k: round(n[k]-v, 4) for k, v in before.items()}
         e = self.emit(kind, people, text, imp, parents, facts)
+        if k in ('work', 'change_job', 'learn_trade'):
+            n['career']['last_event'] = e['id']
         n['last_action'] = {**a, 'month': self.month, 'event_id': e['id']}
         self.metrics['actions'][k] = self.metrics['actions'].get(k, 0) + 1
         if k == 'duel':
@@ -763,15 +811,7 @@ class World:
             demography.health_step(self, n)
             if not n['alive']:
                 continue
-            if n['age_months'] in (120, 192):
-                previous_job = n['job']
-                if n['age_months'] == 120:
-                    n['job'] = '学徒'
-                else:
-                    family_jobs = [self.npcs[p]['job'] for p in n['parents'] if self.npcs[p]['job'] in JOBS]
-                    n['job'] = self.rng.choice(family_jobs or JOBS)
-                self.emit('career', [n['id']], f"{n['name']}长成，离开{previous_job}身份，开始以{n['job']}立身。", .65,
-                          [n['last_event']], {'before': previous_job, 'after': n['job']})
+            careers.grow(self, n)
             self.update_goal(n)
             self.execute(n, self.choose(n, self.legal_actions(n)))
             n['wealth'] = round(n['wealth'], 4)
@@ -793,6 +833,7 @@ class World:
         if not n['alive']:
             return self.store.event(n['death']['event_id']) if n['death'] else None
         cause = cause or ('starvation' if n['health'] <= 0 else 'old_age')
+        n['final_identity'] = careers.identity(self, n)
         n['alive'] = False
         self.metrics['deaths'] += 1
         relatives = list(dict.fromkeys(n['children'] + ([n['spouse']] if n['spouse'] else [])))
@@ -835,6 +876,11 @@ class World:
         for q in self.npcs.values():
             if q['mentor'] == n['id']:
                 q['mentor'] = None
+        # Spousal and mentorship links are removed after the death settlement.
+        # Record those resulting identity changes immediately, even while paused.
+        for q in self.npcs.values():
+            if q['alive'] and (q['id'] in relatives or str(q['id']) in n['relationships']):
+                careers.sync_identity(self, q, e['id'])
         for observer in observers:
             if observer not in e['people']:
                 self.emit('death_notice', [observer], f"{self.npcs[observer]['name']}得知{n['name']}已离世。", .75,
@@ -952,8 +998,13 @@ class World:
             n['ai_pending'] = False
             demography.initialize(self, n)
             n.setdefault('office', None)
+            careers.initialize(self, n, legacy=True)
         self.factions, self.player, self.metrics = state['factions'], state['player'], state['metrics']
         self.government = state.get('government', government.new())
+        for n in self.npcs.values():
+            n.setdefault('identity', careers.identity(self, n))
+            if not n['alive']:
+                n.setdefault('final_identity', deepcopy(n['identity']))
         self.metrics.setdefault('death_causes', {})
         self.population_limit = state['population_limit']
         def tuples(x):
@@ -965,9 +1016,11 @@ class World:
         self.store.save(self.export())
 
     def npc_summary(self, n):
-        return {k: n[k] for k in ('id', 'name', 'sex', 'age_months', 'alive', 'place', 'job', 'wealth',
+        return {**{k: n[k] for k in ('id', 'name', 'sex', 'age_months', 'alive', 'place', 'job', 'wealth',
                                   'skill', 'health', 'reputation', 'goal', 'faction', 'spouse', 'last_action',
-                                  'generation', 'office', 'pregnancy', 'illness', 'death')}
+                                  'generation', 'office', 'pregnancy', 'illness', 'death')},
+                'profession': n['career']['profession'], 'career_level': careers.level(n)[1],
+                'identity': careers.identity(self, n)}
 
     def summary(self):
         living = [n for n in self.npcs.values() if n['alive']]
@@ -977,6 +1030,8 @@ class World:
                 'total_people': len(self.npcs), 'events': self.store.count(), 'friendships': friends,
                 'feuds': feuds, 'marriages': sum(bool(n['spouse']) for n in living)//2,
                 'goals': dict(Counter(n['goal']['kind'] for n in living)), 'metrics': self.metrics,
+                'professions': dict(Counter(n['job'] for n in living)),
+                'identity_grades': dict(Counter(careers.identity(self, n)['grade_label'] for n in living)),
                 'places': [{**p, 'population': len(self.residents[p['id']])} for p in PLACES],
                 'factions': self.factions, 'government': {**self.government, 'cases': self.government['cases'][-12:]},
                 'demography': {'children': sum(n['age_months'] < 192 for n in living),
@@ -989,6 +1044,9 @@ class World:
 
     def npc_detail(self, npc_id):
         n = deepcopy(self.npcs[npc_id])
+        n['career_view'] = careers.view(self, self.npcs[npc_id])
+        n['identity'] = careers.identity(self, self.npcs[npc_id])
+        n['career_options'] = careers.catalog(self, self.npcs[npc_id])
         n['legal_actions'] = self.legal_actions(self.npcs[npc_id])
         n['relations_view'] = [dict(other=int(i), name=self.npcs[int(i)]['name'],
                                     alive=self.npcs[int(i)]['alive'], **r)

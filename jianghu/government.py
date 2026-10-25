@@ -28,6 +28,13 @@ def appoint(w):
         candidates = [n for n in w.npcs.values() if n['alive'] and 252 <= n['age_months'] <= 840 and n['id'] not in occupied]
         if not candidates:
             g['offices'][office] = None
+            if current:
+                current['office'] = None
+                e = w.emit('office_vacancy', [current['id']],
+                           f"{current['name']}的{office}任期届满，暂无合资格继任者，此职暂缺。", .75,
+                           [g['last_appointments'].get(office)], {'office': office, 'previous': current['id']})
+                g['last_appointments'][office] = e['id']
+                g.setdefault('departed', {})[office] = current['id']
             continue
         def merit(n):
             return n['reputation'] + n['contribution']*.15 + n['traits']['loyalty']*.25 + (

@@ -8,6 +8,7 @@ import urllib.request
 from urllib.parse import urlparse
 
 from .engine import TRAITS, BELIEFS, DESIRES
+from . import careers
 
 DEFAULT_CONFIG = {'enabled': False, 'backend': 'llamacpp', 'url': 'http://127.0.0.1:11435',
                   'model': 'qwen3:4b', 'reviews_per_month': 2, 'cooldown_months': 6,
@@ -31,7 +32,8 @@ def context_for(world, n):
             'self': {k: deepcopy(n[k]) for k in ('name', 'age_months', 'wealth', 'health', 'skill', 'job',
                                                   'traits', 'mood', 'beliefs', 'desires', 'goal',
                                                   'pregnancy', 'illness', 'office', 'generation',
-                                                  'spouse', 'children', 'family_size')},
+                                                  'spouse', 'children', 'family_size', 'career')},
+            'social_identity': careers.identity(world, n),
             'public_institutions': {'name': world.government['name'], 'tax_rate': world.government['tax_rate'],
                                     'offices': world.government['offices'].copy()},
             'current_plan': deepcopy(n['plan']),
