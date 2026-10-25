@@ -1,5 +1,6 @@
 """A county government with real people, a balanced treasury and evidence-based cases."""
 from .demography import infect
+from . import social
 
 OFFICES = ['县令', '捕头', '主簿']
 
@@ -103,18 +104,26 @@ def monthly(w):
         g['expenses'] += 2
         restitution = min(offender['wealth'], case['amount'])
         offender['wealth'] -= restitution
-        victim['wealth'] += restitution
+        if case.get('public_money'):
+            g['fund']+=restitution
+            g['revenue']+=restitution
+        else:
+            victim['wealth'] += restitution
         fine = min(offender['wealth'], 3)
         offender['wealth'] -= fine
         g['fund'] += fine
         g['revenue'] += fine
         offender['reputation'] = max(-100, offender['reputation']-4)
+        restraint=3 if w.store.event(case['crime_event'])['kind'] in ('extortion','extortion_resisted') else 1
+        offender['probation_until']=max(offender.get('probation_until',-1),w.month+restraint)
         victim['desires']['revenge'] = max(0, victim['desires']['revenge']-40)
         w.relation(victim, offender['id'])['affinity'] = min(100, w.relation(victim, offender['id'])['affinity']+15)
         e = w.emit('judgment', [victim['id'], offender['id'], g['offices']['捕头']],
-                   f"临川县衙据已提交的侵吞证据判令{offender['name']}偿还{victim['name']}{restitution:.1f}银，另罚{fine:.1f}银。", .9,
+                   f"临川县衙据已提交的证据判令{offender['name']}偿还{restitution:.1f}银，另罚{fine:.1f}银，拘束劳役{restraint}个月。", .9,
                    [case['report_event'], case['crime_event']],
-                   {'case': case['crime_event'], 'restitution': restitution, 'fine': fine, 'court_cost': 2})
+                   {'case': case['crime_event'], 'restitution': restitution, 'fine': fine, 'court_cost': 2,
+                    'offender':offender['id'],'victim':victim['id'],'public_money':case.get('public_money',False),
+                    'restricted_months':restraint})
         case.update({'status': '已判决', 'judgment': e['id'], 'restitution': restitution})
         g['closed_cases'] += 1
     holders = [i for i in g['offices'].values() if i and w.npcs[i]['alive']]
@@ -153,13 +162,14 @@ def annual(w):
                 infect(w, n, e['id'])
 
 
-def report(w, n, crime_event):
+def report(w, n, crime_event, extra=None):
     crime = w.store.event(crime_event)
-    if not crime or crime['kind'] != 'betrayal' or crime['facts'].get('victim') != n['id']:
+    if not crime or crime['kind'] not in social.CRIMES or crime['facts'].get('victim') != n['id']:
         raise ValueError('没有此人实际掌握的受害证据')
-    e = w.emit('crime_report', [n['id']], f"{n['name']}携已知的侵吞证据向临川县衙报案。", .75,
-               [crime_event], {'crime_event': crime_event, 'offender': crime['facts']['offender']})
+    e = w.emit('crime_report', [n['id']], f"{n['name']}携实际掌握的侵害证据向临川县衙报案。", .75,
+               [crime_event], {'crime_event': crime_event, 'offender': crime['facts']['offender'],**(extra or {})})
     w.government['cases'].append({'crime_event': crime_event, 'report_event': e['id'], 'month': w.month,
                                   'offender': crime['facts']['offender'], 'victim': n['id'],
-                                  'amount': crime['facts']['transfer'], 'status': '待审'})
+                                  'amount': crime['facts']['transfer'], 'status': '待审',
+                                  'public_money':crime['facts'].get('public_money',False)})
     return e

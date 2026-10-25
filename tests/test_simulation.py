@@ -7,6 +7,7 @@ import unittest
 from jianghu.ai import apply_decision, context_for
 from jianghu.engine import World, TRAITS
 from jianghu.store import Store
+from jianghu import social
 
 
 def proposal(ctx, **kwargs):
@@ -27,7 +28,12 @@ class SimulationTests(unittest.TestCase):
             a.month_step();b.month_step()
         self.assertEqual(a.npcs,b.npcs)
         self.assertEqual(a.rng.getstate(),b.rng.getstate())
-        self.assertGreaterEqual(sum(n['goal']['kind']==first[i] for i,n in a.npcs.items() if i in first),24)
+        for i,n in a.npcs.items():
+            if i not in first or n['goal']['kind']==first[i]:continue
+            cause=a.store.event(n['goal']['cause'])
+            self.assertIn(cause['kind'],social.CRIMES)
+            self.assertEqual(cause['facts']['victim'],i)
+            self.assertGreaterEqual(n['past_goals'][0]['ended']-n['past_goals'][0]['since'],24)
 
     def test_save_reload_continues_same_world(self):
         with tempfile.TemporaryDirectory() as d:
@@ -157,11 +163,12 @@ class SimulationTests(unittest.TestCase):
         w=self.world(population=1);n=w.npcs[1]
         n['age_months']=240;n['health']=20;n['wealth']=50
         before=n['wealth'];w.month_step()
-        e=w.store.event(n['last_action']['event_id']);facts=e['facts']
-        self.assertEqual(facts['monthly_settlement']['payer'],1)
-        stipends=sum(json.loads(raw)['facts'].get('payments',{}).get('1',0)
-                     for raw, in w.store.db.execute('SELECT data FROM events WHERE month=1'))
-        reconstructed=before+stipends-facts['monthly_settlement']['paid']+facts['actor_delta']['wealth']
+        month_events=[json.loads(raw) for raw, in w.store.db.execute('SELECT data FROM events WHERE month=1')]
+        settlements=[e['facts']['monthly_settlement'] for e in month_events if 'monthly_settlement' in e['facts']]
+        self.assertEqual(len(settlements),1);self.assertEqual(settlements[0]['payer'],1)
+        stipends=sum(e['facts'].get('payments',{}).get('1',0) for e in month_events)
+        action_changes=sum(e['facts'].get('actor_delta',{}).get('wealth',0) for e in month_events if e['facts'].get('actor')==1)
+        reconstructed=before+stipends-settlements[0]['paid']+action_changes
         self.assertAlmostEqual(n['wealth'],reconstructed)
 
     def test_unfed_child_does_not_heal_through_starvation(self):

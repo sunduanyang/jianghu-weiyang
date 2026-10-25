@@ -23,6 +23,11 @@ class Game:
             config = json.loads(config_path.read_text(encoding='utf-8'))
         except (FileNotFoundError, ValueError):
             config = DEFAULT_CONFIG.copy()
+        # Upgrade the old 2-person budget only when opening a pre-v3 config; keep a
+        # user's subsequent explicit budget setting intact.
+        if config.get('config_version',0)<3:
+            config={**config,'reviews_per_month':24,'cooldown_months':3,'queue_limit':48,'config_version':3,
+                    'max_tokens':360}
         self.ai = AIManager(config)
         self.world = World(seed, population, Store(path))
         self.ai.restore_stats(self.world.store)
@@ -50,7 +55,7 @@ class Game:
                             self.job['remaining'] -= 1
                         if not fast:
                             self.ai.schedule(self.world)
-                        delay = 4 if self.ai.config['enabled'] and not fast else (.55 if self.autoplay else 0)
+                        delay = 1 if self.ai.config['enabled'] and not fast else (.55 if self.autoplay else 0)
                         self.next_step = time.monotonic() + delay
                         if not self.job['remaining'] and not self.autoplay:
                             self.job['label'] = '已暂停'
@@ -65,6 +70,8 @@ class Game:
                 time.sleep(.5)
 
     def state(self):
+        self.ai.stats['eligible']=sum(n['alive'] and n['age_months']>=120 for n in self.world.npcs.values())
+        self.ai.stats['coverage']=sum(n['alive'] and n['last_ai_review'] is not None for n in self.world.npcs.values())
         return {**self.world.summary(), 'ai': self.ai.view(), 'job': self.job.copy(),
                 'autoplay': self.autoplay, 'database': str(self.path),
                 'ai_budget_wait': game_ai_wait(self.ai, self.world.month),
@@ -105,7 +112,7 @@ class Game:
         parsed = urlparse(config['url'])
         if parsed.hostname not in ('127.0.0.1', 'localhost', '::1') or parsed.scheme != 'http':
             raise ValueError('仅允许本机HTTP模型服务')
-        for k, lo, hi in [('reviews_per_month', 1, 8), ('cooldown_months', 1, 24), ('queue_limit', 1, 16)]:
+        for k, lo, hi in [('reviews_per_month', 1, 128), ('cooldown_months', 1, 24), ('queue_limit', 1, 128)]:
             if k in body:
                 config[k] = max(lo, min(hi, int(body[k])))
         self.ai.config = config
@@ -225,10 +232,10 @@ def handler_for(game):
 
 
 def game_ai_wait(ai, month):
-    # Ordinary actions never call the model. After three whole world-months, let an
+    # Ordinary actions never call the model. After one whole world-month, let an
     # outstanding important review land before racing decades past its context.
     return bool(ai.config['enabled'] and ai.submitted_months and
-                month-min(ai.submitted_months.values()) >= 3)
+                month-min(ai.submitted_months.values()) >= 1)
 
 
 def serve(path, host='127.0.0.1', port=8765, seed=42, population=100, prehistory=18):
