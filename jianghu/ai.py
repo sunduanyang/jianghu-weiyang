@@ -8,6 +8,7 @@ import urllib.request
 from urllib.parse import urlparse
 
 from .engine import TRAITS, BELIEFS, DESIRES
+from . import items
 
 DEFAULT_CONFIG = {'enabled': False, 'backend': 'llamacpp', 'url': 'http://127.0.0.1:11435',
                   'model': 'qwen3:4b', 'reviews_per_month': 2, 'cooldown_months': 6,
@@ -18,7 +19,7 @@ def context_for(world, n):
     """Only firsthand/attributed memories and the NPC's OWN view of others."""
     options = world.legal_actions(n)
     if n['wealth'] < 8 or n['health'] < 35 or n['age_months'] < 120:
-        options = [a for a in options if a['kind'] in ('work', 'rest', 'train', 'treatment')]
+        options = [a for a in options if a['kind'] in ('work', 'rest', 'train', 'treatment', 'use_item', 'sell_item')]
     # All legal options stay addressable. Ranking is a disclosed baseline, not model authority.
     options = sorted(options, key=lambda a: world.score(n, a), reverse=True)[:22]
     memories = sorted(n['memories'], key=lambda m: m['month']*.015+m['salience'], reverse=True)[:6]
@@ -35,6 +36,9 @@ def context_for(world, n):
             'public_institutions': {'name': world.government['name'], 'tax_rate': world.government['tax_rate'],
                                     'offices': world.government['offices'].copy()},
             'current_plan': deepcopy(n['plan']),
+            'possessions': [{'id': i['id'], 'name': items.spec(i)['name'], 'durability': i['durability']}
+                            for i in items.objects(world, n['id'])],
+            'equipment_bonuses': items.bonuses(world, n['id']),
             'known_people': [{'id': int(i), 'observed': n['knowledge'].get(i, {}), 'my_relation': r.copy()}
                               for i, r in contacts],
             'memories': [{k: m[k] for k in ('event_id', 'fact', 'interpretation', 'source', 'salience')} for m in memories],

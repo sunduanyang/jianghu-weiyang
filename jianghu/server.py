@@ -10,6 +10,7 @@ from urllib.parse import parse_qs, urlparse
 from .ai import AIManager, DEFAULT_CONFIG
 from .engine import World
 from .store import Store
+from . import items
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -150,12 +151,16 @@ def handler_for(game):
                         elif path == '/api/ai/logs':
                             rows = game.world.store.db.execute('SELECT data FROM ai_log ORDER BY id DESC LIMIT 15').fetchall()
                             data = [json.loads(r[0]) for r in rows]
+                        elif path == '/api/inventory':
+                            data = items.view(game.world, 'player')
+                        elif path == '/api/market':
+                            data = items.market_view(game.world)
                         else:
                             self.json_response({'error': '接口不存在'}, 404)
                             return
                     self.json_response(data)
                     return
-                files = {'/': 'index.html', '/index.html': 'index.html', '/style.css': 'style.css', '/app.js': 'app.js'}
+                files = {'/': 'index.html', '/index.html': 'index.html', '/style.css': 'style.css', '/app.js': 'app.js', '/inventory.js': 'inventory.js'}
                 filename = files.get(path)
                 if not filename:
                     self.send_error(404)
@@ -185,6 +190,10 @@ def handler_for(game):
                     elif self.path == '/api/intervene':
                         data = game.world.intervene(int(body['npc_id']), body['action'], body.get('text', ''))
                         game.ai.schedule(game.world, int(body['npc_id']))
+                    elif self.path == '/api/items':
+                        data = items.perform(game.world, 'player', body['operation'], body.get('item_id'),
+                                             body.get('target'), body.get('recipe'))
+                        game.world.checkpoint()
                     elif self.path == '/api/ai/config':
                         data = game.configure(body)
                     elif self.path == '/api/ai/review':
