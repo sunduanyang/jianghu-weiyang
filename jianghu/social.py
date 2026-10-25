@@ -65,7 +65,7 @@ def actions(w, n, visible):
         add('leisure',detail='茶酒游憩，花费2银')
     if n['wealth'] >= 6 and n['age_months'] >= 216:
         add('gamble',detail='押6银，有赢有输')
-    if n['office'] and w.government['fund'] >= 8:
+    if n['office'] and w.local_government(n)['fund'] >= 8:
         add('embezzle',detail='利用职权挪走8银，可能被审计发现')
     for i in visible:
         q=w.npcs[i]
@@ -143,7 +143,7 @@ def execute(w, n, a, facts):
     if k=='steal':
         amount=min(12,q['wealth']*.3)
         n['wealth']+=amount;q['wealth']-=amount
-        if w.rng.random()<.25+w.government['security']*.3:
+        if w.rng.random()<.25+w.local_government(n)['security']*.3:
             return expose(w,'theft_exposed',n,q,amount,f"{n['name']}窃取{q['name']}{amount:.1f}银，被当场发现。",parents,settled())
         e=w.emit('secret_theft',[n['id']],f"{n['name']}暗中窃取{q['name']}{amount:.1f}银，未被发现。",.65,parents,
                  {**settled(),'secret':True,'offender':n['id'],'victim':q['id'],'transfer':amount})
@@ -166,15 +166,15 @@ def execute(w, n, a, facts):
         r=w.relation(audience,q['id']);r['affinity']=max(-100,r['affinity']-5);r['trust']=max(-100,r['trust']-4)
         q['reputation']=max(-100,q['reputation']-2)
         n['reputation']=min(100,n['reputation']+1)
-        if w.rng.random()<.2+w.government['security']*.2:
+        if w.rng.random()<.2+w.local_government(n)['security']*.2:
             return expose(w,'slander_exposed',n,q,0,f"{n['name']}中伤{q['name']}的传言被核实为编造，双方反目。",[secret['id']],settled())
         return secret
     if k=='embezzle':
         amount=8
-        w.government['fund']-=amount;w.government['expenses']+=amount;n['wealth']+=amount
+        w.local_government(n)['fund']-=amount;w.local_government(n)['expenses']+=amount;n['wealth']+=amount
         e=w.emit('embezzlement',[n['id']],f"{n['name']}利用{n['office']}职权将公帑8银据为己有。",.7,parents,
                  {**settled(),'offender':n['id'],'amount':8,'secret':True})
-        w.government.setdefault('corruption_records',[]).append({'event_id':e['id'],'offender':n['id'],'amount':8,'audited':False})
+        w.local_government(n).setdefault('corruption_records',[]).append({'event_id':e['id'],'offender':n['id'],'amount':8,'audited':False})
         return e
     if k=='gamble':
         n['wealth']-=6;w.economy['gaming_house']+=6
@@ -201,19 +201,24 @@ def execute(w, n, a, facts):
     return w.emit(k,[n['id']],text,.15,parents,settled())
 
 
-def audit(w):
-    records=w.government.get('corruption_records',[])
+def audit(w, g=None):
+    if g is None:
+        for court in w.governments:
+            audit(w, court)
+        return
+
+    records=g.get('corruption_records',[])
     for row in records:
         if row['audited'] or w.rng.random()>.6:
             continue
         row['audited']=True
         offender=w.npcs[row['offender']]
-        auditor=next((w.npcs[i] for i in w.government['offices'].values() if i and i!=offender['id'] and w.npcs[i]['alive']),None)
+        auditor=next((w.npcs[i] for i in g['offices'].values() if i and i!=offender['id'] and w.npcs[i]['alive']),None)
         if not auditor or not offender['alive']:
             continue
         e=expose(w,'embezzlement_exposed',offender,auditor,row['amount'],
                  f"县衙查账发现{offender['name']}侵吞公帑{row['amount']:.1f}银。",[row['event_id']],{'public_money':True})
-        w.government['last_event']=e['id']
+        g['last_event']=e['id']
 
 
 def interpretation(w, n, e):

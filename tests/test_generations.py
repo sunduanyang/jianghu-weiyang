@@ -90,15 +90,24 @@ class GenerationsTests(unittest.TestCase):
             self.assertTrue(e['causes']);self.assertEqual(e['facts']['cause'],cause)
 
     def test_death_is_idempotent_and_no_heir_estate_enters_treasury(self):
-        w=self.world();n=w.npcs[1];wealth=n['wealth'];fund=w.government['fund']
+        w=self.world();n=w.npcs[1];wealth=n['wealth'];g=w.local_government(n);fund=g['fund']
         w.die(n,'old_age');count=w.metrics['deaths'];w.die(n,'old_age')
         self.assertEqual(w.metrics['deaths'],count)
-        self.assertAlmostEqual(w.government['fund'],fund+wealth)
+        self.assertAlmostEqual(g['fund'],fund+wealth)
         self.assertEqual(n['wealth'],0)
 
 
 class GovernmentTests(unittest.TestCase):
-    def world(self):return World(seed=42,population=30,durable=False)
+    def world(self):
+        # A populated single jurisdiction isolates the government accounting tests.
+        w = World(seed=42, population=30, durable=False)
+        for n in w.npcs.values():
+            n.update(place=0, office=None, office_country=None)
+        w.governments = [government.new(i) for i in range(len(w.countries))]
+        w.government = w.governments[0]
+        w.reindex()
+        government.establish(w)
+        return w
 
     def test_tax_and_relief_transfer_real_money_with_no_overdraft(self):
         w=self.world();n=w.npcs[1];n['wealth']+=20

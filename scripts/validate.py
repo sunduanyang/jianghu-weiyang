@@ -38,6 +38,11 @@ def probe(population, months, seed, durable):
     kinds=dict(w.store.db.execute('SELECT kind,count(*) FROM events GROUP BY kind').fetchall())
     marriage_errors=sum(bool(n['spouse']) and n['alive'] and
                         (not w.npcs[n['spouse']]['alive'] or w.npcs[n['spouse']]['spouse']!=n['id']) for n in w.npcs.values())
+    treasury_errors=sum(g['fund'] < -.0001 or abs(g['fund']-g['opening_fund']-g['revenue']+g['expenses']) > .001
+                        for g in w.governments)
+    office_errors=sum(not w.npcs[i]['alive'] or w.npcs[i]['office'] != office or
+                      w.npcs[i]['office_country'] != g['country']
+                      for g in w.governments for office, i in g['offices'].items() if i)
     result={k:v for k,v in w.summary().items() if k not in ('npcs','places','factions','player')}
     result.update({'initial_population':population,'simulated_years':months/12,'durable_monthly_snapshot':durable,
                    'source_sha256': {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT/'jianghu').glob('*.py')},
@@ -47,7 +52,8 @@ def probe(population, months, seed, durable):
                    'active_goal_age_years_median':statistics.median(age_goals),
                    'last_action_distribution':dict(dominant),'event_kinds':kinds,
                    'bad_causal_edges':bad_causes,'private_memory_leaks':private_leaks,
-                   'marriage_errors':marriage_errors,'database':str(path)})
+                   'marriage_errors':marriage_errors,'treasury_errors':treasury_errors,
+                   'office_errors':office_errors,'database':str(path)})
     w.store.close()
     return result
 

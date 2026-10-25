@@ -17,6 +17,7 @@ DEFAULT_CONFIG = {'enabled': False, 'backend': 'llamacpp', 'url': 'http://127.0.
 
 def context_for(world, n):
     """Only firsthand/attributed memories and the NPC's OWN view of others."""
+    local_g = world.local_government(n)
     options = world.legal_actions(n,planning=True)
     if n['wealth'] < 8 or n['health'] < 35 or n['age_months'] < 120:
         options = [a for a in options if a['kind'] in ('work', 'rest', 'train', 'treatment', 'use_item', 'sell_item')]
@@ -40,8 +41,10 @@ def context_for(world, n):
                                                   'traits', 'mood', 'beliefs', 'desires', 'goal',
                                                   'pregnancy', 'illness', 'office', 'generation',
                                                   'spouse', 'children', 'family_size')},
-            'public_institutions': {'name': world.government['name'], 'tax_rate': world.government['tax_rate'],
-                                    'offices': world.government['offices'].copy()},
+            'public_institutions': {'name': local_g['name'], 'tax_rate': local_g['tax_rate'],
+                                    'offices': local_g['offices'].copy()},
+            'location': {**world.summary_place(n['place']), 'country_name': world.countries[local_g['country']]['name']},
+            'membership': deepcopy(world.factions[n['faction']]) if n['faction'] is not None else None,
             'current_plan': deepcopy(n['plan']),
             'possessions': [{'id': i['id'], 'name': items.spec(i)['name'], 'durability': i['durability']}
                             for i in items.objects(world, n['id'])],

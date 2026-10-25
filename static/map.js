@@ -1,0 +1,205 @@
+/* Offline national atlas. World coordinates persist across polling and pointer gestures. */
+const atlasUI = {
+  geometry: null, loading: false, layer: 'countries', view: [0, 0, 1100, 760],
+  site: null, signature: '', drag: null, suppressClick: false,
+  country(id) { return world.countries.find(c => c.id === Number(id)); },
+  async init() {
+    if (this.loading || this.geometry) return;
+    this.loading = true;
+    try {
+      const response = await fetch('/geography.json');
+      if (!response.ok) throw Error('舆图数据未能载入');
+      this.geometry = await response.json();
+      this.signature = '';
+      if (world) this.render();
+    } catch (e) {
+      $('#map').innerHTML = '<p class="note map-error">舆图载入失败，请刷新重试。人物模拟与存档仍可使用。</p>';
+    }
+  },
+  bind() {
+    const map = $('#map');
+    map.addEventListener('wheel', e => { e.preventDefault(); this.zoom(e.deltaY < 0 ? .8 : 1.25, e); }, {passive: false});
+    map.addEventListener('pointerdown', e => {
+      if (e.button !== 0) return;
+      this.drag = {x: e.clientX, y: e.clientY, view: [...this.view], moved: false};
+    });
+    map.addEventListener('pointermove', e => {
+      if (!this.drag) return;
+      const dx = e.clientX-this.drag.x, dy = e.clientY-this.drag.y;
+      if (Math.abs(dx)+Math.abs(dy) < 5 && !this.drag.moved) return;
+      this.drag.moved = true;
+      if (!map.hasPointerCapture(e.pointerId)) map.setPointerCapture(e.pointerId);
+      const scale = this.pixelScale();
+      this.view[0] = this.drag.view[0]-dx/scale;
+      this.view[1] = this.drag.view[1]-dy/scale;
+      this.applyView();
+    });
+    const finish = () => {
+      if (this.drag?.moved) { this.suppressClick = true; setTimeout(() => this.suppressClick = false, 0); }
+      this.drag = null;
+    };
+    map.addEventListener('pointerup', finish);
+    map.addEventListener('pointercancel', finish);
+    map.addEventListener('pointerleave', e => { if (!map.hasPointerCapture(e.pointerId)) finish(); });
+    $('#map-zoom-in').onclick = () => this.zoom(.7);
+    $('#map-zoom-out').onclick = () => this.zoom(1/.7);
+    $('#map-reset').onclick = () => { this.view = [0, 0, 1100, 760]; this.applyView(); };
+    $('#map-locate').onclick = () => { const n = person(selected); if (n) this.focusSite(n.place); };
+    $$('[data-map-layer]').forEach(button => button.onclick = () => {
+      this.layer = button.dataset.mapLayer;
+      $$('[data-map-layer]').forEach(b => { b.classList.toggle('active', b === button); b.setAttribute('aria-pressed', b === button); });
+      this.signature = ''; this.render();
+    });
+  },
+  pixelScale() {
+    const r = $('#map').getBoundingClientRect();
+    return Math.min(r.width/this.view[2], r.height/this.view[3]);
+  },
+  zoom(factor, event) {
+    const [x,y,w,h] = this.view, newWidth = Math.max(110, Math.min(1100, w*factor));
+    const k = newWidth/w;
+    let cx = x+w/2, cy = y+h/2;
+    const svg = $('#map svg');
+    if (event && svg) {
+      const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(svg.getScreenCTM().inverse());
+      cx = point.x; cy = point.y;
+    }
+    this.view = [cx+(x-cx)*k, cy+(y-cy)*k, newWidth, h*k];
+    this.applyView();
+  },
+  applyView() {
+    const svg = $('#map svg'); if (!svg) return;
+    const [,,w,h] = this.view;
+    this.view[0] = Math.max(-80, Math.min(1180-w, this.view[0]));
+    this.view[1] = Math.max(-70, Math.min(830-h, this.view[1]));
+    svg.setAttribute('viewBox', this.view.join(' '));
+    svg.classList.toggle('map-close', w < 490);
+    svg.classList.toggle('map-near', w < 250);
+    for (const site of svg.querySelectorAll('.atlas-site.capital')) {
+      const p = world.places[Number(site.dataset.place)];
+      const k = w < 250 ? .28 : w < 490 ? .55 : 1;
+      site.querySelector('.site-symbol').setAttribute('transform', `translate(${p.x} ${p.y}) scale(${k}) translate(${-p.x} ${-p.y})`);
+    }
+    // Dense eastern settlements share little screen space. Keep the most useful labels,
+    // while hover/focus always reveals a settlement's full name.
+    const occupied = [];
+    const sites = [...svg.querySelectorAll('.atlas-site')].sort((a,b) =>
+      Number(b.classList.contains('chosen'))*10+Number(b.classList.contains('prominent'))-
+      Number(a.classList.contains('chosen'))*10-Number(a.classList.contains('prominent')));
+    sites.forEach(site => site.classList.remove('label-suppressed'));
+    for (const site of sites) {
+      if (site.classList.contains('dimmed')) continue;
+      const label = site.querySelector('.atlas-site-label');
+      const rect = label.getBoundingClientRect();
+      if (!rect.width || rect.bottom < 0 || rect.top > innerHeight) continue;
+      if (occupied.some(r => rect.left < r.right+4 && rect.right+4 > r.left && rect.top < r.bottom+3 && rect.bottom+3 > r.top))
+        site.classList.add('label-suppressed');
+      else occupied.push(rect);
+    }
+    $('#map-scale').textContent = `${(1100/w).toFixed(1)}×`;
+  },
+  focusSite(id) {
+    const p = world.places.find(p => p.id === Number(id)); if (!p) return;
+    this.site = p.id;
+    this.view = [p.x-135, p.y-93, 270, 186.55];
+    this.signature = ''; this.render();
+  },
+  chooseCountry(id, focus = true) {
+    $('#country-filter').value = String(id);
+    $('#place-filter').value = ''; $('#faction-filter').value = ''; $('#circuit-filter').value = '';
+    this.site = null;
+    if (focus && id === '') this.view = [0, 0, 1100, 760];
+    if (focus && id !== '') {
+      const points = world.places.filter(p => p.country === Number(id));
+      const xs = points.map(p=>p.x), ys = points.map(p=>p.y);
+      const w = Math.max(230, Math.max(...xs)-Math.min(...xs)+160, (Math.max(...ys)-Math.min(...ys)+120)*1100/760);
+      this.view = [(Math.max(...xs)+Math.min(...xs)-w)/2, (Math.max(...ys)+Math.min(...ys)-w*760/1100)/2, w, w*760/1100];
+    }
+    this.signature = ''; renderPeople(); this.render(); renderFactions(); renderSociety();
+  },
+  selectSite(id) {
+    this.site = Number(id);
+    $('#country-filter').value = ''; $('#faction-filter').value = '';
+    $('#place-filter').value = String(id);
+    renderPeople(); this.signature = ''; this.render();
+  },
+  render() {
+    if (!world?.countries) return;
+    if (!this.geometry) { this.init(); return; }
+    const country = $('#country-filter').value;
+    const key = [world.seed, world.month, world.events, selected, country, this.site, this.layer, $('#faction-filter').value, $('#circuit-filter').value].join('/');
+    if (key === this.signature || this.drag) return;
+    this.signature = key;
+    const dim = id => country !== '' && Number(country) !== id;
+    const shapes = this.geometry.territories.map(p => {
+      const c = this.country(p.country);
+      return `<path class="map-territory ${c.kind==='诸部'?'tribal-range':''} ${dim(c.id)?'dimmed':''}" data-country="${c.id}" d="${p.path}" fill="${c.color}"><title>${esc(p.name)} · ${esc(c.name)}</title></path>`;
+    }).join('');
+    const routes = world.routes.map(r => {
+      const a = world.places[r.a], b = world.places[r.b];
+      return `<path class="atlas-route ${r.sea?'sea':''} ${dim(a.country)&&dim(b.country)?'dimmed':''}" d="M${a.x},${a.y} L${b.x},${b.y}"><title>${esc(a.name)}—${esc(b.name)} · ${r.km}公里</title></path>`;
+    }).join('');
+    const n = person(selected), site = n ? world.places[n.place] : null;
+    const focus = site ? `<circle class="atlas-person-ring" cx="${site.x}" cy="${site.y}" r="13"/><circle cx="${site.x}" cy="${site.y}" r="3" fill="#9e4c37"/>` : '';
+    const labels = world.countries.map(c=>`<text class="country-label ${dim(c.id)?'dimmed':''}" data-country="${c.id}" x="${c.label_x}" y="${c.label_y}">${esc(c.name)}</text>`).join('');
+    const circuits = this.geometry.regions.map(r=>`<text class="circuit-label ${dim(r.country)?'dimmed':''}" data-circuit="${esc(r.name)}" data-country="${r.country}" x="${r.x}" y="${r.y}">${esc(r.name)}</text>`).join('');
+    const rivers = this.geometry.rivers.map(r=>`<path class="atlas-river" d="${r.path}"><title>${esc(r.name)}</title></path>`).join('');
+    const sites = world.places.map(p => {
+      const schools = world.factions.filter(f => f.place === p.id), capital = p.kind === 'capital';
+      const prominent = capital || (this.layer === 'factions' && schools.length);
+      const filtered = $('#faction-filter').value;
+      const highlight = this.site === p.id || (filtered !== '' && schools.some(f => f.id === Number(filtered)));
+      const label = this.layer === 'factions' && schools.length ? schools.map(f=>f.name).join(' / ') : p.name;
+      return `<g class="atlas-site ${capital?'capital':''} ${prominent?'prominent':''} ${dim(p.country)?'dimmed':''} ${highlight?'chosen':''}" data-place="${p.id}" role="button" tabindex="0" aria-label="${esc(p.name)}，${p.population}人，${esc(this.country(p.country).name)}">
+        <title>${esc(p.name)} · ${esc(this.country(p.country).name)} · ${p.population}人${schools.length?' · '+esc(schools.map(f=>f.name).join('、')):''}</title>
+        ${capital?`<path class="site-symbol" d="M${p.x},${p.y-5} l5,5 -5,5 -5,-5 Z"/>`:`<circle class="site-symbol" cx="${p.x}" cy="${p.y}" r="${schools.length&&this.layer==='factions'?4:2.8}"/>`}
+        <text class="atlas-site-label" x="${p.x+7}" y="${p.y+4}">${esc(label)}</text>
+        <text class="atlas-site-pop" x="${p.x+7}" y="${p.y+17}">${p.population}人</text></g>`;
+    }).join('');
+    const residentDots = world.places.map(p => world.npcs.filter(n=>n.alive&&n.place===p.id).map((n,i)=>{
+      const angle=i*2.399963, r=4+Math.sqrt(i)*1.1;
+      return `<circle class="map-npc" data-person="${n.id}" cx="${p.x+Math.cos(angle)*r}" cy="${p.y+Math.sin(angle)*r}" r=".85" fill="${n.id===selected?'#a4513f':'#5e7e68'}"><title>${esc(n.name)} · ${esc(p.name)}</title></circle>`;
+    }).join('')).join('');
+    $('#map').innerHTML = `<svg class="atlas-svg layer-${this.layer}" viewBox="${this.view.join(' ')}" aria-label="约1200年宋金时期江湖舆图，可缩放拖动，${world.places.length}处地点，包含古代政权疆界与诸部活动范围" role="img">
+      <defs><clipPath id="historical-land"><path d="${this.geometry.land}"/></clipPath><pattern id="map-grid" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M80 0 H0 V80" fill="none" stroke="#bcc8bf" stroke-width=".5" opacity=".22"/></pattern></defs>
+      <rect x="-1000" y="-1000" width="4000" height="4000" fill="#e9eee8"/>
+      <rect width="1100" height="760" fill="url(#map-grid)"/>
+      <path class="atlas-coast" d="${this.geometry.land}"/>
+      <g class="atlas-land" clip-path="url(#historical-land)">${shapes}</g>
+      <g class="atlas-rivers" clip-path="url(#historical-land)">${rivers}</g>
+      <path class="song-jin-frontier" d="${this.geometry.frontier}"><title>宋金疆界：秦岭、大散关—淮水一线（概略）</title></path>
+      <g class="atlas-roads">${routes}</g><g class="atlas-regions">${labels}</g>
+      <g class="atlas-circuits">${circuits}</g><g class="atlas-residents">${residentDots}</g><g class="atlas-sites">${sites}</g>${focus}
+      <g class="atlas-compass" transform="translate(1000 65)"><path d="M0 -22 L-6 2 0 -3 6 2 Z" fill="#567168"/><text x="0" y="-30" text-anchor="middle" font-size="14" fill="#567168">北</text><path d="M0 5 V20 M-12 0 H12" stroke="#9aab9c"/></g>
+      <text class="frontier-label" x="${25+(107.3-73)*16.5}" y="${25+(54-34.18)*18.5-8}">大散关</text>
+      <text class="sea-label" x="938" y="487">东 海</text><text class="sea-label" x="790" y="718">南 海</text>
+    </svg>`;
+    this.applyView();
+    $('#country-legend').innerHTML = `<button class="country-chip ${country===''?'active':''}" data-country="">天下</button>`+world.countries.map(c=>`<button class="country-chip ${Number(country)===c.id&&country!==''?'active':''}" data-country="${c.id}"><i style="background:${c.color}"></i>${esc(c.name)} <small>${c.population}</small></button>`).join('');
+    $('#atlas-count').textContent = `${world.places.length}处山河 · ${world.countries.length}方政权 / 诸部 · ${world.factions.length}个组织`;
+    this.renderDetail();
+  },
+  renderDetail() {
+    const p = this.site !== null ? world.places[this.site] : null;
+    const c = p ? this.country(p.country) : ($('#country-filter').value !== '' ? this.country($('#country-filter').value) : null);
+    if (!c) {
+      $('#map-detail').innerHTML = `<div><b>九州之内，各有归处</b><p>约公元1200年，宋金隔淮水、秦岭对峙。实线为概略国界，虚线为诸部活动范围；「州路」查看古代政区。</p></div><span class="atlas-seal">天下</span>`;
+      return;
+    }
+    const schools = p ? world.factions.filter(f=>f.place===p.id) : [];
+    const neighbors = p ? world.routes.filter(r=>r.a===p.id||r.b===p.id).map(r=>world.places[r.a===p.id?r.b:r.a].name).join('、') : '';
+    $('#map-detail').innerHTML = `<div><div class="atlas-detail-title"><b>${esc(p?p.name:c.name)}</b><span>${esc(c.name)} · ${esc(p?p.region:c.capital)} · ${p?p.population:c.population}人在世</span></div>
+      <p>${p?`${schools.map(f=>esc(f.name)+' · '+esc(f.art)).join(' / ')||'往来行旅与当地居民在此生活。'}<br>通往 ${esc(neighbors)}`:esc(c.ethos)+'。公帑 '+num(c.government.fund,1)+' · 税率 '+num(c.government.tax_rate*100,1)+'%'}</p>
+      ${!p?`<div class="border-relations">${Object.entries(c.relations).map(([id,status])=>`<span class="relation-${status}">${esc(this.country(id).name)} · ${esc(status)}</span>`).join('')}</div>`:''}</div><span class="atlas-seal" style="border-color:${c.color}">${esc(c.name.slice(0,2))}</span>`;
+  }
+};
+
+function renderFactions() {
+  if (!world?.countries) return;
+  const country = $('#country-filter').value, kind = $('#faction-kind').value;
+  const factions = world.factions.filter(f=>(country===''||f.country===Number(country))&&(kind===''||f.kind===kind));
+  const labels = {sect:'门派',guild:'商帮',society:'义社'};
+  $('#faction-directory').innerHTML = factions.map(f=>`<button class="faction-card ${$('#faction-filter').value===String(f.id)?'active':''}" data-faction="${f.id}">
+    <span class="faction-type">${labels[f.kind]}</span><b>${esc(f.name)}</b><span>${esc(f.art)}</span>
+    <small>${esc(place(f.place))} · ${f.members}人在世 · ${esc(atlasUI.country(f.country).name)}</small></button>`).join('')||'<p class="note">此处没有该类组织。</p>';
+}

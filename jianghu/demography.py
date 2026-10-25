@@ -84,7 +84,7 @@ def pregnancies(w):
             father = w.npcs[mother['spouse']]
             # Parenthood is shaped by both people's values and resources, not a population quota.
             readiness = (mother['traits']['loyalty']+father['traits']['loyalty']+100)/200
-            money = min(1., (mother['wealth']+father['wealth']+w.government['fund']*.02)/50)
+            money = min(1., (mother['wealth']+father['wealth']+w.local_government(mother)['fund']*.02)/50)
             intent = 1.6 if max(mother['family_intent_until'], father['family_intent_until']) >= w.month else 1.
             if w.rng.random() < .065 * readiness * money * intent:
                 event = w.emit('pregnancy', [mother['id'], father['id']],
@@ -113,7 +113,7 @@ def deliver(w, mother):
     w.set_goal(child, w.best_goal(child), event['id'], initial=True)
     w.metrics['births'] += 1
     w.government_grant(child, 6, '育幼补助', event['id'])
-    if w.rng.random() < .006 * (2-w.government['sanitation']) * (1 + int(mother['health'] < 40)):
+    if w.rng.random() < .006 * (2-w.local_government(mother)['sanitation']) * (1 + int(mother['health'] < 40)):
         mother['health'] = 0
         w.die(mother, 'childbirth', event['id'])
 
@@ -146,7 +146,7 @@ def health_step(w, n):
         if illness['remaining'] <= 0:
             w.emit('recovery', [n['id']], f"{n['name']}病势渐退，恢复日常生活。", .4, [illness['event_id']])
             n['illness'] = None
-    elif w.rng.random() < .0015 * (1.6-w.government['sanitation']) * (1+int(age < 3 or age > 65)):
+    elif w.rng.random() < .0015 * (1.6-w.local_government(n)['sanitation']) * (1+int(age < 3 or age > 65)):
         infect(w, n)
     wound = n['wound']
     if wound:
@@ -167,8 +167,8 @@ def health_step(w, n):
 def accident(w, n, event):
     if not n['alive'] or event['kind'] not in ('work', 'travel') or w.rng.random() >= .0012:
         return
-    damage = w.rng.uniform(8, 65) * (1.15-w.government['security']*.3)
-    catastrophic = w.rng.random() < .035*(1-w.government['security']*.5)
+    damage = w.rng.uniform(8, 65) * (1.15-w.local_government(n)['security']*.3)
+    catastrophic = w.rng.random() < .035*(1-w.local_government(n)['security']*.5)
     if catastrophic:
         damage = max(damage, n['health'])
     n['health'] = max(0., n['health']-damage)
