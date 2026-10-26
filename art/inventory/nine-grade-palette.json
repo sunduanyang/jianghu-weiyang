@@ -1,0 +1,65 @@
+[
+  {
+    "grade": 9,
+    "grade_label": "凡",
+    "grade_name": "九品",
+    "grade_color": "#8C918C",
+    "grade_color_name": "灰"
+  },
+  {
+    "grade": 8,
+    "grade_label": "素",
+    "grade_name": "八品",
+    "grade_color": "#E8E5DA",
+    "grade_color_name": "白"
+  },
+  {
+    "grade": 7,
+    "grade_label": "良",
+    "grade_name": "七品",
+    "grade_color": "#78A85B",
+    "grade_color_name": "绿"
+  },
+  {
+    "grade": 6,
+    "grade_label": "精",
+    "grade_name": "六品",
+    "grade_color": "#568FC4",
+    "grade_color_name": "蓝"
+  },
+  {
+    "grade": 5,
+    "grade_label": "珍",
+    "grade_name": "五品",
+    "grade_color": "#51B8B4",
+    "grade_color_name": "青"
+  },
+  {
+    "grade": 4,
+    "grade_label": "秘",
+    "grade_name": "四品",
+    "grade_color": "#AF79BF",
+    "grade_color_name": "紫"
+  },
+  {
+    "grade": 3,
+    "grade_label": "极",
+    "grade_name": "三品",
+    "grade_color": "#D4B052",
+    "grade_color_name": "金"
+  },
+  {
+    "grade": 2,
+    "grade_label": "绝",
+    "grade_name": "二品",
+    "grade_color": "#DC8644",
+    "grade_color_name": "橙"
+  },
+  {
+    "grade": 1,
+    "grade_label": "神",
+    "grade_name": "一品",
+    "grade_color": "#D8584E",
+    "grade_color_name": "红"
+  }
+]

@@ -13,20 +13,95 @@ public partial class JianghuApp {
     readonly Dictionary<Vector2Int,J> cityNodes=new Dictionary<Vector2Int,J>();
     readonly Dictionary<Vector2Int,J> cityLots=new Dictionary<Vector2Int,J>();
     readonly Dictionary<Vector2Int,J> cityDrawNodes=new Dictionary<Vector2Int,J>();
+    readonly Dictionary<Vector2Int,Rect> cityCoordinateRects=new Dictionary<Vector2Int,Rect>();
+    int cityCoordinatePlace=-1;
+    float cityCoordinateWidth;
+    Vector2 cityCoordinateCenter;
     string cityPathKey="";
     float cityZoom=1;
     Vector2 cityPan,cityPress,cityLastMouse;
-    bool cityPointerDown,cityPanned,cityLabels=true,cityReach,cityGrid,cityLoading;
+    bool cityPointerDown,cityPanned,cityLabels=true,cityReach,cityGrid=true,cityLoading,cityBattleEnding;
+    Vector2Int cityHeldDirection;
+    float cityNextStepAt;
+    Vector2Int cityLastClickTile=new Vector2Int(-1,-1);
+    Vector2 cityLastClickPosition;
+    float cityLastClickAt=-10;
     int cityRequest;
     Vector2Int cityHover=new Vector2Int(-1,-1);
     Vector2Int cityTipTile=new Vector2Int(-1,-1);
     float cityHoverSince;
-    GUIStyle cityTiny,cityTip,cityTitle,cityName,cityCount;
+    GUIStyle cityTiny,cityTip,cityTitle,cityName,cityCount,cityCoordinateStyle;
     Rect CityOverviewRect=>new Rect(CityViewport.x+12,CityViewport.yMax-138,194,126);
     Rect CityDestinationRect=>new Rect(CityViewport.center.x-196,CityViewport.yMax-76,392,64);
+    Rect CityNoticeRect=>new Rect(CityViewport.x+12,CityViewport.y+8,CityViewport.width-24,46);
     static readonly Vector2Int[] CitySteps={new Vector2Int(-1,0),new Vector2Int(0,1),new Vector2Int(1,0),new Vector2Int(0,-1)};
     Rect CityViewport=>new Rect(rosterOpen?284:42,146,rosterOpen?1118:1360,604);
     bool CityLocal=>Hero["created"].B&&City["place"].I==Hero["place"].I;
+
+    string CityMovementBlockReason=>!Hero["created"].B?"请先创建主角":!CityLocal?"远方地图预览，请先返回主角所在城镇":W["battle_active"].B?"切磋尚未结束，收招后才能在城中行走":W["autoplay"].B||W["job"]["remaining"].I>0?"世界正在推演，请先暂停再行走":Hero["points"].I<=0?"本月行动力已用尽，请结束本月":"";
+    bool CityMovementAllowed=>Page==1&&City.Has&&CityMovementBlockReason.Length==0&&!personScreen&&!dialogueOpen&&!advanceOpen;
+    void UpdateCityMovement(){
+        if(Page!=1||!City.Has||personScreen||dialogueOpen||advanceOpen||!Application.isFocused||GUI.GetNameOfFocusedControl()=="RosterSearch"){
+            cityHeldDirection=Vector2Int.zero;cityNextStepAt=0;return;
+        }
+        int row=(Input.GetKey(KeyCode.S)||Input.GetKey(KeyCode.DownArrow)?1:0)-(Input.GetKey(KeyCode.W)||Input.GetKey(KeyCode.UpArrow)?1:0);
+        int col=(Input.GetKey(KeyCode.D)||Input.GetKey(KeyCode.RightArrow)?1:0)-(Input.GetKey(KeyCode.A)||Input.GetKey(KeyCode.LeftArrow)?1:0);
+        // Take one cardinal step at a time, so two held keys cannot cut a corner.
+        var direction=row!=0?new Vector2Int(row,0):new Vector2Int(0,col);
+        bool changed=direction!=cityHeldDirection;cityHeldDirection=direction;
+        if(direction==Vector2Int.zero){cityNextStepAt=0;return;}
+        if(!CityMovementAllowed){if(changed)Client.Status=CityMovementBlockReason;return;}
+        if(changed)cityNextStepAt=0;
+        if(cityLoading||Client.Busy||Time.realtimeSinceStartup<cityNextStepAt)return;
+        TryCityWalk(new Vector2Int(Hero["row"].I,Hero["col"].I)+direction);
+        cityNextStepAt=Time.realtimeSinceStartup+(changed?.28f:.16f);
+    }
+    bool TryCityWalk(Vector2Int target){
+        if(!CityMovementAllowed){Client.Status=CityMovementBlockReason;return false;}
+        if(cityLoading||Client.Busy||!CityInside(target))return false;
+        EnsureCityRoutes();
+        if(!cityCosts.TryGetValue(target,out int cost)){Client.Status=CityCoordinate(target)+" 不可通行，请沿街巷或桥梁绕行";return false;}
+        if(cost<=0){Client.Status="已在 "+CityCoordinate(target);return false;}
+        if(cost>Hero["points"].I){Client.Status="前往 "+CityCoordinate(target)+" 需要 "+cost+" 行动力，本月不足";return false;}
+        chosenRow=target.x;chosenCol=target.y;
+        HeroAction("walk","place",City["place"],"row",target.x,"col",target.y);return true;
+    }
+    void ResumeCityBattle(){personScreen=dialogueOpen=false;battlePaused=true;Go(3);battleView=true;}
+    System.Collections.IEnumerator EndCityBattle(){
+        if(cityBattleEnding||Client.Busy)yield break;
+        cityBattleEnding=true;
+        try{
+            J current=null;yield return Client.Request("/api/martial",null,j=>current=j);
+            if(current==null)yield break;
+            Martial=current;var battle=current["battle"];
+            if(battle["status"].S=="active")yield return Client.Action("/api/battle",J.O("battle_id",battle["id"],"round",battle["round"],"action","surrender"),j=>Martial=j);
+            else yield return Client.Refresh();
+            if(!W["battle_active"].B){Client.Status="已收招，可用 WASD 或双击地格行走";if(Page==1)LoadCity(Hero["place"].I);}
+        }finally{cityBattleEnding=false;}
+    }
+    static string CityColumn(int col){string label="";for(int value=col+1;value>0;value=(value-1)/26)label=(char)('A'+(value-1)%26)+label;return label;}
+    static string CityCoordinate(Vector2Int at)=>CityColumn(at.y)+(at.x+1);
+    void EnsureCityCoordinateLayout(float tw,float th,Vector2 center){
+        int size=City["size"].I;
+        if(cityCoordinateRects.Count==size*size&&cityCoordinatePlace==City["place"].I&&cityCoordinateWidth==tw&&cityCoordinateCenter==center)return;
+        cityCoordinateRects.Clear();cityCoordinatePlace=City["place"].I;cityCoordinateWidth=tw;cityCoordinateCenter=center;
+        // Tall terraces can project two different cells onto the same label.
+        // Space labels along each isometric column and retain a leader to the tile.
+        for(int diagonal=1-size;diagonal<size;diagonal++){
+            var cells=new List<Vector2Int>();for(int row=0;row<size;row++){int col=row+diagonal;if(col>=0&&col<size)cells.Add(new Vector2Int(row,col));}
+            float next=float.NegativeInfinity;
+            foreach(var at in cells.OrderBy(q=>CitySurface(q,tw,th,center).y)){
+                var p=CitySurface(at,tw,th,center);var rect=new Rect(p.x-13,Mathf.Max(p.y+th*.36f-7,next),26,14);
+                cityCoordinateRects[at]=rect;next=rect.yMax+2;
+            }
+        }
+    }
+    Rect CityCoordinateRect(Vector2Int at,float tw,float th,Vector2 center){EnsureCityCoordinateLayout(tw,th,center);return cityCoordinateRects[at];}
+    Vector2Int CityCoordinatePick(Vector2 mouse,float tw,float th,Vector2 center){
+        EnsureCityCoordinateLayout(tw,th,center);
+        foreach(var cell in cityCoordinateRects)if(cell.Value.Contains(mouse))return cell.Key;
+        return new Vector2Int(-1,-1);
+    }
 
     public void LoadCity(int place){
         int request=++cityRequest;SelectedPlace=place;cityLoading=true;
@@ -34,7 +109,7 @@ public partial class JianghuApp {
             if(request!=cityRequest)return;
             bool changed=!City.Has||City["place"].I!=place;
             City=j;cityLoading=false;cityPathKey="";IndexCityBuildings();
-            if(changed){chosenRow=chosenCol=originRow=originCol=-1;cityZoom=1;cityPan=Vector2.zero;cityKind="全部设施";}
+            if(changed){chosenRow=chosenCol=originRow=originCol=-1;cityZoom=1;cityPan=Vector2.zero;cityKind="全部设施";cityLastClickAt=-10;}
             cityPointerDown=false;cityHover=new Vector2Int(-1,-1);
         });
     }
@@ -46,6 +121,7 @@ public partial class JianghuApp {
         cityTitle=new GUIStyle(centerTitle){fontSize=26};
         cityName=new GUIStyle(centerSmall){fontSize=13,wordWrap=false};TextColor(cityName,new Color(.94f,.92f,.81f));
         cityCount=new GUIStyle(cityTiny){fontSize=10};
+        cityCoordinateStyle=new GUIStyle(cityTiny){fontSize=11,fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleCenter,wordWrap=false};
     }
     static string CityTerrain(char t)=>t=='~'?"水域":t=='^'?"山岭":t=='#'?"城垣":t=='t'?"林地":t==','?"田圃":t=='+'?"街道":t=='='?"桥梁":"平地";
     static bool CityBlocked(char t)=>t=='~'||t=='^'||t=='#';
@@ -56,9 +132,8 @@ public partial class JianghuApp {
     static Vector2Int CityLotCorner(J node)=>node["footprint"].Has?new Vector2Int(node["footprint"]["row"].I,node["footprint"]["col"].I):new Vector2Int(node["row"].I,node["col"].I);
     Vector2 CityBuildingPoint(J node,float tw,float th,Vector2 center){int size=CityLotSize(node);return CitySurface(CityLotCorner(node),tw,th,center)+new Vector2(0,(size-1)*th);}
     static string CityLotLabel(J node){int size=CityLotSize(node);return size+"×"+size+" · "+(size*size)+"格占地";}
-    Vector2Int CityPickDestination(Vector2Int tile)=>cityLots.TryGetValue(tile,out var node)?new Vector2Int(node["row"].I,node["col"].I):tile;
     void IndexCityBuildings(){
-        cityNodes.Clear();cityLots.Clear();cityDrawNodes.Clear();
+        cityNodes.Clear();cityLots.Clear();cityDrawNodes.Clear();cityCoordinateRects.Clear();
         foreach(var node in City["nodes"].A){
             cityNodes[new Vector2Int(node["row"].I,node["col"].I)]=node;
             int size=CityLotSize(node);var start=CityLotCorner(node);
@@ -116,7 +191,7 @@ public partial class JianghuApp {
         Line(new Vector2(CityViewport.center.x+170,83),new Vector2(CityViewport.center.x+280,83),new Color(.7f,.6f,.36f,.4f));
         GUI.Label(new Rect(CityViewport.center.x-270,97,540,17),City["country_name"].S+"  /  "+City["theme_label"].S+"  /  "+City["population"].S+"人在世",cityTiny);
         DrawCityBoard(CityViewport);
-        DrawCityToolbar();DrawCityLegend();DrawCityOverview();DrawCityDestination();
+        DrawCityToolbar();DrawCityLegend();DrawCityOverview();DrawCityDestination();DrawCityMovementNotice();
         if(cityLoading)GUI.Label(new Rect(620,370,430,44),"正在展开新图…",centerTitle);
     }
     void DrawCityToolbar(){
@@ -131,10 +206,21 @@ public partial class JianghuApp {
         if(GUI.Button(new Rect(left+267,114,80,25),"定位主角",chip))CityFocus(new Vector2Int(Hero["row"].I,Hero["col"].I));
         GUI.enabled=!cityLoading;
         if(GUI.Button(new Rect(left+365,114,68,25),"名牌",cityLabels?selected:chip))cityLabels=!cityLabels;
-        if(GUI.Button(new Rect(left+438,114,68,25),"地格",cityGrid?selected:chip))cityGrid=!cityGrid;
+        if(GUI.Button(new Rect(left+438,114,68,25),"坐标格",cityGrid?selected:chip))cityGrid=!cityGrid;
         if(CityLocal&&GUI.Button(new Rect(left+511,114,86,25),"可达范围",cityReach?selected:chip))cityReach=!cityReach;
-        GUI.Label(new Rect(r.xMax-280,118,270,20),"滚轮缩放 / 拖动浏览 / 点选目的地",cityTiny);
+        GUI.Label(new Rect(r.xMax-365,118,355,20),"W ↗  A ↖  S ↙  D ↘ / 双击坐标格前往",cityTiny);
         GUI.enabled=true;
+    }
+    void DrawCityMovementNotice(){
+        string reason=CityMovementBlockReason;if(reason.Length==0)return;
+        Rect r=CityNoticeRect;Fill(r,new Color(.28f,.12f,.08f,.96f));Outline(r,brass);
+        GUI.Label(new Rect(r.x+12,r.y+10,r.width-(W["battle_active"].B?310:24),27),reason,sub);
+        if(W["battle_active"].B){
+            GUI.enabled=!Client.Busy&&!cityBattleEnding;
+            if(GUI.Button(new Rect(r.xMax-284,r.y+8,126,30),"返回切磋",chip))ResumeCityBattle();
+            if(GUI.Button(new Rect(r.xMax-150,r.y+8,138,30),cityBattleEnding?"正在收招…":"收招认输，继续行旅",selected))Client.StartCoroutine(EndCityBattle());
+            GUI.enabled=true;
+        }
     }
     void CityTexture(string name,Vector2 p,float tw,Color tint){var t=CityArt(name);if(t==null)return;var old=GUI.color;GUI.color=tint;float s=tw/128;GUI.DrawTexture(new Rect(p.x-128*s,p.y-171*s,256*s,256*s),t);GUI.color=old;}
     void CityDiamond(Vector2 p,float tw,float th,Color c,float width=1.2f){Line(p+new Vector2(0,-th),p+new Vector2(tw,0),c,width);Line(p+new Vector2(tw,0),p+new Vector2(0,th),c,width);Line(p+new Vector2(0,th),p+new Vector2(-tw,0),c,width);Line(p+new Vector2(-tw,0),p+new Vector2(0,-th),c,width);}
@@ -149,9 +235,8 @@ public partial class JianghuApp {
     void DrawCityBoard(Rect r){
         CityGeometry(r,out float tw,out float th,out var center);int size=City["size"].I;
         GUI.BeginGroup(r);var e=Event.current;var localBounds=new Rect(0,0,r.width,r.height);
-        bool over=localBounds.Contains(e.mousePosition)&&!CityOverviewRect.Contains(e.mousePosition+r.position)&&!(chosenRow>=0&&CityDestinationRect.Contains(e.mousePosition+r.position))&&!OverUI(e.mousePosition+r.position)&&!cityLoading;
+        bool over=localBounds.Contains(e.mousePosition)&&!CityOverviewRect.Contains(e.mousePosition+r.position)&&!(CityMovementBlockReason.Length>0&&CityNoticeRect.Contains(e.mousePosition+r.position))&&!(chosenRow>=0&&CityDestinationRect.Contains(e.mousePosition+r.position))&&!OverUI(e.mousePosition+r.position)&&!cityLoading;
         cityHover=over?CitySurfacePick(e.mousePosition,tw,th,center):new Vector2Int(-1,-1);if(!CityInside(cityHover))cityHover=new Vector2Int(-1,-1);
-        cityHover=CityPickDestination(cityHover);
         var target=chosenRow>=0?new Vector2Int(chosenRow,chosenCol):cityHover;
         var route=CityPreview(target);bool affordable=!CityLocal||!cityCosts.TryGetValue(target,out int total)||total<=Hero["points"].I;
         Color routeColor=affordable?new Color(.97f,.79f,.36f):new Color(.89f,.40f,.27f);
@@ -167,7 +252,6 @@ public partial class JianghuApp {
             CityTexture(CityGround(t)+"-"+variant,ground,tw,tint);
             if(t=='+'||t=='=')CityTexture((t=='='?"bridge-":"road-")+CityRoadMask(q),p,tw,Color.white);
             DrawCityStairs(q,p,tw,th);
-            if(cityGrid)CityDiamond(p,tw*.985f,th*.985f,new Color(.24f,.30f,.23f,.22f),.6f);
             if(cityReach&&CityLocal&&cityCosts.TryGetValue(q,out int cost)&&cost<=Hero["points"].I){CityTexture("reachable",p,tw,new Color(1,1,1,.65f));CityDiamond(p,tw*.94f,th*.94f,new Color(.69f,.84f,.53f,.38f));}
         }
         // Every facility has one whole square lot. A 2x2 lot covers its four
@@ -182,8 +266,6 @@ public partial class JianghuApp {
             if(i>0){var prev=CitySurface(route[i-1],tw,th,center);Line(prev,p,new Color(.10f,.15f,.11f,.8f),5);DashedLine(prev,p,routeColor,2.6f,5,4);}
             CityTexture("route-dot",p,tw*.14f,routeColor);
         }
-        if(CityInside(cityHover)){bool facility=cityNodes.TryGetValue(cityHover,out var hoverNode);float extent=facility?CityLotSize(hoverNode):1;CityDiamond(facility?CityBuildingPoint(hoverNode,tw,th,center):CitySurface(cityHover,tw,th,center),tw*extent,th*extent,new Color(.96f,.91f,.69f,.95f),2);}
-        if(chosenRow>=0){bool facility=cityNodes.TryGetValue(target,out var pickedNode);float extent=facility?CityLotSize(pickedNode):1;var p=facility?CityBuildingPoint(pickedNode,tw,th,center):CitySurface(target,tw,th,center);CityDiamond(p,tw*extent*.97f,th*extent*.97f,route.Count>0?brass:new Color(.9f,.4f,.27f),2);}
         // Ground is completed first, then scenery back-to-front; tall props cannot hide the route underneath a later tile.
         foreach(var q in all){
             var p=CitySurface(q,tw,th,center);char t=CityTile(q.x,q.y);int variant=(q.x*17+q.y*7+City["place"].I)%3;
@@ -219,19 +301,38 @@ public partial class JianghuApp {
             }
             if(over&&tag.Contains(e.mousePosition))cityHover=q;
         }
+        // Coordinates are a topmost hit layer: every cell, including a cell
+        // beneath a multi-cell building, retains its own destination.
+        if(cityGrid)foreach(var q in all){
+            var p=CitySurface(q,tw,th,center);CityDiamond(p,tw*.985f,th*.985f,new Color(.81f,.79f,.61f,.48f),1);
+            Rect cell=CityCoordinateRect(q,tw,th,center);
+            var anchor=p+new Vector2(0,th*.36f);if(Vector2.Distance(cell.center,anchor)>2)Line(anchor,cell.center,new Color(.89f,.85f,.65f,.65f),1);
+            bool heroHere=CityLocal&&q.x==Hero["row"].I&&q.y==Hero["col"].I;
+            Fill(cell,heroHere?new Color(.38f,.27f,.10f,.97f):new Color(.035f,.08f,.075f,.88f));
+            GUI.Label(cell,CityCoordinate(q),cityCoordinateStyle);
+        }
+        if(cityGrid&&over){var coordinate=CityCoordinatePick(e.mousePosition,tw,th,center);if(CityInside(coordinate))cityHover=coordinate;}
+        if(CityLocal)CityDiamond(CitySurface(new Vector2Int(Hero["row"].I,Hero["col"].I),tw,th,center),tw*.88f,th*.88f,new Color(1,.82f,.35f),2.4f);
+        if(CityInside(cityHover))CityDiamond(CitySurface(cityHover,tw,th,center),tw*.98f,th*.98f,new Color(.98f,.94f,.73f),2);
+        if(chosenRow>=0)CityDiamond(CitySurface(target,tw,th,center),tw*.96f,th*.96f,route.Count>0?brass:new Color(.9f,.4f,.27f),2);
         if(CityLocal){var p=CitySurface(new Vector2Int(Hero["row"].I,Hero["col"].I),tw,th,center);HaloLabel(new Rect(p.x-64,p.y-88*Mathf.Clamp(tw/46,.75f,1.35f),128,22),Hero["name"].S+" · 主角",mapLabelOn,mapHaloBold);}
         if(cityTipTile!=cityHover){cityTipTile=cityHover;cityHoverSince=Time.realtimeSinceStartup;}
         if(CityInside(cityHover)&&!cityPointerDown&&Time.realtimeSinceStartup-cityHoverSince>.3f){
             var q=cityHover;char t=CityTile(q.x,q.y);string label=cityNodes.TryGetValue(q,out var node)?node["name"].S:CityTerrain(t);
             string detail=CityBlocked(t)?"不可通行 · "+(t=='~'?"须从桥梁绕行":t=='^'?"山势险峻":"请经城门出入"):cityCosts.TryGetValue(q,out int cost)?(cost==0?"当前寻路起点":"路线消耗 "+cost+" 行动力"+(CityLocal&&cost>Hero["points"].I?" · 本月不足":"")):"没有可通行的路线";
             Rect tip=new Rect(Mathf.Clamp(e.mousePosition.x+18,8,r.width-256),Mathf.Clamp(e.mousePosition.y+22,8,r.height-65),248,58);
-            Panel(tip);GUI.Label(new Rect(tip.x+12,tip.y+6,225,23),label+"  /  "+CityTerrain(t),cityTip);GUI.Label(new Rect(tip.x+12,tip.y+31,225,21),detail,cityTiny);
+            Panel(tip);GUI.Label(new Rect(tip.x+12,tip.y+6,225,23),CityCoordinate(q)+" · "+label+" / "+CityTerrain(t),cityTip);GUI.Label(new Rect(tip.x+12,tip.y+31,225,21),detail,cityTiny);
         }
         if(over&&e.type==EventType.ScrollWheel){CityZoom(cityZoom*(e.delta.y>0?1/1.15f:1.15f),e.mousePosition);e.Use();}
         if(over&&e.type==EventType.MouseDown&&(e.button==0||e.button==2)){cityPointerDown=true;cityPanned=e.button==2;cityPress=cityLastMouse=e.mousePosition;GUI.FocusControl(null);}
         if(cityPointerDown&&e.type==EventType.MouseDrag){if(Vector2.Distance(e.mousePosition,cityPress)>5)cityPanned=true;if(cityPanned){cityPan+=e.mousePosition-cityLastMouse;CityClampPan();}cityLastMouse=e.mousePosition;e.Use();}
         if(cityPointerDown&&e.rawType==EventType.MouseUp){
-            if(!cityPanned&&over&&CityInside(cityHover)){chosenRow=cityHover.x;chosenCol=cityHover.y;GUI.FocusControl(null);}
+            if(!cityPanned&&e.button==0&&over&&CityInside(cityHover)){
+                chosenRow=cityHover.x;chosenCol=cityHover.y;GUI.FocusControl(null);
+                bool twice=cityHover==cityLastClickTile&&Time.realtimeSinceStartup-cityLastClickAt<=.5f&&Vector2.Distance(e.mousePosition,cityLastClickPosition)<=6;
+                cityLastClickTile=cityHover;cityLastClickPosition=e.mousePosition;cityLastClickAt=twice?-10:Time.realtimeSinceStartup;
+                if(twice)TryCityWalk(cityHover);
+            }else cityLastClickAt=-10;
             cityPointerDown=false;if(e.type==EventType.MouseUp)e.Use();
         }
         GUI.EndGroup();
@@ -249,7 +350,7 @@ public partial class JianghuApp {
         Rect r=new Rect(CityViewport.x,758,CityViewport.width,42);Fill(r,new Color(.06f,.11f,.09f,.88f));
         string[] labels={"街桥 1","平田 2","林地 3","水山城垣 ×"};Color[] colors={new Color(.74f,.68f,.48f),new Color(.59f,.65f,.39f),new Color(.31f,.51f,.34f),new Color(.31f,.50f,.51f)};
         for(int i=0;i<labels.Length;i++){float x=r.x+13+i*110;Fill(new Rect(x,r.y+15,9,9),colors[i]);GUI.Label(new Rect(x+17,r.y+9,100,24),labels[i],small);}
-        string status=CityLocal?"本月余 "+Hero["points"].S+" / "+Hero["max_points"].S+" 行动力":"游览地图 · 行旅不结算";
+        string status=CityLocal?"当前位置 "+CityCoordinate(new Vector2Int(Hero["row"].I,Hero["col"].I))+" · 余 "+Hero["points"].S+" / "+Hero["max_points"].S+" 行动力":"游览地图 · 行旅不结算";
         GUI.Label(new Rect(r.xMax-320,r.y+9,300,24),status,centerSmall);
     }
     void DrawCityOverview(){
@@ -272,34 +373,33 @@ public partial class JianghuApp {
     void DrawCityDestination(){
         var at=new Vector2Int(chosenRow,chosenCol);if(!CityInside(at))return;
         Rect r=CityDestinationRect;Panel(r);Fill(new Rect(r.x,r.y,3,r.height),brass);
-        var node=cityNodes.TryGetValue(at,out var n)?n:new J();string name=node.Has?node["name"].S:CityTerrain(CityTile(at.x,at.y));
+        var node=cityLots.TryGetValue(at,out var n)?n:new J();string name=CityCoordinate(at)+" · "+(node.Has?node["name"].S:CityTerrain(CityTile(at.x,at.y)));
         bool reachable=cityCosts.TryGetValue(at,out int cost),affordable=reachable&&cost<=Hero["points"].I;
         GUI.Label(new Rect(r.x+16,r.y+7,224,24),name,sub);
         string info=reachable?(cost==0?"已在此处":cost+" 行动力  /  "+(CityPreview(at).Count-1)+" 格"):("无法抵达 · "+CityTerrain(CityTile(at.x,at.y)));
         GUI.Label(new Rect(r.x+16,r.y+32,224,21),info,small);
-        GUI.enabled=CityLocal&&affordable&&cost>0&&!cityLoading&&!Client.Busy&&Paused;
-        if(GUI.Button(new Rect(r.xMax-137,r.y+14,124,36),!CityLocal?"远方预览":reachable&&!affordable?"行动力不足":"行走至此 →",selected))HeroAction("walk","place",City["place"],"row",chosenRow,"col",chosenCol);
-        GUI.enabled=true;
+        string hint=!CityLocal?"远方预览":W["battle_active"].B?"切磋中，先收招":!reachable?"不可通行":cost==0?"已在此处":!affordable?"行动力不足":!Paused?"请先暂停":"双击前往";
+        GUI.Label(new Rect(r.xMax-128,r.y+20,116,25),hint,centerSmall);
     }
     void DrawNodeCard(){
         Rect c=PlaceCard;Panel(c);GUILayout.BeginArea(new Rect(c.x+12,c.y+10,c.width-24,c.height-18));
         if(!City.Has){GUILayout.Label("正在展开城中街巷…",small);GUILayout.EndArea();return;}
         GUILayout.Label(City["name"].S+" · 城中",heading);GUILayout.Label(City["country_name"].S+" · "+City["population"].S+"人在世",small);
         bool local=CityLocal;
-        GUILayout.Label(local?Hero["name"].S+" · "+Hero["position_name"].S:"远方地图预览 · 浏览不消耗回合",small);
+        GUILayout.Label(local?Hero["name"].S+" · "+CityCoordinate(new Vector2Int(Hero["row"].I,Hero["col"].I))+" · "+Hero["position_name"].S:"远方地图预览 · 浏览不消耗回合",small);
         GUI.enabled=!cityLoading;
         GUILayout.BeginHorizontal();if(Btn("主角所在",Hero["created"].B))LoadCity(Hero["place"].I);if(Btn("下一城镇")){var all=W["locations"].A;int idx=all.FindIndex(p=>p["id"].I==SelectedPlace);LoadCity(all[(idx+1)%all.Count]["id"].I);}GUILayout.EndHorizontal();
         cityKind=Cycle(cityKind,new[]{"全部设施"}.Concat(City["nodes"].A.Select(n=>n["label"].S).Distinct()).ToArray());
         mainScroll=GUILayout.BeginScrollView(mainScroll);
-        var at=new Vector2Int(chosenRow,chosenCol);var node=cityNodes.TryGetValue(at,out var found)?found:new J();
+        var at=new Vector2Int(chosenRow,chosenCol);var node=cityLots.TryGetValue(at,out var found)?found:new J();
         if(CityInside(at)){
             char t=CityTile(at.x,at.y);GUILayout.Label(node["name"].Has?node["name"].S:CityTerrain(t)+"（"+(chosenRow+1)+"，"+(chosenCol+1)+"）",sub);
+            T("选中 "+CityCoordinate(at)+" · 第"+(at.x+1)+"行，第"+(at.y+1)+"列",small);
             if(node["description"].Has)T(node["description"].S,small);
             if(node.Has)T(CityLotLabel(node),small);
             var path=CityPreview(at);int cost=cityCosts.TryGetValue(at,out int amount)?amount:0;
             T(path.Count>0?Math.Max(0,path.Count-1)+"格 · "+cost+"行动力 · 道路优先":"不可抵达 · "+(CityBlocked(t)?CityTerrain(t)+"阻断通行":"没有连通步道"),small);
-            string reason=path.Count==0?"此处不可通行":path.Count==1?"已在寻路起点":cost>Hero["points"].I&&local?"本月行动力不足":"行走至此 · "+cost+"力";
-            if(local){if(Btn(reason,!cityLoading&&!Client.Busy&&Paused&&path.Count>1&&cost<=Hero["points"].I))HeroAction("walk","place",City["place"],"row",chosenRow,"col",chosenCol);if(cost>Hero["points"].I)T("可在下方月盘结束本月，恢复行动力。",small);}
+            if(local){T("双击地图地格或设施前往；WASD / 方向键逐格移动，按住可连续行走。",small);if(cost>Hero["points"].I)T("本月行动力不足，可在下方月盘结束本月。",small);}
             else if(Btn("以此为游览起点",path.Count>0&&!CityBlocked(t))){originRow=chosenRow;originCol=chosenCol;cityPathKey="";EnsureCityRoutes();}
             if(local&&!Paused)T("先暂停世界推演或收招，再安排行旅。",small);
             string kind=node["kind"].S;
@@ -314,7 +414,7 @@ public partial class JianghuApp {
                 CityTexture("building-"+node["kind"].S,art.center,106,Color.white);
                 T("此处人物 · "+node["residents"].A.Count+"人",sub);foreach(var resident in node["residents"].A)if(GUILayout.Button(resident["name"].S+" · "+resident["job"].S,chip)){SelectPerson(resident["id"].I);OpenPersonScreen();}
             }
-        }else{T("点选地格，查看山水与行旅路线。",sub);T("金线标示最低行动力路径；绿色边框显示本月可达范围。",small);}
+        }else{T("单击查看，双击前往；WASD 移步。",sub);T("金线标示最低行动力路径；绿色边框显示本月可达范围。",small);}
         GUILayout.Space(10);T("城中设施  /  "+City["nodes"].A.Count+"处",sub);
         foreach(var n in City["nodes"].A.Where(n=>cityKind=="全部设施"||n["label"].S==cityKind))if(GUILayout.Button(n["glyph"].S+"  "+n["name"].S+" · "+n["residents"].A.Count+"人",n["row"].I==chosenRow&&n["col"].I==chosenCol?selected:chip))SelectCityNode(n,true);
         if(local)DrawTravel();GUILayout.EndScrollView();GUI.enabled=true;GUILayout.EndArea();

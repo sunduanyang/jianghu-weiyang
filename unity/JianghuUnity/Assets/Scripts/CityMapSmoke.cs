@@ -34,12 +34,21 @@ public class CityMapSmoke : MonoBehaviour {
     }
     IEnumerator Run(){
         double calls=client.World["ai"]["calls"].N;int month=client.World["month"].I;
+        if(client.World["battle_active"].B){
+            var before=client.World["hero"];app.SelectedPlace=before["place"].I;app.Go(1);yield return new WaitForSecondsRealtime(1);
+            yield return Capture("00-unfinished-battle-movement-notice");
+            Check("unfinished battle explains the movement lock",app.CityMovementReasonForSmoke.Contains("切磋"));
+            Check("blocked input preserves the hero",!app.CityWalkForSmoke(before["row"].I-1,before["col"].I)&&client.World["hero"]["revision"].I==before["revision"].I);
+            yield return app.CityEndBattleForSmoke();
+            Check("city surrender releases the movement lock",!client.World["battle_active"].B&&app.CityMovementReasonForSmoke.Length==0);
+        }
         Check("painted map assets are bundled",app.ValidateCityArt(out J artFacts),artFacts);
         foreach(var place in client.World["locations"].A){
             yield return Call("/api/city?place="+place["id"].S,null,j=>app.City=j);
             Check("native routes match backend: "+place["name"].S,app.ValidateCityMap(out J facts),facts);
             Check("terraces and foundations: "+place["name"].S,app.ValidateCityTerrain(out J terrainFacts),terrainFacts);
             Check("raised map picking: "+place["name"].S,app.ValidateCityCamera(out J pickFacts),pickFacts);
+            Check("each grid coordinate selects its own cell: "+place["name"].S,app.ValidateCityCoordinates(out J coordinateFacts),coordinateFacts);
         }
         Check("browsing preserves month",client.World["month"].I==month);
         if(!client.World["hero"]["created"].B){yield return Call("/api/hero",client.HeroBody("create","name","山河行客","sex","男","age",20,"place",45));yield return client.Refresh();}
@@ -53,7 +62,7 @@ public class CityMapSmoke : MonoBehaviour {
         if(target!=null){
             var path=app.CityPath(hero["row"].I,hero["col"].I,target["row"].I,target["col"].I,out int cost);
             if(path.Count>1&&cost<=hero["points"].I){
-                yield return Call("/api/hero",client.HeroBody("walk","place",home,"row",target["row"],"col",target["col"]));yield return client.Refresh();
+                Check("city input accepts an affordable destination",app.CityWalkForSmoke(target["row"].I,target["col"].I));while(client.Busy)yield return null;
                 Check("walk consumes displayed cost and preserves month",client.World["hero"]["points"].I==hero["points"].I-cost&&client.World["month"].I==month);
                 app.LoadCity(home);yield return new WaitForSecondsRealtime(.5f);app.CitySmokeView(true);yield return Capture("03-city-arrival");
             }else Check("walk fixture has affordable path",false);
@@ -71,6 +80,22 @@ public class CityMapSmoke : MonoBehaviour {
     void Finish(){File.WriteAllText(Path.Combine(output,"acceptance.json"),J.O("unity",Application.unityVersion,"checks",new J(checks),"passed",checks.All(c=>c["pass"].B)).ToString());Application.Quit(checks.All(c=>c["pass"].B)?0:1);}
 }
 public partial class JianghuApp {
+    public string CityMovementReasonForSmoke=>CityMovementBlockReason;
+    public bool CityWalkForSmoke(int row,int col)=>TryCityWalk(new Vector2Int(row,col));
+    public IEnumerator CityEndBattleForSmoke()=>EndCityBattle();
+    public bool ValidateCityCoordinates(out J facts){
+        var labels=new HashSet<string>();var failures=new List<J>();int count=0;float oldZoom=cityZoom;var oldPan=cityPan;
+        foreach(float zoom in new[]{.75f,1,1.55f,2.8f}){
+            cityZoom=zoom;cityPan=Vector2.zero;CityGeometry(CityViewport,out float tw,out float th,out var center);
+            for(int row=0;row<City["size"].I;row++)for(int col=0;col<City["size"].I;col++){
+                var at=new Vector2Int(row,col);string label=CityCoordinate(at);labels.Add(label);count++;
+                var picked=CityCoordinatePick(CityCoordinateRect(at,tw,th,center).center,tw,th,center);
+                if(picked!=at)failures.Add(J.O("coordinate",label,"picked",CityCoordinate(picked),"zoom",zoom));
+            }
+        }
+        cityZoom=oldZoom;cityPan=oldPan;facts=J.O("unique_labels",labels.Count,"cells",City["size"].I*City["size"].I,"picks",count,"failures",new J(failures));
+        return labels.Count==City["size"].I*City["size"].I&&failures.Count==0;
+    }
     public bool ValidateCityArt(out J facts){
         var names=new[]{"gate","government","palace","market","inn","clinic","workshop","training","school","residence","granary","garden","temple","dock","faction"}.Select(k=>"building-"+k)
             .Concat(new[]{"selection","hero-ring","reachable","route-dot","island-shadow","bridge-axis-0","bridge-axis-1","wall-axis-0","wall-axis-1","building-parcel"})
@@ -88,7 +113,8 @@ public partial class JianghuApp {
         foreach(var node in City["nodes"].A){
             var native=CityPath(gate["row"].I,gate["col"].I,node["row"].I,node["col"].I,out int cost);checkedNodes++;
             var q=new Vector2Int(node["row"].I,node["col"].I);
-            if(native.Count==0||cost!=node["walk_cost"].I||!cityCosts.TryGetValue(q,out int overlay)||overlay!=cost)failures.Add(J.O("node",node["name"],"native",cost,"server",node["walk_cost"]));
+            var origin=CityOrigin();CityPath(origin.x,origin.y,q.x,q.y,out int originCost);
+            if(native.Count==0||cost!=node["walk_cost"].I||!cityCosts.TryGetValue(q,out int overlay)||overlay!=originCost)failures.Add(J.O("node",node["name"],"native",cost,"server",node["walk_cost"]));
         }
         int one=0,four=0;var used=new HashSet<Vector2Int>();CityGeometry(CityViewport,out float tw,out float th,out var center);
         foreach(var node in City["nodes"].A){
@@ -98,7 +124,7 @@ public partial class JianghuApp {
             var average=Vector2.zero;bool includesEntrance=false;
             for(int row=0;row<size;row++)for(int col=0;col<size;col++){
                 var q=corner+new Vector2Int(row,col);average+=CitySurface(q,tw,th,center);includesEntrance|=q==entrance;
-                if(!CityInside(q)||!used.Add(q)||CityPickDestination(q)!=entrance)failures.Add(J.O("invalid_lot_cell",node["id"],"row",q.x,"col",q.y));
+                if(!CityInside(q)||!used.Add(q))failures.Add(J.O("invalid_lot_cell",node["id"],"row",q.x,"col",q.y));
                 else if(size==2&&(CityBlocked(CityTile(q.x,q.y))||CityTile(q.x,q.y)=='='))failures.Add(J.O("lot_covers_barrier",node["id"]));
             }
             if(!includesEntrance||Vector2.Distance(average/(size*size),CityBuildingPoint(node,tw,th,center))>.01f)failures.Add(J.O("uncentred_building",node["id"]));
@@ -144,7 +170,7 @@ public partial class JianghuApp {
         cityZoom=oldZoom;cityPan=oldPan;facts=J.O("tile_centres_checked",count,"raised_surface_picks",raised,"block_side_picks",faces);return ok;
     }
     public void CitySmokeView(bool detail){
-        rosterOpen=false;cityZoom=detail?1.55f:1;cityPan=Vector2.zero;cityReach=detail;cityLabels=true;cityGrid=false;cityPathKey="";EnsureCityRoutes();
+        rosterOpen=false;cityZoom=detail?1.55f:1;cityPan=Vector2.zero;cityReach=detail;cityLabels=true;cityGrid=true;cityPathKey="";EnsureCityRoutes();
         chosenRow=chosenCol=-1;
         if(detail){var target=City["nodes"].A.FirstOrDefault(n=>n["kind"].S=="market");if(target!=null){chosenRow=target["row"].I;chosenCol=target["col"].I;CityFocus(new Vector2Int(chosenRow,chosenCol));}}
     }

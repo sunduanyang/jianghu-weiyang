@@ -1,15 +1,15 @@
 /* Browsing is free; protagonist walking settles on the server. */
 const cityUI = {
-  place: null, data: null, selected: 'gate', selectedTile: null, origin: 'gate', token: 0, key: '', filter: '',
+  place: null, data: null, selected: 'gate', selectedTile: null, origin: 'gate', token: 0, key: '', filter: '', lastMapClick: null,
   async open(id) {
-    this.selected = 'market'; this.selectedTile = null; this.origin = 'gate'; this.filter = ''; this.key = '';
+    this.selected = 'market'; this.selectedTile = null; this.origin = 'gate'; this.filter = ''; this.key = ''; this.lastMapClick = null;
     if(!$('#city-dialog').open)$('#city-dialog').showModal();
     await this.load(world.places[Number(id)]?.hub??Number(id));
   },
   async load(id) {
     const token = ++this.token, changing = this.place !== id || !this.data;
     this.place = id;
-    if(changing)this.selectedTile=null;
+    if(changing){this.selectedTile=null;this.lastMapClick=null;}
     if (changing) $('#city-content').innerHTML = '<p class="city-loading">正沿驿道展开城中图…</p>';
     try {
       const data = await api('/api/city?place='+id);
@@ -28,6 +28,18 @@ const cityUI = {
   },
   xy(row,col) { return [400+(col-row)*34, 72+(row+col)*20]; },
   diamond(x,y) { return `${x},${y-20} ${x+34},${y} ${x},${y+20} ${x-34},${y}`; },
+  coordinate(row,col) { let letters='';for(let n=col+1;n>0;n=Math.floor((n-1)/26))letters=String.fromCharCode(65+(n-1)%26)+letters;return letters+(row+1); },
+  movementReason() { return world.battle_active?'切磋尚未结束，收招后才能在城中行走':world.autoplay||world.job.remaining?'世界正在推演，请先暂停再行走':world.hero.points<=0?'本月行动力已用尽，请结束本月':''; },
+  async endBattle() {
+    if(heroUI.pending||martialBusy)return;
+    heroUI.pending=true;this.render();
+    try {
+      stopCombatClock();martialState=await api('/api/martial');const b=martialState.battle;
+      if(b?.status==='active')martialState=await api('/api/battle',{battle_id:b.id,round:b.round,action:'surrender'});
+      await refresh(true);await this.load(this.place);toast('已收招，可用 WASD 或双击坐标格行走。');
+    } catch(error) { toast(error.message,true);await refresh(true); }
+    finally { heroUI.pending=false;heroUI.signature='';heroUI.render();this.render(); }
+  },
   route(start,end) {
     const rows=this.data.rows, size=rows.length;
     const from=[start.row,start.col], goal=`${end.row},${end.col}`;
@@ -45,6 +57,27 @@ const cityUI = {
       }
     }
     return [];
+  },
+  async walkTo(row,col) {
+    const h=world.hero, d=this.data;
+    if(!$('#city-dialog').open||!h?.created||this.place!==h.place||d?.place!==h.place||heroUI.pending)return;
+    if(this.movementReason()){toast(this.movementReason(),true);return;}
+    if(!d.rows[row]?.[col]||'~^#'.includes(d.rows[row][col])){toast(this.coordinate(row,col)+' 不可通行，请沿街巷或桥梁绕行。',true);return;}
+    const route=this.route(h,{row,col});
+    const cost=route.slice(1).reduce((sum,[r,c])=>sum+('+='.includes(d.rows[r][c])?1:d.rows[r][c]==='t'?3:2),0);
+    if(route.length<2||cost>h.points)return;
+    await heroUI.perform('walk',{place:h.place,row,col});
+  },
+  async selectMapTarget(element,event) {
+    const node=element.dataset.cityNode?this.data.nodes.find(n=>n.id===element.dataset.cityNode):null;
+    const row=node?.row??Number(element.dataset.cityRow), col=node?.col??Number(element.dataset.cityCol);
+    const previous=this.lastMapClick, now=performance.now();
+    // Rendering replaces the SVG, so retain the click pair across those renders.
+    const twice=element.closest('.city-board')&&event.detail>0&&previous&&previous.place===this.place&&previous.row===row&&previous.col===col&&now-previous.time<=400&&Math.hypot(event.clientX-previous.x,event.clientY-previous.y)<=5;
+    this.lastMapClick=element.closest('.city-board')&&event.detail>0&&!twice?{place:this.place,row,col,time:now,x:event.clientX,y:event.clientY}:null;
+    this.selectedTile=node?null:{row,col};if(node)this.selected=node.id;
+    this.render();
+    if(twice)await this.walkTo(row,col);
   },
   building(node,x,y) {
     const type=node.kind, tent=['steppe','forest'].includes(this.data.theme), color=this.data.color;
@@ -70,17 +103,17 @@ const cityUI = {
     if(!d.nodes.some(n=>n.id===this.origin))this.origin='gate';
     const h=world.hero, local=!!h?.created&&h.place===d.place;
     const tile=this.selectedTile;
-    const node=tile?{id:'tile',kind:'tile',label:d.terrain_legend[d.rows[tile.row][tile.col]],name:`地格（${tile.row+1}，${tile.col+1}）`,description:'可步行的城中地格。',row:tile.row,col:tile.col,residents:[]}:d.nodes.find(n=>n.id===this.selected);
+    const node=tile?{id:'tile',kind:'tile',label:d.terrain_legend[d.rows[tile.row][tile.col]],name:`地格 ${this.coordinate(tile.row,tile.col)}`,description:'~^#'.includes(d.rows[tile.row][tile.col])?'此格不可通行。':'可步行的城中地格。',row:tile.row,col:tile.col,residents:[]}:d.nodes.find(n=>n.id===this.selected);
     const start=local?{row:h.row,col:h.col,name:h.position_name}:d.nodes.find(n=>n.id===this.origin);
     const route=this.route(start,node), trail=new Set(route.map(q=>q.join(',')));
     const moveCost=route.slice(1).reduce((cost,[r,c])=>cost+('+='.includes(d.rows[r][c])?1:d.rows[r][c]==='t'?3:2),0);
-    const canWalk=local&&route.length>1&&moveCost<=h.points&&!world.autoplay&&!world.job.remaining&&!world.battle_active&&!heroUI.pending;
     const terrainColors={'.':'#d7dab9','+':'#d6c49e','=':'#b5a17a','~':'#99b7af','^':'#a4af99','t':'#b9c5a3',',':'#c8cf9d','#':'#b0ad94'};
-    const base=[];
+    const base=[], coordinates=[];
     for(let r=0;r<d.size;r++)for(let c=0;c<d.size;c++){
       const [x,y]=this.xy(r,c), t=d.rows[r][c];
       const detail=t==='~'?`<path d="M${x-16} ${y-1} q8 -5 16 0 t16 0 M${x-9} ${y+6} q8 -4 16 0" stroke="#d6e5dc" fill="none" opacity=".7"/>`:t===','?`<path d="M${x-18} ${y} l20 -11 M${x-9} ${y+5} l20 -11 M${x} ${y+10} l20 -11" stroke="#9da777" stroke-width="2"/>`:'';
-      base.push(`<g class="city-ground" ${'~^#'.includes(t)?'':`data-city-row="${r}" data-city-col="${c}" tabindex="0" role="button" aria-label="${esc(d.terrain_legend[t])}地格 ${r+1}，${c+1}"`}><polygon points="${this.diamond(x,y)}" fill="${terrainColors[t]}"/><title>${esc(d.terrain_legend[t])} · ${r+1},${c+1}</title>${detail}${trail.has(`${r},${c}`)?`<polygon class="city-trail-tile" points="${this.diamond(x,y)}"/>`:''}</g>`);
+      base.push(`<g class="city-ground" data-city-row="${r}" data-city-col="${c}" tabindex="0" role="button" aria-label="${this.coordinate(r,c)} · ${esc(d.terrain_legend[t])}地格 ${r+1}，${c+1}"><polygon points="${this.diamond(x,y)}" fill="${terrainColors[t]}"/><title>${this.coordinate(r,c)} · ${esc(d.terrain_legend[t])}</title>${detail}${trail.has(`${r},${c}`)?`<polygon class="city-trail-tile" points="${this.diamond(x,y)}"/>`:''}</g>`);
+      coordinates.push(`<g class="city-coordinate ${local&&h.row===r&&h.col===c?'hero-at':''}" data-city-row="${r}" data-city-col="${c}" aria-hidden="true"><rect x="${x-13}" y="${y+6}" width="26" height="13" rx="2"/><text x="${x}" y="${y+16}">${this.coordinate(r,c)}</text></g>`);
     }
     const overlays=[];
     for(let sum=0;sum<d.size*2;sum++)for(let r=0;r<d.size;r++){
@@ -103,17 +136,18 @@ const cityUI = {
     $('#city-title').textContent=d.name+' · 城中图';
     $('#city-content').innerHTML=`<div class="city-summary"><div><span class="city-mode">${d.authored?'重点营造':'因地成图'}</span><b>${esc(d.theme_label)}</b><p>${esc(d.note)}</p></div><span class="city-owner" style="--city-owner:${d.color}">${esc(d.country_name)}${d.occupied?' · 占领中':''}</span></div>
       <div class="city-toolbar"><label>浏览地图 <select id="city-selector" aria-label="内部地图地点">${locations().map(p=>`<option value="${p.id}" ${p.id===d.place?'selected':''}>${p.interior_authored?'◆ ':''}${esc(p.name)}</option>`).join('')}</select></label><label>设施 <select id="city-type" aria-label="内部地图设施筛选"><option value="">全部设施</option>${kinds.map(([id,name])=>`<option value="${id}" ${this.filter===id?'selected':''}>${name}</option>`).join('')}</select></label><span>${d.nodes.length}处设施 · ${d.population}人在世</span></div>
-      <div class="city-hero-bar">${local?`<span>◎ ${esc(h.name)} · ${esc(h.position_name)} <small>（${h.row+1}，${h.col+1}）· ${esc(world.date)} / 第${h.turn}回合</small></span><b>行动力 ${h.points} / ${h.max_points}</b><button data-hero-end-local class="hero-end-local" ${heroUI.paused()&&!heroUI.pending?'':'disabled'}>结束本月 →</button>`:h?.created?`<span>远方地图预览 · 主角位于${esc(h.place_name)}</span><button data-hero-local>返回主角所在地 ↗</button>`:'<span>地图游览中 · 创建主角后可在此行走</span>'}</div>
+      <div class="city-hero-bar">${local?`<span>◎ ${esc(h.name)} · ${this.coordinate(h.row,h.col)} · ${esc(h.position_name)} <small>（第${h.row+1}行，第${h.col+1}列）· ${esc(world.date)} / 第${h.turn}回合</small></span><b>行动力 ${h.points} / ${h.max_points}</b><button data-hero-end-local class="hero-end-local" ${heroUI.paused()&&!heroUI.pending?'':'disabled'}>结束本月 →</button>`:h?.created?`<span>远方地图预览 · 主角位于${esc(h.place_name)}</span><button data-hero-local>返回主角所在地 ↗</button>`:'<span>地图游览中 · 创建主角后可在此行走</span>'}</div>
+      ${local&&this.movementReason()?`<div class="city-movement-notice" role="status"><strong>${esc(this.movementReason())}</strong>${world.battle_active?`<button data-city-battle-resume>返回切磋</button><button data-city-battle-end ${heroUI.pending?'disabled':''}>收招认输，继续行旅</button>`:''}</div>`:''}
       <div class="city-layout"><section class="city-board theme-${d.theme}" aria-label="${esc(d.name)}内部地图">
         <svg viewBox="70 0 660 455" role="group" aria-label="${esc(d.name)}的街巷设施与步行路线"><defs><filter id="city-shadow"><feDropShadow dx="1" dy="3" stdDeviation="3" flood-color="#4e5942" flood-opacity=".18"/></filter></defs>
         <ellipse cx="400" cy="277" rx="288" ry="134" fill="#72816a" opacity=".09"/>
         <g class="city-tiles">${base.join('')}</g><polyline class="city-trail" points="${selectedRoute}"/>
-        <g class="city-structures">${overlays.join('')}</g>${heroToken}<text x="400" y="433" class="city-road-name">${esc(d.road_name)}</text>
+        <g class="city-structures">${overlays.join('')}</g>${heroToken}<g class="city-coordinate-layer">${coordinates.join('')}</g><text x="400" y="433" class="city-road-name">${esc(d.road_name)}</text>
         <g transform="translate(685 48)" class="city-compass"><path d="M0 -15 l-5 18 5 -5 5 5 Z"/><text y="-22">北</text></g></svg>
         <div class="city-map-key"><span><i class="water"></i>水域</span><span><i class="field"></i>田圃</span><span><i class="woods"></i>山林</span><span><i class="street"></i>街道 / 桥</span><span><i class="path"></i>游览路线</span></div>
-        <p class="city-instructions">${local?'点选设施或地格，再点「行走至此」；也可用方向键移动（上下为行、左右为列）。街道/桥1点，平地/田圃2点，林地3点。':'点选设施规划游览路线；浏览地图不改变主角位置。'}水域、山岭和城垣不可穿行，跨水须经桥。</p></section>
-      <aside class="city-details"><p class="eyebrow">${esc(node.label)} / ${esc(d.country_name)}</p><h3>${esc(node.name)}</h3><p>${esc(node.description)}</p>
-        <div class="city-route-info"><span>从${esc(start.name)}</span><b>${route.length?route.length-1:'—'}格</b><small>${route.length?`${local?'消耗'+moveCost+'行动力 · ':''}道路优先路线`:'此处无步行通路'}</small></div>${local?`<button class="hero-walk" data-hero-walk data-row="${node.row}" data-col="${node.col}" ${canWalk?'':'disabled'}>${route.length===1?'主角已在此处':`行走至此 · ${moveCost}行动力`}</button><p class="hero-local-message">${moveCost>h.points?'本月行动力不足，可先结束本月。':'从当前位置沿通路行走，不推进月份；远行须先到城门或舟埠。'}</p>`:tile?'':`<button data-city-origin="${node.id}" class="quiet">以此为寻路起点 ↗</button>`}
+        <p class="city-instructions">每格坐标由列字母与行号组成，如 E9 为第9行、第5列。${local?'单击查看，双击坐标格前往；W ↗ / A ↖ / S ↙ / D ↘，按住可连续行走。街道/桥1点，平地/田圃2点，林地3点。':'点选设施规划游览路线；浏览地图不改变主角位置。'}水域、山岭和城垣不可穿行，跨水须经桥。</p></section>
+      <aside class="city-details"><p class="eyebrow">${esc(node.label)} / ${esc(d.country_name)}</p><h3>${esc(node.name)}</h3><p>选中 ${this.coordinate(node.row,node.col)} · 第${node.row+1}行，第${node.col+1}列</p><p>${esc(node.description)}</p>
+        <div class="city-route-info"><span>从${esc(start.name)}</span><b>${route.length?route.length-1:'—'}格</b><small>${route.length?`${local?'消耗'+moveCost+'行动力 · ':''}道路优先路线`:'此处无步行通路'}</small></div>${local?`<p class="hero-local-message">${route.length===1?'主角已在此处。':moveCost>h.points?'本月行动力不足，可先结束本月。':'双击地图前往此处；WASD / 方向键移步。远行须先到城门或舟埠。'}</p>`:tile?'':`<button data-city-origin="${node.id}" class="quiet">以此为寻路起点 ↗</button>`}
         <div class="city-service-actions">${node.kind==='market'||node.kind==='workshop'?'<button data-city-service="market">打开过客货栈 ↗</button>':''}${['training','temple','faction'].includes(node.kind)?'<button data-city-service="martial">功法与闭关 ↗</button>':''}${node.kind==='government'?'<button data-city-service="government">查看所属官府 ↗</button>':''}${['gate','dock'].includes(node.kind)?'<button data-city-service="routes">查看城外行路 ↗</button>':''}</div>
         <div class="section-label">此地人物 <span>${node.residents.length}人</span></div><div class="city-residents">${node.residents.map(n=>`<button data-person="${n.id}"><b>${esc(n.name)}</b><span>${esc(n.job)}</span><small>${n.event_id?when(n.month)+' · '+esc(n.source):'乡籍居所'}</small></button>`).join('')||'<p class="note">眼下没有人物在此落脚。</p>'}</div>
         <p class="city-presence-note">居民按乡籍安置分布于设施；完成真实行动后，位置随行程更新。</p></aside></div>
@@ -124,8 +158,9 @@ const cityUI = {
 document.addEventListener('click', async e=>{
   if(e.target.closest('#map-interior')){await cityUI.open(atlasUI.site??person(selected)?.place??45);return;}
   const open=e.target.closest('[data-city-place]');if(open){await cityUI.open(open.dataset.cityPlace);return;}
-  const node=e.target.closest('[data-city-node]');if(node){cityUI.selectedTile=null;cityUI.selected=node.dataset.cityNode;cityUI.render();return;}
-  const tile=e.target.closest('[data-city-row]');if(tile){cityUI.selectedTile={row:Number(tile.dataset.cityRow),col:Number(tile.dataset.cityCol)};cityUI.render();return;}
+  if(e.target.closest('[data-city-battle-resume]')){await openMartial(true);return;}
+  if(e.target.closest('[data-city-battle-end]')){await cityUI.endBattle();return;}
+  const destination=e.target.closest('[data-city-node],[data-city-row]');if(destination){await cityUI.selectMapTarget(destination,e);return;}
   if(e.target.closest('[data-hero-end-local]')){await heroUI.perform('end_turn');return;}
   const origin=e.target.closest('[data-city-origin]');if(origin){cityUI.origin=origin.dataset.cityOrigin;cityUI.render();return;}
   if(e.target.closest('[data-city-retry]')){await cityUI.load(cityUI.place);return;}

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -7,6 +8,7 @@ namespace Jianghu {
 public partial class JianghuApp {
     string inventoryMode="行囊",itemQuery="",itemCategory="全部",itemSort="种类",selectedItem="",institutionKind="政权",institutionQuery="",importPath="",newPopulation="800",newSeed="42",newYears="0";
     int giftTarget=-1;
+    int itemGrade;
     bool battleView,fastMode=true,aiEditing,aiEnabled,aiOllama;
     string aiUrl="http://127.0.0.1:11435",aiModel="qwen3:4b",aiBudget="24",aiCooldown="3";
     Vector2 itemScroll,detailScroll;
@@ -15,27 +17,55 @@ public partial class JianghuApp {
     void DrawInventory(){
         H("一器一物，皆有来处");if(!Inventory.Has){T("正在整理行囊…");return;}
         T(Inventory["name"].S+"  /  "+Num(Inventory["wealth"])+"银 · 负重 "+Num(Inventory["weight"])+" / "+Num(Inventory["capacity"])+"斤",sub);
-        GUILayout.BeginHorizontal();foreach(string mode in new[]{"行囊","货栈","制药"})if(GUILayout.Button(mode,inventoryMode==mode?selected:skin.button)){inventoryMode=mode;selectedItem="";}GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();foreach(string mode in new[]{"行囊","货栈","制药"})if(GUILayout.Button(mode,inventoryMode==mode?selected:skin.button)){inventoryMode=mode;selectedItem="";itemGrade=0;}GUILayout.EndHorizontal();
         if(inventoryMode=="制药"){
             mainScroll=GUILayout.BeginScrollView(mainScroll);T("耗用行囊中的药草与2银工费，制得一份成药。",small);
             foreach(var r in Market["recipes"].A){GUILayout.BeginVertical(card);H(r["name"].S);T(r["description"].S);foreach(var ing in r["ingredients"].D)Metric(ing.Key,ing.Value.S+"份");int needed=r["ingredients"].D.Sum(k=>k.Value.I),owned=Inventory["items"].A.Count(i=>i["template"].S=="herb");T("行囊药草 "+owned+" / "+needed+"份",small);if(Btn("依方制成",owned>=needed&&Inventory["wealth"].N>=2&&!W["battle_active"].B))ItemAction("craft",null,r["template"].S);GUILayout.EndVertical();}GUILayout.EndScrollView();return;
         }
-        GUILayout.BeginHorizontal();itemQuery=GUILayout.TextField(itemQuery);itemCategory=Cycle(itemCategory,new[]{"全部","兵刃","衣甲","佩饰","器具","丹药","饮食","典籍","材料"});itemSort=Cycle(itemSort,new[]{"种类","品阶","价值","重量"});GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();
+        if(GUILayout.Button("全部品级",itemGrade==0?selected:chip,GUILayout.Width(100)))itemGrade=0;
+        foreach(var grade in Inventory["grades"].A){var style=new GUIStyle(itemGrade==grade["grade"].I?selected:chip);TextColor(style,Hex(grade["grade_color"].S));if(GUILayout.Button(grade["grade_name"].S,style))itemGrade=itemGrade==grade["grade"].I?0:grade["grade"].I;}
+        GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();foreach(var slot in Inventory["slots"].D){var gear=Inventory["items"].A.FirstOrDefault(x=>x["id"].S==Inventory["equipment"][slot.Key].S);if(GUILayout.Button(slot.Value.S+" · "+(gear==null?"未装备":gear["name"].S),chip)){if(gear!=null){inventoryMode="行囊";selectedItem=gear["id"].S;itemCategory="全部";itemQuery="";itemGrade=0;}}}GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();foreach(string category in new[]{"全部"}.Concat(Inventory["categories"].D.Values.Select(x=>x.S)))if(GUILayout.Button(category,itemCategory==category?selected:chip)){itemCategory=category;selectedItem="";}GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();GUILayout.Label("寻物",small,GUILayout.Width(38));itemQuery=GUILayout.TextField(itemQuery);itemSort=Cycle(itemSort,new[]{"种类","品阶","价值","重量"});GUILayout.EndHorizontal();
         if(giftTarget>=0)T("赠物对象："+(W["npcs"].A.FirstOrDefault(n=>n["id"].I==giftTarget)?["name"].S??"请选择人物"),sub);
-        var list=(inventoryMode=="货栈"?Market:Inventory)["items"].A.Where(i=>i["name"].S.Contains(itemQuery)&&(itemCategory=="全部"||i["category_label"].S==itemCategory));
-        list=itemSort=="品阶"?list.OrderBy(i=>i["grade"].N):itemSort=="价值"?list.OrderByDescending(i=>i["price"].N):itemSort=="重量"?list.OrderByDescending(i=>i["weight"].N):list.OrderBy(i=>i["category"].S);var rows=list.ToList();
+        var list=(inventoryMode=="货栈"?Market:Inventory)["items"].A.Where(i=>i["name"].S.Contains(itemQuery)&&(itemCategory=="全部"||i["category_label"].S==itemCategory)&&(itemGrade==0||i["grade"].I==itemGrade));
+        var categoryOrder=Inventory["categories"].D.Keys.ToList();
+        list=itemSort=="品阶"?list.OrderBy(i=>i["grade"].N):itemSort=="价值"?list.OrderByDescending(i=>i[inventoryMode=="货栈"?"buy_price":"sell_price"].N):itemSort=="重量"?list.OrderByDescending(i=>i["weight"].N):list.OrderBy(i=>categoryOrder.IndexOf(i["category"].S)).ThenBy(i=>i["grade"].I);
+        var rows=list.GroupBy(i=>i["template"].S+"/"+i["durability"].S+"/"+i["equipped"].B).Select(group=>{var representative=group.FirstOrDefault(x=>x["id"].S==selectedItem)??group.First();var tile=J.Parse(representative.ToString());tile["stack_count"]=new J(group.Count());return tile;}).ToList();
         if(!rows.Any(i=>i["id"].S==selectedItem))selectedItem=rows.FirstOrDefault()?["id"].S??"";
-        GUILayout.BeginHorizontal();GUILayout.BeginVertical(GUILayout.Width(445));itemScroll=GUILayout.BeginScrollView(itemScroll);
-        foreach(var item in rows){if(GUILayout.Button(item["name"].S+"  /  "+item["grade"].S+"品 · "+item["category_label"].S+"\n"+(inventoryMode=="货栈"?Num(item["buy_price"])+"银":Num(item["weight"])+"斤")+(item["equipped"].B?" · 已装备":""),selectedItem==item["id"].S?rowOnStyle:rowStyle,GUILayout.MinHeight(57)))selectedItem=item["id"].S;}GUILayout.EndScrollView();GUILayout.EndVertical();
-        GUILayout.BeginVertical(GUILayout.Width(485));detailScroll=GUILayout.BeginScrollView(detailScroll);var i=rows.FirstOrDefault(x=>x["id"].S==selectedItem);if(i!=null){H(i["name"].S);T(i["description"].S);T(i["grade"].S+"品 · "+i["grade_label"].S+" · "+i["category_label"].S,small);Bar("耐久",i["durability"].N,100);Metric("重量",Num(i["weight"])+"斤");Metric(inventoryMode=="货栈"?"购入":"售出",Num(i[inventoryMode=="货栈"?"buy_price":"sell_price"])+"银");
-            foreach(string key in new[]{"attack","defense","income","training","recovery","heal","wound","illness","learning"})if(i[key].Has)Metric(ItemLabels.ContainsKey(key)?ItemLabels[key]:key,Num(i[key]));
+        GUILayout.BeginHorizontal();GUILayout.BeginVertical(GUILayout.Width(738));itemScroll=GUILayout.BeginScrollView(itemScroll,GUILayout.Height(408));
+        if(itemSort=="种类"&&itemCategory=="全部"){foreach(var group in rows.GroupBy(x=>x["category_label"].S)){T(group.Key,sub);DrawItemGrid(group.ToList());}}else DrawItemGrid(rows);
+        if(rows.Count==0)T("未寻到物品，试试其他分类或品级。",small);
+        GUILayout.EndScrollView();GUILayout.EndVertical();
+        GUILayout.BeginVertical(GUILayout.Width(402));detailScroll=GUILayout.BeginScrollView(detailScroll,GUILayout.Height(408));var i=rows.FirstOrDefault(x=>x["id"].S==selectedItem);if(i!=null){var qualityStyle=new GUIStyle(sub);TextColor(qualityStyle,Hex(i["grade_color"].S));T(i["grade_name"].S+" · "+i["grade_label"].S+" · "+i["category_label"].S,qualityStyle);H(i["name"].S);T(i["description"].S);if(new[]{"weapon","armor","accessory","tool","manual"}.Contains(i["category"].S))Bar("耐久",i["durability"].N,100);Metric("重量",Num(i["weight"])+"斤");Metric(inventoryMode=="货栈"?"购入":"售出",Num(i[inventoryMode=="货栈"?"buy_price":"sell_price"])+"银");
+            foreach(string key in new[]{"attack","defense","income","training","recovery","heal","joy","wound","illness","learning"})if(i[key].Has)Metric(ItemLabels.ContainsKey(key)?ItemLabels[key]:key,Num(i[key]));
             if(i["category"].S=="manual")T("研读 "+i["read_progress"].S+" / "+i["pages"].S+"篇 · 所需武学 "+i["requirement"].S,small);
             T("此物来处",sub);T(i["origin"].S);if(i["origin_event"].Has&&Btn("查看初得记录"))OpenEvent(i["origin_event"].I);if(i["last_event"].Has&&Btn("查看最近流转"))OpenEvent(i["last_event"].I);
+            if(i["stack_count"].I>1)T("同类 "+i["stack_count"].S+"件 · 当前物号 "+i["id"].S+" · 每次操作一件",small);
             if(SelectedPerson>=0&&Btn("赠物对象设为所选人物"))giftTarget=SelectedPerson;
             var ops=inventoryMode=="货栈"?new[]{new J("buy")}:i["operations"].A.ToArray();foreach(var op in ops){bool enabled=!W["battle_active"].B&&(op.S!="gift"||giftTarget>=0)&&(op.S!="buy"||i["buy_price"].N<=Inventory["wealth"].N&&i["weight"].N+Inventory["weight"].N<=Inventory["capacity"].N);if(Btn(OperationLabels.TryGetValue(op.S,out var label)?label:op.S,enabled))ItemAction(op.S,i);}
-        }else T("行囊空空，未寻到物品。");GUILayout.EndScrollView();GUILayout.EndVertical();GUILayout.EndHorizontal();T(inventoryMode=="货栈"?"货栈持有有限实物 · 现银 "+Num(Market["wealth"])+"两":"四个独立装备部位 · 每次操作自动存档",small);
+        }else T("行囊空空，未寻到物品。");GUILayout.EndScrollView();GUILayout.EndVertical();GUILayout.EndHorizontal();T(inventoryMode=="货栈"?"货栈持有有限实物 · 现银 "+Num(Market["wealth"])+"两":"九品最低，一品最高 · 同类合并显示，每件保留来源与耐久 · 每次操作自动存档",small);
     }
-    static readonly System.Collections.Generic.Dictionary<string,string> ItemLabels=new System.Collections.Generic.Dictionary<string,string>{{"attack","攻势"},{"defense","防护"},{"income","营生收益"},{"training","习武增益"},{"recovery","调养恢复"},{"heal","恢复体力"},{"wound","缓解外伤"},{"illness","缓解疾病"},{"learning","研读进益"}};
+    void DrawItemGrid(List<J> rows){
+        const int columns=5;
+        for(int start=0;start<rows.Count;start+=columns){GUILayout.BeginHorizontal();for(int column=0;column<columns;column++){
+            if(start+column>=rows.Count){GUILayout.Space(142);continue;}
+            var item=rows[start+column];Rect r=GUILayoutUtility.GetRect(136,134,GUILayout.Width(136),GUILayout.Height(134));
+            if(GUI.Button(r,GUIContent.none,selectedItem==item["id"].S?rowOnStyle:rowStyle))selectedItem=item["id"].S;
+            Color color=Hex(item["grade_color"].S);Fill(new Rect(r.x+1,r.yMax-4,r.width-2,3),color);
+            var badge=new GUIStyle(small){fontSize=12,alignment=TextAnchor.MiddleLeft,wordWrap=false};TextColor(badge,color);
+            GUI.Label(new Rect(r.x+7,r.y+5,65,20),item["grade_name"].S,badge);
+            GUI.Label(new Rect(r.x+76,r.y+5,54,20),item["equipped"].B?"已装备":"×"+item["stack_count"].S,small);
+            var glyph=new GUIStyle(centerTitle){fontSize=36};TextColor(glyph,color);
+            GUI.Label(new Rect(r.x+30,r.y+25,76,50),ItemGlyph(item["category"].S),glyph);
+            GUI.Label(new Rect(r.x+3,r.y+78,r.width-6,25),item["name"].S,centerSmall);
+            GUI.Label(new Rect(r.x+3,r.y+103,r.width-6,21),inventoryMode=="货栈"?Num(item["buy_price"])+"银":Num(item["weight"])+"斤",centerSmall);
+        }GUILayout.EndHorizontal();}
+    }
+    static string ItemGlyph(string category){switch(category){case "manual":return "书";case "food":return "食";case "wine":return "酒";case "tea":return "茶";case "weapon":return "剑";case "armor":return "衣";case "accessory":return "玉";case "medicine":return "药";case "material":return "材";default:return "器";}}
+    static readonly System.Collections.Generic.Dictionary<string,string> ItemLabels=new System.Collections.Generic.Dictionary<string,string>{{"attack","攻势"},{"defense","防护"},{"income","营生收益"},{"training","习武增益"},{"recovery","调养恢复"},{"heal","恢复体力"},{"joy","舒缓心绪"},{"wound","缓解外伤"},{"illness","缓解疾病"},{"learning","研读进益"}};
     static readonly System.Collections.Generic.Dictionary<string,string> OperationLabels=new System.Collections.Generic.Dictionary<string,string>{{"equip","装备"},{"unequip","卸下"},{"read","研读一篇"},{"repair","修补"},{"sell","出售"},{"gift","赠予"},{"buy","购入"},{"use","使用"}};
     void DrawMartial(){
         GUILayout.BeginHorizontal();H("练一身本领，赴一场江湖");GUILayout.FlexibleSpace();if(Btn(battleView?"功法与闭关":"演武场 / 续战"))battleView=!battleView;GUILayout.EndHorizontal();if(!Martial.Has){T("正在展开武谱…");return;}

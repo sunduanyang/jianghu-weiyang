@@ -3,11 +3,18 @@ from copy import deepcopy
 import math
 
 
-GRADES = {9: '下下', 8: '下中', 7: '下上', 6: '中下', 5: '中中',
-          4: '中上', 3: '上下', 2: '上中', 1: '上上'}
-CATEGORIES = {'weapon': '兵刃', 'armor': '衣甲', 'accessory': '佩饰', 'tool': '器具',
-              'medicine': '丹药', 'food': '饮食', 'manual': '典籍', 'material': '材料'}
+GRADES = {9: '凡', 8: '素', 7: '良', 6: '精', 5: '珍',
+          4: '秘', 3: '极', 2: '绝', 1: '神'}
+GRADE_COLORS = {9: '#8C918C', 8: '#E8E5DA', 7: '#78A85B', 6: '#568FC4',
+                5: '#51B8B4', 4: '#AF79BF', 3: '#D4B052', 2: '#DC8644', 1: '#D8584E'}
+GRADE_COLOR_NAMES = {9: '灰', 8: '白', 7: '绿', 6: '蓝', 5: '青',
+                     4: '紫', 3: '金', 2: '橙', 1: '红'}
+GRADE_NAMES = {grade: name+'品' for grade, name in zip(range(9, 0, -1), '九八七六五四三二一')}
+CATEGORIES = {'manual': '书籍', 'food': '食品', 'wine': '酒', 'tea': '茶',
+              'weapon': '武器', 'armor': '衣甲', 'accessory': '佩饰', 'tool': '器具',
+              'medicine': '丹药', 'material': '材料'}
 SLOTS = {'weapon': '兵刃', 'armor': '衣甲', 'accessory': '佩饰', 'tool': '器具'}
+CONSUMABLES = ('food', 'wine', 'tea', 'medicine')
 
 
 def template(name, category, grade, price, weight, description, **kwargs):
@@ -33,7 +40,7 @@ CATALOG = {
     'salve': template('金疮药', 'medicine', 9, 6, .1, '外敷伤处，恢复体力并缩短外伤。', heal=18, wound=2),
     'pill': template('养心丸', 'medicine', 7, 18, .1, '缓和病势，调养元气；不能代替长期诊治。', heal=12, illness=12),
     'ration': template('麦饼', 'food', 9, 3, .3, '朴素耐放的行粮，食用恢复少许体力。', heal=6),
-    'wine': template('桂花酿', 'food', 8, 8, .5, '清甜微辛，歇脚时饮一盏，可舒缓心绪。', heal=8, joy=4),
+    'wine': template('桂花酿', 'wine', 8, 8, .5, '清甜微辛，歇脚时饮一盏，可舒缓心绪。', heal=8, joy=4),
     'basic_manual': template('吐纳入门', 'manual', 9, 20, .3, '从呼吸起落入手，循序习得基本功。', learning=1.2, requirement=0, pages=3),
     'sword_manual': template('青溪剑谱', 'manual', 7, 58, .4, '记录青溪一脉剑式，需些武学根基。', learning=2., requirement=12, pages=4),
     'cloud_manual': template('栖云心法', 'manual', 4, 180, .4, '凝神守一，气息绵长；根基不足者难以领会。', learning=3., requirement=30, pages=5),
@@ -42,7 +49,54 @@ CATALOG = {
     'iron': template('生铁', 'material', 9, 5, .8, '未经精炼的铁料，可用于修补兵刃与衣甲。'),
     'timber': template('硬木料', 'material', 9, 4, .6, '纹理紧实的木料，可用于修补佩饰与器具。'),
 }
+# Keep old template IDs and their effects stable; add the missing grades around them.
+ORIGINAL_TEMPLATES = frozenset(CATALOG)
+CATALOG.update({
+    'iron_practice_sword': template('铁胎练剑', 'weapon', 8, 26, 2.6, '剑刃未开，铁胎扎实，适宜习练架势。', attack=4, training=.11),
+    'autumn_sword': template('秋水剑', 'weapon', 5, 140, 2.2, '淬火匀净，剑光似秋水，收发自如。', attack=11, training=.24),
+    'frost_blade': template('霜华刀', 'weapon', 4, 220, 2.8, '叠锻霜纹隐现，兼有韧性与锋锐。', attack=13, training=.27),
+    'tianheng_sword': template('天衡剑', 'weapon', 1, 1500, 2.1, '名匠穷年淬成，剑脊如衡，出锋若星。', attack=25, training=.5),
+    'scallion_pancake': template('葱香炊饼', 'food', 8, 6, .3, '面香裹葱，外酥内软，是旅店常备的点心。', heal=9),
+    'mushroom_noodles': template('山菌汤面', 'food', 7, 12, .4, '山菌熬汤，细面滑口，暖胃解乏。', heal=12),
+    'lotus_rice': template('荷叶蒸饭', 'food', 6, 22, .4, '新米与时蔬包入荷叶，蒸得清香。', heal=16),
+    'river_shrimp': template('清炒河虾', 'food', 5, 40, .3, '细火急炒，虾肉鲜嫩，佐以时令青蔬。', heal=20),
+    'silver_fish': template('银丝鱼脍', 'food', 4, 72, .3, '鲜鱼细切，姜醋相和，刀工十分讲究。', heal=25),
+    'golden_crab': template('金膏蒸蟹', 'food', 3, 128, .4, '秋蟹膏满，清蒸留鲜，是席间珍味。', heal=31),
+    'mountain_stew': template('山海珍羹', 'food', 2, 240, .4, '山珍海味慢煨成羹，汤色清润，滋养甚厚。', heal=38),
+    'nine_treasure_feast': template('九珍玉食', 'food', 1, 480, .5, '九味珍材各得其宜，汇成一席玲珑滋味。', heal=48),
+    'village_wine': template('村酿浊酒', 'wine', 9, 4, .5, '村家新酿，酒色微浊，饮来温和。', heal=5, joy=2),
+    'green_plum_wine': template('青梅酒', 'wine', 7, 16, .5, '青梅入酒，酸甜相济，略解行路烦忧。', heal=10, joy=5),
+    'bamboo_wine': template('竹叶青酿', 'wine', 6, 30, .5, '竹叶浸酿，色泽青润，回味悠长。', heal=12, joy=6),
+    'pear_blossom_wine': template('梨花白', 'wine', 5, 55, .5, '酒色澄澈，香如春日梨花，入口绵柔。', heal=15, joy=7),
+    'song_lao_wine': template('松醪春', 'wine', 4, 96, .5, '松香与谷香交融，封坛经年方启。', heal=18, joy=8),
+    'jade_dew_wine': template('玉壶清露', 'wine', 3, 168, .4, '清泉酿成，以玉色瓷壶封存，香气清冽。', heal=22, joy=9),
+    'zixia_wine': template('紫霞陈酿', 'wine', 2, 300, .4, '陈香层叠，开坛如霞，少许便觉醇厚。', heal=27, joy=10),
+    'taibai_wine': template('太白遗酿', 'wine', 1, 600, .4, '名酿古法续传，酒香沉静，百味融于一盏。', heal=34, joy=12),
+    'coarse_tea': template('山野粗茶', 'tea', 9, 3, .1, '山间粗叶焙成，虽朴素，亦能解渴醒神。', heal=4, joy=1),
+    'roasted_tea': template('炒青茶', 'tea', 8, 7, .1, '铁锅炒青，茶汤明亮，香味平和。', heal=6, joy=2),
+    'pine_tea': template('松溪春茗', 'tea', 7, 14, .1, '溪畔春芽，轻焙留香，饮后精神一振。', heal=8, joy=3),
+    'cloud_tea': template('云岭毛尖', 'tea', 6, 26, .1, '云岭细芽，锋毫匀整，滋味清鲜。', heal=11, joy=4),
+    'lotus_tea': template('莲心雪芽', 'tea', 5, 48, .1, '嫩芽如雪，回甘带莲心清意。', heal=14, joy=5),
+    'silver_needle_tea': template('白毫银针', 'tea', 4, 85, .1, '芽头肥壮，白毫如银，茶香温润。', heal=18, joy=6),
+    'dragon_tea': template('龙团胜雪', 'tea', 3, 150, .1, '细碾团茶，点汤如雪，工序繁复。', heal=22, joy=8),
+    'purple_bud_tea': template('紫笋贡茗', 'tea', 2, 280, .1, '紫芽初展时采制，香凝不散，甘醇入喉。', heal=27, joy=10),
+    'taihe_tea': template('太和清露', 'tea', 1, 700, .1, '清露初采，慢焙成香。啜饮一盏，澄心静气。', heal=32, joy=12),
+    'stance_manual': template('桩功浅说', 'manual', 8, 34, .3, '从立身扎根讲起，附有清楚的行功图。', learning=1.6, requirement=5, pages=3),
+    'steps_manual': template('归雁步图', 'manual', 6, 90, .3, '步随身转，进退有节，须先练稳下盘。', learning=2.3, requirement=18, pages=4),
+    'river_manual': template('沧浪劲论', 'manual', 5, 128, .4, '论劲如潮，层层相续，宜以已有根基印证。', learning=2.6, requirement=24, pages=5),
+    'moon_manual': template('照月剑经', 'manual', 3, 320, .4, '以静照动，借月喻剑，收录名家心悟。', learning=3.5, requirement=42, pages=5),
+    'liangyi_manual': template('两仪玄章', 'manual', 2, 640, .5, '阴阳相济，动静互根，字字关乎深厚内功。', learning=4., requirement=55, pages=6),
+})
 RECIPES = {'salve': {'herb': 2}, 'pill': {'herb': 3}}
+
+
+def grade_info(grade):
+    return {'grade_label': GRADES[grade], 'grade_name': GRADE_NAMES[grade],
+            'grade_color': GRADE_COLORS[grade], 'grade_color_name': GRADE_COLOR_NAMES[grade]}
+
+
+def grade_legend():
+    return [{'grade': grade, **grade_info(grade)} for grade in GRADES]
 
 
 def actor(w, owner):
@@ -117,13 +171,25 @@ def remove(w, item):
 def initialize(w, legacy=False):
     """One-time registration; never invent possessions for an already deceased NPC."""
     prepare(w.player)
+    w.player.setdefault('mood', {'joy': 15.})
     for key, value in {'health': 100., 'skill': 12., 'alive': True}.items():
         w.player.setdefault(key, value)
     for n in w.npcs.values():
         prepare(n)
     if getattr(w, 'items', None):
+        if w.items.get('version', 1) < 2:
+            # Explicit one-time stock registration, never monthly replenishment.
+            known = {i['template'] for i in w.items['objects'].values()} | ORIGINAL_TEMPLATES
+            added = [create(w, 'market', key, '九品物品目录扩充时登记的货栈新货')
+                     for key in CATALOG if key not in known]
+            w.items['version'] = 2
+            e = w.emit('item_catalog', [], f'货栈登记九品新货{len(added)}件，开放书籍、食品、酒、茶与武器分栏。', .25,
+                       facts={'initial_condition': True, 'catalog_version': 2, 'items': [i['id'] for i in added]})
+            for item in added:
+                item['origin_event'] = item['last_event'] = e['id']
+            return True
         return False
-    w.items = {'version': 1, 'next_id': 1, 'objects': {},
+    w.items = {'version': 2, 'next_id': 1, 'objects': {},
                'market': {'name': '五地货栈', 'wealth': 800.}, 'government': {'name': '县衙遗物库'}}
     prepare(w.items['market'])
     prepare(w.items['government'])
@@ -204,7 +270,7 @@ def operations(w, owner, item):
             result.append('equip')
         if item['durability'] < 100:
             result.append('repair')
-    if d['category'] in ('food', 'medicine') and (n['health'] < 100 or
+    if d['category'] in CONSUMABLES and (n['health'] < 100 or
             (d.get('wound') and n.get('wound')) or (d.get('illness') and n.get('illness')) or
             (d.get('joy') and n.get('mood') and n['mood']['joy'] < 30)):
         result.append('use')
@@ -221,24 +287,26 @@ def view(w, owner):
     result = []
     for item in objects(w, owner):
         d = spec(item)
-        result.append({**deepcopy(item), **d, 'grade_label': GRADES[d['grade']],
+        result.append({**deepcopy(item), **d, **grade_info(d['grade']),
                        'category_label': CATEGORIES[d['category']], 'equipped': item['id'] in n['equipment'].values(),
                        'buy_price': buy_price(item), 'sell_price': sell_price(item), 'repair_price': repair_price(item),
                        'read_progress': n['read_books'].get(item['template'], 0),
                        'operations': operations(w, owner, item) if n.get('alive', True) else []})
     return {'owner': str(owner), 'name': n['name'], 'wealth': n.get('wealth', 0), 'health': n.get('health'),
-            'skill': n.get('skill'), 'items': result, 'equipment': n['equipment'].copy(), 'weight': weight(w, owner),
+            'skill': n.get('skill'), 'joy': n.get('mood', {}).get('joy'),
+            'items': result, 'equipment': n['equipment'].copy(), 'weight': weight(w, owner),
             'capacity': round(capacity(w, owner), 1), 'bonuses': bonuses(w, owner), 'categories': CATEGORIES,
-            'slots': SLOTS, 'alive': n.get('alive', True)}
+            'slots': SLOTS, 'grades': grade_legend(), 'alive': n.get('alive', True)}
 
 
 def market_view(w):
     # Individual instances remain addressable even when the UI groups identical stock.
     return {'name': '五地货栈', 'wealth': w.items['market']['wealth'],
             'items': [{**deepcopy(i), **spec(i), 'buy_price': buy_price(i),
-                       'grade_label': GRADES[spec(i)['grade']], 'category_label': CATEGORIES[spec(i)['category']]}
+                       **grade_info(spec(i)['grade']), 'category_label': CATEGORIES[spec(i)['category']]}
                       for i in objects(w, 'market')],
-            'recipes': [{'template': k, **CATALOG[k], 'grade_label': GRADES[CATALOG[k]['grade']],
+            'grades': grade_legend(), 'categories': CATEGORIES,
+            'recipes': [{'template': k, **CATALOG[k], **grade_info(CATALOG[k]['grade']),
                          'ingredients': {CATALOG[t]['name']: q for t, q in v.items()}}
                         for k, v in RECIPES.items()]}
 
@@ -315,6 +383,7 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
         text = f"{n['name']}{'装备' if operation == 'equip' else '卸下'}{d['name']}。"
     elif operation == 'use':
         before = n['health']
+        joy_before = n.get('mood', {}).get('joy', 0)
         n['health'] = min(100., n['health']+d.get('heal', 0))
         if d.get('wound') and n.get('wound'):
             n['wound']['remaining'] = max(0, n['wound']['remaining']-d['wound'])
@@ -322,8 +391,9 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
             n['illness']['severity'] = max(0, n['illness']['severity']-d['illness'])
         if d.get('joy') and n.get('mood'):
             n['mood']['joy'] = min(30, n['mood']['joy']+d['joy'])
-        facts.update(health_gain=round(n['health']-before, 4), consumed=item['id'])
-        text = f"{n['name']}使用{d['name']}，恢复{n['health']-before:g}体力。"
+        joy_gain = n.get('mood', {}).get('joy', 0)-joy_before
+        facts.update(health_gain=round(n['health']-before, 4), joy_gain=joy_gain, consumed=item['id'])
+        text = f"{n['name']}使用{d['name']}，恢复{n['health']-before:g}体力" + (f'，喜悦增加{joy_gain:g}' if joy_gain else '') + '。'
         remove(w, item)
     elif operation == 'read':
         progress = n['read_books'].get(item['template'], 0)+1
@@ -404,7 +474,7 @@ def candidates(w, n):
                 choices.append(('equip_item', 23))
         if 'read' in ops and n['health'] > 40:
             choices.append(('read_item', 18+(12 if n['goal']['kind'] == 'mastery' else 0)))
-        if ('sell' in ops and n['wealth'] < 10 and d['category'] not in ('food', 'medicine')
+        if ('sell' in ops and n['wealth'] < 10 and d['category'] not in CONSUMABLES
                 and w.items['market']['wealth'] >= sell_price(item)):
             choices.append(('sell_item', 45))
         if 'repair' in ops and item['durability'] < 25 and n['wealth'] > repair_price(item)+12:

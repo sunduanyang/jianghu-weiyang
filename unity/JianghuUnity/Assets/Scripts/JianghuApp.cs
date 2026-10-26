@@ -30,11 +30,7 @@ public partial class JianghuApp : MonoBehaviour {
         UpdatePaperReference();
         UpdateBattle();
         if(seenRevision!=Client.Revision){seenRevision=Client.Revision;if(W["month"].I!=lastMonth){lastMonth=W["month"].I;ReloadPage();if(SelectedPerson>=0)SelectPerson(SelectedPerson);} }
-        if(Page==1&&City.Has&&Hero["created"].B&&City["place"].I==Hero["place"].I&&!Client.Busy&&Paused&&GUIUtility.keyboardControl==0){
-            int dr=Input.GetKeyDown(KeyCode.UpArrow)?-1:Input.GetKeyDown(KeyCode.DownArrow)?1:0;
-            int dc=Input.GetKeyDown(KeyCode.LeftArrow)?-1:Input.GetKeyDown(KeyCode.RightArrow)?1:0;
-            if(dr!=0||dc!=0)HeroAction("walk","place",Hero["place"],"row",Hero["row"].I+dr,"col",Hero["col"].I+dc);
-        }
+        UpdateCityMovement();
     }
     static Texture2D Solid(Color c){var t=new Texture2D(1,1);t.SetPixel(0,0,c);t.Apply();return t;}
     public void OnGUI(){
@@ -84,7 +80,7 @@ public partial class JianghuApp : MonoBehaviour {
             }
             GUILayout.EndScrollView();GUILayout.EndArea();return;
         }
-        query=GUILayout.TextField(query,field);
+        GUI.SetNextControlName("RosterSearch");query=GUILayout.TextField(query,field);
         IEnumerable<J> people;
         if(rosterMode=="此地"){people=W["npcs"].A.Where(n=>n["alive"].B&&n["place"].I==SelectedPlace&&(string.IsNullOrEmpty(query)||n["name"].S.Contains(query)||n["job"].S.Contains(query)));GUILayout.Label(Place(SelectedPlace)["name"].S+" · 此地中人",small);}
         else{

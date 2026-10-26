@@ -51,6 +51,70 @@ class ItemTests(unittest.TestCase):
         self.assertAlmostEqual(w.player['wealth']+w.items['market']['wealth'], total)
         self.assert_ownership(w)
 
+    def test_five_requested_families_have_all_nine_grades_and_shared_palette(self):
+        w = self.world()
+        market = items.market_view(w)
+        self.assertEqual([g['grade'] for g in market['grades']], list(range(9, 0, -1)))
+        self.assertEqual(len({g['grade_color'] for g in market['grades']}), 9)
+        self.assertEqual(market['grades'], items.view(w, 'player')['grades'])
+        for category in ('manual', 'food', 'wine', 'tea', 'weapon'):
+            rows = [i for i in market['items'] if i['category'] == category]
+            self.assertEqual({i['grade'] for i in rows}, set(range(1, 10)), category)
+            for row in rows:
+                self.assertEqual(row['grade_color'], items.GRADE_COLORS[row['grade']])
+        self.assertEqual(items.CATALOG['wine']['category'], 'wine')
+
+    def test_drinking_at_full_health_improves_mood_and_consumes_one_instance(self):
+        w = self.world()
+        w.player['health'], w.player['mood']['joy'] = 100, 15
+        for template_id in ('wine', 'coarse_tea'):
+            drink = items.create(w, 'player', template_id, '测试饮品')
+            spare = items.create(w, 'player', template_id, '另一份饮品')
+            before = w.player['mood']['joy']
+            event = items.perform(w, 'player', 'use', drink['id'])
+            self.assertEqual(w.player['health'], 100)
+            self.assertGreater(w.player['mood']['joy'], before)
+            self.assertEqual(event['facts']['joy_gain'], items.CATALOG[template_id]['joy'])
+            self.assertNotIn(drink['id'], w.items['objects'])
+            self.assertIn(spare['id'], w.items['objects'])
+        w.player['mood']['joy'] = 30
+        before = deepcopy(w.export())
+        with self.assertRaises(ValueError):
+            items.perform(w, 'player', 'use', spare['id'])
+        self.assertEqual(w.export(), before)
+
+    def test_catalog_upgrade_preserves_old_possessions_and_never_restocks_on_reload(self):
+        w = self.world()
+        for item in list(w.items['objects'].values()):
+            if item['template'] not in items.ORIGINAL_TEMPLATES:
+                items.remove(w, item)
+        depleted = self.find(w, 'wine', 'market')
+        for item in list(items.objects(w, 'market')):
+            if item['template'] == depleted['template']:
+                items.remove(w, item)
+        w.items['version'] = 1
+        previous = deepcopy(w.items['objects'])
+        inventory, silver, rng = w.player['inventory'][:], w.player['wealth'], w.rng.getstate()
+        w.checkpoint()
+        upgraded = World(store=w.store, durable=False)
+        self.assertEqual(upgraded.player['inventory'], inventory)
+        self.assertEqual(upgraded.player['wealth'], silver)
+        self.assertEqual(upgraded.rng.getstate(), rng)
+        self.assertTrue(all(upgraded.items['objects'][key] == value for key, value in previous.items()))
+        self.assertFalse(any(i['template'] == 'wine' for i in items.objects(upgraded, 'market')))
+        self.assertEqual(upgraded.items['version'], 2)
+        registration = next(e for e in upgraded.store.history() if e['kind'] == 'item_catalog')
+        self.assertTrue(registration['facts']['initial_condition'])
+        tea = self.find(upgraded, 'coarse_tea', 'market')
+        items.perform(upgraded, 'player', 'buy', tea['id'])
+        upgraded.checkpoint()
+        snapshot, events = deepcopy(upgraded.items), upgraded.store.count()
+        reloaded = World(store=w.store, durable=False)
+        self.assertEqual(reloaded.items, snapshot)
+        self.assertEqual(reloaded.store.count(), events)
+        self.assertEqual(items.get(reloaded, 'player', tea['id'])['owner'], 'player')
+        self.assert_ownership(reloaded)
+
     def test_invalid_purchase_and_foreign_item_leave_world_unchanged(self):
         w = self.world()
         item = self.find(w, 'cloud_sword', 'market')

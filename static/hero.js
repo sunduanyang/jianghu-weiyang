@@ -58,8 +58,6 @@ document.addEventListener('click',async e=>{
   if(e.target.closest('[data-hero-bag]')){await openInventory('player');return;}
   const travel=e.target.closest('[data-hero-travel]');
   if(travel){await heroUI.perform('travel',{place:Number(travel.dataset.heroTravel)});return;}
-  const walk=e.target.closest('[data-hero-walk]');
-  if(walk){await heroUI.perform('walk',{place:cityUI.place,row:Number(walk.dataset.row),col:Number(walk.dataset.col)});return;}
   if(e.target.closest('#hero-end-turn'))await heroUI.perform('end_turn');
 });
 $('#hero-form').onsubmit=async e=>{
@@ -67,10 +65,12 @@ $('#hero-form').onsubmit=async e=>{
   await heroUI.perform('create',{...data,age:Number(data.age),place:Number(data.place)});
 };
 document.addEventListener('keydown',async e=>{
-  if(!$('#city-dialog').open||!world?.hero.created||cityUI.place!==world.hero.place||e.target.closest('input,select,textarea,button')||e.altKey||e.ctrlKey||e.metaKey)return;
-  const delta={ArrowUp:[-1,0],ArrowDown:[1,0],ArrowLeft:[0,-1],ArrowRight:[0,1]}[e.key];
+  if(!$('#city-dialog').open||!world?.hero.created||cityUI.place!==world.hero.place||e.target.closest('dialog:not(#city-dialog),input,select,textarea,[contenteditable="true"]')||e.altKey||e.ctrlKey||e.metaKey)return;
+  const delta={KeyW:[-1,0],KeyS:[1,0],KeyA:[0,-1],KeyD:[0,1],ArrowUp:[-1,0],ArrowDown:[1,0],ArrowLeft:[0,-1],ArrowRight:[0,1]}[e.code];
   if(!delta)return;e.preventDefault();
+  cityUI.lastMapClick=null;
+  if(cityUI.movementReason()){if(!e.repeat)toast(cityUI.movementReason(),true);return;}
   const h=world.hero,row=h.row+delta[0],col=h.col+delta[1],rows=cityUI.data?.rows;
-  if(!rows?.[row]?.[col]||'~^#'.includes(rows[row][col])){toast('此处不可通行，跨水须经桥。');return;}
-  await heroUI.perform('walk',{place:h.place,row,col});
+  if(!rows?.[row]?.[col]||'~^#'.includes(rows[row][col]))return;
+  await cityUI.walkTo(row,col);
 });
