@@ -94,6 +94,8 @@ def prepare(backend_only=False, bundle_python=False, include_local_save=False):
     import bake_ui
     bake_ui.bake_ui()
     bake_ui.bake_atlas()
+    import bake_city
+    bake_city.main()
     import bake_paper_cast
     bake_paper_cast.bake()
     reference = assets / 'StreamingAssets' / 'OriginalPuppets'

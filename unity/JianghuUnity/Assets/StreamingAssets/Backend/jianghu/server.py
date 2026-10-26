@@ -190,7 +190,8 @@ def handler_for(game):
                     self.json_response(data)
                     return
                 files = {'/': 'index.html', '/index.html': 'index.html', '/style.css': 'style.css', '/app.js': 'app.js', '/society.js': 'society.js', '/inventory.js': 'inventory.js', '/map.js': 'map.js', '/city.js': 'city.js', '/city.css': 'city.css', '/geography.json': 'geography.json', '/martial.js': 'martial.js', '/art.css': 'art.css', '/assets/river-valley.png': 'assets/river-valley.png', '/assets/portraits.png': 'assets/portraits.png'}
-                files.update({'/hero.js': 'hero.js', '/hero.css': 'hero.css'})
+                files.update({'/hero.js': 'hero.js', '/hero.css': 'hero.css',
+                              '/combat.js': 'combat.js', '/combat.css': 'combat.css'})
                 if game.world.settlements:
                     files['/geography.json'] = 'geography-compact.json'
                 filename = files.get(path)

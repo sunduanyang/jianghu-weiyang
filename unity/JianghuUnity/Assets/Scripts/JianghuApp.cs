@@ -27,6 +27,7 @@ public partial class JianghuApp : MonoBehaviour {
     void Awake(){Client=GetComponent<GameClient>()??gameObject.AddComponent<GameClient>();valley=Resources.Load<Texture2D>("Art/river-valley");}
     void Update(){
         if(!Client.Ready)return;
+        UpdateBattle();
         if(seenRevision!=Client.Revision){seenRevision=Client.Revision;if(W["month"].I!=lastMonth){lastMonth=W["month"].I;ReloadPage();if(SelectedPerson>=0)SelectPerson(SelectedPerson);} }
         if(Page==1&&City.Has&&Hero["created"].B&&City["place"].I==Hero["place"].I&&!Client.Busy&&Paused&&GUIUtility.keyboardControl==0){
             int dr=Input.GetKeyDown(KeyCode.UpArrow)?-1:Input.GetKeyDown(KeyCode.DownArrow)?1:0;
@@ -36,19 +37,20 @@ public partial class JianghuApp : MonoBehaviour {
     }
     static Texture2D Solid(Color c){var t=new Texture2D(1,1);t.SetPixel(0,0,c);t.Apply();return t;}
     public void OnGUI(){
+        paperDraws.Clear();paperDrawOrigin=Vector2.zero;
         InitSkin();GUI.skin=skin;
         float scale=Mathf.Min(Screen.width/1680f,Screen.height/960f);GUI.matrix=Matrix4x4.TRS(new Vector3((Screen.width-1680*scale)/2,(Screen.height-960*scale)/2,0),Quaternion.identity,new Vector3(scale,scale,1));
         Rect screen=new Rect(0,0,1680,960);
         if(!Client.Ready){Tile(screen,"bg");Tex(screen,"vignette");Rect wait=new Rect(400,300,880,300);Panel(wait);GUILayout.BeginArea(new Rect(440,330,800,250));H("山河正在展开");T(string.IsNullOrEmpty(Client.Error)?Client.Status:Client.Error);T("首次启动会将原世界副本放入 Unity 的独立存档目录。",small);if(!string.IsNullOrEmpty(Client.Error)&&GUILayout.Button("打开日志目录"))Application.OpenURL(Client.SaveDir);GUILayout.EndArea();return;}
-        if(dialogueOpen&&Person.Has){DrawDialogue();DrawTransition(screen);return;}
-        if(personScreen){DrawPersonScreen();DrawTransition(screen);return;}
-        if(Page==3&&battleView){DrawBattleScreen();DrawTransition(screen);return;}
+        if(dialogueOpen&&Person.Has){DrawDialogue();FlushPaperFigures();DrawTransition(screen);return;}
+        if(personScreen){DrawPersonScreen();FlushPaperFigures();DrawTransition(screen);return;}
+        if(Page==3&&battleView){DrawBattleScreen();FlushPaperFigures();DrawTransition(screen);return;}
         if(!IsStagePage(Page)){
             Rect body=BookScreen(Pages[Page]);
             Rect area=Page==5?new Rect(200,118,1280,760):new Rect(260,118,1160,760);
-            GUILayout.BeginArea(area);
+            paperDrawOrigin=area.position;GUILayout.BeginArea(area);
             switch(Page){case 2:DrawInventory();break;case 3:DrawMartial();break;case 4:DrawInstitutions();break;case 5:DrawPuppets();break;case 6:DrawEvents();break;case 7:DrawAI();break;case 8:DrawSettings();break;}
-            GUILayout.EndArea();DrawTransition(screen);return;
+            GUILayout.EndArea();paperDrawOrigin=Vector2.zero;FlushPaperFigures();DrawTransition(screen);return;
         }
         // 戏: full-screen map or city, with floating panels
         basePage=Page;
@@ -58,7 +60,7 @@ public partial class JianghuApp : MonoBehaviour {
         DrawRoster();DrawTracker();
         if(Page==0)DrawPlaceCard();else DrawNodeCard();
         DrawDock();DrawHeroCreation();DrawAdvance();
-        DrawTransition(screen);
+        FlushPaperFigures();DrawTransition(screen);
     }
     public void Go(int page){BeginTransition(page);Page=page;mainScroll=Vector2.zero;ReloadPage();}
     public void ReloadPage(){if(!Client.Ready)return;switch(Page){case 1:LoadCity(SelectedPlace);break;case 2:LoadInventory();break;case 3:Client.Fetch("/api/martial",j=>Martial=j);break;case 6:Client.Fetch("/api/events",j=>Events=j);break;case 7:Client.Fetch("/api/ai/logs",j=>Logs=j);break;}}

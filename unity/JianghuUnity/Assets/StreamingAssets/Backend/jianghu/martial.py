@@ -26,11 +26,18 @@ ARTS = {
     'stone_force': dict(name='破石劲', kind='attack', affinity='刚阳', grade=7, requirement=22,
                         damage_type='external', reach=[0, 1], power=2.15, qi=15, forms=3,
                         cooldown=3, description='近身重击，适合刚阳内功。'),
+    'reed_cut': dict(name='折苇连锋', kind='attack', affinity='平和', grade=9, requirement=0,
+                     damage_type='external', reach=[2, 4], power=1.8, qi=8, forms=2,
+                     cooldown=2, cast=1, pattern=['thrust', 'slash'],
+                     description='以刺、劈各一式连成剑势，运功一拍后出手；可用凝神式替代。'),
     'cloud_step': dict(name='游云步', kind='movement', affinity='平和', grade=9, requirement=0,
                        description='进退有度，提高闪避与移动步数。'),
     'swallow_step': dict(name='掠燕身', kind='movement', affinity='柔阴', grade=8, requirement=18,
                          description='轻身避实，精进后一次可移动两格。'),
 }
+# Wind-ups are resolved by the new battle rules. Historic bouts keep their ruleset.
+ARTS['wave_palm'].update(cast=1, pattern=['crush', 'crush'])
+ARTS['stone_force'].update(cast=2, pattern=['crush', 'crush', 'crush'], break_power=2.5)
 KIND_NAMES = {'inner': '内功', 'attack': '摧破', 'movement': '身法'}
 
 
@@ -49,6 +56,8 @@ def initialize(actor, player=False):
         known.append('river_sword')
     if skill >= 25 and not player:
         known += ['wave_palm', 'iron_root']
+    if player or skill >= 15:
+        known.append('reed_cut')
     practice = min(65., max(5., skill * 1.1))
     actor['martial'] = {
         'arts': {key: {'practice': practice, 'realm': int(practice >= 40)} for key in known},
@@ -67,7 +76,7 @@ def learn(actor, art_id):
     if actor['skill'] < ARTS[art_id]['requirement']:
         raise ValueError(f"武学须达到{ARTS[art_id]['requirement']}")
     m['arts'][art_id] = {'practice': 0., 'realm': 0}
-    if ARTS[art_id]['kind'] == 'attack' and len(m['loadout']['attacks']) < 3:
+    if ARTS[art_id]['kind'] == 'attack' and len(m['loadout']['attacks']) < 6:
         m['loadout']['attacks'].append(art_id)
     return art_id
 
@@ -84,8 +93,8 @@ def equip(actor, art_id):
                 raise ValueError('至少保留一门摧破功法')
             attacks.remove(art_id)
         else:
-            if len(attacks) >= 3:
-                raise ValueError('最多装配三门摧破，请先卸下一门')
+            if len(attacks) >= 6:
+                raise ValueError('最多装配六门摧破，请先卸下一门')
             attacks.append(art_id)
     else:
         m['loadout'][kind] = art_id
