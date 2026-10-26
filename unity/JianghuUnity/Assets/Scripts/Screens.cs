@@ -26,7 +26,7 @@ public partial class JianghuApp {
         GUI.Label(new Rect(60,114,180,22),"近日查阅 "+recentPeople.Count,caption);
         for(int i=0;i<recentPeople.Count;i++){
             var n=Npc(recentPeople[i]);if(!n.Has)continue;Rect c=new Rect(60,140+i*104,180,96);
-            bool on=recentPeople[i]==SelectedPerson;Frame(c,on?"btn_on":"card",6);
+            bool on=recentPeople[i]==SelectedPerson;Frame(c,on?"btn_on":"card",8);
             Portrait(new Rect(c.x+6,c.y+6,66,84),n["id"].I,n["sex"].S,n["age_months"].I);
             GUI.Label(new Rect(c.x+80,c.y+12,96,24),n["name"].S,sub);GUI.Label(new Rect(c.x+80,c.y+40,96,40),n["identity"]["title"].S,small);
             if(GUI.Button(c,GUIContent.none,GUIStyle.none))SelectPerson(n["id"].I);
@@ -52,11 +52,11 @@ public partial class JianghuApp {
             new KeyValuePair<string,string>("声望",Num(p["reputation"])),new KeyValuePair<string,string>("心情",MoodWord(p)),new KeyValuePair<string,string>("心愿",p["goal"]["title"].S)};
         for(int i=0;i<facts.Count;i++){Rect row=new Rect(880,124+i*36,330,34);GUI.Label(new Rect(row.x,row.y,90,row.height),facts[i].Key,new GUIStyle(text){alignment=TextAnchor.MiddleLeft});GUI.Label(new Rect(row.x+90,row.y,row.width-90,row.height),facts[i].Value,valueStyle);Fill(new Rect(row.x,row.yMax,row.width,1),hairline);}
         // traits (lower centre)
-        Rect tr=new Rect(270,540,940,330);Frame(tr,"card",6);
+        Rect tr=new Rect(270,540,940,330);Frame(tr,"card",8);
         GUI.Label(new Rect(tr.x,tr.y+6,tr.width,26),"心性",new GUIStyle(sub){alignment=TextAnchor.MiddleCenter});
         for(int i=0;i<TraitOrder.Length;i++){
             string key=TraitOrder[i];if(!p["traits"][key].Has)continue;float v=(float)p["traits"][key].N;
-            Rect c=new Rect(tr.x+20+(i%4)*228,tr.y+44+(i/4)*92,214,80);Frame(c,"btn",6);
+            Rect c=new Rect(tr.x+20+(i%4)*228,tr.y+44+(i/4)*92,214,80);Frame(c,"btn",8);
             GUI.Label(new Rect(c.x,c.y+8,c.width,26),TraitNames[key],new GUIStyle(sub){alignment=TextAnchor.MiddleCenter});
             Rect bar=new Rect(c.x+18,c.y+46,c.width-36,6);Fill(bar,new Color(.10f,.12f,.12f));Fill(new Rect(bar.x,bar.y,bar.width*Mathf.Clamp01(v/100f),bar.height),v>=60?brass:v<=30?jade:new Color(.62f,.60f,.55f));
             GUI.Label(new Rect(c.x,c.y+54,c.width,22),Mathf.RoundToInt(v).ToString(),centerSmall);
@@ -93,10 +93,10 @@ public partial class JianghuApp {
         var rel=p["player_relation"];
         if(rel.Has){float aff=(float)rel["affinity"].N;GUI.Label(new Rect(plateR.x+20,plateR.y+80,plateR.width-40,20),"交情 "+Num(rel["affinity"]),centerSmall);Rect bar=new Rect(plateR.x+40,plateR.y+108,plateR.width-80,6);Fill(bar,new Color(.10f,.12f,.12f));Fill(new Rect(bar.x,bar.y,bar.width*Mathf.Clamp01((aff+100)/200f),bar.height),aff>=0?brass:vermilion);}
         // centre: scene banner, speech, numbered options
-        Rect box=new Rect(510,150,660,760);Frame(box,"panel_solid",10);
+        Rect box=new Rect(510,150,660,760);Frame(box,"panel_solid",24);
         Rect banner=new Rect(box.x+14,box.y+14,box.width-28,210);
         if(valley!=null){var old=GUI.color;GUI.color=new Color(.78f,.74f,.66f,1);GUI.DrawTexture(banner,valley,ScaleMode.ScaleAndCrop);GUI.color=old;}Outline(banner,hairline);
-        Rect speech=new Rect(box.x+30,banner.yMax+16,box.width-60,170);Frame(speech,"card",6);
+        Rect speech=new Rect(box.x+30,banner.yMax+16,box.width-60,170);Frame(speech,"card",8);
         GUI.Label(new Rect(speech.x+20,speech.y+10,speech.width-40,speech.height-20),"“"+dialogueText+"”",dialogueStyle);
         GUILayout.BeginArea(new Rect(box.x+20,speech.yMax+16,box.width-40,box.yMax-speech.yMax-30));
         if(DialogueOption("1","（拜访叙旧……）",p["alive"].B))Intervene("visit");

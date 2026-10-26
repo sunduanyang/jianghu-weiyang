@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-26",
+  "pull_request": "https://github.com/sunduanyang/jianghu-weiyang/pull/5",
+  "pr_head": "91171a2d954322832e6a47ba3f8fb4c1bbda2735",
+  "desktop_base": "fb3c01e39bc0ecb71f6ccdfcff3df6f53795bfeb",
+  "desktop_changes_preserved_in": "65fbdbd",
+  "preserved_features": [
+    "Nine-grade inventory, 59 item templates and legacy stock migration",
+    "Per-cell coordinate selection, WASD and double-click walking",
+    "Unfinished-battle movement notice and surrender action",
+    "Terraced city maps, square building foundations and shared puppet rig"
+  ],
+  "merged_features": [
+    "Handmade interface textures and optional painted-art overrides",
+    "Song/Ming-style atlas, winding roads and vertical place labels",
+    "49 playable settlements and 96 routes",
+    "One-time version-1 save expansion: 25 new settlements, 16 registered residents each"
+  ],
+  "validation": {
+    "python_unittest": { "passed": true, "tests": 223 },
+    "puppet_geometry": { "passed": true, "states": 7290 },
+    "javascript_syntax": { "passed": true, "files": ["static/city.js", "static/hero.js", "static/inventory.js"] },
+    "unity_build": {
+      "passed": true,
+      "editor": "6000.6.7f1",
+      "graphics": "Direct3D11",
+      "assembly_sha256": "0e6eec949b98d235f24861cf134a1ed1530999a8aff6dd5dd2a3271f1ba3d6a5"
+    },
+    "native_acceptance": { "passed": true, "checks": 78 },
+    "city_acceptance": { "passed": true, "towns": 49, "checks": 304 },
+    "restart_acceptance": { "passed": true, "checks": 9 },
+    "existing_save_copies": {
+      "passed": true,
+      "databases": 2,
+      "original_databases_unchanged": true,
+      "month_and_protagonist_preserved": true,
+      "old_npcs_items_and_events_preserved": true,
+      "repeat_load_does_not_register_more_residents": true
+    },
+    "real_model_calls": 0
+  },
+  "default_build_target": "unity/Build/Current/江湖未央.exe",
+  "default_launcher": "启动Unity版.bat",
+  "local_evidence": "output/pr5-integration/",
+  "limits": [
+    "Automated acceptance and screenshot inspection are not exhaustive gameplay or balance testing.",
+    "Private saves, backups, runtime bundles and build products remain outside the public repository."
+  ]
+}

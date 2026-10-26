@@ -25,7 +25,10 @@ def new():
 
 
 def prepare(w):
+    # Map colours are presentation, not history: older saves pick up the current palette.
+    palette = {c['id']: c['color'] for c in COUNTRIES}
     for c in w.countries:
+        c['color'] = palette.get(c['id'], c['color'])
         c.setdefault('border_activity', {})
         c.setdefault('last_year_borders', {})
 

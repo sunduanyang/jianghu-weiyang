@@ -26,7 +26,7 @@ public class UnitySmoke : MonoBehaviour {
         yield return new WaitForSecondsRealtime(.4f);Check("no Unity runtime exceptions",exceptions.Count==0,new J(exceptions.Select(x=>new J(x)).ToList()));Finish();
     }
     IEnumerator Run(){
-        Check("native client ready",client.Ready);Check("24 towns migrated",client.World["locations"].A.Count==24);Check("34 organisations migrated",client.World["factions"].A.Count==34);Check("AI defaults disabled",!client.World["ai"]["config"]["enabled"].B);
+        Check("native client ready",client.Ready);Check("49 towns migrated",client.World["locations"].A.Count==49);Check("34 organisations migrated",client.World["factions"].A.Count==34);Check("AI defaults disabled",!client.World["ai"]["config"]["enabled"].B);
         if(GameClient.Arg("-smokePhase")=="combat"){yield return CombatFlow();yield break;}
         string proof=Path.Combine(client.SaveDir,"acceptance-state.json");
         if(GameClient.Arg("-smokePhase")=="restart"){
