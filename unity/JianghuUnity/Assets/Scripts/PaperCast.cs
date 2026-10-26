@@ -15,6 +15,20 @@ public partial class JianghuApp {
     Vector2 paperSkinScroll;
     float paperBattleStart;
     string paperBattleKey="";
+    double paperGuiPivotDrift;
+    int paperGuiPivotSamples;
+    double paperGuiEndpointDrift;
+    int paperGuiEndpointSamples;
+    readonly bool paperMeasureGui=GameClient.Arg("-smokeDir").Length>0||GameClient.Arg("-paperRegressionDir").Length>0;
+    sealed class PaperFigureDraw {
+        public Rect PixelViewport;
+        public string Skin,Clip;
+        public float Phase;
+        public bool Left,Bones;
+        public PaperPose Pose;
+    }
+    readonly List<PaperFigureDraw> paperDraws=new List<PaperFigureDraw>();
+    Vector2 paperDrawOrigin,paperPixelOrigin;
     J PaperCast {get{if(paperCast==null){var textAsset=Resources.Load<TextAsset>("PaperCast/index");if(textAsset==null)throw new InvalidOperationException("Missing PaperCast/index; run python unity/bake_paper_cast.py");paperCast=J.Parse(textAsset.text);}return paperCast;}}
     Texture2D PaperAtlas(string id){if(!paperAtlases.TryGetValue(id,out var atlas)){atlas=Resources.Load<Texture2D>("PaperCast/"+id);if(atlas==null)throw new InvalidOperationException("Missing paper puppet atlas: "+id);paperAtlases[id]=atlas;}return atlas;}
 
@@ -52,19 +66,50 @@ public partial class JianghuApp {
         GUI.DrawTextureWithTexCoords(target,PaperAtlas(id),PaperUV(part));GUI.color=old;
     }
 
-    void PaperPart(Texture2D atlas,J part,Vector2 pivot,float angle,float size,bool left){
+    void PaperPart(Texture2D atlas,J part,Vector2 pivot,float angle,float size,bool left,Vector2? endpoint){
         Vector2 source=PaperRig.Point(part["pivot"]),dimensions=PaperRig.Point(part["size"]);
         Matrix4x4 old=GUI.matrix;Rect uv=PaperUV(part);
-        if(left){source.x=dimensions.x-source.x;uv.x+=uv.width;uv.width=-uv.width;angle=-angle;}
+        Vector2 tip=endpoint.HasValue?PaperRig.Point(part["tip"]):Vector2.zero;
+        Vector2 expected=paperMeasureGui&&endpoint.HasValue?(Vector2)old.MultiplyPoint3x4(endpoint.Value+paperPixelOrigin):Vector2.zero;
+        if(left){source.x=dimensions.x-source.x;tip.x=dimensions.x-tip.x;uv.x+=uv.width;uv.width=-uv.width;angle=-angle;}
         try{
             // Unity's pivot helper preserves nested GUI clipping offsets. Scaling
             // is applied to coordinates, so the same renderer also works in areas.
-            GUIUtility.RotateAroundPivot(angle,pivot);
+            PaperRotateAroundPivot(angle,pivot);
+            if(paperMeasureGui&&endpoint.HasValue){Vector2 actual=GUI.matrix.MultiplyPoint3x4(pivot+(tip-source)*size+paperPixelOrigin);paperGuiEndpointDrift=Math.Max(paperGuiEndpointDrift,Vector2.Distance(expected,actual));paperGuiEndpointSamples++;}
             GUI.DrawTextureWithTexCoords(new Rect(pivot.x-source.x*size,pivot.y-source.y*size,dimensions.x*size,dimensions.y*size),atlas,uv);
         }finally{GUI.matrix=old;}
     }
+    void PaperRotateAroundPivot(float angle,Vector2 pivot){
+        Vector2 unclipped=pivot+paperPixelOrigin;
+        Vector2 before=paperMeasureGui?(Vector2)GUI.matrix.MultiplyPoint3x4(unclipped):Vector2.zero;
+        // The dedicated paper pass has unit GUI scale. Native rotation and its
+        // clipping offsets now operate in the same pixel coordinate system.
+        GUIUtility.RotateAroundPivot(angle,pivot);
+        if(paperMeasureGui){paperGuiPivotDrift=Math.Max(paperGuiPivotDrift,Vector2.Distance(before,GUI.matrix.MultiplyPoint3x4(unclipped)));paperGuiPivotSamples++;}
+    }
     static Vector2 PaperScreenPoint(Rect r,float fit,bool left,Vector2 point)=>new Vector2(r.center.x+(left?-1:1)*fit*point.x,r.yMax-42*fit+fit*(point.y-238));
     public void DrawPaperFigure(Rect r,string id,string clip,float phase,bool left=false,bool bones=false,PaperPose sampled=null){
+        if(Event.current.type!=EventType.Repaint)return;
+        // The virtual canvas has one explicit area origin and one root matrix.
+        // Project once here; do not mix GUIClip's window and screen conversions.
+        Vector2 a=GUI.matrix.MultiplyPoint3x4(r.min+paperDrawOrigin),b=GUI.matrix.MultiplyPoint3x4(r.max+paperDrawOrigin);
+        paperDraws.Add(new PaperFigureDraw{PixelViewport=Rect.MinMaxRect(a.x,a.y,b.x,b.y),Skin=id,Clip=clip,Phase=phase,Left=left,Bones=bones,Pose=sampled});
+    }
+    void FlushPaperFigures(){
+        if(Event.current.type!=EventType.Repaint||paperDraws.Count==0)return;
+        Matrix4x4 original=GUI.matrix;Color color=GUI.color;
+        try{
+            GUI.matrix=Matrix4x4.identity;
+            foreach(var draw in paperDraws){
+                Rect viewport=draw.PixelViewport;paperPixelOrigin=viewport.position;
+                GUI.BeginGroup(viewport);
+                try{RenderPaperFigure(new Rect(0,0,viewport.width,viewport.height),draw.Skin,draw.Clip,draw.Phase,draw.Left,draw.Bones,draw.Pose);}
+                finally{GUI.EndGroup();}
+            }
+        }finally{GUI.matrix=original;GUI.color=color;paperDraws.Clear();}
+    }
+    void RenderPaperFigure(Rect r,string id,string clip,float phase,bool left,bool bones,PaperPose sampled){
         var skin=PaperCast["skins"][id];if(!skin.Has)throw new InvalidOperationException("Unknown paper skin: "+id);
         var rig=PaperCast["rig"];var pose=sampled??PaperRig.Sample(rig,skin,clip,phase);var p=pose.Joints;
         if(!paperLayers.TryGetValue(id,out var layers)){layers=skin["parts"].D.Values.OrderBy(v=>v["layer"].N).ToList();paperLayers[id]=layers;}
@@ -73,11 +118,12 @@ public partial class JianghuApp {
         try{
             GUI.color=Color.white;var atlas=PaperAtlas(id);
             foreach(var part in layers){
-                Vector2 pivot;float angle,scale;
+                Vector2 pivot;float angle,scale;Vector2? endpoint=null;
                 if(part["bone"].Has){
                     var bone=rig["bones"][part["bone"].S];Vector2 a=p[bone[0].S],b=p[bone[1].S],delta=b-a;
                     Vector2 local=PaperRig.Point(part["tip"])-PaperRig.Point(part["pivot"]);
                     pivot=a;angle=Mathf.Atan2(delta.y,delta.x)*Mathf.Rad2Deg-Mathf.Atan2(local.y,local.x)*Mathf.Rad2Deg;scale=delta.magnitude/local.magnitude;
+                    endpoint=PaperScreenPoint(r,fit,left,b);
                 }else{
                     pivot=p[part["joint"].S];angle=(float)part["angle"].N;
                     string follow=part["follow"].S;
@@ -88,10 +134,10 @@ public partial class JianghuApp {
                     scale=part["width"].Has?(float)(part["width"].N/part["size"][0].N):(float)(part["height"].N/part["size"][1].N);
                     if(part==skin["parts"]["head-neck"])scale=(float)part["height"].N/Mathf.Max(1,PaperRig.Point(part["pivot"]).y);
                 }
-                PaperPart(atlas,part,PaperScreenPoint(r,fit,left,pivot),angle,scale*fit,left);
+                PaperPart(atlas,part,PaperScreenPoint(r,fit,left,pivot),angle,scale*fit,left,endpoint);
             }
             if(bones&&Event.current.type==EventType.Repaint){
-                foreach(var bone in rig["bones"].D.Values){Vector2 a=PaperScreenPoint(r,fit,left,p[bone[0].S]),b=PaperScreenPoint(r,fit,left,p[bone[1].S]);Matrix4x4 m=GUI.matrix;GUIUtility.RotateAroundPivot(Mathf.Atan2(b.y-a.y,b.x-a.x)*Mathf.Rad2Deg,a);Fill(new Rect(a.x,a.y-1,(b-a).magnitude,2),new Color(.2f,.8f,.9f,.85f));GUI.matrix=m;}
+                foreach(var bone in rig["bones"].D.Values){Vector2 a=PaperScreenPoint(r,fit,left,p[bone[0].S]),b=PaperScreenPoint(r,fit,left,p[bone[1].S]);Matrix4x4 m=GUI.matrix;PaperRotateAroundPivot(Mathf.Atan2(b.y-a.y,b.x-a.x)*Mathf.Rad2Deg,a);Fill(new Rect(a.x,a.y-1,(b-a).magnitude,2),new Color(.2f,.8f,.9f,.85f));GUI.matrix=m;}
                 foreach(var joint in p.Values){var point=PaperScreenPoint(r,fit,left,joint);Fill(new Rect(point.x-3,point.y-3,6,6),new Color(.9f,.2f,.15f,1));}
             }
         }finally{GUI.matrix=old;GUI.color=color;}
@@ -166,5 +212,9 @@ public partial class JianghuApp {
     public void PaperSmokeStage(){personScreen=false;dialogueOpen=false;}
     public void PaperSmokeGallery(string clip,bool left){paperPreviewGallery=true;paperPreviewClip=clip;paperPreviewLeft=left;}
     public void PaperSmokeStudio(){paperPreviewGallery=false;paperPreviewClip="walk";paperPreviewLeft=false;paperPreviewBones=true;}
+    public void PaperSmokePose(string skin,string clip,bool left,bool bones,float phase){paperPreviewGallery=false;paperPreviewSkin=skin;paperPreviewClip=clip;paperPreviewLeft=left;paperPreviewBones=bones;paperPreviewAnimate=false;paperPreviewPhase=phase;}
+    public void PaperSmokePlay(bool playing){paperPreviewAnimate=playing;}
+    public void ResetPaperGuiProbe(){paperGuiPivotDrift=0;paperGuiPivotSamples=0;paperGuiEndpointDrift=0;paperGuiEndpointSamples=0;}
+    public bool PaperGuiProbe(out J facts){facts=J.O("width",Screen.width,"height",Screen.height,"pivot_samples",paperGuiPivotSamples,"maximum_pivot_drift_pixels",paperGuiPivotDrift,"endpoint_samples",paperGuiEndpointSamples,"maximum_attachment_error_pixels",paperGuiEndpointDrift);return paperGuiPivotSamples>0&&paperGuiEndpointSamples>0&&paperGuiPivotDrift<.5&&paperGuiEndpointDrift<.5;}
 }
 }
