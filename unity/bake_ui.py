@@ -1096,6 +1096,132 @@ def catmull(points, steps=10):
     return out
 
 
+# ---------------------------------------------------------------- map content: countryside, lakes, names, roads
+FARMING = (0, 1, 3, 6, 10, 11)       # 南宋 金 西夏 大理 高丽 日本: fields and villages
+WOODED = (0, 6, 10, 11)              # broadleaf clumps south of the Huai and on the islands
+LAKES = [('洞庭湖', 112.9, 29.25, 26, 14), ('鄱阳湖', 116.3, 29.1, 13, 20), ('太湖', 120.2, 31.2, 13, 11),
+         ('青海湖', 100.2, 36.9, 22, 12), ('洱海', 100.2, 25.8, 5, 12), ('滇池', 102.7, 24.85, 7, 11),
+         ('巢湖', 117.6, 31.6, 9, 6), ('呼伦湖', 117.4, 49.0, 10, 14), ('兴凯湖', 132.5, 45.0, 16, 12)]
+REGION_NAMES = [('漠北', 104.0, 47.6, 64), ('西域', 82.5, 41.2, 64), ('雪域', 87.5, 32.6, 64), ('河西', 99.5, 39.6, 40),
+                ('中原', 113.8, 35.4, 52), ('江南', 116.8, 28.6, 52), ('岭南', 110.0, 23.6, 48), ('巴蜀', 104.6, 31.2, 48),
+                ('辽东', 123.6, 43.6, 44), ('林海', 129.0, 49.6, 52), ('滇南', 101.6, 23.2, 40)]
+SEA_NAMES = [('东海', 125.0, 28.8, 56), ('南海', 114.5, 18.8, 56), ('渤海', 120.0, 38.9, 30)]
+
+
+def mask_from(paths, W, H, k):
+    m = Image.new('L', (W, H), 0)
+    d = ImageDraw.Draw(m)
+    for path in paths:
+        for poly in polygons(path):
+            d.polygon([(x * k, y * k) for x, y in poly], fill=255)
+    return np.array(m) > 127
+
+
+def ranges_mask(W, H, k, width):
+    m = Image.new('L', (W, H), 0)
+    d = ImageDraw.Draw(m)
+    for _, pts, scale in RANGES:
+        d.line([(x * k, y * k) for x, y in (lonlat(*p) for p in catmull(pts, 10))], fill=255, width=int(width * scale))
+    return np.array(m) > 127
+
+
+def paint_countryside(di, geo, land_np, k, rng):
+    H, W = land_np.shape
+    terr = {t['country']: t['path'] for t in geo['territories']}
+    farm = mask_from([terr[c] for c in FARMING if c in terr], W, H, k) & land_np
+    farm &= ~ranges_mask(W, H, k, 46)
+    for poly in DESERTS:
+        farm &= ~mask_from(['M' + ' L'.join(f'{x},{y}' for x, y in (lonlat(*p) for p in catmull(poly, 6)))], W, H, k)
+    farm &= ndimage.distance_transform_edt(land_np) > 6
+    wood = mask_from([terr[c] for c in WOODED if c in terr], W, H, k) & farm
+    ys, xs = np.nonzero(farm)
+    def field(x, y):
+        s = rng.uniform(8, 15)
+        sk = rng.uniform(-.5, .5)
+        quad = [(x, y), (x + s, y + s * sk * .3), (x + s + s * .35, y + s * .55 + s * sk * .3), (x + s * .35, y + s * .55)]
+        di.polygon(quad, fill=(176, 172, 104, 120), outline=(96, 86, 52, 150))
+        di.line([((quad[0][0] + quad[1][0]) / 2, (quad[0][1] + quad[1][1]) / 2), ((quad[3][0] + quad[2][0]) / 2, (quad[3][1] + quad[2][1]) / 2)], fill=(96, 86, 52, 120), width=1)
+        di.line([((quad[0][0] + quad[3][0]) / 2, (quad[0][1] + quad[3][1]) / 2), ((quad[1][0] + quad[2][0]) / 2, (quad[1][1] + quad[2][1]) / 2)], fill=(96, 86, 52, 120), width=1)
+    def house(x, y, s):
+        di.rectangle((x - s, y - s * .55, x + s, y + s * .35), fill=(226, 212, 176, 235), outline=(60, 50, 38, 220))
+        di.polygon([(x - s * 1.35, y - s * .5), (x - s * .7, y - s * 1.25), (x + s * .7, y - s * 1.25), (x + s * 1.35, y - s * .5)],
+                   fill=(78, 82, 82, 235), outline=(40, 36, 30, 230))
+    def clump(x, y):
+        for _ in range(rng.integers(3, 6)):
+            cx, cy, r = x + rng.normal(0, 5), y + rng.normal(0, 3), rng.uniform(2.6, 4.2)
+            di.ellipse((cx - r, cy - r, cx + r, cy + r), fill=(84, 116, 86, 215), outline=(44, 58, 44, 200))
+            di.line((cx, cy + r, cx, cy + r + 2.5), fill=(44, 58, 44, 200), width=1)
+    marks = []
+    for i in rng.choice(len(xs), size=min(len(xs), 520), replace=False):
+        marks.append((ys[i], xs[i], 'field'))
+    for i in rng.choice(len(xs), size=min(len(xs), 170), replace=False):
+        marks.append((ys[i], xs[i], 'village'))
+    wy, wx = np.nonzero(wood)
+    for i in rng.choice(len(wx), size=min(len(wx), 240), replace=False):
+        marks.append((wy[i], wx[i], 'wood'))
+    for y, x, kind in sorted(marks):                       # back to front
+        if kind == 'field':
+            field(x, y)
+        elif kind == 'village':
+            for _ in range(rng.integers(2, 4)):
+                house(x + rng.normal(0, 5), y + rng.normal(0, 2.5), rng.uniform(2.8, 3.8))
+        else:
+            clump(x, y)
+
+
+def paint_lakes(di, k, rng):
+    for _, lon, lat, rx, ry in LAKES:
+        x, y = lonlat(lon, lat)
+        x, y = x * k, y * k
+        pts = []
+        for a in np.linspace(0, 2 * math.pi, 28, endpoint=False):
+            r = 1 + rng.normal(0, .12)
+            pts.append((x + math.cos(a) * rx * r, y + math.sin(a) * ry * r))
+        pts = catmull(pts + pts[:3], 4)[:-8]
+        di.polygon(pts, fill=(150, 176, 160, 255), outline=rgba(INK, 220))
+        for j in range(-1, 2):                             # a couple of ripple strokes
+            yy = y + j * ry * .35
+            di.arc((x - rx * .5, yy - 3, x - rx * .1, yy + 3), 200, 340, fill=(52, 82, 80, 160), width=1)
+            di.arc((x + rx * .05, yy - 3, x + rx * .45, yy + 3), 200, 340, fill=(52, 82, 80, 160), width=1)
+
+
+def paint_region_names(ink, k):
+    layer = Image.new('RGBA', ink.size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+    # land is labelled live with each power's name; the sheet only names the seas
+    for names, col in ((SEA_NAMES, (40, 74, 72, 130)),):
+        for name, lon, lat, size in names:
+            x, y = lonlat(lon, lat)
+            f = cjk_font(size)
+            step = size * 1.9                               # wide letter spacing, like a painted map caption
+            x0 = x * k - step * (len(name) - 1) / 2
+            for i, ch in enumerate(name):
+                d.text((x0 + i * step, y * k), ch, font=f, fill=col, anchor='mm')
+    return Image.alpha_composite(ink, layer.filter(ImageFilter.GaussianBlur(.4)))
+
+
+def paint_roads(di, geo, k):
+    """驿道 as vermilion dotted lines and 航路 as long ink-teal dashes, painted into the sheet."""
+    for road in geo.get('roads', []):
+        for line in polylines(road['path']):
+            pts = [(x * k, y * k) for x, y in line]
+            dash, gap, col, width = (14, 10, (52, 92, 100, 170), 2) if road['sea'] else (5, 5, (150, 44, 30, 215), 3)
+            phase = 0.0
+            for a, b in zip(pts, pts[1:]):
+                seg = math.dist(a, b)
+                t = 0.0
+                while t < seg:
+                    on = (phase % (dash + gap)) < dash
+                    step = min(seg - t, (dash - phase % (dash + gap)) if on else (dash + gap - phase % (dash + gap)))
+                    step = max(step, .5)
+                    if on:
+                        u0, u1 = t / seg, min(1, (t + step) / seg)
+                        di.line((a[0] + (b[0] - a[0]) * u0, a[1] + (b[1] - a[1]) * u0,
+                                 a[0] + (b[0] - a[0]) * u1, a[1] + (b[1] - a[1]) * u1), fill=col, width=width)
+                    t += step
+                    phase += step
+
+
 def bake_atlas():
     geo = json.loads((ROOT / 'static' / 'geography-compact.json').read_text(encoding='utf-8'))
     W, H = 2048, 1216          # drawn at 1.6x of the 1280x760 map space, saved at 2048x1024
@@ -1190,6 +1316,10 @@ def bake_atlas():
         di.polygon([(x, y - h * .62), (x - h * .48, y), (x + h * .48, y)], fill=(70, 100, 78, 200), outline=(46, 60, 46, 200))
         di.line((x, y, x, y + 3), fill=(46, 60, 46, 200), width=1)
 
+    # countryside first so mountains overlap it: fields, villages and tree clumps; then the big lakes
+    paint_countryside(di, geo, land_np, k, np.random.default_rng(191))
+    paint_lakes(di, k, np.random.default_rng(192))
+
     # mountains: 青绿 peaks (mineral blue-green tops fading to ochre), ink contour on the ridge only
     top_c, mid_c, base_c = np.array([66, 112, 118.]), np.array([116, 146, 110.]), np.array([216, 198, 152.])
     def peak(x, y, size, seed, fade=1.0):
@@ -1265,6 +1395,9 @@ def bake_atlas():
                 w = 3 + 5 * (i / max(1, n - 1))
                 di.line([a, b], fill=fill, width=int(round(w)))
 
+    # winding post roads and sea lanes between the towns (static; the game only highlights them)
+    paint_roads(di, geo, k)
+
     # 长城: crenellated wall along the northern frontier, as drawn on the Song 《华夷图》 (1136)
     draw_great_wall(di, [S(lonlat(*p)) for p in GREAT_WALL])
 
@@ -1272,6 +1405,7 @@ def bake_atlas():
     ink = Image.alpha_composite(ink, ruled_grid(W, H, 64))
     di = ImageDraw.Draw(ink)
     draw_frame(di, W, H)
+    ink = paint_region_names(ink, k)
     ink = title_cartouche(ink, land_np, k)
     di = ImageDraw.Draw(ink)
 
@@ -1324,6 +1458,8 @@ def bake_atlas():
         img.putalpha(Image.fromarray(np.clip(alpha * 255, 0, 255).astype(np.uint8), 'L'))
         path = MAP / f"cell-{cell['place']}.png"
         img.save(path, optimize=True)
+        if not Path(str(path) + '.meta').exists():          # new region: same importer settings as the others
+            write_texture_meta(path, wrap=False, mipmaps=True, compress=True)
     print('baked territory washes', len(geo['cells']))
 
     # ---- markers ----------------------------------------------------------------------
@@ -1354,6 +1490,34 @@ def bake_atlas():
         save(img, MAP / name)
     slip('label.png', (230, 214, 172), rgba(INK, 225), 181)
     slip('label_cap.png', (150, 48, 32), (236, 214, 160, 230), 183)
+
+    # minor places that belong to a town region (not playable stops): small pictograms
+    def site_city(d, s):     # 县: a ruled circle, smaller and quieter than a town square
+        d.ellipse((s * .2, s * .2, s * .8, s * .8), fill=(232, 216, 176, 255), outline=rgba(INK, 235), width=int(s * .07))
+        d.ellipse((s * .4, s * .4, s * .6, s * .6), fill=rgba(INK, 200))
+    marker(24, site_city, 'site_city.png')
+
+    def site_town(d, s):     # 镇集: two roofs
+        for cx, cy, w in ((.36, .62, .2), (.64, .56, .22)):
+            d.rectangle((s * (cx - w * .8), s * (cy - w * .2), s * (cx + w * .8), s * (cy + w * .9)), fill=(232, 216, 176, 255), outline=rgba(INK, 235), width=int(s * .035))
+            d.polygon([(s * (cx - w * 1.15), s * (cy - w * .1)), (s * (cx - w * .55), s * (cy - w * .95)), (s * (cx + w * .55), s * (cy - w * .95)), (s * (cx + w * 1.15), s * (cy - w * .1))],
+                      fill=(78, 82, 82, 255), outline=rgba(INK, 240))
+    marker(24, site_town, 'site_town.png')
+
+    def site_mountain(d, s):  # 山门: a blue-green peak with a small vermilion gate at its foot
+        d.polygon([(s * .08, s * .86), (s * .34, s * .30), (s * .48, s * .46), (s * .62, s * .14), (s * .92, s * .86)], fill=(86, 128, 118, 255), outline=rgba(INK, 240))
+        d.line((s * .62, s * .14, s * .62, s * .5), fill=rgba(INK, 140), width=int(s * .03))
+        d.rectangle((s * .40, s * .64, s * .60, s * .86), fill=rgba(VERMILION), outline=rgba(INK, 240))
+        d.line((s * .34, s * .64, s * .66, s * .64), fill=rgba(INK, 250), width=int(s * .06))
+    marker(24, site_mountain, 'site_mountain.png')
+
+    def site_port(d, s):     # 津渡: a junk under sail on two wave strokes
+        d.polygon([(s * .18, s * .62), (s * .82, s * .62), (s * .70, s * .76), (s * .30, s * .76)], fill=(120, 84, 52, 255), outline=rgba(INK, 240))
+        d.polygon([(s * .50, s * .14), (s * .50, s * .60), (s * .22, s * .58)], fill=(232, 216, 176, 255), outline=rgba(INK, 240))
+        d.line((s * .5, s * .12, s * .5, s * .62), fill=rgba(INK, 250), width=int(s * .04))
+        d.arc((s * .1, s * .74, s * .5, s * .94), 200, 340, fill=(52, 82, 80, 230), width=int(s * .04))
+        d.arc((s * .5, s * .74, s * .9, s * .94), 200, 340, fill=(52, 82, 80, 230), width=int(s * .04))
+    marker(24, site_port, 'site_port.png')
 
     def ring(d, s):
         d.ellipse((s * .06, s * .06, s * .94, s * .94), outline=rgba(VERMILION, 235), width=int(s * .07))
