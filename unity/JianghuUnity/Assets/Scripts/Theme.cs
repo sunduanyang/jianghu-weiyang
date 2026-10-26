@@ -10,6 +10,9 @@ namespace Jianghu {
 //        function medallions. The globe at the bottom right switches 天下 ⇄ 城中.
 //   书 — 人物, 行囊, 功法, 势力, 年谱, 皮影 and settings open as full-screen pages with a bottom tab strip.
 // Textures come from unity/bake_ui.py; fonts are subsets of Noto Serif CJK SC (SIL OFL).
+// Hand-painted replacements go in Resources/UI/Art/ under the same file name and win over the baked
+// texture (bake_ui.py never writes there). Painted icons are optional: Resources/UI/Art/icon_<key>.png
+// replaces the single glyph on a medallion, e.g. icon_bag.png for 囊. See unity/ART_PROMPTS.md.
 public partial class JianghuApp {
     Font fontRegular, fontBold;
     readonly Dictionary<string,Texture2D> uiTextures=new Dictionary<string,Texture2D>();
@@ -30,7 +33,13 @@ public partial class JianghuApp {
     Rect LeftPanel=>rosterOpen?new Rect(8,70,262,640):new Rect(8,70,26,120);
 
     static bool IsStagePage(int page)=>page==0||page==1;
-    Texture2D UI(string name){if(!uiTextures.TryGetValue(name,out var t)){t=Resources.Load<Texture2D>("UI/"+name);uiTextures[name]=t;}return t;}
+    Texture2D UI(string name){if(!uiTextures.TryGetValue(name,out var t)){t=Resources.Load<Texture2D>("UI/Art/"+name);if(t==null)t=Resources.Load<Texture2D>("UI/"+name);uiTextures[name]=t;}return t;}
+    static readonly Dictionary<string,string> IconKeys=new Dictionary<string,string>{
+        {"人","person"},{"囊","bag"},{"武","martial"},{"势","faction"},{"谱","chronicle"},{"影","puppet"},{"演","advance"},
+        {"银","silver"},{"力","action"},{"望","fame"},{"体","health"},{"事","events"},{"义","bonds"}};
+    // A painted icon for a medallion glyph, or null when only the baked skin is present.
+    Texture2D Icon(string glyph,bool population=false){if(population)return UI("icon_population");return IconKeys.TryGetValue(glyph,out var key)?UI("icon_"+key):null;}
+    void Glyph(Rect r,string glyph,GUIStyle style,bool population=false){var icon=Icon(glyph,population);if(icon!=null){float pad=r.width*.17f;GUI.DrawTexture(new Rect(r.x+pad,r.y+pad,r.width-pad*2,r.height-pad*2),icon,ScaleMode.ScaleToFit);}else GUI.Label(r,glyph,style);}
     Texture2D UIOr(string name,Color fallback){var t=UI(name);return t!=null?t:Solid(fallback);}
     static void Skin9(GUIStyle s,Texture2D normal,Texture2D hover,Texture2D active,int border){
         s.normal.background=normal;s.hover.background=hover??normal;s.active.background=active??hover??normal;s.focused.background=normal;
@@ -51,13 +60,13 @@ public partial class JianghuApp {
         skin.label.font=fontRegular;skin.label.fontSize=15;TextColor(skin.label,ink);skin.label.wordWrap=true;
 
         var b=skin.button;
-        Skin9(b,UIOr("btn",new Color(.17f,.20f,.19f)),UIOr("btn_hover",new Color(.22f,.26f,.25f)),UIOr("btn_active",new Color(.11f,.13f,.13f)),6);
+        Skin9(b,UIOr("btn",new Color(.17f,.20f,.19f)),UIOr("btn_hover",new Color(.22f,.26f,.25f)),UIOr("btn_active",new Color(.11f,.13f,.13f)),8);
         b.onNormal.background=UIOr("btn_on",vermilion);b.onHover.background=b.onNormal.background;b.onActive.background=b.onNormal.background;
         b.font=fontRegular;b.fontSize=14;TextColor(b,ink);b.onNormal.textColor=paperText;b.onHover.textColor=paperText;b.onActive.textColor=paperText;
         b.padding=new RectOffset(12,12,8,8);b.margin=new RectOffset(3,3,3,3);b.overflow=new RectOffset(0,0,0,0);b.wordWrap=true;
 
         var f=skin.textField;
-        Skin9(f,UIOr("field",new Color(.07f,.09f,.09f)),null,null,6);
+        Skin9(f,UIOr("field",new Color(.07f,.09f,.09f)),null,null,7);
         f.font=fontRegular;f.fontSize=15;TextColor(f,ink);f.padding=new RectOffset(9,9,8,8);f.overflow=new RectOffset(0,0,0,0);
         skin.textArea=new GUIStyle(f){wordWrap=true};
         skin.settings.cursorColor=brass;skin.settings.selectionColor=new Color(.79f,.64f,.35f,.35f);
@@ -70,7 +79,7 @@ public partial class JianghuApp {
         }
         tg.font=fontRegular;tg.fontSize=14;TextColor(tg,ink);tg.onNormal.textColor=brass;tg.onHover.textColor=brass;
 
-        skin.box.normal.background=UIOr("card",new Color(.16f,.19f,.18f));skin.box.border=new RectOffset(6,6,6,6);
+        skin.box.normal.background=UIOr("card",new Color(.16f,.19f,.18f));skin.box.border=new RectOffset(8,8,8,8);
 
         if(UI("scroll_thumb")!=null){
             var vs=skin.verticalScrollbar;vs.normal.background=UI("scroll_track");vs.border=new RectOffset(0,0,6,6);vs.fixedWidth=12;vs.margin=new RectOffset(3,0,0,0);vs.padding=new RectOffset(0,0,0,0);
@@ -87,7 +96,7 @@ public partial class JianghuApp {
         heading=new GUIStyle(text){font=fontBold,fontSize=20};heading.margin=new RectOffset(4,4,6,4);TextColor(heading,new Color(.93f,.86f,.70f));
         sub=new GUIStyle(text){font=fontBold,fontSize=16};
         chip=new GUIStyle(skin.button){fontSize=13,padding=new RectOffset(9,9,5,5)};
-        selected=new GUIStyle(skin.button){font=fontBold};var onTex=UIOr("btn_on",vermilion);Skin9(selected,onTex,onTex,onTex,6);TextColor(selected,paperText);
+        selected=new GUIStyle(skin.button){font=fontBold};var onTex=UIOr("btn_on",vermilion);Skin9(selected,onTex,onTex,onTex,8);TextColor(selected,paperText);
         card=new GUIStyle(skin.box){padding=new RectOffset(14,14,12,12),margin=new RectOffset(3,3,5,5)};
         field=new GUIStyle(skin.textField);
         seal=new GUIStyle(title){alignment=TextAnchor.MiddleCenter,fontSize=22,wordWrap=false};TextColor(seal,paperText);
@@ -134,8 +143,8 @@ public partial class JianghuApp {
         if(!frameStyles.TryGetValue(name,out var s)){s=new GUIStyle();s.normal.background=t;s.border=new RectOffset(border,border,border,border);frameStyles[name]=s;}
         s.Draw(r,false,false,false,false);
     }
-    void Panel(Rect r){Frame(r,"panel",10);}
-    void BookPanel(Rect r){Frame(r,"panel",10);}
+    void Panel(Rect r){Frame(r,"panel",24);}
+    void BookPanel(Rect r){Frame(r,"panel",24);}
     void StagePanel(Rect r){var screen=UI("screen");if(screen!=null)GUI.DrawTexture(r,screen,ScaleMode.StretchToFill);else Fill(r,new Color(.96f,.89f,.74f));Frame(r,"frame_stage",14);}
     void Outline(Rect r,Color c,float w=1){Fill(new Rect(r.x,r.y,r.width,w),c);Fill(new Rect(r.x,r.yMax-w,r.width,w),c);Fill(new Rect(r.x,r.y,w,r.height),c);Fill(new Rect(r.xMax-w,r.y,w,r.height),c);}
     void Seal(Rect r,string s,GUIStyle style){var t=UI("seal");if(t!=null)GUI.DrawTexture(r,t,ScaleMode.StretchToFill);else Fill(r,vermilion);GUI.Label(r,s,style);}
@@ -150,7 +159,7 @@ public partial class JianghuApp {
     bool Medal(Vector2 c,float size,string glyph,string label,bool on=false,bool enabled=true){
         Rect r=new Rect(c.x-size/2,c.y-size/2,size,size);var old=GUI.color;if(!enabled)GUI.color=new Color(1,1,1,.45f);
         Tex(r,on?"medallion_on":"medallion");if(r.Contains(Event.current.mousePosition)&&enabled)Outline(new Rect(r.x+size*.12f,r.yMax-3,size*.76f,2),brass);
-        GUI.Label(r,glyph,medalGlyph);if(!string.IsNullOrEmpty(label))GUI.Label(new Rect(c.x-50,r.yMax,100,22),label,medalLabel);
+        Glyph(r,glyph,medalGlyph);if(!string.IsNullOrEmpty(label))GUI.Label(new Rect(c.x-50,r.yMax,100,22),label,medalLabel);
         GUI.color=old;bool hit=GUI.Button(new Rect(r.x,r.y,r.width,r.height+22),GUIContent.none,GUIStyle.none);return hit&&enabled&&!Client.Busy;
     }
     bool OverUI(Vector2 m){
@@ -167,7 +176,7 @@ public partial class JianghuApp {
 
     // ---------------------------------------------------------------- 戏 screen chrome
     void Resource(ref float x,string glyph,string value,string label){
-        Rect m=new Rect(x,12,32,32);Tex(m,"medallion");GUI.Label(m,glyph,resGlyph);
+        Rect m=new Rect(x,12,32,32);Tex(m,"medallion");Glyph(m,glyph,resGlyph,label=="在世");
         GUI.Label(new Rect(x+36,8,110,22),value,resValue);GUI.Label(new Rect(x+36,29,110,18),label,caption);
         x+=Mathf.Max(96,resValue.CalcSize(new GUIContent(value)).x+50);
     }

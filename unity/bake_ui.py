@@ -535,6 +535,325 @@ def bake_ui():
     save(img, UI / 'tag_on.png')
 
 
+# ---------------------------------------------------------------- hand-made overrides
+# The first skin above is built from perfect rectangles and 1px rules, which reads as
+# "template UI".  These overrides keep the same file names and 9-slice borders but give
+# every piece a mounted-silk / lacquered-wood / brushed-ink surface: ragged edges,
+# pigment pooling at borders, cloud-head corners and an ink-mountain dock.
+def wrap_noise_1d(n, sigma, seed):
+    rng = np.random.default_rng(seed)
+    v = ndimage.gaussian_filter1d(rng.random(n), sigma, mode='wrap')
+    v -= v.min()
+    return v / max(v.max(), 1e-6)
+
+
+def ragged_mask(h, w, inset, rough, seed, soft=.7):
+    """Rectangle whose edge wanders by up to `rough` px, like torn silk or a brushed border."""
+    m = np.zeros((h, w))
+    m[inset:h - inset, inset:w - inset] = 1
+    dist = ndimage.distance_transform_edt(np.pad(m, 1))[1:-1, 1:-1]
+    n = noise((h, w), 1.6, seed)
+    keep = dist > (n * rough)
+    return ndimage.gaussian_filter(keep.astype(float), soft)
+
+
+def ink_wash(h, w, base, seed, stain=10, pool=0.0, pool_width=8):
+    """Mottled wash with darker blooms; `pool` darkens the edge like pigment drying at the rim."""
+    low = noise((h, w), max(h, w) / 5, seed)
+    mid = noise((h, w), 4, seed + 1)
+    grain = noise((h, w), .7, seed + 2)
+    bloom = np.clip((noise((h, w), max(h, w) / 9, seed + 3) - .62) * 3, 0, 1)
+    shade = (low - .5) * stain + (mid - .5) * stain * .5 + (grain - .5) * 6 - bloom * stain * .9
+    rgb = np.dstack([np.full((h, w), c, float) for c in base]) + shade[..., None]
+    if pool:
+        m = np.zeros((h, w))
+        m[1:-1, 1:-1] = 1
+        d = ndimage.distance_transform_edt(m)
+        rgb *= (1 - pool * np.exp(-d / pool_width))[..., None]
+    return rgb
+
+
+def wobble(d, a, b, col, width, rng, amp=.45, steps=None):
+    steps = steps or max(6, int(math.hypot(b[0] - a[0], b[1] - a[1]) / 4))
+    pts = []
+    drift = 0.0
+    for t in np.linspace(0, 1, steps):
+        drift = drift * .7 + rng.normal(0, amp)
+        nx, ny = -(b[1] - a[1]), b[0] - a[0]
+        L = max(math.hypot(nx, ny), 1e-6)
+        pts.append((a[0] + (b[0] - a[0]) * t + nx / L * drift, a[1] + (b[1] - a[1]) * t + ny / L * drift))
+    d.line(pts, fill=col, width=width, joint='curve')
+
+
+def cloud_head(size, col):
+    """A 云头 corner bracket, drawn for the top-left corner (flip for the others)."""
+    s = size * 4
+    img = Image.new('RGBA', (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    w = max(3, s // 22)
+    # the L bracket
+    d.line((s * .08, s * .95, s * .08, s * .30), fill=col, width=w)
+    d.line((s * .30, s * .08, s * .95, s * .08), fill=col, width=w)
+    # spiral curl filling the corner
+    cx, cy, r = s * .30, s * .30, s * .22
+    d.arc((cx - r, cy - r, cx + r, cy + r), 90, 360, fill=col, width=w)
+    r2 = r * .55
+    d.arc((cx - r2 + r * .2, cy - r2, cx + r2 + r * .2, cy + r2), 180, 450, fill=col, width=w)
+    d.ellipse((cx + r * .2 - w, cy - w, cx + r * .2 + w, cy + w), fill=col)
+    # tails joining the bracket
+    d.arc((s * .08 - r * .0, cy, s * .08 + r * 2 * .0 + r * .44, cy + r * .9), 90, 180, fill=col, width=w)
+    return img.resize((size, size), Image.LANCZOS)
+
+
+def paste_corners(img, corner, inset):
+    w, h = img.size
+    cw, ch = corner.size
+    for flipx, flipy, x, y in ((False, False, inset, inset), (True, False, w - inset - cw, inset),
+                              (False, True, inset, h - inset - ch), (True, True, w - inset - cw, h - inset - ch)):
+        c = corner
+        if flipx:
+            c = c.transpose(Image.FLIP_LEFT_RIGHT)
+        if flipy:
+            c = c.transpose(Image.FLIP_TOP_BOTTOM)
+        img.alpha_composite(c, (x, y))
+
+
+def silk_panel(size, base, seed, alpha=238, rule=BRASS, corners=True, inner=True):
+    rgb = ink_wash(size, size, base, seed, stain=12, pool=.35, pool_width=7)
+    m = ragged_mask(size, size, 1, 2.2, seed + 9)
+    img = from_array(rgb, m * alpha)
+    d = ImageDraw.Draw(img)
+    rng = np.random.default_rng(seed + 11)
+    o = 5
+    for a, b in (((o, o), (size - o, o)), ((size - o, o), (size - o, size - o)),
+                 ((size - o, size - o), (o, size - o)), ((o, size - o), (o, o))):
+        wobble(d, a, b, rgba(rule, 190), 1, rng, amp=.25)
+    if inner:
+        o = 9
+        for a, b in (((o, o), (size - o, o)), ((size - o, o), (size - o, size - o)),
+                     ((size - o, size - o), (o, size - o)), ((o, size - o), (o, o))):
+            wobble(d, a, b, rgba(LINE, 80), 1, rng, amp=.2)
+    if corners:
+        paste_corners(img, cloud_head(18, rgba(rule, 225)), 2)
+    return img
+
+
+def plaque(w, h, base, seed, rule, alpha=245, grain_dir=0):
+    """Lacquered wooden board: streaky grain, ragged edge, worn gilt frame."""
+    rng = np.random.default_rng(seed)
+    g = ndimage.gaussian_filter(rng.random((h, w)), (0.6, 14) if grain_dir == 0 else (14, .6))
+    g = (g - g.min()) / max(g.max() - g.min(), 1e-6)
+    rgb = ink_wash(h, w, base, seed + 1, stain=8, pool=.30, pool_width=5) + ((g - .5) * 22)[..., None]
+    top = np.linspace(1.10, .88, h)[:, None, None]          # lamplight from above
+    rgb *= top
+    m = ragged_mask(h, w, 1, 1.6, seed + 2)
+    img = from_array(rgb, m * alpha)
+    d = ImageDraw.Draw(img)
+    if rule:
+        for o, a in ((3, 210), (6, 70)):
+            for p, q in (((o, o), (w - o, o)), ((w - o, o), (w - o, h - o)), ((w - o, h - o), (o, h - o)), ((o, h - o), (o, o))):
+                wobble(d, p, q, rgba(rule, a), 1, rng, amp=.2)
+        # wear: break the gilt line here and there
+        arr = np.array(img).astype(float)
+        wear = noise((h, w), 1.2, seed + 3) > .70
+        edge = np.zeros((h, w), bool)
+        edge[:5, :] = edge[-5:, :] = edge[:, :5] = edge[:, -5:] = True
+        arr[..., :3] = np.where((wear & edge)[..., None], rgb, arr[..., :3])
+        img = from_array(arr[..., :3], arr[..., 3])
+    return img
+
+
+def brush_ring(s, r0, r1, seed, col, gap=.12):
+    """Ring painted in one brush pass: thickness swells, a dry gap where the brush lifted."""
+    yy, xx = np.mgrid[0:s, 0:s] - (s - 1) / 2
+    r = np.sqrt(xx ** 2 + yy ** 2) / (s / 2)
+    ang = (np.arctan2(yy, xx) + math.pi) / (2 * math.pi)
+    k = np.arange(512)
+    swell = wrap_noise_1d(512, 18, seed)[(ang * 511).astype(int)]
+    thick = (r1 - r0) * (.65 + .7 * swell)
+    mid = (r0 + r1) / 2
+    # the stroke starts and ends at `lift`: taper both ends so the joint reads as one brush pass
+    da = np.abs(((ang - .62 + .5) % 1) - .5)
+    thick = thick * np.clip(da / max(gap, 1e-3), 0, 1) ** .6
+    ring = np.abs(r - mid) < thick / 2
+    a = ndimage.gaussian_filter(ring.astype(float), .6)
+    return from_array(np.zeros((s, s, 3)) + np.array(col[:3], float)[None, None], a * (col[3] if len(col) > 3 else 255))
+
+
+def ink_disc(name, s, fill, seed, rim=BRASS):
+    yy, xx = np.mgrid[0:s, 0:s] - (s - 1) / 2
+    r = np.sqrt(xx ** 2 + yy ** 2) / (s / 2)
+    rgb = ink_wash(s, s, fill, seed, stain=14)
+    rgb *= np.clip(1.12 - r * .35 - yy / s * .45, .55, 1.2)[..., None]
+    edge = 0.90 + (wrap_noise_1d(512, 10, seed + 2)[((np.arctan2(yy, xx) + math.pi) / (2 * math.pi) * 511).astype(int)] - .5) * .03
+    a = ndimage.gaussian_filter((r < edge).astype(float), .8) * 248
+    img = from_array(rgb, a)
+    # faint cloud scroll inside
+    layer = Image.new('RGBA', (s, s), (0, 0, 0, 0))
+    cloud_swirls(ImageDraw.Draw(layer), s, s, np.random.default_rng(seed + 3), 3, rgba(rim, 18), wrap=False)
+    layer.putalpha(ImageChops.multiply(layer.getchannel('A'), Image.fromarray((r < .7).astype(np.uint8) * 255)))
+    img = Image.alpha_composite(img, layer)
+    img = Image.alpha_composite(img, brush_ring(s, .82, .885, seed + 4, rgba(rim, 235), gap=.08))
+    img = Image.alpha_composite(img, brush_ring(s, .70, .725, seed + 5, rgba(rim, 110), gap=.3))
+    save(img, UI / name)
+
+
+def ink_mountains(w, base_y, peak_y, seed, period, rough=6):
+    """Ridge line (per column) for a range of soft ink peaks."""
+    rng = np.random.default_rng(seed)
+    x = np.arange(w)
+    ridge = np.full(w, float(base_y))
+    for _ in range(int(w / period)):
+        c, hgt, wid = rng.uniform(0, w), rng.uniform(.35, 1) * (base_y - peak_y), rng.uniform(.5, 1.3) * period
+        ridge = np.minimum(ridge, base_y - hgt * np.exp(-((x - c) / (wid * .42)) ** 2) ** .8)
+    ridge += (noise((1, w), rough, seed + 1)[0] - .5) * rough * 1.6
+    return ridge
+
+
+def bake_handmade():
+    # panels -----------------------------------------------------------------------
+    save(silk_panel(96, PANEL, 401), UI / 'panel.png')
+    save(silk_panel(96, (27, 33, 33), 402, alpha=255), UI / 'panel_solid.png')
+    card = from_array(ink_wash(64, 64, (40, 49, 46), 403, stain=10, pool=.25, pool_width=5),
+                      ragged_mask(64, 64, 1, 2.0, 404) * 212)
+    save(card, UI / 'card.png')
+
+    # buttons: small lacquered boards; the selected one is a vermilion stamp ----------
+    save(plaque(64, 64, (42, 49, 45), 411, (110, 112, 96)), UI / 'btn.png')
+    save(plaque(64, 64, (56, 62, 54), 412, BRASS), UI / 'btn_hover.png')
+    save(plaque(64, 64, (30, 35, 33), 413, (120, 110, 84)), UI / 'btn_active.png')
+    save(plaque(64, 64, (34, 40, 39), 414, (70, 78, 74), alpha=200), UI / 'btn_off.png')
+    on = plaque(64, 64, (150, 44, 32), 415, (214, 170, 96))
+    save(on, UI / 'btn_on.png')
+
+    # name plaques for the map / city labels -----------------------------------------
+    save(plaque(48, 48, (38, 30, 23), 421, BRASS, alpha=242), UI / 'plaque.png')
+    save(plaque(48, 48, (128, 40, 28), 422, (222, 178, 100), alpha=248), UI / 'plaque_on.png')
+    tag = from_array(ink_wash(32, 32, (24, 27, 25), 423, stain=8, pool=.3, pool_width=4), ragged_mask(32, 32, 1, 1.6, 424) * 215)
+    save(tag, UI / 'tag.png')
+    save(plaque(32, 32, (128, 40, 28), 425, (222, 178, 100)), UI / 'tag_on.png')
+
+    # a horizontal dry-brush stroke for toolbars and the legend strip ----------------
+    w, h = 256, 48
+    yy, xx = np.mgrid[0:h, 0:w]
+    top = 7 + noise((1, w), 5, 431)[0] * 5
+    bot = h - 7 - noise((1, w), 5, 432)[0] * 5
+    left = 4 + noise((h, 1), 2, 433)[:, 0] * 14
+    right = w - 4 - noise((h, 1), 2, 434)[:, 0] * 14
+    m = ((yy > top) & (yy < bot) & (xx > left[:, None]) & (xx < right[:, None])).astype(float)
+    streak = ndimage.gaussian_filter(np.random.default_rng(435).random((h, w)), (.5, 20))
+    streak = (streak - streak.min()) / (streak.max() - streak.min())
+    m *= np.where(streak > .80, .55, 1) * np.where(streak < .12, .8, 1)
+    m = ndimage.gaussian_filter(m, .7)
+    save(from_array(ink_wash(h, w, (14, 20, 19), 436, stain=10), m * 225), UI / 'strip.png')
+
+    # list rows: a wobbly hairline; selection is a brush wash that fades to the right --
+    img = Image.new('RGBA', (64, 64), (0, 0, 0, 0))
+    wobble(ImageDraw.Draw(img), (2, 62), (62, 62), rgba(LINE, 110), 1, np.random.default_rng(441), amp=.3)
+    save(img, UI / 'row.png')
+    img = from_array(ink_wash(64, 64, (60, 70, 64), 442, stain=8), np.full((64, 64), 26.))
+    wobble(ImageDraw.Draw(img), (2, 62), (62, 62), rgba(BRASS, 120), 1, np.random.default_rng(443), amp=.3)
+    save(img, UI / 'row_hover.png')
+    fade = np.clip(1.15 - np.linspace(0, 1, 64), .35, 1)[None, :] * np.ones((64, 1))
+    img = from_array(ink_wash(64, 64, (126, 36, 26), 444, stain=16), fade * 175 * ragged_mask(64, 64, 0, 1.2, 445))
+    d = ImageDraw.Draw(img)
+    rng = np.random.default_rng(446)
+    for x in (1, 2, 3):
+        wobble(d, (x, 2), (x, 62), rgba(BRASS, 230 - x * 30), 1, rng, amp=.2)
+    save(img, UI / 'row_on.png')
+
+    img = from_array(ink_wash(64, 64, (16, 20, 20), 451, stain=6, pool=.25), ragged_mask(64, 64, 1, 1.2, 452) * 240)
+    d = ImageDraw.Draw(img)
+    wobble(d, (2, 61), (62, 61), rgba(BRASS, 150), 1, np.random.default_rng(453), amp=.25)
+    save(img, UI / 'field.png')
+
+    # top bar: ink band with a brushed lower edge and a running 回纹 fret ---------------
+    w, h = 512, 64                                         # drawn squeezed into the 58 px top bar
+    edge = 59 + (wrap_noise_1d(w, 6, 461) - .5) * 6 + (wrap_noise_1d(w, 1.2, 462) - .5) * 2.5
+    yy = np.mgrid[0:h, 0:w][0]
+    alpha = np.clip((edge[None, :] - yy) / 2.0, 0, 1) * np.clip(1.05 - yy / h * .25, 0, 1) * 250
+    # wrap-around noise (crop of a seamless square) so the bar tiles without a seam every 512 px
+    shade = (tile_noise(w, 30, 463)[:h] - .5) * 10 + (tile_noise(w, 3, 464)[:h] - .5) * 5 + (tile_noise(w, .7, 465)[:h] - .5) * 5
+    rgb = np.dstack([np.full((h, w), c, float) for c in (16, 21, 21)]) + shade[..., None]
+    bar = from_array(rgb, alpha)
+    d = ImageDraw.Draw(bar)
+    fret = Image.new('RGBA', (w, h), (0, 0, 0, 0))
+    df = ImageDraw.Draw(fret)
+    y0 = 50                                               # a low 回 fret just above the brushed edge, under the captions
+    for x0 in range(0, w, 16):                            # one unit every 16 px, tiles at 512
+        df.line([(x0, y0 + 6), (x0, y0), (x0 + 11, y0), (x0 + 11, y0 + 5), (x0 + 4, y0 + 5), (x0 + 4, y0 + 2), (x0 + 8, y0 + 2)],
+                fill=rgba(BRASS, 34), width=1)
+    bar = Image.alpha_composite(bar, fret)
+    d = ImageDraw.Draw(bar)
+    rng = np.random.default_rng(464)
+    d.line([(x, edge[x] - 3 + (wrap_noise_1d(w, 3, 465)[x] - .5) * 1.5) for x in range(w)], fill=rgba(BRASS, 170), width=1)
+    save(bar, UI / 'topbar.png', wrap=True)
+
+    # bottom dock: misty ink mountains and rooflines rising behind a dark band -----------
+    W2, H2 = 2048, 192
+    yy, xx = np.mgrid[0:H2, 0:W2]
+    img = Image.new('RGBA', (W2, H2), (0, 0, 0, 0))
+    layers = [(ink_mountains(W2, 70, 0, 471, 260, 8), (52, 70, 66), 120),
+              (ink_mountains(W2, 74, 18, 472, 170, 6), (34, 48, 45), 190),
+              (ink_mountains(W2, 78, 40, 473, 120, 4), (22, 30, 29), 235)]
+    for ridge, col, a in layers:
+        inside = yy > ridge[None, :]
+        mist = np.clip((yy - ridge[None, :]) / 46, 0, 1)            # peaks dark, feet fade into mist
+        al = np.where(inside, a * (1 - .55 * mist), 0)
+        al = ndimage.gaussian_filter(al, .8)
+        img = Image.alpha_composite(img, from_array(ink_wash(H2, W2, col, int(a), stain=12), al))
+    # a few pines on the nearest ridge
+    d = ImageDraw.Draw(img)
+    rng = np.random.default_rng(474)
+    near = layers[2][0]
+    for x in rng.choice(np.arange(60, W2 - 60), 22, replace=False):
+        if abs(x - W2 / 2) < 220:
+            continue
+        y = near[x] + 3
+        hgt = rng.uniform(10, 18)
+        for k in range(3):
+            yy0 = y - hgt * (k + 1) / 3.2
+            wd = hgt * (.55 - k * .14)
+            d.polygon([(x - wd, yy0 + hgt * .22), (x, yy0 - hgt * .12), (x + wd, yy0 + hgt * .22)], fill=(18, 25, 24, 235))
+        d.line((x, y, x, y - hgt * .4), fill=(18, 25, 24, 235), width=1)
+    # the dock band itself: arched under the month dial, brushed top edge
+    edge = 72 - 44 * np.exp(-((xx[0] - W2 / 2) / 330.0) ** 2) + (noise((1, W2), 4, 475)[0] - .5) * 3
+    band = np.clip((yy - edge[None, :]) / 1.5, 0, 1) * 250
+    base = np.array(dark_field(W2, H2, (19, 25, 25), 476, swirls=60, wrap=False).convert('RGB'), float)
+    img = Image.alpha_composite(img, from_array(base, band))
+    d = ImageDraw.Draw(img)
+    d.line([(x, edge[x]) for x in range(0, W2, 2)], fill=rgba(BRASS, 190), width=2)
+    d.line([(x, edge[x] + 6 + (noise((1, W2), 9, 477)[0][x] - .5) * 2) for x in range(0, W2, 2)], fill=rgba(LINE, 120), width=1)
+    save(img, UI / 'bottombar.png')
+
+    # month dial: gold-leaf disc, squares of leaf, brushed dark rim, a cloud over its foot --
+    s = 256
+    yy, xx = np.mgrid[0:s, 0:s] - (s - 1) / 2
+    r = np.sqrt(xx ** 2 + yy ** 2) / (s / 2)
+    light = np.clip(1 - np.sqrt((xx + 30) ** 2 + (yy + 40) ** 2) / (s * .6), 0, 1)
+    lo, hi = np.array([160, 114, 42.]), np.array([236, 202, 116.])
+    disc = lo[None, None] + (hi - lo)[None, None] * light[..., None]
+    rng = np.random.default_rng(481)
+    leaf = np.zeros((s, s))
+    for gy in range(0, s, 34):                                  # gold leaf laid in slightly uneven squares
+        for gx in range(0, s, 34):
+            leaf[gy:gy + 34, gx:gx + 34] = rng.normal(0, 3)
+    leaf = ndimage.shift(leaf, (rng.uniform(0, 8), rng.uniform(0, 8)), mode='wrap')
+    seams = (np.abs(((xx + s / 2 + 3) % 34) - 0) < .8) | (np.abs(((yy + s / 2 + 5) % 34) - 0) < .8)
+    disc += leaf[..., None] + (noise((s, s), 2, 482)[..., None] - .5) * 22 - seams[..., None] * 5
+    disc -= np.clip((noise((s, s), 9, 483) - .7) * 3, 0, 1)[..., None] * 40   # tarnish
+    col = np.where((r < .80)[..., None], disc, np.array([20, 25, 25.])[None, None])
+    a = np.where(r < .97, 255, 0).astype(float)
+    img = from_array(col, ndimage.gaussian_filter(a, .7))
+    img = Image.alpha_composite(img, brush_ring(s, .78, .83, 484, (60, 40, 20, 220), gap=.06))
+    img = Image.alpha_composite(img, brush_ring(s, .91, .955, 485, rgba(BRASS, 220)))
+    save(img, UI / 'moon.png')
+
+    ink_disc('medallion.png', 128, (38, 48, 46), 491)
+    ink_disc('medallion_on.png', 128, (122, 36, 26), 492)
+    ink_disc('globe.png', 256, (32, 42, 40), 493)
+
+
 # ---------------------------------------------------------------- atlas
 def lonlat(lon, lat):
     return 25 + (lon - 73) * 16.5, 25 + (54 - lat) * 18.5
@@ -856,6 +1175,7 @@ def main():
     parser.add_argument('--ui-only', action='store_true')
     args = parser.parse_args()
     bake_ui()
+    bake_handmade()
     if not args.ui_only:
         bake_atlas()
 
