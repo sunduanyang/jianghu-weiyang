@@ -22,7 +22,7 @@ public partial class JianghuApp {
     class RigPose {public Dictionary<string,Vector2> p=new Dictionary<string,Vector2>();public float lean,front,back,sword;}
     struct Piece {public string slot;public Vector2 point;public float angle;public Piece(string s,Vector2 p,float a){slot=s;point=p;angle=a;}}
     string PuppetCycle(string label,string current,string[] options){GUILayout.BeginHorizontal();T(label,small);GUILayout.FlexibleSpace();if(GUILayout.Button(puppetNames[current]+"  ›",chip,GUILayout.Width(150))){int i=Array.IndexOf(options,current);current=options[(i+1)%options.Length];}GUILayout.EndHorizontal();return current;}
-    void DrawPuppets(){
+    void DrawLegacyPuppets(){
         if(!puppetIndex.Has){puppetIndex=J.Parse(Resources.Load<TextAsset>("Puppets/index").text);LoadPuppet();}
         H("皮影换装台");T("平面皮革 · 固定铰点 · 头茬与身段分开 · 前后裙片独立旋转",small);
         GUILayout.BeginHorizontal();GUILayout.BeginVertical(card,GUILayout.Width(245));
@@ -30,7 +30,7 @@ public partial class JianghuApp {
         puppetHead=PuppetCycle("头茬",puppetHead,puppetTypes);puppetUpper=PuppetCycle("上身双臂",puppetUpper,puppetTypes);puppetLower=PuppetCycle("下身双腿",puppetLower,puppetTypes);puppetWaist=PuppetCycle("腰饰",puppetWaist,puppetTypes);
         puppetFacing=PuppetCycle("朝向",puppetFacing,new[]{"right","left"});puppetExpression=PuppetCycle("神情",puppetExpression,new[]{"calm","angry","sad"});puppetPose=PuppetCycle("动作",puppetPose,new[]{"idle","walk","lunge"});
         T("动作进度 "+Mathf.RoundToInt(puppetStep)+"%",small);puppetStep=GUILayout.HorizontalSlider(puppetStep,0,100);T("磨损覆盖 "+Mathf.RoundToInt(puppetWear)+"%",small);puppetWear=GUILayout.HorizontalSlider(puppetWear,0,100);puppetJoints=GUILayout.Toggle(puppetJoints,"标出关节点");puppetAnimate=GUILayout.Toggle(puppetAnimate,"循环演示迈步");if(Btn("保存人物搭配"))SavePuppet();if(Btn("导出当前皮影 SVG"))ExportPuppet();GUILayout.EndVertical();
-        GUILayout.BeginVertical();Rect r=GUILayoutUtility.GetRect(690,470,GUILayout.ExpandWidth(true));Fill(r,new Color(.93f,.87f,.73f));float step=puppetAnimate?(Time.realtimeSinceStartup*.3f%1)*100:puppetStep;DrawPuppet(r,step);T("皮影沿用原版分件轮廓，左右衣襟独立绘制。动作由 Unity 原生关节变换驱动。",small);T("搭配可独立保存；皮影试样尚未接到 NPC 换装。",small);GUILayout.EndVertical();GUILayout.EndHorizontal();
+        GUILayout.BeginVertical();Rect r=GUILayoutUtility.GetRect(690,470,GUILayout.ExpandWidth(true));var lit=UI("screen");if(lit!=null)GUI.DrawTexture(r,lit,ScaleMode.StretchToFill);else Fill(r,new Color(.93f,.87f,.73f));Outline(r,new Color(.17f,.14f,.11f,.45f));float step=puppetAnimate?(Time.realtimeSinceStartup*.3f%1)*100:puppetStep;DrawPuppet(r,step);T("皮影沿用原版分件轮廓，左右衣襟独立绘制。动作由 Unity 原生关节变换驱动。",small);T("搭配可独立保存；皮影试样尚未接到 NPC 换装。",small);GUILayout.EndVertical();GUILayout.EndHorizontal();
     }
     static Vector2 Rot(Vector2 p,float d){float a=d*Mathf.Deg2Rad;return new Vector2(p.x*Mathf.Cos(a)-p.y*Mathf.Sin(a),p.x*Mathf.Sin(a)+p.y*Mathf.Cos(a));}
     static float RigAngle(Vector2 a,Vector2 b)=>Mathf.Atan2(a.x-b.x,b.y-a.y)*Mathf.Rad2Deg;
@@ -70,10 +70,32 @@ public partial class JianghuApp {
             int sx=Mathf.Clamp((int)((lx-bx)/bw*texture.width),0,texture.width-1),sy=Mathf.Clamp(texture.height-1-(int)((ly-by)/bh*texture.height),0,texture.height-1);Color32 s=pixels[sy*texture.width+sx];if(s.a==0)continue;int at=(619-y)*900+x;Color32 d=puppetCanvas[at];float sa=s.a/255f*opacity,da=d.a/255f,oa=sa+da*(1-sa);if(oa<=0)continue;float tail=da*(1-sa);puppetCanvas[at]=new Color32((byte)((s.r*sa+d.r*tail)/oa),(byte)((s.g*sa+d.g*tail)/oa),(byte)((s.b*sa+d.b*tail)/oa),(byte)(oa*255));
         }
     }
+    readonly Dictionary<string,Texture2D> puppetSnapshots=new Dictionary<string,Texture2D>();
+    // Renders a whole puppet (one identity for every slot) into its own cached texture, for the dock and the duel stage.
+    Texture2D PuppetSnapshot(string type,string facing,string expression,string pose,float step){
+        if(!puppetIndex.Has){puppetIndex=J.Parse(Resources.Load<TextAsset>("Puppets/index").text);LoadPuppet();}
+        string key=type+"|"+facing+"|"+expression+"|"+pose+"|"+Mathf.RoundToInt(step);
+        if(puppetSnapshots.TryGetValue(key,out var cached))return cached;
+        if(Event.current==null||Event.current.type!=EventType.Repaint||!puppetIndex["states"][type+"-"+facing+"-"+expression].Has)return null;
+        string head=puppetHead,upper=puppetUpper,lower=puppetLower,waist=puppetWaist,face=puppetFacing,mood=puppetExpression,stance=puppetPose;bool animate=puppetAnimate;float wear=puppetWear;var canvas=puppetCanvas;
+        puppetHead=puppetUpper=puppetLower=puppetWaist=type;puppetFacing=facing;puppetExpression=expression;puppetPose=pose;puppetAnimate=false;puppetWear=0;puppetCanvas=new Color32[900*620];
+        try{
+            foreach(var piece in Pieces(Geometry(step))){var part=Part(piece.slot);RasterPart(piece,part,part["base"].S,1);}
+            var texture=new Texture2D(900,620,TextureFormat.RGBA32,false){filterMode=FilterMode.Bilinear};texture.SetPixels32(puppetCanvas);texture.Apply(false);
+            puppetSnapshots[key]=texture;cached=texture;
+        } finally {
+            puppetHead=head;puppetUpper=upper;puppetLower=lower;puppetWaist=waist;puppetFacing=face;puppetExpression=mood;puppetPose=stance;puppetAnimate=animate;puppetWear=wear;puppetCanvas=canvas;
+        }
+        return cached;
+    }
+    void DrawPuppetFigure(Rect r,string type,string facing,string expression,string pose,float step,Color tint){
+        var t=PuppetSnapshot(type,facing,expression,pose,step);if(t==null)return;var old=GUI.color;GUI.color=tint;GUI.DrawTexture(r,t,ScaleMode.ScaleToFit);GUI.color=old;
+    }
+    string PuppetTypeFor(string sex,int ageMonths)=>ageMonths>=55*12?"daoist":sex=="女"?"escort":"traveller";
     void SavePuppet(){var j=J.O("head",puppetHead,"upper",puppetUpper,"lower",puppetLower,"waist",puppetWaist,"facing",puppetFacing,"expression",puppetExpression,"pose",puppetPose,"step",puppetStep,"wear",puppetWear,"joints",puppetJoints);PlayerPrefs.SetString("jianghu.puppet.v3",j.ToString());PlayerPrefs.Save();Client.Status="皮影搭配已保存";}
     void LoadPuppet(){if(puppetLoaded)return;puppetLoaded=true;try{var j=J.Parse(PlayerPrefs.GetString("jianghu.puppet.v3","{}"));if(!j["head"].Has)return;puppetHead=j["head"].S;puppetUpper=j["upper"].S;puppetLower=j["lower"].S;puppetWaist=j["waist"].S;puppetFacing=j["facing"].S;puppetExpression=j["expression"].S;puppetPose=j["pose"].S;puppetStep=(float)j["step"].N;puppetWear=(float)j["wear"].N;puppetJoints=j["joints"].B;}catch{}}
     void ExportPuppet(){var b=new StringBuilder("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-450 -330 900 620\">");foreach(var p in Pieces(Geometry(puppetStep))){J part=Part(p.slot);b.Append("<g transform=\"translate(").Append(p.point.x.ToString("0.#####",CultureInfo.InvariantCulture)).Append(' ').Append(p.point.y.ToString("0.#####",CultureInfo.InvariantCulture)).Append(") rotate(").Append(p.angle.ToString("0.#####",CultureInfo.InvariantCulture)).Append(")\">").Append(part["svg"].S);if(puppetWear>0)b.Append("<g opacity=\"").Append((puppetWear/100).ToString("0.###",CultureInfo.InvariantCulture)).Append("\">").Append(part[puppetWear>35?"wearHigh":"wearLow"].S).Append("</g>");b.Append("</g>");}b.Append("</svg>");string path=Path.Combine(Client.SaveDir,"puppet-"+DateTime.Now.ToString("yyyyMMdd-HHmmss")+".svg");File.WriteAllText(path,b.ToString());Client.Status="皮影已导出："+path;}
-    public bool ValidateSourceRig(out double maxError){maxError=0;string pose=puppetPose,facing=puppetFacing;bool animate=puppetAnimate;puppetAnimate=false;foreach(var source in J.Parse(Resources.Load<TextAsset>("Puppets/source-poses").text).A){puppetPose=source["pose"].S;puppetFacing=source["facing"].S;var g=Geometry(source["step"].I);foreach(var p in g.p){var expected=source["geometry"][p.Key];maxError=Math.Max(maxError,Vector2.Distance(p.Value,new Vector2((float)expected["x"].N,(float)expected["y"].N)));}foreach(var part in Pieces(g)){var data=Part(part.slot);if(PuppetTexture(data["base"].S)==null)return false;}}puppetPose=pose;puppetFacing=facing;puppetAnimate=animate;return maxError<.001;}
+    public bool ValidateSourceRig(out double maxError){if(!puppetIndex.Has){puppetIndex=J.Parse(Resources.Load<TextAsset>("Puppets/index").text);LoadPuppet();}maxError=0;string pose=puppetPose,facing=puppetFacing;bool animate=puppetAnimate;puppetAnimate=false;foreach(var source in J.Parse(Resources.Load<TextAsset>("Puppets/source-poses").text).A){puppetPose=source["pose"].S;puppetFacing=source["facing"].S;var g=Geometry(source["step"].I);foreach(var p in g.p){var expected=source["geometry"][p.Key];maxError=Math.Max(maxError,Vector2.Distance(p.Value,new Vector2((float)expected["x"].N,(float)expected["y"].N)));}foreach(var part in Pieces(g)){var data=Part(part.slot);if(PuppetTexture(data["base"].S)==null)return false;}}puppetPose=pose;puppetFacing=facing;puppetAnimate=animate;return maxError<.001;}
     public void PuppetSmokeVariant(){puppetHead="daoist";puppetUpper="escort";puppetLower="traveller";puppetWaist="daoist";puppetPose="lunge";puppetFacing="left";puppetExpression="angry";puppetWear=65;puppetStep=100;puppetJoints=true;ExportPuppet();}
 }
 }

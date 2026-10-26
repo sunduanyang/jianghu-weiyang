@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-26",
+  "scope": "Unity city map visual and interaction enhancement",
+  "native_acceptance": "output\\city-map\\visible-acceptance\\acceptance.json",
+  "native_checks": 101,
+  "native_passed": true,
+  "cities": 24,
+  "facilities": 347,
+  "city_rule_tests": {
+    "passed": 11,
+    "command": "python -m unittest discover -s tests -p test_city_maps.py -v"
+  },
+  "full_suite": {
+    "tests": 172,
+    "passed": 171,
+    "failed": 1,
+    "failure": "test_internal_attack_uses_inner_guard_forms_qi_and_cooldown",
+    "targeted_recheck": "passed after concurrent combat changes; full suite was not repeated"
+  },
+  "assets": {
+    "textures": 81,
+    "transparent_textures": 80,
+    "kinds": 15,
+    "method": "Original deterministic procedural art; no commercial game pixels sampled"
+  },
+  "screenshots": [
+    "output\\city-map\\visible-acceptance\\01-city-overview.png",
+    "output\\city-map\\visible-acceptance\\02-city-route.png",
+    "output\\city-map\\visible-acceptance\\03-city-arrival.png",
+    "output\\city-map\\visible-acceptance\\04-city-capital.png",
+    "output\\city-map\\visible-acceptance\\04-city-mountain.png",
+    "output\\city-map\\visible-acceptance\\04-city-oasis.png"
+  ],
+  "manual_ui": "Native window opened and observed; further pointer input stopped because concurrent user input was detected. Drag/hover behavior was not manually signed off. Camera projection and inverse were checked across every tile at four zoom levels.",
+  "hidden_probe": "output/city-map/acceptance was a preliminary hidden-window run; its black screenshots are excluded from visual acceptance. The visible run validates pixel diversity.",
+  "save_policy": "All acceptance and UI actions used isolated output/city-map test saves. No official save was supplied to acceptance.",
+  "sha256": {
+    "unity/JianghuUnity/Assets/Scripts/CityMap.cs": "2c8b638547c1132ecf13327f56bcb4c7ce1a700b72b61b132e6e1938f7b49d21",
+    "unity/JianghuUnity/Assets/Scripts/CityMapSmoke.cs": "1bb974c050492a566b72e164ccb4ad5c077f6e89e41ea38116fe355c84fafb72",
+    "unity/JianghuUnity/Assets/Scripts/WorldUI.cs": "8173dc8a05f671df03e8597f157f5e8aeedfbdd4dcfa20ba54eca3e213fbdc42",
+    "unity/bake_city.py": "77748dba2bd2b46dd448803ae437d748ea4e254fc1f424f17259987291d41d99",
+    "unity/Build/江湖未央_Data/Managed/Assembly-CSharp.dll": "04cef79a9f705aee1e1167f85efd8ed167797b329d3920ebccfdf1a7168b5415"
+  }
+}

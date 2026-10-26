@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-10-26T06:18:13.808803+00:00",
+  "desktop_snapshot_commit": "2163ea29d63515570f11f62b1a8c7692bdfb898c",
+  "shared_renderer_commit": "ab434d39c268c15dc520a9015a432e54b16967e9",
+  "scope": [
+    "Unity full-screen UI and shared paper puppet skins",
+    "24 original skins and 405 independent PNG parts",
+    "81 original city textures, settlement navigation and route overlays",
+    "Pausable continuous combat, forms and casting; web and Unity clients",
+    "Scaled-window puppet attachment repair"
+  ],
+  "source_sha256_lf": {
+    "jianghu/__init__.py": "fa4bb541ffb1012e31431d164c85942d7e66419ef2c01b38bcb64e142969b8d7",
+    "jianghu/ai.py": "909160a85f2cb10ffb5d5ba798e9825c9183a8c81abc8e63ca6905cb41226a57",
+    "jianghu/atlas.py": "fe9215bab9cac2cf8133c64c4c65fd891a7c689a7d5b81a2644e9af3220113ba",
+    "jianghu/atlas_expansion.py": "48c19a4258c81a611d6fd3dcd5b63fa4ae134693ca10caa01c3564abfbf452fd",
+    "jianghu/atlas_migration.py": "c8f548da1c80323f57a999bfdebe5caf98bf29784fdc0d12021d2a61c72d4b5c",
+    "jianghu/careers.py": "1dd311ff15132744808035d63bdf8d16286a8d0097a0f9604d53fedf1349ea38",
+    "jianghu/city_maps.py": "a1e9b687f94d7df43c88fa537af204c9598afa95edb8109d80207ae38441de5a",
+    "jianghu/city_plans.py": "48cb31a3f7355449314e7c1936a6405b419dc7d8d176a774b085beb291659548",
+    "jianghu/combat.py": "f8e040923271bf0d520cb577e2511ded706420f3614aaa3dd252b7d86fe503bf",
+    "jianghu/combat_flow.py": "b6bea419dd699c9909ad9c3f0470b656d586d5606389a5f78c5672748316d90f",
+    "jianghu/demography.py": "47fea0504faf27437fb70db3585c427521d1ff6c101989cf7b406c52b22c4f89",
+    "jianghu/engine.py": "a223b0b2a7185af9988357b8587dca8d7dd1d7141dac6c21cd241c12ae68c91f",
+    "jianghu/government.py": "5a8a9eb25979321b8df43a2b7df776d1309afcbdfe606e68dd9340faada6c765",
+    "jianghu/historical_map.py": "98cb923700e6ca92bd4540c51cd3153cc5ef3245c9c26b6f3a2ada7f983ad65f",
+    "jianghu/items.py": "3bba00b6cfe79c48e2af39af374212e22a9adf975f365e823e17bdff144627ee",
+    "jianghu/martial.py": "4ca0fe98dc562e0c39ed2301facbe43c8d54c5dda028906c9e8b651d193da8e2",
+    "jianghu/organizations.py": "cec0b223c8aa9d26940f9271fa14f08fd3d05c3a1ce26a6da164dc523c0033f4",
+    "jianghu/politics.py": "104df87059c7841f0786537d91b1cee9a208abac27502b1b3b624dfeaebe109c",
+    "jianghu/protagonist.py": "32ed043baaccbb04c6247a51ed414e1889634869d03aafc49737c2b478a3eadf",
+    "jianghu/relationships.py": "0b51546065f525967838cab3a967fbd2102903dca5b9b79864007169e0450fae",
+    "jianghu/server.py": "fe825832263d06291c98deeed4f8085edd9c67aa0ff609fee7332d6d5d4e07a8",
+    "jianghu/settlements.py": "276a66b5969dbefc9953c0180320ca1c77e393b21bfc3ea06ae60eed9033e940",
+    "jianghu/social.py": "17c4430fe4340aaadbd2b51a787fd195a413960229461214dffb5065d0ddf12b",
+    "jianghu/store.py": "f1e28ac64bb8a015e6fb15d776d58b183ee7577e4fbde46383911e52b7d5cfe8",
+    "jianghu/territory.py": "9b0c79f44fd053d654455cad2b7ee8ef4e2457404b59f54984668d586b459ebe",
+    "static/app.js": "84009c842016fa8d73517a6e594abec948a3418a50c00751013379303a98241f",
+    "static/city.js": "ff988e05899d8fb2435074aa4932a00561f053d0a474d8cfd82b0ecc5458912b",
+    "static/combat.css": "fcd78481dc091ca7cf7187c23ecb4beb26cc49b7de3ac472d1990794d7baa4f1",
+    "static/combat.js": "784e9a71c47e3e72c16b3584cfd54b560fd80b4b17932779247a66b05f453496",
+    "static/hero.js": "922c33c8e791c11d70467e1309dfe80bf145e76a93e67646aac38741e3a2a9bb",
+    "static/inventory.js": "6e0d874b78213677f33d31b41d42ff5de897c747461c36f612010834cca24f10",
+    "static/map.js": "e84521341dca0cb01b3d04e23174c99ed23591a95fc4e2b7bf4cfaf12bef68c3",
+    "static/martial.js": "b1e38f15da8beddc60d5f34cb7e840666a800a8605dc61d70125d9330fac19b4",
+    "static/society.js": "882fa7318663e7f99c2629e64091a7365511f1ad1355a98d5e39a7b63021c5c9",
+    "unity/JianghuUnity/Assets/Scripts/BattleScreen.cs": "25fee05252b427724b3e8dcc115a77794fd85b2503151ed19a413d122b6e8ac6",
+    "unity/JianghuUnity/Assets/Scripts/CityMap.cs": "2c8b638547c1132ecf13327f56bcb4c7ce1a700b72b61b132e6e1938f7b49d21",
+    "unity/JianghuUnity/Assets/Scripts/CityMapSmoke.cs": "1bb974c050492a566b72e164ccb4ad5c077f6e89e41ea38116fe355c84fafb72",
+    "unity/JianghuUnity/Assets/Scripts/GameClient.cs": "0e5a7ca61cf4d73feac981e7eec2325584a4bb6dcf74262dbb616ebaaa3c496c",
+    "unity/JianghuUnity/Assets/Scripts/JianghuApp.cs": "98bf02f068c5b5b2b5413fa44e44e341f117f9dfd2504fb04a5d18b71d257a70",
+    "unity/JianghuUnity/Assets/Scripts/Json.cs": "7095efb0f241c03d8acb6411cdceccf55dc84f2d961aaa03ac1e5abac03be60d",
+    "unity/JianghuUnity/Assets/Scripts/Panels.cs": "38bd91abf9b483c4b99fd9047f138c7fac8d057bef156c79745f11697eaaad31",
+    "unity/JianghuUnity/Assets/Scripts/PaperCast.cs": "b6cd2e010bc1f3b17797ee3a53f6f9a93f98bb4ba361ebd86235ad2a196e6df0",
+    "unity/JianghuUnity/Assets/Scripts/PaperRenderSmoke.cs": "fbd5f39d2156b5c49b7e26ce28c549b7fd4cd9392b78f29e27db8639eccad527",
+    "unity/JianghuUnity/Assets/Scripts/PaperRig.cs": "e817a0b45aa5c0d7d429d4706742cc265d610d81f6732274a053621597ec4b1d",
+    "unity/JianghuUnity/Assets/Scripts/PuppetStudio.cs": "4b1d3f1b637e81c1244c0757f23f81306a56f93daa072e335ec2b89653309bab",
+    "unity/JianghuUnity/Assets/Scripts/Screens.cs": "398b6c8a3abb83513b80e020a29b82ef8489d12d6cfa0d5a48ef48129cb48665",
+    "unity/JianghuUnity/Assets/Scripts/Theme.cs": "7d875bd33f357ba596d5737ae2999b1698eb9fbc85e4f120f361adef632d65eb",
+    "unity/JianghuUnity/Assets/Scripts/UnitySmoke.cs": "6517ba6e653bb0194816c1e3433f06077d1cc6629b7b7f0ac6e84f5971268058",
+    "unity/JianghuUnity/Assets/Scripts/WorldUI.cs": "e9ac764dc97a931364255fda8f781ce1ce690eedd1062a39ec0b346b7d5823d7"
+  },
+  "rules": {
+    "command": "python -X utf8 -m unittest discover -s tests -v",
+    "passed": true,
+    "tests": 188,
+    "seconds": 226.685
+  },
+  "javascript_syntax": {
+    "files": [
+      "static/combat.js",
+      "static/martial.js"
+    ],
+    "passed": true
+  },
+  "original_vector_geometry": {
+    "passed": true,
+    "checked_states": 7290
+  },
+  "windows_build": {
+    "unity": "6000.6.7f1",
+    "passed": true,
+    "actual_launcher": "启动Unity版.bat",
+    "assembly_path": "unity/Build/江湖未央_Data/Managed/Assembly-CSharp.dll",
+    "assembly_sha256": "38002f212ae70155f2f39b5d9f61d517649a367eb58ee70e8621ab696f7ffb9b",
+    "backend_matches_source": true
+  },
+  "native_acceptance": {
+    "paper_renderer": {
+      "passed": true,
+      "checks": 118,
+      "local_report": "reports/main-integration-20261026/paper-render/render-regression.json",
+      "skipped": []
+    },
+    "city_maps": {
+      "passed": true,
+      "checks": 101,
+      "local_report": "reports/main-integration-20261026/city-native/acceptance.json",
+      "skipped": []
+    },
+    "full_client": {
+      "passed": true,
+      "checks": 77,
+      "local_report": "reports/main-integration-20261026/full-native/acceptance.json",
+      "skipped": []
+    },
+    "restart": {
+      "passed": true,
+      "checks": 9,
+      "local_report": "reports/main-integration-20261026/full-native/restart.json",
+      "skipped": []
+    },
+    "continuous_combat": {
+      "passed": true,
+      "checks": 24,
+      "local_report": "reports/main-integration-20261026/combat-native/acceptance.json",
+      "skipped": []
+    }
+  },
+  "model_calls": 0,
+  "save_policy": "Native checks ran with explicitly isolated test saves. Personal saves, models, logs, output, runtime bundles and build outputs remain local and are excluded from Git. The main integration log and build backup are retained under reports/main-integration-20261026.",
+  "images": {
+    "validation/current-main/city.png": {
+      "sha256": "03a229ca6a5fec98144b97fe8659445f9e1448f95d7be601de91caf4100beaa1"
+    },
+    "validation/current-main/combat.png": {
+      "sha256": "da365980837fe677138d3004f9fc270bfe18795ce9ba51e60717a1fdbae94e7c"
+    }
+  },
+  "limits": [
+    "Automated native client paths and native screenshots were verified. This run did not manually certify every keyboard shortcut, pointer drag or hover.",
+    "Paper renderer probes check actual rotation pivots and bone-bound attachment tips; they are not exhaustive pixel-level animation acceptance.",
+    "Continuous combat uses deterministic pausable beats, not independent continuous actor timelines."
+  ]
+}

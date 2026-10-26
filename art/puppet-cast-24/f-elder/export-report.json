@@ -1,0 +1,178 @@
+{
+  "id": "f-elder",
+  "size": [
+    1024,
+    1536
+  ],
+  "threshold": 32,
+  "minArea": 300,
+  "expected": 16,
+  "actual": 16,
+  "transparentPixels": 1048125,
+  "components": [
+    {
+      "label": 2,
+      "area": 50868,
+      "bbox": [
+        25,
+        60,
+        300,
+        381
+      ]
+    },
+    {
+      "label": 3,
+      "area": 57337,
+      "bbox": [
+        551,
+        62,
+        774,
+        416
+      ]
+    },
+    {
+      "label": 4,
+      "area": 55036,
+      "bbox": [
+        793,
+        62,
+        1007,
+        417
+      ]
+    },
+    {
+      "label": 1,
+      "area": 52319,
+      "bbox": [
+        331,
+        52,
+        530,
+        456
+      ]
+    },
+    {
+      "label": 7,
+      "area": 21558,
+      "bbox": [
+        829,
+        465,
+        956,
+        740
+      ]
+    },
+    {
+      "label": 8,
+      "area": 20149,
+      "bbox": [
+        570,
+        466,
+        689,
+        739
+      ]
+    },
+    {
+      "label": 5,
+      "area": 25636,
+      "bbox": [
+        66,
+        449,
+        210,
+        757
+      ]
+    },
+    {
+      "label": 6,
+      "area": 25261,
+      "bbox": [
+        345,
+        451,
+        482,
+        757
+      ]
+    },
+    {
+      "label": 11,
+      "area": 15441,
+      "bbox": [
+        84,
+        798,
+        194,
+        1027
+      ]
+    },
+    {
+      "label": 12,
+      "area": 15782,
+      "bbox": [
+        340,
+        802,
+        457,
+        1024
+      ]
+    },
+    {
+      "label": 10,
+      "area": 33443,
+      "bbox": [
+        820,
+        758,
+        959,
+        1096
+      ]
+    },
+    {
+      "label": 9,
+      "area": 34848,
+      "bbox": [
+        569,
+        758,
+        726,
+        1097
+      ]
+    },
+    {
+      "label": 14,
+      "area": 27058,
+      "bbox": [
+        336,
+        1075,
+        445,
+        1413
+      ]
+    },
+    {
+      "label": 13,
+      "area": 27602,
+      "bbox": [
+        86,
+        1075,
+        195,
+        1415
+      ]
+    },
+    {
+      "label": 15,
+      "area": 18201,
+      "bbox": [
+        534,
+        1207,
+        739,
+        1378
+      ]
+    },
+    {
+      "label": 16,
+      "area": 18007,
+      "bbox": [
+        791,
+        1209,
+        995,
+        1378
+      ]
+    }
+  ],
+  "pixel_checks": "All retained artwork RGBA values match the source; other pixels are transparent zero; decoded PNG pixels match the planned isolation exactly.",
+  "parts": 16,
+  "atlas_background_isolated": true,
+  "atlas_rgba_check": "Decoded cleaned atlas exactly matches the union of retained PNG part pixels."
+}

@@ -1,2 +1,6 @@
 # Needed only when regenerating Unity map assets.
 Pillow==12.2.0
+numpy>=1.26
+scipy>=1.11
+# Only needed to rebuild the bundled font subsets (unity/build_fonts.py).
+fonttools>=4.50

@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-26",
+  "project": "江湖未央",
+  "ruleset": 2,
+  "entry": "启动Unity版.bat",
+  "tests": {
+    "count": 188,
+    "seconds": 230.468,
+    "passed": true,
+    "log": "output\\combat-regression-release.log"
+  },
+  "native": {
+    "unity": "6000.6.7f1",
+    "passed": true,
+    "check_count": 24,
+    "report": "output/combat-release-qa/acceptance.json",
+    "screenshots": [
+      "output/combat-release-qa/combat-opening.png",
+      "output/combat-release-qa/combat-windup.png",
+      "output/combat-release-qa/combat-continuous.png",
+      "output/combat-release-qa/combat-result.png"
+    ],
+    "actual_launcher_used": true,
+    "manual_keyboard_validation": "Stopped by user with physical Escape before final key pass."
+  },
+  "build": {
+    "log": "output/combat-build-verified-retry.log",
+    "engine_hashes": {
+      "combat.py": {
+        "source": "f8e040923271bf0d520cb577e2511ded706420f3614aaa3dd252b7d86fe503bf",
+        "built": "f8e040923271bf0d520cb577e2511ded706420f3614aaa3dd252b7d86fe503bf"
+      },
+      "combat_flow.py": {
+        "source": "b6bea419dd699c9909ad9c3f0470b656d586d5606389a5f78c5672748316d90f",
+        "built": "b6bea419dd699c9909ad9c3f0470b656d586d5606389a5f78c5672748316d90f"
+      },
+      "martial.py": {
+        "source": "4ca0fe98dc562e0c39ed2301facbe43c8d54c5dda028906c9e8b651d193da8e2",
+        "built": "4ca0fe98dc562e0c39ed2301facbe43c8d54c5dda028906c9e8b651d193da8e2"
+      },
+      "server.py": {
+        "source": "90e1f725a31c9666d519be0c1b93c7e91aef60cfbf24de232ec4e39bd3ff953e",
+        "built": "90e1f725a31c9666d519be0c1b93c7e91aef60cfbf24de232ec4e39bd3ff953e"
+      }
+    },
+    "engine_matches_source": true
+  },
+  "web": {
+    "verified": [
+      "resource serving",
+      "resume battle",
+      "guard twice",
+      "forms unlock",
+      "wind-up",
+      "surrender",
+      "result summary"
+    ],
+    "screenshot": "output/combat-web/result.png"
+  },
+  "limits": [
+    "Discrete deterministic beats with pausing, not independent real-time actor timelines.",
+    "Original rules and content inspired by distance/combos/casting; not a full Taiwu recreation.",
+    "Prior unfinished battles retain their original rules.",
+    "No complete weapon inventory, acupoint or companion combat systems."
+  ]
+}

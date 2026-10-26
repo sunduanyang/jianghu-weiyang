@@ -2,7 +2,7 @@
 from copy import deepcopy
 import random
 
-from . import martial
+from . import martial, combat_flow
 
 
 def fighter(actor, key, equipment=None):
@@ -16,12 +16,16 @@ def fighter(actor, key, equipment=None):
 
 def start(a, b, seed, battle_id='', spar=True, equipment=None):
     equipment = equipment or (None, None)
-    return {'id': battle_id, 'seed': seed, 'round': 1, 'distance': 3, 'status': 'active',
+    battle = {'id': battle_id, 'seed': seed, 'round': 1, 'distance': 3, 'status': 'active',
             'spar': spar, 'fighters': [fighter(a, a.get('id', 'player'), equipment[0]), fighter(b, b['id'], equipment[1])],
             'log': [], 'winner': None, 'reason': '', 'settled': False}
+    combat_flow.initialize(battle)
+    return battle
 
 
 def actions(battle, side=0):
+    if battle.get('ruleset') == 2:
+        return combat_flow.actions(battle, side)
     if battle['status'] != 'active':
         return []
     f = battle['fighters'][side]
@@ -47,6 +51,8 @@ def finish(battle, winner, reason):
 
 
 def perform(battle, choice, side):
+    if battle.get('ruleset') == 2:
+        return combat_flow.perform(battle, choice, side)
     f, target = battle['fighters'][side], battle['fighters'][1-side]
     item = next((a for a in actions(battle, side) if a['id'] == choice), None)
     if not item or not item['enabled']:
@@ -101,6 +107,8 @@ def perform(battle, choice, side):
 
 
 def ai_choice(battle, side):
+    if battle.get('ruleset') == 2:
+        return combat_flow.ai_choice(battle, side)
     f = battle['fighters'][side]
     available = [a for a in actions(battle, side) if a['enabled']]
     attacks = [a for a in available if a['id'] in martial.ARTS]
@@ -120,6 +128,8 @@ def ai_choice(battle, side):
 
 
 def step(battle, choice):
+    if battle.get('ruleset') == 2:
+        return combat_flow.step(battle, choice)
     # Validate before changing any field, including round and the combat log.
     perform(battle, choice, 0)
     if battle['status'] == 'active':
@@ -140,6 +150,8 @@ def autoplay(battle):
 def view(battle):
     if not battle:
         return None
+    if battle.get('ruleset') == 2:
+        return combat_flow.view(battle)
     return {**deepcopy(battle), 'actions': actions(battle),
             'opponent_intent': next((a['label'] for a in actions(battle, 1)
                                      if a['id'] == ai_choice(battle, 1)), '') if battle['status'] == 'active' else ''}

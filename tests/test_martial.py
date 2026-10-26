@@ -222,6 +222,11 @@ class CombatTests(unittest.TestCase):
         combat.perform(b, 'wave_palm', 0)
         self.assertEqual(f['qi'], qi-12)
         self.assertLessEqual(f['forms'], 2)
+        self.assertEqual(b['fighters'][1]['inner_wounds'], 0)
+        self.assertEqual(f['casting']['action'], 'wave_palm')
+        b['round'] += 1
+        combat.perform(b, 'continue', 0)
+        self.assertEqual(f['qi'], qi-12)
         self.assertGreater(b['fighters'][1]['inner_wounds'], 0)
         self.assertEqual(b['fighters'][1]['outer_wounds'], 0)
         choice = next(a for a in combat.actions(b) if a['id'] == 'wave_palm')
@@ -280,3 +285,10 @@ class MartialHTTPTests(unittest.TestCase):
         self.assertEqual(result['battle']['status'], 'finished')
         self.assertFalse(self.request('/api/state')['battle_active'])
         self.assertEqual(self.request('/api/martial')['battle']['id'], b['id'])
+
+    def test_combat_scripts_and_styles_are_served_with_correct_types(self):
+        for path, mime, marker in [('/combat.js', 'text/javascript', b'combatAutoBeat'),
+                                   ('/combat.css', 'text/css', b'combat-stage')]:
+            with self.subTest(path=path), urllib.request.urlopen(self.base+path) as response:
+                self.assertEqual(response.headers.get_content_type(), mime)
+                self.assertIn(marker, response.read())

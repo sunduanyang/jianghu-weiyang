@@ -3,6 +3,7 @@ __pycache__/
 .runtime/
 data/
 reports/
+output/
 .worktrees/
 unity/JianghuUnity/Library/
 unity/JianghuUnity/Temp/

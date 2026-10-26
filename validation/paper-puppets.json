@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "source_sha256_lf": {
+    "unity/paper-rig.json": "732d84b3af3bec548d0f55c0bcfe1711eb81bc9be1c97a5adb902be0d026092c",
+    "unity/bake_paper_cast.py": "50bb93293ec37a5aada614088f3c63fcad9153aed88b5c4bfb9816418cd663a0",
+    "unity/JianghuUnity/Assets/Scripts/PaperRig.cs": "e817a0b45aa5c0d7d429d4706742cc265d610d81f6732274a053621597ec4b1d",
+    "unity/JianghuUnity/Assets/Scripts/PaperCast.cs": "f1b6580ac5982a9561c97874e79cc796212d082462e15d45d057d6dcdfc25919",
+    "unity/JianghuUnity/Assets/Scripts/Theme.cs": "7d875bd33f357ba596d5737ae2999b1698eb9fbc85e4f120f361adef632d65eb",
+    "unity/JianghuUnity/Assets/Scripts/Screens.cs": "868ae8bf6fa0d782cbd46d74c670ea23e889b466cc1ae34d8016160925ace263",
+    "unity/JianghuUnity/Assets/Scripts/UnitySmoke.cs": "c125c56577960f6a2ab4e009b0b07bd40d12c556d1187822926b1d50a0cd9d79",
+    "tests/test_paper_cast.py": "aec8e5772ee099ad2d95cc26e5bd5db6ad4e860427a28304f386d705b0bdb1e7"
+  },
+  "assets": {
+    "skins": 24,
+    "core_parts": 384,
+    "accessories": 21,
+    "total_parts": 405,
+    "original_art": "art/puppet-cast-24/",
+    "runtime": "unity/JianghuUnity/Assets/Resources/PaperCast/"
+  },
+  "system": {
+    "rig_version": 1,
+    "clips": [
+      "idle",
+      "walk",
+      "talk",
+      "attack",
+      "guard",
+      "hurt",
+      "defeated"
+    ],
+    "shared_views": [
+      "roster portraits",
+      "character sheet",
+      "dialogue figures",
+      "hero dock",
+      "combat portraits and fighters",
+      "skin and animation studio"
+    ],
+    "skin_specific_animation_code": false
+  },
+  "validation": {
+    "python": {
+      "command": "python -m unittest discover -s tests -v",
+      "passed": true,
+      "tests": 172,
+      "seconds": 87.074
+    },
+    "unity": {
+      "version": "6000.6.7f1",
+      "windows_build": true,
+      "standard_launcher_used": true,
+      "full_checks": 77,
+      "full_passed": true,
+      "restart_checks": 9,
+      "restart_passed": true,
+      "final_visual_checks": 31,
+      "final_visual_passed": true,
+      "rig_facts": {
+        "skins": 24,
+        "parts": 405,
+        "clips": 7,
+        "pose_samples": 3528,
+        "max_bone_length_error": 1.52587890625e-05,
+        "transition_joint_jump": 0,
+        "age_sex_profession_controls": true
+      }
+    },
+    "visual_review": [
+      "all 24 assembled skins in idle/right",
+      "all 24 assembled skins in attack/left",
+      "walk with joint overlay",
+      "portrait and dialogue identity",
+      "combat hero portrait and coloured fighter"
+    ],
+    "model_calls": 0
+  },
+  "evidence_images": [
+    "validation/paper-cast/gallery-idle.png",
+    "validation/paper-cast/gallery-attack-left.png",
+    "validation/paper-cast/rig-walk.png"
+  ],
+  "limits": [
+    "Windows Unity player only; no other platform build performed.",
+    "Accessories belong to the skin and are not yet driven by individual inventory equipment.",
+    "No cloth physics or collision-driven animation.",
+    "Private save fixtures and raw runtime logs remain local; they are not published."
+  ]
+}

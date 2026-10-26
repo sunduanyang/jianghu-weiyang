@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "bake:puppets": "node unity/bake_puppets.cjs",
+    "bake:paper-cast": "python unity/bake_paper_cast.py",
     "test:puppets": "node prototypes/shadow-puppets/verify.cjs"
   },
   "devDependencies": {

@@ -16,9 +16,10 @@ public class UnitySmoke : MonoBehaviour {
     void Log(string message,string trace,LogType type){if(type==LogType.Exception||type==LogType.Error)exceptions.Add(message);}
     void Check(string name,bool pass,J facts=null){checks.Add(J.O("check",name,"pass",pass,"facts",facts??new J()));if(!pass)Debug.LogWarning("ACCEPTANCE FAILED: "+name);}
     IEnumerator Call(string path,J body,Action<J> done=null,bool expected=true){bool ok=false;yield return client.Request(path,body,j=>{ok=true;done?.Invoke(j);});Check(path,ok==expected,J.O("request",body??new J(),"expected_success",expected,"error",client.Error));}
-    IEnumerator Snapshot(int page,string name){app.Go(page);yield return new WaitForSecondsRealtime(.8f);yield return new WaitForEndOfFrame();string path=Path.Combine(output,name+".png");var capture=ScreenCapture.CaptureScreenshotAsTexture();if(capture!=null){File.WriteAllBytes(path,capture.EncodeToPNG());Destroy(capture);}yield return new WaitForSecondsRealtime(.2f);Check("render "+name,File.Exists(path)&&new FileInfo(path).Length>10000);}
+    IEnumerator Snapshot(int page,string name){app.Go(page);yield return new WaitForSecondsRealtime(.8f);yield return new WaitForEndOfFrame();string path=Path.Combine(output,name+".png");var capture=ScreenCapture.CaptureScreenshotAsTexture();var colors=new HashSet<int>();if(capture!=null){File.WriteAllBytes(path,capture.EncodeToPNG());var pixels=capture.GetPixels32();for(int i=0;i<pixels.Length;i+=101){var c=pixels[i];colors.Add((c.r<<16)|(c.g<<8)|c.b);}Destroy(capture);}yield return new WaitForSecondsRealtime(.2f);Check("render "+name,File.Exists(path)&&new FileInfo(path).Length>10000&&colors.Count>8,J.O("sampled_colors",colors.Count));}
     IEnumerator Start(){
         output=GameClient.Arg("-smokeDir");Directory.CreateDirectory(output);float timeout=Time.realtimeSinceStartup+100;
+        if(float.TryParse(GameClient.Arg("-smokeDelay","0"),out float delay)&&delay>0)yield return new WaitForSecondsRealtime(delay);
         while(Time.realtimeSinceStartup<timeout){client=FindAnyObjectByType<GameClient>();app=FindAnyObjectByType<JianghuApp>();if(client!=null&&client.Ready&&client.World.Has)break;yield return null;}
         if(client==null||!client.Ready){Check("companion startup",false);Finish();yield break;}
         var work=Run();while(true){bool more=false;object next=null;try{more=work.MoveNext();if(more)next=work.Current;}catch(Exception e){Check("smoke execution",false,J.O("error",e.ToString()));break;}if(!more)break;yield return next;}
@@ -26,6 +27,7 @@ public class UnitySmoke : MonoBehaviour {
     }
     IEnumerator Run(){
         Check("native client ready",client.Ready);Check("24 towns migrated",client.World["locations"].A.Count==24);Check("34 organisations migrated",client.World["factions"].A.Count==34);Check("AI defaults disabled",!client.World["ai"]["config"]["enabled"].B);
+        if(GameClient.Arg("-smokePhase")=="combat"){yield return CombatFlow();yield break;}
         string proof=Path.Combine(client.SaveDir,"acceptance-state.json");
         if(GameClient.Arg("-smokePhase")=="restart"){
             J old=J.Parse(File.ReadAllText(proof));Check("restart preserves month",old["month"].I==client.World["month"].I);Check("restart preserves hero",old["hero"].ToString()==client.World["hero"].ToString());Check("restart preserves inventory",old["inventory"].ToString()==client.World["player"]["inventory"].ToString());yield return Snapshot(0,"restart-world");yield break;
@@ -33,8 +35,11 @@ public class UnitySmoke : MonoBehaviour {
         double initialCalls=client.World["ai"]["calls"].N;
         foreach(string endpoint in new[]{"/api/state","/api/hero","/api/inventory","/api/market","/api/martial","/api/country/0","/api/faction/0","/api/events","/api/ai/logs"})yield return Call(endpoint,null);
         var adult=client.World["npcs"].A.First(n=>n["alive"].B&&n["age_months"].I>=192&&n["health"].N>=60);app.SelectPerson(adult["id"].I);
+        Check("24 skins share one rig and seven clips",app.ValidatePaperCast(out J paperFacts),paperFacts);
         yield return Snapshot(0,"01-atlas");app.SelectedPlace=client.World["hero"]["place"].I;yield return Snapshot(1,"02-city");yield return Snapshot(2,"03-inventory");yield return Snapshot(3,"04-martial");app.OpenInstitution(true,0);yield return Snapshot(4,"05-institutions");yield return Snapshot(5,"06-puppets");yield return Snapshot(6,"07-events");yield return Snapshot(7,"08-local-ai");yield return Snapshot(8,"09-saves");
-        Check("126 native rig poses match original",app.ValidateSourceRig(out double maxRigError),J.O("max_anchor_error",maxRigError));app.PuppetSmokeVariant();yield return Snapshot(5,"06b-puppets-mixed");
+        app.PaperSmokePerson();yield return Snapshot(0,"11-paper-character");Check("NPC portrait and figure resolve the same skin",app.PaperSkinFor(app.Person)==app.PaperSkinFor(client.World["npcs"].A.First(n=>n["id"].I==adult["id"].I)));app.PaperSmokeDialogue();yield return Snapshot(0,"12-paper-dialogue");app.PaperSmokeStage();
+        app.PaperSmokeGallery("idle",false);yield return Snapshot(5,"13-paper-cast-idle");app.PaperSmokeGallery("attack",true);yield return Snapshot(5,"14-paper-cast-attack-left");app.PaperSmokeStudio();yield return Snapshot(5,"15-paper-walk-bones");
+        Check("126 legacy vector rig poses preserved",app.ValidateSourceRig(out double maxRigError),J.O("max_anchor_error",maxRigError));
         if(GameClient.Arg("-smokePhase")=="visuals")yield break;
         yield return Call("/api/intervene",J.O("npc_id",adult["id"],"action","gift"));yield return Call("/api/intervene",J.O("npc_id",adult["id"],"action","talk","text","愿你在此地安顿生活。"));yield return Call("/api/intervene",J.O("npc_id",adult["id"],"action","visit"));
         J shop=new J(),pack=new J(),battle=new J();yield return Call("/api/market",null,j=>shop=j);var buy=shop["items"].A.First(i=>i["template"].S=="herb");yield return Call("/api/items",J.O("operation","buy","item_id",buy["id"]));yield return Call("/api/items",J.O("operation","sell","item_id",buy["id"]));
@@ -59,8 +64,50 @@ public class UnitySmoke : MonoBehaviour {
         yield return Call("/api/hero",client.HeroBody("create","name","Unity验收","sex","女","age",20,"place",45));yield return client.Refresh();yield return Call("/api/hero",client.HeroBody("end_turn"));yield return client.Refresh();yield return Call("/api/save",J.O());
         File.WriteAllText(proof,J.O("month",client.World["month"],"hero",client.World["hero"],"inventory",client.World["player"]["inventory"]).ToString());
     }
+    IEnumerator CombatFlow(){
+        // Explicit new world in the isolated save, independent of private seed fixtures.
+        yield return Call("/api/new",J.O("population",100,"seed",20261026,"prehistory",0));yield return client.Refresh();
+        var adult=client.World["npcs"].A.First(n=>n["alive"].B&&n["age_months"].I>=216&&n["health"].N>30);
+        double calls=client.World["ai"]["calls"].N;
+        yield return Call("/api/intervene",J.O("npc_id",adult["id"],"action","challenge"),j=>app.Martial=j);
+        app.ShowBattleForSmoke();yield return Snapshot(3,"combat-opening");
+        Check("new combat rules enabled",app.Martial["battle"]["ruleset"].I==2);
+        Check("battle starts paused",app.BattlePausedForSmoke);
+        for(int i=0;i<2;i++){app.StepBattleForSmoke("guard");while(client.Busy)yield return null;}
+        var b=app.Martial["battle"];int round=b["round"].I;
+        Check("manual steps accumulate forms",b["fighters"][0]["forms"].I==2);
+        var cast=b["actions"].A.FirstOrDefault(a=>a["id"].S=="reed_cut");
+        Check("new starter has a usable wind-up",cast!=null&&cast["enabled"].B);
+        if(cast!=null&&cast["enabled"].B){
+            app.StepBattleForSmoke("reed_cut");while(client.Busy)yield return null;
+            Check("technique winds up before damage",app.Martial["battle"]["fighters"][0]["casting"]["action"].S=="reed_cut");
+            yield return Snapshot(3,"combat-windup");
+            int pausedRound=app.Martial["battle"]["round"].I;
+            yield return new WaitForSecondsRealtime(2f);
+            Check("pause freezes the battle clock",app.Martial["battle"]["round"].I==pausedRound);
+            app.RunBattleForSmoke(true);yield return new WaitForSecondsRealtime(2.6f);app.RunBattleForSmoke(false);while(client.Busy)yield return null;
+            Check("continuous mode advances combat",app.Martial["battle"]["round"].I>pausedRound);
+            Check("continuous mode resolves own wind-up",!app.Martial["battle"]["fighters"][0]["casting"].Has);
+            yield return Snapshot(3,"combat-continuous");
+        }
+        b=app.Martial["battle"];
+        if(b["status"].S=="active"){
+            yield return Call("/api/battle",J.O("battle_id",b["id"],"round",1,"action","guard"),null,false);
+            yield return Call("/api/martial",null,j=>app.Martial=j);
+            app.StepBattleForSmoke("surrender");while(client.Busy)yield return null;
+        }
+        Check("battle settled once",app.Martial["battle"]["settled"].B);
+        Check("damage summary present",app.Martial["battle"]["summary"].A.Count==2);
+        yield return Snapshot(3,"combat-result");
+        yield return client.Refresh();Check("combat uses no model calls",client.World["ai"]["calls"].N==calls);
+    }
     static string Hash(string p){using(var sha=System.Security.Cryptography.SHA256.Create())using(var f=File.OpenRead(p))return BitConverter.ToString(sha.ComputeHash(f));}
     void Finish(){File.WriteAllText(Path.Combine(output,GameClient.Arg("-smokePhase")=="restart"?"restart.json":"acceptance.json"),J.O("unity",Application.unityVersion,"checks",new J(checks),"passed",checks.All(c=>c["pass"].B)).ToString());Application.Quit(checks.All(c=>c["pass"].B)?0:1);}
 }
-public partial class JianghuApp {public void ShowBattleForSmoke(){battleView=true;}}
+public partial class JianghuApp {
+    public void ShowBattleForSmoke(){battleView=true;}
+    public bool BattlePausedForSmoke=>battlePaused;
+    public void StepBattleForSmoke(string action){SendBattleAction(action);}
+    public void RunBattleForSmoke(bool run){if(battlePaused==run)ToggleBattleClock();}
+}
 }

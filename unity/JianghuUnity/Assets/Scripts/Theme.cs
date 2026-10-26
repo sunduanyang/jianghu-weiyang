@@ -1,0 +1,293 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+namespace Jianghu {
+// Dark lamplight skin with a layout modelled on 太吾绘卷:
+//   戏 — the map (天下 / 城中) fills the screen; panels float over it: top status bar, roster on the left,
+//        travel journal and place card on the right, and a bottom dock with the hero, the month dial and
+//        function medallions. The globe at the bottom right switches 天下 ⇄ 城中.
+//   书 — 人物, 行囊, 功法, 势力, 年谱, 皮影 and settings open as full-screen pages with a bottom tab strip.
+// Textures come from unity/bake_ui.py; fonts are subsets of Noto Serif CJK SC (SIL OFL).
+public partial class JianghuApp {
+    Font fontRegular, fontBold;
+    readonly Dictionary<string,Texture2D> uiTextures=new Dictionary<string,Texture2D>();
+    readonly Dictionary<string,GUIStyle> frameStyles=new Dictionary<string,GUIStyle>();
+    GUIStyle tab, tabOn, rowStyle, rowOnStyle, linkStyle, linkOnStyle, sealSmall, mapLabel, mapLabelOn, mapHalo, mapHaloBold, caption, mapTitle,
+        centerTitle, centerSmall, bigNumber, titleBrush, medalGlyph, medalLabel, tagStyle, tagOnStyle, dialogueStyle, valueStyle, labelRight, resGlyph, resValue, moonLabel, globeOn, globeOff;
+    static readonly int[] BookTabs={-1,2,3,4,6,5,7,8};
+    static readonly string[] BookTabNames={"人物","行囊","功法","势力","年谱","皮影","模型","存档"};
+    float transitionStart=-10;
+    bool transitionToStage, rosterOpen=true, advanceOpen, personScreen, dialogueOpen;
+    int basePage;
+    readonly Color vermilion=new Color(.56f,.17f,.13f), muted=new Color(.60f,.63f,.58f), paperText=new Color(.97f,.93f,.85f),
+        hairline=new Color(.35f,.40f,.38f,.65f), brass=new Color(.79f,.64f,.35f,1f), jade=new Color(.24f,.56f,.48f), shadowInk=new Color(.08f,.06f,.04f,.92f);
+    static readonly Vector2[] HaloOffsets={new Vector2(-1,0),new Vector2(1,0),new Vector2(0,-1),new Vector2(0,1),new Vector2(-1,-1),new Vector2(1,1),new Vector2(-1,1),new Vector2(1,-1)};
+
+    // fixed layout of the 戏 screen (virtual 1680×960)
+    static readonly Rect TopBar=new Rect(0,0,1680,58), Dock=new Rect(0,806,1680,154), Tracker=new Rect(1420,70,252,176), PlaceCard=new Rect(1420,254,252,540), LayerRow=new Rect(590,62,500,34), AdvancePopup=new Rect(1056,598,310,200);
+    Rect LeftPanel=>rosterOpen?new Rect(8,70,262,640):new Rect(8,70,26,120);
+
+    static bool IsStagePage(int page)=>page==0||page==1;
+    Texture2D UI(string name){if(!uiTextures.TryGetValue(name,out var t)){t=Resources.Load<Texture2D>("UI/"+name);uiTextures[name]=t;}return t;}
+    Texture2D UIOr(string name,Color fallback){var t=UI(name);return t!=null?t:Solid(fallback);}
+    static void Skin9(GUIStyle s,Texture2D normal,Texture2D hover,Texture2D active,int border){
+        s.normal.background=normal;s.hover.background=hover??normal;s.active.background=active??hover??normal;s.focused.background=normal;
+        s.onNormal.background=normal;s.onHover.background=hover??normal;s.onActive.background=active??normal;s.onFocused.background=normal;
+        s.border=new RectOffset(border,border,border,border);
+    }
+    static void TextColor(GUIStyle s,Color c){s.normal.textColor=c;s.hover.textColor=c;s.active.textColor=c;s.focused.textColor=c;s.onNormal.textColor=c;s.onHover.textColor=c;s.onActive.textColor=c;s.onFocused.textColor=c;}
+    void LoadFonts(){
+        fontRegular=Resources.Load<Font>("Fonts/NotoSerifSC-Regular");fontBold=Resources.Load<Font>("Fonts/NotoSerifSC-Bold");
+        if(fontRegular==null)fontRegular=Font.CreateDynamicFontFromOSFont(new[]{"Noto Serif CJK SC","SimSun","Microsoft YaHei","Arial"},16);
+        if(fontBold==null)fontBold=fontRegular;
+    }
+
+    void InitSkin(){
+        if(skin!=null)return;
+        LoadFonts();
+        skin=Instantiate(GUI.skin);skin.font=fontRegular;
+        skin.label.font=fontRegular;skin.label.fontSize=15;TextColor(skin.label,ink);skin.label.wordWrap=true;
+
+        var b=skin.button;
+        Skin9(b,UIOr("btn",new Color(.17f,.20f,.19f)),UIOr("btn_hover",new Color(.22f,.26f,.25f)),UIOr("btn_active",new Color(.11f,.13f,.13f)),6);
+        b.onNormal.background=UIOr("btn_on",vermilion);b.onHover.background=b.onNormal.background;b.onActive.background=b.onNormal.background;
+        b.font=fontRegular;b.fontSize=14;TextColor(b,ink);b.onNormal.textColor=paperText;b.onHover.textColor=paperText;b.onActive.textColor=paperText;
+        b.padding=new RectOffset(12,12,8,8);b.margin=new RectOffset(3,3,3,3);b.overflow=new RectOffset(0,0,0,0);b.wordWrap=true;
+
+        var f=skin.textField;
+        Skin9(f,UIOr("field",new Color(.07f,.09f,.09f)),null,null,6);
+        f.font=fontRegular;f.fontSize=15;TextColor(f,ink);f.padding=new RectOffset(9,9,8,8);f.overflow=new RectOffset(0,0,0,0);
+        skin.textArea=new GUIStyle(f){wordWrap=true};
+        skin.settings.cursorColor=brass;skin.settings.selectionColor=new Color(.79f,.64f,.35f,.35f);
+
+        var tg=skin.toggle;
+        if(UI("toggle")!=null){
+            tg.normal.background=UI("toggle");tg.hover.background=UI("toggle");tg.active.background=UI("toggle_on");tg.focused.background=UI("toggle");
+            tg.onNormal.background=UI("toggle_on");tg.onHover.background=UI("toggle_on");tg.onActive.background=UI("toggle");tg.onFocused.background=UI("toggle_on");
+            tg.border=new RectOffset(15,0,15,0);tg.overflow=new RectOffset(0,0,-4,0);tg.padding=new RectOffset(21,4,1,2);
+        }
+        tg.font=fontRegular;tg.fontSize=14;TextColor(tg,ink);tg.onNormal.textColor=brass;tg.onHover.textColor=brass;
+
+        skin.box.normal.background=UIOr("card",new Color(.16f,.19f,.18f));skin.box.border=new RectOffset(6,6,6,6);
+
+        if(UI("scroll_thumb")!=null){
+            var vs=skin.verticalScrollbar;vs.normal.background=UI("scroll_track");vs.border=new RectOffset(0,0,6,6);vs.fixedWidth=12;vs.margin=new RectOffset(3,0,0,0);vs.padding=new RectOffset(0,0,0,0);
+            var th=skin.verticalScrollbarThumb;th.normal.background=UI("scroll_thumb");th.hover.background=UI("scroll_thumb");th.active.background=UI("scroll_thumb");th.border=new RectOffset(0,0,6,6);th.fixedWidth=12;
+        }
+        if(UI("slider_track")!=null){
+            var sl=skin.horizontalSlider;sl.normal.background=UI("slider_track");sl.border=new RectOffset(4,4,0,0);sl.fixedHeight=16;sl.overflow=new RectOffset(0,0,0,0);sl.padding=new RectOffset(0,0,0,0);
+            var st=skin.horizontalSliderThumb;st.normal.background=UI("slider_thumb");st.hover.background=UI("slider_thumb");st.active.background=UI("slider_thumb");st.border=new RectOffset(0,0,0,0);st.overflow=new RectOffset(0,0,0,0);st.fixedWidth=16;st.fixedHeight=16;
+        }
+
+        text=new GUIStyle(skin.label){wordWrap=true,fontSize=15};
+        small=new GUIStyle(text){fontSize=12};TextColor(small,muted);
+        title=new GUIStyle(text){font=fontBold,fontSize=30};
+        heading=new GUIStyle(text){font=fontBold,fontSize=20};heading.margin=new RectOffset(4,4,6,4);TextColor(heading,new Color(.93f,.86f,.70f));
+        sub=new GUIStyle(text){font=fontBold,fontSize=16};
+        chip=new GUIStyle(skin.button){fontSize=13,padding=new RectOffset(9,9,5,5)};
+        selected=new GUIStyle(skin.button){font=fontBold};var onTex=UIOr("btn_on",vermilion);Skin9(selected,onTex,onTex,onTex,6);TextColor(selected,paperText);
+        card=new GUIStyle(skin.box){padding=new RectOffset(14,14,12,12),margin=new RectOffset(3,3,5,5)};
+        field=new GUIStyle(skin.textField);
+        seal=new GUIStyle(title){alignment=TextAnchor.MiddleCenter,fontSize=22,wordWrap=false};TextColor(seal,paperText);
+        sealSmall=new GUIStyle(seal){fontSize=15};
+
+        tab=new GUIStyle(skin.button){font=fontRegular,fontSize=19,padding=new RectOffset(18,18,6,8),margin=new RectOffset(2,2,0,0),wordWrap=false,alignment=TextAnchor.MiddleCenter};
+        Skin9(tab,null,UI("tab_hover"),UI("tab_hover"),6);TextColor(tab,ink);
+        tabOn=new GUIStyle(tab){font=fontBold};var brush=UIOr("tab_brush",vermilion);Skin9(tabOn,brush,brush,brush,24);TextColor(tabOn,paperText);
+        rowStyle=new GUIStyle(skin.button){alignment=TextAnchor.MiddleLeft,fontSize=14,padding=new RectOffset(12,10,8,8),margin=new RectOffset(0,0,0,0)};
+        Skin9(rowStyle,UI("row"),UI("row_hover"),UI("row_on"),6);TextColor(rowStyle,ink);
+        rowOnStyle=new GUIStyle(rowStyle);var rowSelected=UIOr("row_on",new Color(.40f,.14f,.10f));Skin9(rowOnStyle,rowSelected,rowSelected,rowSelected,6);
+        linkStyle=new GUIStyle(skin.label){fontSize=14,alignment=TextAnchor.MiddleCenter,wordWrap=false,padding=new RectOffset(8,8,6,6)};TextColor(linkStyle,muted);linkStyle.hover.textColor=brass;
+        linkOnStyle=new GUIStyle(linkStyle){font=fontBold};TextColor(linkOnStyle,brass);
+        mapLabel=new GUIStyle(text){fontSize=13,wordWrap=false,alignment=TextAnchor.MiddleLeft,padding=new RectOffset(2,2,0,0),margin=new RectOffset(0,0,0,0)};TextColor(mapLabel,ink);
+        mapLabelOn=new GUIStyle(mapLabel){font=fontBold};TextColor(mapLabelOn,brass);
+        mapHalo=new GUIStyle(mapLabel);TextColor(mapHalo,new Color(.06f,.07f,.07f,.85f));
+        mapHaloBold=new GUIStyle(mapLabelOn);TextColor(mapHaloBold,new Color(.06f,.07f,.07f,.85f));
+        caption=new GUIStyle(small){alignment=TextAnchor.MiddleLeft,wordWrap=false};
+        mapTitle=new GUIStyle(sub){alignment=TextAnchor.UpperCenter,fontSize=17,wordWrap=false};
+        centerTitle=new GUIStyle(sub){fontSize=24,alignment=TextAnchor.MiddleCenter,wordWrap=false};TextColor(centerTitle,new Color(.95f,.88f,.72f));
+        centerSmall=new GUIStyle(small){alignment=TextAnchor.MiddleCenter,wordWrap=false};
+        bigNumber=new GUIStyle(sub){fontSize=44,alignment=TextAnchor.MiddleCenter,wordWrap=false};TextColor(bigNumber,new Color(.24f,.15f,.06f));
+        titleBrush=new GUIStyle(sub){fontSize=64,alignment=TextAnchor.UpperLeft,wordWrap=false};TextColor(titleBrush,new Color(.79f,.64f,.35f,.55f));
+        medalGlyph=new GUIStyle(sub){fontSize=24,alignment=TextAnchor.MiddleCenter,wordWrap=false};TextColor(medalGlyph,new Color(.93f,.83f,.60f));
+        medalLabel=new GUIStyle(text){fontSize=14,alignment=TextAnchor.MiddleCenter,wordWrap=false};
+        tagStyle=new GUIStyle(text){fontSize=13,alignment=TextAnchor.MiddleCenter,wordWrap=false,padding=new RectOffset(5,5,1,1),margin=new RectOffset(0,0,0,0)};
+        Skin9(tagStyle,UIOr("tag",new Color(.07f,.09f,.09f,.8f)),null,null,4);TextColor(tagStyle,ink);
+        tagOnStyle=new GUIStyle(tagStyle){font=fontBold};var tagOn=UIOr("tag_on",vermilion);Skin9(tagOnStyle,tagOn,tagOn,tagOn,4);TextColor(tagOnStyle,paperText);
+        dialogueStyle=new GUIStyle(text){fontSize=21,alignment=TextAnchor.MiddleCenter,wordWrap=true};TextColor(dialogueStyle,new Color(.95f,.91f,.82f));
+        valueStyle=new GUIStyle(sub){alignment=TextAnchor.MiddleRight,wordWrap=false,fontSize=15};
+        labelRight=new GUIStyle(text){alignment=TextAnchor.MiddleRight,wordWrap=false};
+        resGlyph=new GUIStyle(medalGlyph){fontSize=15};
+        resValue=new GUIStyle(sub){wordWrap=false,fontSize=16};
+        moonLabel=new GUIStyle(medalLabel);TextColor(moonLabel,new Color(.26f,.17f,.07f));
+        globeOn=new GUIStyle(medalGlyph);TextColor(globeOn,new Color(.98f,.88f,.62f));
+        globeOff=new GUIStyle(medalGlyph);TextColor(globeOff,muted);
+    }
+
+    // ---------------------------------------------------------------- drawing helpers
+    void Tile(Rect r,string name){var t=UI(name);if(t==null){Fill(r,paper);return;}GUI.DrawTextureWithTexCoords(r,t,new Rect(r.x/t.width,r.y/t.height,r.width/t.width,r.height/t.height));}
+    void Paper(Rect r,string name="paper"){Tile(r,name);}
+    void Frame(Rect r,string name,int border){
+        if(Event.current.type!=EventType.Repaint)return;var t=UI(name);if(t==null)return;
+        if(!frameStyles.TryGetValue(name,out var s)){s=new GUIStyle();s.normal.background=t;s.border=new RectOffset(border,border,border,border);frameStyles[name]=s;}
+        s.Draw(r,false,false,false,false);
+    }
+    void Panel(Rect r){Frame(r,"panel",10);}
+    void BookPanel(Rect r){Frame(r,"panel",10);}
+    void StagePanel(Rect r){var screen=UI("screen");if(screen!=null)GUI.DrawTexture(r,screen,ScaleMode.StretchToFill);else Fill(r,new Color(.96f,.89f,.74f));Frame(r,"frame_stage",14);}
+    void Outline(Rect r,Color c,float w=1){Fill(new Rect(r.x,r.y,r.width,w),c);Fill(new Rect(r.x,r.yMax-w,r.width,w),c);Fill(new Rect(r.x,r.y,w,r.height),c);Fill(new Rect(r.xMax-w,r.y,w,r.height),c);}
+    void Seal(Rect r,string s,GUIStyle style){var t=UI("seal");if(t!=null)GUI.DrawTexture(r,t,ScaleMode.StretchToFill);else Fill(r,vermilion);GUI.Label(r,s,style);}
+    void Tex(Rect r,string name){var t=UI(name);if(t!=null)GUI.DrawTexture(r,t,ScaleMode.StretchToFill);}
+    void HaloLabel(Rect r,string s,GUIStyle style,GUIStyle halo){
+        if(Event.current.type==EventType.Repaint)foreach(var d in HaloOffsets)GUI.Label(new Rect(r.x+d.x,r.y+d.y,r.width,r.height),s,halo);
+        GUI.Label(r,s,style);
+    }
+    Rect TagRect(Vector2 anchorLeft,string s,bool on){float w=(on?tagOnStyle:tagStyle).CalcSize(new GUIContent(s)).x+4;return new Rect(anchorLeft.x,anchorLeft.y-10,w,20);}
+    void TagLabel(Rect r,string s,bool on){GUI.Label(r,s,on?tagOnStyle:tagStyle);}
+    // A round medallion with a single glyph and a caption underneath; returns true when clicked.
+    bool Medal(Vector2 c,float size,string glyph,string label,bool on=false,bool enabled=true){
+        Rect r=new Rect(c.x-size/2,c.y-size/2,size,size);var old=GUI.color;if(!enabled)GUI.color=new Color(1,1,1,.45f);
+        Tex(r,on?"medallion_on":"medallion");if(r.Contains(Event.current.mousePosition)&&enabled)Outline(new Rect(r.x+size*.12f,r.yMax-3,size*.76f,2),brass);
+        GUI.Label(r,glyph,medalGlyph);if(!string.IsNullOrEmpty(label))GUI.Label(new Rect(c.x-50,r.yMax,100,22),label,medalLabel);
+        GUI.color=old;bool hit=GUI.Button(new Rect(r.x,r.y,r.width,r.height+22),GUIContent.none,GUIStyle.none);return hit&&enabled&&!Client.Busy;
+    }
+    bool OverUI(Vector2 m){
+        if(personScreen||dialogueOpen||!IsStagePage(Page))return true;
+        if(TopBar.Contains(m)||LeftPanel.Contains(m)||Tracker.Contains(m)||PlaceCard.Contains(m))return true;
+        if(m.y>Dock.y+40||new Rect(740,812,200,150).Contains(m)||new Rect(1520,780,160,180).Contains(m)||new Rect(0,712,300,248).Contains(m))return true;
+        if(Page==0&&LayerRow.Contains(m))return true;
+        if(advanceOpen&&AdvancePopup.Contains(m))return true;
+        return false;
+    }
+    void Portrait(Rect r,int id,string sex,int ageMonths,bool silhouette=false){
+        DrawPaperPortrait(r,PaperPerson(id,sex,ageMonths),id<0,silhouette);
+    }
+
+    // ---------------------------------------------------------------- 戏 screen chrome
+    void Resource(ref float x,string glyph,string value,string label){
+        Rect m=new Rect(x,12,32,32);Tex(m,"medallion");GUI.Label(m,glyph,resGlyph);
+        GUI.Label(new Rect(x+36,8,110,22),value,resValue);GUI.Label(new Rect(x+36,29,110,18),label,caption);
+        x+=Mathf.Max(96,resValue.CalcSize(new GUIContent(value)).x+50);
+    }
+    void DrawTopBar(){
+        var t=UI("topbar");if(t!=null)GUI.DrawTextureWithTexCoords(TopBar,t,new Rect(0,0,TopBar.width/t.width,1));else Fill(TopBar,new Color(.07f,.09f,.09f,.95f));
+        var p=W["player"];float x=14;
+        Resource(ref x,"银",Num(p["wealth"]),"银两");
+        Resource(ref x,"力",Hero["created"].B?Hero["points"].S+" / "+Hero["max_points"].S:"—","行动力");
+        Resource(ref x,"望",Num(p["reputation"]),"声望");
+        Resource(ref x,"武",Num(p["skill"]),"武学");
+        Resource(ref x,"体",Num(p["health"]),"体力");
+        GUI.Label(new Rect(640,4,400,30),W["date"].S,centerTitle);
+        GUI.Label(new Rect(640,32,400,20),W["battle_active"].B?"切磋进行中":W["autoplay"].B?"自行演化":W["job"]["remaining"].I>0?"推演中 · 余"+W["job"]["remaining"].S+"月":"江湖已暂停",centerSmall);
+        Fill(new Rect(700,52,280,1),new Color(.79f,.64f,.35f,.6f));
+        float rx=1110;
+        Resource(ref rx,"人",W["population"].S,"在世");
+        Resource(ref rx,"事",W["events"].S,"事件");
+        Resource(ref rx,"义",W["sworn_bonds"].S,"结义");
+        if(GUI.Button(new Rect(1560,12,48,34),"模型",Page==7?linkOnStyle:linkStyle))Go(7);
+        if(GUI.Button(new Rect(1612,12,58,34),"存档",Page==8?linkOnStyle:linkStyle))Go(8);
+    }
+    void DrawLayerRow(){
+        GUILayout.BeginArea(LayerRow);GUILayout.BeginHorizontal();GUILayout.FlexibleSpace();
+        foreach(string layer in new[]{"疆域","州路","门派","行路"})if(GUILayout.Button(layer,mapLayer==layer?selected:chip,GUILayout.Height(30)))mapLayer=layer;
+        if(GUILayout.Button("全图",chip,GUILayout.Height(30))){mapZoom=1;mapPan=Vector2.zero;}
+        GUILayout.FlexibleSpace();GUILayout.EndHorizontal();GUILayout.EndArea();
+    }
+    void DrawTracker(){
+        Panel(Tracker);
+        GUILayout.BeginArea(new Rect(Tracker.x+12,Tracker.y+8,Tracker.width-24,Tracker.height-14));
+        GUILayout.BeginHorizontal();GUILayout.Label("行旅手记",sub);GUILayout.FlexibleSpace();if(GUILayout.Button("年谱 ›",linkStyle))Go(6);GUILayout.EndHorizontal();
+        var notes=Hero["journal"].A.Count>0?Hero["journal"].A.AsEnumerable().Reverse().Take(3).ToList():W["world_events"].A.Take(3).ToList();
+        if(notes.Count==0)GUILayout.Label("江湖尚无新事。",small);
+        foreach(var e in notes){string s=e["summary"].Has?e["summary"].S:e["text"].Has?e["text"].S:e.S;if(s.Length>34)s=s.Substring(0,33)+"…";if(GUILayout.Button(s,rowStyle)&&e["id"].Has)OpenEvent(e["id"].I);}
+        GUILayout.EndArea();
+    }
+    void DrawDock(){
+        var bar=UI("bottombar");if(bar!=null)GUI.DrawTexture(Dock,bar,ScaleMode.StretchToFill);else Fill(new Rect(0,850,1680,110),new Color(.08f,.10f,.10f,.96f));
+        // hero (left)
+        Rect hp=new Rect(4,712,200,240);
+        if(Hero["created"].B){DrawPaperPerson(hp,Hero,true);GUI.Label(new Rect(208,880,200,24),Hero["name"].S,sub);GUI.Label(new Rect(208,904,260,20),Hero["place_name"].S+" · "+Hero["position_name"].S,caption);
+            if(GUI.Button(new Rect(208,926,90,24),"定位主角",linkStyle)){SelectedPlace=Hero["place"].I;mapZoom=1.6f;mapPan=new Vector2(640-(float)Place(SelectedPlace)["x"].N,380-(float)Place(SelectedPlace)["y"].N);if(Page!=0)Go(0);}}
+        else{DrawPaperPerson(hp,J.O("sex",heroSex,"age_months",int.TryParse(heroAge,out int ha)?ha*12:216),true);GUI.Label(new Rect(208,880,240,24),"尚未立主角",sub);if(GUI.Button(new Rect(208,906,110,30),"创建主角",selected))creatingHero=!creatingHero;}
+        // month dial (centre)
+        Rect moon=new Rect(765,812,150,150);Tex(moon,"moon");
+        bool hero=Hero["created"].B;
+        GUI.Label(new Rect(moon.x,moon.y+30,moon.width,60),hero?Hero["points"].S:"推",bigNumber);
+        GUI.Label(new Rect(moon.x,moon.y+86,moon.width,24),hero?"结束本月":"推演一月",moonLabel);
+        if(GUI.Button(moon,GUIContent.none,GUIStyle.none)&&!Client.Busy&&!W["battle_active"].B){if(hero){if(Paused)HeroAction("end_turn");}else Control("advance",1);}
+        // function medallions
+        float y=900;
+        if(Medal(new Vector2(500,y),60,"人","人物",personScreen))OpenPersonScreen();
+        if(Medal(new Vector2(585,y),60,"囊","行囊",Page==2))Go(2);
+        if(Medal(new Vector2(670,y),60,"武","功法",Page==3))Go(3);
+        if(Medal(new Vector2(1010,y),60,"势","势力",Page==4))Go(4);
+        if(Medal(new Vector2(1095,y),60,"谱","年谱",Page==6))Go(6);
+        if(Medal(new Vector2(1180,y),60,"影","皮影",Page==5))Go(5);
+        if(Medal(new Vector2(1265,y),60,"演","推演",advanceOpen))advanceOpen=!advanceOpen;
+        // world / city globe (bottom right)
+        Rect g=new Rect(1528,792,144,144);Tex(g,"globe");
+        Fill(new Rect(g.x+30,g.center.y,g.width-60,1),new Color(.79f,.64f,.35f,.6f));
+        GUI.Label(new Rect(g.x,g.y+26,g.width,40),"天下",Page==0?globeOn:globeOff);
+        GUI.Label(new Rect(g.x,g.y+78,g.width,40),"城中",Page==1?globeOn:globeOff);
+        if(GUI.Button(new Rect(g.x,g.y,g.width,g.height/2),GUIContent.none,GUIStyle.none)&&Page!=0)Go(0);
+        if(GUI.Button(new Rect(g.x,g.center.y,g.width,g.height/2),GUIContent.none,GUIStyle.none)&&Page!=1){if(Hero["created"].B&&SelectedPlace!=Hero["place"].I&&Page==1)SelectedPlace=Hero["place"].I;Go(1);}
+        // status toast above the dial
+        string status=!string.IsNullOrEmpty(Client.Error)?"提示："+Client.Error:Client.Busy?"正在结算，请稍候…":Client.Status;
+        if(!string.IsNullOrEmpty(status)){float w=Mathf.Min(760,small.CalcSize(new GUIContent(status)).x+30);Rect sr=new Rect(840-w/2,776,w,24);GUI.Label(sr,status,tagStyle);}
+    }
+    void DrawHeroCreation(){
+        if(Hero["created"].B||!creatingHero)return;
+        Rect r=new Rect(20,560,330,170);Panel(r);
+        GUILayout.BeginArea(new Rect(r.x+14,r.y+10,r.width-28,r.height-18));
+        GUILayout.Label("立一名主角，走自己的路",sub);
+        GUILayout.BeginHorizontal();heroName=GUILayout.TextField(heroName,GUILayout.Width(120));heroSex=Cycle(heroSex,new[]{"男","女"});heroAge=GUILayout.TextField(heroAge,GUILayout.Width(50));GUILayout.Label("岁",small);GUILayout.EndHorizontal();
+        GUILayout.Label("出身："+Place(SelectedPlace)["name"].S+"（在舆图上点选城镇）",small);
+        if(Btn("此身入江湖",Paused)&&int.TryParse(heroAge,out int age)){HeroAction("create","name",heroName,"sex",heroSex,"age",age,"place",SelectedPlace);creatingHero=false;}
+        GUILayout.EndArea();
+    }
+    void DrawAdvance(){
+        if(!advanceOpen)return;Panel(AdvancePopup);
+        GUILayout.BeginArea(new Rect(AdvancePopup.x+14,AdvancePopup.y+10,AdvancePopup.width-28,AdvancePopup.height-18));
+        GUILayout.Label("世界推演",sub);bool calm=!W["battle_active"].B;
+        GUILayout.BeginHorizontal();if(Btn("一月",calm))Control("advance",1);if(Btn("一年",calm))Control("advance",12);if(Btn("十年",calm))Control("advance",120);if(Btn("五十年",calm))Control("advance",600);GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();if(Btn("自行演化",calm))Control("auto");if(Btn("暂停"))Control("pause");if(Btn("保存"))Client.Act("/api/save",J.O());GUILayout.EndHorizontal();
+        fastMode=GUILayout.Toggle(fastMode,"规则快进（跳过模型调用）");
+        GUILayout.EndArea();
+    }
+
+    // ---------------------------------------------------------------- 书 screens
+    // Full-screen page: big faint title, close mark, bottom tab strip. Returns the content rect.
+    Rect BookScreen(string heading){
+        Tile(new Rect(0,0,1680,960),"bg");Tex(new Rect(0,0,1680,960),"vignette");
+        GUI.Label(new Rect(40,10,600,90),heading,titleBrush);Fill(new Rect(40,96,360,1),new Color(.79f,.64f,.35f,.35f));
+        Rect close=new Rect(1606,22,50,50);var old=GUI.color;if(close.Contains(Event.current.mousePosition))GUI.color=new Color(1,.86f,.6f);Tex(close,"close");GUI.color=old;
+        if(GUI.Button(close,GUIContent.none,GUIStyle.none)||(Event.current.type==EventType.KeyDown&&Event.current.keyCode==KeyCode.Escape&&!dialogueOpen))CloseBook();
+        Fill(new Rect(40,890,1600,1),hairline);
+        GUILayout.BeginArea(new Rect(40,896,1600,52));GUILayout.BeginHorizontal();GUILayout.FlexibleSpace();
+        for(int i=0;i<BookTabs.Length;i++){int target=BookTabs[i];bool on=target<0?personScreen:!personScreen&&Page==target;
+            if(GUILayout.Button(BookTabNames[i],on?tabOn:tab,GUILayout.Height(46),GUILayout.MinWidth(118))){if(target<0)OpenPersonScreen();else{personScreen=false;Go(target);}}}
+        GUILayout.FlexibleSpace();GUILayout.EndHorizontal();GUILayout.EndArea();
+        return new Rect(60,112,1560,770);
+    }
+    void CloseBook(){personScreen=false;dialogueOpen=false;if(!IsStagePage(Page))Go(basePage);}
+    void OpenPersonScreen(){if(SelectedPerson<0&&W["npcs"].A.Count>0)SelectPerson(W["npcs"].A[0]["id"].I);personScreen=true;dialogueOpen=false;}
+
+    // ---------------------------------------------------------------- 开幕 / 翻页
+    void BeginTransition(int page){if(IsStagePage(page)==IsStagePage(Page))return;transitionStart=Time.realtimeSinceStartup;transitionToStage=IsStagePage(page);}
+    void DrawTransition(Rect r){
+        float t=(Time.realtimeSinceStartup-transitionStart)/.55f;if(t<0||t>=1)return;
+        float e=1-Mathf.Pow(1-t,3);
+        if(transitionToStage){
+            float half=r.width*.5f*(1-e);var cur=UI("curtain");
+            Rect a=new Rect(r.x,r.y,half,r.height),b=new Rect(r.xMax-half,r.y,half,r.height);
+            if(cur!=null){GUI.DrawTextureWithTexCoords(a,cur,new Rect(0,0,half/cur.width,1));GUI.DrawTextureWithTexCoords(b,cur,new Rect(0,0,half/cur.width,1));}
+            else{Fill(a,new Color(.38f,.11f,.09f));Fill(b,new Color(.38f,.11f,.09f));}
+            Fill(new Rect(a.xMax-2,r.y,2,r.height),brass);Fill(new Rect(b.x,r.y,2,r.height),brass);
+        } else {
+            var old=GUI.color;GUI.color=new Color(1,1,1,1-e);Tile(r,"bg");GUI.color=old;
+        }
+    }
+}
+}

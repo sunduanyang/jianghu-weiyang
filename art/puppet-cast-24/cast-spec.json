@@ -1,0 +1,247 @@
+[
+  {
+    "index": 1,
+    "id": "m-youth-farmer",
+    "description": "二十岁农家青年，中等身材，黑发挽小髻系粗布带；土褐色粗布短褐，裤腿扎起，草鞋",
+    "accessories": []
+  },
+  {
+    "index": 2,
+    "id": "f-youth-farmer",
+    "description": "二十岁农家姑娘，身材纤细，单髻插木簪；藏青短襦配赭黄长裙，布鞋",
+    "accessories": []
+  },
+  {
+    "index": 3,
+    "id": "m-middle-farmer",
+    "description": "四十岁农人，身材粗壮略驼，头裹深色布巾，短须；赭黄短褐，肩头一块补丁，草鞋",
+    "accessories": []
+  },
+  {
+    "index": 4,
+    "id": "f-middle-farmer",
+    "description": "四十岁农妇，身材敦实，发髻包赭黄头巾，额角细纹；土褐短襦长裙，腰系围裙",
+    "accessories": [
+      {
+        "id": "apron",
+        "description": "围裙：独立完整的腰带与围裙布片，一件相连的皮影片"
+      }
+    ]
+  },
+  {
+    "index": 5,
+    "id": "m-elder",
+    "description": "七十岁老翁，瘦削，背微驼、头略前倾；白发小髻，长白须，寿眉下垂；藏青旧长衫，拄一根竹杖",
+    "accessories": [
+      {
+        "id": "bamboo-staff",
+        "description": "竹杖：完整细长的单根竹杖，横向放置，长度跨底部一整行，不连手"
+      }
+    ]
+  },
+  {
+    "index": 6,
+    "id": "f-elder",
+    "description": "七十岁老妪，瘦小，背驼；白发低髻插骨簪；土褐长衫，袖口磨旧",
+    "accessories": []
+  },
+  {
+    "index": 7,
+    "id": "m-child",
+    "description": "八岁男童，个子只到成人胸口，头身比例偏大；两个小抓髻；赭黄短衣短裤，光脚",
+    "accessories": []
+  },
+  {
+    "index": 8,
+    "id": "f-child",
+    "description": "八岁女童，个子只到成人胸口，头身比例偏大；双丫髻系红绳，刘海齐眉；朱红短襦藏青裙",
+    "accessories": []
+  },
+  {
+    "index": 9,
+    "id": "m-scholar",
+    "description": "二十五岁书生，清瘦高挑；黑色方巾，面白无须；米白襕衫，领缘墨色宽边，腰系丝绦，手持一卷书",
+    "accessories": [
+      {
+        "id": "book-scroll",
+        "description": "书卷：单独一卷无字书，完整连接成一件，不连手"
+      }
+    ]
+  },
+  {
+    "index": 10,
+    "id": "f-scholar",
+    "description": "二十二岁书香女子，身段纤长；高髻插玉簪和步摇；朱红上襦、米白长裙，云肩镂空花纹",
+    "accessories": [
+      {
+        "id": "cloud-shoulder",
+        "description": "云肩：独立完整的云肩披片，以细密镂空花纹作为全身唯一最精细区，躯干衣领只作简单边线"
+      }
+    ]
+  },
+  {
+    "index": 11,
+    "id": "m-merchant",
+    "description": "三十五岁行商，略胖；赭黄小帽，八字胡；藏青长衫，领缘铜钱纹镂空，腰挂钱袋",
+    "accessories": [
+      {
+        "id": "coin-pouch",
+        "description": "钱袋：带挂绳的独立完整小钱袋，一件相连，不与身体相连"
+      }
+    ]
+  },
+  {
+    "index": 12,
+    "id": "f-merchant",
+    "description": "三十岁女掌柜，中等身材；发髻插两根银簪；米色绸衫，领缘牡丹纹，腰挂算盘形佩饰",
+    "accessories": [
+      {
+        "id": "abacus-pendant",
+        "description": "算盘形佩饰：一件完整的微型算盘腰佩，框架与算珠相连，带挂环，不与身体相连"
+      }
+    ]
+  },
+  {
+    "index": 13,
+    "id": "m-escort",
+    "description": "三十岁镖师，魁梧宽肩；红色抹额，络腮短须；藏青劲装，朱红交领，护肩铜铆钉，腰挂腰牌，背单刀",
+    "accessories": [
+      {
+        "id": "sheathed-saber",
+        "description": "带鞘单刀：一件完整独立的刀与刀鞘组合，平放于底行，不连手或背"
+      },
+      {
+        "id": "waist-token",
+        "description": "腰牌：一件带挂环的完整无字腰牌"
+      }
+    ]
+  },
+  {
+    "index": 14,
+    "id": "f-escort",
+    "description": "二十五岁女镖师，身形矫健、肩比男子窄；红色抹额，高髻利落；藏青劲装，护腕，佩单刀",
+    "accessories": [
+      {
+        "id": "sheathed-saber",
+        "description": "带鞘单刀：一件完整独立刀与刀鞘组合，平放底行，不连手或腰"
+      }
+    ]
+  },
+  {
+    "index": 15,
+    "id": "m-fisher",
+    "description": "四十岁渔人，精瘦黝黑（用铜褐色系皮面表现）；宽檐斗笠；蓑衣肩披，短裤，赤脚，手提鱼篓",
+    "accessories": [
+      {
+        "id": "straw-cape",
+        "description": "蓑衣肩披：一件完整独立蓑衣披肩，简洁平涂条带线，不是纹理或散落细线"
+      },
+      {
+        "id": "fish-basket",
+        "description": "鱼篓：带提梁的完整独立竹编鱼篓，无鱼无水，一件相连，不连手"
+      }
+    ]
+  },
+  {
+    "index": 16,
+    "id": "m-hunter",
+    "description": "三十岁猎户，结实；毛边皮帽，络腮胡；皮坎肩，绑腿，背弓",
+    "accessories": [
+      {
+        "id": "bow",
+        "description": "弓：一件完整独立的弓，弓身和弓弦连接为一件，不连后背；禁止箭或箭袋"
+      }
+    ]
+  },
+  {
+    "index": 17,
+    "id": "m-artisan",
+    "description": "三十五岁匠人，粗壮，小臂粗；头裹短巾，额前汗巾打结；赭黄短褐，皮围裙，腰插小锤",
+    "accessories": [
+      {
+        "id": "leather-apron",
+        "description": "皮围裙：一件完整独立的皮围裙，挂带与围裙相连"
+      },
+      {
+        "id": "small-hammer",
+        "description": "小锤：一件完整独立小锤，锤头与木柄相连，不与身体相连"
+      }
+    ]
+  },
+  {
+    "index": 18,
+    "id": "f-healer",
+    "description": "三十岁女药师，中等身材；青布包髻；青灰长衫，领缘草叶纹，斜挎药篓",
+    "accessories": [
+      {
+        "id": "medicine-basket",
+        "description": "药篓：完整独立药篓及相连斜挎带作为一件，不与身体相连；无漂浮草药"
+      }
+    ]
+  },
+  {
+    "index": 19,
+    "id": "m-performer",
+    "description": "二十五岁男艺人，身段轻盈；发髻簪绢花，眉眼细长；朱红短衫，腰系彩带，手持折扇",
+    "accessories": [
+      {
+        "id": "folding-fan",
+        "description": "折扇：一件独立完整无字折扇，扇面与扇骨相连，不连手"
+      }
+    ]
+  },
+  {
+    "index": 20,
+    "id": "m-daoist",
+    "description": "五十岁道士，清瘦挺拔；莲花冠，冠上镂空云纹作为唯一最精细区，长须寿眉；青色道袍长及脚踝，只露鞋尖，手持拂尘",
+    "accessories": [
+      {
+        "id": "fly-whisk",
+        "description": "拂尘：完整独立的拂尘，柄和白色拂须相连为一件，横向平放底行，不连手"
+      }
+    ]
+  },
+  {
+    "index": 21,
+    "id": "m-monk",
+    "description": "四十岁僧人，身材宽厚；光头，头顶戒疤点刻；赭黄僧衣，斜披袈裟，手持念珠",
+    "accessories": [
+      {
+        "id": "prayer-beads",
+        "description": "念珠：一件完整独立的串珠环，每颗珠子通过串绳相连，不连手"
+      },
+      {
+        "id": "kasaya",
+        "description": "袈裟披片：一件完整独立的斜披袈裟，挂带与披片相连，不与躯干相连"
+      }
+    ]
+  },
+  {
+    "index": 22,
+    "id": "m-official",
+    "description": "四十五岁官员，体态端正微胖；黑色展脚幞头，短须；绯色圆领袍长及脚踝，腰系革带",
+    "accessories": []
+  },
+  {
+    "index": 23,
+    "id": "m-beggar",
+    "description": "三十岁丐帮弟子，瘦高；头发蓬乱随意束起，额上一道旧疤；百衲衣，赤脚，手持竹棒",
+    "accessories": [
+      {
+        "id": "bamboo-stick",
+        "description": "竹棒：一件完整独立竹棒，横向平放底行，不连手"
+      }
+    ]
+  },
+  {
+    "index": 24,
+    "id": "f-swordswoman",
+    "description": "二十岁门派女弟子，身形修长；高髻发带飘在脑后（发带保持与头茬相连）；藏青劲装，领缘竹叶纹，佩剑",
+    "accessories": [
+      {
+        "id": "sheathed-sword",
+        "description": "佩剑：一件完整独立长剑与剑鞘组合，横向平放底行，不连腰或手"
+      }
+    ]
+  }
+]
