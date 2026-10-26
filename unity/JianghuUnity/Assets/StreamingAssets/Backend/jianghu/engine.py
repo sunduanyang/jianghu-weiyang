@@ -1358,6 +1358,8 @@ class World:
             self.checkpoint()
         if self.compact_requested and not self.settlements:
             settlements.activate(self)
+        elif self.settlements:
+            settlements.expand(self)
 
     def checkpoint(self):
         self.store.save(self.export())
