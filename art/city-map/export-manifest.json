@@ -1,0 +1,273 @@
+{
+  "source": "painted-atlas.png",
+  "sha256": "3058d083ec0203ce649c656d264c505215e6bc8ef8eb39df073f162580885005",
+  "layout": [
+    4,
+    4
+  ],
+  "extraction": "16 connected silhouettes with nearest-body alpha fringe assignment",
+  "source_size": [
+    1254,
+    1254
+  ],
+  "sprites": [
+    {
+      "kind": "gate",
+      "alpha_bounds": [
+        0,
+        33,
+        340,
+        338
+      ],
+      "outputs": [
+        "building-gate"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    },
+    {
+      "kind": "government",
+      "alpha_bounds": [
+        312,
+        25,
+        653,
+        324
+      ],
+      "outputs": [
+        "building-government"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    },
+    {
+      "kind": "palace",
+      "alpha_bounds": [
+        632,
+        23,
+        975,
+        320
+      ],
+      "outputs": [
+        "building-palace"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    },
+    {
+      "kind": "market",
+      "alpha_bounds": [
+        940,
+        23,
+        1254,
+        322
+      ],
+      "outputs": [
+        "building-market"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    },
+    {
+      "kind": "inn",
+      "alpha_bounds": [
+        0,
+        308,
+        334,
+        627
+      ],
+      "outputs": [
+        "building-inn"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    },
+    {
+      "kind": "clinic",
+      "alpha_bounds": [
+        321,
+        313,
+        638,
+        617
+      ],
+      "outputs": [
+        "building-clinic"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    },
+    {
+      "kind": "workshop",
+      "alpha_bounds": [
+        622,
+        315,
+        963,
+        603
+      ],
+      "outputs": [
+        "building-workshop"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    },
+    {
+      "kind": "training",
+      "alpha_bounds": [
+        931,
+        319,
+        1254,
+        609
+      ],
+      "outputs": [
+        "building-training"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    },
+    {
+      "kind": "school",
+      "alpha_bounds": [
+        0,
+        598,
+        332,
+        931
+      ],
+      "outputs": [
+        "building-school"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    },
+    {
+      "kind": "residence",
+      "alpha_bounds": [
+        310,
+        626,
+        639,
+        927
+      ],
+      "outputs": [
+        "building-residence"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    },
+    {
+      "kind": "granary",
+      "alpha_bounds": [
+        636,
+        608,
+        950,
+        902
+      ],
+      "outputs": [
+        "building-granary"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    },
+    {
+      "kind": "garden",
+      "alpha_bounds": [
+        931,
+        606,
+        1254,
+        922
+      ],
+      "outputs": [
+        "building-garden"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    },
+    {
+      "kind": "temple",
+      "alpha_bounds": [
+        0,
+        876,
+        334,
+        1218
+      ],
+      "outputs": [
+        "building-temple"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    },
+    {
+      "kind": "dock",
+      "alpha_bounds": [
+        321,
+        897,
+        646,
+        1230
+      ],
+      "outputs": [
+        "building-dock"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    },
+    {
+      "kind": "faction",
+      "alpha_bounds": [
+        606,
+        889,
+        959,
+        1254
+      ],
+      "outputs": [
+        "building-faction"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    },
+    {
+      "kind": "forest",
+      "alpha_bounds": [
+        929,
+        911,
+        1241,
+        1222
+      ],
+      "outputs": [
+        "prop-forest-0",
+        "prop-forest-1",
+        "prop-forest-2"
+      ],
+      "anchor": [
+        128,
+        171
+      ]
+    }
+  ]
+}

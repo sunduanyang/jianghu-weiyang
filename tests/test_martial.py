@@ -192,7 +192,7 @@ class MartialTests(unittest.TestCase):
 
 class CombatTests(unittest.TestCase):
     def battle(self, seed=10):
-        return combat.start(actor(), actor('乙', 2), seed)
+        return combat.start(actor(), actor('乙', 2), seed, ruleset=2)
 
     def test_out_of_range_or_unknown_attack_spends_nothing(self):
         b = self.battle()

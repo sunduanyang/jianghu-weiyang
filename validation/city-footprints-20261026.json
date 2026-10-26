@@ -1,0 +1,117 @@
+{
+  "date": "2026-10-26",
+  "request": "Each city building occupies a centred whole 1x1 or 2x2 square",
+  "placement_version": 2,
+  "one_cell_buildings": 280,
+  "four_cell_buildings": 67,
+  "cities": 24,
+  "native_checks": 103,
+  "native_passed": true,
+  "native_acceptance": "output/city-footprints-20261026/native-acceptance/acceptance.json",
+  "pixel_alignment": {
+    "passed": true,
+    "buildings": [
+      {
+        "kind": "building-clinic",
+        "centre_error_px": 0.5,
+        "diamond_radius": 0.8359375
+      },
+      {
+        "kind": "building-dock",
+        "centre_error_px": 0.5,
+        "diamond_radius": 0.84375
+      },
+      {
+        "kind": "building-faction",
+        "centre_error_px": 0.5,
+        "diamond_radius": 0.83984375
+      },
+      {
+        "kind": "building-garden",
+        "centre_error_px": 0.0,
+        "diamond_radius": 0.83203125
+      },
+      {
+        "kind": "building-gate",
+        "centre_error_px": 0.5,
+        "diamond_radius": 0.84375
+      },
+      {
+        "kind": "building-government",
+        "centre_error_px": 0.0,
+        "diamond_radius": 0.83984375
+      },
+      {
+        "kind": "building-granary",
+        "centre_error_px": 0.5,
+        "diamond_radius": 0.83203125
+      },
+      {
+        "kind": "building-inn",
+        "centre_error_px": 0.5,
+        "diamond_radius": 0.83984375
+      },
+      {
+        "kind": "building-market",
+        "centre_error_px": 0.0,
+        "diamond_radius": 0.84765625
+      },
+      {
+        "kind": "building-palace",
+        "centre_error_px": 0.5,
+        "diamond_radius": 0.828125
+      },
+      {
+        "kind": "building-residence",
+        "centre_error_px": 0.5,
+        "diamond_radius": 0.8359375
+      },
+      {
+        "kind": "building-school",
+        "centre_error_px": 0.5,
+        "diamond_radius": 0.8359375
+      },
+      {
+        "kind": "building-temple",
+        "centre_error_px": 0.5,
+        "diamond_radius": 0.83203125
+      },
+      {
+        "kind": "building-training",
+        "centre_error_px": 0.5,
+        "diamond_radius": 0.828125
+      },
+      {
+        "kind": "building-workshop",
+        "centre_error_px": 0.0,
+        "diamond_radius": 0.83203125
+      }
+    ],
+    "failures": []
+  },
+  "python_tests": {
+    "test_city_maps.py": 11,
+    "test_protagonist.py": 13
+  },
+  "build": "unity/Build/Current/江湖未央.exe",
+  "build_exit": 0,
+  "launcher": "启动Unity版.bat verified with isolated -saveDir and native acceptance",
+  "manual_ui": "City navigation and display checked. Four-cell coordinate click was blocked after user input and foreground change; further UI input stopped. All occupied cells and centre geometry were checked by the native runner.",
+  "save_policy": "Only output/city-footprints-20261026/native-save was used. Original saves were not supplied.",
+  "sha256": {
+    "jianghu/city_maps.py": "b11ded76014846c6c304fb537157c9bcd9b6a064c9d2d1fecc4f8f70758710f2",
+    "tests/test_city_maps.py": "d912260480e88b29bbf42ae857fee2a12fe57d3fdb035eb6bc74073d95ace00f",
+    "unity/JianghuUnity/Assets/Scripts/CityMap.cs": "b12dcc34ef5090a21efdaee9bb85c3577b7bcf1220a14690851d8145eb33042b",
+    "unity/JianghuUnity/Assets/Scripts/CityMapSmoke.cs": "8f08d63d4dcef1ed39dcbd4b81138d4ff1ce80b19ea3072b3a4c62b272e7321b",
+    "unity/export_song_city_art.py": "146fab1a99100e9ebfb35321c6176674f59ec493edef7c9ccb9aac4414e3f261",
+    "unity/bake_city.py": "023c267b37668aa1f034391d06c4b0435263d09e78419e1c0c2bba3c85d8d52b",
+    "art/city-map/song-20261026/runtime-manifest.json": "f74248b71e0c8cbe2682f68437a3dd6b81034f47ddcae802cdb7cee049b38dde",
+    "unity/Build/Current/江湖未央_Data/Managed/Assembly-CSharp.dll": "0da3e55cb2c78e5662ee678939cde7e4c085f72d595f8f2e67b01b5b606d37b7"
+  },
+  "full_rebake": {
+    "passed": true,
+    "full_bake_exit": 0,
+    "runtime_textures": 79,
+    "changed_hashes": []
+  }
+}

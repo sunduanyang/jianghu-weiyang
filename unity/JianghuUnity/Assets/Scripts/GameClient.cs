@@ -66,6 +66,14 @@ public class GameClient : MonoBehaviour {
     public IEnumerator Refresh(){yield return Request("/api/state",null,j=>{World=j;Revision++;});}
     public void Fetch(string path,Action<J> done) {StartCoroutine(Request(path,null,done));}
     public void Act(string path,J body,Action<J> done=null) {if(!Busy&&Ready)StartCoroutine(Action(path,body,done));}
+    public void BattleAct(J body,Action<J> done){if(!Busy&&Ready)StartCoroutine(BattleRequest(body,done));}
+    IEnumerator BattleRequest(J body,Action<J> done){
+        Busy=true;
+        yield return Request("/api/battle",body,done);
+        // A combat tick does not change the world. Refresh it on settlement only.
+        if(body["action"].S=="surrender"||World["battle_active"].B&&GetComponent<JianghuApp>().Martial["battle"]["status"].S=="finished")yield return Refresh();
+        Busy=false;
+    }
     public IEnumerator Action(string path,J body,Action<J> done=null) {
         Busy=true;Status="正在结算…";
         yield return Request(path,body,done);

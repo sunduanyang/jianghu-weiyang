@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-26",
+  "project": "江湖未央",
+  "ruleset": 3,
+  "entry": "启动Unity版.bat",
+  "build": "unity/Build/Current/江湖未央.exe",
+  "implemented": [
+    "independent continuous timelines with 0.1 second simulation substeps",
+    "1.0-10.0 distance and movement during casting",
+    "three attack charges and nine rotating form slots",
+    "posture/breath and adjustable inner injury ratio",
+    "windups, recovery, interruption, weapon switching cooldown",
+    "three hit comparisons and five target areas",
+    "12 injury slots with expiring openings and seals",
+    "movement technique, defence, parry and interruptible healing",
+    "deterministic save/restore, stale revision rejection and legacy v1/v2 compatibility",
+    "time based reward eligibility prevents command-spam rewards"
+  ],
+  "validation": {
+    "python_tests": 216,
+    "seconds": 99.169,
+    "passed": true,
+    "log": "output/combat-v3-regression-verified.log",
+    "native_checks": 28,
+    "native_passed": true,
+    "native_report": "output/combat-v3-verified/acceptance.json",
+    "actual_launcher_used": true,
+    "screenshots_reviewed": [
+      "output/combat-v3-verified/combat-opening.png",
+      "output/combat-v3-verified/combat-windup.png"
+    ],
+    "unity_runtime_exceptions": 0,
+    "web_http": [
+      {
+        "resource": "combat.js",
+        "status": 200
+      },
+      {
+        "resource": "combat.css",
+        "status": 200
+      }
+    ],
+    "web_clock_step_verified": 0.2,
+    "web_browser_visual_qa": "Unavailable: in-app browser attach and Chrome automation both timed out.",
+    "javascript_syntax": "passed",
+    "puppet_structure": "7290 prototype states passed; this is separate from game art/rig acceptance",
+    "new_model_calls": 0
+  },
+  "source_hashes": {
+    "engine.py": {
+      "source": "a8c65dbd22b415a25082cc2ee4bf82ce1e0a67af95972e4c440cc38f8649f150",
+      "unity": "a8c65dbd22b415a25082cc2ee4bf82ce1e0a67af95972e4c440cc38f8649f150",
+      "built": "a8c65dbd22b415a25082cc2ee4bf82ce1e0a67af95972e4c440cc38f8649f150"
+    },
+    "combat.py": {
+      "source": "51326f380170b3372dde644b1d0a2b2d648b6d70175d670ec3da01deac4513bc",
+      "unity": "51326f380170b3372dde644b1d0a2b2d648b6d70175d670ec3da01deac4513bc",
+      "built": "51326f380170b3372dde644b1d0a2b2d648b6d70175d670ec3da01deac4513bc"
+    },
+    "combat_flow.py": {
+      "source": "b6bea419dd699c9909ad9c3f0470b656d586d5606389a5f78c5672748316d90f",
+      "unity": "b6bea419dd699c9909ad9c3f0470b656d586d5606389a5f78c5672748316d90f",
+      "built": "b6bea419dd699c9909ad9c3f0470b656d586d5606389a5f78c5672748316d90f"
+    },
+    "combat_realtime.py": {
+      "source": "18f22a64e74cb997b7dc0e986ca183d6f8cf16ec1e863775290c467fdc95249b",
+      "unity": "18f22a64e74cb997b7dc0e986ca183d6f8cf16ec1e863775290c467fdc95249b",
+      "built": "18f22a64e74cb997b7dc0e986ca183d6f8cf16ec1e863775290c467fdc95249b"
+    },
+    "martial.py": {
+      "source": "fcedf9e32bc249b34e249458570df8593d7a564c649c1e387f7a4f2513e98089",
+      "unity": "fcedf9e32bc249b34e249458570df8593d7a564c649c1e387f7a4f2513e98089",
+      "built": "fcedf9e32bc249b34e249458570df8593d7a564c649c1e387f7a4f2513e98089"
+    }
+  },
+  "limits": [
+    "Not a complete or numerically exact reproduction of The Scroll of Taiwu.",
+    "Original project art and martial arts retained.",
+    "Missing full weapon/form catalog, poisons, detailed meridians, companion support, normal/reverse practice and complete martial arts effects.",
+    "Three weapon modes are combat abstractions, not three new equipped inventory items.",
+    "Damage scale, hit weights, body modifiers and 120 second limit are project-specific tuning.",
+    "In-progress legacy battles retain their saved ruleset.",
+    "Native acceptance uses the actual built player and action handlers; physical keyboard input was not separately verified."
+  ],
+  "fixes_verified": [
+    "Scaled GUI rings render within their bounds.",
+    "Continuous attack damage adjusted for the existing actor stat scale.",
+    "Initial native runs exposed ring scaling and an early-defeat scenario; those failed reports remain under output/combat-v3-native and output/combat-v3-native-final."
+  ]
+}

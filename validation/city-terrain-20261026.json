@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-26",
+  "scope": "Unity city terrain: solid isometric blocks, deterministic elevation terraces, low water, level facility foundations, road stairs, raised routes and top/side picking",
+  "build": "unity/Build/Current/江湖未央.exe",
+  "build_exit": 0,
+  "source": "unity/JianghuUnity/Assets/Scripts/CityTerrain.cs",
+  "native_acceptance": "output/city-terrain-20261026/final-acceptance/acceptance.json",
+  "native_passed": true,
+  "native_checks": 151,
+  "cities": 24,
+  "surface_picks": 7776.0,
+  "block_side_picks": 1728.0,
+  "terrain_levels": {
+    "max": 8.0,
+    "min": 0.0
+  },
+  "targeted_tests": {
+    "test_city_maps_py": 11,
+    "passed": true
+  },
+  "interactive": {
+    "checks": [
+      "entered city from world map",
+      "clicked exposed block side and selected the corresponding top at row 2 column 9",
+      "zoomed map to 120 percent and preserved raised selection and route"
+    ],
+    "passed": true
+  },
+  "save_policy": "Native and interactive acceptance used isolated output/city-terrain-20261026 save directories. Existing user saves were not supplied.",
+  "screenshot": "output/city-terrain-20261026/final-acceptance/01-city-overview.png",
+  "sha256": {
+    "unity/JianghuUnity/Assets/Scripts/CityTerrain.cs": "edbb74506b1e547c40b4a3818f730917b4a8610d8621a81b6f7a86b076b3fa6b",
+    "unity/JianghuUnity/Assets/Scripts/CityMap.cs": "98f3e2dab75ee38f8ba75bd8200527e812e35c4e98b828ea5d19ad7e1ab1eb4f",
+    "unity/JianghuUnity/Assets/Scripts/CityMapSmoke.cs": "fadd7bf470be42afa80b8c1cd877dc1246666967694749531548b2f6a44cf91f",
+    "unity/Build/Current/江湖未央_Data/Managed/Assembly-CSharp.dll": "f38b3f51cb5c063013f4272a401bdc6000c934354f97a3d45c3fadfb0ea56ba6"
+  }
+}

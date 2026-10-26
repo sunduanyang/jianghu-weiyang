@@ -1,0 +1,14 @@
+{
+  "canvas": [1024, 1536],
+  "origin": [565, 529],
+  "landmarks": {
+    "hip": [565, 529], "neck": [487, 295],
+    "shoulderNear": [465, 338], "shoulderFar": [528, 375],
+    "hipNear": [562, 572], "hipFar": [638, 582],
+    "elbowNear": [439, 551], "elbowFar": [637, 582],
+    "wristNear": [425, 749], "wristFar": [757, 722],
+    "kneeNear": [511, 1017], "kneeFar": [609, 1025],
+    "ankleNear": [446, 1372], "ankleFar": [639, 1392]
+  },
+  "method": "Manual centres measured on assembled.png. The far shoulder is occluded and inferred from the torso binding; visible rivet centres are the proportion controls. Cutout outlines differ from the assembled drawing, so rigid assembly is not a pixel-identical reconstruction."
+}

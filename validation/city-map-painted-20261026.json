@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-26",
+  "scope": "Unity painted city map and map interaction improvements",
+  "unity": "6000.6.7f1",
+  "build": "unity/Build/Current/江湖未央.exe",
+  "build_exit": 0,
+  "launch_verified": "启动Unity版.bat selected unity/Build/Current/江湖未央.exe with isolated smoke arguments; process 44700",
+  "native_acceptance": "output/city-map-v2/final-acceptance/acceptance.json",
+  "native_checks": 102,
+  "native_passed": true,
+  "cities": 24,
+  "facilities": 347,
+  "targeted_tests": [
+    {
+      "command": "python -m unittest discover -s tests -p test_city_maps.py -v",
+      "passed": 11
+    },
+    {
+      "command": "python -m unittest discover -s tests -p test_protagonist.py -v",
+      "passed": 13
+    }
+  ],
+  "assets": {
+    "generated_source": "art/city-map/painted-atlas.png",
+    "tool": "built-in image_gen",
+    "prompt": "art/city-map/prompt.txt",
+    "manifest": "art/city-map/export-manifest.json",
+    "source_size": [
+      1254,
+      1254
+    ],
+    "isolated_sprites": 16,
+    "painted_runtime_textures": 18,
+    "full_bake_preserves_painted_hashes": true
+  },
+  "screenshots": [
+    "output/city-map-v2/final-acceptance/01-city-overview.png",
+    "output/city-map-v2/final-acceptance/02-city-route.png",
+    "output/city-map-v2/final-acceptance/03-city-arrival.png",
+    "output/city-map-v2/final-acceptance/04-city-capital.png",
+    "output/city-map-v2/final-acceptance/04-city-mountain.png",
+    "output/city-map-v2/final-acceptance/04-city-oasis.png"
+  ],
+  "manual_ui": "User pressed physical Escape; all Computer Use input stopped. Manual click/drag/hover acceptance was not completed. Further verification used the opt-in native smoke runner and saved render screenshots.",
+  "save_policy": "Native runs used isolated output/city-map-v2 save directories. Existing user game was not terminated or supplied to acceptance.",
+  "sha256": {
+    "unity/JianghuUnity/Assets/Scripts/CityMap.cs": "cec8c3d202bea8bcede4579f81650db22f08e840da5215e599c1f3c3db6aa7f3",
+    "unity/JianghuUnity/Assets/Scripts/CityMapSmoke.cs": "6feaa6ac980f33a084ae20d2f968553bcd96a7f4ec24c94c8ffddc228bf6e951",
+    "unity/bake_city.py": "a29eb4014f57f9a1d7ae1c0c579da40bcdcd0353840cbfbf92d9170523ad4bdd",
+    "unity/export_city_art.py": "95cef5ae5795aba7070baeea38e5f687fd398e699915e4cde1ea6b81dce7f804",
+    "art/city-map/painted-atlas.png": "3058d083ec0203ce649c656d264c505215e6bc8ef8eb39df073f162580885005",
+    "unity/Build/Current/江湖未央_Data/Managed/Assembly-CSharp.dll": "99f55bb1b48d9484f209d2cc6fcb4dfaa13b80dcf7488904d5beb3ddbae592c8"
+  }
+}

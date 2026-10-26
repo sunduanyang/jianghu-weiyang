@@ -1,16 +1,328 @@
 {
-  "version": 1,
-  "lengths": {"spine": 160, "upper_arm": 88, "forearm": 80, "thigh": 110, "shin": 112},
-  "bones": {"torso": ["hip", "neck"], "upperFar": ["shoulderFar", "elbowFar"], "forearmFar": ["elbowFar", "wristFar"], "upperNear": ["shoulderNear", "elbowNear"], "forearmNear": ["elbowNear", "wristNear"], "thighFar": ["hipFar", "kneeFar"], "shinFar": ["kneeFar", "ankleFar"], "thighNear": ["hipNear", "kneeNear"], "shinNear": ["kneeNear", "ankleNear"]},
-  "attachments": {"palmNear": {"parent": "wristNear", "offset": [0, 30], "follow": "forearmNear"}, "palmFar": {"parent": "wristFar", "offset": [0, 30], "follow": "forearmFar"}},
-  "rest": {"root_x": 0, "root_y": 0, "lean": 0, "near_upper": -12, "near_elbow": 8, "far_upper": 10, "far_elbow": -8, "near_thigh": -12, "near_knee": 12, "far_thigh": 12, "far_knee": -12},
+  "version": 2,
+  "lengths": {
+    "spine": 160,
+    "upper_arm": 88,
+    "forearm": 80,
+    "thigh": 110,
+    "shin": 112
+  },
+  "bones": {
+    "torso": [
+      "hip",
+      "neck"
+    ],
+    "upperFar": [
+      "shoulderFar",
+      "elbowFar"
+    ],
+    "forearmFar": [
+      "elbowFar",
+      "wristFar"
+    ],
+    "upperNear": [
+      "shoulderNear",
+      "elbowNear"
+    ],
+    "forearmNear": [
+      "elbowNear",
+      "wristNear"
+    ],
+    "thighFar": [
+      "hipFar",
+      "kneeFar"
+    ],
+    "shinFar": [
+      "kneeFar",
+      "ankleFar"
+    ],
+    "thighNear": [
+      "hipNear",
+      "kneeNear"
+    ],
+    "shinNear": [
+      "kneeNear",
+      "ankleNear"
+    ]
+  },
+  "attachments": {
+    "palmNear": {
+      "parent": "wristNear",
+      "offset": [
+        0,
+        30
+      ],
+      "follow": "forearmNear"
+    },
+    "palmFar": {
+      "parent": "wristFar",
+      "offset": [
+        0,
+        30
+      ],
+      "follow": "forearmFar"
+    }
+  },
+  "rest": {
+    "root_x": 0,
+    "root_y": 0,
+    "lean": 0,
+    "near_upper": -12,
+    "near_elbow": 8,
+    "far_upper": 10,
+    "far_elbow": -8,
+    "near_thigh": -12,
+    "near_knee": 12,
+    "far_thigh": 12,
+    "far_knee": -12,
+    "foot_ik": 1,
+    "near_foot_x": 10,
+    "far_foot_x": -14,
+    "near_foot_lift": 0,
+    "far_foot_lift": 0,
+    "near_foot_angle": 0,
+    "far_foot_angle": 0,
+    "near_wrist": 0,
+    "far_wrist": 0,
+    "head_angle": 0,
+    "near_skirt": 0,
+    "far_skirt": 0,
+    "gait": 0
+  },
   "clips": {
-    "idle": {"label": "静立", "seconds": 3, "loop": true, "keys": [{"t": 0}, {"t": 0.5, "root_y": -2, "lean": 1}, {"t": 1}]},
-    "walk": {"label": "行走", "seconds": 1.2, "loop": true, "keys": [{"t": 0, "near_thigh": -28, "near_knee": 12, "far_thigh": 26, "far_knee": -20, "near_upper": 20, "far_upper": -25}, {"t": 0.25, "root_y": -8, "near_thigh": 0, "near_knee": 5, "far_thigh": 0, "far_knee": -45}, {"t": 0.5, "near_thigh": 26, "near_knee": -20, "far_thigh": -28, "far_knee": 12, "near_upper": -25, "far_upper": 20}, {"t": 0.75, "root_y": -8, "near_thigh": 0, "near_knee": -45, "far_thigh": 0, "far_knee": 5}, {"t": 1, "near_thigh": -28, "near_knee": 12, "far_thigh": 26, "far_knee": -20, "near_upper": 20, "far_upper": -25}]},
-    "talk": {"label": "交谈", "seconds": 2.4, "loop": true, "keys": [{"t": 0, "near_upper": -25, "near_elbow": -65}, {"t": 0.5, "near_upper": -40, "near_elbow": -80, "lean": 2}, {"t": 1, "near_upper": -25, "near_elbow": -65}]},
-    "attack": {"label": "进招", "seconds": 0.9, "loop": false, "keys": [{"t": 0}, {"t": 0.25, "root_x": -8, "lean": -8, "near_upper": 30, "near_elbow": -80}, {"t": 0.55, "root_x": 20, "root_y": 8, "lean": 12, "near_upper": -93, "near_elbow": 8, "far_upper": -65, "far_elbow": 20, "near_thigh": -38, "near_knee": 28, "far_thigh": 30, "far_knee": -20}, {"t": 0.78, "root_x": 12, "lean": 7, "near_upper": -72, "near_elbow": 12}, {"t": 1}]},
-    "guard": {"label": "招架", "seconds": 2.4, "loop": true, "keys": [{"t": 0, "lean": -3, "near_upper": -42, "near_elbow": -100, "far_upper": -30, "far_elbow": -80}, {"t": 0.5, "root_y": -2, "lean": -2, "near_upper": -45, "near_elbow": -96, "far_upper": -33, "far_elbow": -76}, {"t": 1, "lean": -3, "near_upper": -42, "near_elbow": -100, "far_upper": -30, "far_elbow": -80}]},
-    "hurt": {"label": "受招", "seconds": 0.7, "loop": false, "keys": [{"t": 0}, {"t": 0.35, "root_x": -16, "lean": -18, "near_upper": 25, "near_elbow": -35, "far_upper": -30, "near_knee": 22}, {"t": 0.7, "root_x": -8, "lean": -8}, {"t": 1}]},
-    "defeated": {"label": "收势", "seconds": 1, "loop": false, "keys": [{"t": 0}, {"t": 0.55, "root_y": 32, "lean": 20, "near_thigh": -48, "near_knee": 90, "far_thigh": 32, "far_knee": -65}, {"t": 1, "root_y": 48, "lean": 28, "near_thigh": -62, "near_knee": 105, "far_thigh": 42, "far_knee": -80, "near_upper": -25, "near_elbow": -40}]}
+    "idle": {
+      "label": "静立",
+      "seconds": 3,
+      "loop": true,
+      "keys": [
+        {
+          "t": 0
+        },
+        {
+          "t": 0.5,
+          "root_y": -2,
+          "lean": 1
+        },
+        {
+          "t": 1
+        }
+      ]
+    },
+    "walk": {
+      "label": "行走",
+      "seconds": 1.2,
+      "loop": true,
+      "keys": [
+        {
+          "t": 0,
+          "near_thigh": -28,
+          "near_knee": 12,
+          "far_thigh": 26,
+          "far_knee": -20,
+          "near_upper": 20,
+          "far_upper": -25
+        },
+        {
+          "t": 0.25,
+          "root_y": -8,
+          "near_thigh": 0,
+          "near_knee": 5,
+          "far_thigh": 0,
+          "far_knee": -45
+        },
+        {
+          "t": 0.5,
+          "near_thigh": 26,
+          "near_knee": -20,
+          "far_thigh": -28,
+          "far_knee": 12,
+          "near_upper": -25,
+          "far_upper": 20
+        },
+        {
+          "t": 0.75,
+          "root_y": -8,
+          "near_thigh": 0,
+          "near_knee": -45,
+          "far_thigh": 0,
+          "far_knee": 5
+        },
+        {
+          "t": 1,
+          "near_thigh": -28,
+          "near_knee": 12,
+          "far_thigh": 26,
+          "far_knee": -20,
+          "near_upper": 20,
+          "far_upper": -25
+        }
+      ]
+    },
+    "talk": {
+      "label": "交谈",
+      "seconds": 2.4,
+      "loop": true,
+      "keys": [
+        {
+          "t": 0,
+          "near_upper": -25,
+          "near_elbow": -65
+        },
+        {
+          "t": 0.5,
+          "near_upper": -40,
+          "near_elbow": -80,
+          "lean": 2,
+          "head_angle": 3,
+          "near_wrist": -14
+        },
+        {
+          "t": 1,
+          "near_upper": -25,
+          "near_elbow": -65
+        }
+      ]
+    },
+    "attack": {
+      "label": "进招",
+      "seconds": 0.9,
+      "loop": false,
+      "keys": [
+        {
+          "t": 0
+        },
+        {
+          "t": 0.25,
+          "root_x": -8,
+          "lean": -8,
+          "near_upper": 30,
+          "near_elbow": -80
+        },
+        {
+          "t": 0.55,
+          "root_x": 20,
+          "root_y": 8,
+          "lean": 12,
+          "near_upper": -93,
+          "near_elbow": 8,
+          "far_upper": -65,
+          "far_elbow": 20,
+          "near_thigh": -38,
+          "near_knee": 28,
+          "far_thigh": 30,
+          "far_knee": -20,
+          "near_foot_x": 65,
+          "far_foot_x": -55,
+          "near_wrist": -12,
+          "near_skirt": -5
+        },
+        {
+          "t": 0.78,
+          "root_x": 12,
+          "lean": 7,
+          "near_upper": -72,
+          "near_elbow": 12,
+          "near_foot_x": 45,
+          "far_foot_x": -38
+        },
+        {
+          "t": 1
+        }
+      ]
+    },
+    "guard": {
+      "label": "招架",
+      "seconds": 2.4,
+      "loop": true,
+      "keys": [
+        {
+          "t": 0,
+          "lean": -3,
+          "near_upper": -42,
+          "near_elbow": -100,
+          "far_upper": -30,
+          "far_elbow": -80
+        },
+        {
+          "t": 0.5,
+          "root_y": -2,
+          "lean": -2,
+          "near_upper": -45,
+          "near_elbow": -96,
+          "far_upper": -33,
+          "far_elbow": -76
+        },
+        {
+          "t": 1,
+          "lean": -3,
+          "near_upper": -42,
+          "near_elbow": -100,
+          "far_upper": -30,
+          "far_elbow": -80
+        }
+      ]
+    },
+    "hurt": {
+      "label": "受招",
+      "seconds": 0.7,
+      "loop": false,
+      "keys": [
+        {
+          "t": 0
+        },
+        {
+          "t": 0.35,
+          "root_x": -16,
+          "lean": -18,
+          "near_upper": 25,
+          "near_elbow": -35,
+          "far_upper": -30,
+          "near_knee": 22
+        },
+        {
+          "t": 0.7,
+          "root_x": -8,
+          "lean": -8
+        },
+        {
+          "t": 1
+        }
+      ]
+    },
+    "defeated": {
+      "label": "收势",
+      "seconds": 1,
+      "loop": false,
+      "keys": [
+        {
+          "t": 0
+        },
+        {
+          "t": 0.55,
+          "root_y": 62,
+          "lean": 20,
+          "near_thigh": -48,
+          "near_knee": 90,
+          "far_thigh": 32,
+          "far_knee": -65,
+          "near_foot_x": 45,
+          "far_foot_x": -35
+        },
+        {
+          "t": 1,
+          "root_y": 95,
+          "lean": 28,
+          "near_thigh": -62,
+          "near_knee": 105,
+          "far_thigh": 42,
+          "far_knee": -80,
+          "near_upper": -25,
+          "near_elbow": -40,
+          "near_foot_x": 55,
+          "far_foot_x": -35,
+          "head_angle": 18
+        }
+      ]
+    }
   }
 }

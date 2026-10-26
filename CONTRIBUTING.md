@@ -49,7 +49,10 @@ node unity/bake_puppets.cjs
 
 ## 提交前验证
 
+皮影源图与运行图集的逐像素校验需要 Pillow 和 NumPy。以下测试依赖仅用于开发验证，游戏规则运行仍只依赖 Python 标准库；资源重生成使用的 `requirements-dev.txt` 已包含这些依赖。
+
 ```powershell
+python -m pip install -r requirements-test.txt
 python -m unittest discover -s tests -v
 node prototypes/shadow-puppets/verify.cjs
 git diff --check

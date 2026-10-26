@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "expected_skins": 24,
-  "expected_parts": 405,
+  "expected_skins": 28,
+  "expected_parts": 468,
   "rig": {
-    "version": 1,
+    "version": 2,
     "lengths": {
       "spine": 160,
       "upper_arm": 88,
@@ -78,7 +78,20 @@
       "near_thigh": -12,
       "near_knee": 12,
       "far_thigh": 12,
-      "far_knee": -12
+      "far_knee": -12,
+      "foot_ik": 1,
+      "near_foot_x": 10,
+      "far_foot_x": -14,
+      "near_foot_lift": 0,
+      "far_foot_lift": 0,
+      "near_foot_angle": 0,
+      "far_foot_angle": 0,
+      "near_wrist": 0,
+      "far_wrist": 0,
+      "head_angle": 0,
+      "near_skirt": 0,
+      "far_skirt": 0,
+      "gait": 0
     },
     "clips": {
       "idle": {
@@ -163,7 +176,9 @@
             "t": 0.5,
             "near_upper": -40,
             "near_elbow": -80,
-            "lean": 2
+            "lean": 2,
+            "head_angle": 3,
+            "near_wrist": -14
           },
           {
             "t": 1,
@@ -199,14 +214,20 @@
             "near_thigh": -38,
             "near_knee": 28,
             "far_thigh": 30,
-            "far_knee": -20
+            "far_knee": -20,
+            "near_foot_x": 65,
+            "far_foot_x": -55,
+            "near_wrist": -12,
+            "near_skirt": -5
           },
           {
             "t": 0.78,
             "root_x": 12,
             "lean": 7,
             "near_upper": -72,
-            "near_elbow": 12
+            "near_elbow": 12,
+            "near_foot_x": 45,
+            "far_foot_x": -38
           },
           {
             "t": 1
@@ -282,23 +303,28 @@
           },
           {
             "t": 0.55,
-            "root_y": 32,
+            "root_y": 62,
             "lean": 20,
             "near_thigh": -48,
             "near_knee": 90,
             "far_thigh": 32,
-            "far_knee": -65
+            "far_knee": -65,
+            "near_foot_x": 45,
+            "far_foot_x": -35
           },
           {
             "t": 1,
-            "root_y": 48,
+            "root_y": 95,
             "lean": 28,
             "near_thigh": -62,
             "near_knee": 105,
             "far_thigh": 42,
             "far_knee": -80,
             "near_upper": -25,
-            "near_elbow": -40
+            "near_elbow": -40,
+            "near_foot_x": 55,
+            "far_foot_x": -35,
+            "head_angle": 18
           }
         ]
       }
@@ -10326,6 +10352,2223 @@
         ]
       },
       "atlas_sha256": "56a93ffaa8acd5866408f707e7df8ca8ea173cf91c337711e06353da979f49a2"
+    },
+    "reference-jade": {
+      "id": "reference-jade",
+      "description": "青玉女侠 · 用户参考素材",
+      "atlas": "reference-jade",
+      "size": [
+        1024,
+        1536
+      ],
+      "scale": 1,
+      "lengths": {
+        "spine": 246.6576574931336,
+        "upper_arm": 215,
+        "forearm": 198,
+        "thigh": 449,
+        "shin": 361,
+        "upper_armNear": 214.5809870421888,
+        "forearmNear": 198.4943324127921,
+        "thighNear": 447.9129379689763,
+        "shinNear": 360.90164865237176,
+        "upper_armFar": 233.94443784796422,
+        "forearmFar": 184.39088914585776,
+        "thighFar": 443.9481951759687,
+        "shinFar": 368.22411653774117
+      },
+      "reference": true,
+      "canvas": [
+        1024,
+        1536
+      ],
+      "canvas_origin": [
+        565,
+        529
+      ],
+      "bind_lean": -18.43494882292201,
+      "reference_landmarks": {
+        "hip": [
+          0.0,
+          0.0
+        ],
+        "neck": [
+          -78.0,
+          -234.0
+        ],
+        "shoulderNear": [
+          -100.0,
+          -191.0
+        ],
+        "shoulderFar": [
+          -37.0,
+          -154.0
+        ],
+        "hipNear": [
+          -3.0,
+          43.0
+        ],
+        "hipFar": [
+          73.0,
+          53.0
+        ],
+        "elbowNear": [
+          -126.0,
+          22.0
+        ],
+        "elbowFar": [
+          72.0,
+          53.0
+        ],
+        "wristNear": [
+          -140.0,
+          220.0
+        ],
+        "wristFar": [
+          192.0,
+          193.0
+        ],
+        "kneeNear": [
+          -54.0,
+          488.0
+        ],
+        "kneeFar": [
+          44.0,
+          496.0
+        ],
+        "ankleNear": [
+          -119.0,
+          843.0
+        ],
+        "ankleFar": [
+          74.0,
+          863.0
+        ]
+      },
+      "shoulders": {
+        "Near": [
+          -34.46882649583533,
+          -212.82128652933193
+        ],
+        "Far": [
+          13.597793938724031,
+          -157.79765524240213
+        ]
+      },
+      "hips": {
+        "Near": [
+          -16.443843832875572,
+          39.84469851812158
+        ],
+        "Far": [
+          52.4938091587951,
+          73.3648417159064
+        ]
+      },
+      "feet": {
+        "Near": [
+          -119.0,
+          843.0
+        ],
+        "Far": [
+          74.0,
+          863.0
+        ]
+      },
+      "knee_poles": {
+        "Near": 1,
+        "Far": -1
+      },
+      "angle_offsets": {
+        "near_upper": 37.39437089442098,
+        "near_elbow": -10.914936497317868,
+        "far_upper": -19.334998463138238,
+        "far_elbow": -4.831347358944225
+      },
+      "leg_bind_angles": {
+        "Near": 6.537957457847294,
+        "Far": 3.745395479095225
+      },
+      "parts": {
+        "head-neck": {
+          "size": [
+            330,
+            408
+          ],
+          "pivot": [
+            205,
+            308
+          ],
+          "uv": [
+            0.0078125,
+            0.43489583333333337,
+            0.322265625,
+            0.265625
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            0,
+            12,
+            330,
+            420
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "joint": "neck",
+          "height": 300,
+          "breadth": 1.13,
+          "angle": 0,
+          "follow": "head",
+          "layer": 60
+        },
+        "torso": {
+          "size": [
+            185,
+            381
+          ],
+          "pivot": [
+            100,
+            255
+          ],
+          "uv": [
+            0.345703125,
+            0.45247395833333337,
+            0.1806640625,
+            0.248046875
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            345,
+            40,
+            530,
+            421
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "bone": "torso",
+          "tip": [
+            86,
+            28
+          ],
+          "layer": 40,
+          "breadth": 0.5465999077047169,
+          "shear": 0.5906980509407911
+        },
+        "front-skirt": {
+          "size": [
+            263,
+            436
+          ],
+          "pivot": [
+            131,
+            24
+          ],
+          "uv": [
+            0.0078125,
+            0.7109375,
+            0.2568359375,
+            0.2838541666666667
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            527,
+            20,
+            790,
+            456
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "joint": "hipNear",
+          "height": 630,
+          "angle": 0,
+          "follow": "skirtNear",
+          "layer": 50
+        },
+        "back-skirt": {
+          "size": [
+            234,
+            425
+          ],
+          "pivot": [
+            124,
+            32
+          ],
+          "uv": [
+            0.5400390625,
+            0.7180989583333333,
+            0.228515625,
+            0.2766927083333333
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            790,
+            30,
+            1024,
+            455
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "joint": "hipFar",
+          "height": 630,
+          "angle": 20,
+          "follow": "skirtFar",
+          "layer": 5
+        },
+        "near-upper-arm": {
+          "size": [
+            155,
+            303
+          ],
+          "pivot": [
+            115,
+            35
+          ],
+          "uv": [
+            0.171875,
+            0.22721354166666663,
+            0.1513671875,
+            0.197265625
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            43,
+            465,
+            198,
+            768
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "bone": "upperNear",
+          "tip": [
+            63,
+            272
+          ],
+          "layer": 72,
+          "breadth": 0.8
+        },
+        "far-upper-arm": {
+          "size": [
+            152,
+            303
+          ],
+          "pivot": [
+            44,
+            35
+          ],
+          "uv": [
+            0.0078125,
+            0.22721354166666663,
+            0.1484375,
+            0.197265625
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            345,
+            465,
+            497,
+            768
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "bone": "upperFar",
+          "tip": [
+            84,
+            272
+          ],
+          "layer": 10,
+          "breadth": 0.7
+        },
+        "near-forearm": {
+          "size": [
+            142,
+            302
+          ],
+          "pivot": [
+            50,
+            35
+          ],
+          "uv": [
+            0.3388671875,
+            0.22786458333333337,
+            0.138671875,
+            0.19661458333333334
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            578,
+            464,
+            720,
+            766
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "bone": "forearmNear",
+          "tip": [
+            104,
+            259
+          ],
+          "layer": 75,
+          "breadth": 1
+        },
+        "far-forearm": {
+          "size": [
+            130,
+            301
+          ],
+          "pivot": [
+            78,
+            34
+          ],
+          "uv": [
+            0.4931640625,
+            0.228515625,
+            0.126953125,
+            0.19596354166666666
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            821,
+            465,
+            951,
+            766
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "bone": "forearmFar",
+          "tip": [
+            73,
+            264
+          ],
+          "layer": 12,
+          "breadth": 1.1
+        },
+        "near-hand": {
+          "size": [
+            102,
+            201
+          ],
+          "pivot": [
+            56,
+            30
+          ],
+          "uv": [
+            0.3466796875,
+            0.0859375,
+            0.099609375,
+            0.130859375
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            74,
+            835,
+            176,
+            1036
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "joint": "wristNear",
+          "height": 150,
+          "breadth": 0.9,
+          "angle": 0,
+          "follow": "handNear",
+          "layer": 80
+        },
+        "far-hand": {
+          "size": [
+            109,
+            201
+          ],
+          "pivot": [
+            31,
+            31
+          ],
+          "uv": [
+            0.224609375,
+            0.0859375,
+            0.1064453125,
+            0.130859375
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            329,
+            835,
+            438,
+            1036
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "joint": "wristFar",
+          "height": 150,
+          "breadth": 0.9,
+          "angle": 0,
+          "follow": "handFar",
+          "layer": 14
+        },
+        "near-thigh": {
+          "size": [
+            150,
+            324
+          ],
+          "pivot": [
+            60,
+            35
+          ],
+          "uv": [
+            0.6953125,
+            0.48958333333333337,
+            0.146484375,
+            0.2109375
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            569,
+            767,
+            719,
+            1091
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "bone": "thighNear",
+          "tip": [
+            97,
+            291
+          ],
+          "layer": 25,
+          "breadth": 0.48
+        },
+        "far-thigh": {
+          "size": [
+            141,
+            324
+          ],
+          "pivot": [
+            76,
+            35
+          ],
+          "uv": [
+            0.5419921875,
+            0.48958333333333337,
+            0.1376953125,
+            0.2109375
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            824,
+            767,
+            965,
+            1091
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "bone": "thighFar",
+          "tip": [
+            62,
+            292
+          ],
+          "layer": 16,
+          "breadth": 0.49
+        },
+        "near-shin": {
+          "size": [
+            118,
+            433
+          ],
+          "pivot": [
+            68,
+            31
+          ],
+          "uv": [
+            0.4091796875,
+            0.712890625,
+            0.115234375,
+            0.2819010416666667
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            65,
+            1070,
+            183,
+            1503
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "bone": "shinNear",
+          "tip": [
+            54,
+            353
+          ],
+          "layer": 26,
+          "breadth": 0.85
+        },
+        "far-shin": {
+          "size": [
+            116,
+            435
+          ],
+          "pivot": [
+            51,
+            33
+          ],
+          "uv": [
+            0.2802734375,
+            0.7115885416666667,
+            0.11328125,
+            0.283203125
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            337,
+            1068,
+            453,
+            1503
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "bone": "shinFar",
+          "tip": [
+            50,
+            355
+          ],
+          "layer": 17,
+          "breadth": 0.85
+        },
+        "near-foot": {
+          "size": [
+            206,
+            228
+          ],
+          "pivot": [
+            59,
+            29
+          ],
+          "uv": [
+            0.0078125,
+            0.068359375,
+            0.201171875,
+            0.1484375
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            533,
+            1263,
+            739,
+            1491
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "joint": "ankleNear",
+          "height": 130,
+          "breadth": 1.25,
+          "angle": 0,
+          "follow": "footNear",
+          "layer": 29
+        },
+        "far-foot": {
+          "size": [
+            202,
+            228
+          ],
+          "pivot": [
+            58,
+            31
+          ],
+          "uv": [
+            0.6357421875,
+            0.27604166666666663,
+            0.197265625,
+            0.1484375
+          ],
+          "source": "rig-reference/dressed-parts.png",
+          "source_rect": [
+            810,
+            1263,
+            1012,
+            1491
+          ],
+          "source_sha256": "810fe285ec88241691d387d7938112e06ab24dd09581da7b57fae277fecc701e",
+          "joint": "ankleFar",
+          "height": 130,
+          "breadth": 1.35,
+          "angle": 0,
+          "follow": "footFar",
+          "layer": 20
+        }
+      },
+      "head_angle_offset": 18.43494882292201,
+      "hand_angle_offsets": {
+        "Near": -3,
+        "Far": 47.5
+      },
+      "atlas_sha256": "c38145ee441046b2edfa540cb9c2f49502347172f4bbb12e2756241ba435b8fc",
+      "ground": 975.3245614035088
+    },
+    "reference-body": {
+      "id": "reference-body",
+      "description": "素身关节标定 · 用户参考素材",
+      "atlas": "reference-body",
+      "size": [
+        1024,
+        768
+      ],
+      "scale": 1,
+      "lengths": {
+        "spine": 246.6576574931336,
+        "upper_arm": 215,
+        "forearm": 198,
+        "thigh": 449,
+        "shin": 361,
+        "upper_armNear": 214.5809870421888,
+        "forearmNear": 198.4943324127921,
+        "thighNear": 447.9129379689763,
+        "shinNear": 360.90164865237176,
+        "upper_armFar": 233.94443784796422,
+        "forearmFar": 184.39088914585776,
+        "thighFar": 443.9481951759687,
+        "shinFar": 368.22411653774117
+      },
+      "reference": true,
+      "canvas": [
+        1024,
+        1536
+      ],
+      "canvas_origin": [
+        565,
+        529
+      ],
+      "bind_lean": -18.43494882292201,
+      "reference_landmarks": {
+        "hip": [
+          0.0,
+          0.0
+        ],
+        "neck": [
+          -78.0,
+          -234.0
+        ],
+        "shoulderNear": [
+          -100.0,
+          -191.0
+        ],
+        "shoulderFar": [
+          -37.0,
+          -154.0
+        ],
+        "hipNear": [
+          -3.0,
+          43.0
+        ],
+        "hipFar": [
+          73.0,
+          53.0
+        ],
+        "elbowNear": [
+          -126.0,
+          22.0
+        ],
+        "elbowFar": [
+          72.0,
+          53.0
+        ],
+        "wristNear": [
+          -140.0,
+          220.0
+        ],
+        "wristFar": [
+          192.0,
+          193.0
+        ],
+        "kneeNear": [
+          -54.0,
+          488.0
+        ],
+        "kneeFar": [
+          44.0,
+          496.0
+        ],
+        "ankleNear": [
+          -119.0,
+          843.0
+        ],
+        "ankleFar": [
+          74.0,
+          863.0
+        ]
+      },
+      "shoulders": {
+        "Near": [
+          -34.46882649583533,
+          -212.82128652933193
+        ],
+        "Far": [
+          13.597793938724031,
+          -157.79765524240213
+        ]
+      },
+      "hips": {
+        "Near": [
+          -16.443843832875572,
+          39.84469851812158
+        ],
+        "Far": [
+          52.4938091587951,
+          73.3648417159064
+        ]
+      },
+      "feet": {
+        "Near": [
+          -119.0,
+          843.0
+        ],
+        "Far": [
+          74.0,
+          863.0
+        ]
+      },
+      "knee_poles": {
+        "Near": 1,
+        "Far": -1
+      },
+      "angle_offsets": {
+        "near_upper": 37.39437089442098,
+        "near_elbow": -10.914936497317868,
+        "far_upper": -19.334998463138238,
+        "far_elbow": -4.831347358944225
+      },
+      "leg_bind_angles": {
+        "Near": 6.537957457847294,
+        "Far": 3.745395479095225
+      },
+      "parts": {
+        "head-neck": {
+          "size": [
+            123,
+            302
+          ],
+          "pivot": [
+            58,
+            277
+          ],
+          "uv": [
+            0.55859375,
+            0.5963541666666667,
+            0.1201171875,
+            0.3932291666666667
+          ],
+          "source": "rig-reference/body-parts.png",
+          "source_rect": [
+            108,
+            68,
+            231,
+            370
+          ],
+          "source_sha256": "7e44f6bdd3fd74ead932cd91c09c0174c69ab05be90deede7e3204a5027eab2a",
+          "joint": "neck",
+          "height": 300,
+          "breadth": 1,
+          "angle": 0,
+          "follow": "head",
+          "layer": 60
+        },
+        "torso": {
+          "size": [
+            142,
+            379
+          ],
+          "pivot": [
+            71,
+            339
+          ],
+          "uv": [
+            0.0078125,
+            0.49609375,
+            0.138671875,
+            0.4934895833333333
+          ],
+          "source": "rig-reference/body-parts.png",
+          "source_rect": [
+            442,
+            32,
+            584,
+            411
+          ],
+          "source_sha256": "7e44f6bdd3fd74ead932cd91c09c0174c69ab05be90deede7e3204a5027eab2a",
+          "bone": "torso",
+          "tip": [
+            67,
+            38
+          ],
+          "layer": 40
+        },
+        "pelvis": {
+          "size": [
+            129,
+            167
+          ],
+          "pivot": [
+            64,
+            25
+          ],
+          "uv": [
+            0.08203125,
+            0.2578125,
+            0.1259765625,
+            0.21744791666666666
+          ],
+          "source": "rig-reference/body-parts.png",
+          "source_rect": [
+            791,
+            136,
+            920,
+            303
+          ],
+          "source_sha256": "7e44f6bdd3fd74ead932cd91c09c0174c69ab05be90deede7e3204a5027eab2a",
+          "joint": "hip",
+          "height": 110,
+          "angle": 0,
+          "layer": 50
+        },
+        "near-upper-arm": {
+          "size": [
+            72,
+            291
+          ],
+          "pivot": [
+            28,
+            31
+          ],
+          "uv": [
+            0.7802734375,
+            0.6106770833333333,
+            0.0703125,
+            0.37890625
+          ],
+          "source": "rig-reference/body-parts.png",
+          "source_rect": [
+            91,
+            443,
+            163,
+            734
+          ],
+          "source_sha256": "7e44f6bdd3fd74ead932cd91c09c0174c69ab05be90deede7e3204a5027eab2a",
+          "bone": "upperNear",
+          "tip": [
+            49,
+            262
+          ],
+          "layer": 72,
+          "breadth": 0.7
+        },
+        "far-upper-arm": {
+          "size": [
+            72,
+            291
+          ],
+          "pivot": [
+            28,
+            31
+          ],
+          "uv": [
+            0.6943359375,
+            0.6106770833333333,
+            0.0703125,
+            0.37890625
+          ],
+          "source": "rig-reference/body-parts.png",
+          "source_rect": [
+            348,
+            443,
+            420,
+            734
+          ],
+          "source_sha256": "7e44f6bdd3fd74ead932cd91c09c0174c69ab05be90deede7e3204a5027eab2a",
+          "bone": "upperFar",
+          "tip": [
+            49,
+            262
+          ],
+          "layer": 10,
+          "breadth": 0.7
+        },
+        "near-forearm": {
+          "size": [
+            60,
+            238
+          ],
+          "pivot": [
+            30,
+            28
+          ],
+          "uv": [
+            0.0078125,
+            0.16536458333333337,
+            0.05859375,
+            0.3098958333333333
+          ],
+          "source": "rig-reference/body-parts.png",
+          "source_rect": [
+            610,
+            470,
+            670,
+            708
+          ],
+          "source_sha256": "7e44f6bdd3fd74ead932cd91c09c0174c69ab05be90deede7e3204a5027eab2a",
+          "bone": "forearmNear",
+          "tip": [
+            34,
+            211
+          ],
+          "layer": 75,
+          "breadth": 0.7
+        },
+        "far-forearm": {
+          "size": [
+            58,
+            238
+          ],
+          "pivot": [
+            29,
+            28
+          ],
+          "uv": [
+            0.8662109375,
+            0.6796875,
+            0.056640625,
+            0.3098958333333333
+          ],
+          "source": "rig-reference/body-parts.png",
+          "source_rect": [
+            867,
+            470,
+            925,
+            708
+          ],
+          "source_sha256": "7e44f6bdd3fd74ead932cd91c09c0174c69ab05be90deede7e3204a5027eab2a",
+          "bone": "forearmFar",
+          "tip": [
+            27,
+            211
+          ],
+          "layer": 12,
+          "breadth": 0.7
+        },
+        "near-hand": {
+          "size": [
+            71,
+            150
+          ],
+          "pivot": [
+            24,
+            25
+          ],
+          "uv": [
+            0.3095703125,
+            0.27994791666666663,
+            0.0693359375,
+            0.1953125
+          ],
+          "source": "rig-reference/body-parts.png",
+          "source_rect": [
+            93,
+            874,
+            164,
+            1024
+          ],
+          "source_sha256": "7e44f6bdd3fd74ead932cd91c09c0174c69ab05be90deede7e3204a5027eab2a",
+          "joint": "wristNear",
+          "height": 150,
+          "breadth": 0.9,
+          "angle": 0,
+          "follow": "handNear",
+          "layer": 80
+        },
+        "far-hand": {
+          "size": [
+            72,
+            150
+          ],
+          "pivot": [
+            24,
+            25
+          ],
+          "uv": [
+            0.2236328125,
+            0.27994791666666663,
+            0.0703125,
+            0.1953125
+          ],
+          "source": "rig-reference/body-parts.png",
+          "source_rect": [
+            350,
+            874,
+            422,
+            1024
+          ],
+          "source_sha256": "7e44f6bdd3fd74ead932cd91c09c0174c69ab05be90deede7e3204a5027eab2a",
+          "joint": "wristFar",
+          "height": 150,
+          "breadth": 0.9,
+          "angle": 0,
+          "follow": "handFar",
+          "layer": 14
+        },
+        "near-thigh": {
+          "size": [
+            99,
+            360
+          ],
+          "pivot": [
+            50,
+            32
+          ],
+          "uv": [
+            0.2744140625,
+            0.5208333333333333,
+            0.0966796875,
+            0.46875
+          ],
+          "source": "rig-reference/body-parts.png",
+          "source_rect": [
+            591,
+            771,
+            690,
+            1131
+          ],
+          "source_sha256": "7e44f6bdd3fd74ead932cd91c09c0174c69ab05be90deede7e3204a5027eab2a",
+          "bone": "thighNear",
+          "tip": [
+            53,
+            321
+          ],
+          "layer": 25,
+          "breadth": 0.7
+        },
+        "far-thigh": {
+          "size": [
+            99,
+            360
+          ],
+          "pivot": [
+            50,
+            32
+          ],
+          "uv": [
+            0.162109375,
+            0.5208333333333333,
+            0.0966796875,
+            0.46875
+          ],
+          "source": "rig-reference/body-parts.png",
+          "source_rect": [
+            848,
+            771,
+            947,
+            1131
+          ],
+          "source_sha256": "7e44f6bdd3fd74ead932cd91c09c0174c69ab05be90deede7e3204a5027eab2a",
+          "bone": "thighFar",
+          "tip": [
+            50,
+            321
+          ],
+          "layer": 16,
+          "breadth": 0.7
+        },
+        "near-shin": {
+          "size": [
+            72,
+            332
+          ],
+          "pivot": [
+            41,
+            33
+          ],
+          "uv": [
+            0.47265625,
+            0.5572916666666667,
+            0.0703125,
+            0.4322916666666667
+          ],
+          "source": "rig-reference/body-parts.png",
+          "source_rect": [
+            92,
+            1165,
+            164,
+            1497
+          ],
+          "source_sha256": "7e44f6bdd3fd74ead932cd91c09c0174c69ab05be90deede7e3204a5027eab2a",
+          "bone": "shinNear",
+          "tip": [
+            37,
+            299
+          ],
+          "layer": 26,
+          "breadth": 0.7
+        },
+        "far-shin": {
+          "size": [
+            72,
+            332
+          ],
+          "pivot": [
+            41,
+            33
+          ],
+          "uv": [
+            0.38671875,
+            0.5572916666666667,
+            0.0703125,
+            0.4322916666666667
+          ],
+          "source": "rig-reference/body-parts.png",
+          "source_rect": [
+            349,
+            1165,
+            421,
+            1497
+          ],
+          "source_sha256": "7e44f6bdd3fd74ead932cd91c09c0174c69ab05be90deede7e3204a5027eab2a",
+          "bone": "shinFar",
+          "tip": [
+            37,
+            299
+          ],
+          "layer": 17,
+          "breadth": 0.7
+        },
+        "near-foot": {
+          "size": [
+            184,
+            110
+          ],
+          "pivot": [
+            37,
+            31
+          ],
+          "uv": [
+            0.58984375,
+            0.33203125,
+            0.1796875,
+            0.14322916666666666
+          ],
+          "source": "rig-reference/body-parts.png",
+          "source_rect": [
+            549,
+            1275,
+            733,
+            1385
+          ],
+          "source_sha256": "7e44f6bdd3fd74ead932cd91c09c0174c69ab05be90deede7e3204a5027eab2a",
+          "joint": "ankleNear",
+          "height": 110,
+          "breadth": 1.25,
+          "angle": 0,
+          "follow": "footNear",
+          "layer": 29
+        },
+        "far-foot": {
+          "size": [
+            184,
+            110
+          ],
+          "pivot": [
+            37,
+            31
+          ],
+          "uv": [
+            0.39453125,
+            0.33203125,
+            0.1796875,
+            0.14322916666666666
+          ],
+          "source": "rig-reference/body-parts.png",
+          "source_rect": [
+            806,
+            1275,
+            990,
+            1385
+          ],
+          "source_sha256": "7e44f6bdd3fd74ead932cd91c09c0174c69ab05be90deede7e3204a5027eab2a",
+          "joint": "ankleFar",
+          "height": 110,
+          "breadth": 1.35,
+          "angle": 0,
+          "follow": "footFar",
+          "layer": 20
+        }
+      },
+      "head_angle_offset": 18.43494882292201,
+      "hand_angle_offsets": {
+        "Near": -3,
+        "Far": 47.5
+      },
+      "atlas_sha256": "31c0d715eac8f6f7d3efd4b3e122d1fc9e71c4b2b1d13d087031dfea63e3cb57",
+      "ground": 942.0
+    },
+    "reference-bamboo": {
+      "id": "reference-bamboo",
+      "description": "竹纹长衫剑客 · 用户新素材试装",
+      "atlas": "reference-bamboo",
+      "size": [
+        1024,
+        1792
+      ],
+      "scale": 1,
+      "reference": true,
+      "source_sheet": "bamboo-source",
+      "source_facing": "left",
+      "body_source_scale": 1,
+      "parts": {
+        "head-neck": {
+          "size": [
+            316,
+            456
+          ],
+          "uv": [
+            0.0078125,
+            0.4620535714285714,
+            0.30859375,
+            0.2544642857142857
+          ],
+          "pivot": [
+            106,
+            229
+          ],
+          "mirror": true,
+          "source": "rig-bamboo/parts/01-head-neck.png",
+          "sha256": "7815a33ffe8dd1729793535697cf7488f35b6fffe7484f3202792f7be703314a",
+          "joint": "neck",
+          "height": 229,
+          "angle": 0,
+          "follow": "head",
+          "layer": 60
+        },
+        "torso": {
+          "size": [
+            196,
+            412
+          ],
+          "uv": [
+            0.33203125,
+            0.4866071428571429,
+            0.19140625,
+            0.22991071428571427
+          ],
+          "pivot": [
+            88,
+            233
+          ],
+          "mirror": true,
+          "source": "rig-bamboo/parts/02-torso.png",
+          "sha256": "e9a4da00a9f158b5fbd16cd4510d1ed145dd8335bc20b50ae74e578e15394220",
+          "bone": "torso",
+          "tip": [
+            96,
+            29
+          ],
+          "layer": 40
+        },
+        "front-skirt": {
+          "size": [
+            352,
+            484
+          ],
+          "uv": [
+            0.0078125,
+            0.7254464285714286,
+            0.34375,
+            0.2700892857142857
+          ],
+          "pivot": [
+            149,
+            15
+          ],
+          "mirror": true,
+          "source": "rig-bamboo/parts/03-front-skirt.png",
+          "sha256": "0bf07a971881b0cfdd81de41eb13e7d90e2d6b5b8cf3430e5d26f3f7f5843365",
+          "joint": "hipNear",
+          "height": 484,
+          "angle": 0,
+          "follow": "skirtNear",
+          "layer": 50
+        },
+        "back-skirt": {
+          "size": [
+            244,
+            474
+          ],
+          "uv": [
+            0.3671875,
+            0.7310267857142857,
+            0.23828125,
+            0.26450892857142855
+          ],
+          "pivot": [
+            93,
+            18
+          ],
+          "mirror": true,
+          "source": "rig-bamboo/parts/04-back-skirt.png",
+          "sha256": "5ed82982ae4168728ffc285840691c4dd49c5b3875358a3c2413831de5a0cd8f",
+          "joint": "hipFar",
+          "height": 474,
+          "angle": 8,
+          "follow": "skirtFar",
+          "layer": 5
+        },
+        "near-upper-arm": {
+          "size": [
+            216,
+            358
+          ],
+          "uv": [
+            0.7421875,
+            0.5167410714285714,
+            0.2109375,
+            0.19977678571428573
+          ],
+          "pivot": [
+            124,
+            38
+          ],
+          "mirror": true,
+          "source": "rig-bamboo/parts/05-near-upper-arm.png",
+          "sha256": "b09e310fb233e12361542a19a1fb129cf5b026a94c7b89cf4f553cf7d39bab21",
+          "bone": "upperNear",
+          "tip": [
+            106,
+            209
+          ],
+          "layer": 72
+        },
+        "far-upper-arm": {
+          "size": [
+            192,
+            358
+          ],
+          "uv": [
+            0.5390625,
+            0.5167410714285714,
+            0.1875,
+            0.19977678571428573
+          ],
+          "pivot": [
+            60,
+            37
+          ],
+          "mirror": true,
+          "source": "rig-bamboo/parts/06-far-upper-arm.png",
+          "sha256": "fd8217995fd64b45aa92b8af0827ddbebc4a6ef9cbc87e853aab635a2e7d4536",
+          "bone": "upperFar",
+          "tip": [
+            79,
+            209
+          ],
+          "layer": 10
+        },
+        "near-forearm": {
+          "size": [
+            279,
+            473
+          ],
+          "uv": [
+            0.62109375,
+            0.7315848214285714,
+            0.2724609375,
+            0.26395089285714285
+          ],
+          "pivot": [
+            29,
+            38
+          ],
+          "mirror": true,
+          "source": "rig-bamboo/parts/07-near-forearm.png",
+          "sha256": "a76b679eeb540c652c496c713ee6ee5e9c1a0212009353bc9b1413febe4da226",
+          "bone": "forearmNear",
+          "tip": [
+            99,
+            183
+          ],
+          "layer": 75
+        },
+        "far-forearm": {
+          "size": [
+            219,
+            352
+          ],
+          "uv": [
+            0.0078125,
+            0.2566964285714286,
+            0.2138671875,
+            0.19642857142857142
+          ],
+          "pivot": [
+            113,
+            41
+          ],
+          "mirror": true,
+          "source": "rig-bamboo/parts/08-far-forearm.png",
+          "sha256": "00fe0d0e430e70bc17b3705836daa736c0239552a44fca1c06e231519be8f7f2",
+          "bone": "forearmFar",
+          "tip": [
+            90,
+            192
+          ],
+          "layer": 12
+        },
+        "near-hand": {
+          "size": [
+            81,
+            201
+          ],
+          "uv": [
+            0.8369140625,
+            0.3409598214285714,
+            0.0791015625,
+            0.11216517857142858
+          ],
+          "pivot": [
+            37,
+            40
+          ],
+          "mirror": true,
+          "source": "rig-bamboo/parts/09-near-hand.png",
+          "sha256": "a5bccb536af38654dce7b3d558ef03ba7a3e84c8e11c829eb245d6f3980e22f7",
+          "joint": "wristNear",
+          "height": 201,
+          "angle": 0,
+          "follow": "handNear",
+          "layer": 80
+        },
+        "far-hand": {
+          "size": [
+            81,
+            203
+          ],
+          "uv": [
+            0.7421875,
+            0.33984375,
+            0.0791015625,
+            0.11328125
+          ],
+          "pivot": [
+            43,
+            43
+          ],
+          "mirror": true,
+          "source": "rig-bamboo/parts/10-far-hand.png",
+          "sha256": "bdeb1ab952d0a3ae4278965ce8aa64b10ab94edc6e555054887b3a7906cec36d",
+          "joint": "wristFar",
+          "height": 203,
+          "angle": 0,
+          "follow": "handFar",
+          "layer": 14
+        },
+        "near-thigh": {
+          "size": [
+            132,
+            332
+          ],
+          "uv": [
+            0.4462890625,
+            0.2678571428571429,
+            0.12890625,
+            0.18526785714285715
+          ],
+          "pivot": [
+            54,
+            31
+          ],
+          "mirror": true,
+          "source": "rig-bamboo/parts/11-near-thigh.png",
+          "sha256": "0ea2ae4d2d391f55de4094866c29775016b8251652bb570eb45e24242a4f3565",
+          "bone": "thighNear",
+          "tip": [
+            81,
+            300
+          ],
+          "layer": 25
+        },
+        "far-thigh": {
+          "size": [
+            139,
+            326
+          ],
+          "uv": [
+            0.5908203125,
+            0.2712053571428571,
+            0.1357421875,
+            0.18191964285714285
+          ],
+          "pivot": [
+            86,
+            30
+          ],
+          "mirror": true,
+          "source": "rig-bamboo/parts/12-far-thigh.png",
+          "sha256": "32b16d0daf2a6e2b640b28efe5c1e5bf34f599b12ef498688840d51ada8447f1",
+          "bone": "thighFar",
+          "tip": [
+            47,
+            292
+          ],
+          "layer": 16
+        },
+        "near-shin": {
+          "size": [
+            89,
+            344
+          ],
+          "uv": [
+            0.34375,
+            0.2611607142857143,
+            0.0869140625,
+            0.19196428571428573
+          ],
+          "pivot": [
+            44,
+            34
+          ],
+          "mirror": true,
+          "source": "rig-bamboo/parts/13-near-shin.png",
+          "sha256": "c517d3946ed455262915e8f802a4c0c9560b06accecd7d1e03026eb4f1ffab8a",
+          "bone": "shinNear",
+          "tip": [
+            48,
+            313
+          ],
+          "layer": 26
+        },
+        "far-shin": {
+          "size": [
+            93,
+            345
+          ],
+          "uv": [
+            0.2373046875,
+            0.2606026785714286,
+            0.0908203125,
+            0.19252232142857142
+          ],
+          "pivot": [
+            48,
+            33
+          ],
+          "mirror": true,
+          "source": "rig-bamboo/parts/14-far-shin.png",
+          "sha256": "9287db34f4da10889ce700ac12a32e8c59411e1a21415597bf7adc29905edbac",
+          "bone": "shinFar",
+          "tip": [
+            50,
+            313
+          ],
+          "layer": 17
+        },
+        "near-foot": {
+          "size": [
+            191,
+            192
+          ],
+          "uv": [
+            0.2060546875,
+            0.140625,
+            0.1865234375,
+            0.10714285714285714
+          ],
+          "pivot": [
+            141,
+            29
+          ],
+          "mirror": true,
+          "source": "rig-bamboo/parts/15-near-foot.png",
+          "sha256": "9246cdedc922c0da560c952883aaf55e9ff7eae2af37fddf1aa621263e31c1e1",
+          "joint": "ankleNear",
+          "height": 192,
+          "angle": 0,
+          "follow": "footNear",
+          "layer": 29
+        },
+        "far-foot": {
+          "size": [
+            187,
+            195
+          ],
+          "uv": [
+            0.0078125,
+            0.1389508928571429,
+            0.1826171875,
+            0.10881696428571429
+          ],
+          "pivot": [
+            55,
+            27
+          ],
+          "mirror": false,
+          "source": "rig-bamboo/parts/16-far-foot.png",
+          "sha256": "285ce1eda923f6be29077be8271e907c56a767f3afd0b079f149fd3005097408",
+          "joint": "ankleFar",
+          "height": 195,
+          "angle": 0,
+          "follow": "footFar",
+          "layer": 20
+        },
+        "sheathed-sword": {
+          "size": [
+            992,
+            182
+          ],
+          "uv": [
+            0.0078125,
+            0.028459821428571397,
+            0.96875,
+            0.1015625
+          ],
+          "pivot": [
+            289,
+            57
+          ],
+          "mirror": false,
+          "source": "rig-bamboo/parts/17-sheathed-sword.png",
+          "sha256": "eab171e40e8729d6a925d8be1d2fe4262227fff8cce13ed175863090d4d769e2",
+          "joint": "hipNear",
+          "width": 600,
+          "angle": 100,
+          "layer": 19,
+          "trial_weapon": true
+        }
+      },
+      "shoulders": {
+        "Near": [
+          -79.48792204152683,
+          -142.22401432078956
+        ],
+        "Far": [
+          14.048025660284631,
+          -128.5482515441108
+        ]
+      },
+      "hips": {
+        "Near": [
+          -18.730700880379505,
+          18.280066863382928
+        ],
+        "Far": [
+          24.197087434381473,
+          20.964278182014716
+        ]
+      },
+      "lengths": {
+        "spine": 204.15680248279753,
+        "upper_armNear": 171.9447585708852,
+        "upper_armFar": 173.04623659588788,
+        "forearmNear": 161.01242188104618,
+        "forearmFar": 152.74161188098023,
+        "thighNear": 270.3516228913746,
+        "thighFar": 264.8867682614592,
+        "shinNear": 279.0286723618202,
+        "shinFar": 280.0071427660373,
+        "upper_arm": 172.49549758338654,
+        "forearm": 156.87701688101322,
+        "thigh": 267.6191955764169,
+        "shin": 279.51790756392876
+      },
+      "canvas": [
+        1200,
+        1380
+      ],
+      "canvas_origin": [
+        600,
+        470
+      ],
+      "knee_poles": {
+        "Near": 1,
+        "Far": 1
+      },
+      "ground": 715.8581892095112,
+      "atlas_sha256": "78e6ce88ab420ed32c07af5e3d06522c1616a7d0c28d4345e10deb17e0f57615"
+    },
+    "reference-plain": {
+      "id": "reference-plain",
+      "description": "素发女侠 · 十五件单一腰胯",
+      "atlas": "reference-plain",
+      "size": [
+        1024,
+        512
+      ],
+      "scale": 1,
+      "reference": true,
+      "source_sheet": "plain-source",
+      "reference_image": "plain-assembled",
+      "assembly_label": "十五件 · 单一腰胯",
+      "bind_lean": -8.972626614896393,
+      "canvas": [
+        332,
+        1020
+      ],
+      "canvas_origin": [
+        190,
+        357
+      ],
+      "shoulders": {
+        "Near": [
+          -63.736705025970465,
+          -128.51316054176098
+        ],
+        "Far": [
+          6.290490463411439,
+          -110.36951449440072
+        ]
+      },
+      "hips": {
+        "Near": [
+          -42.16188236220395,
+          183.67192402671583
+        ],
+        "Far": [
+          -68.25961965668776,
+          169.42734231618084
+        ]
+      },
+      "feet": {
+        "Near": [
+          18.0,
+          586.0
+        ],
+        "Far": [
+          -106.0,
+          558.0
+        ]
+      },
+      "knee_poles": {
+        "Near": 1,
+        "Far": 1
+      },
+      "angle_offsets": {
+        "near_upper": 38.585204457820225,
+        "near_elbow": -16.57309503956871,
+        "far_upper": -24.340478961817716,
+        "far_elbow": 10.220766070886611
+      },
+      "hand_angle_offsets": {
+        "Near": -11,
+        "Far": 10
+      },
+      "head_angle_offset": 8.972626614896393,
+      "parts": {
+        "head-neck": {
+          "size": [
+            167,
+            221
+          ],
+          "uv": [
+            0.0078125,
+            0.552734375,
+            0.1630859375,
+            0.431640625
+          ],
+          "pivot": [
+            91,
+            190
+          ],
+          "source": "rig-plain/parts/01-head-neck.png",
+          "sha256": "4a712851b67d308a467cee6ec3c29d420467e5520cd434f5fc6bf61ad8c3f8c4",
+          "joint": "neck",
+          "height": 201.4,
+          "angle": 0,
+          "follow": "head",
+          "layer": 30
+        },
+        "torso": {
+          "size": [
+            143,
+            179
+          ],
+          "uv": [
+            0.7412109375,
+            0.634765625,
+            0.1396484375,
+            0.349609375
+          ],
+          "pivot": [
+            70,
+            172
+          ],
+          "source": "rig-plain/parts/02-torso.png",
+          "sha256": "a030a316c660827147e554fe0f20f1b99111ffe46a05e0963045295dc9b7826c",
+          "bone": "torso",
+          "tip": [
+            76,
+            41
+          ],
+          "layer": 40
+        },
+        "pelvis": {
+          "size": [
+            190,
+            197
+          ],
+          "uv": [
+            0.1865234375,
+            0.599609375,
+            0.185546875,
+            0.384765625
+          ],
+          "pivot": [
+            97,
+            25
+          ],
+          "source": "rig-plain/parts/03-pelvis.png",
+          "sha256": "e8804c1896708cf64ed8728c2fad4af6bf45455b5d70043314732e17c466af82",
+          "joint": "hip",
+          "height": 262.01,
+          "angle": 8.972626614896393,
+          "layer": 50
+        },
+        "near-upper-arm": {
+          "size": [
+            91,
+            168
+          ],
+          "uv": [
+            0.1064453125,
+            0.193359375,
+            0.0888671875,
+            0.328125
+          ],
+          "pivot": [
+            58,
+            25
+          ],
+          "source": "rig-plain/parts/04-near-upper-arm.png",
+          "sha256": "31aae2d456c34a1c9aaf9b6070bc6852c35dfab0a3995ec147a1227b04be2c22",
+          "bone": "upperNear",
+          "tip": [
+            44,
+            145
+          ],
+          "layer": 72
+        },
+        "far-upper-arm": {
+          "size": [
+            88,
+            164
+          ],
+          "uv": [
+            0.2109375,
+            0.201171875,
+            0.0859375,
+            0.3203125
+          ],
+          "pivot": [
+            33,
+            21
+          ],
+          "source": "rig-plain/parts/05-far-upper-arm.png",
+          "sha256": "76dfd8cf21fae8cd7952a47fb05700dc17d30da2bf943e0a3e85d00fd15cfc5a",
+          "bone": "upperFar",
+          "tip": [
+            52,
+            141
+          ],
+          "layer": 10
+        },
+        "near-forearm": {
+          "size": [
+            88,
+            172
+          ],
+          "uv": [
+            0.896484375,
+            0.6484375,
+            0.0859375,
+            0.3359375
+          ],
+          "pivot": [
+            56,
+            16
+          ],
+          "source": "rig-plain/parts/06-near-forearm.png",
+          "sha256": "7493487c2ff5d6a40a3560e8a2a21e50e1813c8dfcfe277f2533d179108ca376",
+          "bone": "forearmNear",
+          "tip": [
+            34,
+            151
+          ],
+          "layer": 75
+        },
+        "far-forearm": {
+          "size": [
+            85,
+            171
+          ],
+          "uv": [
+            0.0078125,
+            0.1875,
+            0.0830078125,
+            0.333984375
+          ],
+          "pivot": [
+            23,
+            14
+          ],
+          "source": "rig-plain/parts/07-far-forearm.png",
+          "sha256": "57f33d147c523c194b092cb4c9bb3215caa821c56f7e42bc8fba69a805b366f0",
+          "bone": "forearmFar",
+          "tip": [
+            59,
+            148
+          ],
+          "layer": 12
+        },
+        "near-hand": {
+          "size": [
+            60,
+            120
+          ],
+          "uv": [
+            0.3828125,
+            0.287109375,
+            0.05859375,
+            0.234375
+          ],
+          "pivot": [
+            39,
+            13
+          ],
+          "source": "rig-plain/parts/08-near-hand.png",
+          "sha256": "6c53a29b8bc86c6e8a844d856dc882d730c068c1ba3824d672e0e7d1dccc195a",
+          "joint": "wristNear",
+          "height": 120,
+          "angle": 0,
+          "follow": "handNear",
+          "layer": 80
+        },
+        "far-hand": {
+          "size": [
+            56,
+            120
+          ],
+          "uv": [
+            0.3125,
+            0.287109375,
+            0.0546875,
+            0.234375
+          ],
+          "pivot": [
+            16,
+            13
+          ],
+          "source": "rig-plain/parts/09-far-hand.png",
+          "sha256": "d1becc4e946395d5368418501641380f14366674acc7a0dc38de64894564968d",
+          "joint": "wristFar",
+          "height": 108.0,
+          "angle": 0,
+          "follow": "handFar",
+          "layer": 14
+        },
+        "near-thigh": {
+          "size": [
+            82,
+            181
+          ],
+          "uv": [
+            0.6455078125,
+            0.630859375,
+            0.080078125,
+            0.353515625
+          ],
+          "pivot": [
+            44,
+            14
+          ],
+          "source": "rig-plain/parts/10-near-thigh.png",
+          "sha256": "b79dc3d1df0472fff905a2cfc8c3c4ca1484bbef8f961ad74f1466d514d5a2bf",
+          "bone": "thighNear",
+          "tip": [
+            33,
+            172
+          ],
+          "layer": 25
+        },
+        "far-thigh": {
+          "size": [
+            77,
+            181
+          ],
+          "uv": [
+            0.5546875,
+            0.630859375,
+            0.0751953125,
+            0.353515625
+          ],
+          "pivot": [
+            38,
+            14
+          ],
+          "source": "rig-plain/parts/11-far-thigh.png",
+          "sha256": "628f9233fad7c5a300188a199195167807305920feb6866a54305ca45efeaa0b",
+          "bone": "thighFar",
+          "tip": [
+            45,
+            172
+          ],
+          "layer": 16
+        },
+        "near-shin": {
+          "size": [
+            73,
+            193
+          ],
+          "uv": [
+            0.3876953125,
+            0.607421875,
+            0.0712890625,
+            0.376953125
+          ],
+          "pivot": [
+            40,
+            8
+          ],
+          "source": "rig-plain/parts/12-near-shin.png",
+          "sha256": "8ccf5e432bec500de563ee3a10ac56d1f4b9a4c3258c826272bb3172de8f336e",
+          "bone": "shinNear",
+          "tip": [
+            36,
+            186
+          ],
+          "layer": 26
+        },
+        "far-shin": {
+          "size": [
+            66,
+            189
+          ],
+          "uv": [
+            0.474609375,
+            0.615234375,
+            0.064453125,
+            0.369140625
+          ],
+          "pivot": [
+            24,
+            7
+          ],
+          "source": "rig-plain/parts/13-far-shin.png",
+          "sha256": "9ca0ec2ad36126a2f17e4723ef3f8c048bf28cd4a55e065f771c26ffc89c75f0",
+          "bone": "shinFar",
+          "tip": [
+            30,
+            183
+          ],
+          "layer": 17
+        },
+        "near-foot": {
+          "size": [
+            140,
+            89
+          ],
+          "uv": [
+            0.6025390625,
+            0.34765625,
+            0.13671875,
+            0.173828125
+          ],
+          "pivot": [
+            34,
+            25
+          ],
+          "source": "rig-plain/parts/14-near-foot.png",
+          "sha256": "ffe808d4c260480208ef2ff56efd501c1e7bec15df7ac3d8bb37bc0b20a6623f",
+          "joint": "ankleNear",
+          "height": 97.9,
+          "angle": 0,
+          "follow": "footNear",
+          "layer": 29
+        },
+        "far-foot": {
+          "size": [
+            133,
+            90
+          ],
+          "uv": [
+            0.45703125,
+            0.345703125,
+            0.1298828125,
+            0.17578125
+          ],
+          "pivot": [
+            35,
+            17
+          ],
+          "source": "rig-plain/parts/15-far-foot.png",
+          "sha256": "eef14362a6442fd344e8a300da19adf5a10fef1154d74a9c365196719e315a8c",
+          "joint": "ankleFar",
+          "height": 94.5,
+          "angle": 0,
+          "follow": "footFar",
+          "layer": 20
+        }
+      },
+      "lengths": {
+        "spine": 153.88307249337075,
+        "upper_armNear": 132.19682295728592,
+        "forearmNear": 133.6600164596728,
+        "thighNear": 165.0969412193939,
+        "shinNear": 234.30749027719963,
+        "upper_armFar": 197.0913493789111,
+        "forearmFar": 75.02666192761077,
+        "thighFar": 142.1724305201258,
+        "shinFar": 244.96530366564158,
+        "upper_arm": 164.6440861680985,
+        "forearm": 104.34333919364178,
+        "thigh": 153.63468586975983,
+        "shin": 239.6363969714206
+      },
+      "reference_landmarks": {
+        "hip": [
+          0.0,
+          0.0
+        ],
+        "neck": [
+          -24.0,
+          -152.0
+        ],
+        "shoulderNear": [
+          -83.0,
+          -117.0
+        ],
+        "shoulderFar": [
+          -11.0,
+          -110.0
+        ],
+        "elbowNear": [
+          -123.0,
+          9.0
+        ],
+        "elbowFar": [
+          67.0,
+          71.0
+        ],
+        "wristNear": [
+          -144.0,
+          141.0
+        ],
+        "wristFar": [
+          94.0,
+          141.0
+        ],
+        "hipNear": [
+          -13.0,
+          188.0
+        ],
+        "hipFar": [
+          -41.0,
+          178.0
+        ],
+        "kneeNear": [
+          6.0,
+          352.0
+        ],
+        "kneeFar": [
+          -48.0,
+          320.0
+        ],
+        "ankleNear": [
+          18.0,
+          586.0
+        ],
+        "ankleFar": [
+          -106.0,
+          558.0
+        ]
+      },
+      "notes": "各片保持原长宽比，以左侧整身图校准连接与覆盖区；腰胯作为单一部件随腰骨旋转。",
+      "ground": 656.4,
+      "atlas_sha256": "393c77c3d9031dd415bcad4914128154922263ec0409621e091e09e239376673"
     }
   }
 }

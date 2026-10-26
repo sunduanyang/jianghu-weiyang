@@ -2,7 +2,7 @@
 from copy import deepcopy
 import random
 
-from . import martial, combat_flow
+from . import martial, combat_flow, combat_realtime
 
 
 def fighter(actor, key, equipment=None):
@@ -14,16 +14,20 @@ def fighter(actor, key, equipment=None):
             'attacks': actor['martial']['loadout']['attacks'].copy()}
 
 
-def start(a, b, seed, battle_id='', spar=True, equipment=None):
+def start(a, b, seed, battle_id='', spar=True, equipment=None, ruleset=3):
     equipment = equipment or (None, None)
     battle = {'id': battle_id, 'seed': seed, 'round': 1, 'distance': 3, 'status': 'active',
             'spar': spar, 'fighters': [fighter(a, a.get('id', 'player'), equipment[0]), fighter(b, b['id'], equipment[1])],
             'log': [], 'winner': None, 'reason': '', 'settled': False}
-    combat_flow.initialize(battle)
+    (combat_realtime if ruleset == 3 else combat_flow).initialize(battle)
+    for f, actor in zip(battle['fighters'], (a, b)):
+        f['movement_name'] = martial.ARTS[actor['martial']['loadout']['movement']]['name']
     return battle
 
 
 def actions(battle, side=0):
+    if battle.get('ruleset') == 3:
+        return combat_realtime.actions(battle, side)
     if battle.get('ruleset') == 2:
         return combat_flow.actions(battle, side)
     if battle['status'] != 'active':
@@ -51,6 +55,8 @@ def finish(battle, winner, reason):
 
 
 def perform(battle, choice, side):
+    if battle.get('ruleset') == 3:
+        return combat_realtime.command(battle, choice, side)
     if battle.get('ruleset') == 2:
         return combat_flow.perform(battle, choice, side)
     f, target = battle['fighters'][side], battle['fighters'][1-side]
@@ -107,6 +113,8 @@ def perform(battle, choice, side):
 
 
 def ai_choice(battle, side):
+    if battle.get('ruleset') == 3:
+        return 'auto'
     if battle.get('ruleset') == 2:
         return combat_flow.ai_choice(battle, side)
     f = battle['fighters'][side]
@@ -128,6 +136,8 @@ def ai_choice(battle, side):
 
 
 def step(battle, choice):
+    if battle.get('ruleset') == 3:
+        return combat_realtime.step(battle, choice)
     if battle.get('ruleset') == 2:
         return combat_flow.step(battle, choice)
     # Validate before changing any field, including round and the combat log.
@@ -150,6 +160,8 @@ def autoplay(battle):
 def view(battle):
     if not battle:
         return None
+    if battle.get('ruleset') == 3:
+        return combat_realtime.view(battle)
     if battle.get('ruleset') == 2:
         return combat_flow.view(battle)
     return {**deepcopy(battle), 'actions': actions(battle),

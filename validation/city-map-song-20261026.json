@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-26",
+  "scope": "Unity city map integration of the 21 newly generated Song art assets",
+  "pack": "song-20261026",
+  "source_assets": 21,
+  "runtime_textures": 78,
+  "build": "unity/Build/Current/江湖未央.exe",
+  "build_exit": 0,
+  "launcher_verified": "启动Unity版.bat -> unity/launch-game.ps1 -> Build/Current/江湖未央.exe",
+  "native_acceptance": "output/city-song-integration/final-acceptance/acceptance.json",
+  "native_passed": true,
+  "native_checks": 102,
+  "cities": 24,
+  "facilities": 347,
+  "targeted_tests": {
+    "test_city_maps.py": 11,
+    "test_protagonist.py": 13
+  },
+  "asset_verification": {
+    "sources": 21,
+    "runtime_textures": 78,
+    "errors": [],
+    "passed": true
+  },
+  "full_rebake": {
+    "full_bake_exit": 0,
+    "runtime_textures": 78,
+    "changed_hashes": [],
+    "passed": true
+  },
+  "interactive_acceptance": "output/city-song-integration/interactive-acceptance.json",
+  "interactive_passed": true,
+  "save_policy": "All native and manual runs used isolated output/city-song-integration save directories. Existing user saves were not supplied.",
+  "screenshots": [
+    "output/city-song-integration/final-acceptance/01-city-overview.png",
+    "output/city-song-integration/final-acceptance/02-city-route.png",
+    "output/city-song-integration/final-acceptance/03-city-arrival.png",
+    "output/city-song-integration/final-acceptance/04-city-capital.png",
+    "output/city-song-integration/final-acceptance/04-city-mountain.png",
+    "output/city-song-integration/final-acceptance/04-city-oasis.png"
+  ],
+  "sha256": {
+    "unity/JianghuUnity/Assets/Scripts/CityMap.cs": "d8617228521ed22a978b6314c4c145cbf64e5dc84b58182e6ac8216055605730",
+    "unity/JianghuUnity/Assets/Scripts/CityMapSmoke.cs": "c694968b8d254ffde7ab441d5ab91b2cf29fa45e6e04de317ea585f44620187c",
+    "unity/export_city_art.py": "5d93451ec2480a3dc9e20d1fa49eb9b2ede1773ab3f2031fb8b2e02a2bdd09e2",
+    "unity/export_song_city_art.py": "7c836652ca701632af36ab6bc3954ff24d51ec9a73dab217952c8f7d7ae11191",
+    "art/city-map/song-20261026/runtime-manifest.json": "d29d5101b61825521085b7b349fdc5ba907c73f90dad82193070ba8df75bda11",
+    "unity/Build/Current/江湖未央_Data/Managed/Assembly-CSharp.dll": "475e7ad9fd496f5a80c056b3049608d8faff177980e0e450659418fdcfe64f75"
+  }
+}
