@@ -887,6 +887,186 @@ STEPPE = [(98, 46.0), (104, 47.5), (110, 47.4), (116, 47.6), (118, 45.2), (114, 
 FOREST = [(122, 47.5), (126, 49.5), (131, 48.0), (133, 45.5), (130, 43.6), (126, 44.2), (123, 45.5)]
 
 
+# ---------------------------------------------------------------- ancient-map furniture
+# The atlas follows the conventions of Song–Ming Chinese maps (《华夷图》《禹迹图》《大明混一图》):
+# aged silk, a sea filled with scale waves, double-banked rivers with the Yellow River in yellow,
+# the Great Wall as a crenellated line, a faint 计里画方 grid, a ruled frame and a title cartouche.
+FONT_BOLD = ASSETS / 'Resources' / 'Fonts' / 'NotoSerifSC-Bold.ttf'
+FONT_REGULAR = ASSETS / 'Resources' / 'Fonts' / 'NotoSerifSC-Regular.ttf'
+MAP_FRAME = (58, 42)          # x / y inset of the ruled frame on the 2048x1216 sheet
+GREAT_WALL = [(98.2, 39.8), (100.4, 38.9), (102.6, 37.9), (104.2, 37.4), (106.2, 38.6), (107.6, 38.1),
+              (109.7, 38.4), (111.4, 39.4), (113.3, 40.2), (114.9, 40.6), (116.0, 40.4), (117.6, 40.3), (119.8, 40.0)]
+
+
+def cjk_font(size, bold=True):
+    from PIL import ImageFont
+    return ImageFont.truetype(str(FONT_BOLD if bold else FONT_REGULAR), size)
+
+
+def age_silk(base, W, H):
+    """Silk weave, fold creases and foxing on the painted base (float RGB array)."""
+    yy, xx = np.mgrid[0:H, 0:W]
+    weave = (np.sin(xx * 2.1) * np.sin(yy * 2.1)) * 2.2
+    base = base + weave[..., None]
+    # creases where the scroll was folded: soft dark line with a lighter shoulder
+    for x0 in (W * .25, W * .5, W * .75):
+        dx = xx - x0 - (noise((H, 1), 30, int(x0))[:, 0][:, None] - .5) * 6
+        base = base * (1 - .07 * np.exp(-(dx / 1.4) ** 2))[..., None] + (5 * np.exp(-((dx - 4) / 3) ** 2))[..., None]
+    dy = yy - H * .5 - (noise((1, W), 40, 7)[0][None, :] - .5) * 6
+    base = base * (1 - .07 * np.exp(-(dy / 1.4) ** 2))[..., None] + (5 * np.exp(-((dy - 4) / 3) ** 2))[..., None]
+    # foxing: a scatter of small rust-brown spots and a few larger tide marks
+    rng = np.random.default_rng(141)
+    spots = np.zeros((H, W))
+    for _ in range(220):
+        x, y, r = rng.uniform(0, W), rng.uniform(0, H), rng.uniform(1.2, 4.5)
+        x0, x1, y0, y1 = int(max(0, x - 3 * r)), int(min(W, x + 3 * r)), int(max(0, y - 3 * r)), int(min(H, y + 3 * r))
+        spots[y0:y1, x0:x1] = np.maximum(spots[y0:y1, x0:x1], np.exp(-(((xx[y0:y1, x0:x1] - x) ** 2 + (yy[y0:y1, x0:x1] - y) ** 2) / (r * r))))
+    tide = np.clip((noise((H, W), 60, 142) - .72) * 5, 0, 1)
+    stain = np.array([120, 84, 40.])[None, None]
+    base = base * (1 - spots[..., None] * .22) + stain * spots[..., None] * .10
+    base = base * (1 - tide[..., None] * .09)
+    # mounting margin outside the ruled frame: slightly darker, plainer silk
+    fx, fy = MAP_FRAME
+    outside = (xx < fx - 8) | (xx > W - fx + 8) | (yy < fy - 8) | (yy > H - fy + 8)
+    base = np.where(outside[..., None], base * .80 + np.array([150, 128, 88.])[None, None] * .14, base)
+    return base
+
+
+def fish_scale_sea(W, H, sea_dist, land_np):
+    """Rows of overlapping scale-arcs (鱼鳞纹) filling the sea; a quiet band hugs the coast."""
+    layer = Image.new('L', (W, H), 0)
+    d = ImageDraw.Draw(layer)
+    rng = np.random.default_rng(151)
+    r, dx, dy = 9.0, 16.0, 7.0
+    row = 0
+    y = -r
+    while y < H + r:
+        off = (row % 2) * dx / 2
+        x = -r + off
+        while x < W + r:
+            jx, jy = rng.normal(0, .6), rng.normal(0, .5)
+            d.arc((x - r + jx, y - r + jy, x + r + jx, y + r + jy), 200, 340, fill=150, width=1)
+            if rng.random() < .22:                          # an inner crest here and there
+                rr = r * .55
+                d.arc((x - rr + jx, y - rr + jy + 2, x + rr + jx, y + rr + jy + 2), 215, 325, fill=110, width=1)
+            x += dx
+        y += dy
+        row += 1
+    a = np.array(layer, float)
+    keep = np.clip((sea_dist - 5) / 6, 0, 1) * (~land_np)          # leave the coast line clear
+    a *= keep * (.75 + .25 * noise((H, W), 25, 152))
+    fx, fy = MAP_FRAME
+    a[:fy, :] = a[H - fy:, :] = 0
+    a[:, :fx] = a[:, W - fx:] = 0
+    # a second, sparse layer of curling breakers (卷浪) further out to sea
+    curls = Image.new('L', (W, H), 0)
+    dc = ImageDraw.Draw(curls)
+    ys, xs = np.nonzero((sea_dist > 40) & ~land_np)
+    for i in rng.choice(len(xs), size=min(len(xs), 36), replace=False):
+        x, y = xs[i], ys[i]
+        if not (fx + 20 < x < W - fx - 20 and fy + 20 < y < H - fy - 20):
+            continue
+        dc.arc((x - 9, y - 9, x + 9, y + 9), 160, 430, fill=230, width=2)
+        dc.arc((x - 4, y - 4, x + 4, y + 4), 0, 300, fill=230, width=2)
+        dc.line((x + 9, y, x + 22, y + 4), fill=230, width=2)
+    a = np.maximum(a, np.array(curls, float) * .8)
+    return Image.merge('RGBA', [Image.new('L', (W, H), c) for c in (52, 82, 80)] + [Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))])
+
+
+def draw_great_wall(d, pts):
+    line = catmull(pts, 10)
+    # wall body: ink line with a grey fill, crenels on the north side every few pixels
+    d.line(line, fill=rgba(INK, 230), width=6, joint='curve')
+    d.line(line, fill=(176, 166, 140, 255), width=3, joint='curve')
+    acc = 0.0
+    for a, b in zip(line, line[1:]):
+        seg = math.dist(a, b)
+        if seg < 1e-6:
+            continue
+        ux, uy = (b[0] - a[0]) / seg, (b[1] - a[1]) / seg
+        nx, ny = uy, -ux                                       # left normal points north for a west→east wall
+        if ny > 0:
+            nx, ny = -nx, -ny
+        t = (6 - acc % 6) % 6
+        while t < seg:
+            cx, cy = a[0] + ux * t + nx * 4, a[1] + uy * t + ny * 4
+            d.rectangle((cx - 1.6, cy - 1.6, cx + 1.6, cy + 1.6), fill=rgba(INK, 230))
+            t += 6
+        acc += seg
+    for x, y in (line[0], line[-1]):                          # gate towers at both ends
+        d.rectangle((x - 6, y - 6, x + 6, y + 6), fill=(176, 166, 140, 255), outline=rgba(INK, 240), width=2)
+        d.line((x - 8, y - 6, x, y - 11, x + 8, y - 6), fill=rgba(INK, 240), width=2)
+
+
+def ruled_grid(W, H, step):
+    """计里画方: a faint square grid, broken like a ruled line drawn in diluted ink."""
+    fx, fy = MAP_FRAME
+    layer = Image.new('L', (W, H), 0)
+    d = ImageDraw.Draw(layer)
+    for x in np.arange(fx, W - fx, step):
+        d.line((x, fy, x, H - fy), fill=255, width=1)
+    for y in np.arange(fy, H - fy, step):
+        d.line((fx, y, W - fx, y), fill=255, width=1)
+    a = np.array(layer, float) * (.55 + .45 * (noise((H, W), 6, 161) > .35)) * .11
+    return Image.merge('RGBA', [Image.new('L', (W, H), c) for c in (110, 80, 44)] + [Image.fromarray(a.astype(np.uint8))])
+
+
+def draw_frame(d, W, H):
+    fx, fy = MAP_FRAME
+    d.rectangle((fx - 8, fy - 8, W - fx + 8, H - fy + 8), outline=rgba(INK, 220), width=3)
+    d.rectangle((fx, fy, W - fx, H - fy), outline=rgba(INK, 170), width=1)
+
+
+def vertical_text(d, x, y, text, font, fill, gap=1.06):
+    size = font.size
+    for i, ch in enumerate(text):
+        d.text((x, y + i * size * gap), ch, font=font, fill=fill, anchor='mt')
+    return y + len(text) * size * gap
+
+
+def title_cartouche(ink, land_np, k):
+    """Vertical title in a ruled cartouche with a vermilion seal, placed in open sea (lower right first)."""
+    H, W = land_np.shape
+    bw, bh = 118, 360
+    near = ndimage.binary_dilation(land_np, iterations=14)
+    fx, fy = MAP_FRAME
+    spot = None
+    for x0 in range(W - fx - bw - 30, W // 2, -16):
+        for y0 in range(H - fy - bh - 30, fy + 30, -16):
+            if not near[y0:y0 + bh, x0:x0 + bw].any():
+                spot = (x0, y0)
+                break
+        if spot:
+            break
+    if spot is None:
+        return ink
+    x0, y0 = spot
+    card = Image.new('RGBA', (bw, bh), (0, 0, 0, 0))
+    paper = paper_field((bh, bw), (226, 208, 162), 171, fibre=False, wrap=False)
+    card.paste(paper, (0, 0))
+    d = ImageDraw.Draw(card)
+    d.rectangle((2, 2, bw - 3, bh - 3), outline=rgba(INK, 235), width=3)
+    d.rectangle((9, 9, bw - 10, bh - 10), outline=rgba(INK, 160), width=1)
+    title = cjk_font(40)
+    vertical_text(d, bw * .60, 26, '九州山河图', title, rgba(INK, 240), gap=1.12)
+    small = cjk_font(17, bold=False)
+    vertical_text(d, bw * .24, 34, '宋金对峙', small, rgba(INK, 210))
+    vertical_text(d, bw * .24, 34 + 17 * 5.2, '列国十二', small, rgba(INK, 210))
+    ink.alpha_composite(card, (x0, y0))
+    # collector's seal (白文: paper characters cut into vermilion)
+    s = 46
+    seal = Image.new('RGBA', (s, s), (0, 0, 0, 0))
+    ds = ImageDraw.Draw(seal)
+    ds.rectangle((0, 0, s - 1, s - 1), fill=(160, 44, 30, 235))
+    f = cjk_font(19)
+    for i, ch in enumerate('江湖未央'):
+        ds.text((s * (.73 if i < 2 else .27), s * (.28 if i % 2 == 0 else .72)), ch, font=f, fill=(236, 222, 190, 255), anchor='mm')
+    m = (noise((s, s), 1.1, 172) > .18).astype(np.uint8) * 255   # worn stamp
+    seal.putalpha(ImageChops.multiply(seal.getchannel('A'), Image.fromarray(m)))
+    ink.alpha_composite(seal, (x0 - s - 10, y0 + bh - s - 4))   # stamped beside the cartouche, inside the frame
+    return ink
+
+
 def polygons(path):
     for section in re.split('[Mm]', path):
         nums = [float(n) for n in re.findall(r'-?\d+(?:\.\d+)?', section)]
@@ -931,8 +1111,8 @@ def bake_atlas():
     # ---- base: sea wash + land paper ------------------------------------------------
     sea_dist = ndimage.distance_transform_edt(~land_np)
     land_dist = ndimage.distance_transform_edt(land_np)
-    paper = np.array(paper_field((H, W), (236, 226, 202), 101, fibre=False, wrap=False).convert('RGB'), float)
-    sea = np.array(paper_field((H, W), (206, 214, 200), 102, fibre=False, wrap=False).convert('RGB'), float)
+    paper = np.array(paper_field((H, W), (214, 194, 148), 101, fibre=False, wrap=False).convert('RGB'), float)   # aged silk
+    sea = np.array(paper_field((H, W), (166, 180, 154), 102, fibre=False, wrap=False).convert('RGB'), float)     # 石青 wash
     # sea gets slightly deeper away from the coast, like a graded wash
     deep = np.clip(sea_dist / 260, 0, 1)[..., None]
     sea = sea * (1 - deep * .06) + np.array([150, 170, 165.])[None, None] * deep * .06
@@ -943,7 +1123,8 @@ def bake_atlas():
     # aged vignette
     yy, xx = np.mgrid[0:H, 0:W]
     v = np.clip(np.sqrt(((xx - W / 2) / (W * .62)) ** 2 + ((yy - H / 2) / (H * .62)) ** 2) - .6, 0, 1)
-    base = base * (1 - v[..., None] * .12)
+    base = base * (1 - v[..., None] * .22)
+    base = age_silk(base, W, H)
     base_img = from_array(base)
 
     # plateau and terrain washes (on the base so territory washes sit on top)
@@ -960,15 +1141,8 @@ def bake_atlas():
     ink = Image.new('RGBA', (W, H), (0, 0, 0, 0))
     di = ImageDraw.Draw(ink)
 
-    # concentric wave rings offshore (水纹)
-    rings = np.zeros((H, W))
-    for dist, alpha in ((9, 62), (21, 40), (36, 22)):
-        band = (np.abs(sea_dist - dist) < .9) & ~land_np
-        rings = np.maximum(rings, band * alpha)
-    wob = noise((H, W), 3, 111) > .32           # break the rings into strokes
-    rings *= wob
-    ring_img = Image.fromarray(rings.astype(np.uint8), 'L').filter(ImageFilter.GaussianBlur(.5))
-    ink = Image.alpha_composite(ink, Image.merge('RGBA', [Image.new('L', (W, H), c) for c in (70, 98, 100)] + [ring_img]))
+    # 鱼鳞水纹: the whole sea is filled with rows of scale-shaped wave arcs, as on 《华夷图》《大明混一图》
+    ink = Image.alpha_composite(ink, fish_scale_sea(W, H, sea_dist, land_np))
     di = ImageDraw.Draw(ink)
 
     # coastline: vector ink line along every land polygon
@@ -1078,22 +1252,44 @@ def bake_atlas():
             seed += 1
             peak(x, y, size, seed, fade)
 
-    # rivers: tapered ink-blue strokes, thicker downstream
+    # rivers: drawn as two ink banks with colour between (黄河 in ochre-yellow, others in pale 石青)
     for river in geo['rivers']:
+        fill = (198, 162, 70, 255) if river['name'] == '黄河' else (132, 168, 160, 255)
         for line in polylines(river['path']):
             pts = [S(p) for p in catmull(line, 6)]
             n = len(pts)
             for i, (a, b) in enumerate(zip(pts, pts[1:])):
-                width = 1 + 2.4 * (i / max(1, n - 1))
-                di.line([a, b], fill=(52, 92, 104, 220), width=max(1, int(round(width))))
-            di.line(pts, fill=(52, 92, 104, 120), width=1)
+                w = 3 + 5 * (i / max(1, n - 1))
+                di.line([a, b], fill=rgba(INK, 225), width=int(round(w + 3)))
+            for i, (a, b) in enumerate(zip(pts, pts[1:])):
+                w = 3 + 5 * (i / max(1, n - 1))
+                di.line([a, b], fill=fill, width=int(round(w)))
+
+    # 长城: crenellated wall along the northern frontier, as drawn on the Song 《华夷图》 (1136)
+    draw_great_wall(di, [S(lonlat(*p)) for p in GREAT_WALL])
+
+    # 计里画方 grid, a double frame and a title cartouche with a collector's seal
+    ink = Image.alpha_composite(ink, ruled_grid(W, H, 64))
+    di = ImageDraw.Draw(ink)
+    draw_frame(di, W, H)
+    ink = title_cartouche(ink, land_np, k)
+    di = ImageDraw.Draw(ink)
+
+    # nothing is painted on the mounting margin outside the ruled frame
+    fx, fy = MAP_FRAME
+    ia = np.array(ink)
+    ia[:fy - 10, :, 3] = 0
+    ia[H - fy + 10:, :, 3] = 0
+    ia[:, :fx - 10, 3] = 0
+    ia[:, W - fx + 10:, 3] = 0
+    ink = Image.fromarray(ia, 'RGBA')
 
     # final resample to power-of-two height (non-uniform; drawn back into 1280x760 space)
     base_img = base_img.resize((2048, 1024), Image.LANCZOS)
     ink = ink.resize((2048, 1024), Image.LANCZOS)
     # feather the sheet edges so the scroll fades into the surrounding paper at any zoom
     fy, fx = np.mgrid[0:1024, 0:2048]
-    edge = np.minimum.reduce([fx / 90, (2047 - fx) / 90, fy / 60, (1023 - fy) / 60])
+    edge = np.minimum.reduce([fx / 22, (2047 - fx) / 22, fy / 14, (1023 - fy) / 14])   # the mounting margin is the edge now
     feather = np.clip(edge, 0, 1) ** 1.4
     base_img.putalpha(Image.fromarray((feather * 255).astype(np.uint8), 'L'))
     ink.putalpha(ImageChops.multiply(ink.getchannel('A'), Image.fromarray((feather * 255).astype(np.uint8), 'L')))
@@ -1111,6 +1307,8 @@ def bake_atlas():
             ImageDraw.Draw(m).polygon(poly, fill=255)
         territories[territory['country']] = m
     gran = noise((760, 1280), 1.2, 131)
+    frame_inside = np.zeros((760, 1280))
+    frame_inside[int(MAP_FRAME[1] / 1.6):760 - int(MAP_FRAME[1] / 1.6), int(MAP_FRAME[0] / 1.6):1280 - int(MAP_FRAME[0] / 1.6)] = 1
     for cell in geo['cells']:
         m = Image.new('L', (1280, 760), 0)
         for poly in polygons(cell['path']):
@@ -1120,6 +1318,7 @@ def bake_atlas():
         inside = ndimage.distance_transform_edt(a)
         alpha = np.where(a, .42 + .58 * np.exp(-np.maximum(inside - 1, 0) / 5.0), 0)
         alpha *= .88 + .24 * (gran - .5)
+        alpha *= frame_inside
         alpha = ndimage.gaussian_filter(alpha, .5)
         img = Image.new('RGBA', (1280, 760), (255, 255, 255, 0))
         img.putalpha(Image.fromarray(np.clip(alpha * 255, 0, 255).astype(np.uint8), 'L'))
@@ -1133,15 +1332,28 @@ def bake_atlas():
         draw_fn(ImageDraw.Draw(img), size * 4)
         save(img.resize((size, size), Image.LANCZOS), MAP / name)
 
-    def city(d, s):          # walled-town glyph: double square
-        d.rectangle((s * .18, s * .18, s * .82, s * .82), fill=(246, 238, 218, 255), outline=rgba(INK), width=int(s * .07))
-        d.rectangle((s * .36, s * .36, s * .64, s * .64), fill=rgba(INK, 230))
+    def city(d, s):          # 府州: a ruled square on silk, as on Song maps
+        d.rectangle((s * .16, s * .16, s * .84, s * .84), fill=(232, 216, 176, 255), outline=rgba(INK), width=int(s * .08))
+        d.rectangle((s * .34, s * .34, s * .66, s * .66), outline=rgba(INK, 200), width=int(s * .05))
     marker(32, city, 'city.png')
 
-    def capital(d, s):       # capital: vermilion seal with paper inner square
-        d.rectangle((s * .1, s * .1, s * .9, s * .9), fill=rgba(VERMILION), outline=(80, 24, 16, 255), width=int(s * .05))
-        d.rectangle((s * .3, s * .3, s * .7, s * .7), outline=(246, 238, 218, 255), width=int(s * .07))
+    def capital(d, s):       # 都城: vermilion double square
+        d.rectangle((s * .06, s * .06, s * .94, s * .94), fill=rgba(VERMILION), outline=(70, 20, 14, 255), width=int(s * .06))
+        d.rectangle((s * .24, s * .24, s * .76, s * .76), outline=(240, 226, 192, 255), width=int(s * .06))
+        d.rectangle((s * .40, s * .40, s * .60, s * .60), fill=(240, 226, 192, 255))
     marker(32, capital, 'capital.png')
+
+    # vertical name slips (9-sliced, border 6): silk slip with ruled ink edge; capitals on vermilion
+    def slip(name, fill, line, seed):
+        w, h = 32, 64
+        img = from_array(np.array(paper_field((h, w), fill, seed, fibre=False, wrap=False).convert('RGB'), float),
+                         ragged_mask(h, w, 0, 1.0, seed + 1) * 240)
+        d = ImageDraw.Draw(img)
+        d.rectangle((1, 1, w - 2, h - 2), outline=line, width=2)
+        d.rectangle((4, 4, w - 5, h - 5), outline=line[:3] + (110,), width=1)
+        save(img, MAP / name)
+    slip('label.png', (230, 214, 172), rgba(INK, 225), 181)
+    slip('label_cap.png', (150, 48, 32), (236, 214, 160, 230), 183)
 
     def ring(d, s):
         d.ellipse((s * .06, s * .06, s * .94, s * .94), outline=rgba(VERMILION, 235), width=int(s * .07))
@@ -1153,20 +1365,17 @@ def bake_atlas():
         d.polygon([(s * .33, s * .1), (s * .9, s * .22), (s * .33, s * .42)], fill=rgba(VERMILION), outline=(80, 24, 16, 255))
     marker(48, pennant, 'pennant.png')
 
-    def compass(d, s):       # 指北: 8-point rose in ink and vermilion
+    def compass(d, s):       # 方位: a silk disc with the four quarters written in, 北 in vermilion
         c = s / 2
-        d.ellipse((c - s * .40, c - s * .40, c + s * .40, c + s * .40), outline=rgba(INK, 200), width=int(s * .012))
-        d.ellipse((c - s * .34, c - s * .34, c + s * .34, c + s * .34), outline=rgba(INK, 120), width=int(s * .006))
-        for i in range(8):
-            ang = i * math.pi / 4
-            long = s * (.38 if i % 2 == 0 else .22)
-            tip = (c + math.sin(ang) * long, c - math.cos(ang) * long)
-            l = (c + math.sin(ang - math.pi / 2) * s * .05, c - math.cos(ang - math.pi / 2) * s * .05)
-            r = (c + math.sin(ang + math.pi / 2) * s * .05, c - math.cos(ang + math.pi / 2) * s * .05)
-            col = rgba(VERMILION, 240) if i == 0 else rgba(INK, 220 if i % 2 == 0 else 160)
-            d.polygon([tip, l, (c, c)], fill=col)
-            d.polygon([tip, r, (c, c)], fill=(246, 238, 218, 255), outline=col)
-        d.ellipse((c - s * .03, c - s * .03, c + s * .03, c + s * .03), fill=rgba(INK))
+        d.ellipse((c - s * .46, c - s * .46, c + s * .46, c + s * .46), fill=(226, 208, 162, 235), outline=rgba(INK, 230), width=int(s * .02))
+        d.ellipse((c - s * .39, c - s * .39, c + s * .39, c + s * .39), outline=rgba(INK, 150), width=int(s * .008))
+        d.line((c, c - s * .22, c, c + s * .22), fill=rgba(INK, 160), width=int(s * .01))
+        d.line((c - s * .22, c, c + s * .22, c), fill=rgba(INK, 160), width=int(s * .01))
+        d.ellipse((c - s * .05, c - s * .05, c + s * .05, c + s * .05), fill=rgba(VERMILION, 230))
+        f = cjk_font(int(s * .17))
+        for ch, (x, y), col in (('北', (c, c - s * .31), rgba(VERMILION, 250)), ('南', (c, c + s * .31), rgba(INK, 235)),
+                                ('东', (c + s * .31, c), rgba(INK, 235)), ('西', (c - s * .31, c), rgba(INK, 235))):
+            d.text((x, y), ch, font=f, fill=col, anchor='mm')
     marker(128, compass, 'compass.png')
 
 

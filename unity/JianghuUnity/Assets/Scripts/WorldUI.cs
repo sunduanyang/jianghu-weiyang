@@ -10,6 +10,7 @@ public partial class JianghuApp {
     J geography=new J(),campaignOptions=new J();
     readonly Dictionary<int,Texture2D> mapMasks=new Dictionary<int,Texture2D>();
     Texture2D landMask,atlasBase,atlasInk,cityMark,capitalMark,ringMark,pennantMark,compassMark;
+    GUIStyle slipStyle,slipCapStyle,slipText,slipTextBold,slipTextCap;
     float mapZoom=1;Vector2 mapPan;bool dragging;Vector2 dragMouse;
     int chosenRow=-1,chosenCol=-1,originRow=-1,originCol=-1;
     string cityKind="全部设施";
@@ -18,6 +19,23 @@ public partial class JianghuApp {
         foreach(var c in geography["cells"].A)mapMasks[c["place"].I]=Resources.Load<Texture2D>("Map/cell-"+c["place"].S);
         atlasBase=Resources.Load<Texture2D>("Map/atlas_base");atlasInk=Resources.Load<Texture2D>("Map/atlas_ink");
         cityMark=Resources.Load<Texture2D>("Map/city");capitalMark=Resources.Load<Texture2D>("Map/capital");ringMark=Resources.Load<Texture2D>("Map/ring");pennantMark=Resources.Load<Texture2D>("Map/pennant");compassMark=Resources.Load<Texture2D>("Map/compass");
+        slipStyle=SlipStyle("Map/label");slipCapStyle=SlipStyle("Map/label_cap");
+    }
+    static GUIStyle SlipStyle(string path){var t=Resources.Load<Texture2D>(path);var s=new GUIStyle();s.normal.background=t;s.border=new RectOffset(6,6,6,6);return s;}
+    // Place names are written top-to-bottom on small paper slips beside the town mark, the way names sit
+    // in their ruled boxes on Song and Ming maps. Capitals get a vermilion slip.
+    void InitSlipText(){
+        if(slipText!=null)return;
+        slipText=new GUIStyle(mapLabel){alignment=TextAnchor.UpperCenter,fontSize=13,wordWrap=false,padding=new RectOffset(0,0,6,6)};TextColor(slipText,new Color(.17f,.13f,.09f));
+        slipTextBold=new GUIStyle(slipText){font=fontBold};TextColor(slipTextBold,new Color(.12f,.08f,.05f));
+        slipTextCap=new GUIStyle(slipText){font=fontBold};TextColor(slipTextCap,paperText);
+    }
+    static string Vertical(string s)=>string.Join("\n",s.ToCharArray());
+    Rect SlipRect(Vector2 q,float ms,Vector2 size,int attempt){
+        bool left=attempt%2==1;int shift=attempt/2;float step=size.y*.5f+8;
+        float y=q.y-size.y/2+(shift==0?0:(shift%2==1?1:-1)*((shift+1)/2)*step);
+        float x=left?q.x-ms/2-3-size.x:q.x+ms/2+3;
+        return new Rect(x,y,size.x,size.y);
     }
     void DrawWorld(Rect screen){InitMap();DrawMap(screen);}
     void DrawPlaceCard(){
@@ -49,35 +67,40 @@ public partial class JianghuApp {
         float k=Mathf.Max(r.width/1280f,r.height/760f)*mapZoom;Vector2 center=new Vector2(r.width/2,r.height/2);Vector2 offset=center-new Vector2(640,380)*k+mapPan*k;
         Func<float,float,Vector2> pos=(x,y)=>new Vector2(x*k+offset.x,y*k+offset.y);
         var mapRect=new Rect(offset.x,offset.y,1280*k,760*k);var prev=GUI.color;
-        GUI.color=new Color(.80f,.77f,.71f);
+        GUI.color=Color.white;
         if(atlasBase!=null)GUI.DrawTexture(mapRect,atlasBase,ScaleMode.StretchToFill);else GUI.DrawTexture(mapRect,landMask);
         GUI.color=prev;
-        if(mapLayer=="疆域"||mapLayer=="州路")foreach(var c in geography["cells"].A){if(!mapMasks.TryGetValue(c["place"].I,out var tex)||tex==null)continue;GUI.color=Hex(Country(Place(c["place"].I)["country"].I)["color"].S,mapLayer=="州路"?.36f:.56f);GUI.DrawTexture(mapRect,tex);GUI.color=prev;}
-        GUI.color=new Color(.88f,.86f,.82f);
+        if(mapLayer=="疆域"||mapLayer=="州路")foreach(var c in geography["cells"].A){if(!mapMasks.TryGetValue(c["place"].I,out var tex)||tex==null)continue;GUI.color=Hex(Country(Place(c["place"].I)["country"].I)["color"].S,mapLayer=="州路"?.20f:.30f);GUI.DrawTexture(mapRect,tex);GUI.color=prev;}
+        GUI.color=Color.white;
         if(atlasInk!=null)GUI.DrawTexture(mapRect,atlasInk,ScaleMode.StretchToFill);
         GUI.color=prev;
         if(atlasInk==null)foreach(var river in geography["rivers"].A)DrawVectorPath(river["path"].S,pos,new Color(.35f,.57f,.61f,.8f),1.4f);
         bool roads=mapLayer=="行路";
         foreach(var route in W["routes"].A){
             var a=Place(route["a"].I);var b=Place(route["b"].I);Vector2 pa=pos((float)a["x"].N,(float)a["y"].N),pb=pos((float)b["x"].N,(float)b["y"].N);
-            if(route["sea"].B)DashedLine(pa,pb,new Color(.20f,.38f,.44f,roads?.9f:.5f),roads?2f:1.3f,9,6);
-            else DashedLine(pa,pb,new Color(.40f,.20f,.12f,roads?.9f:.45f),roads?2.2f:1.4f,5,4);
+            // 驿道 in fine vermilion dots, 航路 in long ink-teal dashes
+            if(route["sea"].B)DashedLine(pa,pb,new Color(.23f,.38f,.43f,roads?.9f:.6f),roads?1.8f:1.2f,7,6);
+            else DashedLine(pa,pb,new Color(.59f,.20f,.14f,roads?.95f:.67f),roads?2.2f:1.5f,3,3.5f);
         }
         if(mapLayer=="州路")foreach(var region in geography["regions"].A){Vector2 q=pos((float)region["x"].N,(float)region["y"].N);HaloLabel(new Rect(q.x-30,q.y-21,110,18),region["name"].S,caption,mapHalo);}
         bool overUI=OverUI(Event.current.mousePosition);
         var placedLabels=new List<Rect>();
         foreach(var p in W["locations"].A){
             Vector2 q=pos((float)p["x"].N,(float)p["y"].N);bool chosen=p["id"].I==SelectedPlace;bool capital=p["kind"].S=="capital";
-            float ms=(capital?18:14)*Mathf.Clamp(mapZoom,1,1.6f);Rect markRect=new Rect(q.x-ms/2,q.y-ms/2,ms,ms);
+            float ms=(capital?20:15)*Mathf.Clamp(mapZoom,1,1.6f);Rect markRect=new Rect(q.x-ms/2,q.y-ms/2,ms,ms);
             Texture2D mark=capital?capitalMark:cityMark;
             if(mark!=null)GUI.DrawTexture(markRect,mark);else Fill(new Rect(q.x-3,q.y-3,6,6),Hex(Country(p["country"].I)["color"].S));
             if(chosen&&ringMark!=null)GUI.DrawTexture(new Rect(q.x-ms,q.y-ms,ms*2,ms*2),ringMark);
-            Rect labelRect=TagRect(new Vector2(q.x+ms/2+4,q.y),p["name"].S,chosen);
-            for(int attempt=0;attempt<18&&placedLabels.Any(o=>o.Overlaps(labelRect));attempt++){int step=(attempt/2+1)*22;labelRect.y=q.y-10+(attempt%2==0?step:-step);labelRect.x=q.x+ms/2+4+(attempt>=10?-labelRect.width-ms-8:0);}
+            InitSlipText();string vertical=Vertical(p["name"].S);var textStyle=capital?slipTextCap:chosen?slipTextBold:slipText;
+            Vector2 slip=new Vector2(21,textStyle.CalcSize(new GUIContent(vertical)).y);
+            Rect labelRect=SlipRect(q,ms,slip,0);
+            for(int attempt=1;attempt<18&&placedLabels.Any(o=>o.Overlaps(labelRect));attempt++)labelRect=SlipRect(q,ms,slip,attempt);
             placedLabels.Add(labelRect);
-            if(Vector2.Distance(labelRect.center,q)>60)Line(q,labelRect.center,new Color(.9f,.85f,.7f,.35f));
-            Fill(new Rect(labelRect.x,labelRect.yMax,labelRect.width,2),Hex(Country(p["country"].I)["color"].S,.95f));
-            TagLabel(labelRect,p["name"].S,chosen);
+            if(Vector2.Distance(labelRect.center,q)>60)Line(q,labelRect.center,new Color(.35f,.24f,.14f,.45f));
+            if(Event.current.type==EventType.Repaint)(capital?slipCapStyle:slipStyle).Draw(labelRect,false,false,false,false);
+            Fill(new Rect(labelRect.x+4,labelRect.y-3,labelRect.width-8,3),Hex(Country(p["country"].I)["color"].S,.95f));   // owner colour as a tab on top
+            if(chosen)Outline(new Rect(labelRect.x-2,labelRect.y-2,labelRect.width+4,labelRect.height+4),brass,2);
+            GUI.Label(labelRect,vertical,textStyle);
             if(!overUI){bool hit=GUI.Button(labelRect,GUIContent.none,GUIStyle.none);hit|=GUI.Button(markRect,GUIContent.none,GUIStyle.none);if(hit){SelectedPlace=p["id"].I;campaignOptions=new J();}}
         }
         if(mapLayer=="门派")foreach(var f in W["factions"].A){var p=Place(f["place"].I);Vector2 q=pos((float)p["x"].N,(float)p["y"].N);Rect fr=new Rect(q.x-12,q.y+16+(f["id"].I%3)*18,110,18);Fill(new Rect(fr.x-7,fr.y+6,5,5),brass);HaloLabel(fr,f["name"].S,caption,mapHalo);if(!overUI&&GUI.Button(fr,GUIContent.none,GUIStyle.none))OpenInstitution(false,f["id"].I);}
