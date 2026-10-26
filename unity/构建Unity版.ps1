@@ -16,4 +16,4 @@ if ($RegenerateAssets) {
 $process = Start-Process -FilePath $EditorPath -ArgumentList @('-batchmode','-nographics','-quit','-projectPath',('"' + $projectPath + '"'),'-executeMethod','Jianghu.Editor.BuildTools.BuildWindows','-logFile',('"' + (Join-Path $migrationRoot 'build.log') + '"')) -WindowStyle Hidden -PassThru
 $process.WaitForExit()
 if ($process.ExitCode -ne 0) { throw 'Unity 构建失败，请查看 unity/build.log。若工程已在编辑器打开，请从「江湖/构建 Windows 游戏」菜单构建。' }
-Write-Output (Join-Path $migrationRoot 'Build\江湖未央.exe')
+Write-Output (Join-Path $migrationRoot 'Build\Current\江湖未央.exe')

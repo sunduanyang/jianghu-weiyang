@@ -1,0 +1,676 @@
+{
+  "date": "2026-10-26",
+  "asset": "user-supplied plain swordswoman, 15 pieces",
+  "source_sha256": "847734a377ea8319a1b70f99bdb614f742dc8187c969ba5f0492ae3c8a37e81a",
+  "parts": 15,
+  "pelvis": "one rigid part; no split skirts",
+  "import": "RGB paper background matted to alpha; retained interior RGB unchanged",
+  "binding": "Fixed isotropic per-piece scales, manually calibrated against the assembled reference; no breadth or shear. Neck rendered behind the collar.",
+  "portable_checks": {
+    "command": "python -m unittest tests.test_paper_cast -v",
+    "passed": 8
+  },
+  "native": {
+    "unity": "6000.6.7f1",
+    "checks": [
+      {
+        "check": "all skins and shared rig",
+        "pass": true,
+        "facts": {
+          "skins": 28,
+          "parts": 468,
+          "clips": 7,
+          "pose_samples": 19796,
+          "max_bone_length_error": 9.1552734375e-05,
+          "transition_joint_jump": 0,
+          "max_ground_penetration": 6.103515625e-05,
+          "max_support_foot_gap": 6.29135975032113e-05,
+          "max_reverse_knee": 0,
+          "max_loop_seam": 0,
+          "reference_landmark_error_pixels": 0.000848064781166613,
+          "age_sex_profession_controls": true
+        }
+      },
+      {
+        "check": "1680-plain-idle-right",
+        "pass": true,
+        "facts": {
+          "width": 1680,
+          "height": 960,
+          "pivot_samples": 3192,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1197,
+          "maximum_attachment_error_pixels": 8.63167442730628e-05,
+          "clip": "idle",
+          "left": false,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1680-plain-idle-right visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 1354
+        }
+      },
+      {
+        "check": "1680-plain-idle-left",
+        "pass": true,
+        "facts": {
+          "width": 1680,
+          "height": 960,
+          "pivot_samples": 3576,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1341,
+          "maximum_attachment_error_pixels": 8.63167442730628e-05,
+          "clip": "idle",
+          "left": true,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1680-plain-idle-left visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 1353
+        }
+      },
+      {
+        "check": "1680-plain-walk-right",
+        "pass": true,
+        "facts": {
+          "width": 1680,
+          "height": 960,
+          "pivot_samples": 3840,
+          "maximum_pivot_drift_pixels": 6.82393801980652e-05,
+          "endpoint_samples": 1440,
+          "maximum_attachment_error_pixels": 8.63167442730628e-05,
+          "clip": "walk",
+          "left": false,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1680-plain-walk-right visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 1353
+        }
+      },
+      {
+        "check": "1680-plain-walk-left",
+        "pass": true,
+        "facts": {
+          "width": 1680,
+          "height": 960,
+          "pivot_samples": 3528,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1323,
+          "maximum_attachment_error_pixels": 6.82393801980652e-05,
+          "clip": "walk",
+          "left": true,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1680-plain-walk-left visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 1354
+        }
+      },
+      {
+        "check": "1680-plain-talk-right",
+        "pass": true,
+        "facts": {
+          "width": 1680,
+          "height": 960,
+          "pivot_samples": 3816,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1431,
+          "maximum_attachment_error_pixels": 8.63167442730628e-05,
+          "clip": "talk",
+          "left": false,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1680-plain-talk-right visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 1354
+        }
+      },
+      {
+        "check": "1680-plain-talk-left",
+        "pass": true,
+        "facts": {
+          "width": 1680,
+          "height": 960,
+          "pivot_samples": 3840,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1440,
+          "maximum_attachment_error_pixels": 6.103515625e-05,
+          "clip": "talk",
+          "left": true,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1680-plain-talk-left visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 1353
+        }
+      },
+      {
+        "check": "1680-plain-attack-right",
+        "pass": true,
+        "facts": {
+          "width": 1680,
+          "height": 960,
+          "pivot_samples": 3864,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1449,
+          "maximum_attachment_error_pixels": 0.00013647876039613,
+          "clip": "attack",
+          "left": false,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1680-plain-attack-right visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 1353
+        }
+      },
+      {
+        "check": "1680-plain-attack-left",
+        "pass": true,
+        "facts": {
+          "width": 1680,
+          "height": 960,
+          "pivot_samples": 3864,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1449,
+          "maximum_attachment_error_pixels": 0.0001220703125,
+          "clip": "attack",
+          "left": true,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1680-plain-attack-left visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 1355
+        }
+      },
+      {
+        "check": "1680-plain-guard-right",
+        "pass": true,
+        "facts": {
+          "width": 1680,
+          "height": 960,
+          "pivot_samples": 3408,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1278,
+          "maximum_attachment_error_pixels": 6.82393801980652e-05,
+          "clip": "guard",
+          "left": false,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1680-plain-guard-right visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 1352
+        }
+      },
+      {
+        "check": "1680-plain-guard-left",
+        "pass": true,
+        "facts": {
+          "width": 1680,
+          "height": 960,
+          "pivot_samples": 3864,
+          "maximum_pivot_drift_pixels": 6.82393801980652e-05,
+          "endpoint_samples": 1449,
+          "maximum_attachment_error_pixels": 8.63167442730628e-05,
+          "clip": "guard",
+          "left": true,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1680-plain-guard-left visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 1350
+        }
+      },
+      {
+        "check": "1680-plain-hurt-right",
+        "pass": true,
+        "facts": {
+          "width": 1680,
+          "height": 960,
+          "pivot_samples": 3600,
+          "maximum_pivot_drift_pixels": 6.82393801980652e-05,
+          "endpoint_samples": 1350,
+          "maximum_attachment_error_pixels": 0.000125827195006423,
+          "clip": "hurt",
+          "left": false,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1680-plain-hurt-right visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 1353
+        }
+      },
+      {
+        "check": "1680-plain-hurt-left",
+        "pass": true,
+        "facts": {
+          "width": 1680,
+          "height": 960,
+          "pivot_samples": 3816,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1431,
+          "maximum_attachment_error_pixels": 0.000125827195006423,
+          "clip": "hurt",
+          "left": true,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1680-plain-hurt-left visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 1354
+        }
+      },
+      {
+        "check": "1680-plain-defeated-right",
+        "pass": true,
+        "facts": {
+          "width": 1680,
+          "height": 960,
+          "pivot_samples": 3624,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1359,
+          "maximum_attachment_error_pixels": 8.63167442730628e-05,
+          "clip": "defeated",
+          "left": false,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1680-plain-defeated-right visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 1353
+        }
+      },
+      {
+        "check": "1680-plain-defeated-left",
+        "pass": true,
+        "facts": {
+          "width": 1680,
+          "height": 960,
+          "pivot_samples": 3840,
+          "maximum_pivot_drift_pixels": 6.82393801980652e-05,
+          "endpoint_samples": 1440,
+          "maximum_attachment_error_pixels": 0.0001220703125,
+          "clip": "defeated",
+          "left": true,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1680-plain-defeated-left visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 1353
+        }
+      },
+      {
+        "check": "1280-plain-idle-right",
+        "pass": true,
+        "facts": {
+          "width": 1280,
+          "height": 800,
+          "pivot_samples": 3864,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1449,
+          "maximum_attachment_error_pixels": 0.0001220703125,
+          "clip": "idle",
+          "left": false,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1280-plain-idle-right visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 878
+        }
+      },
+      {
+        "check": "1280-plain-idle-left",
+        "pass": true,
+        "facts": {
+          "width": 1280,
+          "height": 800,
+          "pivot_samples": 3696,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1386,
+          "maximum_attachment_error_pixels": 6.82393801980652e-05,
+          "clip": "idle",
+          "left": true,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1280-plain-idle-left visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 879
+        }
+      },
+      {
+        "check": "1280-plain-walk-right",
+        "pass": true,
+        "facts": {
+          "width": 1280,
+          "height": 800,
+          "pivot_samples": 3864,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1449,
+          "maximum_attachment_error_pixels": 6.103515625e-05,
+          "clip": "walk",
+          "left": false,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1280-plain-walk-right visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 878
+        }
+      },
+      {
+        "check": "1280-plain-walk-left",
+        "pass": true,
+        "facts": {
+          "width": 1280,
+          "height": 800,
+          "pivot_samples": 3864,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1449,
+          "maximum_attachment_error_pixels": 6.82393801980652e-05,
+          "clip": "walk",
+          "left": true,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1280-plain-walk-left visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 879
+        }
+      },
+      {
+        "check": "1280-plain-talk-right",
+        "pass": true,
+        "facts": {
+          "width": 1280,
+          "height": 800,
+          "pivot_samples": 3648,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1368,
+          "maximum_attachment_error_pixels": 6.82393801980652e-05,
+          "clip": "talk",
+          "left": false,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1280-plain-talk-right visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 878
+        }
+      },
+      {
+        "check": "1280-plain-talk-left",
+        "pass": true,
+        "facts": {
+          "width": 1280,
+          "height": 800,
+          "pivot_samples": 3840,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1440,
+          "maximum_attachment_error_pixels": 8.63167442730628e-05,
+          "clip": "talk",
+          "left": true,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1280-plain-talk-left visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 878
+        }
+      },
+      {
+        "check": "1280-plain-attack-right",
+        "pass": true,
+        "facts": {
+          "width": 1280,
+          "height": 800,
+          "pivot_samples": 3648,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1368,
+          "maximum_attachment_error_pixels": 8.63167442730628e-05,
+          "clip": "attack",
+          "left": false,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1280-plain-attack-right visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 879
+        }
+      },
+      {
+        "check": "1280-plain-attack-left",
+        "pass": true,
+        "facts": {
+          "width": 1280,
+          "height": 800,
+          "pivot_samples": 3864,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1449,
+          "maximum_attachment_error_pixels": 9.1552734375e-05,
+          "clip": "attack",
+          "left": true,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1280-plain-attack-left visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 878
+        }
+      },
+      {
+        "check": "1280-plain-guard-right",
+        "pass": true,
+        "facts": {
+          "width": 1280,
+          "height": 800,
+          "pivot_samples": 3456,
+          "maximum_pivot_drift_pixels": 6.82393801980652e-05,
+          "endpoint_samples": 1296,
+          "maximum_attachment_error_pixels": 6.82393801980652e-05,
+          "clip": "guard",
+          "left": false,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1280-plain-guard-right visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 878
+        }
+      },
+      {
+        "check": "1280-plain-guard-left",
+        "pass": true,
+        "facts": {
+          "width": 1280,
+          "height": 800,
+          "pivot_samples": 3816,
+          "maximum_pivot_drift_pixels": 6.82393801980652e-05,
+          "endpoint_samples": 1431,
+          "maximum_attachment_error_pixels": 0.000125827195006423,
+          "clip": "guard",
+          "left": true,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1280-plain-guard-left visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 879
+        }
+      },
+      {
+        "check": "1280-plain-hurt-right",
+        "pass": true,
+        "facts": {
+          "width": 1280,
+          "height": 800,
+          "pivot_samples": 3576,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1341,
+          "maximum_attachment_error_pixels": 8.63167442730628e-05,
+          "clip": "hurt",
+          "left": false,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1280-plain-hurt-right visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 878
+        }
+      },
+      {
+        "check": "1280-plain-hurt-left",
+        "pass": true,
+        "facts": {
+          "width": 1280,
+          "height": 800,
+          "pivot_samples": 3840,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1440,
+          "maximum_attachment_error_pixels": 6.103515625e-05,
+          "clip": "hurt",
+          "left": true,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1280-plain-hurt-left visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 879
+        }
+      },
+      {
+        "check": "1280-plain-defeated-right",
+        "pass": true,
+        "facts": {
+          "width": 1280,
+          "height": 800,
+          "pivot_samples": 3744,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1404,
+          "maximum_attachment_error_pixels": 6.103515625e-05,
+          "clip": "defeated",
+          "left": false,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1280-plain-defeated-right visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 879
+        }
+      },
+      {
+        "check": "1280-plain-defeated-left",
+        "pass": true,
+        "facts": {
+          "width": 1280,
+          "height": 800,
+          "pivot_samples": 3048,
+          "maximum_pivot_drift_pixels": 6.103515625e-05,
+          "endpoint_samples": 1143,
+          "maximum_attachment_error_pixels": 8.63167442730628e-05,
+          "clip": "defeated",
+          "left": true,
+          "gallery": false
+        }
+      },
+      {
+        "check": "1280-plain-defeated-left visible screenshot",
+        "pass": true,
+        "facts": {
+          "lit_samples": 878
+        }
+      },
+      {
+        "check": "no simulation or model side effects",
+        "pass": true,
+        "facts": {
+          "month": 242,
+          "new_model_calls": 0
+        }
+      },
+      {
+        "check": "no runtime exceptions",
+        "pass": true,
+        "facts": []
+      }
+    ],
+    "passed": true
+  },
+  "render_scope": "New skin: seven clips, both facings, 1680x960 and 1280x800; shared geometry: all 28 skins at 101 phases per clip.",
+  "limits": [
+    "Manual landmark calibration is not pixel-identical art reconstruction.",
+    "Rigid pelvis and limb articulation; no cloth or soft-tissue simulation."
+  ],
+  "artifacts": {
+    "native": "unity/validation/plain-final-20261026",
+    "gif": "output/plain-trial-20261026/plain-motion.gif",
+    "launcher": "演示骨骼系统.bat"
+  }
+}

@@ -71,6 +71,7 @@ public class UnitySmoke : MonoBehaviour {
         double calls=client.World["ai"]["calls"].N;
         yield return Call("/api/intervene",J.O("npc_id",adult["id"],"action","challenge"),j=>app.Martial=j);
         app.ShowBattleForSmoke();yield return Snapshot(3,"combat-opening");
+        if(app.Martial["battle"]["ruleset"].I==3){yield return RealtimeCombatFlow(calls);yield break;}
         Check("new combat rules enabled",app.Martial["battle"]["ruleset"].I==2);
         Check("battle starts paused",app.BattlePausedForSmoke);
         for(int i=0;i<2;i++){app.StepBattleForSmoke("guard");while(client.Busy)yield return null;}
@@ -98,6 +99,49 @@ public class UnitySmoke : MonoBehaviour {
         }
         Check("battle settled once",app.Martial["battle"]["settled"].B);
         Check("damage summary present",app.Martial["battle"]["summary"].A.Count==2);
+        yield return Snapshot(3,"combat-result");
+        yield return client.Refresh();Check("combat uses no model calls",client.World["ai"]["calls"].N==calls);
+    }
+    IEnumerator RealtimeCombatFlow(double calls){
+        var b=app.Martial["battle"];
+        Check("continuous combat rules enabled",b["ruleset"].I==3);
+        Check("battle starts paused",app.BattlePausedForSmoke);
+        double time=b["elapsed"].N;
+        yield return new WaitForSecondsRealtime(1.1f);
+        Check("pause freezes simulation time",app.Martial["battle"]["elapsed"].N==time);
+        app.RunBattleForSmoke(true);yield return new WaitForSecondsRealtime(2.8f);app.RunBattleForSmoke(false);while(client.Busy)yield return null;
+        b=app.Martial["battle"];
+        Check("independent timelines advance",b["elapsed"].N>time);
+        Check("automatic weapon sequence accumulates forms",b["fighters"][0]["forms"].I>=2);
+        yield return Snapshot(3,"combat-continuous");
+        app.StepBattleForSmoke("toggle_auto");while(client.Busy)yield return null;
+        for(int i=0;i<4;i++){app.StepBattleForSmoke("tick");while(client.Busy)yield return null;}
+        b=app.Martial["battle"];
+        var art=b["actions"].A.FirstOrDefault(a=>a["id"].S=="reed_cut");
+        Check("starter sword technique unlocked by forms",art!=null&&art["enabled"].B,J.O("action",art??new J()));
+        if(art!=null&&art["enabled"].B){
+            app.StepBattleForSmoke("reed_cut");while(client.Busy)yield return null;
+            Check("technique begins visible windup",app.Martial["battle"]["fighters"][0]["casting"].Has);
+            yield return Snapshot(3,"combat-windup");
+            time=app.Martial["battle"]["elapsed"].N;
+            app.StepBattleForSmoke("advance");while(client.Busy)yield return null;
+            Check("moving does not cancel casting or advance clock",app.Martial["battle"]["fighters"][0]["casting"].Has&&app.Martial["battle"]["elapsed"].N==time);
+            double distance=app.Martial["battle"]["distance"].N;
+            app.RunBattleForSmoke(true);yield return new WaitForSecondsRealtime(2.8f);app.RunBattleForSmoke(false);while(client.Busy)yield return null;
+            Check("windup resolves on continuous clock",!app.Martial["battle"]["fighters"][0]["casting"].Has);
+            Check("held movement changes fractional distance",app.Martial["battle"]["distance"].N!=distance);
+            app.StepBattleForSmoke("stop");while(client.Busy)yield return null;
+        }
+        b=app.Martial["battle"];
+        Check("injury capacity exposed",b["fighters"][0]["capacity"].I==12);
+        Check("nine form slots supported",b["fighters"][0]["forms"].I<=9);
+        if(b["status"].S=="active"){
+            yield return Call("/api/battle",J.O("battle_id",b["id"],"round",1,"action","tick"),null,false);
+            yield return Call("/api/martial",null,j=>app.Martial=j);
+            app.StepBattleForSmoke("surrender");while(client.Busy)yield return null;
+        }
+        Check("continuous battle settles once",app.Martial["battle"]["settled"].B);
+        Check("combat result contains both summaries",app.Martial["battle"]["summary"].A.Count==2);
         yield return Snapshot(3,"combat-result");
         yield return client.Refresh();Check("combat uses no model calls",client.World["ai"]["calls"].N==calls);
     }

@@ -1,0 +1,474 @@
+{
+  "pack": "song-20261026",
+  "source_count": 21,
+  "placement_version": 2,
+  "building_alignment": "visible_image_centre",
+  "building_footprints": [
+    "1x1",
+    "2x2"
+  ],
+  "source_hashes": {
+    "building-gate": "c60e3e9be1791084c5c628c96bda4f2ae03a0cd7609529d3277d224ecc540b9b",
+    "building-government": "aa6d2dc3068f4b38814c86466c78860374d69079457660eb32822522c034ef4d",
+    "building-palace": "64b418b6f91547341ab19d534268c29a4077e04449a401fb053403a4a970cd2c",
+    "building-market": "8b98b308967325150b9f758eec526be8007fbd220c38e59fa55880749af0c249",
+    "building-inn": "2deba41687ce1bd1da2adeb4e095a186d1fa0676e0e52d033e1d04f9aa9c4030",
+    "building-clinic": "7f7b2b4d20875ffcb2a0a6414f70c393c1cd00fa9c71d9e4ff737f9a2f88d831",
+    "building-workshop": "1f6e5d34a151171371a9b8e8c9c70243b3d9a9e2fb384b855c9272032c108ce9",
+    "building-training": "7185e278cb7ebc68953e3724781830768b50db543141176064c4cdbc2541742b",
+    "building-school": "69e0d1aff2c2bf387a63bcaba48b89a967656cd9b611c06d847c541ab8c4cd85",
+    "building-residence": "8729f419cd1ac19d193d92fe8f873b2770d902887c9badf4aca42f111d465eee",
+    "building-granary": "d34ecb55f9f29783bc41b4576cff5617b497859054e6c57cbe89e810fa857bc7",
+    "building-garden": "ec0589080e9dad402ee965daf243352c8f862eefd2918d74d9612d31436597af",
+    "building-temple": "5e14352ca656405837ff2a523acde937e050ed4c9e2081c60584367636c0fb17",
+    "building-dock": "ec77b31913267a8c64b647da6df6e16257bf56ad8b368b2f9bbf41e97b712e11",
+    "building-faction": "3819080136e18029e4cb8a44fbdfaaef260b9b9d0b7ebe2bff879d5c8b500ff7",
+    "prop-tree": "5158568da5c206286dee3923770a9f743f3fb23e5119b8775430de9d4c4c85e5",
+    "prop-wall": "d76875c3b1b9efc0e6b4b8893be0edb0a38408d8d142c1dc5273c8b8da689f0a",
+    "prop-bridge": "41f392e67a76e1b24f27acf71773f21b5fad00c661f812c30bc5ee339189ffea",
+    "tile-grass": "91950034ed1ddfd30f7d9e3b0680c3f38cac6fa7a0c7bb107fc63e6167e33750",
+    "tile-water": "d282217ec4956a3eb9afee98683d81e4fc47368f9f00b08cbfb3282f5cfda274",
+    "tile-stone": "0866d1d3ba9f1abb9a3897b7bb9b076bdd3f8df99ff0c653e4203e9823b50c9e"
+  },
+  "logical_canvas": [
+    256,
+    256
+  ],
+  "runtime_canvas": [
+    512,
+    512
+  ],
+  "logical_anchor": [
+    128,
+    171
+  ],
+  "ground_projection": "2:1",
+  "buildings": [
+    {
+      "source": "building-gate",
+      "source_alpha_bounds": [
+        149,
+        191,
+        1170,
+        1084
+      ],
+      "alignment": "visible image centre",
+      "runtime_centre": [
+        256,
+        342
+      ],
+      "projected_lot_inset": 0.83,
+      "source_fringe_alpha_threshold": 8,
+      "centre_error_pixels": 0.5,
+      "runtime_bounds": [
+        166,
+        263,
+        348,
+        422
+      ]
+    },
+    {
+      "source": "building-government",
+      "source_alpha_bounds": [
+        29,
+        194,
+        1240,
+        1091
+      ],
+      "alignment": "visible image centre",
+      "runtime_centre": [
+        256,
+        342
+      ],
+      "projected_lot_inset": 0.83,
+      "source_fringe_alpha_threshold": 8,
+      "centre_error_pixels": 0.0,
+      "runtime_bounds": [
+        126,
+        246,
+        387,
+        439
+      ]
+    },
+    {
+      "source": "building-palace",
+      "source_alpha_bounds": [
+        134,
+        279,
+        1178,
+        1066
+      ],
+      "alignment": "visible image centre",
+      "runtime_centre": [
+        256,
+        342
+      ],
+      "projected_lot_inset": 0.83,
+      "source_fringe_alpha_threshold": 8,
+      "centre_error_pixels": 0.5,
+      "runtime_bounds": [
+        142,
+        256,
+        372,
+        429
+      ]
+    },
+    {
+      "source": "building-market",
+      "source_alpha_bounds": [
+        107,
+        229,
+        1202,
+        1029
+      ],
+      "alignment": "visible image centre",
+      "runtime_centre": [
+        256,
+        342
+      ],
+      "projected_lot_inset": 0.83,
+      "source_fringe_alpha_threshold": 8,
+      "centre_error_pixels": 0.0,
+      "runtime_bounds": [
+        123,
+        245,
+        390,
+        440
+      ]
+    },
+    {
+      "source": "building-inn",
+      "source_alpha_bounds": [
+        107,
+        151,
+        1226,
+        1160
+      ],
+      "alignment": "visible image centre",
+      "runtime_centre": [
+        256,
+        342
+      ],
+      "projected_lot_inset": 0.83,
+      "source_fringe_alpha_threshold": 8,
+      "centre_error_pixels": 0.5,
+      "runtime_bounds": [
+        157,
+        252,
+        356,
+        432
+      ]
+    },
+    {
+      "source": "building-clinic",
+      "source_alpha_bounds": [
+        134,
+        206,
+        1226,
+        1087
+      ],
+      "alignment": "visible image centre",
+      "runtime_centre": [
+        256,
+        342
+      ],
+      "projected_lot_inset": 0.83,
+      "source_fringe_alpha_threshold": 8,
+      "centre_error_pixels": 0.5,
+      "runtime_bounds": [
+        152,
+        258,
+        362,
+        428
+      ]
+    },
+    {
+      "source": "building-workshop",
+      "source_alpha_bounds": [
+        103,
+        220,
+        1228,
+        1085
+      ],
+      "alignment": "visible image centre",
+      "runtime_centre": [
+        256,
+        342
+      ],
+      "projected_lot_inset": 0.83,
+      "source_fringe_alpha_threshold": 8,
+      "centre_error_pixels": 0.0,
+      "runtime_bounds": [
+        152,
+        262,
+        361,
+        423
+      ]
+    },
+    {
+      "source": "building-training",
+      "source_alpha_bounds": [
+        66,
+        207,
+        1247,
+        1082
+      ],
+      "alignment": "visible image centre",
+      "runtime_centre": [
+        256,
+        342
+      ],
+      "projected_lot_inset": 0.83,
+      "source_fringe_alpha_threshold": 8,
+      "centre_error_pixels": 0.5,
+      "runtime_bounds": [
+        124,
+        244,
+        390,
+        441
+      ]
+    },
+    {
+      "source": "building-school",
+      "source_alpha_bounds": [
+        29,
+        193,
+        1240,
+        1094
+      ],
+      "alignment": "visible image centre",
+      "runtime_centre": [
+        256,
+        342
+      ],
+      "projected_lot_inset": 0.83,
+      "source_fringe_alpha_threshold": 8,
+      "centre_error_pixels": 0.5,
+      "runtime_bounds": [
+        126,
+        246,
+        386,
+        439
+      ]
+    },
+    {
+      "source": "building-residence",
+      "source_alpha_bounds": [
+        136,
+        249,
+        1225,
+        1061
+      ],
+      "alignment": "visible image centre",
+      "runtime_centre": [
+        256,
+        342
+      ],
+      "projected_lot_inset": 0.83,
+      "source_fringe_alpha_threshold": 8,
+      "centre_error_pixels": 0.5,
+      "runtime_bounds": [
+        148,
+        262,
+        364,
+        423
+      ]
+    },
+    {
+      "source": "building-granary",
+      "source_alpha_bounds": [
+        192,
+        219,
+        1150,
+        1036
+      ],
+      "alignment": "visible image centre",
+      "runtime_centre": [
+        256,
+        342
+      ],
+      "projected_lot_inset": 0.83,
+      "source_fringe_alpha_threshold": 8,
+      "centre_error_pixels": 0.5,
+      "runtime_bounds": [
+        158,
+        259,
+        354,
+        426
+      ]
+    },
+    {
+      "source": "building-garden",
+      "source_alpha_bounds": [
+        47,
+        242,
+        1236,
+        1084
+      ],
+      "alignment": "visible image centre",
+      "runtime_centre": [
+        256,
+        342
+      ],
+      "projected_lot_inset": 0.83,
+      "source_fringe_alpha_threshold": 8,
+      "centre_error_pixels": 0.0,
+      "runtime_bounds": [
+        133,
+        255,
+        380,
+        430
+      ]
+    },
+    {
+      "source": "building-temple",
+      "source_alpha_bounds": [
+        116,
+        216,
+        1225,
+        1038
+      ],
+      "alignment": "visible image centre",
+      "runtime_centre": [
+        256,
+        342
+      ],
+      "projected_lot_inset": 0.83,
+      "source_fringe_alpha_threshold": 8,
+      "centre_error_pixels": 0.5,
+      "runtime_bounds": [
+        146,
+        260,
+        368,
+        425
+      ]
+    },
+    {
+      "source": "building-dock",
+      "source_alpha_bounds": [
+        86,
+        217,
+        1200,
+        991
+      ],
+      "alignment": "visible image centre",
+      "runtime_centre": [
+        256,
+        342
+      ],
+      "projected_lot_inset": 0.83,
+      "source_fringe_alpha_threshold": 8,
+      "centre_error_pixels": 0.5,
+      "runtime_bounds": [
+        134,
+        257,
+        380,
+        428
+      ]
+    },
+    {
+      "source": "building-faction",
+      "source_alpha_bounds": [
+        27,
+        197,
+        1225,
+        1102
+      ],
+      "alignment": "visible image centre",
+      "runtime_centre": [
+        256,
+        342
+      ],
+      "projected_lot_inset": 0.83,
+      "source_fringe_alpha_threshold": 8,
+      "centre_error_pixels": 0.5,
+      "runtime_bounds": [
+        128,
+        246,
+        384,
+        440
+      ]
+    }
+  ],
+  "outputs": {
+    "building-gate": "5c4fe55866f619c6bed590db3e2ebe882e25f1ac116c50d710b092d5fe636294",
+    "building-government": "138075f08a9279335a486688959d931a12ee6afe6ffae0bed9e41f84524c5e2b",
+    "building-palace": "cfaf70f8c22fe1893b8914ddb75bdaf7c50bb4908d9006c61129d6f275d777aa",
+    "building-market": "20e7df64465e1f82c0d244a1675cecb7c620d70012b2ad165becdb868fe20bae",
+    "building-inn": "dd36e3cac5222638ca49676fff560eb515269b3d12d9fb5c10a7aa0e61cb9985",
+    "building-clinic": "ff3128de6e38133e8b9148ca72e35efa196cd1fe3ab5ebb09f6c69ad93723fed",
+    "building-workshop": "a229668ecf911aa64c217f646f31c0da988eab1d257db902bb47ad5d1ad93d2c",
+    "building-training": "6e785e0b8874886bef63e2ffd725f8fd3cd557cd6909e349342902837aee2115",
+    "building-school": "20876b3e166bed42cdcef6e0428738cd7830d644519bbc21a80af4bf00ce6cd9",
+    "building-residence": "49079c0066e389db5facd0340a619bd030a523645eaadf905d3eeb1a32df7218",
+    "building-granary": "8e4ea6904a0ca5a5591ae2058c9971dfe1df2db40303e4a6c1887b25eab94fa2",
+    "building-garden": "825999ca86450e1398f672bad5f27d3cfecb9dac14aac8681bc6cdac4212eb60",
+    "building-temple": "988c8d16544e83d0e9be26a9263f6b089c4d758c51f2b4dcd6aa1a95cd6bb531",
+    "building-dock": "c12e0369e7e1787c0ff0ebea441b4a260fded68d625b2f0bc3de41c1b8e2229a",
+    "building-faction": "57b5583f0d458a3eaf30f52080ef078577721d596b7f11d777c7bcc51bfe93aa",
+    "prop-forest-0": "ad42c240198ce31ef7c9aa53d43cc8bf9d7918df16625c310cb95bfc658b8613",
+    "prop-grass-0": "d408c6ebb0023d16d6deac37c9e7130b2d13b121b0baf8a5eaa1a2319a33485a",
+    "prop-forest-1": "eb679917080808d85724eda808b382a26645f67430eaab27fd0d94a94135d90b",
+    "prop-grass-1": "f6363937e7f6db9d2727dd6bd1436062f943993ef426a1d2a5f544ebcf9675b5",
+    "prop-forest-2": "f217c38513721eabba410de7ec04a7500683323097a591e6197efc94335cbb7d",
+    "prop-grass-2": "adc2abf1723e91a2e3c00d939b446b6c671dbdb221d726521ddebf2db8e2a104",
+    "wall-axis-0": "59fc469bab93a4ca64a7400fc0633d55fdc57be2dc4cedb9c4370c242d649365",
+    "bridge-axis-0": "6bbf456729361d327e5738c20d5d9050eab1d3d23b33f459862e09d788a84a53",
+    "wall-axis-1": "3c863da978a677f273f0ce4e29685661c786cb0f298a1b469044c9c04891b8d8",
+    "bridge-axis-1": "76b6aca988f89153c132bbcc0f1a44f7f56443df761f04661cd7396fb7dce8c6",
+    "building-parcel": "5d2ae28ee0a7e118554fbef48c56d02023b0bbadc836b60ff8d26a8670342617",
+    "grass-0": "0aadc963476db3865cfd516b47fc245ed414a449a7f54e70e81f33c96a2069ff",
+    "street-0": "0aadc963476db3865cfd516b47fc245ed414a449a7f54e70e81f33c96a2069ff",
+    "forest-0": "78259cf9be34c0556f54f3214d2b3d7c1436b1a065146cdfcafbd284b8e29da8",
+    "mountain-0": "0aadc963476db3865cfd516b47fc245ed414a449a7f54e70e81f33c96a2069ff",
+    "wall-0": "0aadc963476db3865cfd516b47fc245ed414a449a7f54e70e81f33c96a2069ff",
+    "water-0": "4decc99b85f5f118d48bacef46f26b65144cab815b1528ad7f51ebde8b6dbf5f",
+    "field-0": "d81c38c79c22f71ad5bde16192265a44edb34042fac8c48cf7b7eede3ca64de6",
+    "grass-1": "f25cb7d341e15230c4a73c723aa80831ed06f304b40735489a925c254a5cdd49",
+    "street-1": "f25cb7d341e15230c4a73c723aa80831ed06f304b40735489a925c254a5cdd49",
+    "forest-1": "b6f7b0c5adf79e0dbb1b600b86244f48625dcd918981390ad21bc6adc0b24c72",
+    "mountain-1": "f25cb7d341e15230c4a73c723aa80831ed06f304b40735489a925c254a5cdd49",
+    "wall-1": "f25cb7d341e15230c4a73c723aa80831ed06f304b40735489a925c254a5cdd49",
+    "water-1": "9edff7579ec88b453c2650f34c8633d3d61694ed0344ff511d7b08b93e840689",
+    "field-1": "d81c38c79c22f71ad5bde16192265a44edb34042fac8c48cf7b7eede3ca64de6",
+    "grass-2": "54f06100fde96455a0f6555da25637b3f81832ff33eb0808b63aa256b2524f47",
+    "street-2": "54f06100fde96455a0f6555da25637b3f81832ff33eb0808b63aa256b2524f47",
+    "forest-2": "679d3b5451347a71218f48546943adb83b8f4aabbae52e9337e662a4467589b9",
+    "mountain-2": "54f06100fde96455a0f6555da25637b3f81832ff33eb0808b63aa256b2524f47",
+    "wall-2": "54f06100fde96455a0f6555da25637b3f81832ff33eb0808b63aa256b2524f47",
+    "water-2": "fb98e61cfeac1edb376c07f5f194c06713d2e164da0c48ad292c8367eb35b07c",
+    "field-2": "d81c38c79c22f71ad5bde16192265a44edb34042fac8c48cf7b7eede3ca64de6",
+    "road-0": "55f13be33d0c5371628a0f74fa86b88c877aef2b6a00d7f5d957d9318508a844",
+    "bridge-0": "55f13be33d0c5371628a0f74fa86b88c877aef2b6a00d7f5d957d9318508a844",
+    "road-1": "3da49ae2ee59c32781d6de050153208736052ae82c4a189b259a84f316c52edc",
+    "bridge-1": "3da49ae2ee59c32781d6de050153208736052ae82c4a189b259a84f316c52edc",
+    "road-2": "224c61fd67bdd6e997226a16c6cae04b5267487a768cbd203351cbb9e5460d31",
+    "bridge-2": "224c61fd67bdd6e997226a16c6cae04b5267487a768cbd203351cbb9e5460d31",
+    "road-3": "63b9f64b8cae3e42a10a1ab705f279b46980e3f0aa6b8b980078ba584fb26635",
+    "bridge-3": "63b9f64b8cae3e42a10a1ab705f279b46980e3f0aa6b8b980078ba584fb26635",
+    "road-4": "7ac9fadf75f7bb2e7180791e7420eb4e426b5bcc8254aa8ee193077cecf019ee",
+    "bridge-4": "7ac9fadf75f7bb2e7180791e7420eb4e426b5bcc8254aa8ee193077cecf019ee",
+    "road-5": "5e96e56939a4a02d7e4dc8a85e38b91a534ccdea04ab76eaf455cb0fcda1aa98",
+    "bridge-5": "5e96e56939a4a02d7e4dc8a85e38b91a534ccdea04ab76eaf455cb0fcda1aa98",
+    "road-6": "e662219ddd5847a42667af572f17aff9eb01db4e64d28c7fc6a1a34b3154909d",
+    "bridge-6": "e662219ddd5847a42667af572f17aff9eb01db4e64d28c7fc6a1a34b3154909d",
+    "road-7": "8843440282d8ec67ccb44fdeed5f32830164c60a80ee0837ad7c5669c8c3308e",
+    "bridge-7": "8843440282d8ec67ccb44fdeed5f32830164c60a80ee0837ad7c5669c8c3308e",
+    "road-8": "7ebb93b478f82e79bf82689ea1bb5e538b49d1e7a990a0d832dbd392e4563336",
+    "bridge-8": "7ebb93b478f82e79bf82689ea1bb5e538b49d1e7a990a0d832dbd392e4563336",
+    "road-9": "894a2c6e56ae12b1707f2de65f7bbf60ddae2e63f03a93173a8609aa702033b6",
+    "bridge-9": "894a2c6e56ae12b1707f2de65f7bbf60ddae2e63f03a93173a8609aa702033b6",
+    "road-10": "f9f835403567c3a15e664128df8e8cb3c2d9206ca15ee6743790ac111deb4bae",
+    "bridge-10": "f9f835403567c3a15e664128df8e8cb3c2d9206ca15ee6743790ac111deb4bae",
+    "road-11": "6f566e6eda7c4d67415945a53ae16743a2490b4f05d736408489067adeabaa35",
+    "bridge-11": "6f566e6eda7c4d67415945a53ae16743a2490b4f05d736408489067adeabaa35",
+    "road-12": "42c1ddd89187f8159116640e3a70045d77a5843611e20efdad72362d823b7159",
+    "bridge-12": "42c1ddd89187f8159116640e3a70045d77a5843611e20efdad72362d823b7159",
+    "road-13": "199f17116ad1b27181d854bb03368647c08e70c105c61f4ba9e2d4cc62dddc78",
+    "bridge-13": "199f17116ad1b27181d854bb03368647c08e70c105c61f4ba9e2d4cc62dddc78",
+    "road-14": "a384abc0b87881f200788af2257e195ff9540b98f882690a87e9f1899ac5bd11",
+    "bridge-14": "a384abc0b87881f200788af2257e195ff9540b98f882690a87e9f1899ac5bd11",
+    "road-15": "2674c07767bc29fc429a3aeef227086e6a9646157cfddcf758e159ad2110b5e1",
+    "bridge-15": "2674c07767bc29fc429a3aeef227086e6a9646157cfddcf758e159ad2110b5e1"
+  }
+}

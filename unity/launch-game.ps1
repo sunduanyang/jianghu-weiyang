@@ -1,5 +1,8 @@
 $ErrorActionPreference = 'Stop'
 $buildPath = Join-Path $PSScriptRoot 'Build'
+# Current releases can be installed while a previous root-level player is running.
+$currentBuildPath = Join-Path $buildPath 'Current'
+if (@(Get-ChildItem -LiteralPath $currentBuildPath -Filter '*.exe' -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -ne 'UnityCrashHandler64.exe' }).Count -eq 1) { $buildPath = $currentBuildPath }
 $players = @(Get-ChildItem -LiteralPath $buildPath -Filter '*.exe' -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -ne 'UnityCrashHandler64.exe' })
 if ($players.Count -ne 1) {
     Write-Host 'Build the Unity project first. See unity/README.md.'

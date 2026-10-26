@@ -37,7 +37,7 @@ public static class BuildTools {
                 importer.isReadable=true;importer.textureCompression=TextureImporterCompression.Uncompressed;importer.mipmapEnabled=false;importer.alphaIsTransparency=true;importer.SaveAndReimport();
             }
         }
-        string output=GameClient.Arg("-buildOutput",Path.GetFullPath(Path.Combine(Application.dataPath,"../../Build/江湖未央.exe")));Directory.CreateDirectory(Path.GetDirectoryName(output));
+        string output=GameClient.Arg("-buildOutput",Path.GetFullPath(Path.Combine(Application.dataPath,"../../Build/Current/江湖未央.exe")));Directory.CreateDirectory(Path.GetDirectoryName(output));
         var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions{scenes=new[]{"Assets/Scenes/Jianghu.unity"},locationPathName=output,target=BuildTarget.StandaloneWindows64,options=BuildOptions.None});
         if(report.summary.result!=BuildResult.Succeeded)throw new Exception("Windows build failed: "+report.summary.result);
         Debug.Log("JIANGHU_BUILD_OK "+output+" bytes="+report.summary.totalSize);

@@ -19,6 +19,7 @@ function renderMartialSummary(){
 }
 
 function artCard(a, interactive=true){
+ if(a.combat_reach)a={...a,reach:a.combat_reach};
  const ready=a.ready, equipped=a.equipped;
  return `<article class="art-card ${equipped?'equipped':''}"><div class="art-head"><span class="art-kind">${artKinds[a.kind]} · ${a.affinity}</span><span class="art-grade">${a.grade}品</span></div><h3>${esc(a.name)} <small>${esc(a.realm_name)}</small></h3><p>${esc(a.description)}</p><div class="art-progress"><i style="width:${a.practice}%"></i><b style="left:${a.gate}%"></b></div><div class="art-progress-label"><span>修习 ${num(a.practice,1)} / ${a.gate}</span><span>${a.realm===3?'已臻化境':ready?'可突破':'尚待打磨'}</span></div>${a.kind==='attack'?`<div class="art-cost">距离 ${a.reach.join('–')} · ${a.damage_type==='internal'?'内伤':'外伤'} · ${a.qi} 内力 · ${a.forms} 式</div>`:''}${interactive?`<div class="art-buttons"><button data-martial-action="${ready?'breakthrough':'practice'}" data-art="${a.id}" ${a.realm===3?'disabled':''}>${ready?'突破关隘':'闭关修习'}</button><button data-martial-action="equip" data-art="${a.id}" class="${equipped?'equipped-button':'quiet'}">${equipped?(a.kind==='attack'?'已装配 · 卸下':'运用中'):'装配'}</button></div>`:''}</article>`;
 }

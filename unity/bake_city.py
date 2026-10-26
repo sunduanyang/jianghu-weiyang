@@ -5,15 +5,29 @@ depth-sorted scenery share a 256px canvas, with ground centre at (128, 171).
 Run: python unity/bake_city.py
 """
 import math
+import io
 import random
 from pathlib import Path
 
+import numpy as np
+from scipy.ndimage import gaussian_filter
 from PIL import Image, ImageDraw, ImageFilter
-from bake_ui import save
+from bake_ui import write_texture_meta
 
 OUT = Path(__file__).resolve().parent / 'JianghuUnity/Assets/Resources/City'
 S = 2
 INK = (45, 58, 49)
+
+
+def save(image, path):
+    """Replace whole city textures atomically, including during a full rebake."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    buffer = io.BytesIO()
+    image.save(buffer, format='PNG', optimize=True)
+    temporary = path.with_suffix('.png.tmp')
+    temporary.write_bytes(buffer.getvalue())
+    temporary.replace(path)
+    write_texture_meta(path, wrap=False, mipmaps=False, compress=False)
 
 
 class Art:
@@ -49,18 +63,23 @@ def patch(a, u, v, w, d, color, z=0, edge=None):
 
 def ground(kind, variant):
     a = Art(1200+variant*17+ord(kind))
-    colors = {'.':(132,151,107), '+':(172,164,127), '~':(78,132,129),
-              '^':(111,135,108),'t':(100,135,94),',':(161,163,99),'#':(135,144,119)}
+    colors = {'.':(147,158,119), '+':(147,158,119), '~':(66,118,119),
+              '^':(126,146,117),'t':(122,147,106),',':(164,159,103),'#':(144,151,125)}
     base = colors[kind]
-    a.poly([(2,171),(128,234),(128,244),(2,181)], (69,83,62), INK)
-    a.poly([(128,234),(254,171),(254,181),(128,244)], (54,72,58), INK)
-    a.poly([(128,108),(254,171),(128,234),(2,171)], base, (58,78,59))
-    # Faint contour washes and grass stippling, kept within the rhombus.
-    for _ in range(155):
+    # A continuous landscape: exact touching diamonds, no dark extrusion on each cell.
+    mask=Image.new('L',a.im.size);md=ImageDraw.Draw(mask)
+    md.polygon([(128*S,107*S),(256*S,171*S),(128*S,235*S),(0,171*S)],fill=255)
+    rng=np.random.default_rng(1200+variant*17+ord(kind))
+    cloud=gaussian_filter(rng.normal(size=(256*S,256*S)),14*S)
+    cloud=cloud/max(float(cloud.std()),.0001)
+    grain=rng.normal(0,1.4,size=cloud.shape)
+    rgb=np.clip(np.array(base)[None,None,:]+(cloud*3+grain)[...,None],0,255).astype('uint8')
+    a.im=Image.fromarray(rgb).convert('RGBA');a.im.putalpha(mask);a.d=ImageDraw.Draw(a.im)
+    for _ in range(45):
         u,v = a.rng.uniform(-66,66),a.rng.uniform(-66,66)
         x,y=iso(u,v)
-        c=tuple(max(0,min(255,k+a.rng.randint(-13,10))) for k in base)+(100,)
-        a.line([(x,y),(x+a.rng.uniform(2,7),y-1)], c, .7)
+        c=tuple(max(0,min(255,k+a.rng.randint(-8,6))) for k in base)
+        a.line([(x,y),(x+a.rng.uniform(2,7),y-1)], c, .5)
     if kind=='~':
         for _ in range(24):
             x,y=iso(a.rng.uniform(-58,58),a.rng.uniform(-58,58))
@@ -75,10 +94,10 @@ def ground(kind, variant):
             a.line([iso(-48,v+3),iso(48,v+3)],(86,117,65),2)
             for u in range(-44,48,12):
                 x,y=iso(u,v);a.line([(x,y),(x,y-5)],(207,191,104))
-    else:
-        for _ in range(10):
+    elif kind not in '+#^':
+        for _ in range(6):
             x,y=iso(a.rng.uniform(-58,58),a.rng.uniform(-58,58))
-            a.line([(x-2,y),(x-3,y-3),(x,y),(x+2,y-4)],(83,113,68,130))
+            a.line([(x-2,y),(x-3,y-3),(x,y),(x+2,y-4)],(111,136,89))
     a.finish({'~':'water','^':'mountain','t':'forest',',':'field','#':'wall','+':'street','.':'grass'}[kind]+f'-{variant}')
 
 
@@ -87,12 +106,12 @@ def road(mask, bridge=False):
     ends=[(192,139),(192,203),(64,203),(64,139)]
     for bit,end in enumerate(ends):
         if not(mask & (1<<bit)): continue
-        a.line([(128,171),end],(83,89,65),30)
-        a.line([(128,171),end],(188,179,139) if not bridge else (155,126,84),24)
+        a.line([(128,171),end],(130,139,105),33)
+        a.line([(128,171),end],(183,177,143) if not bridge else (155,126,84),26)
         dx,dy=end[0]-128,end[1]-171
-        for i in range(1,8):
+        for i in range(1,7):
             t=i/8;x=128+dx*t;y=171+dy*t
-            a.line([(x-dy*.12,y+dx*.12),(x+dy*.12,y-dx*.12)],(115,115,87) if not bridge else (85,72,54))
+            a.line([(x-dy*.17,y+dx*.17),(x+dy*.17,y-dx*.17)],(158,157,125) if not bridge else (85,72,54),.6)
         if bridge:
             for sign in (-1,1):
                 q=(sign*-dy*.25,sign*dx*.25)
@@ -239,16 +258,34 @@ def scenery(kind, variant):
 
 
 def backdrop():
-    im=Image.new('RGB',(1680,960),(45,64,55));d=ImageDraw.Draw(im)
+    rng_np=np.random.default_rng(243)
+    yy,xx=np.mgrid[:960,:1680]
+    light=np.exp(-((xx-810)/900)**2-((yy-410)/520)**2)
+    grain=rng_np.normal(0,.75,(960,1680))
+    rgb=np.stack([28+light*29+grain,46+light*30+grain,43+light*22+grain],axis=-1)
+    im=Image.fromarray(np.clip(rgb,0,255).astype('uint8'));d=ImageDraw.Draw(im)
     rng=random.Random(243)
     for layer in range(4):
         pts=[(-100,960)]
         for x in range(-100,1800,38):
-            y=310+layer*115+math.sin(x*.009+layer)*95+rng.uniform(-80,40)
+            y=280+layer*155+math.sin(x*.007+layer)*65+rng.uniform(-50,30)
             pts.append((x,y))
-        pts.append((1800,960));d.polygon(pts,fill=(48+layer*5,70+layer*5,62+layer*3))
-    im=im.filter(ImageFilter.GaussianBlur(9))
+        pts.append((1800,960));d.polygon(pts,fill=(34+layer*3,53+layer*4,49+layer*3))
+    im=im.filter(ImageFilter.GaussianBlur(14))
     save(im,OUT/'backdrop.png')
+
+
+def overlays():
+    a=Art();a.poly([(128,108),(254,171),(128,234),(2,171)],(173,209,121,45));a.finish('reachable')
+    a=Art();a.oval((91,153,165,189),(255,238,172));a.oval((105,160,151,182),(255,250,208));a.finish('route-dot')
+    for name,col in [('selection',(235,198,103)),('hero-ring',(250,219,140))]:
+        a=Art();a.oval((18,119,238,223),(*col,32));a.oval((26,123,230,219),(0,0,0,0),(*col,210));
+        a.line([(128,118),(139,124),(128,130),(117,124),(128,118)],(*col,230),2)
+        a.line([(128,212),(139,218),(128,224),(117,218),(128,212)],(*col,230),2)
+        a.finish(name)
+    shadow=Image.new('RGBA',(1024,560));d=ImageDraw.Draw(shadow)
+    d.polygon([(512,18),(1006,265),(512,518),(18,265)],fill=(7,20,17,160))
+    shadow=shadow.filter(ImageFilter.GaussianBlur(15));save(shadow,OUT/'island-shadow.png')
 
 
 def main():
@@ -259,6 +296,10 @@ def main():
         for v in range(3):scenery(kind,v)
     for kind in ('gate','government','palace','market','inn','clinic','workshop','training','school','residence','granary','garden','temple','dock','faction'):building(kind)
     backdrop()
+    overlays()
+    # Generated production painting is kept as source art, with deterministic crop/anchor export.
+    from export_city_art import export
+    export()
 
 
 if __name__=='__main__':main()

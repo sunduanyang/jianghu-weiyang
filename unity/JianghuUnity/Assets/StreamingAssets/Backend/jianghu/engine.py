@@ -1254,7 +1254,8 @@ class World:
             n = self.npcs[b['fighters'][1]['id']]
             costs = []
             rewards = self.player.setdefault('spar_rewards', {})
-            practiced = (b['round'] >= 3 and any(row.get('damage', 0) > 0 and row['side'] == 0 for row in b['log']))
+            practiced_time = b.get('elapsed', 0) >= 3 if b.get('ruleset') == 3 else b['round'] >= 3
+            practiced = practiced_time and any(row.get('damage', 0) > 0 and row['side'] == 0 for row in b['log'])
             gain = .3 if practiced and rewards.get(str(n['id'])) != self.month else 0.
             if gain:
                 rewards[str(n['id'])] = self.month

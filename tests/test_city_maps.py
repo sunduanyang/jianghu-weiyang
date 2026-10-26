@@ -40,7 +40,18 @@ class CityMapTests(unittest.TestCase):
                 self.assertEqual(len({n['id'] for n in city['nodes']}),len(city['nodes']))
                 self.assertEqual(len({(n['row'],n['col']) for n in city['nodes']}),len(city['nodes']))
                 start = city['nodes'][0]
+                occupied = set()
                 for node in city['nodes']:
+                    lot = node['footprint']
+                    self.assertIn(lot['size'], (1, 2))
+                    cells = {(lot['row']+r, lot['col']+c)
+                             for r in range(lot['size']) for c in range(lot['size'])}
+                    self.assertIn((node['row'], node['col']), cells)
+                    self.assertFalse(cells & occupied, (seed, p['name'], node['name']))
+                    self.assertTrue(all(0 <= r < city['size'] and 0 <= c < city['size'] for r,c in cells))
+                    if lot['size'] == 2:
+                        self.assertTrue(all(city['rows'][r][c] not in '~^#=' for r,c in cells))
+                    occupied.update(cells)
                     path,_ = city_maps.path_between(city['rows'],(start['row'],start['col']),
                                                    (node['row'],node['col']))
                     self.assertTrue(path,(seed,p['name'],node['name']))

@@ -10,20 +10,22 @@ public partial class JianghuApp {
     float battleVisualDistance=3;
     string battleSession="";
     string battleLastError="";
+    string pendingBattleCommand;
     Vector2 battleLogScroll;
     readonly Color combatDark=new Color(.055f,.095f,.095f,.96f),combatLight=new Color(.95f,.90f,.76f),combatRed=new Color(.73f,.30f,.23f);
     static readonly string[] BasicKeys={"basic_thrust","basic_slash","basic_crush"};
     static readonly string[] ArtHotkeys={"Q","W","E","Z","X","C"};
 
-    void OnApplicationFocus(bool focus){if(!focus)battlePaused=true;}
+    void OnApplicationFocus(bool focus){if(!focus){battlePaused=true;if(Martial["battle"]["ruleset"].I==3)pendingBattleCommand="stop";}}
     void UpdateBattle(){
-        if(Page!=3||!battleView||personScreen||dialogueOpen){battlePaused=true;return;}
+        if(Page!=3||!battleView||personScreen||dialogueOpen){battlePaused=true;if(Martial["battle"]["ruleset"].I==3&&Martial["battle"]["fighters"][0]["move"].I!=0)pendingBattleCommand="stop";return;}
         var b=Martial["battle"];
         if(!b.Has||b["status"].S!="active"){battlePaused=true;return;}
-        if(battleSession!=b["id"].S){battleSession=b["id"].S;battleVisualDistance=(float)b["distance"].N;battlePaused=true;nextBattleBeat=Time.realtimeSinceStartup+1.8f;}
+        if(battleSession!=b["id"].S){battleSession=b["id"].S;battleVisualDistance=(float)b["distance"].N;battlePaused=true;pendingBattleCommand=null;nextBattleBeat=Time.realtimeSinceStartup+1.8f;}
         battleVisualDistance=Mathf.MoveTowards(battleVisualDistance,(float)b["distance"].N,Time.unscaledDeltaTime*3.5f);
         if(Input.GetKeyDown(KeyCode.Space)&&!battleHelp)ToggleBattleClock();
         if(Input.GetKeyDown(KeyCode.Escape)){battlePaused=true;battleHelp=false;battleView=false;return;}
+        if(b["ruleset"].I==3){UpdateRealtimeBattle(b);return;}
         if(battleHelp||Client.Busy)return;
         if(Client.Error.Length>0){
             battlePaused=true;
@@ -39,17 +41,21 @@ public partial class JianghuApp {
         if(command!=null){SendBattleAction(command);return;}
         if(!battlePaused&&Time.realtimeSinceStartup>=nextBattleBeat)SendBattleAction(b["ruleset"].I==2?"auto":"guard");
     }
-    void ToggleBattleClock(){battlePaused=!battlePaused;nextBattleBeat=Time.realtimeSinceStartup+1.8f/battleSpeed;}
+    float BattleInterval()=>Martial["battle"]["ruleset"].I==3?.2f/battleSpeed:1.8f/battleSpeed;
+    void ToggleBattleClock(){battlePaused=!battlePaused;nextBattleBeat=Time.realtimeSinceStartup+BattleInterval();}
     void SendBattleAction(string command){
         var b=Martial["battle"];
         if(Client.Busy||b["status"].S!="active")return;
         var action=b["actions"].A.FirstOrDefault(a=>a["id"].S==command);
         if(command!="auto"&&(action==null||!action["enabled"].B))return;
-        nextBattleBeat=Time.realtimeSinceStartup+1.8f/battleSpeed;
-        Client.Act("/api/battle",J.O("battle_id",b["id"],"round",b["round"],"action",command),j=>{
-            Martial=j;nextBattleBeat=Time.realtimeSinceStartup+1.8f/battleSpeed;
+        bool clock=command=="tick"||command=="auto";
+        if(clock)nextBattleBeat=Time.realtimeSinceStartup+BattleInterval();
+        Action<J> received=j=>{
+            Martial=j;if(clock)nextBattleBeat=Time.realtimeSinceStartup+BattleInterval();
             if(j["battle"]["status"].S!="active")battlePaused=true;
-        });
+        };
+        var body=J.O("battle_id",b["id"],"round",b["round"],"action",command);
+        if(b["ruleset"].I==3)Client.BattleAct(body,received);else Client.Act("/api/battle",body,received);
     }
     GUIStyle CombatText(int size,Color color,TextAnchor align=TextAnchor.MiddleLeft){return new GUIStyle(text){fontSize=size,alignment=align,wordWrap=true,normal={textColor=color}};}
     bool CombatButton(Rect r,string label,bool active=false,bool enabled=true,string hint=""){
@@ -62,6 +68,7 @@ public partial class JianghuApp {
         Tile(new Rect(0,0,1680,960),"bg");
         var b=Martial["battle"];
         if(!b.Has){GUI.Label(new Rect(280,350,1120,80),"尚未约战\n在人物页选择一位成年、体力充足的江湖人，点击「切磋」。",centerTitle);if(CombatButton(new Rect(735,500,210,46),"返回功法"))battleView=false;return;}
+        if(b["ruleset"].I==3){DrawRealtimeBattle(b);return;}
         bool finished=b["status"].S=="finished",modern=b["ruleset"].I==2;
         var fighters=b["fighters"].A;
         if(fighters.Count<2)return;

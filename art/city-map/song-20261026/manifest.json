@@ -1,0 +1,1490 @@
+{
+  "generatedWith": "built-in image_gen",
+  "count": 21,
+  "expected": 21,
+  "palette": [
+    "#E6DCC6",
+    "#8A9A6B",
+    "#6E8B74",
+    "#5B6E78",
+    "#555F66",
+    "#B08D57",
+    "#C9A97A",
+    "#A8432F",
+    "#2B2620"
+  ],
+  "validationScope": "PNG integrity, SHA-256, genuine alpha and opaque pixel palette statistics only. No exact projection, art style, two-tone or runtime acceptance claim.",
+  "failures": [],
+  "assets": [
+    {
+      "id": "building-gate",
+      "label": "城门",
+      "file": "flat/building-gate.png",
+      "sha256": "c60e3e9be1791084c5c628c96bda4f2ae03a0cd7609529d3277d224ecc540b9b",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 1012458,
+      "alpha": {
+        "clear": 1014372,
+        "opaque": 715,
+        "partial": 557429
+      },
+      "alphaBounds": [
+        149,
+        191,
+        1170,
+        1084
+      ],
+      "clearMargin": 84,
+      "opaquePaletteStats": {
+        "denominator": 526666,
+        "exactFraction": 0.000013291156064754512,
+        "withinRGBDistance18Fraction": 0.5794963031598774,
+        "uniqueColors": 54754,
+        "topColors": [
+          [
+            "#E9D8BF",
+            8201
+          ],
+          [
+            "#63717B",
+            6800
+          ],
+          [
+            "#63717A",
+            6522
+          ],
+          [
+            "#63707A",
+            5844
+          ],
+          [
+            "#E8D7BE",
+            5372
+          ],
+          [
+            "#62707A",
+            4874
+          ],
+          [
+            "#64717B",
+            4495
+          ],
+          [
+            "#5A6770",
+            4252
+          ],
+          [
+            "#E9D8BE",
+            3784
+          ],
+          [
+            "#64727B",
+            3121
+          ]
+        ]
+      }
+    },
+    {
+      "id": "building-government",
+      "label": "官署",
+      "file": "flat/building-government.png",
+      "sha256": "aa6d2dc3068f4b38814c86466c78860374d69079457660eb32822522c034ef4d",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 1083747,
+      "alpha": {
+        "clear": 934073,
+        "opaque": 1391,
+        "partial": 637052
+      },
+      "alphaBounds": [
+        29,
+        195,
+        1240,
+        1091
+      ],
+      "clearMargin": 14,
+      "opaquePaletteStats": {
+        "denominator": 623388,
+        "exactFraction": 0.00003208274782318556,
+        "withinRGBDistance18Fraction": 0.7686641385461382,
+        "uniqueColors": 55947,
+        "topColors": [
+          [
+            "#5B6972",
+            18556
+          ],
+          [
+            "#5A6972",
+            18129
+          ],
+          [
+            "#E7D6B8",
+            14156
+          ],
+          [
+            "#5A6872",
+            12374
+          ],
+          [
+            "#5B6973",
+            12006
+          ],
+          [
+            "#E7D6B9",
+            11935
+          ],
+          [
+            "#5A6871",
+            10946
+          ],
+          [
+            "#5B6A73",
+            7877
+          ],
+          [
+            "#E6D5B8",
+            7841
+          ],
+          [
+            "#E7D7B9",
+            7730
+          ]
+        ]
+      }
+    },
+    {
+      "id": "building-palace",
+      "label": "宫阙",
+      "file": "flat/building-palace.png",
+      "sha256": "64b418b6f91547341ab19d534268c29a4077e04449a401fb053403a4a970cd2c",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 958946,
+      "alpha": {
+        "clear": 1088259,
+        "opaque": 846,
+        "partial": 483411
+      },
+      "alphaBounds": [
+        134,
+        279,
+        1178,
+        1066
+      ],
+      "clearMargin": 76,
+      "opaquePaletteStats": {
+        "denominator": 468237,
+        "exactFraction": 0.000010678353056251428,
+        "withinRGBDistance18Fraction": 0.4873899328758727,
+        "uniqueColors": 77738,
+        "topColors": [
+          [
+            "#5F7182",
+            8566
+          ],
+          [
+            "#5E7081",
+            5441
+          ],
+          [
+            "#5E7182",
+            5314
+          ],
+          [
+            "#607283",
+            5221
+          ],
+          [
+            "#5F7282",
+            5124
+          ],
+          [
+            "#5F7283",
+            5014
+          ],
+          [
+            "#5F7181",
+            4920
+          ],
+          [
+            "#5E7181",
+            4736
+          ],
+          [
+            "#000000",
+            4194
+          ],
+          [
+            "#607282",
+            4060
+          ]
+        ]
+      }
+    },
+    {
+      "id": "building-market",
+      "label": "市集",
+      "file": "flat/building-market.png",
+      "sha256": "8b98b308967325150b9f758eec526be8007fbd220c38e59fa55880749af0c249",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 1007576,
+      "alpha": {
+        "clear": 1036215,
+        "opaque": 1175,
+        "partial": 535126
+      },
+      "alphaBounds": [
+        107,
+        229,
+        1202,
+        1029
+      ],
+      "clearMargin": 52,
+      "opaquePaletteStats": {
+        "denominator": 496498,
+        "exactFraction": 0.000010070534020278027,
+        "withinRGBDistance18Fraction": 0.3310023403921063,
+        "uniqueColors": 55360,
+        "topColors": [
+          [
+            "#E6D3B5",
+            12013
+          ],
+          [
+            "#E7D4B6",
+            11936
+          ],
+          [
+            "#E7D3B5",
+            10246
+          ],
+          [
+            "#7F8C79",
+            8059
+          ],
+          [
+            "#E7D3B6",
+            7517
+          ],
+          [
+            "#7F8B78",
+            7409
+          ],
+          [
+            "#E6D3B6",
+            5630
+          ],
+          [
+            "#E7D4B7",
+            4596
+          ],
+          [
+            "#7F8C78",
+            4568
+          ],
+          [
+            "#E7D4B5",
+            4107
+          ]
+        ]
+      }
+    },
+    {
+      "id": "building-inn",
+      "label": "客栈",
+      "file": "flat/building-inn.png",
+      "sha256": "2deba41687ce1bd1da2adeb4e095a186d1fa0676e0e52d033e1d04f9aa9c4030",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 1315769,
+      "alpha": {
+        "clear": 851535,
+        "opaque": 1702,
+        "partial": 719279
+      },
+      "alphaBounds": [
+        107,
+        151,
+        1226,
+        1160
+      ],
+      "clearMargin": 28,
+      "opaquePaletteStats": {
+        "denominator": 677100,
+        "exactFraction": 0.000032491507901343966,
+        "withinRGBDistance18Fraction": 0.7099010485895731,
+        "uniqueColors": 56226,
+        "topColors": [
+          [
+            "#E6D7BF",
+            10979
+          ],
+          [
+            "#5E6A73",
+            10333
+          ],
+          [
+            "#5D6972",
+            10092
+          ],
+          [
+            "#5E6A72",
+            9574
+          ],
+          [
+            "#E6D7C0",
+            8914
+          ],
+          [
+            "#5D6A72",
+            8558
+          ],
+          [
+            "#5D6971",
+            7712
+          ],
+          [
+            "#5F6B73",
+            7401
+          ],
+          [
+            "#5E6B73",
+            7249
+          ],
+          [
+            "#E5D6BF",
+            6625
+          ]
+        ]
+      }
+    },
+    {
+      "id": "building-clinic",
+      "label": "医馆",
+      "file": "flat/building-clinic.png",
+      "sha256": "7f7b2b4d20875ffcb2a0a6414f70c393c1cd00fa9c71d9e4ff737f9a2f88d831",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 1046807,
+      "alpha": {
+        "clear": 977435,
+        "opaque": 913,
+        "partial": 594168
+      },
+      "alphaBounds": [
+        134,
+        206,
+        1226,
+        1087
+      ],
+      "clearMargin": 28,
+      "opaquePaletteStats": {
+        "denominator": 559844,
+        "exactFraction": 0.0006216017319110324,
+        "withinRGBDistance18Fraction": 0.6286233307850044,
+        "uniqueColors": 68382,
+        "topColors": [
+          [
+            "#5C6D79",
+            14720
+          ],
+          [
+            "#5B6C78",
+            10772
+          ],
+          [
+            "#5D6E7A",
+            10317
+          ],
+          [
+            "#5C6D78",
+            9716
+          ],
+          [
+            "#5D6E79",
+            9382
+          ],
+          [
+            "#5C6E79",
+            7110
+          ],
+          [
+            "#5B6D78",
+            6854
+          ],
+          [
+            "#ECDCBF",
+            6354
+          ],
+          [
+            "#5B6D79",
+            5989
+          ],
+          [
+            "#EDDDC0",
+            5922
+          ]
+        ]
+      }
+    },
+    {
+      "id": "building-workshop",
+      "label": "作坊",
+      "file": "flat/building-workshop.png",
+      "sha256": "1f6e5d34a151171371a9b8e8c9c70243b3d9a9e2fb384b855c9272032c108ce9",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 1082908,
+      "alpha": {
+        "clear": 1008999,
+        "opaque": 1005,
+        "partial": 562512
+      },
+      "alphaBounds": [
+        103,
+        220,
+        1228,
+        1084
+      ],
+      "clearMargin": 26,
+      "opaquePaletteStats": {
+        "denominator": 528060,
+        "exactFraction": 0.000007574896792031208,
+        "withinRGBDistance18Fraction": 0.5518937241980078,
+        "uniqueColors": 57283,
+        "topColors": [
+          [
+            "#5E6A73",
+            12027
+          ],
+          [
+            "#5D6972",
+            10788
+          ],
+          [
+            "#5D6A73",
+            7181
+          ],
+          [
+            "#5F6B74",
+            6481
+          ],
+          [
+            "#ECD8BA",
+            6322
+          ],
+          [
+            "#ECD8B9",
+            6110
+          ],
+          [
+            "#5E6B74",
+            5060
+          ],
+          [
+            "#5C6871",
+            4710
+          ],
+          [
+            "#5C6972",
+            4617
+          ],
+          [
+            "#5D6A72",
+            4472
+          ]
+        ]
+      }
+    },
+    {
+      "id": "building-training",
+      "label": "演武场",
+      "file": "flat/building-training.png",
+      "sha256": "7185e278cb7ebc68953e3724781830768b50db543141176064c4cdbc2541742b",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 1075430,
+      "alpha": {
+        "clear": 1004839,
+        "opaque": 678,
+        "partial": 566999
+      },
+      "alphaBounds": [
+        68,
+        207,
+        1247,
+        1082
+      ],
+      "clearMargin": 7,
+      "opaquePaletteStats": {
+        "denominator": 530504,
+        "exactFraction": 0.000009424999623000015,
+        "withinRGBDistance18Fraction": 0.6238859650445614,
+        "uniqueColors": 69275,
+        "topColors": [
+          [
+            "#5F6F7C",
+            9856
+          ],
+          [
+            "#5E6E7B",
+            8754
+          ],
+          [
+            "#E8D8BC",
+            8581
+          ],
+          [
+            "#5D6D7A",
+            8423
+          ],
+          [
+            "#E8D9BD",
+            7447
+          ],
+          [
+            "#E8D9BC",
+            6806
+          ],
+          [
+            "#E9D9BD",
+            6615
+          ],
+          [
+            "#EADBBF",
+            5843
+          ],
+          [
+            "#E8D8BB",
+            4924
+          ],
+          [
+            "#E9DABE",
+            4438
+          ]
+        ]
+      }
+    },
+    {
+      "id": "building-school",
+      "label": "书院",
+      "file": "flat/building-school.png",
+      "sha256": "69e0d1aff2c2bf387a63bcaba48b89a967656cd9b611c06d847c541ab8c4cd85",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 1177296,
+      "alpha": {
+        "clear": 922054,
+        "opaque": 1088,
+        "partial": 649374
+      },
+      "alphaBounds": [
+        29,
+        193,
+        1240,
+        1094
+      ],
+      "clearMargin": 14,
+      "opaquePaletteStats": {
+        "denominator": 606816,
+        "exactFraction": 0.000006591784000421874,
+        "withinRGBDistance18Fraction": 0.6974931445446395,
+        "uniqueColors": 73033,
+        "topColors": [
+          [
+            "#5C6C76",
+            20710
+          ],
+          [
+            "#5D6D77",
+            12447
+          ],
+          [
+            "#5D6C76",
+            12137
+          ],
+          [
+            "#EAD8BA",
+            10855
+          ],
+          [
+            "#E9D7B9",
+            8281
+          ],
+          [
+            "#5D6C77",
+            6701
+          ],
+          [
+            "#5C6B75",
+            6465
+          ],
+          [
+            "#E9D8BA",
+            5821
+          ],
+          [
+            "#5B6B75",
+            5481
+          ],
+          [
+            "#5C6B76",
+            5098
+          ]
+        ]
+      }
+    },
+    {
+      "id": "building-residence",
+      "label": "民居",
+      "file": "flat/building-residence.png",
+      "sha256": "8729f419cd1ac19d193d92fe8f873b2770d902887c9badf4aca42f111d465eee",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 867548,
+      "alpha": {
+        "clear": 1041545,
+        "opaque": 1325,
+        "partial": 529646
+      },
+      "alphaBounds": [
+        136,
+        249,
+        1225,
+        1061
+      ],
+      "clearMargin": 29,
+      "opaquePaletteStats": {
+        "denominator": 500901,
+        "exactFraction": 0.000011978414896356765,
+        "withinRGBDistance18Fraction": 0.8138634181205467,
+        "uniqueColors": 42861,
+        "topColors": [
+          [
+            "#5E6C77",
+            12679
+          ],
+          [
+            "#5F6D78",
+            12085
+          ],
+          [
+            "#5D6B76",
+            11456
+          ],
+          [
+            "#5D6C77",
+            10130
+          ],
+          [
+            "#5E6D78",
+            8955
+          ],
+          [
+            "#EADBC3",
+            8920
+          ],
+          [
+            "#5C6B76",
+            8236
+          ],
+          [
+            "#EBDCC4",
+            8018
+          ],
+          [
+            "#5D6B77",
+            6678
+          ],
+          [
+            "#5E6C78",
+            6652
+          ]
+        ]
+      }
+    },
+    {
+      "id": "building-granary",
+      "label": "田仓",
+      "file": "flat/building-granary.png",
+      "sha256": "d34ecb55f9f29783bc41b4576cff5617b497859054e6c57cbe89e810fa857bc7",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 820932,
+      "alpha": {
+        "clear": 1081118,
+        "opaque": 675,
+        "partial": 490723
+      },
+      "alphaBounds": [
+        192,
+        219,
+        1150,
+        1036
+      ],
+      "clearMargin": 104,
+      "opaquePaletteStats": {
+        "denominator": 467422,
+        "exactFraction": 0.000017115155041910735,
+        "withinRGBDistance18Fraction": 0.537253274343099,
+        "uniqueColors": 58165,
+        "topColors": [
+          [
+            "#5F6F7C",
+            12011
+          ],
+          [
+            "#5F6F7B",
+            11534
+          ],
+          [
+            "#60707C",
+            9943
+          ],
+          [
+            "#5E6E7B",
+            8248
+          ],
+          [
+            "#60707D",
+            7629
+          ],
+          [
+            "#5F707C",
+            6639
+          ],
+          [
+            "#5E6F7B",
+            6500
+          ],
+          [
+            "#5E6E7A",
+            4879
+          ],
+          [
+            "#54626C",
+            4856
+          ],
+          [
+            "#61717D",
+            4452
+          ]
+        ]
+      }
+    },
+    {
+      "id": "building-garden",
+      "label": "园林",
+      "file": "flat/building-garden.png",
+      "sha256": "ec0589080e9dad402ee965daf243352c8f862eefd2918d74d9612d31436597af",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 1066315,
+      "alpha": {
+        "clear": 1044614,
+        "opaque": 1559,
+        "partial": 526343
+      },
+      "alphaBounds": [
+        47,
+        242,
+        1236,
+        1084
+      ],
+      "clearMargin": 18,
+      "opaquePaletteStats": {
+        "denominator": 490647,
+        "exactFraction": 0.000006114375508257464,
+        "withinRGBDistance18Fraction": 0.632460811948305,
+        "uniqueColors": 65132,
+        "topColors": [
+          [
+            "#ECDBBF",
+            5434
+          ],
+          [
+            "#ECDABE",
+            5407
+          ],
+          [
+            "#66757D",
+            3647
+          ],
+          [
+            "#67757E",
+            3589
+          ],
+          [
+            "#67757D",
+            3568
+          ],
+          [
+            "#EBD9BD",
+            3403
+          ],
+          [
+            "#67767E",
+            3371
+          ],
+          [
+            "#EDDBBF",
+            3300
+          ],
+          [
+            "#EBDABE",
+            3274
+          ],
+          [
+            "#5E6C76",
+            3198
+          ]
+        ]
+      }
+    },
+    {
+      "id": "building-temple",
+      "label": "寺观",
+      "file": "flat/building-temple.png",
+      "sha256": "5e14352ca656405837ff2a523acde937e050ed4c9e2081c60584367636c0fb17",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 930072,
+      "alpha": {
+        "clear": 1013690,
+        "opaque": 1275,
+        "partial": 557551
+      },
+      "alphaBounds": [
+        116,
+        216,
+        1225,
+        1037
+      ],
+      "clearMargin": 29,
+      "opaquePaletteStats": {
+        "denominator": 526256,
+        "exactFraction": 0.00003230366969687756,
+        "withinRGBDistance18Fraction": 0.8014103402146484,
+        "uniqueColors": 50583,
+        "topColors": [
+          [
+            "#5F6D76",
+            29427
+          ],
+          [
+            "#5F6E77",
+            15494
+          ],
+          [
+            "#5E6D76",
+            15354
+          ],
+          [
+            "#5F6D77",
+            13441
+          ],
+          [
+            "#606E77",
+            12163
+          ],
+          [
+            "#5E6C75",
+            9720
+          ],
+          [
+            "#546169",
+            7889
+          ],
+          [
+            "#5E6C76",
+            6877
+          ],
+          [
+            "#5F6E76",
+            5664
+          ],
+          [
+            "#546068",
+            5279
+          ]
+        ]
+      }
+    },
+    {
+      "id": "building-dock",
+      "label": "舟埠",
+      "file": "flat/building-dock.png",
+      "sha256": "ec77b31913267a8c64b647da6df6e16257bf56ad8b368b2f9bbf41e97b712e11",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 904836,
+      "alpha": {
+        "clear": 1093259,
+        "opaque": 2263,
+        "partial": 476994
+      },
+      "alphaBounds": [
+        86,
+        217,
+        1200,
+        991
+      ],
+      "clearMargin": 54,
+      "opaquePaletteStats": {
+        "denominator": 426098,
+        "exactFraction": 0.00000938751179306169,
+        "withinRGBDistance18Fraction": 0.4968575304272726,
+        "uniqueColors": 43803,
+        "topColors": [
+          [
+            "#606A71",
+            7833
+          ],
+          [
+            "#606A72",
+            5701
+          ],
+          [
+            "#5F6971",
+            5030
+          ],
+          [
+            "#5F6970",
+            4149
+          ],
+          [
+            "#E6D1B0",
+            4112
+          ],
+          [
+            "#606971",
+            3731
+          ],
+          [
+            "#616B72",
+            3570
+          ],
+          [
+            "#E5D1B0",
+            3107
+          ],
+          [
+            "#616A72",
+            3014
+          ],
+          [
+            "#E6D2B1",
+            2984
+          ]
+        ]
+      }
+    },
+    {
+      "id": "building-faction",
+      "label": "门派驻地",
+      "file": "flat/building-faction.png",
+      "sha256": "3819080136e18029e4cb8a44fbdfaaef260b9b9d0b7ebe2bff879d5c8b500ff7",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 1095293,
+      "alpha": {
+        "clear": 949338,
+        "opaque": 1481,
+        "partial": 621697
+      },
+      "alphaBounds": [
+        27,
+        197,
+        1225,
+        1102
+      ],
+      "clearMargin": 27,
+      "opaquePaletteStats": {
+        "denominator": 607718,
+        "exactFraction": 0.0000016455000510105016,
+        "withinRGBDistance18Fraction": 0.780942805709227,
+        "uniqueColors": 56422,
+        "topColors": [
+          [
+            "#5A6975",
+            20987
+          ],
+          [
+            "#EEDDC1",
+            18961
+          ],
+          [
+            "#596975",
+            16483
+          ],
+          [
+            "#5A6A76",
+            14701
+          ],
+          [
+            "#5B6A76",
+            13272
+          ],
+          [
+            "#EDDCC0",
+            11406
+          ],
+          [
+            "#EEDDC2",
+            9914
+          ],
+          [
+            "#596874",
+            8119
+          ],
+          [
+            "#EDDCC1",
+            7745
+          ],
+          [
+            "#5A6976",
+            7687
+          ]
+        ]
+      }
+    },
+    {
+      "id": "prop-tree",
+      "label": "树木",
+      "file": "flat/prop-tree.png",
+      "sha256": "5158568da5c206286dee3923770a9f743f3fb23e5119b8775430de9d4c4c85e5",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 924244,
+      "alpha": {
+        "clear": 1105788,
+        "opaque": 1839,
+        "partial": 464889
+      },
+      "alphaBounds": [
+        140,
+        193,
+        1137,
+        1053
+      ],
+      "clearMargin": 117,
+      "opaquePaletteStats": {
+        "denominator": 407049,
+        "exactFraction": 0.000019653653491348708,
+        "withinRGBDistance18Fraction": 0.4621261813688278,
+        "uniqueColors": 40310,
+        "topColors": [
+          [
+            "#838F57",
+            4269
+          ],
+          [
+            "#849058",
+            3511
+          ],
+          [
+            "#6A7C66",
+            2676
+          ],
+          [
+            "#5C6F5B",
+            2289
+          ],
+          [
+            "#697B65",
+            2165
+          ],
+          [
+            "#5B6E5A",
+            2161
+          ],
+          [
+            "#849057",
+            2157
+          ],
+          [
+            "#919D6E",
+            2151
+          ],
+          [
+            "#848F57",
+            2064
+          ],
+          [
+            "#838F58",
+            1998
+          ]
+        ]
+      }
+    },
+    {
+      "id": "prop-wall",
+      "label": "城墙",
+      "file": "flat/prop-wall.png",
+      "sha256": "d76875c3b1b9efc0e6b4b8893be0edb0a38408d8d142c1dc5273c8b8da689f0a",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 590436,
+      "alpha": {
+        "clear": 1259340,
+        "opaque": 857,
+        "partial": 312319
+      },
+      "alphaBounds": [
+        153,
+        284,
+        1184,
+        1021
+      ],
+      "clearMargin": 70,
+      "opaquePaletteStats": {
+        "denominator": 300623,
+        "exactFraction": 0.000026611403651749866,
+        "withinRGBDistance18Fraction": 0.37793182823669513,
+        "uniqueColors": 18327,
+        "topColors": [
+          [
+            "#898A87",
+            8542
+          ],
+          [
+            "#898A88",
+            6832
+          ],
+          [
+            "#8A8B88",
+            5953
+          ],
+          [
+            "#888986",
+            5892
+          ],
+          [
+            "#888987",
+            4929
+          ],
+          [
+            "#8A8B89",
+            4275
+          ],
+          [
+            "#555C60",
+            3717
+          ],
+          [
+            "#565D61",
+            3703
+          ],
+          [
+            "#565D60",
+            3336
+          ],
+          [
+            "#8A8A88",
+            2860
+          ]
+        ]
+      }
+    },
+    {
+      "id": "prop-bridge",
+      "label": "石桥",
+      "file": "flat/prop-bridge.png",
+      "sha256": "41f392e67a76e1b24f27acf71773f21b5fad00c661f812c30bc5ee339189ffea",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 589197,
+      "alpha": {
+        "clear": 1276212,
+        "opaque": 1200,
+        "partial": 295104
+      },
+      "alphaBounds": [
+        131,
+        382,
+        1172,
+        977
+      ],
+      "clearMargin": 82,
+      "opaquePaletteStats": {
+        "denominator": 285100,
+        "exactFraction": 0.00006664328305857593,
+        "withinRGBDistance18Fraction": 0.6788846018940723,
+        "uniqueColors": 29815,
+        "topColors": [
+          [
+            "#E8D9BF",
+            4471
+          ],
+          [
+            "#676F75",
+            3373
+          ],
+          [
+            "#E9D9C0",
+            3355
+          ],
+          [
+            "#E8D8BF",
+            3345
+          ],
+          [
+            "#666E74",
+            3328
+          ],
+          [
+            "#E9DAC1",
+            2568
+          ],
+          [
+            "#E9DAC0",
+            2527
+          ],
+          [
+            "#E8D8BE",
+            2484
+          ],
+          [
+            "#E8D9C0",
+            2360
+          ],
+          [
+            "#E9D9BF",
+            2349
+          ]
+        ]
+      }
+    },
+    {
+      "id": "tile-grass",
+      "label": "草地",
+      "file": "flat/tile-grass.png",
+      "sha256": "91950034ed1ddfd30f7d9e3b0680c3f38cac6fa7a0c7bb107fc63e6167e33750",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 444832,
+      "alpha": {
+        "clear": 1236066,
+        "opaque": 1275,
+        "partial": 335175
+      },
+      "alphaBounds": [
+        51,
+        355,
+        1203,
+        931
+      ],
+      "clearMargin": 51,
+      "opaquePaletteStats": {
+        "denominator": 327679,
+        "exactFraction": 0.00002746590413178751,
+        "withinRGBDistance18Fraction": 0.982199042355476,
+        "uniqueColors": 5505,
+        "topColors": [
+          [
+            "#899668",
+            60476
+          ],
+          [
+            "#889567",
+            25401
+          ],
+          [
+            "#899768",
+            24235
+          ],
+          [
+            "#8A9769",
+            20963
+          ],
+          [
+            "#889667",
+            18964
+          ],
+          [
+            "#899667",
+            17717
+          ],
+          [
+            "#889668",
+            16531
+          ],
+          [
+            "#8A9768",
+            13351
+          ],
+          [
+            "#899769",
+            11904
+          ],
+          [
+            "#889568",
+            7271
+          ]
+        ]
+      }
+    },
+    {
+      "id": "tile-water",
+      "label": "水面",
+      "file": "flat/tile-water.png",
+      "sha256": "d282217ec4956a3eb9afee98683d81e4fc47368f9f00b08cbfb3282f5cfda274",
+      "width": 1774,
+      "height": 887,
+      "channels": 4,
+      "bytes": 530424,
+      "alpha": {
+        "clear": 1121031,
+        "opaque": 1714,
+        "partial": 450793
+      },
+      "alphaBounds": [
+        159,
+        143,
+        1615,
+        753
+      ],
+      "clearMargin": 134,
+      "opaquePaletteStats": {
+        "denominator": 425229,
+        "exactFraction": 0.0005596984213212175,
+        "withinRGBDistance18Fraction": 0.9875666993549358,
+        "uniqueColors": 3195,
+        "topColors": [
+          [
+            "#596973",
+            47886
+          ],
+          [
+            "#596A74",
+            28621
+          ],
+          [
+            "#586872",
+            27796
+          ],
+          [
+            "#5A6A74",
+            25516
+          ],
+          [
+            "#586973",
+            25395
+          ],
+          [
+            "#5A6B75",
+            13742
+          ],
+          [
+            "#596974",
+            11313
+          ],
+          [
+            "#596A73",
+            10105
+          ],
+          [
+            "#586972",
+            9933
+          ],
+          [
+            "#586873",
+            8076
+          ]
+        ]
+      }
+    },
+    {
+      "id": "tile-stone",
+      "label": "石板地",
+      "file": "flat/tile-stone.png",
+      "sha256": "0866d1d3ba9f1abb9a3897b7bb9b076bdd3f8df99ff0c653e4203e9823b50c9e",
+      "width": 1774,
+      "height": 887,
+      "channels": 4,
+      "bytes": 783787,
+      "alpha": {
+        "clear": 987095,
+        "opaque": 1755,
+        "partial": 584688
+      },
+      "alphaBounds": [
+        105,
+        81,
+        1668,
+        819
+      ],
+      "clearMargin": 68,
+      "opaquePaletteStats": {
+        "denominator": 574283,
+        "exactFraction": 0.000006965207049486055,
+        "withinRGBDistance18Fraction": 0.8619722332020973,
+        "uniqueColors": 14306,
+        "topColors": [
+          [
+            "#E2D4B7",
+            69458
+          ],
+          [
+            "#E2D4B8",
+            37613
+          ],
+          [
+            "#E3D4B8",
+            34675
+          ],
+          [
+            "#E3D5B8",
+            30043
+          ],
+          [
+            "#E2D3B7",
+            26116
+          ],
+          [
+            "#E3D4B7",
+            25995
+          ],
+          [
+            "#C5A473",
+            25417
+          ],
+          [
+            "#C5A472",
+            13637
+          ],
+          [
+            "#E2D3B6",
+            13080
+          ],
+          [
+            "#E2D5B8",
+            12794
+          ]
+        ]
+      }
+    }
+  ]
+}

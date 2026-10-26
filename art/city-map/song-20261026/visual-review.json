@@ -1,0 +1,51 @@
+{
+  "status": "candidate_art_pack",
+  "assetsReviewed": [
+    "building-gate",
+    "building-government",
+    "building-palace",
+    "building-market",
+    "building-inn",
+    "building-clinic",
+    "building-workshop",
+    "building-training",
+    "building-school",
+    "building-residence",
+    "building-granary",
+    "building-garden",
+    "building-temple",
+    "building-dock",
+    "building-faction",
+    "prop-tree",
+    "prop-wall",
+    "prop-bridge",
+    "tile-grass",
+    "tile-water",
+    "tile-stone"
+  ],
+  "fileChecks": {
+    "expected": 21,
+    "present": 21,
+    "transparent": 21,
+    "pngDecode": 21,
+    "edgeMarginsPassed": 21
+  },
+  "visualFindings": {
+    "isolatedSubjects": true,
+    "noTextOrWatermarkObserved": true,
+    "style": "Consistent restrained Southern Song inspired architectural sprites with dark outlines and muted mineral colors.",
+    "palette": "Intermediate RGB values remain throughout the generated images; these are not strictly nine-color indexed PNGs.",
+    "flatFill": "Visible gentle tonal variation or mottling remains in some roofs, walls and ground surfaces; the no-gradient requirement is not fully met.",
+    "projection": "A common isometric/dimetric camera was requested. Exact 2:1 geometry for all architectural lines and consistent per-sprite anchors have not been certified.",
+    "palace": "Regenerated with extra transparent padding; original candidate preserved in drafts.",
+    "runtime": "No game assets or code replaced. Sprite pivots, scale and runtime map placement were not calibrated."
+  },
+  "acceptance": {
+    "fileIntegrity": true,
+    "fullArtSpecification": false
+  },
+  "preview": {
+    "html": "index.html",
+    "browserQA": "Local server start and file-URL browser preview were blocked by policy. PNGs were inspected directly."
+  }
+}

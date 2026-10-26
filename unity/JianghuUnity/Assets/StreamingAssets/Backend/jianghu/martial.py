@@ -179,6 +179,7 @@ def view(actor, equipment=None):
     m = actor['martial']
     return {**deepcopy(m), 'stats': stats(actor, equipment), 'arts': [
         {**deepcopy(ARTS[key]), 'id': key, **deepcopy(entry),
+         **({'combat_reach': [round(1+x*1.5, 1) for x in ARTS[key]['reach']]} if 'reach' in ARTS[key] else {}),
          'realm_name': REALMS[entry['realm']], 'gate': GATES[entry['realm']],
          'ready': entry['realm'] < 3 and entry['practice'] >= GATES[entry['realm']],
          'equipped': key in m['loadout']['attacks'] or key in

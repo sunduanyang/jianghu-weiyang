@@ -172,8 +172,17 @@ def bake():
         result['skins'][cid] = skin
         count += len(skin['parts'])
     assert len(result['skins']) == result['expected_skins'] and count == result['expected_parts']
+    if (ROOT/'art/rig-reference/dressed-parts.png').exists():
+        from bake_reference_puppet import bake_reference
+        bake_reference(result)
+    if (ROOT/'art/rig-bamboo/source.png').exists():
+        from bake_bamboo_puppet import bake_bamboo
+        bake_bamboo(result)
+    if (ROOT/'art/rig-plain/source.png').exists():
+        from bake_plain_puppet import bake_plain
+        bake_plain(result)
     (DEST/'index.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
-    print(json.dumps({'skins': len(result['skins']), 'parts': count, 'clips': len(result['rig']['clips']), 'runtime': str(DEST)}, ensure_ascii=False))
+    print(json.dumps({'skins': len(result['skins']), 'parts': sum(len(s['parts']) for s in result['skins'].values()), 'clips': len(result['rig']['clips']), 'runtime': str(DEST)}, ensure_ascii=False))
 
 
 if __name__ == '__main__':

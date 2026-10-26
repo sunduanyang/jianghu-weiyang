@@ -42,6 +42,36 @@ WORK_PLACES = {'农人': 'granary', '行商': 'market', '药师': 'clinic', '匠
                '镖师': 'gate', '渔人': 'dock', '猎户': 'garden', '书生': 'school', '艺人': 'market'}
 
 
+def _building_footprints(rows, nodes):
+    """Reserve whole 1x1 or 2x2 visual lots without moving saved entrances.
+
+    The entrance remains the existing integer node coordinate. A large lot may
+    extend into vacant, passable neighbours, never another facility or a barrier.
+    Lot allocation is presentation metadata and does not change movement costs.
+    """
+    priorities = {'palace': 0, 'government': 1, 'faction': 2, 'temple': 3, 'school': 4}
+    used = {(n['row'], n['col']) for n in nodes}
+    size = len(rows)
+    for n in sorted(nodes, key=lambda n: (priorities.get(n['kind'], 9), n['id'])):
+        entrance = n['row'], n['col']
+        candidates = []
+        if n['kind'] in priorities:
+            for row in (n['row'] - 1, n['row']):
+                for col in (n['col'] - 1, n['col']):
+                    cells = {(row + a, col + b) for a in (0, 1) for b in (0, 1)}
+                    extra = cells - {entrance}
+                    if extra & used or any(not (0 <= r < size and 0 <= c < size)
+                                           or rows[r][c] in '~^#=' for r, c in cells):
+                        continue
+                    candidates.append((sum(rows[r][c] == '+' for r, c in extra), row, col, cells))
+        if candidates:
+            _, row, col, cells = min(candidates, key=lambda x: x[:3])
+            used.update(cells)
+            n['footprint'] = dict(row=row, col=col, size=2)
+        else:
+            n['footprint'] = dict(row=n['row'], col=n['col'], size=1)
+
+
 def theme_for(p):
     if p['country'] == 2:
         return 'steppe'
@@ -189,6 +219,7 @@ def _layout(seed, place, version=VERSION, compact=False):
         for r,c in route:
             if rows[r][c] not in '=~^#':
                 rows[r][c] = '+'
+    _building_footprints(rows, nodes)
     result = dict(version=version, place=place, name=p['name'], size=size, theme=theme,
                   theme_label=THEMES[theme], authored=bool(authored),
                   note=authored['note'] if authored else f"依{THEMES[theme]}的水陆、街市和营生规律布局。",

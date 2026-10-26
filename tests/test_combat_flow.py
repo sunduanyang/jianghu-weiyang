@@ -2,7 +2,7 @@ from copy import deepcopy
 import random
 import unittest
 
-from jianghu import combat, martial
+from jianghu import combat, martial, combat_flow
 from jianghu.engine import World
 from jianghu.store import Store
 from tests.test_martial import actor
@@ -10,7 +10,7 @@ from tests.test_martial import actor
 
 class CombatFlowTests(unittest.TestCase):
     def battle(self, seed=10):
-        return combat.start(actor('我', 1), actor('客', 2), seed)
+        return combat.start(actor('我', 1), actor('客', 2), seed, ruleset=2)
 
     def ready(self, b, key='wave_palm', side=0):
         f = b['fighters'][side]
@@ -205,6 +205,9 @@ class CombatFlowTests(unittest.TestCase):
         self.addCleanup(w.store.close)
         opponent = next(n for n in w.npcs.values() if n['age_months'] >= 216)
         w.start_battle(opponent['id'])
+        # An already saved v2 bout must still resume through the shared endpoint.
+        combat_flow.initialize(w.battle)
+        w.battle['distance'] = 3
         w.battle_action(w.battle['id'], 1, 'guard')
         w.battle_action(w.battle['id'], 2, 'guard')
         w.battle_action(w.battle['id'], 3, 'reed_cut')

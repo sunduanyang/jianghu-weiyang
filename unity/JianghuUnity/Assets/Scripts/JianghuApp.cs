@@ -24,9 +24,10 @@ public partial class JianghuApp : MonoBehaviour {
     public static readonly string[] Pages={"山海舆图","城中行旅","行囊货栈","功法演武","天下势力","皮影衣橱","世界年谱","本地模型","存档设置"};
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void Boot(){if(FindAnyObjectByType<JianghuApp>()!=null)return;var go=new GameObject("江湖未央 · Unity");DontDestroyOnLoad(go);go.AddComponent<JianghuApp>();}
-    void Awake(){Client=GetComponent<GameClient>()??gameObject.AddComponent<GameClient>();valley=Resources.Load<Texture2D>("Art/river-valley");}
+    void Awake(){Client=GetComponent<GameClient>()??gameObject.AddComponent<GameClient>();valley=Resources.Load<Texture2D>("Art/river-valley");if(GameClient.Arg("-paperDemo")=="true"){Page=5;paperReferenceView=true;if(GameClient.Arg("-paperSkin")=="reference-bamboo")paperPreviewLeft=true;if(GameClient.Arg("-paperCalibration")=="true"){PaperSmokeReference("idle",0);paperDemoOverlay=true;}}}
     void Update(){
         if(!Client.Ready)return;
+        UpdatePaperReference();
         UpdateBattle();
         if(seenRevision!=Client.Revision){seenRevision=Client.Revision;if(W["month"].I!=lastMonth){lastMonth=W["month"].I;ReloadPage();if(SelectedPerson>=0)SelectPerson(SelectedPerson);} }
         if(Page==1&&City.Has&&Hero["created"].B&&City["place"].I==Hero["place"].I&&!Client.Busy&&Paused&&GUIUtility.keyboardControl==0){
