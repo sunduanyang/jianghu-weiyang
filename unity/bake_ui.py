@@ -1096,15 +1096,10 @@ def catmull(points, steps=10):
     return out
 
 
-# ---------------------------------------------------------------- map content: countryside, lakes, names, roads
-FARMING = (0, 1, 3, 6, 10, 11)       # 南宋 金 西夏 大理 高丽 日本: fields and villages
-WOODED = (0, 6, 10, 11)              # broadleaf clumps south of the Huai and on the islands
+# ---------------------------------------------------------------- map content: lakes, sea names, roads
 LAKES = [('洞庭湖', 112.9, 29.25, 26, 14), ('鄱阳湖', 116.3, 29.1, 13, 20), ('太湖', 120.2, 31.2, 13, 11),
          ('青海湖', 100.2, 36.9, 22, 12), ('洱海', 100.2, 25.8, 5, 12), ('滇池', 102.7, 24.85, 7, 11),
          ('巢湖', 117.6, 31.6, 9, 6), ('呼伦湖', 117.4, 49.0, 10, 14), ('兴凯湖', 132.5, 45.0, 16, 12)]
-REGION_NAMES = [('漠北', 104.0, 47.6, 64), ('西域', 82.5, 41.2, 64), ('雪域', 87.5, 32.6, 64), ('河西', 99.5, 39.6, 40),
-                ('中原', 113.8, 35.4, 52), ('江南', 116.8, 28.6, 52), ('岭南', 110.0, 23.6, 48), ('巴蜀', 104.6, 31.2, 48),
-                ('辽东', 123.6, 43.6, 44), ('林海', 129.0, 49.6, 52), ('滇南', 101.6, 23.2, 40)]
 SEA_NAMES = [('东海', 125.0, 28.8, 56), ('南海', 114.5, 18.8, 56), ('渤海', 120.0, 38.9, 30)]
 
 
@@ -1123,50 +1118,6 @@ def ranges_mask(W, H, k, width):
     for _, pts, scale in RANGES:
         d.line([(x * k, y * k) for x, y in (lonlat(*p) for p in catmull(pts, 10))], fill=255, width=int(width * scale))
     return np.array(m) > 127
-
-
-def paint_countryside(di, geo, land_np, k, rng):
-    H, W = land_np.shape
-    terr = {t['country']: t['path'] for t in geo['territories']}
-    farm = mask_from([terr[c] for c in FARMING if c in terr], W, H, k) & land_np
-    farm &= ~ranges_mask(W, H, k, 46)
-    for poly in DESERTS:
-        farm &= ~mask_from(['M' + ' L'.join(f'{x},{y}' for x, y in (lonlat(*p) for p in catmull(poly, 6)))], W, H, k)
-    farm &= ndimage.distance_transform_edt(land_np) > 6
-    wood = mask_from([terr[c] for c in WOODED if c in terr], W, H, k) & farm
-    ys, xs = np.nonzero(farm)
-    def field(x, y):
-        s = rng.uniform(8, 15)
-        sk = rng.uniform(-.5, .5)
-        quad = [(x, y), (x + s, y + s * sk * .3), (x + s + s * .35, y + s * .55 + s * sk * .3), (x + s * .35, y + s * .55)]
-        di.polygon(quad, fill=(176, 172, 104, 120), outline=(96, 86, 52, 150))
-        di.line([((quad[0][0] + quad[1][0]) / 2, (quad[0][1] + quad[1][1]) / 2), ((quad[3][0] + quad[2][0]) / 2, (quad[3][1] + quad[2][1]) / 2)], fill=(96, 86, 52, 120), width=1)
-        di.line([((quad[0][0] + quad[3][0]) / 2, (quad[0][1] + quad[3][1]) / 2), ((quad[1][0] + quad[2][0]) / 2, (quad[1][1] + quad[2][1]) / 2)], fill=(96, 86, 52, 120), width=1)
-    def house(x, y, s):
-        di.rectangle((x - s, y - s * .55, x + s, y + s * .35), fill=(226, 212, 176, 235), outline=(60, 50, 38, 220))
-        di.polygon([(x - s * 1.35, y - s * .5), (x - s * .7, y - s * 1.25), (x + s * .7, y - s * 1.25), (x + s * 1.35, y - s * .5)],
-                   fill=(78, 82, 82, 235), outline=(40, 36, 30, 230))
-    def clump(x, y):
-        for _ in range(rng.integers(3, 6)):
-            cx, cy, r = x + rng.normal(0, 5), y + rng.normal(0, 3), rng.uniform(2.6, 4.2)
-            di.ellipse((cx - r, cy - r, cx + r, cy + r), fill=(84, 116, 86, 215), outline=(44, 58, 44, 200))
-            di.line((cx, cy + r, cx, cy + r + 2.5), fill=(44, 58, 44, 200), width=1)
-    marks = []
-    for i in rng.choice(len(xs), size=min(len(xs), 520), replace=False):
-        marks.append((ys[i], xs[i], 'field'))
-    for i in rng.choice(len(xs), size=min(len(xs), 170), replace=False):
-        marks.append((ys[i], xs[i], 'village'))
-    wy, wx = np.nonzero(wood)
-    for i in rng.choice(len(wx), size=min(len(wx), 240), replace=False):
-        marks.append((wy[i], wx[i], 'wood'))
-    for y, x, kind in sorted(marks):                       # back to front
-        if kind == 'field':
-            field(x, y)
-        elif kind == 'village':
-            for _ in range(rng.integers(2, 4)):
-                house(x + rng.normal(0, 5), y + rng.normal(0, 2.5), rng.uniform(2.8, 3.8))
-        else:
-            clump(x, y)
 
 
 def paint_lakes(di, k, rng):
@@ -1299,26 +1250,7 @@ def bake_atlas():
     wash.putalpha(ImageChops.multiply(mask.filter(ImageFilter.GaussianBlur(26)).point(lambda v: v * 50 // 255), land))
     ink = Image.alpha_composite(ink, wash)
     di = ImageDraw.Draw(ink)
-    ys, xs = np.nonzero((np.array(mask) > 0) & land_np)
-    for i in rng.choice(len(xs), size=min(len(xs), 120), replace=False):
-        x, y = xs[i], ys[i]
-        for dx, top in ((-4, -5), (0, -8), (4, -5)):
-            di.line((x, y, x + dx, y + top), fill=(80, 100, 64, 150), width=1)
-
-    # forest: sparse little pines
-    mask = Image.new('L', (W, H), 0)
-    ImageDraw.Draw(mask).polygon([S(lonlat(*p)) for p in catmull(FOREST, 6)], fill=255)
-    ys, xs = np.nonzero((np.array(mask) > 0) & land_np)
-    trees = sorted((ys[i], xs[i]) for i in rng.choice(len(xs), size=min(len(xs), 110), replace=False))
-    for y, x in trees:
-        h = rng.uniform(10, 15)
-        di.polygon([(x, y - h), (x - h * .38, y - h * .35), (x + h * .38, y - h * .35)], fill=(78, 110, 84, 200), outline=(46, 60, 46, 200))
-        di.polygon([(x, y - h * .62), (x - h * .48, y), (x + h * .48, y)], fill=(70, 100, 78, 200), outline=(46, 60, 46, 200))
-        di.line((x, y, x, y + 3), fill=(46, 60, 46, 200), width=1)
-
-    # countryside first so mountains overlap it: fields, villages and tree clumps; then the big lakes
-    paint_countryside(di, geo, land_np, k, np.random.default_rng(191))
-    paint_lakes(di, k, np.random.default_rng(192))
+    # (grass tufts, pine forests, fields and villages were dropped: the map stays clean around the towns)
 
     # mountains: 青绿 peaks (mineral blue-green tops fading to ochre), ink contour on the ridge only
     top_c, mid_c, base_c = np.array([66, 112, 118.]), np.array([116, 146, 110.]), np.array([216, 198, 152.])
