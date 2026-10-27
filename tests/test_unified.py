@@ -4,7 +4,7 @@ from copy import deepcopy
 import unittest
 from unittest.mock import patch
 
-from jianghu import careers, items, martial
+from jianghu import careers, items, martial, weapons
 from jianghu.ai import context_for
 from jianghu.atlas import PLACES
 from jianghu.engine import World
@@ -63,12 +63,18 @@ class UnifiedTests(unittest.TestCase):
         sword = next(i for i in items.objects(w, 'player') if i['template'] == 'wood_sword')
         b = w.start_battle(1)['battle']
         base = abilities.parameters(abilities.ratings(w.player))['damage_scale']
-        self.assertAlmostEqual(b['fighters'][0]['damage_scale'], base+.024)
+        self.assertAlmostEqual(b['fighters'][0]['damage_scale'], base)
+        self.assertEqual(b['fighters'][0]['weapon_item'], sword['id'])
+        for key, value in weapons.attributes(sword).items():
+            self.assertEqual(b['fighters'][0]['weapon'][key], value)
         w.battle_action(b['id'], b['revision'], 'surrender')
         self.assertEqual(sword['durability'], 98)
         sword['durability'] = 0
         b = w.start_battle(1)['battle']
         self.assertAlmostEqual(b['fighters'][0]['damage_scale'], abilities.parameters(abilities.ratings(w.player))['damage_scale'])
+        self.assertEqual(b['fighters'][0]['weapon']['id'], 'unarmed')
+        self.assertIsNone(b['fighters'][0]['weapon_item'])
+        self.assertIn(sword['id'], w.player['inventory'])
 
     def test_combined_save_reloads_and_continues_without_random_drift(self):
         w = self.world()
