@@ -37,59 +37,39 @@ public sealed class PaperRenderSmoke : MonoBehaviour {
     }
     IEnumerator Run(){
         double calls=client.World["ai"]["calls"].N;int month=client.World["month"].I;
-        bool quick=GameClient.Arg("-paperRegressionQuick")=="true";
-        if(quick){yield return Case("large-idle-bones","m-youth-farmer","idle",false,false,true);yield return LiveCase("large-idle-playing","m-youth-farmer","idle",false);yield break;}
-        // A hidden Windows player can initialize without a swapchain. Establish
-        // a rendered viewport before inspecting any actual GUI matrices.
         Screen.SetResolution(1680,960,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.8f);
-        Check("all skins and shared rig",app.ValidatePaperCast(out J rigFacts),rigFacts);
-        string trial=GameClient.Arg("-paperTrialSkin");
-        if(trial.Length>0){
-            string stem=trial.Replace("reference-","");
-            foreach(var size in new[]{new Vector2Int(1680,960),new Vector2Int(1280,800)}){
-                Screen.SetResolution(size.x,size.y,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.4f);
-                foreach(string clip in new[]{"idle","walk","talk","attack","guard","hurt","defeated"})foreach(bool left in new[]{false,true})
-                    yield return Case(size.x+"-"+stem+"-"+clip+(left?"-left":"-right"),trial,clip,left,false,true);
-            }
-            Screen.SetResolution(1680,960,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.4f);
-            bool facing=trial=="reference-bamboo";
-            app.Go(5);app.PaperReferenceSkin(trial);app.PaperSmokeReference("idle",0,facing);yield return new WaitForSecondsRealtime(.4f);
-            var still=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Path.Combine(output,stem+"-studio.png"),still.EncodeToPNG());Destroy(still);
-            if(trial=="reference-plain"){app.PaperReferenceOverlay(true);yield return new WaitForEndOfFrame();yield return new WaitForEndOfFrame();var over=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Path.Combine(output,stem+"-overlay.png"),over.EncodeToPNG());Destroy(over);app.PaperReferenceOverlay(false);}
-            if(GameClient.Arg("-paperCapture")=="true"){
-                string frames=Path.Combine(output,"frames");Directory.CreateDirectory(frames);int frame=0;
-                foreach(string clip in new[]{"walk","attack","guard"})for(int i=0;i<24;i++){
-                    app.PaperSmokeReference(clip,i/23f,facing);yield return new WaitForEndOfFrame();yield return new WaitForEndOfFrame();
-                    var image=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Path.Combine(frames,(frame++).ToString("D4")+".png"),image.EncodeToPNG());Destroy(image);
-                }
-            }
-            yield return client.Refresh();Check("no simulation or model side effects",client.World["month"].I==month&&client.World["ai"]["calls"].N==calls,J.O("month",month,"new_model_calls",client.World["ai"]["calls"].N-calls));yield break;
-        }
-        foreach(string clip in new[]{"idle","walk","talk","attack","guard","hurt","defeated"})foreach(bool left in new[]{false,true})
-            yield return Case("reference-"+clip+(left?"-left":"-right"),"reference-jade",clip,left,false,true);
-        app.Go(5);app.PaperSmokeReference("idle",0);app.PaperReferenceOverlay(true);yield return new WaitForSecondsRealtime(.5f);
-        var overlay=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Path.Combine(output,"reference-proportion-overlay.png"),overlay.EncodeToPNG());Destroy(overlay);app.PaperReferenceOverlay(false);
-        app.Go(5);app.PaperSmokeReference("walk",.15f);yield return new WaitForSecondsRealtime(.5f);
-        var reference=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Path.Combine(output,"reference-studio.png"),reference.EncodeToPNG());Destroy(reference);
-        if(GameClient.Arg("-paperCapture")=="true"){
-            string frames=Path.Combine(output,"frames");Directory.CreateDirectory(frames);int frame=0;
-            foreach(string clip in new[]{"walk","attack","guard"})for(int i=0;i<24;i++){
-                app.PaperSmokeReference(clip,i/23f);yield return new WaitForEndOfFrame();yield return new WaitForEndOfFrame();
-                var image=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Path.Combine(frames,(frame++).ToString("D4")+".png"),image.EncodeToPNG());Destroy(image);
+        Check("24 skins, source sockets and walk",app.ValidatePaperCast(out J rigFacts),rigFacts);
+        foreach(var size in new[]{new Vector2Int(1280,800),new Vector2Int(1680,960)}){
+            Screen.SetResolution(size.x,size.y,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.4f);
+            foreach(string clip in new[]{"bind","walk"})foreach(bool left in new[]{false,true}){
+                string name=size.x+"-"+clip+(left?"-left":"-right");
+                yield return Case(name,"m-youth-farmer",clip,left,false,true);
+                yield return Case(name+"-all-skins","",clip,left,true,true);
             }
         }
-        foreach(var size in new[]{new Vector2Int(1280,800),new Vector2Int(1680,960),new Vector2Int(1920,1080),new Vector2Int(2560,1480)}){
-            Screen.SetResolution(size.x,size.y,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.5f);
-            string prefix=size.x+"x"+size.y;
-            foreach(string clip in new[]{"idle","walk","talk","attack","guard","hurt","defeated"})foreach(bool left in new[]{false,true}){
-                string name=prefix+"-"+clip+(left?"-left":"-right");
-                yield return Case(name,"m-youth-farmer",clip,left,false,clip=="idle"&&!left||clip=="walk"&&!left||clip=="attack"&&left);
-                yield return Case(name+"-all-skins","",clip,left,true,clip=="idle"&&!left||clip=="attack"&&left);
-            }
+        Screen.SetResolution(1680,960,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.4f);
+        foreach(string id in new[]{"m-youth-farmer","f-youth-farmer","m-middle-farmer","f-middle-farmer","m-elder","f-elder","m-child","f-child","m-scholar","f-scholar","m-merchant","f-merchant","m-escort","f-escort","m-fisher","m-hunter","m-artisan","f-healer","m-performer","m-daoist","m-monk","m-official","m-beggar","f-swordswoman"}){
+            app.PaperSmokeStage();app.Go(5);app.PaperSmokeComparison(id,false,false);yield return new WaitForEndOfFrame();yield return new WaitForEndOfFrame();
+            var image=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Path.Combine(output,"comparison-"+id+".png"),image.EncodeToPNG());Destroy(image);
+            File.WriteAllText(Path.Combine(output,"comparison-"+id+".json"),app.PaperReferenceViewports().ToString());
         }
-        yield return LiveCase("large-child-walk-playing","f-child","walk",false);
-        yield return LiveCase("large-daoist-talk-playing","m-daoist","talk",true);
-        yield return LiveCase("large-escort-attack-playing","m-escort","attack",false);
+        yield return LiveCase("child-walking","f-child","walk",false);
+        yield return LiveCase("daoist-walking","m-daoist","walk",true);
+        string hips=Path.Combine(output,"hip-phases");Directory.CreateDirectory(hips);
+        foreach(string id in new[]{"m-youth-farmer","m-middle-farmer","m-child","m-escort","f-escort","m-fisher","m-hunter","m-artisan","m-beggar"})for(int i=0;i<8;i++){
+            app.Go(5);app.PaperSmokeWalkComparison(id,i/8f);app.ResetPaperGuiProbe();
+            yield return new WaitForEndOfFrame();yield return new WaitForEndOfFrame();
+            Check("hip-phase-"+id+"-"+i,app.PaperGuiProbe(out J hipFacts),hipFacts);
+            var hipImage=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Path.Combine(hips,id+"-"+i+".png"),hipImage.EncodeToPNG());Destroy(hipImage);
+            if(i==0)File.WriteAllText(Path.Combine(hips,id+".json"),app.PaperReferenceViewports().ToString());
+        }
+        string frames=Path.Combine(output,"frames");Directory.CreateDirectory(frames);
+        for(int i=0;i<24;i++){
+            app.Go(5);app.PaperSmokeWalkComparison("m-youth-farmer",i/24f);
+            yield return new WaitForEndOfFrame();yield return new WaitForEndOfFrame();
+            var frame=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Path.Combine(frames,i.ToString("D4")+".png"),frame.EncodeToPNG());Destroy(frame);
+            if(i==0)File.WriteAllText(Path.Combine(output,"frame-viewports.json"),app.PaperReferenceViewports().ToString());
+        }
         yield return client.Refresh();Check("no simulation or model side effects",client.World["month"].I==month&&client.World["ai"]["calls"].N==calls,J.O("month",month,"new_model_calls",client.World["ai"]["calls"].N-calls));
     }
     IEnumerator LiveCase(string name,string skin,string clip,bool left){

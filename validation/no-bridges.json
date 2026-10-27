@@ -1,0 +1,19 @@
+{
+  "map_version": 7,
+  "regions_checked": 168,
+  "compact_and_full_worlds": true,
+  "bridge_cells": 0,
+  "ford_cells_in_both_profiles": 186,
+  "rules_tests": 23,
+  "rules_passed": true,
+  "native_checks": 528,
+  "native_passed": true,
+  "active_region_bridge_checks": 49,
+  "build": "unity/Build/NoBridges/江湖未央.exe",
+  "native_report": "validation/no-bridges-native.json",
+  "city_maps_sha256": "25c81ef5e788a79ee64dd96547806b420317a14e6624954648bffd99dd1360aa",
+  "launcher_build": "SectSystem",
+  "launcher_has_ford_conversion": true,
+  "launcher_bridge_renderer_removed": true,
+  "launcher_fords_at_water_level": true
+}

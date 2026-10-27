@@ -45,7 +45,27 @@ def households(w):
         relatives = set(child['parents'])
         for p in child['parents']:
             relatives.update(w.npcs[p]['parents'])
-        candidates = [w.npcs[i] for i in relatives if w.npcs[i]['alive'] and w.npcs[i]['age_months'] >= 216]
+            relatives.update(w.npcs[p]['children'])
+        candidates = [w.npcs[i] for i in relatives if w.npcs[i]['alive'] and w.npcs[i]['age_months'] >= 216
+                      and w.npcs[i]['health'] >= 30
+                      and w.npcs[i]['relationships'].get(str(child['id']), {}).get('affinity', 0) >= -25
+                      and w.npcs[i]['traits']['compassion'] + w.npcs[i]['traits']['loyalty'] >= 60]
+        # Adult siblings can continue a household. A parent's sworn friend may
+        # volunteer locally, provided there is a real bond and capacity to care.
+        if not candidates:
+            volunteers = set()
+            for p in child['parents']:
+                parent = w.npcs[p]
+                for key, tie in parent['relationships'].items():
+                    q = w.npcs[int(key)]
+                    back = q['relationships'].get(str(p), {})
+                    if (tie.get('sworn') and back.get('sworn') and back.get('affinity', 0) >= 20
+                            and q['alive'] and q['place'] == child['place'] and q['age_months'] >= 216
+                            and q['health'] >= 50 and q['wealth'] >= 15
+                            and q['traits']['compassion'] >= 55 and q['traits']['loyalty'] >= 50
+                            and q['relationships'].get(str(child['id']), {}).get('affinity', 0) >= -10):
+                        volunteers.add(q['id'])
+            candidates = [w.npcs[i] for i in sorted(volunteers)]
         if candidates:
             guardian = min(candidates, key=lambda p: (p['place'] != child['place'], -p['wealth'], p['id']))
             old = child['guardian']

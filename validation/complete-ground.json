@@ -1,0 +1,55 @@
+{
+  "native_checks": 366,
+  "passed": true,
+  "pixel_regression": {
+    "sampled_ground_cells": 4,
+    "samples": [
+      {
+        "cell": "(3, 5)",
+        "pixel_x": 1003,
+        "pixel_y": 554,
+        "r": 0.1176471,
+        "g": 0.8235294,
+        "b": 0.8627451,
+        "visible_top": true
+      },
+      {
+        "cell": "(4, 5)",
+        "pixel_x": 904,
+        "pixel_y": 505,
+        "r": 0.1176471,
+        "g": 0.8235294,
+        "b": 0.8627451,
+        "visible_top": true
+      },
+      {
+        "cell": "(5, 3)",
+        "pixel_x": 677,
+        "pixel_y": 554,
+        "r": 0.1176471,
+        "g": 0.8235294,
+        "b": 0.8627451,
+        "visible_top": true
+      },
+      {
+        "cell": "(5, 4)",
+        "pixel_x": 776,
+        "pixel_y": 505,
+        "r": 0.1176471,
+        "g": 0.8235294,
+        "b": 0.8627451,
+        "visible_top": true
+      }
+    ],
+    "failures": []
+  },
+  "map_data_unchanged": true,
+  "build": "unity/Build/CompleteGround/江湖未央.exe",
+  "native_report": "validation/complete-ground-native.json",
+  "renderer_sources": {
+    "CityLandscape.cs": "a6ec62b6b9beff5a54956997c0d3cdc59b24a5c8f9743a947a44e9f0166b4469",
+    "CityLoading.cs": "d5dd084c260905fdb01afc82ef5d9e46803b509e102d569abe53dbdd184d54c4",
+    "CityGroundSmoke.cs": "413a23979965c4e25260c6e3abf84544b8f2ea8411426c7b21257d28fc526e7b",
+    "CityMapSmoke.cs": "eb095b7c63d7b7edd6c107365489639c3714d40810df5c9e34937d45ab3180a6"
+  }
+}

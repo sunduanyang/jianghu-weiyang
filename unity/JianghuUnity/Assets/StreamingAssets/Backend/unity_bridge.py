@@ -31,8 +31,7 @@ def main():
     if not path.exists() and seed.exists():
         shutil.copy2(seed, path)
     game = original.Game(path)
-    # A migration must never silently start inference or autoplay from an old config.
-    game.ai.config['enabled'] = False
+    # Explicitly saved model preferences persist; autoplay remains off on startup.
     base = original.handler_for(game)
 
     class Handler(base):
@@ -83,7 +82,7 @@ def main():
                                 saved = json.loads(row[0]) if row else {}
                                 if not all(k in saved for k in ('npcs', 'month', 'player')):
                                     raise ValueError('存档缺少世界检查点')
-                        replacement = World(42, 800, Store(target), compact=True)
+                        replacement = World(42, 800, Store(target), compact=True, market_economy=True,rank_assessments=True)
                         game.world.checkpoint()
                         game.world.store.close()
                         game.world = replacement
@@ -115,7 +114,7 @@ def main():
         http.serve_forever()
     finally:
         game.closed = True
-        game.ai.closed = True
+        game.ai.close()
         game.thread.join(timeout=3)
         with game.lock:
             game.world.checkpoint()

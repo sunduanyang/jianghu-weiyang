@@ -26,7 +26,7 @@ class SettlementTests(unittest.TestCase):
         self.assertEqual(len(w.summary()['locations']),len(settlements.HUBS))
         self.assertEqual(sum(p['population'] for p in w.summary()['places']),800)
         self.assertEqual(sum(p['active'] for p in w.summary()['places']),len(settlements.HUBS))
-        geo=json.loads(Path('static/geography-compact.json').read_text(encoding='utf-8'))
+        geo=json.loads(Path('art/world-map/geography-compact.json').read_text(encoding='utf-8'))
         self.assertEqual(sorted(c['place'] for c in geo['cells']),sorted(settlements.HUBS))
         self.assertEqual({(r['a'],r['b']) for r in geo['roads']},{(r['a'],r['b']) for r in settlements.COMPACT_ROUTES})
         w.month_step()

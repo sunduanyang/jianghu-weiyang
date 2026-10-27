@@ -1,0 +1,134 @@
+{
+  "created": "2026-10-27",
+  "generator": "built-in image_gen",
+  "count": 6,
+  "status": "Six independent art images; grid anchors and cross-tile continuity require calibration before production use.",
+  "assets": [
+    {
+      "id": "01-forest-meadow",
+      "name": "森林草甸",
+      "file": "01-forest-meadow.png",
+      "width": 1536,
+      "height": 1024,
+      "pixel_format": "Format32bppArgb",
+      "exterior_alpha_samples": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "center_alpha": 251,
+      "bytes": 2094643,
+      "sha256": "7cb875cd2af2c1ee7514edc51d936887ce489e801b48c3cbdfbbdf13957f1800"
+    },
+    {
+      "id": "02-river-wetland",
+      "name": "河湾湖泊",
+      "file": "02-river-wetland.png",
+      "width": 1536,
+      "height": 1024,
+      "pixel_format": "Format32bppArgb",
+      "exterior_alpha_samples": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "center_alpha": 252,
+      "bytes": 2129662,
+      "sha256": "a87551ae0e637cd1fe9b59843ce1cfd60e4164ed27f43eb25ee0cccf931f40fe"
+    },
+    {
+      "id": "03-karst-peaks",
+      "name": "奇峰山地",
+      "file": "03-karst-peaks.png",
+      "width": 1536,
+      "height": 1024,
+      "pixel_format": "Format32bppArgb",
+      "exterior_alpha_samples": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "center_alpha": 252,
+      "bytes": 1990226,
+      "sha256": "9da84763c940e13cb29f3f8c89c8d1bda365c95d7d12c64e802c8687ffe14045"
+    },
+    {
+      "id": "04-terraced-fields",
+      "name": "梯田平原",
+      "file": "04-terraced-fields.png",
+      "width": 1536,
+      "height": 1024,
+      "pixel_format": "Format32bppArgb",
+      "exterior_alpha_samples": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "center_alpha": 252,
+      "bytes": 1978351,
+      "sha256": "56a57aad42e4dcd84af3a1c6730758794527dcb2ed5a1428d3b1ad5c74cbc771"
+    },
+    {
+      "id": "05-desert-canyon",
+      "name": "荒漠峡谷",
+      "file": "05-desert-canyon.png",
+      "width": 1536,
+      "height": 1024,
+      "pixel_format": "Format32bppArgb",
+      "exterior_alpha_samples": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "center_alpha": 252,
+      "bytes": 2012620,
+      "sha256": "80c84294e2e94926d898c11e2231852f7dc3776ffd2a095b082992c434288642"
+    },
+    {
+      "id": "06-volcanic-crater",
+      "name": "熔岩火山",
+      "file": "06-volcanic-crater.png",
+      "width": 1536,
+      "height": 1024,
+      "pixel_format": "Format32bppArgb",
+      "exterior_alpha_samples": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "center_alpha": 252,
+      "bytes": 1826417,
+      "sha256": "b4ce4c3a4eb95277e6ca7eef61d5f21bc3fd56839bb513308b8a68959a3f2688"
+    }
+  ]
+}

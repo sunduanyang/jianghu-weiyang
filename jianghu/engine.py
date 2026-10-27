@@ -10,9 +10,10 @@ from . import demography, government, items
 from . import social
 from . import politics, territory
 from .atlas import PLACES, FACTIONS, COUNTRIES, ROUTES, NEIGHBORS, MAP_VERSION, ERA
-from . import careers
-from . import martial, combat
-from . import city_maps, relationships, organizations, protagonist, settlements
+from . import careers, social_ranks
+from . import martial, physical_combat as combat
+from . import city_maps, relationships, organizations, protagonist, settlements, society
+from . import npc_plans, npc_memory, economics, rank_progression, local_life, llm_policy, npc_attention
 
 TRAITS = {'compassion': '仁厚', 'ambition': '进取', 'caution': '谨慎',
           'sociability': '外向', 'loyalty': '忠诚', **social.EXTRA_TRAITS}
@@ -22,11 +23,11 @@ DESIRES = {'wealth': '安家立业', 'mastery': '武学有成', 'belonging': '�
 ACTIONS = {'work': '谋生', 'train': '习武', 'rest': '休养', 'befriend': '结交',
            'court': '倾诉心意', 'propose': '提亲', 'aid': '接济', 'trade': '合营',
            'betray': '窃取托银', 'duel': '寻仇比武', 'mentor': '拜师', 'teach': '传艺',
-           'join': '入会', 'duty': '尽责', 'travel': '远行', 'rumor': '交换见闻',
+           'join': '入门', 'duty': '尽责', 'travel': '远行', 'rumor': '交换见闻',
            'family': '筹划育儿', 'treatment': '求医', 'report': '报官', 'public_service': '公务',
            'use_item': '使用物品', 'equip_item': '整备行装', 'read_item': '研读典籍',
            'buy_item': '购置物品', 'sell_item': '出售物品', 'repair_item': '修补物品', 'learn_trade': '学艺', 'change_job': '转业',
-           **social.LABELS, **relationships.LABELS, **organizations.LABELS}
+           **social.LABELS, **relationships.LABELS, **organizations.LABELS, **society.LABELS, **rank_progression.LABELS}
 JOBS = list(careers.PROFESSIONS)
 FAMILY = '沈陆顾苏林萧温谢江柳叶裴唐宋秦孟钟楚傅白'
 GIVEN = ['知秋', '望舒', '行舟', '照野', '清和', '若水', '长宁', '归尘', '听澜', '云生',
@@ -43,14 +44,19 @@ def date(month):
 
 
 class World:
-    def __init__(self, seed=42, population=100, store=None, load=True, durable=True, compact=False):
+    def __init__(self, seed=42, population=100, store=None, load=True, durable=True, compact=False,
+                 population_profile=False, start_month=0, market_economy=False, rank_assessments=False):
         self.store = store or Store()
         self.rng = random.Random(seed)
-        self.seed, self.month = seed, 0
+        self.seed, self.month = seed, start_month
+        self.population_generation = None
+        self.rank_system = None
         self.compact_requested = compact
         self.settlements = settlements.profile() if compact else None
         self.phase = 0
         self.npcs, self.factions = {}, deepcopy(FACTIONS)
+        from .sect_catalog import VERSION as SECT_VERSION
+        self.sect_version, self.sect_history, self._sect_migration = SECT_VERSION, [], None
         settlements.align_factions(self)
         organizations.initialize(self)
         self.atlas_history = []
@@ -59,10 +65,14 @@ class World:
         self.territory = territory.new()
         self.campaigns = {'last_attack': {}, 'history': []}
         self.city_map_version = city_maps.VERSION
+        self.city_settlement_profiles = {}
         self.city_positions = {}
+        self.local_life = None
+        self.npc_attention = None
         self.governments = [government.new(c['id']) for c in COUNTRIES]
         self.government = self.governments[0]
         self.economy = {'gaming_house': 200.}
+        society.initialize(self)
         self.player = {'name': '过客', 'wealth': 160., 'reputation': 0, 'ties': {}}
         martial.initialize(self.player, player=True)
         protagonist.initialize(self)
@@ -76,6 +86,11 @@ class World:
         state = self.store.load() if load else None
         if state:
             self.restore(state)
+            if self._sect_migration:
+                e = self.emit('sects_rebuilt', [], '门派重整为十四家，各建独立九格驻地；撤销的组织退出现世，旧履历与库银交接留档。',
+                              .9, facts=self._sect_migration)
+                self._sect_migration['event_id'] = e['id']
+                self.checkpoint()
             if 'government' not in state:
                 government.establish(self)
             elif 'governments' not in state:
@@ -103,20 +118,37 @@ class World:
             if state.get('map_version', 1) < MAP_VERSION or 'government' not in state:
                 self.checkpoint()
         else:
-            for index in range(population):
-                self.make_npc(place=self.active_places[index % len(self.active_places)]['id'] if self.settlements else None)
+            if population_profile:
+                from . import population as population_rules
+                population_rules.seed(self, population)
+            else:
+                for index in range(population):
+                    self.make_npc(place=self.active_places[index % len(self.active_places)]['id'] if self.settlements else None)
             self.reindex()
+            city_maps.city_regions.initialize_profiles(self)
             # Census is an honest initial condition, not invented life history.
             for n in self.npcs.values():
                 e = self.emit('census', [n['id']], f"{n['name']}以{n['age_months']//12}岁之龄载入乡籍，"
                               f"居于{PLACES[n['place']]['name']}，以{n['job']}为生。", .25,
                               facts={'age_months': n['age_months'], 'wealth': n['wealth'],
+                                     'identity': n['identity'], 'faction': n['faction'],
+                                     'contribution': n['contribution'], 'guardian': n['guardian'],
                                      'skill': n['skill'], 'initial_condition': True})
                 self.set_goal(n, self.best_goal(n), e['id'], initial=True)
                 if self.settlements:
                     settlements.register_position(self, n, e['id'])
+                    if population_profile:
+                        population_rules.place_member(self, n, e['id'])
             government.establish(self)
             items.initialize(self)
+            local_life.initialize(self)
+            npc_attention.initialize(self)
+            self.checkpoint()
+        if state and (not state.get('npc_attention') or not state.get('local_life') or state.get('city_map_version')!=self.city_map_version or state.get('city_settlement_profiles')!=self.city_settlement_profiles):
+            self.checkpoint()
+        if market_economy and economics.initialize(self):
+            self.checkpoint()
+        if rank_assessments and rank_progression.initialize(self):
             self.checkpoint()
 
     def make_npc(self, parents=None, place=None):
@@ -168,6 +200,7 @@ class World:
         self.npcs[i] = n
         demography.initialize(self, n)
         social.initialize(self, n)
+        society.prepare(self, n)
         organizations.prepare(n)
         martial.initialize(n)
         n['office'] = None
@@ -175,7 +208,11 @@ class World:
         n['office_country'] = None
         n['visited_places'] = [n['place']]
         careers.initialize(self, n)
+        if economics.active(self):
+            economics.prepare(n)
         n['identity'] = careers.identity(self, n)
+        if rank_progression.active(self):
+            rank_progression.prepare(self, n['id'])
         return n
 
     def place_name(self, place):
@@ -276,6 +313,8 @@ class World:
         if kind != 'identity_change':
             for i in people:
                 careers.sync_identity(self, self.npcs[i], event['id'])
+        rank_progression.on_event(self, event)
+        npc_attention.record(self,event)
         return event
 
     def drift(self, n, axis, requested, major=False, event_id=None, source='经历累积'):
@@ -302,7 +341,8 @@ class World:
             return mixed
         changes = []
         positive = k in ('aid', 'marriage', 'friendship', 'teaching', 'birth', 'promotion', 'goal_complete',
-                         'pregnancy', 'recovery', 'government_relief', 'judgment', 'guardianship')
+                         'pregnancy', 'recovery', 'government_relief', 'judgment', 'guardianship',
+                         'household_support', 'community_relief', 'donate_relief', 'neighbor_care')
         negative = k in ('betrayal', 'duel', 'death', 'disaster', 'loss', 'rejection', 'illness', 'accident', 'epidemic')
         if k in ('work', 'trade', 'train', 'duty'):
             # Small repeated feedback has an observable cumulative effect over decades.
@@ -328,7 +368,7 @@ class World:
                 axis, amount = ('loyalty', .007) if t['loyalty']>50 else ('honesty', -.004)
                 text = '共同做事，才知道这份组织之约值多少。' if t['loyalty']>50 else '出了这份力，总得为自己换些门路。'
             changes.append(self.drift(n, axis, amount, event_id=e['id']))
-        elif k == 'aid':
+        elif k in ('aid', 'household_support', 'community_relief', 'neighbor_care', 'donate_relief'):
             receiver = e['facts'].get('receiver') == n['id']
             text = ('危难时仍有人相助，我愿再信人一次。' if receiver else
                     '江湖情义需要有人先付出。' if t['compassion'] > 50 else '结一份善缘，往后或有所助。')
@@ -400,6 +440,8 @@ class World:
         return keys
 
     def set_goal(self, n, key, cause=None, initial=False):
+        if n.get('plan'):
+            npc_plans.close(self, n, '中断', '长期心愿已调整', cause)
         old = n['goal']
         if old:
             n['past_goals'].append({**old, 'ended': self.month})
@@ -460,7 +502,7 @@ class World:
             return self.available_actions(n,actions,planning)
         actions.extend(items.candidates(self, n))
         add('work', detail=n['job'])
-        actions.extend(careers.actions(self, n))
+        actions.extend(careers.actions(self, n, planning))
         if n['wealth'] >= 1.5 and n['health'] > 30 and n['martial']['stamina'] >= 12:
             add('train', detail='花费1.5银，练功一周')
         local = self.residents.get(n['place'], [])
@@ -470,7 +512,7 @@ class World:
         strangers = [i for i in local if i != n['id'] and i not in known]
         if strangers:
             offset = (self.month + n['id']) % len(strangers)
-            known += (strangers[offset:] + strangers[:offset])[:2]
+            known += local_life.strangers(self, n, strangers)[:2] if local_life.active(self) else (strangers[offset:] + strangers[:offset])[:2]
         own_rank = sorted(set(known)-set(strangers), key=lambda i: abs(n['relationships'].get(str(i), {}).get('affinity', 0)), reverse=True)
         # Leave room for new acquaintances as old generations die and young people grow up.
         visible_new = [i for i in known if i in strangers]
@@ -520,21 +562,27 @@ class World:
         if n['faction'] is not None and n['wealth'] >= 4:
             add('duty', n['faction'], self.factions[n['faction']]['name'])
         actions += organizations.candidates(self, n, planning)
+        migration = society.migration(self, n)
         if n['health'] > 40 and n['age_months'] >= 192:
             for destination in self.neighbors[n['place']]:
                 p = PLACES[destination]
                 trip = politics.journey(self, n['place'], destination)
-                if n['wealth'] >= trip['cost'] + 7 and (not n['office'] or territory.owner(self, destination) == n['office_country']):
-                    add('travel', destination, f"{p['name']} · {trip['km']}公里 / {trip['cost']:.1f}银 / {trip['border']}", **trip)
+                refuge = migration if migration and migration['next_place'] == destination else None
+                reserve = 2.3 if refuge else 7
+                if n['wealth'] >= trip['cost'] + reserve and (not n['office'] or territory.owner(self, destination) == n['office_country']):
+                    add('travel', destination, f"{p['name']} · {trip['km']}公里 / {trip['cost']:.1f}银 / {trip['border']}" +
+                        (' · 困顿投亲' if refuge else ''), **trip, migration=refuge)
         actions += social.actions(self,n,visible)
         actions += relationships.candidates(self, n, visible, planning)
+        actions += society.candidates(self, n, visible, planning)
+        actions += rank_progression.candidates(self, n)
         return self.available_actions(n,actions,planning)
 
     def available_actions(self,n,actions,planning=False):
         return [{**a,'time_cost':social.cost(a['kind'])} for a in actions
                 if n.get('cooldowns',{}).get(a['id'],-1)<=self.month and
                 (n['probation_until']<self.month or a['kind'] not in ('steal','extort','smear','embezzle','travel','duel','betray')) and
-                (planning or (social.cost(a['kind'])<=n['time_left'] and
+                (planning or (local_life.partner_available(self,a) and social.cost(a['kind'])<=n['time_left'] and
                               (not self.phase or self.phase+social.cost(a['kind'])<=5) and
                               n['action_counts'].get(a['kind'],0)<social.LIMITS.get(a['kind'],4)))]
 
@@ -572,16 +620,25 @@ class World:
             score = relationships.score(self, n, a)
         if k in organizations.LABELS:
             score = organizations.score(self, n, a)
+        if k in society.LABELS:
+            score = society.score(self, n, a)
+        if k in rank_progression.LABELS:
+            score = 25 + n['traits']['ambition']*.1 + (20 if g == 'renown' else 0)
+        if k == 'change_job' and rank_progression.active(self) and g == 'renown':
+            score += max(0, careers.identity(self,n)['grade']-social_ranks.grade_for(a['target']))*5
         boost = {'wealth': {'work': 16, 'trade': 18, 'betray': 12}, 'mastery': {'train': 23, 'mentor': 28, 'join': 15},
                  'belonging': {'befriend': 15, 'court': 25, 'propose': 34, 'aid': 5},
                  'renown': {'duty': 26, 'join': 25, 'teach': 15, 'aid': 10},
                  'freedom': {'travel': 27, 'work': 7}, 'revenge': {'duel': 38, 'train': 18}}
         score += boost[g].get(k, 0)
+        if economics.active(self) and k in ('work', 'trade'):
+            score += economics.work_adjustment(self, n, k)
         if k in ('court', 'befriend'):
             r = n['relationships'].get(str(a['target']), {})
             score += (r.get('romance', 0)*.1 if k == 'court' else -r.get('affinity', 0)*.08)
         if k == 'travel':
             score -= a['cost'] * .16
+            score += 60 if a.get('migration') else 0
             score += 5 if a['target'] not in n.get('visited_places', []) else -2
             score -= 6 if a['border'] == '交恶' else 0
         if k == 'join':
@@ -606,29 +663,12 @@ class World:
                 score += 28
         score += {'belonging': {'family': 16}, 'renown': {'public_service': 24},
                   'revenge': {'report': 30}}.get(g, {}).get(k, 0)
-        if n['wealth'] < 10 and k != 'work':
+        if n['wealth'] < 10 and k != 'work' and not (k == 'travel' and a.get('migration')):
             score -= 35
-        return score + social.adjustment(self,n,a)
+        return score + social.adjustment(self,n,a) + npc_plans.adjustment(self, n, a) + rank_progression.adjustment(self,n,a) + local_life.adjustment(self,n,a) + llm_policy.adjustment(self,n,a)
 
     def choose(self, n, actions):
-        plan = n['plan']
-        if plan and plan['until'] >= self.month:
-            for wanted in plan['steps']:
-                found = next((a for a in actions if a['id'] == wanted), None)
-                if found:
-                    if self.score(n, next(a for a in actions if a['kind'] == 'rest')) > 28 or n['wealth'] < 8:
-                        break
-                    # AI plans and rule plans persist, but still pass current legality and survival needs.
-                    plan['steps'].remove(wanted)
-                    n['choice_source'] = plan['source']
-                    return found
-        scored = [(self.score(n, a) + self.rng.uniform(-9, 9), a) for a in actions]
-        chosen = max(scored, key=lambda x: x[0])[1]
-        n['choice_source'] = '规则'
-        n['plan'] = {'source': '规则', 'created': self.month, 'until': self.month+5,
-                     'reason': f"围绕「{n['goal']['title']}」，兼顾生计与已有关系。",
-                     'steps': [], 'horizon': '本周行动，下一周依反馈调整'}
-        return chosen
+        return npc_plans.choose(self, n, actions)
 
     def execute(self, n, action):
         # Reject any caller supplied action not in the engine's CURRENT legal set.
@@ -644,6 +684,9 @@ class World:
         parents = [n['last_event'], n['goal']['cause']]
         people, imp, facts, kind = [n['id']], .15, {'action': a['id'],'actor':n['id'],
                                                   'decision_source':n['choice_source'],'time_cost':a['time_cost']}, k
+        visit = local_life.meeting(self, n, a)
+        if visit:
+            facts['local_visit'] = visit
         settlement = n.get('monthly_settlement', {})
         if settlement.get('month') == self.month and not n['settlement_logged']:
             facts['monthly_settlement'] = settlement.copy()
@@ -659,30 +702,40 @@ class World:
         if k in organizations.LABELS:
             e = organizations.execute(self, n, a, facts)
             return self.finish_action(n, a, e)
+        if k in society.LABELS:
+            e = society.execute(self, n, a, facts)
+            return self.finish_action(n, a, e)
+        if k in rank_progression.LABELS:
+            e = rank_progression.execute(self, n['id'], k)
+            return self.finish_action(n, a, e)
         prior_rank = organizations.rank(self, n)
         name = n['name']
         gear = items.bonuses(self, n['id'])
         facts['equipment_bonuses'] = gear
         if k == 'work':
-            earn = (careers.income(n)+gear['income'])*.5
-            school = self.factions[n['faction']] if n['faction'] is not None else None
-            bonus = 1.12 if school and school['kind'] == 'guild' and school['place'] == n['place'] else 1
-            earn *= bonus
-            n['wealth'] += earn
-            tax = government.tax(self, n, earn) if n['age_months'] >= 192 else 0
+            if economics.active(self):
+                result = economics.work(self, n)
+                earn, tax = result['gross'], result['tax']
+                facts['production'] = result
+            else:
+                earn = (careers.income(n)+gear['income'])*.5
+                n['wealth'] += earn
+                tax = government.tax(self, n, earn) if n['age_months'] >= 192 else 0
             practice = careers.gain(n, n['career']['profession'], .4)
-            facts.update({'career_practice': practice, 'gross_income': earn, 'tax': tax, 'guild_multiplier': bonus,
+            facts.update({'career_practice': practice, 'gross_income': earn, 'tax': tax,
                           'tax_country': territory.owner(self, n['place'])})
             n['health'] = clamp(n['health'] - self.rng.uniform(.5, 2))
             text = f"{name}在{PLACES[n['place']]['name']}以{n['job']}谋生，收入{earn:.1f}银，纳税{tax:.1f}银。"
+            if economics.active(self):
+                text += result['note'] + '。'
         elif k == 'change_job':
             previous = n['job']
             cost = careers.PROFESSIONS[i]['cost']
             n['wealth'] -= cost
+            economics.fee(self, n['place'], cost)
             n['job'] = i
             n['career'].update({'profession': i, 'since': self.month, 'last_change': self.month, 'source': '自主转业'})
             n['career']['experience'].setdefault(i, 0.)
-            n['plan'] = None
             facts.update({'before': previous, 'after': i, 'setup_cost': cost,
                           'experience': careers.experience(n), 'cooldown_months': 24})
             text, imp = f'{name}花{cost}银置办生计，由{previous}转为{i}，旧业本领仍保留。', .7
@@ -701,6 +754,7 @@ class World:
             text = f'{name}休养一周，恢复体力。'
         elif k == 'train':
             n['wealth'] -= 1.5 if n['age_months'] >= 120 else 0
+            economics.fee(self, n['place'], 1.5 if n['age_months'] >= 120 else 0)
             school = self.factions[n['faction']] if n['faction'] is not None else None
             bonus = 1.25 if school and school['kind'] == 'sect' and school['place'] == n['place'] else 1
             training = martial.auto_practice(n, self.rng, scale=.5*bonus, equipment=gear)
@@ -718,6 +772,7 @@ class World:
             self.residents[i].append(n['id'])
             people += demography.follow_guardian(self, n, old)
             n['wealth'] -= a['cost']
+            economics.fee(self, old, a['fare'])
             destination_government = self.governments[a['destination_country']]
             destination_government['fund'] += a['toll']
             destination_government['revenue'] += a['toll']
@@ -727,7 +782,11 @@ class World:
                 n['visited_places'].append(i)
             facts.update({key: a[key] for key in ('km', 'fare', 'toll', 'cost', 'border', 'origin_country', 'destination_country')})
             facts.update({'origin': old, 'destination': i})
+            if a.get('migration'):
+                facts['migration'] = a['migration']
             text = f"{name}离开{PLACES[old]['name']}，行经{a['km']}公里来到{PLACES[i]['name']}，花费{a['cost']:.1f}银（关税{a['toll']:.1f}银）。"
+            if a.get('migration'):
+                text += f"此行按此前见闻，前往{PLACES[a['migration']['destination']]['name']}投亲求助。"
             imp = .4
         elif k == 'family':
             partner = self.npcs[n['spouse']]
@@ -755,6 +814,7 @@ class World:
         elif k == 'public_service':
             g = government.office_government(self, n)
             g['fund'] -= 4
+            economics.fee(self, n['place'], 4)
             g['expenses'] += 4
             g['security'] = min(.95, g['security']+.015)
             g['sanitation'] = min(.95, g['sanitation']+.01)
@@ -818,6 +878,15 @@ class World:
                 n['reputation'] = clamp(n['reputation'] + 1)
                 text, imp = f"{name}拿出8银接济拮据的{q['name']}。", .75
                 facts.update({'giver': n['id'], 'receiver': i, 'transfer': 8})
+            elif k == 'trade' and economics.active(self):
+                result = economics.haul(self, n)
+                net = max(0., result['gross']-result['tax'])
+                share = round(net * .35, 4)
+                n['wealth'] -= share; q['wealth'] += share
+                success = net > 0
+                facts.update(production=result, success=success, partner_payment=share)
+                self.link(n, q, 4 if success else 0, 3 if success else 0)
+                text, imp = f"{name}与{q['name']}合营贩运，{result['note']}，同行分得{share:.2f}银。", .45
             elif k == 'trade':
                 n['wealth'] -= 3
                 q['wealth'] -= 3
@@ -852,7 +921,7 @@ class World:
                               [secret['id']], {'amount': silver})
                     return self.finish_action(n,a,secret)
             elif k == 'duel':
-                bout = combat.autoplay(combat.start(n, q, self.rng.getrandbits(63), spar=False, equipment=(gear, items.bonuses(self, q['id']))))
+                bout = combat.autoplay(combat.start(n, q, self.rng.getrandbits(63), spar=False, equipment=(combat.equipment(self, n['id']), combat.equipment(self, q['id']))))
                 facts['combat'] = bout
                 for actor, f in zip((n, q), bout['fighters']):
                     loss = (f['vigor_max']-f['vigor'])/f['vigor_max']
@@ -865,7 +934,7 @@ class World:
                 # Winning revenge settles part of a grievance; it does not erase the opponent's memory.
                 if winner:
                     self.relation(winner, loser['id'])['affinity'] = clamp(self.relation(winner, loser['id'])['affinity'] + 20, -100, 100)
-                result = f"{winner['name']}取胜讨回颜面" if winner else '双方六十合未分胜负'
+                result = f"{winner['name']}取胜讨回颜面" if winner else '双方交手未分胜负'
                 text, imp = f"{name}因旧怨向{q['name']}挑战，{result}。", .8
                 facts.update({'winner': winner['id'] if winner else None, 'loser': loser['id'] if loser else None})
             elif k == 'mentor':
@@ -919,6 +988,8 @@ class World:
             n['career']['last_event'] = e['id']
         if k == 'work':
             items.produce(self, n, e)
+        if k == 'learn_trade':
+            relationships.reserve_partner(self, q, a, e, '手艺授课')
         self.finish_action(n,a,e)
         if k=='trade':
             q['time_left']-=1
@@ -938,16 +1009,25 @@ class World:
         return e
 
     def finish_action(self,n,a,e):
+        local_life.reserve_partner(self, n, a, e)
+        npc_plans.record(self, n, a, e)
         n['time_left']-=a['time_cost']
         n['action_counts'][a['kind']]=n['action_counts'].get(a['kind'],0)+1
         n['last_action']={**a,'month':self.month,'week':self.phase,'event_id':e['id'],'source':n['choice_source']}
+        decision=n.get('decision') or {}
+        actual_decision=decision.get('action_id')==a['id'] and decision.get('month')==self.month
+        if actual_decision and decision.get('policy_influence'):
+            n['last_action']['llm_policy']=True
+            self.metrics['ai_policy_actions']=self.metrics.get('ai_policy_actions',0)+1
+        if actual_decision and decision.get('policy_ranking_changed'):
+            self.metrics['ai_policy_ranking_changes']=self.metrics.get('ai_policy_ranking_changes',0)+1
         n['monthly_actions'].append(n['last_action'].copy())
         city_maps.record_action(self,n,a,e)
         n['settlement_logged']=True
         self.metrics['actions'][a['kind']]=self.metrics['actions'].get(a['kind'],0)+1
-        if a['kind'] in ('befriend','court','propose','rumor','care','family','reconcile','swear'):
+        if a['kind'] in ('befriend','court','propose','rumor','care','family','reconcile','swear','neighbor_care'):
             n['loneliness']=max(0,n['loneliness']-18)
-        if n['choice_source']=='AI':
+        if n['choice_source']=='AI' and actual_decision:
             n['last_ai_execution']=self.month
             self.metrics['ai_executed_actions']=self.metrics.get('ai_executed_actions',0)+1
         return e
@@ -958,11 +1038,15 @@ class World:
         started = time.perf_counter()
         self.month += 1
         self.reindex()
+        if economics.active(self):
+            economics.begin_month(self)
         for n in self.npcs.values():
             n['drift_month'] = {}
             social.reset_month(self,n)
         demography.households(self)
+        local_life.reconcile(self)
         territory.monthly(self)
+        society.monthly(self)
         government.monthly(self)
         relationships.monthly(self)
         organizations.monthly(self)
@@ -976,7 +1060,7 @@ class World:
             martial.recover(n)
             for k in n['mood']:
                 n['mood'][k] *= .72
-            upkeep = 2.3 if n['age_months'] >= 144 else 1.2
+            upkeep = 0 if economics.active(self) else 2.3 if n['age_months'] >= 144 else 1.2
             payer = n['id']
             guardian_payment = 0
             if n['age_months'] < 192:
@@ -991,18 +1075,22 @@ class World:
             n['monthly_settlement'] = {'month': self.month, 'payer': payer,
                                        'paid': round(paid + guardian_payment, 4),
                                        'food_shortfall': round(upkeep-paid, 4)}
+            if not economics.active(self):
+                society.settle_hardship(self, n)
             if paid < upkeep:
                 n['health'] = clamp(n['health'] - 5)
                 if n['health'] < 65:
                     n['review_urgency'] = max(n['review_urgency'], .8)
             if n['age_months'] > 660:
                 n['health'] = clamp(n['health'] - (n['age_months']-660)/1200)
-            demography.health_step(self, n)
+            if not economics.active(self):
+                demography.health_step(self, n)
             if not n['alive']:
                 continue
             careers.grow(self, n)
             self.update_goal(n)
-            n['wealth'] = round(n['wealth'], 4)
+            if not economics.active(self):
+                n['wealth'] = round(n['wealth'], 4)
             n['review_urgency'] = max(.1, n['review_urgency'] * .98)
         for week in range(1,5):
             self.phase=week
@@ -1015,16 +1103,32 @@ class World:
                 if actions:
                     self.execute(n,self.choose(n,actions))
         self.phase=0
+        if economics.active(self):
+            economics.close_month(self)
+            for n in list(self.npcs.values()):
+                if n['alive']:
+                    demography.health_step(self, n)
         demography.pregnancies(self)
         demography.households(self)
         if self.month % 12 == 0:
             self.annual()
+        rank_progression.monthly(self)
+        local_life.reconcile(self)
         if self.month % 3 == 0:
             social.audit(self)
         self.metrics['steps'] += 1
         self.metrics['simulation_ms'] += (time.perf_counter()-started)*1000
         if self.month % 12 == 0:
-            self.player['wealth'] += 24
+            if economics.active(self):
+                g = self.governments[territory.owner(self, economics.place_of(self, 'player'))]
+                stipend = min(24., g['fund'])
+                g['fund'] -= stipend; g['expenses'] += stipend
+                self.player['wealth'] += stipend
+                e = self.emit('hero_stipend', [], f"{self.player['name']}领取{g['name']}实付的年度行脚补助{stipend:.2f}银。", .3,
+                              facts=dict(country=g['country'], paid=stipend, requested=24.))
+                government.record(g, e)
+            else:
+                self.player['wealth'] += 24
         martial.recover(self.player)
         self.player['health'] = clamp(self.player['health']+6+items.bonuses(self, 'player')['recovery'])
         protagonist.on_month(self)
@@ -1066,7 +1170,9 @@ class World:
                                            'heirs': [h['id'] for h in heirs]})
         n['death'] = {'event_id': e['id'], 'month': self.month, 'cause': cause,
                       'cause_label': demography.DEATH_CAUSES[cause], 'cause_event': cause_event}
+        npc_plans.close(self, n, '中断', '人物已故，原计划不再执行', e['id'])
         items.inherit(self, n, heirs, e)
+        economics.inherit(self, n, heirs)
         self.metrics.setdefault('death_causes', {})[cause] = self.metrics.setdefault('death_causes', {}).get(cause, 0)+1
         if n['pregnancy']:
             p = n['pregnancy']
@@ -1125,6 +1231,8 @@ class World:
             for n in local:
                 loss = min(n['wealth'], self.rng.uniform(7, 22))
                 n['wealth'] -= loss
+                if economics.active(self):
+                    economics.state(self)['destroyed_silver'] += loss
                 n['health'] = clamp(n['health']-self.rng.uniform(3, 10))
                 if self.rng.random() < .004*(1-self.governments[territory.owner(self, place)]['security']):
                     fatalities.append(n['id'])
@@ -1184,13 +1292,16 @@ class World:
             raise ValueError('未知介入方式')
         n['review_urgency'] = 1.
         tie['last_event'], tie['last_contact'] = e['id'], self.month
+        if action == 'gift':
+            rank_progression.on_event(self,e,who='player')
         self.checkpoint()
         return e
 
     def martial_view(self):
         known = self.player['martial']['arts']
         return {'player': {**deepcopy(self.player), 'martial': martial.view(self.player, items.bonuses(self, 'player'))},
-                'catalog': [{**deepcopy(art), 'id': key} for key, art in martial.ARTS.items() if key not in known],
+                'catalog': [{**deepcopy(art), 'id': key} for key, art in martial.ARTS.items()
+                            if key not in known and not art.get('school')],
                 'battle': combat.view(self.battle)}
 
     def martial_action(self, action, art_id=None):
@@ -1201,16 +1312,20 @@ class World:
         if action == 'equip':
             martial.equip(p, art_id)
         elif action == 'learn':
+            if martial.ARTS.get(art_id, {}).get('school'):
+                raise ValueError('门派传承请到驻地凭贡献请益')
             if p['wealth'] < 12:
                 raise ValueError('研读手抄谱需要12银')
             martial.learn(p, art_id)
             p['wealth'] -= 12
+            economics.fee(self, economics.place_of(self, 'player'), 12)
             facts.update(art=art_id, cost=12)
         elif action in ('practice', 'breakthrough'):
             if p['wealth'] < 3:
                 raise ValueError('闭关一月需要3银')
             facts['training'] = martial.practice(p, self.rng, art_id, action == 'breakthrough', equipment=items.bonuses(self, 'player'))
             p['wealth'] -= 3
+            economics.fee(self, economics.place_of(self, 'player'), 3)
             facts['cost'] = 3
             facts['equipment_wear'] = items.wear(self, 'player', ['weapon'], 2)
             self.month_step()
@@ -1236,25 +1351,47 @@ class World:
         if self.player['health'] <= 30 or self.player['martial']['stamina'] < 12:
             raise ValueError('你伤疲过重，请先调养')
         battle_id = f'{self.seed}-{self.month}-{self.store.next_id}'
-        self.battle = combat.start(self.player, n, self.rng.getrandbits(63), battle_id, equipment=(items.bonuses(self, 'player'), items.bonuses(self, npc_id)))
+        self.battle = combat.start(self.player, n, self.rng.getrandbits(63), battle_id, equipment=(combat.equipment(self, 'player'), combat.equipment(self, npc_id)))
         e = self.emit('spar_start', [npc_id], f"过客与{n['name']}约定点到为止，摆开切磋架势。", .3,
                       [n['last_event']], {'battle_id': battle_id})
         self.battle['cause'] = e['id']
         self.checkpoint()
         return self.martial_view()
 
-    def battle_action(self, battle_id, round_number, action):
+    def restart_legacy_battle(self):
+        """Archive obsolete active bouts without running or settling old rules."""
+        old = self.battle
+        if not old or old.get('status') != 'active' or old.get('settled') or old.get('ruleset') == combat.RULESET:
+            return False
+        npc_id = old['fighters'][1]['id']
+        n = self.npcs[npc_id]
+        battle_id = old['id'] + '-physics4'
+        replacement = combat.start(self.player, n, old['seed'], battle_id,
+            spar=old.get('spar', True), equipment=(combat.equipment(self, 'player'), combat.equipment(self, npc_id)))
+        event = self.emit('combat_rules_upgraded', [],
+            f"与{n['name']}未结算的旧战局归档，改用物理战斗重新开局；不结算体力、精力、装备损耗或收益。", .3,
+            [old.get('cause')], {'legacy_combat':deepcopy(old), 'battle_id':battle_id,
+            'from_ruleset':old.get('ruleset',1), 'to_ruleset':combat.RULESET, 'restart_without_settlement':True})
+        replacement['cause'] = replacement['upgrade_event_id'] = event['id']
+        self.battle = replacement
+        self.checkpoint()
+        return True
+
+    def battle_action(self, battle_id, revision, action, frame=None):
         b = self.battle
-        if not b or b['status'] != 'active':
-            raise ValueError('目前没有进行中的切磋')
-        if battle_id != b['id'] or round_number != b['round']:
-            raise ValueError('战局已变化，请刷新后再出招')
-        combat.step(b, action)
+        if not b or battle_id != b['id']:
+            raise ValueError('目前没有对应的切磋')
+        if revision == b.get('last_request_revision') and action == b.get('last_action'):
+            return self.martial_view()
+        if b['status'] != 'active' or revision != b['revision']:
+            raise ValueError('战局已变化，请刷新后再提交')
+        b = deepcopy(b)
+        combat.submit(b, action, frame)
         if b['status'] == 'finished':
             n = self.npcs[b['fighters'][1]['id']]
             costs = []
             rewards = self.player.setdefault('spar_rewards', {})
-            practiced_time = b.get('elapsed', 0) >= 3 if b.get('ruleset') == 3 else b['round'] >= 3
+            practiced_time = b.get('elapsed', 0) >= 3
             practiced = practiced_time and any(row.get('damage', 0) > 0 and row['side'] == 0 for row in b['log'])
             gain = .3 if practiced and rewards.get(str(n['id'])) != self.month else 0.
             if gain:
@@ -1268,35 +1405,54 @@ class World:
             tie = self.player['ties'].setdefault(str(n['id']), {'affinity': 0., 'trust': 0.})
             tie['affinity'] = clamp(tie['affinity']+2, -100, 100)
             result = '双方平手' if b['winner'] is None else b['fighters'][b['winner']]['name']+'胜出'
-            gear_wear = {'player': items.wear(self, 'player', ['weapon', 'armor'], 2),
-                         'npc': items.wear(self, n['id'], ['weapon', 'armor'], 2)}
+            gear_wear = {'player': items.wear(self, 'player', ['weapon', 'armor', 'shield'], 2),
+                         'npc': items.wear(self, n['id'], ['weapon', 'armor', 'shield'], 2)}
             b['settled'] = True
             e = self.emit('player_duel', [n['id']], f"过客与{n['name']}切磋，{result}，点到为止。", .7,
                           [b['cause']], {'combat': deepcopy(b), 'player_health_cost': costs[0],
                                          'npc_health_cost': costs[1], 'skill_gain': gain, 'equipment_wear': gear_wear})
             b['event_id'] = e['id']
+        self.battle = b
         self.checkpoint()
         return self.martial_view()
 
     def export(self):
         return {'seed': self.seed, 'month': self.month, 'npcs': self.npcs,
+                'population_generation': self.population_generation,
+                'social_rank_version': social_ranks.VERSION,
                 'settlements': self.settlements,
                 'city_map_version': self.city_map_version, 'city_positions': self.city_positions,
+                'city_settlement_profiles': self.city_settlement_profiles,
+                'local_life': self.local_life,
+                'npc_attention': self.npc_attention,
                 'territory': self.territory, 'campaigns': self.campaigns,
-                'factions': self.factions, 'government': self.government, 'governments': self.governments,
+                'factions': self.factions, 'sect_version': self.sect_version, 'sect_history': self.sect_history,
+                'government': self.government, 'governments': self.governments,
+                'society': self.society,
                 'countries': self.countries, 'map_version': MAP_VERSION, 'atlas_history': self.atlas_history, 'player': self.player, 'items': self.items, 'economy': self.economy, 'metrics': self.metrics,
-                'population_limit': self.population_limit, 'random_state': self.rng.getstate(), 'battle': self.battle}
+                'population_limit': self.population_limit, 'random_state': self.rng.getstate(), 'battle': self.battle,
+                'rank_system': self.rank_system}
 
     def restore(self, state):
         self.seed, self.month = state['seed'], state['month']
+        self.population_generation = deepcopy(state.get('population_generation'))
         self.settlements = deepcopy(state.get('settlements'))
-        self.city_map_version = state.get('city_map_version', city_maps.VERSION)
+        previous_city_version = state.get('city_map_version', city_maps.VERSION)
+        self.city_map_version = city_maps.VERSION
+        self.city_settlement_profiles = deepcopy(state.get('city_settlement_profiles',{}))
         self.city_positions = deepcopy(state.get('city_positions', {}))
+        self.local_life = deepcopy(state.get('local_life'))
+        self.npc_attention = deepcopy(state.get('npc_attention'))
         self.npcs = {int(i): n for i, n in state['npcs'].items()}
+        self.rank_system = deepcopy(state.get('rank_system'))
         for n in self.npcs.values():
+            if n.get('ai_pending'):
+                n['last_review_attempt']=min(n.get('last_review_attempt',self.month-1),self.month-1)
+                if self.npc_attention:self.npc_attention['attempts'].pop(str(n['id']),None)
             n['ai_pending'] = False
             demography.initialize(self, n)
             social.initialize(self,n)
+            society.prepare(self, n)
             relationships.prepare(self, n)
             organizations.prepare(n)
             martial.initialize(n)
@@ -1328,10 +1484,8 @@ class World:
                  'governments': deepcopy(state['governments'])}]
         self.government = self.governments[0]
         self.government['name'] = COUNTRIES[0]['government_name']
-        # Add metadata and new organizations without resetting funds, leaders or membership.
-        existing = {f['id']: f for f in self.factions}
-        self.factions = [{**deepcopy(f), **{k: v for k, v in existing.get(f['id'], {}).items()
-                                              if k in organizations.STATE_FIELDS}} for f in FACTIONS]
+        from . import sect_migration
+        sect_migration.restore(self, state)
         settlements.align_factions(self)
         organizations.initialize(self)
         for g in self.governments:
@@ -1340,12 +1494,19 @@ class World:
         for f in self.factions:
             f['country'] = territory.owner(self, f['place'])
         self.economy=state.get('economy',{'gaming_house':200.})
+        if 'society' in state:
+            self.society = deepcopy(state['society'])
+        else:
+            del self.society
+        society.initialize(self)
         for n in self.npcs.values():
-            n.setdefault('identity', careers.identity(self, n))
+            n['identity'] = careers.identity(self, n)
             if not n['alive']:
                 n.setdefault('final_identity', deepcopy(n['identity']))
         martial.initialize(self.player, player=True)
+        city_maps.city_regions.initialize_profiles(self)
         protagonist.initialize(self)
+        city_maps.upgrade_position(self, previous_city_version)
         self.battle = state.get('battle')
         self.metrics.setdefault('death_causes', {})
         self.population_limit = state['population_limit']
@@ -1360,6 +1521,10 @@ class World:
             settlements.activate(self)
         elif self.settlements:
             settlements.expand(self)
+        society.initialize(self)
+        self.restart_legacy_battle()
+        local_life.initialize(self)
+        npc_attention.initialize(self)
 
     def checkpoint(self):
         self.store.save(self.export())
@@ -1375,6 +1540,7 @@ class World:
         living = [n for n in self.npcs.values() if n['alive']]
         ties = relationships.counts(self)
         return {'month': self.month, 'date': date(self.month), 'seed': self.seed, 'population': len(living),
+                'society': society.overview(self),
                 'total_people': len(self.npcs), 'events': self.store.count(), **ties,
                 'marriages': sum(bool(n['spouse']) for n in living)//2,
                 'goals': dict(Counter(n['goal']['kind'] for n in living)), 'metrics': self.metrics,
@@ -1391,7 +1557,8 @@ class World:
                 'campaigns': deepcopy(self.campaigns['history'][-12:]),
                 'countries': [{**c, 'population': sum(territory.owner(self, n['place']) == c['id'] for n in living),
                                'settlements': len(territory.controlled(self, c['id'])),
-                               'government': {**self.governments[c['id']], 'cases': self.governments[c['id']]['cases'][-12:]}}
+                               'government': {**self.governments[c['id']], 'cases': self.governments[c['id']]['cases'][-12:]},
+                               'rank_system': social_ranks.country_view(self, c['id'])}
                               for c in self.countries],
                 'government': {**self.government, 'cases': self.government['cases'][-12:]},
                 'activity': {'weeks_per_month':4,'mean_actions':sum(len(n['monthly_actions']) for n in living)/max(1,len(living)),
@@ -1409,7 +1576,13 @@ class World:
 
     def npc_detail(self, npc_id):
         n = deepcopy(self.npcs[npc_id])
+        n['planning_view'] = npc_plans.view(self, self.npcs[npc_id])
+        n['recalled_memories'] = npc_memory.retrieve(self, self.npcs[npc_id])
         n['career_view'] = careers.view(self, self.npcs[npc_id])
+        n['social_view'] = society.person_view(self, self.npcs[npc_id])
+        n['local_life_view'] = local_life.view(self, self.npcs[npc_id])
+        n['economy_view'] = economics.view(self, n['place'], npc_id)
+        n['rank_progression'] = rank_progression.view(self, npc_id)
         n['identity'] = careers.identity(self, self.npcs[npc_id])
         n['career_options'] = careers.catalog(self, self.npcs[npc_id])
         n['martial_view'] = martial.view(n, items.bonuses(self, npc_id))
@@ -1428,8 +1601,10 @@ class World:
         f = self.factions[faction_id]
         members = [n for n in self.npcs.values() if n['alive'] and n['faction'] == f['id']]
         return {**organizations.view(self, f),
+                'player_options': organizations.player_options(self, faction_id),
+                'player_membership': organizations.player_membership(self),
                 'roster': [{**self.npc_summary(n), 'rank': organizations.rank(self, n), 'contribution': n['contribution']}
-                           for n in sorted(members, key=lambda n: (-n['contribution'], n['id']))],
+                           for n in sorted(members, key=lambda n: (organizations.rank(self, n)['grade'], -n['contribution'], n['id']))],
                 'events': [e for i in reversed(f['records']) if (e := self.store.event(i))]}
 
     def country_detail(self, country_id):
@@ -1437,6 +1612,7 @@ class World:
         g = self.governments[country_id]
         residents = [n for n in self.npcs.values() if n['alive'] and territory.owner(self, n['place']) == country_id]
         return {**c, 'government': deepcopy(g), 'population': len(residents),
+                'rank_system': social_ranks.country_view(self, country_id, include_roster=True),
                 'poor': sum(n['wealth'] < 10 for n in residents),
                 'patients': sum(bool(n['illness']) or n['health'] < 55 for n in residents),
                 'settlements': len(territory.controlled(self, country_id)),

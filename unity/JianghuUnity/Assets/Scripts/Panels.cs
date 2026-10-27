@@ -6,18 +6,19 @@ using UnityEngine;
 
 namespace Jianghu {
 public partial class JianghuApp {
-    string inventoryMode="行囊",itemQuery="",itemCategory="全部",itemSort="种类",selectedItem="",institutionKind="政权",institutionQuery="",importPath="",newPopulation="800",newSeed="42",newYears="0";
+    string inventoryMode="行囊",itemQuery="",itemCategory="全部",itemSort="种类",selectedItem="",institutionKind="政权",institutionQuery="",importPath="",newPopulation="1800",newSeed="42",newYears="0";
     int giftTarget=-1;
     int itemGrade;
-    bool battleView,fastMode=true,aiEditing,aiEnabled,aiOllama;
-    string aiUrl="http://127.0.0.1:11435",aiModel="qwen3:4b",aiBudget="24",aiCooldown="3";
+    bool battleView,fastMode,aiEditing,aiEnabled,aiOllama,aiAutoStart=true;
+    string aiUrl="http://127.0.0.1:11435",aiModel="qwen3:4b",aiQueue="2",aiCooldown="1";
     Vector2 itemScroll,detailScroll;
-    public void LoadInventory(){Client.Fetch("/api/inventory",j=>Inventory=j);Client.Fetch("/api/market",j=>Market=j);}
+    public void LoadInventory(){Client.Fetch("/api/inventory",j=>Inventory=j);Client.Fetch("/api/market",j=>Market=j);LoadEconomy();}
     void ItemAction(string operation,J item=null,string recipe=null){Client.Act("/api/items",J.O("operation",operation,"item_id",item==null?new J():item["id"],"target",giftTarget,"recipe",recipe),j=>{LoadInventory();if(SelectedPerson>=0)SelectPerson(SelectedPerson);});}
     void DrawInventory(){
         H("一器一物，皆有来处");if(!Inventory.Has){T("正在整理行囊…");return;}
         T(Inventory["name"].S+"  /  "+Num(Inventory["wealth"])+"银 · 负重 "+Num(Inventory["weight"])+" / "+Num(Inventory["capacity"])+"斤",sub);
-        GUILayout.BeginHorizontal();foreach(string mode in new[]{"行囊","货栈","制药"})if(GUILayout.Button(mode,inventoryMode==mode?selected:skin.button)){inventoryMode=mode;selectedItem="";itemGrade=0;}GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();foreach(string mode in new[]{"行囊","货栈","制药","市井供需"})if(GUILayout.Button(mode,inventoryMode==mode?selected:skin.button)){inventoryMode=mode;selectedItem="";itemGrade=0;if(mode=="市井供需")LoadEconomy();}GUILayout.EndHorizontal();
+        if(inventoryMode=="市井供需"){DrawEconomy();return;}
         if(inventoryMode=="制药"){
             mainScroll=GUILayout.BeginScrollView(mainScroll);T("耗用行囊中的药草与2银工费，制得一份成药。",small);
             foreach(var r in Market["recipes"].A){GUILayout.BeginVertical(card);H(r["name"].S);T(r["description"].S);foreach(var ing in r["ingredients"].D)Metric(ing.Key,ing.Value.S+"份");int needed=r["ingredients"].D.Sum(k=>k.Value.I),owned=Inventory["items"].A.Count(i=>i["template"].S=="herb");T("行囊药草 "+owned+" / "+needed+"份",small);if(Btn("依方制成",owned>=needed&&Inventory["wealth"].N>=2&&!W["battle_active"].B))ItemAction("craft",null,r["template"].S);GUILayout.EndVertical();}GUILayout.EndScrollView();return;
@@ -64,34 +65,34 @@ public partial class JianghuApp {
             GUI.Label(new Rect(r.x+3,r.y+103,r.width-6,21),inventoryMode=="货栈"?Num(item["buy_price"])+"银":Num(item["weight"])+"斤",centerSmall);
         }GUILayout.EndHorizontal();}
     }
-    static string ItemGlyph(string category){switch(category){case "manual":return "书";case "food":return "食";case "wine":return "酒";case "tea":return "茶";case "weapon":return "剑";case "armor":return "衣";case "accessory":return "玉";case "medicine":return "药";case "material":return "材";default:return "器";}}
+    static string ItemGlyph(string category){switch(category){case "manual":return "书";case "food":return "食";case "wine":return "酒";case "tea":return "茶";case "weapon":return "剑";case "shield":return "盾";case "armor":return "衣";case "accessory":return "玉";case "medicine":return "药";case "material":return "材";default:return "器";}}
     static readonly System.Collections.Generic.Dictionary<string,string> ItemLabels=new System.Collections.Generic.Dictionary<string,string>{{"attack","攻势"},{"defense","防护"},{"income","营生收益"},{"training","习武增益"},{"recovery","调养恢复"},{"heal","恢复体力"},{"joy","舒缓心绪"},{"wound","缓解外伤"},{"illness","缓解疾病"},{"learning","研读进益"}};
     static readonly System.Collections.Generic.Dictionary<string,string> OperationLabels=new System.Collections.Generic.Dictionary<string,string>{{"equip","装备"},{"unequip","卸下"},{"read","研读一篇"},{"repair","修补"},{"sell","出售"},{"gift","赠予"},{"buy","购入"},{"use","使用"}};
     void DrawMartial(){
         GUILayout.BeginHorizontal();H("练一身本领，赴一场江湖");GUILayout.FlexibleSpace();if(Btn(battleView?"功法与闭关":"演武场 / 续战"))battleView=!battleView;GUILayout.EndHorizontal();if(!Martial.Has){T("正在展开武谱…");return;}
         mainScroll=GUILayout.BeginScrollView(mainScroll);
-        if(battleView){DrawBattle();GUILayout.EndScrollView();return;}
+        if(battleView){DrawBattleScreen();GUILayout.EndScrollView();return;}
         var p=Martial["player"];var m=p["martial"];T("武学 "+Num(p["skill"])+" · 精力 "+Num(m["stamina"])+" · 内力 "+Num(m["stats"]["qi"])+" · 行囊 "+Num(p["wealth"])+"银",sub);
+        if(Btn(showHeroRank?"收起主角品阶进退":"主角品阶进退"))showHeroRank=!showHeroRank;
+        if(showHeroRank)DrawRankProgress(Hero["rank_progression"],true);
         T("闭关、突破、调养都会推进整个江湖一个月。修习与突破需3银、12精力；每月恢复8精力。",small);if(Btn("调养一月",Paused))MartialAction("rest");DrawArtList(m["arts"],true);
         H("手抄武谱");foreach(var art in Martial["catalog"].A){GUILayout.BeginVertical(card);T(art["name"].S+" · "+art["affinity"].S,sub);T(art["description"].S);if(Btn("研读 · 12银 / 武学需"+art["requirement"].S,Paused&&p["skill"].N>=art["requirement"].N))MartialAction("learn",art["id"].S);GUILayout.EndVertical();}GUILayout.EndScrollView();
     }
-    void DrawArtList(J arts,bool interactive){foreach(var art in arts.A){GUILayout.BeginVertical(card);T(art["name"].S+" · "+art["realm_name"].S+(art["equipped"].B?" · 运用中":""),sub);T(art["description"].S,small);Bar("修习",art["practice"].N,art["gate"].N);var reach=art["combat_reach"].Has?art["combat_reach"]:art["reach"];if(reach.Has)T("距离 "+reach[0].S+"–"+reach[1].S+" · "+art["qi"].S+"内力 · "+art["forms"].S+"式",small);if(interactive){GUILayout.BeginHorizontal();if(Btn(art["ready"].B?"突破关隘":"闭关修习",Paused&&art["realm"].I<3))MartialAction(art["ready"].B?"breakthrough":"practice",art["id"].S);if(Btn(art["equipped"].B?"已装配 / 卸下":"装配",Paused))MartialAction("equip",art["id"].S);GUILayout.EndHorizontal();}GUILayout.EndVertical();}}
+    void DrawArtList(J arts,bool interactive){foreach(var art in arts.A){GUILayout.BeginVertical(card);T(art["name"].S+" · "+art["realm_name"].S+(art["equipped"].B?" · 运用中":""),sub);T(art["description"].S,small);Bar("修习",art["practice"].N,art["gate"].N);if(art["kind"].S=="attack")T("修习与境界提高物理交手发力；兵器与握持由行囊装备决定。",small);if(interactive){GUILayout.BeginHorizontal();if(Btn(art["ready"].B?"突破关隘":"闭关修习",Paused&&art["realm"].I<3))MartialAction(art["ready"].B?"breakthrough":"practice",art["id"].S);if(Btn(art["equipped"].B?"已装配 / 卸下":"装配",Paused))MartialAction("equip",art["id"].S);GUILayout.EndHorizontal();}GUILayout.EndVertical();}}
     void MartialAction(string action,string art=null){Client.Act("/api/martial",J.O("action",action,"art",art),j=>Martial=j);}
-    void DrawBattle(){
-        var b=Martial["battle"];if(!b.Has){H("尚未与人切磋");T("在右侧人物档案选择一位成年、体力充足的江湖人，点击「切磋」进入演武场。");return;}
-        H(b["status"].S=="finished"?"已收招 · "+b["reason"].S:"第 "+b["round"].S+" 合 · 对手意图："+b["opponent_intent"].S);
-        GUILayout.BeginHorizontal();foreach(var f in b["fighters"].A){GUILayout.BeginVertical(card,GUILayout.Width(455));H(f["name"].S);T(f["inner"].S,small);Bar("气血",f["vigor"].N,f["vigor_max"].N);Bar("内力",f["qi"].N,f["qi_max"].N);T("式 "+f["forms"].S+" · 外伤 "+Num(f["outer_wounds"])+" / 内伤 "+Num(f["inner_wounds"]),small);GUILayout.EndVertical();}GUILayout.EndHorizontal();
-        Metric("身位距离",b["distance"].S+"格");
-        if(b["status"].S!="finished")foreach(var a in b["actions"].A){if(Btn(a["label"].S+(a["reason"].S.Length>0?" · "+a["reason"].S:""),a["enabled"].B))Client.Act("/api/battle",J.O("battle_id",b["id"],"round",b["round"],"action",a["id"]),j=>Martial=j);}
-        else if(b["event_id"].Has&&Btn("查看此战年谱"))OpenEvent(b["event_id"].I);
-        T("拆招记录",sub);foreach(var row in b["log"].A.AsEnumerable().Reverse())T(row["round"].S+"合 · "+(row["side"].I==0?"我":"客")+" · "+row["text"].S,small);
-    }
     public void OpenInstitution(bool country,int id){personScreen=false;dialogueOpen=false;Page=4;institutionKind=country?"政权":"门派";Client.Fetch("/api/"+(country?"country/":"faction/")+id,j=>Institution=j);}
     void DrawInstitutions(){
-        GUILayout.BeginHorizontal();H("天下势力簿");institutionKind=Cycle(institutionKind,new[]{"政权","门派"});institutionQuery=GUILayout.TextField(institutionQuery);GUILayout.EndHorizontal();
-        GUILayout.BeginHorizontal();GUILayout.BeginVertical(GUILayout.Width(275));itemScroll=GUILayout.BeginScrollView(itemScroll);foreach(var f in W[institutionKind=="政权"?"countries":"factions"].A.Where(f=>f["name"].S.Contains(institutionQuery))){if(GUILayout.Button(f["name"].S+"\n"+(institutionKind=="政权"?f["population"].S+"人 · "+f["settlements"].S+"城":"成员"+f["members"].S+"人 · 库银"+Num(f["fund"])),rowStyle))OpenInstitution(institutionKind=="政权",f["id"].I);}GUILayout.EndScrollView();GUILayout.EndVertical();
-        GUILayout.BeginVertical(GUILayout.Width(665));mainScroll=GUILayout.BeginScrollView(mainScroll);if(Institution.Has){H(Institution["name"].S);T(Institution["ethos"].S);if(Institution["government"].Has){var g=Institution["government"];Metric("国库",Num(g["fund"])+"银");Metric("现行施政",g["policy"].S);Metric("税率",(g["tax_rate"].N*100).ToString("0.#")+"%");Metric("治安 / 公医",Num(g["security"])+" / "+Num(g["sanitation"]));foreach(var office in g["offices"].D){int id=office.Value.I;var n=W["npcs"].A.FirstOrDefault(x=>x["id"].I==id);if(GUILayout.Button(office.Key+" · "+(n==null?"虚位":n["name"].S),chip)&&n!=null)SelectPerson(id);}Details("国库收支与民政",g);Details("边境往来",Institution["border_activity"]);Details("外交关系",Institution["relations"]);foreach(var p in Institution["places"].A)if(Btn("城镇 · "+p["name"].S)){SelectedPlace=p["id"].I;Go(0);}}
-            else{Metric("库银",Num(Institution["fund"])+"银");Metric("收入 / 支出",Num(Institution["revenue"])+" / "+Num(Institution["expenses"]));Metric("完成差事",Institution["tasks_completed"].S);foreach(var n in Institution["roster"].A)if(GUILayout.Button(n["name"].S+" · "+n["rank"]["title"].S+" · 贡献"+Num(n["contribution"]),chip))SelectPerson(n["id"].I);}
+        GUILayout.BeginHorizontal();H("天下势力簿");institutionKind=Cycle(institutionKind,new[]{"政权","门派","乡里"});institutionQuery=GUILayout.TextField(institutionQuery);GUILayout.EndHorizontal();
+        if(institutionKind=="乡里"){DrawCommunityDirectory();return;}
+        GUILayout.BeginHorizontal();GUILayout.BeginVertical(GUILayout.Width(275));itemScroll=GUILayout.BeginScrollView(itemScroll);foreach(var f in W[institutionKind=="政权"?"countries":"factions"].A.Where(f=>f["name"].S.Contains(institutionQuery))){if(GUILayout.Button(f["name"].S+"\n"+(institutionKind=="政权"?f["population"].S+"人 · "+f["settlements"].S+"地区":"成员"+f["members"].S+"人 · 库银"+Num(f["fund"])),rowStyle))OpenInstitution(institutionKind=="政权",f["id"].I);}GUILayout.EndScrollView();GUILayout.EndVertical();
+        GUILayout.BeginVertical(GUILayout.Width(665));mainScroll=GUILayout.BeginScrollView(mainScroll);if(Institution.Has){H(Institution["name"].S);T(Institution["ethos"].S);if(Institution["government"].Has){var g=Institution["government"];Metric("国库",Num(g["fund"])+"银");Metric("现行施政",g["policy"].S);Metric("税率",(g["tax_rate"].N*100).ToString("0.#")+"%");Metric("治安 / 公医",Num(g["security"])+" / "+Num(g["sanitation"]));DrawNationalRanks(Institution["rank_system"]);Details("国库收支与民政",g);Details("边境往来",Institution["border_activity"]);Details("外交关系",Institution["relations"]);foreach(var p in Institution["places"].A)if(Btn("城镇 · "+p["name"].S)){SelectedPlace=p["id"].I;Go(0);}}
+            else{Metric("传承",Institution["tradition"].S+" · "+Institution["art"].S);Metric("驻地",Institution["place_name"].S+" · "+Institution["seat_name"].S+" · 独立9格");T(Institution["basis"].S,small);
+                if(Institution["leader_name"].Has)Metric("现任主持",Institution["leader_name"].S);
+                DrawSectRanks(Institution["rank_system"]);
+                var membership=Institution["player_membership"];if(membership.Has)T("主角身份 · "+membership["name"].S+" "+membership["grade_label"].S+" "+membership["title"].S+" · 贡献"+Num(membership["contribution"]),sub);
+                foreach(var option in Institution["player_options"].A){if(Btn(option["label"].S+" / "+option["points"].S+"行动力",Paused&&option["enabled"].B))HeroAction(option["action"].S,"faction",Institution["id"]);if(!option["enabled"].B)T(option["reason"].S,small);}
+                if(Btn("查看门派驻地 ›")){SelectedPlace=Institution["place"].I;Go(1);}
+                Metric("库银",Num(Institution["fund"])+"银");Metric("收入 / 支出",Num(Institution["revenue"])+" / "+Num(Institution["expenses"]));Metric("完成差事",Institution["tasks_completed"].S);foreach(var n in Institution["roster"].A)if(GUILayout.Button(n["name"].S+" · "+n["rank"]["grade_label"].S+" "+n["rank"]["title"].S+" · 贡献"+Num(n["contribution"]),chip))SelectPerson(n["id"].I);}
             DrawEventList(Institution["events"]);
         }else T("择一方势力，查看其成员、民政与收支。");GUILayout.EndScrollView();GUILayout.EndVertical();GUILayout.EndHorizontal();
     }
@@ -100,14 +101,25 @@ public partial class JianghuApp {
         eventScroll=GUILayout.BeginScrollView(eventScroll);if(EventDetail.Has){H(EventDetail["summary"].S);T(EventDetail["date"].S,small);foreach(var id in EventDetail["people"].A){var n=W["npcs"].A.FirstOrDefault(x=>x["id"].I==id.I);if(n!=null&&Btn(n["name"].S))SelectPerson(id.I);}Details("共同事实",EventDetail["facts"],true);foreach(var e in EventDetail["cause_events"].A)if(Btn("前因 · "+e["summary"].S))OpenEvent(e["id"].I);Details("各人理解",EventDetail["perspectives"],true);}else{DrawEventList(Events);if(Events.A.Count>0&&Btn("更早记录"))Client.Fetch("/api/events?before="+Events.A.Last()["id"].S,j=>Events=new J(Events.A.Concat(j.A).ToList()));}GUILayout.EndScrollView();
     }
     void DrawAI(){
-        H("共享一盏心灯");mainScroll=GUILayout.BeginScrollView(mainScroll);var config=W["ai"]["config"];T("人物共享一个本地模型。关闭模型后，完整规则世界继续运行。",small);
-        if(!aiEditing){aiEnabled=config["enabled"].B;aiOllama=config["backend"].S=="ollama";aiUrl=config["url"].S;aiModel=config["model"].S;aiBudget=config["reviews_per_month"].S;aiCooldown=config["cooldown_months"].S;aiEditing=true;}
+        H("共享一盏心灯");mainScroll=GUILayout.BeginScrollView(mainScroll);var config=W["ai"]["config"];T("游玩期间，人物持续在后台轮换思考，没有每月人数上限。这个月停留越久，能完成的思考就越多。",small);
+        if(!aiEditing){aiEnabled=config["enabled"].B;aiOllama=config["backend"].S=="ollama";aiUrl=config["url"].S;aiModel=config["model"].S;aiQueue=config["queue_limit"].S;aiCooldown=config["cooldown_months"].S;aiAutoStart=config["auto_start"].B;aiEditing=true;}
         aiEnabled=GUILayout.Toggle(aiEnabled,"启用真实 AI 决策");bool prior=aiOllama;aiOllama=GUILayout.Toggle(aiOllama,"使用 Ollama（不勾选则使用 llama.cpp）");if(prior!=aiOllama)aiUrl=aiOllama?"http://127.0.0.1:11434":"http://127.0.0.1:11435";
-        T("本机模型地址",sub);aiUrl=GUILayout.TextField(aiUrl);T("模型名称",sub);aiModel=GUILayout.TextField(aiModel);T("每月反思人数 / 冷却月数",sub);GUILayout.BeginHorizontal();aiBudget=GUILayout.TextField(aiBudget);aiCooldown=GUILayout.TextField(aiCooldown);GUILayout.EndHorizontal();
-        if(Btn("保存模型设置")&&int.TryParse(aiBudget,out int budget)&&int.TryParse(aiCooldown,out int cooldown))Client.Act("/api/ai/config",J.O("enabled",aiEnabled,"backend",aiOllama?"ollama":"llamacpp","url",aiUrl,"model",aiModel,"reviews_per_month",budget,"cooldown_months",cooldown));
-        fastMode=GUILayout.Toggle(fastMode,"世界推演使用规则快进（跳过模型调用）");
-        T("先启动原项目的「启动本地模型.bat」。新 Unity 会话默认关闭 AI；需在此手动启用。",small);
-        Metric("真实调用",W["ai"]["calls"].S);Metric("成功 / 失败",W["ai"]["successes"].S+" / "+W["ai"]["failed"].S);Metric("已覆盖人物",W["ai"]["coverage"].S+" / "+W["ai"]["eligible"].S);Metric("排队 / 推理中",W["ai"]["queued"].S+" / "+W["ai"]["pending"].S);
+        T("本机模型地址",sub);aiUrl=GUILayout.TextField(aiUrl);T("模型名称",sub);aiModel=GUILayout.TextField(aiModel);T("后台待办数量 / 同一人物重复思考间隔（月）",sub);GUILayout.BeginHorizontal();aiQueue=GUILayout.TextField(aiQueue);aiCooldown=GUILayout.TextField(aiCooldown);GUILayout.EndHorizontal();
+        aiAutoStart=GUILayout.Toggle(aiAutoStart,"需要时自动启动已安装的本机模型");
+        if(Btn("保存模型设置")&&int.TryParse(aiQueue,out int slots)&&int.TryParse(aiCooldown,out int cooldown))Client.Act("/api/ai/config",J.O("enabled",aiEnabled,"backend",aiOllama?"ollama":"llamacpp","url",aiUrl,"model",aiModel,"queue_limit",slots,"cooldown_months",cooldown,"auto_start",aiAutoStart));
+        fastMode=GUILayout.Toggle(fastMode,"世界推演使用规则快进（跳过新推理，保留已有方针）");
+        T("过月不等待模型。已完成的计划和方针继续生效，尚未开始的旧排程会按当前处境更新。小队列用于控制本机负载，不限制本月思考人数。",small);
+        Metric("模型请求",W["ai"]["calls"].S);Metric("完成思考 / 失败思考",W["ai"]["successes"].S+" / "+W["ai"]["failed"].S);Metric("已覆盖人物",W["ai"]["coverage"].S+" / "+W["ai"]["eligible"].S);Metric("排队 / 推理中",W["ai"]["queued"].S+" / "+W["ai"]["pending"].S);
+        Metric("本月已思考",W["ai"]["month_completed"].S+"人 · 无人数上限");
+        Metric("本次后台完成",W["ai"]["session_applied"].S+"次");
+        Metric("完成深入思考",W["ai"]["deep_completed"].S+"次");
+        Metric("近期玩家往来 / 高位人物",W["ai"]["recent_player_contacts"].S+" / "+W["ai"]["high_status_attention"].S+"人");
+        if(W["ai"]["busy"].B)T("正在思考 · "+W["ai"]["current_name"].S+" · "+W["ai"]["current_depth"].S+" · "+W["ai"]["current_stage"].S,small);
+        Metric("有效生活方针",W["ai"]["policy_active"].S+"人");
+        Metric("模型计划实际执行",W["ai"]["plan_executions"].S+"步");
+        Metric("模型方针参与行动",W["ai"]["policy_actions"].S+"次");
+        Metric("方针改变候选排序",W["ai"]["policy_ranking_changes"].S+"次");
+        if(W["ai"]["last_error"].S.Length>0)T("最近模型状态："+W["ai"]["last_error"].S,small);
         if(Btn("刷新推理账本"))Client.Fetch("/api/ai/logs",j=>Logs=j);foreach(var log in Logs.A)Details("推理记录 "+log["npc_id"].S+" / "+log["month"].S,log);
         GUILayout.EndScrollView();
     }
@@ -118,7 +130,7 @@ public partial class JianghuApp {
         if(Btn("选择存档文件")){string path=UnityEditor.EditorUtility.OpenFilePanel("选择江湖存档","","sqlite");if(path.Length>0)importPath=path;}
         #endif
         if(Btn("复制并载入存档",Paused&&File.Exists(importPath)))Client.Act("/api/unity/import",J.O("path",importPath),j=>{Person=new J();Institution=new J();EventDetail=new J();SelectedPerson=-1;});
-        GUILayout.Space(18);H("另起一方江湖");T("初始人口（30–1000）",sub);newPopulation=GUILayout.TextField(newPopulation);T("固定种子",sub);newSeed=GUILayout.TextField(newSeed);T("历史预演年数（0–50）",sub);newYears=GUILayout.TextField(newYears);
+        GUILayout.Space(18);H("另起一方江湖");T("初始人口（30–3000，默认1800）",sub);newPopulation=GUILayout.TextField(newPopulation);T("固定种子",sub);newSeed=GUILayout.TextField(newSeed);T("历史预演年数（0–50）",sub);newYears=GUILayout.TextField(newYears);
         if(Btn("建立新世界，保留旧档",Paused)&&int.TryParse(newPopulation,out int population)&&int.TryParse(newSeed,out int seed)&&int.TryParse(newYears,out int years))Client.Act("/api/new",J.O("population",population,"seed",seed,"prehistory",years),j=>{Person=new J();SelectedPerson=-1;Institution=new J();City=new J();creatingHero=false;});
         GUILayout.Space(12);T("Unity 客户端负责原生界面、地图与皮影动画；随游戏启动的本机模拟引擎负责社会、战斗、存档与本地 AI。关闭 Unity 时会保存并退出本次模拟进程。",small);GUILayout.EndScrollView();
     }

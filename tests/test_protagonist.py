@@ -91,13 +91,14 @@ class ProtagonistTests(unittest.TestCase):
         target = next(n for n in city['nodes'] if n['id'] == 'market')
         path, cost = city_maps.path_between(city['rows'], (h['row'],h['col']), (target['row'],target['col']))
         result = self.act(w, 'walk', place=h['place'], row=target['row'], col=target['col'])
-        self.assertEqual((w.month, result['node'], result['points']), (0, 'market', 30-cost))
+        self.assertEqual((w.month, result['node'], result['points']), (0, target['settlement_id'], 30-cost))
         self.assertEqual(result['journal'][0]['facts']['path'], [list(p) for p in path])
         self.assertTrue(all(city['rows'][r][c] not in '~^#' for r,c in path))
         self.rejected(w, 'travel', place=h['connections'][0]['place'])
         self.act(w, 'end_turn')
         self.act(w, 'walk', place=h['place'], row=h['row'], col=h['col'])
         self.assertEqual(protagonist.view(w)['node'], 'gate')
+        self.act(w, 'end_turn')
         self.act(w, 'travel', place=h['connections'][0]['place'])
 
     def test_walk_rejects_barriers_remote_maps_bounds_and_fractional_coordinates(self):
@@ -182,9 +183,52 @@ class ProtagonistTests(unittest.TestCase):
                 restored.store.close()
 
 
+class WalkingPersistenceTests(unittest.TestCase):
+    def test_walk_survives_restart_without_rewriting_world_checkpoint(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp)/'walking.sqlite'
+            w = World(population=0, store=Store(path))
+            try:
+                h = protagonist.perform(w, dict(action='create', name='行路试客', month=w.month,
+                                                revision=w.player['protagonist']['revision']))
+                city = city_maps._world_layout(w, h['place'])
+                target = next((r,c) for r,c in ((h['row']-1,h['col']), (h['row']+1,h['col']),
+                                               (h['row'],h['col']-1), (h['row'],h['col']+1))
+                              if 0<=r<city['size'] and 0<=c<city['size'] and city['rows'][r][c] not in '~^#')
+                checkpoint = w.store.db.execute('SELECT data FROM checkpoint WHERE id=1').fetchone()[0]
+                before = protagonist.perform(w, dict(action='walk', month=w.month, revision=h['revision'],
+                                                     place=h['place'], row=target[0], col=target[1]))
+                self.assertEqual(w.store.db.execute('SELECT data FROM checkpoint WHERE id=1').fetchone()[0], checkpoint)
+                restored = World(store=Store(path))
+                try:
+                    self.assertEqual(protagonist.view(restored), before)
+                    self.assertEqual(restored.store.event(before['journal'][0]['id']), before['journal'][0])
+                finally:
+                    restored.store.close()
+            finally:
+                w.store.close()
+
+    def test_full_checkpoint_supersedes_player_save_and_ignores_stale_versions(self):
+        store = Store()
+        try:
+            state = dict(month=2, player=dict(protagonist=dict(revision=5, row=3)))
+            store.save(state)
+            player = dict(protagonist=dict(revision=6, row=4))
+            store.save_player(player, 2)
+            self.assertEqual(store.load()['player'], player)
+            store.save(dict(month=3, player=dict(protagonist=dict(revision=7, row=5))))
+            self.assertIsNone(store.db.execute('SELECT data FROM player_checkpoint').fetchone())
+            store.save_player(player, 2)
+            self.assertEqual(store.load()['player']['protagonist']['row'], 5)
+            store.save_player(player, 3)
+            self.assertEqual(store.load()['player']['protagonist']['row'], 5)
+        finally:
+            store.close()
+
+
 class ProtagonistHTTPTests(unittest.TestCase):
-    def test_browser_api_create_walk_turn_static_files_and_busy_guards(self):
-        game = Game(':memory:',population=0,prehistory=0)
+    def test_unity_api_create_walk_turn_and_busy_guards_without_web_pages(self):
+        game = Game(':memory:',population=0,prehistory=0,model_config={'enabled':False})
         game.closed=True
         game.thread.join(timeout=2)
         server = ThreadingHTTPServer(('127.0.0.1',0),handler_for(game))
@@ -204,8 +248,9 @@ class ProtagonistHTTPTests(unittest.TestCase):
 
         try:
             for path in ('/','/hero.js','/hero.css','/city.js'):
-                with urllib.request.urlopen(base+path) as response:
-                    self.assertEqual(response.status,200)
+                with self.assertRaises(urllib.error.HTTPError) as error:
+                    urllib.request.urlopen(base+path)
+                self.assertEqual(error.exception.code,404)
             self.assertFalse(request('/api/state')['hero']['created'])
             h=act('create',name='测试行者')
             h=act('travel',place=h['connections'][0]['place'])

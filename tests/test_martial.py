@@ -1,3 +1,4 @@
+from tests.physical_helpers import frame
 from copy import deepcopy
 from http.server import ThreadingHTTPServer
 import json
@@ -9,7 +10,7 @@ import unittest
 import urllib.error
 import urllib.request
 
-from jianghu import combat, martial
+from jianghu import physical_combat as combat, martial
 from jianghu.engine import World
 from jianghu.server import Game, handler_for
 from jianghu.store import Store
@@ -118,7 +119,7 @@ class MartialTests(unittest.TestCase):
         a = self.world()
         target = self.adult(a)
         a.start_battle(target['id'])
-        a.battle_action(a.battle['id'], 1, 'guard')
+        a.battle_action(a.battle['id'], 1, 'checkpoint', frame(a.battle, .2))
         a.checkpoint()
         copied = Store()
         a.store.db.backup(copied.db)
@@ -126,7 +127,7 @@ class MartialTests(unittest.TestCase):
         b = World(store=copied, durable=False)
         before = deepcopy(b.export())
         with self.assertRaises(ValueError):
-            b.battle_action(b.battle['id'], 1, 'guard')
+            b.battle_action(b.battle['id'], 0, 'checkpoint', frame(b.battle, .2))
         with self.assertRaises(ValueError):
             b.month_step()
         with self.assertRaises(ValueError):
@@ -148,7 +149,7 @@ class MartialTests(unittest.TestCase):
         self.assertEqual(w.player['skill'], skill)
         before = deepcopy(w.export())
         with self.assertRaises(ValueError):
-            w.battle_action(w.battle['id'], 1, 'surrender')
+            w.battle_action(w.battle['id'], 0, 'surrender')
         self.assertEqual(w.export(), before)
         self.assertGreater(w.player['health'], 0)
         self.assertTrue(target['alive'])
@@ -161,7 +162,7 @@ class MartialTests(unittest.TestCase):
             w.start_battle(target['id'])
             expected = deepcopy(w.battle)
             w.store.close()
-            game = Game(path, prehistory=18)
+            game = Game(path, prehistory=18,model_config={'enabled':False})
             try:
                 self.assertEqual(game.job['remaining'], 0)
                 self.assertEqual(game.world.battle, expected)
@@ -190,64 +191,10 @@ class MartialTests(unittest.TestCase):
         self.assertTrue(any('external' in n['wound'] for n in (a,b) if n['wound']))
 
 
-class CombatTests(unittest.TestCase):
-    def battle(self, seed=10):
-        return combat.start(actor(), actor('乙', 2), seed, ruleset=2)
-
-    def test_out_of_range_or_unknown_attack_spends_nothing(self):
-        b = self.battle()
-        for action in ('bridge_fist', 'destroy_world'):
-            before = deepcopy(b)
-            with self.assertRaises(ValueError):
-                combat.step(b, action)
-            self.assertEqual(b, before)
-
-    def test_guard_reduces_damage_at_identical_seed(self):
-        plain, guarded = self.battle(), self.battle()
-        plain['distance'] = guarded['distance'] = 1
-        guarded['fighters'][1]['guarding'] = True
-        combat.perform(plain, 'bridge_fist', 0)
-        combat.perform(guarded, 'bridge_fist', 0)
-        self.assertTrue(plain['log'][-1]['hit'])
-        self.assertLess(guarded['log'][-1]['damage'], plain['log'][-1]['damage'])
-        self.assertAlmostEqual(guarded['log'][-1]['damage']/plain['log'][-1]['damage'], .45, places=2)
-
-    def test_internal_attack_uses_inner_guard_forms_qi_and_cooldown(self):
-        b = self.battle()
-        b['distance'] = 2
-        f = b['fighters'][0]
-        f['forms'] = 3
-        b['fighters'][1]['outer_guard'] = 999
-        qi = f['qi']
-        combat.perform(b, 'wave_palm', 0)
-        self.assertEqual(f['qi'], qi-12)
-        self.assertLessEqual(f['forms'], 2)
-        self.assertEqual(b['fighters'][1]['inner_wounds'], 0)
-        self.assertEqual(f['casting']['action'], 'wave_palm')
-        b['round'] += 1
-        combat.perform(b, 'continue', 0)
-        self.assertEqual(f['qi'], qi-12)
-        self.assertGreater(b['fighters'][1]['inner_wounds'], 0)
-        self.assertEqual(b['fighters'][1]['outer_wounds'], 0)
-        choice = next(a for a in combat.actions(b) if a['id'] == 'wave_palm')
-        self.assertFalse(choice['enabled'])
-
-    def test_movement_changes_legal_attacks_and_ai_always_finishes(self):
-        b = self.battle()
-        combat.step(b, 'advance')
-        self.assertEqual(b['distance'], 2)
-        self.assertTrue(next(a for a in combat.actions(b) if a['id']=='bridge_fist')['enabled'])
-        a = combat.autoplay(b)
-        self.assertEqual(a['status'], 'finished')
-        self.assertLessEqual(a['round'], 60)
-        self.assertTrue(all(f['qi'] >= 0 and f['vigor'] >= 0 and 0 <= f['forms'] <= 4 for f in a['fighters']))
-        self.assertEqual(combat.autoplay(self.battle(42)), combat.autoplay(self.battle(42)))
-
-
 class MartialHTTPTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.game = Game(':memory:', population=30, prehistory=0)
+        cls.game = Game(':memory:', population=30, prehistory=0,model_config={'enabled':False})
         cls.server = ThreadingHTTPServer(('127.0.0.1', 0), handler_for(cls.game))
         cls.thread = threading.Thread(target=cls.server.serve_forever, daemon=True)
         cls.thread.start()
@@ -281,14 +228,13 @@ class MartialHTTPTests(unittest.TestCase):
             with self.assertRaises(urllib.error.HTTPError) as err:
                 self.request(path, payload)
             self.assertEqual(err.exception.code, 400)
-        result = self.request('/api/battle', {'battle_id':b['id'], 'round':b['round'], 'action':'surrender'})
+        result = self.request('/api/battle', {'battle_id':b['id'], 'revision':b['revision'], 'action':'surrender'})
         self.assertEqual(result['battle']['status'], 'finished')
         self.assertFalse(self.request('/api/state')['battle_active'])
         self.assertEqual(self.request('/api/martial')['battle']['id'], b['id'])
 
-    def test_combat_scripts_and_styles_are_served_with_correct_types(self):
-        for path, mime, marker in [('/combat.js', 'text/javascript', b'combatAutoBeat'),
-                                   ('/combat.css', 'text/css', b'combat-stage')]:
-            with self.subTest(path=path), urllib.request.urlopen(self.base+path) as response:
-                self.assertEqual(response.headers.get_content_type(), mime)
-                self.assertIn(marker, response.read())
+    def test_web_combat_scripts_and_styles_are_unavailable(self):
+        for path in ('/combat.js','/combat.css'):
+            with self.subTest(path=path), self.assertRaises(urllib.error.HTTPError) as error:
+                urllib.request.urlopen(self.base+path)
+            self.assertEqual(error.exception.code,404)

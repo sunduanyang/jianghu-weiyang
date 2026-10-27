@@ -1,0 +1,1534 @@
+{
+  "version": 1,
+  "source_basis": "right-side exploded panels",
+  "characters": {
+    "m-youth-farmer": {
+      "parts": {
+        "head-neck": {
+          "pivot": [
+            132.48,
+            168.3
+          ],
+          "target_height_fraction": 0.22,
+          "rest_angle": 0,
+          "breadth": 1,
+          "erase_polygons": [
+            [
+              [
+                90,
+                147
+              ],
+              [
+                137,
+                174
+              ],
+              [
+                153,
+                187
+              ],
+              [
+                88,
+                187
+              ]
+            ]
+          ]
+        },
+        "torso": {
+          "pivot": [
+            115.7,
+            134.64
+          ],
+          "tip": [
+            99.68,
+            11.22
+          ],
+          "breadth": 0.95,
+          "erase_polygons": [
+            [
+              [
+                0,
+                50.49
+              ],
+              [
+                49.84,
+                41.14
+              ],
+              [
+                78.32,
+                93.5
+              ],
+              [
+                60.52,
+                142.12
+              ],
+              [
+                0,
+                153.34
+              ]
+            ]
+          ]
+        },
+        "pelvis": {
+          "pivot": [
+            103.04,
+            13.52
+          ],
+          "target_height_fraction": 0.25,
+          "rest_angle": 0,
+          "breadth": 0.45
+        },
+        "near-upper-arm": {
+          "pivot": [
+            54.6,
+            14.76
+          ],
+          "tip": [
+            37.8,
+            139.4
+          ],
+          "breadth": 1
+        },
+        "near-forearm": {
+          "pivot": [
+            52.48,
+            12.8
+          ],
+          "tip": [
+            22.96,
+            144.0
+          ],
+          "breadth": 1,
+          "clip_tip": true
+        },
+        "near-thigh": {
+          "pivot": [
+            93.6,
+            12.32
+          ],
+          "tip": [
+            55.9,
+            158.4
+          ],
+          "breadth": 0.67
+        },
+        "near-shin": {
+          "pivot": [
+            57.85,
+            12.39
+          ],
+          "tip": [
+            29.37,
+            161.07
+          ],
+          "breadth": 1
+        },
+        "near-hand": {
+          "pivot": [
+            30.16,
+            9.03
+          ],
+          "target_height_fraction": 0.1,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "near-foot": {
+          "pivot": [
+            52.2,
+            23.22
+          ],
+          "target_height_fraction": 0.085,
+          "rest_angle": 0,
+          "breadth": 0.85
+        },
+        "far-upper-arm": {
+          "pivot": [
+            59.84,
+            17.16
+          ],
+          "tip": [
+            28.16,
+            134.16
+          ],
+          "breadth": 1
+        },
+        "far-forearm": {
+          "pivot": [
+            28.5,
+            16.3
+          ],
+          "tip": [
+            49.5,
+            146.7
+          ],
+          "breadth": 1,
+          "clip_tip": true
+        },
+        "far-thigh": {
+          "pivot": [
+            45.08,
+            12.32
+          ],
+          "tip": [
+            55.86,
+            158.4
+          ],
+          "breadth": 0.67
+        },
+        "far-shin": {
+          "pivot": [
+            28.22,
+            12.53
+          ],
+          "tip": [
+            43.16,
+            162.89
+          ],
+          "breadth": 1
+        },
+        "far-hand": {
+          "pivot": [
+            22.4,
+            9.24
+          ],
+          "target_height_fraction": 0.1,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "far-foot": {
+          "pivot": [
+            54.3,
+            21.87
+          ],
+          "target_height_fraction": 0.085,
+          "rest_angle": 0,
+          "breadth": 0.85
+        }
+      },
+      "notes": "All texture inputs are the right-side exploded panels. Anchors mark anatomical sockets inside the independent part, not cut pixels from the assembled comparison. Long female skirt panels cover the underlying leg chains. Handheld prop is excluded from runtime per user request; hands remain independent skeletal attachments."
+    },
+    "f-youth-farmer": {
+      "parts": {
+        "head-neck": {
+          "pivot": [
+            93.0,
+            176.54
+          ],
+          "target_height_fraction": 0.23,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "torso": {
+          "pivot": [
+            115.92,
+            107.25
+          ],
+          "tip": [
+            105.84,
+            11.7
+          ],
+          "breadth": 0.87,
+          "erase_polygons": [
+            [
+              [
+                0,
+                35.1
+              ],
+              [
+                67.2,
+                54.6
+              ],
+              [
+                72.24,
+                117.0
+              ],
+              [
+                30.24,
+                161.85
+              ],
+              [
+                0,
+                163.8
+              ]
+            ]
+          ]
+        },
+        "pelvis": {
+          "pivot": [
+            98.5,
+            15.44
+          ],
+          "target_height_fraction": 0.66,
+          "rest_angle": 0,
+          "breadth": 0.358
+        },
+        "near-upper-arm": {
+          "pivot": [
+            19,
+            13.76
+          ],
+          "tip": [
+            55.18,
+            144.48
+          ],
+          "breadth": 0.93
+        },
+        "near-forearm": {
+          "pivot": [
+            43.46,
+            12.64
+          ],
+          "tip": [
+            45.92,
+            134.3
+          ],
+          "breadth": 0.85,
+          "clip_tip": true
+        },
+        "near-thigh": {
+          "pivot": [
+            96.94,
+            8.95
+          ],
+          "tip": [
+            69.43,
+            161.1
+          ],
+          "breadth": 1
+        },
+        "near-shin": {
+          "pivot": [
+            59.0,
+            10.44
+          ],
+          "tip": [
+            51.0,
+            158.34
+          ],
+          "breadth": 1
+        },
+        "near-hand": {
+          "pivot": [
+            26.88,
+            8.47
+          ],
+          "target_height_fraction": 0.1,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "near-foot": {
+          "pivot": [
+            37.68,
+            20.25
+          ],
+          "target_height_fraction": 0.085,
+          "rest_angle": 0,
+          "breadth": 0.85
+        },
+        "far-upper-arm": {
+          "pivot": [
+            66.24,
+            11.2
+          ],
+          "tip": [
+            35.52,
+            139.2
+          ],
+          "breadth": 0.85,
+          "hidden": true
+        },
+        "far-forearm": {
+          "pivot": [
+            29.97,
+            12.8
+          ],
+          "tip": [
+            40.5,
+            136.0
+          ],
+          "breadth": 0.85,
+          "clip_tip": true,
+          "hidden": true
+        },
+        "far-thigh": {
+          "pivot": [
+            33.06,
+            8.95
+          ],
+          "tip": [
+            62.7,
+            162.89
+          ],
+          "breadth": 1
+        },
+        "far-shin": {
+          "pivot": [
+            35.7,
+            10.86
+          ],
+          "tip": [
+            52.5,
+            164.71
+          ],
+          "breadth": 1
+        },
+        "far-hand": {
+          "pivot": [
+            19.89,
+            8.61
+          ],
+          "target_height_fraction": 0.1,
+          "rest_angle": 0,
+          "breadth": 1,
+          "hidden": true
+        },
+        "far-foot": {
+          "pivot": [
+            36.72,
+            19.25
+          ],
+          "target_height_fraction": 0.085,
+          "rest_angle": 0,
+          "breadth": 0.85
+        }
+      },
+      "notes": "All texture inputs are the right-side exploded panels. Anchors mark anatomical sockets inside the independent part, not cut pixels from the assembled comparison. Long female skirt panels cover the underlying leg chains."
+    },
+    "m-middle-farmer": {
+      "parts": {
+        "head-neck": {
+          "pivot": [
+            95.12,
+            164.65
+          ],
+          "target_height_fraction": 0.22,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "torso": {
+          "pivot": [
+            94.08,
+            123.95
+          ],
+          "tip": [
+            80.85,
+            11.1
+          ],
+          "breadth": 0.95
+        },
+        "pelvis": {
+          "pivot": [
+            86.48,
+            12.56
+          ],
+          "target_height_fraction": 0.23,
+          "rest_angle": 0,
+          "breadth": 0.59
+        },
+        "near-upper-arm": {
+          "pivot": [
+            48.76,
+            13.2
+          ],
+          "tip": [
+            34.96,
+            138.6
+          ],
+          "breadth": 1
+        },
+        "near-forearm": {
+          "pivot": [
+            44.25,
+            19.25
+          ],
+          "tip": [
+            37.5,
+            157.5
+          ],
+          "breadth": 1,
+          "clip_tip": true
+        },
+        "near-thigh": {
+          "pivot": [
+            87.5,
+            13.02
+          ],
+          "tip": [
+            51.25,
+            167.4
+          ],
+          "breadth": 0.67
+        },
+        "near-shin": {
+          "pivot": [
+            56.95,
+            12.32
+          ],
+          "tip": [
+            32.3,
+            158.4
+          ],
+          "breadth": 1
+        },
+        "near-hand": {
+          "pivot": [
+            28.2,
+            9.94
+          ],
+          "target_height_fraction": 0.1,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "near-foot": {
+          "pivot": [
+            51.9,
+            23.66
+          ],
+          "target_height_fraction": 0.085,
+          "rest_angle": 0,
+          "breadth": 0.85
+        },
+        "far-upper-arm": {
+          "pivot": [
+            50.46,
+            13.6
+          ],
+          "tip": [
+            35.67,
+            144.5
+          ],
+          "breadth": 1,
+          "hidden": true
+        },
+        "far-forearm": {
+          "pivot": [
+            32.0,
+            21.12
+          ],
+          "tip": [
+            33.92,
+            158.4
+          ],
+          "breadth": 1,
+          "clip_tip": true,
+          "hidden": true
+        },
+        "far-thigh": {
+          "pivot": [
+            43.6,
+            11.1
+          ],
+          "tip": [
+            55.59,
+            168.35
+          ],
+          "breadth": 0.67
+        },
+        "far-shin": {
+          "pivot": [
+            31.82,
+            12.11
+          ],
+          "tip": [
+            33.3,
+            155.7
+          ],
+          "breadth": 1
+        },
+        "far-hand": {
+          "pivot": [
+            22.94,
+            9.52
+          ],
+          "target_height_fraction": 0.1,
+          "rest_angle": 0,
+          "breadth": 1,
+          "hidden": true
+        },
+        "far-foot": {
+          "pivot": [
+            52.2,
+            22.1
+          ],
+          "target_height_fraction": 0.085,
+          "rest_angle": 0,
+          "breadth": 0.85
+        }
+      },
+      "notes": "All texture inputs are the right-side exploded panels. Anchors mark anatomical sockets inside the independent part, not cut pixels from the assembled comparison. Long female skirt panels cover the underlying leg chains."
+    },
+    "f-middle-farmer": {
+      "parts": {
+        "head-neck": {
+          "pivot": [
+            106.2,
+            185.64
+          ],
+          "target_height_fraction": 0.22,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "torso": {
+          "pivot": [
+            98.49,
+            167.48
+          ],
+          "tip": [
+            80.85,
+            14.84
+          ],
+          "breadth": 0.87,
+          "erase_polygons": [
+            [
+              [
+                0,
+                27.56
+              ],
+              [
+                36.75,
+                29.68
+              ],
+              [
+                67.62,
+                110.24
+              ],
+              [
+                47.04,
+                156.88
+              ],
+              [
+                0,
+                156.88
+              ]
+            ]
+          ]
+        },
+        "pelvis": {
+          "pivot": [
+            79.12,
+            15.68
+          ],
+          "target_height_fraction": 0.6,
+          "rest_angle": 0,
+          "breadth": 0.383
+        },
+        "near-upper-arm": {
+          "pivot": [
+            37.2,
+            15.93
+          ],
+          "tip": [
+            49.29,
+            145.14
+          ],
+          "breadth": 1
+        },
+        "near-forearm": {
+          "pivot": [
+            51.3,
+            20.64
+          ],
+          "tip": [
+            28.8,
+            151.36
+          ],
+          "breadth": 1,
+          "clip_tip": true
+        },
+        "near-thigh": {
+          "pivot": [
+            75.4,
+            8.35
+          ],
+          "tip": [
+            59.16,
+            151.97
+          ],
+          "breadth": 1
+        },
+        "near-shin": {
+          "pivot": [
+            73.78,
+            10.2
+          ],
+          "tip": [
+            59.5,
+            154.7
+          ],
+          "breadth": 1
+        },
+        "near-hand": {
+          "pivot": [
+            30.74,
+            11.27
+          ],
+          "target_height_fraction": 0.1,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "near-foot": {
+          "pivot": [
+            46.17,
+            25.48
+          ],
+          "target_height_fraction": 0.085,
+          "rest_angle": 0,
+          "breadth": 0.85
+        },
+        "far-upper-arm": {
+          "pivot": [
+            55.55,
+            17.82
+          ],
+          "tip": [
+            45.45,
+            136.08
+          ],
+          "breadth": 1,
+          "hidden": true
+        },
+        "far-forearm": {
+          "pivot": [
+            38.7,
+            20.76
+          ],
+          "tip": [
+            58.5,
+            152.24
+          ],
+          "breadth": 1,
+          "clip_tip": true,
+          "hidden": true
+        },
+        "far-thigh": {
+          "pivot": [
+            28.08,
+            8.35
+          ],
+          "tip": [
+            54.0,
+            151.97
+          ],
+          "breadth": 1
+        },
+        "far-shin": {
+          "pivot": [
+            36.89,
+            10.8
+          ],
+          "tip": [
+            58.31,
+            163.8
+          ],
+          "breadth": 1
+        },
+        "far-hand": {
+          "pivot": [
+            19.76,
+            10.85
+          ],
+          "target_height_fraction": 0.1,
+          "rest_angle": 0,
+          "breadth": 1,
+          "hidden": true
+        },
+        "far-foot": {
+          "pivot": [
+            42.66,
+            25.22
+          ],
+          "target_height_fraction": 0.085,
+          "rest_angle": 0,
+          "breadth": 0.85
+        }
+      },
+      "notes": "All texture inputs are the right-side exploded panels. Anchors mark anatomical sockets inside the independent part, not cut pixels from the assembled comparison. Long female skirt panels cover the underlying leg chains."
+    },
+    "m-elder": {
+      "parts": {
+        "head-neck": {
+          "pivot": [
+            57.96,
+            154.38
+          ],
+          "target_height_fraction": 0.21,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "torso": {
+          "pivot": [
+            104.3,
+            121.6
+          ],
+          "tip": [
+            92.38,
+            15.2
+          ],
+          "breadth": 0.95,
+          "erase_polygons": [
+            [
+              [
+                0,
+                24.7
+              ],
+              [
+                41.72,
+                19.0
+              ],
+              [
+                64.07,
+                60.8
+              ],
+              [
+                53.64,
+                153.9
+              ],
+              [
+                0,
+                172.9
+              ]
+            ]
+          ]
+        },
+        "pelvis": {
+          "pivot": [
+            80.5,
+            14.56
+          ],
+          "target_height_fraction": 0.52,
+          "rest_angle": 0,
+          "breadth": 0.471
+        },
+        "near-upper-arm": {
+          "pivot": [
+            55.76,
+            16.29
+          ],
+          "tip": [
+            39.36,
+            152.04
+          ],
+          "breadth": 1
+        },
+        "near-forearm": {
+          "pivot": [
+            57.72,
+            20.8
+          ],
+          "tip": [
+            73.26,
+            121.6
+          ],
+          "breadth": 1,
+          "clip_tip": true
+        },
+        "near-thigh": {
+          "pivot": [
+            75.48,
+            10.38
+          ],
+          "tip": [
+            48.84,
+            155.7
+          ],
+          "breadth": 1
+        },
+        "near-shin": {
+          "pivot": [
+            63.92,
+            10.62
+          ],
+          "tip": [
+            40.42,
+            159.3
+          ],
+          "breadth": 1
+        },
+        "near-hand": {
+          "pivot": [
+            18.0,
+            11.6
+          ],
+          "target_height_fraction": 0.1,
+          "rest_angle": 0,
+          "breadth": 1,
+          "source_component": "far-hand"
+        },
+        "near-foot": {
+          "pivot": [
+            40.04,
+            22.68
+          ],
+          "target_height_fraction": 0.085,
+          "rest_angle": 0,
+          "breadth": 0.85
+        },
+        "far-upper-arm": {
+          "pivot": [
+            75.6,
+            17.82
+          ],
+          "tip": [
+            34.56,
+            139.32
+          ],
+          "breadth": 1,
+          "hidden": true
+        },
+        "far-forearm": {
+          "pivot": [
+            37.8,
+            15.9
+          ],
+          "tip": [
+            41.16,
+            136.74
+          ],
+          "breadth": 1,
+          "clip_tip": true,
+          "hidden": true
+        },
+        "far-thigh": {
+          "pivot": [
+            35.7,
+            10.62
+          ],
+          "tip": [
+            51.0,
+            159.3
+          ],
+          "breadth": 1
+        },
+        "far-shin": {
+          "pivot": [
+            57.6,
+            11.1
+          ],
+          "tip": [
+            35.1,
+            170.2
+          ],
+          "breadth": 1
+        },
+        "far-hand": {
+          "pivot": [
+            18.0,
+            11.6
+          ],
+          "target_height_fraction": 0.1,
+          "rest_angle": 0,
+          "breadth": 1,
+          "hidden": true
+        },
+        "far-foot": {
+          "pivot": [
+            39.78,
+            22.14
+          ],
+          "target_height_fraction": 0.085,
+          "rest_angle": 0,
+          "breadth": 0.85
+        }
+      },
+      "notes": "All texture inputs are the right-side exploded panels. Anchors mark anatomical sockets inside the independent part, not cut pixels from the assembled comparison. Long female skirt panels cover the underlying leg chains. Handheld prop is excluded from runtime per user request; hands remain independent skeletal attachments."
+    },
+    "f-elder": {
+      "parts": {
+        "head-neck": {
+          "pivot": [
+            81.6,
+            159.1
+          ],
+          "target_height_fraction": 0.24,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "torso": {
+          "pivot": [
+            107.73,
+            99.32
+          ],
+          "tip": [
+            104.31,
+            15.28
+          ],
+          "breadth": 0.87,
+          "erase_polygons": [
+            [
+              [
+                0,
+                30.56
+              ],
+              [
+                47.88,
+                15.28
+              ],
+              [
+                85.5,
+                42.02
+              ],
+              [
+                73.53,
+                179.54
+              ],
+              [
+                17.1,
+                191
+              ],
+              [
+                0,
+                173.81
+              ]
+            ]
+          ]
+        },
+        "pelvis": {
+          "pivot": [
+            82.34,
+            14.64
+          ],
+          "target_height_fraction": 0.62,
+          "rest_angle": 0,
+          "breadth": 0.397
+        },
+        "near-upper-arm": {
+          "pivot": [
+            66.3,
+            14.96
+          ],
+          "tip": [
+            45.9,
+            158.95
+          ],
+          "breadth": 0.85
+        },
+        "near-forearm": {
+          "pivot": [
+            81.42,
+            13.52
+          ],
+          "tip": [
+            57.82,
+            143.65
+          ],
+          "breadth": 0.85,
+          "clip_tip": true
+        },
+        "near-thigh": {
+          "pivot": [
+            85.8,
+            10.8
+          ],
+          "tip": [
+            68.9,
+            158.4
+          ],
+          "breadth": 1
+        },
+        "near-shin": {
+          "pivot": [
+            55.46,
+            10.32
+          ],
+          "tip": [
+            47.94,
+            153.08
+          ],
+          "breadth": 1
+        },
+        "near-hand": {
+          "pivot": [
+            16.5,
+            12.64
+          ],
+          "target_height_fraction": 0.1,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "near-foot": {
+          "pivot": [
+            46.44,
+            21.84
+          ],
+          "target_height_fraction": 0.085,
+          "rest_angle": 0,
+          "breadth": 0.85
+        },
+        "far-upper-arm": {
+          "pivot": [
+            57.42,
+            13.6
+          ],
+          "tip": [
+            41.58,
+            146.2
+          ],
+          "breadth": 0.85
+        },
+        "far-forearm": {
+          "pivot": [
+            40.18,
+            20.16
+          ],
+          "tip": [
+            60.76,
+            142.8
+          ],
+          "breadth": 0.85,
+          "clip_tip": true
+        },
+        "far-thigh": {
+          "pivot": [
+            30.51,
+            12.74
+          ],
+          "tip": [
+            68.93,
+            161.98
+          ],
+          "breadth": 1
+        },
+        "far-shin": {
+          "pivot": [
+            38.16,
+            10.5
+          ],
+          "tip": [
+            54.06,
+            155.75
+          ],
+          "breadth": 1
+        },
+        "far-hand": {
+          "pivot": [
+            15.9,
+            6.7
+          ],
+          "target_height_fraction": 0.1,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "far-foot": {
+          "pivot": [
+            47.52,
+            21.06
+          ],
+          "target_height_fraction": 0.085,
+          "rest_angle": 0,
+          "breadth": 0.85
+        }
+      },
+      "notes": "All texture inputs are the right-side exploded panels. Anchors mark anatomical sockets inside the independent part, not cut pixels from the assembled comparison. Long female skirt panels cover the underlying leg chains."
+    },
+    "m-child": {
+      "parts": {
+        "head-neck": {
+          "pivot": [
+            91.3,
+            168.35
+          ],
+          "target_height_fraction": 0.335,
+          "rest_angle": 0,
+          "breadth": 1,
+          "erase_polygons": [
+            [
+              [
+                61,
+                163
+              ],
+              [
+                110,
+                177
+              ],
+              [
+                116,
+                185
+              ],
+              [
+                56,
+                185
+              ]
+            ]
+          ]
+        },
+        "torso": {
+          "pivot": [
+            97.2,
+            122.14
+          ],
+          "tip": [
+            92.34,
+            13.79
+          ],
+          "breadth": 0.95,
+          "erase_polygons": [
+            [
+              [
+                0,
+                43.34
+              ],
+              [
+                42.12,
+                19.7
+              ],
+              [
+                71.28,
+                49.25
+              ],
+              [
+                58.32,
+                179.27
+              ],
+              [
+                0,
+                163.51
+              ]
+            ]
+          ]
+        },
+        "pelvis": {
+          "pivot": [
+            89.5,
+            12.64
+          ],
+          "target_height_fraction": 0.35,
+          "rest_angle": 0,
+          "breadth": 0.514
+        },
+        "near-upper-arm": {
+          "pivot": [
+            58.59,
+            14.4
+          ],
+          "tip": [
+            37.2,
+            123.84
+          ],
+          "breadth": 1
+        },
+        "near-forearm": {
+          "pivot": [
+            52.7,
+            15.73
+          ],
+          "tip": [
+            32.3,
+            128.7
+          ],
+          "breadth": 1,
+          "clip_tip": true
+        },
+        "near-thigh": {
+          "pivot": [
+            78.08,
+            18.15
+          ],
+          "tip": [
+            52.46,
+            140.25
+          ],
+          "breadth": 0.75
+        },
+        "near-shin": {
+          "pivot": [
+            32.5,
+            12.8
+          ],
+          "tip": [
+            28.6,
+            142.4
+          ],
+          "breadth": 1
+        },
+        "near-hand": {
+          "pivot": [
+            35.38,
+            9.87
+          ],
+          "target_height_fraction": 0.105,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "near-foot": {
+          "pivot": [
+            31.92,
+            60.42
+          ],
+          "target_height_fraction": 0.14,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "far-upper-arm": {
+          "pivot": [
+            69.3,
+            15.3
+          ],
+          "tip": [
+            33.66,
+            126.99
+          ],
+          "breadth": 1,
+          "hidden": true
+        },
+        "far-forearm": {
+          "pivot": [
+            32.8,
+            15.29
+          ],
+          "tip": [
+            45.1,
+            122.32
+          ],
+          "breadth": 1,
+          "clip_tip": true,
+          "hidden": true
+        },
+        "far-thigh": {
+          "pivot": [
+            48.16,
+            17.05
+          ],
+          "tip": [
+            70.56,
+            136.4
+          ],
+          "breadth": 0.75
+        },
+        "far-shin": {
+          "pivot": [
+            43.2,
+            12.72
+          ],
+          "tip": [
+            50.4,
+            141.51
+          ],
+          "breadth": 1
+        },
+        "far-hand": {
+          "pivot": [
+            23.79,
+            10.22
+          ],
+          "target_height_fraction": 0.105,
+          "rest_angle": 0,
+          "breadth": 1,
+          "hidden": true
+        },
+        "far-foot": {
+          "pivot": [
+            31.2,
+            62.7
+          ],
+          "target_height_fraction": 0.14,
+          "rest_angle": 0,
+          "breadth": 1
+        }
+      },
+      "notes": "All texture inputs are the right-side exploded panels. Anchors mark anatomical sockets inside the independent part, not cut pixels from the assembled comparison. Long female skirt panels cover the underlying leg chains."
+    },
+    "f-child": {
+      "parts": {
+        "head-neck": {
+          "pivot": [
+            112.22,
+            173.7
+          ],
+          "target_height_fraction": 0.33,
+          "rest_angle": 0,
+          "breadth": 1,
+          "erase_polygons": [
+            [
+              [
+                81,
+                161
+              ],
+              [
+                128,
+                178
+              ],
+              [
+                133,
+                193
+              ],
+              [
+                80,
+                193
+              ]
+            ]
+          ]
+        },
+        "torso": {
+          "pivot": [
+            93.16,
+            125.8
+          ],
+          "tip": [
+            54.8,
+            12.95
+          ],
+          "breadth": 0.87,
+          "erase_polygons": [
+            [
+              [
+                0,
+                66.6
+              ],
+              [
+                35.62,
+                74.0
+              ],
+              [
+                49.32,
+                111.0
+              ],
+              [
+                31.51,
+                168.35
+              ],
+              [
+                0,
+                172.05
+              ]
+            ]
+          ]
+        },
+        "pelvis": {
+          "pivot": [
+            108.0,
+            15.36
+          ],
+          "target_height_fraction": 0.54,
+          "rest_angle": 0,
+          "breadth": 0.436
+        },
+        "near-upper-arm": {
+          "pivot": [
+            46.08,
+            16.3
+          ],
+          "tip": [
+            48.96,
+            136.92
+          ],
+          "breadth": 0.85
+        },
+        "near-forearm": {
+          "pivot": [
+            45.0,
+            15.7
+          ],
+          "tip": [
+            49.5,
+            133.45
+          ],
+          "breadth": 0.85,
+          "clip_tip": true
+        },
+        "near-thigh": {
+          "pivot": [
+            89.01,
+            10.98
+          ],
+          "tip": [
+            58.05,
+            164.7
+          ],
+          "breadth": 1
+        },
+        "near-shin": {
+          "pivot": [
+            60.16,
+            10.62
+          ],
+          "tip": [
+            47.0,
+            159.3
+          ],
+          "breadth": 1
+        },
+        "near-hand": {
+          "pivot": [
+            30.74,
+            9.59
+          ],
+          "target_height_fraction": 0.105,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "near-foot": {
+          "pivot": [
+            39.42,
+            24.3
+          ],
+          "target_height_fraction": 0.09,
+          "rest_angle": 0,
+          "breadth": 0.85
+        },
+        "far-upper-arm": {
+          "pivot": [
+            49.92,
+            16.2
+          ],
+          "tip": [
+            55.12,
+            139.32
+          ],
+          "breadth": 0.85
+        },
+        "far-forearm": {
+          "pivot": [
+            37.2,
+            15.9
+          ],
+          "tip": [
+            47.43,
+            133.56
+          ],
+          "breadth": 0.85,
+          "clip_tip": true
+        },
+        "far-thigh": {
+          "pivot": [
+            57.2,
+            11.04
+          ],
+          "tip": [
+            77.22,
+            165.6
+          ],
+          "breadth": 1
+        },
+        "far-shin": {
+          "pivot": [
+            32.96,
+            10.38
+          ],
+          "tip": [
+            50.47,
+            155.7
+          ],
+          "breadth": 1
+        },
+        "far-hand": {
+          "pivot": [
+            20.14,
+            8.54
+          ],
+          "target_height_fraction": 0.105,
+          "rest_angle": 0,
+          "breadth": 1
+        },
+        "far-foot": {
+          "pivot": [
+            39.96,
+            24.03
+          ],
+          "target_height_fraction": 0.09,
+          "rest_angle": 0,
+          "breadth": 0.85
+        }
+      },
+      "notes": "All texture inputs are the right-side exploded panels. Anchors mark anatomical sockets inside the independent part, not cut pixels from the assembled comparison. Long female skirt panels cover the underlying leg chains."
+    }
+  }
+}

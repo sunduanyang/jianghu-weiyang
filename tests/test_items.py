@@ -293,7 +293,7 @@ class ItemTests(unittest.TestCase):
         b = state['battle']
         self.assertEqual(b['fighters'][0]['attack'], martial.stats(w.player)['attack']+2)
         self.assertAlmostEqual(b['fighters'][0]['outer_guard'], martial.stats(w.player)['outer_guard']+1)
-        w.battle_action(b['id'], b['round'], 'surrender')
+        w.battle_action(b['id'], b['revision'], 'surrender')
         self.assertLess(w.player['health'], 100)
         self.assertEqual(self.find(w, 'wood_sword')['durability'], 98)
         w.month_step()

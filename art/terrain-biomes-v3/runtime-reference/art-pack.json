@@ -1,0 +1,777 @@
+{
+  "pack": "terrain-biomes-v3-20261026",
+  "source_count": 32,
+  "archive_sha256": "d7a1375e5df63406e9a3036f968bf9f0ce9aed4bf458527cd7ac2e6d26b75eb5",
+  "placement_version": 3,
+  "legacy_assets": false,
+  "assets": [
+    {
+      "id": "01-open-plains",
+      "label": "原野",
+      "size": 1,
+      "source_sha256": "dab62494f3b18cd1ae3f43644eda0958ab96494b9e2564019ab3889eea228f3e",
+      "runtime_sha256": "2f11a6f6f35168e9e7a74bccf929f081071b79552b097b5b271f408523a33a70",
+      "source_pivot": [
+        624.5,
+        777
+      ],
+      "source_bottom": 1159,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "02-meadow",
+      "label": "草甸",
+      "size": 1,
+      "source_sha256": "ba372b9339cad0ea6e07d8d75c785f17fbea14afef0dc500f9e09defc2c16190",
+      "runtime_sha256": "0102c315cc435bdda144588a23523cae81d1b73e11c6b77856235cf96e833c49",
+      "source_pivot": [
+        626.0,
+        769
+      ],
+      "source_bottom": 1157,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "03-woodland",
+      "label": "林地",
+      "size": 1,
+      "source_sha256": "ca9c26962cb01aa6640fad030857b4c97d0302bd40a905b8101f2dae8176661a",
+      "runtime_sha256": "f89730a669a2eae5182b57933b81ba5e8c350a92763b5e98daa2485c8ad9856d",
+      "source_pivot": [
+        626.5,
+        771
+      ],
+      "source_bottom": 1139,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "04-bamboo-forest",
+      "label": "竹林",
+      "size": 1,
+      "source_sha256": "701e0eaed6dd840871a3a3aa3cf9f293b79c57d8ef25000fd4c2dca9e255cff7",
+      "runtime_sha256": "81e7ea442ed213b1995d941c4498b451c6077d992974aef20e1bf75ae96bbc55",
+      "source_pivot": [
+        626.5,
+        774
+      ],
+      "source_bottom": 1154,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "05-scrubland",
+      "label": "灌丛",
+      "size": 1,
+      "source_sha256": "62d15c82e6012029b20c53c29b898375317d6083af68c65771d30830ae103c20",
+      "runtime_sha256": "96644914429af02a6096c9ec01f3ffd7a6b1529c5f3000253c100eaca008d407",
+      "source_pivot": [
+        625.5,
+        769
+      ],
+      "source_bottom": 1172,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "06-wilderness",
+      "label": "荒野",
+      "size": 1,
+      "source_sha256": "c8908a9bc91a0c3f21d8e2b09025f3f02b4055b708e93ae756515b970ffcf383",
+      "runtime_sha256": "7764018cbead1d2f8cd320cd31f1487b51411f1fd23d3b6f47453dce3c2d3890",
+      "source_pivot": [
+        626.0,
+        779
+      ],
+      "source_bottom": 1156,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "07-dryland",
+      "label": "旱地",
+      "size": 1,
+      "source_sha256": "448cf7ae086292b1f87c75c5e767dd724e26a6de5dd35fa027d5328fc4d701d8",
+      "runtime_sha256": "03f41133b7191b828ba696baf2c727e7992dec6f4d2da4e043894a7c66bee28c",
+      "source_pivot": [
+        624.0,
+        777
+      ],
+      "source_bottom": 1153,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "08-farmland",
+      "label": "农田",
+      "size": 1,
+      "source_sha256": "312c9e97c0f9e56c14ee45844b76742eff6420f6ad36c57bb2d99cd13f76d17d",
+      "runtime_sha256": "2a41c16e7d7f3563dbc607bb5fd08de04558cd911ba06f365d096c78b05c7783",
+      "source_pivot": [
+        626.5,
+        780
+      ],
+      "source_bottom": 1143,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "09-rice-paddies",
+      "label": "水田",
+      "size": 1,
+      "source_sha256": "82029c4df8834a4d9cc199f9152cbe6206ee7216128e22a5d9a0fdd01ddeff03",
+      "runtime_sha256": "6e664dc02780e1abf92892a91d6ea4e3ebdface91e42ac2bbeaefe109617bbbe",
+      "source_pivot": [
+        625.0,
+        774
+      ],
+      "source_bottom": 1155,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "10-sand-flat",
+      "label": "沙地",
+      "size": 1,
+      "source_sha256": "ef3538e1cf7a6031baf5ae430b628f18ec9b8f8e759717c0a4eb4f76af0277d6",
+      "runtime_sha256": "48973d097bdc0f998feb328915ab351e18729e4fa45df6bb40fe39cdbc8d3fbc",
+      "source_pivot": [
+        626.5,
+        770
+      ],
+      "source_bottom": 1156,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "11-gravel-land",
+      "label": "砾地",
+      "size": 1,
+      "source_sha256": "9182600ab072d097ec4b4a27ce83b8302481d91a9906d4ace545b246b2b31a3f",
+      "runtime_sha256": "17e14b302683ec54ef132ba9f1226ae61c2f348d9fd5c889ce5e660ab0847da6",
+      "source_pivot": [
+        627.0,
+        783
+      ],
+      "source_bottom": 1171,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "12-mudflat",
+      "label": "泥地",
+      "size": 1,
+      "source_sha256": "3f1901ef56a04405990515fecaeb44465ffa8f3539b31df955e23bc13ed2e016",
+      "runtime_sha256": "be8d4c559b01cfed0ef9e7b7ff3b88ed4f1726ebb09e3c32d2e43cbd795af265",
+      "source_pivot": [
+        628.0,
+        775
+      ],
+      "source_bottom": 1147,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "13-riverbank",
+      "label": "河滩",
+      "size": 1,
+      "source_sha256": "60dfdc850ac41e312950595bf0f83f0b6daf6a5bc5471f77f9f98ac386ef0f3b",
+      "runtime_sha256": "3afe96bb5d9d9c0a428b0e97d28dec9633b6d14624eb92ba8594d78fd2d07868",
+      "source_pivot": [
+        628.5,
+        779
+      ],
+      "source_bottom": 1168,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "14-shallows",
+      "label": "浅滩",
+      "size": 1,
+      "source_sha256": "b73b41af8457a79f86f83fb87999a36052ddb3689160c01e6f0704c3cbc12f95",
+      "runtime_sha256": "d2dcc602ff35f951dd92d2923d44364815ddbc30d8e7a01a9e6b17a51dc651d1",
+      "source_pivot": [
+        624.0,
+        778
+      ],
+      "source_bottom": 1162,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "15-stream",
+      "label": "溪流",
+      "size": 1,
+      "source_sha256": "dad15d604bf959363859398e119c57f5b215909a44b21184dec7675906778430",
+      "runtime_sha256": "659709425a7e3193f0c093210c3b877f80fbc58e71c43639ed2b2a5b89f91c3f",
+      "source_pivot": [
+        627.5,
+        787
+      ],
+      "source_bottom": 1165,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "16-low-hills",
+      "label": "丘陵",
+      "size": 1,
+      "source_sha256": "4b0158afd35ab3e28437ea406da3f5551e5dd64a03b9e135c9f4e43052b79f05",
+      "runtime_sha256": "0a4fe223c459f550132c2f4ab4d89f84c710728a4850710c386198791842c84c",
+      "source_pivot": [
+        625.5,
+        771
+      ],
+      "source_bottom": 1145,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "17-mountain-massif",
+      "label": "山岳",
+      "size": 2,
+      "source_sha256": "dffa48a679634389488a010541c6ade852752bf4ac5266170c6b03d36abb8e7e",
+      "runtime_sha256": "b193b42a8a7ae974257236b09cf76c229141fbb048d8821f1e94ca2148b10429",
+      "source_pivot": [
+        626.0,
+        777
+      ],
+      "source_bottom": 1151,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "18-grand-canyon",
+      "label": "峡谷",
+      "size": 2,
+      "source_sha256": "78cf07a4425d6b4ff41982314ec66f23aa9219201d66f9bfa847c676926d7a36",
+      "runtime_sha256": "585d84f711cb05ea32b61b007881757af21230f4f6144af7a143f555056e3e44",
+      "source_pivot": [
+        625.5,
+        777
+      ],
+      "source_bottom": 1148,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "19-natural-barrier",
+      "label": "天险",
+      "size": 2,
+      "source_sha256": "ada8417375657278c5d48acb9fa202e2c8c989f21ded07afa74cd0493b5a4504",
+      "runtime_sha256": "e1dcf250af6478461190990ebd1f773b8b22a8141c8a1006d3042a9d09ad2015",
+      "source_pivot": [
+        627.5,
+        820
+      ],
+      "source_bottom": 1195,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "20-deep-forest",
+      "label": "密林",
+      "size": 2,
+      "source_sha256": "7dcdd8a807d3dce16a1be6ece5b0345a9be9cfa9e2f0e8afbeee4954e3b118c9",
+      "runtime_sha256": "87581a18562a8eaa43e39a5a9de4f4ab660c693efde69da3d8a848b01f998f21",
+      "source_pivot": [
+        626.5,
+        775
+      ],
+      "source_bottom": 1162,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "21-bog",
+      "label": "沼泽",
+      "size": 2,
+      "source_sha256": "baf3d1f8c74bb1e607ae619a511b7b5116b7d397bed05cdb59775edaa1d5baca",
+      "runtime_sha256": "67828510f9195e9425da13d73dfef49f6c37a29f616db74cfb10d776f5792d60",
+      "source_pivot": [
+        626.5,
+        770
+      ],
+      "source_bottom": 1154,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "22-wetland",
+      "label": "湿地",
+      "size": 2,
+      "source_sha256": "99d0691d78962a44e693ae77dd77745012cfbe8fae4fee357363282bb2f10a8a",
+      "runtime_sha256": "d368d57138bcb335472934881f565ce892322ed4989f22c4a366bb76662cc85a",
+      "source_pivot": [
+        626.0,
+        776
+      ],
+      "source_bottom": 1167,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "23-lake",
+      "label": "湖泊",
+      "size": 2,
+      "source_sha256": "c1bcfa9652f6f1219127c6c811e6e305a8d991087b3710028f427382af97694f",
+      "runtime_sha256": "1119b734224c6eef85b64864dd86c9b15f060b9f2331da9fc30087ef9b33a338",
+      "source_pivot": [
+        626.5,
+        775
+      ],
+      "source_bottom": 1161,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "24-river-valley",
+      "label": "河谷",
+      "size": 2,
+      "source_sha256": "d3432b4f2664c84d25020e8dc5bbeab61cdf93aab5730cb50173f96591222098",
+      "runtime_sha256": "c3768f935aaf5b5a36f354d1f8d03944b564c7d88980ef4b16d906b70c3720f6",
+      "source_pivot": [
+        627.0,
+        773
+      ],
+      "source_bottom": 1156,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "25-stone-forest",
+      "label": "石林",
+      "size": 2,
+      "source_sha256": "0be8b045af88ba134f091bb7147d62446548d00b4e7fef222b0ca9b5ce43e13c",
+      "runtime_sha256": "75f7aa7f781011f3c095173accbde1575d7aa74f994e6aca00bbf5a7b1956279",
+      "source_pivot": [
+        626.5,
+        774
+      ],
+      "source_bottom": 1156,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "26-escarpment",
+      "label": "断崖",
+      "size": 2,
+      "source_sha256": "f690ceca659ceeb0a8f26736e09c1c93a86733fc50c2bae64bacb3ffb9c96a03",
+      "runtime_sha256": "56c5d918de42909eddc16da2f71e82a75800234b330d9b7d495d07cd10e64e38",
+      "source_pivot": [
+        627.0,
+        768
+      ],
+      "source_bottom": 1158,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "27-sinkhole",
+      "label": "天坑",
+      "size": 2,
+      "source_sha256": "988ee7b592ae73cd4c3f43556ebdd6736acd5b8db37a9b74bf580c7cb3070a20",
+      "runtime_sha256": "89c9e701206bfc938171663a5df3cc57a492d619250dcc295be6e992befcd0ef",
+      "source_pivot": [
+        626.5,
+        775
+      ],
+      "source_bottom": 1153,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "28-terraced-fields",
+      "label": "梯田",
+      "size": 2,
+      "source_sha256": "deb5272763f24c8e02bddbd31f1d1459ee3c8a35e3d16d421e504469b5a1df9e",
+      "runtime_sha256": "207a760869b9e87e9892c23fceef7855553944e6eb9cc99688c0fa669d535db9",
+      "source_pivot": [
+        627.0,
+        762
+      ],
+      "source_bottom": 1147,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "29-plateau",
+      "label": "高原",
+      "size": 2,
+      "source_sha256": "fb9260794905fdc4da1576de1f289b56fd3f46ff720378d991ad3569231c748c",
+      "runtime_sha256": "d19132a7373042a1a1ebd9b8925bc431457aba44d2297428ebc11cafb302ad1f",
+      "source_pivot": [
+        627.5,
+        776
+      ],
+      "source_bottom": 1151,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "30-fjord",
+      "label": "峡湾",
+      "size": 2,
+      "source_sha256": "52a1dc026b3191d33c9bca999b6b441ad8362363a3b9844b43dd3f57217aef03",
+      "runtime_sha256": "0601168d7efde8b124916f49b50307ef1e9d3dcc95daf00ec66bb369116a83eb",
+      "source_pivot": [
+        626.0,
+        776
+      ],
+      "source_bottom": 1153,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "31-river-delta",
+      "label": "三角洲",
+      "size": 2,
+      "source_sha256": "3c413fd667c9ce3a4360d16fb3f40b51bca29a6557fcf3d1bff300672768bc75",
+      "runtime_sha256": "e73f32c9a804901e7b9ceae095d3c607b2a91b1df9bb0d0824547016dd900776",
+      "source_pivot": [
+        626.0,
+        780
+      ],
+      "source_bottom": 1182,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    },
+    {
+      "id": "32-basin",
+      "label": "盆地",
+      "size": 2,
+      "source_sha256": "19c16e6fd8f0dcdbe1ea0d8dd9c20ac8a9f8cd5628f46d0373ffa8efb4dc8168",
+      "runtime_sha256": "d9a1e5ab24c71253289af850347d18e11d65e158a5795883f37bf8f71da8cd23",
+      "source_pivot": [
+        626.0,
+        773
+      ],
+      "source_bottom": 1150,
+      "canvas": [
+        512,
+        512
+      ],
+      "pivot": [
+        256,
+        342
+      ],
+      "diamond": [
+        508,
+        256
+      ]
+    }
+  ]
+}

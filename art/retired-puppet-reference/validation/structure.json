@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-26",
+  "source": "puppet.js rigid vector parts",
+  "headTorsoLowerCombinations": 27,
+  "includingIndependentWaist": 81,
+  "expressions": 3,
+  "directions": 2,
+  "poses": 3,
+  "phaseSamples": [
+    0,
+    25,
+    50,
+    75,
+    100
+  ],
+  "checkedStates": 7290,
+  "maximumSerializedEndpointError": 0.000011712659148181003,
+  "tolerance": 0.00004,
+  "checks": [
+    "one owner per slot",
+    "one waist belt",
+    "one sword",
+    "serialized limb endpoints meet",
+    "two fixed independent waist hinges",
+    "left and right collar asset selection",
+    "pose-independent piece shapes",
+    "head-only expression swapping",
+    "clean base / separate wear overlay",
+    "no rods"
+  ],
+  "limits": [
+    "No polygon collision solver or exhaustive aesthetic acceptance.",
+    "Left/right lapel artwork is a separate asset-selection prototype, not historical costume certification.",
+    "The page is independent from saved NPC state and the game animation runtime."
+  ]
+}

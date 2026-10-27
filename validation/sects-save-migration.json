@@ -1,0 +1,15 @@
+{
+  "source": "C:\\Users\\User\\AppData\\LocalLow\\JianghuStudio\\江湖未央 Unity\\Saves\\world.sqlite",
+  "tested_copy": "D:\\Desktop\\新游戏\\validation\\sects-save-copy\\world.sqlite",
+  "old_organizations": 34,
+  "new_sects": 14,
+  "month": 242,
+  "npcs": 1173,
+  "released": 60,
+  "retained": 0,
+  "source_unchanged": true,
+  "treasuries_conserved": true,
+  "reload_idempotent": true,
+  "passed": true,
+  "random_state_preserved": true
+}

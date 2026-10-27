@@ -90,7 +90,7 @@ def political_layers(places=PLACES):
 
 
 if __name__ == '__main__':
-    target = Path(__file__).resolve().parents[1]/'static'/'geography.json'
+    target = Path(__file__).resolve().parents[1]/'art'/'world-map'/'geography.json'
     if '--reuse-coast' in sys.argv:
         data = {**json.loads(target.read_text(encoding='utf-8')), **political_layers()}
     else:

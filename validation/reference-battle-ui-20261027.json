@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-27",
+  "feature": "按用户参考截图重制 Unity 战斗 UI",
+  "build": "unity/Build/ReferenceBattleFinal/江湖未央.exe",
+  "active_build": "ReferenceBattleFinal",
+  "launcher": "启动Unity版.bat",
+  "changes": [
+    "顶部双边伤势、人体部位选择与状态条",
+    "两角人物属性、射程及内力面板",
+    "中央太极暂停盘、倍速和自动普攻开关",
+    "新生成的青绿山石战场与现有皮影人物剪影",
+    "底部双式轮、兵器栏、18个功法和战术槽",
+    "战斗功能、属性、说明和记录浮层",
+    "提示框按当前鼠标位置实时更新",
+    "启动器优先使用 active-build.txt 指定版本"
+  ],
+  "validation": {
+    "python_command": "python -X utf8 -m unittest tests.test_combat_realtime tests.test_combat_flow tests.test_martial",
+    "python_tests": 62,
+    "python_passed": true,
+    "native_checks": 62,
+    "native_passed": true,
+    "native_report": "output/reference-battle-20261027/final/acceptance.json",
+    "runtime_exceptions": 0,
+    "window_sizes": [
+      [
+        1280,
+        800
+      ],
+      [
+        1680,
+        960
+      ],
+      [
+        1920,
+        1080
+      ]
+    ],
+    "physical_ui": [
+      "打开战斗功能弹窗",
+      "点击头颈部位，顶部选择标记跟随更新",
+      "Escape关闭弹窗",
+      "数字3切换飞石，兵器射程同步更新",
+      "Space继续战斗，实际施展、伤势和结算更新",
+      "返回功法并重新进入演武场",
+      "最大化窗口"
+    ],
+    "launcher_selected_path": "unity/Build/ReferenceBattleFinal/江湖未央.exe",
+    "saves": "仅使用 output/reference-battle-20261027 下独立测试存档",
+    "formal_save_modified": false
+  },
+  "screenshots": {
+    "delivery": "validation/screenshots/reference-battle-ui-20261027.jpg",
+    "resolutions": [
+      "output/reference-battle-20261027/final/reference-battle-1280.png",
+      "output/reference-battle-20261027/final/reference-battle-1680.png",
+      "output/reference-battle-20261027/final/reference-battle-1920.png"
+    ],
+    "casting": "output/reference-battle-20261027/final/range-casting.png",
+    "result": "output/reference-battle-20261027/final/combat-result.png"
+  },
+  "assets": {
+    "background": "unity/JianghuUnity/Assets/Resources/BattleUI/stone-stage.png",
+    "generator": "内置 image_gen",
+    "prompt": "art/battle-ui/generation-prompt.txt",
+    "reference": "用户提供的 屏幕截图 2026-10-26 225339.png"
+  },
+  "limits": [
+    "参照截图的主要布局、颜色与结构；图标、卷纹、人物、字体和部分细节并非像素级一致。",
+    "功法和战斗数值沿用本作既有规则；没有新增同道助战等机制。",
+    "截图和交互验收均为独立测试世界，正式存档未参与验收。"
+  ],
+  "backend_sha256": {
+    "jianghu/combat_realtime.py": "d21e7afb359671815bbd655c494a445d0fc300dc40c53398abf7d5236f6d8cbe",
+    "unity/JianghuUnity/Assets/StreamingAssets/Backend/jianghu/combat_realtime.py": "d21e7afb359671815bbd655c494a445d0fc300dc40c53398abf7d5236f6d8cbe",
+    "unity/Build/ReferenceBattleFinal/江湖未央_Data/StreamingAssets/Backend/jianghu/combat_realtime.py": "d21e7afb359671815bbd655c494a445d0fc300dc40c53398abf7d5236f6d8cbe"
+  }
+}

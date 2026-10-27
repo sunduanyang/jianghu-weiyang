@@ -10,10 +10,11 @@ if ($BundlePython) { $prepareArgs += '--bundle-python' }
 python @prepareArgs
 if ($LASTEXITCODE -ne 0) { throw '资源准备失败' }
 if ($RegenerateAssets) {
-    node (Join-Path $migrationRoot 'bake_puppets.cjs')
-    if ($LASTEXITCODE -ne 0) { throw '皮影资源准备失败，请先 npm ci。' }
+    python -X utf8 (Join-Path $migrationRoot 'bake_paper_cast.py')
+    if ($LASTEXITCODE -ne 0) { throw '皮影资源准备失败，请检查 requirements-dev.txt 中的依赖。' }
 }
 $process = Start-Process -FilePath $EditorPath -ArgumentList @('-batchmode','-nographics','-quit','-projectPath',('"' + $projectPath + '"'),'-executeMethod','Jianghu.Editor.BuildTools.BuildWindows','-logFile',('"' + (Join-Path $migrationRoot 'build.log') + '"')) -WindowStyle Hidden -PassThru
 $process.WaitForExit()
 if ($process.ExitCode -ne 0) { throw 'Unity 构建失败，请查看 unity/build.log。若工程已在编辑器打开，请从「江湖/构建 Windows 游戏」菜单构建。' }
+Set-Content -LiteralPath (Join-Path $migrationRoot 'Build\active-build.txt') -Value 'Current' -Encoding UTF8
 Write-Output (Join-Path $migrationRoot 'Build\Current\江湖未央.exe')

@@ -36,7 +36,8 @@ class TerritoryTests(unittest.TestCase):
         counts = Counter(p['country'] for p in PLACES)
         self.assertTrue(all(counts[c['id']] >= 4 for c in COUNTRIES))
         self.assertEqual((PLACES[0]['name'], PLACES[57]['name']), ('青溪镇', '虎思斡耳朵'))
-        self.assertEqual(FACTIONS[24]['name'], '琼海船帮')
+        self.assertEqual(len(FACTIONS), 14)
+        self.assertEqual(FACTIONS[13]['name'], '黑水萨满坛')
         self.assertEqual(counts[10], 12)
         self.assertEqual(counts[11], 23)
         for a, b in [('明州', '博多津'), ('金州', '对马府中'), ('金州', '耽罗'), ('雷州', '琼州')]:
@@ -47,7 +48,7 @@ class TerritoryTests(unittest.TestCase):
 
     def test_every_site_has_a_bundled_control_cell(self):
         root = Path(__file__).resolve().parents[1]
-        data = json.loads((root/'static/geography.json').read_text(encoding='utf-8'))
+        data = json.loads((root/'art/world-map/geography.json').read_text(encoding='utf-8'))
         self.assertEqual(data['map_version'], MAP_VERSION)
         self.assertEqual({c['place'] for c in data['cells']}, set(range(len(PLACES))))
         for cell in data['cells']:
@@ -58,6 +59,10 @@ class TerritoryTests(unittest.TestCase):
 
     def test_capture_changes_tax_toll_organization_and_official_identity(self):
         w = self.w
+        self.target = SITES['平安京']
+        origin = next(r['b'] if r['a']==self.target else r['a'] for r in w.routes if self.target in (r['a'], r['b']) and not r['sea'])
+        w.territory[origin]['owner'] = 10
+        territory.refresh_relations(w)
         n = w.make_npc(place=self.target)
         n.update(age_months=360, office='县令', office_country=11, wealth=100.)
         w.set_goal(n, w.best_goal(n), None, initial=True)
@@ -66,14 +71,14 @@ class TerritoryTests(unittest.TestCase):
         n['faction'] = next(f['id'] for f in w.factions if f['place'] == self.target)
         before_fund = w.governments[10]['fund']
         event = self.win()
-        self.assertTrue(event['facts']['sea'])
+        self.assertFalse(event['facts']['sea'])
         self.assertTrue(event['facts']['captured'])
         self.assertEqual(territory.owner(w, self.target), 10)
         self.assertIsNone(n['office'])
         self.assertIsNone(w.governments[11]['offices']['县令'])
         self.assertEqual(w.factions[n['faction']]['country'], 10)
-        self.assertEqual(w.factions[n['faction']]['name'], '对马船众')
-        trip = politics.journey(w, SITES['金州'], self.target)
+        self.assertEqual(w.factions[n['faction']]['name'], '鞍马寺')
+        trip = politics.journey(w, origin, self.target)
         self.assertEqual((trip['border'], trip['toll']), ('境内', 0))
         self.assertAlmostEqual(before_fund-w.governments[10]['fund'], event['facts']['cost'])
         original = deepcopy(w.governments[11])
@@ -84,8 +89,8 @@ class TerritoryTests(unittest.TestCase):
             self.assertAlmostEqual(g['fund'], g['opening_fund']+g['revenue']-g['expenses'])
         summary = w.summary()
         self.assertEqual(summary['places'][self.target]['color'], w.countries[10]['color'])
-        self.assertEqual(summary['countries'][10]['settlements'], 13)
-        self.assertEqual(summary['countries'][11]['settlements'], 22)
+        self.assertEqual(summary['countries'][10]['settlements'], 14)
+        self.assertEqual(summary['countries'][11]['settlements'], 21)
 
     def test_defeat_costs_silver_and_preserves_owner(self):
         self.w.territory[self.target]['guard'] = 1000.
@@ -172,7 +177,7 @@ class TerritoryTests(unittest.TestCase):
         self.assertEqual(sum(g['fund'] for g in migrated.governments)-sum(g['fund'] for g in before_g), 160.)
         event = migrated.store.history(limit=1)[0]
         self.assertEqual(event['facts']['new_government_opening_funds'], 160)
-        self.assertEqual(event['facts']['new_faction_opening_funds'], 900)
+        self.assertEqual(event['facts']['new_faction_opening_funds'], 0)
         count = w.store.count()
         again = World(store=w.store, durable=False)
         self.assertEqual(w.store.count(), count)

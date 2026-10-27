@@ -1,5 +1,20 @@
 # 社交、国家与门派完善验证
 
+## 家计与乡里补完（2026-10-26）
+
+本次在当前统一版补入亲友扶助、各城独立义仓、自主捐助、双方占时的邻里照护、成年手足与父母义亲接续监护，以及根据已有见闻沿驿道投亲。Unity「势力簿 → 乡里」与人物关系页、网页势力簿与人物关系页均接入实际账簿。
+
+复现：`python -m unittest discover -s tests -v`；`python scripts/validate_social_livelihood.py`。规则同步到 Unity 使用 `python unity/prepare.py --backend-only`。
+
+- 新增19项专项测试，覆盖扶助资金守恒、出资人生活与抚养余量、每月结算幂等、同地和双向结义条件、交恶与自主意愿、真实捐款和救济优先级、空仓与异地隔离、过期行动重验、照护双方周行程与接收方月上限、照护不代替治疗、困顿恢复、已知地点与实际行路费用、受监护者随行、查询不改状态、旧档不改随机数/财产/旧史、合并城镇保留账目、手足与义亲接续监护。
+- 最终全量规则测试240项全部通过，原始本地日志 `output/social-final-tests.txt`。网页脚本通过 `node --check static/society.js`，Python 源码通过编译检查，源码、Unity 后端副本与本次构建的27份规则模块逐字节一致。
+- 自然演化：种子42、初始100人推进120个月，终态118人在世，产生10次亲友扶助与157次邻里照护；种子20261026、初始800人推进24个月，终态860人在世，产生1次亲友扶助、2次自主捐助、1283次邻里照护。两组逐月检查资金非负、义仓账目平衡、四周行程无重叠，非法行动均为0；保存重读后的完整世界状态和随机数一致，读档不新增事件。
+- 两组自然演化未发生义仓救济或新增接续监护；这些分支由明确构造困境的专项测试覆盖，不把未触发的机制声称为自然演化成果。
+- 自然演化使用全新内存世界，未打开玩家存档，也未调用真实模型。原始摘要见 [validation/social-livelihood.json](validation/social-livelihood.json)。这些检查不代表长期经济平衡、全人口模型决策或所有灾荒情境已经验收。
+- Unity 6000.6.7f1、Windows x64 / Direct3D11 构建成功。独立存档运行 `-smokePhase society`，18项原生客户端检查全部通过，涵盖49份独立乡里账户、零期初资金、人物家计、三处画面渲染、月结、账目平衡、保存、零模型调用与零运行时异常，见 [validation/social-native.json](validation/social-native.json)。已查看[乡里页](validation/screenshots/social-towns-20261026.png)与[人物关系页](validation/screenshots/social-household-20261026.png)截图。隐藏窗口首次截图全黑，未计为通过；改用正常游戏窗口完成有效画面检查，失败诊断保留在本地 `output/social-unity/`。
+
+以下为此前独立社会分支的历史验证，版本、人口和检查范围与本次不同。
+
 以下保留独立分支合并前的验证。与168地点、城市占领及城中地图的整合验证见 [MERGE_VALIDATION.md](MERGE_VALIDATION.md)。
 
 基线：`v0.2.0-unified`，提交 `3ef4fe3289bf5cfaa0046dfd830d7a04a9108539`。开发位于独立 worktree、分支 `codex/social-nations-sects`，原主目录与正式存档未修改。

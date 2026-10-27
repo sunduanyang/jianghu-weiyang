@@ -1,6 +1,6 @@
 """Subset Noto Serif CJK SC (SIL OFL 1.1) into the TrueType files the Unity client bundles.
 
-Keeps GB2312 plus every character used by the engine, web client, Unity scripts and data,
+Keeps GB2312 plus every character used by the engine, Unity scripts and data,
 drops OpenType layout tables (IMGUI does not use them) and converts CFF outlines to TrueType.
 
     python unity/build_fonts.py --source-dir /usr/share/fonts/opentype/noto
@@ -21,9 +21,8 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'unity' / 'JianghuUnity' / 'Assets' / 'Resources' / 'Fonts'
 SC_INDEX = 2   # face order in the CJK collections: JP, KR, SC, TC, HK
 EXTRA = '　、。，．：；？！‘’“”「」『』《》〈〉【】〔〕…—～·・●○◎◇◆□■△▲▽▼▶›‹→←↑↓↗＋－×÷＝％￥①②③④⑤⑥⑦⑧⑨⑩✓'
-SOURCES = ['jianghu/*.py', 'static/*.js', 'static/*.json', 'static/*.html', '*.md',
-           'unity/JianghuUnity/Assets/Scripts/*.cs', 'unity/JianghuUnity/Assets/Resources/*.json',
-           'prototypes/shadow-puppets/*.js']
+SOURCES = ['jianghu/*.py', 'art/world-map/*.json', '*.md',
+           'unity/JianghuUnity/Assets/Scripts/*.cs', 'unity/JianghuUnity/Assets/Resources/*.json']
 
 
 def characters():

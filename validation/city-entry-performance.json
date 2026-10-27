@@ -1,0 +1,65 @@
+{
+  "method": "Same process, alternating old per-facility Dijkstra and cached gate tree; isolated population=0 seed=42 world; 5 cold and 60 warm views each; identical views asserted. These are backend data times, not total Unity entry times.",
+  "maps": [
+    {
+      "name": "临安府",
+      "size": 30,
+      "before": {
+        "cold_median_ms": 61.292,
+        "warm_median_ms": 18.889
+      },
+      "after": {
+        "cold_median_ms": 47.813,
+        "warm_median_ms": 2.824
+      }
+    },
+    {
+      "name": "海东聚落",
+      "size": 20,
+      "before": {
+        "cold_median_ms": 20.394,
+        "warm_median_ms": 5.937
+      },
+      "after": {
+        "cold_median_ms": 17.348,
+        "warm_median_ms": 1.483
+      }
+    },
+    {
+      "name": "克鲁伦河营地",
+      "size": 10,
+      "before": {
+        "cold_median_ms": 7.235,
+        "warm_median_ms": 2.131
+      },
+      "after": {
+        "cold_median_ms": 5.359,
+        "warm_median_ms": 0.573
+      }
+    }
+  ],
+  "native_entry": {
+    "load_ms": 1269.3699,
+    "prepare_ms": 788.670700000001,
+    "view_cache_hit": false,
+    "index_builds": 1,
+    "route_builds": 1,
+    "sync_texture_loads": 0,
+    "face_builds": 16
+  },
+  "native_repeat_entry": {
+    "load_ms": 30.398400000001,
+    "prepare_ms": 30.3167000000002,
+    "view_cache_hit": true,
+    "index_builds": 1,
+    "route_builds": 1,
+    "sync_texture_loads": 0,
+    "face_builds": 22
+  },
+  "rules_tests": 39,
+  "native_checks": 307,
+  "native_passed": true,
+  "build": "unity/Build/CitySmoothEntry/江湖未央.exe",
+  "native_report": "validation/city-smooth-entry-native.json",
+  "city_maps_sha256": "20494ef1aafcd07543ddde25c49d189b0a7cc75a362bd9969a4c2e3cfe9dc3c6"
+}

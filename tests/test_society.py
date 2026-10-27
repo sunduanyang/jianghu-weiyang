@@ -22,8 +22,8 @@ class SocietyTests(unittest.TestCase):
         self.addCleanup(w.store.close)
         return w
 
-    def adult(self, w, place=1, **values):
-        n = w.make_npc(place=place)
+    def adult(self, w, place=None, **values):
+        n = w.make_npc(place=w.factions[0]["place"] if place is None else place)
         n.update(age_months=360, wealth=100., skill=30., health=100.)
         n.update(values)
         w.set_goal(n, 'belonging', initial=True)
@@ -129,7 +129,7 @@ class SocietyTests(unittest.TestCase):
         n['place'] = 0
         w.reindex()
         self.assertIsNone(self.action(w, n, 'faction_task', 0))
-        n['place'] = 1
+        n['place'] = f['place']
         w.reindex()
         f['fund'] = 0
         self.assertIsNone(self.action(w, n, 'faction_task', 0))

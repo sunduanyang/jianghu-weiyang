@@ -1,0 +1,588 @@
+{
+  "date": "2026-10-27",
+  "initial_population": 1800,
+  "civil_population": 1296,
+  "sect_population": 504,
+  "civil_grades": {
+    "4": 61,
+    "5": 174,
+    "6": 258,
+    "7": 221,
+    "9": 217,
+    "8": 299,
+    "1": 12,
+    "2": 24,
+    "3": 30
+  },
+  "sects": [
+    {
+      "id": 0,
+      "name": "武当派",
+      "place": 6,
+      "leader": 1,
+      "grades": {
+        "1": 1,
+        "2": 2,
+        "3": 2,
+        "4": 3,
+        "5": 4,
+        "6": 5,
+        "7": 6,
+        "8": 7,
+        "9": 9
+      }
+    },
+    {
+      "id": 1,
+      "name": "丐帮",
+      "place": 5,
+      "leader": 40,
+      "grades": {
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 9,
+        "8": 11,
+        "9": 13
+      }
+    },
+    {
+      "id": 2,
+      "name": "少林寺",
+      "place": 13,
+      "leader": 94,
+      "grades": {
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 8,
+        "8": 9,
+        "9": 11
+      }
+    },
+    {
+      "id": 3,
+      "name": "全真教",
+      "place": 26,
+      "leader": 143,
+      "grades": {
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 3,
+        "5": 4,
+        "6": 5,
+        "7": 6,
+        "8": 8,
+        "9": 9
+      }
+    },
+    {
+      "id": 4,
+      "name": "一品堂",
+      "place": 25,
+      "leader": 184,
+      "grades": {
+        "1": 1,
+        "2": 2,
+        "3": 2,
+        "4": 3,
+        "5": 4,
+        "6": 4,
+        "7": 5,
+        "8": 7,
+        "9": 8
+      }
+    },
+    {
+      "id": 5,
+      "name": "天山派",
+      "place": 32,
+      "leader": 220,
+      "grades": {
+        "1": 1,
+        "2": 2,
+        "3": 2,
+        "4": 3,
+        "5": 3,
+        "6": 4,
+        "7": 5,
+        "8": 6,
+        "9": 8
+      }
+    },
+    {
+      "id": 6,
+      "name": "大轮寺",
+      "place": 34,
+      "leader": 254,
+      "grades": {
+        "1": 1,
+        "2": 1,
+        "3": 2,
+        "4": 3,
+        "5": 3,
+        "6": 4,
+        "7": 5,
+        "8": 6,
+        "9": 7
+      }
+    },
+    {
+      "id": 7,
+      "name": "天龙寺",
+      "place": 42,
+      "leader": 286,
+      "grades": {
+        "1": 1,
+        "2": 2,
+        "3": 2,
+        "4": 3,
+        "5": 3,
+        "6": 4,
+        "7": 5,
+        "8": 6,
+        "9": 8
+      }
+    },
+    {
+      "id": 8,
+      "name": "柏孜克里克寺",
+      "place": 56,
+      "leader": 320,
+      "grades": {
+        "1": 1,
+        "2": 2,
+        "3": 2,
+        "4": 3,
+        "5": 3,
+        "6": 3,
+        "7": 4,
+        "8": 5,
+        "9": 6
+      }
+    },
+    {
+      "id": 9,
+      "name": "克烈武帐",
+      "place": 101,
+      "leader": 349,
+      "grades": {
+        "1": 1,
+        "2": 2,
+        "3": 2,
+        "4": 3,
+        "5": 3,
+        "6": 4,
+        "7": 5,
+        "8": 7,
+        "9": 8
+      }
+    },
+    {
+      "id": 10,
+      "name": "都房",
+      "place": 133,
+      "leader": 384,
+      "grades": {
+        "1": 1,
+        "2": 2,
+        "3": 2,
+        "4": 3,
+        "5": 3,
+        "6": 4,
+        "7": 5,
+        "8": 6,
+        "9": 8
+      }
+    },
+    {
+      "id": 11,
+      "name": "鞍马寺",
+      "place": 146,
+      "leader": 418,
+      "grades": {
+        "1": 1,
+        "2": 1,
+        "3": 2,
+        "4": 3,
+        "5": 3,
+        "6": 4,
+        "7": 5,
+        "8": 6,
+        "9": 7
+      }
+    },
+    {
+      "id": 12,
+      "name": "海东祖灵社",
+      "place": 50,
+      "leader": 450,
+      "grades": {
+        "1": 1,
+        "2": 2,
+        "3": 2,
+        "4": 2,
+        "5": 3,
+        "6": 3,
+        "7": 4,
+        "8": 5,
+        "9": 6
+      }
+    },
+    {
+      "id": 13,
+      "name": "黑水萨满坛",
+      "place": 22,
+      "leader": 478,
+      "grades": {
+        "1": 1,
+        "2": 1,
+        "3": 2,
+        "4": 2,
+        "5": 3,
+        "6": 3,
+        "7": 4,
+        "8": 5,
+        "9": 6
+      }
+    }
+  ],
+  "places": [
+    {
+      "id": 45,
+      "name": "临安府",
+      "population": 55
+    },
+    {
+      "id": 46,
+      "name": "建康府",
+      "population": 29
+    },
+    {
+      "id": 2,
+      "name": "抚州",
+      "population": 32
+    },
+    {
+      "id": 5,
+      "name": "江陵府",
+      "population": 90
+    },
+    {
+      "id": 6,
+      "name": "襄阳府",
+      "population": 64
+    },
+    {
+      "id": 38,
+      "name": "成都府",
+      "population": 35
+    },
+    {
+      "id": 51,
+      "name": "广州",
+      "population": 34
+    },
+    {
+      "id": 61,
+      "name": "泉州",
+      "population": 30
+    },
+    {
+      "id": 14,
+      "name": "中都",
+      "population": 42
+    },
+    {
+      "id": 13,
+      "name": "南京开封府",
+      "population": 76
+    },
+    {
+      "id": 26,
+      "name": "京兆府",
+      "population": 73
+    },
+    {
+      "id": 21,
+      "name": "上京会宁府",
+      "population": 24
+    },
+    {
+      "id": 24,
+      "name": "克鲁伦河营地",
+      "population": 25
+    },
+    {
+      "id": 25,
+      "name": "兴庆府",
+      "population": 73
+    },
+    {
+      "id": 29,
+      "name": "沙州",
+      "population": 20
+    },
+    {
+      "id": 57,
+      "name": "虎思斡耳朵",
+      "population": 35
+    },
+    {
+      "id": 34,
+      "name": "逻些",
+      "population": 69
+    },
+    {
+      "id": 42,
+      "name": "大理城",
+      "population": 76
+    },
+    {
+      "id": 56,
+      "name": "高昌城",
+      "population": 59
+    },
+    {
+      "id": 50,
+      "name": "海东聚落",
+      "population": 60
+    },
+    {
+      "id": 22,
+      "name": "黑水营地",
+      "population": 49
+    },
+    {
+      "id": 133,
+      "name": "开京",
+      "population": 74
+    },
+    {
+      "id": 145,
+      "name": "镰仓",
+      "population": 40
+    },
+    {
+      "id": 146,
+      "name": "平安京",
+      "population": 59
+    },
+    {
+      "id": 16,
+      "name": "太原府",
+      "population": 24
+    },
+    {
+      "id": 17,
+      "name": "济南府",
+      "population": 25
+    },
+    {
+      "id": 98,
+      "name": "辽阳府",
+      "population": 24
+    },
+    {
+      "id": 28,
+      "name": "兰州",
+      "population": 22
+    },
+    {
+      "id": 100,
+      "name": "斡难河营地",
+      "population": 19
+    },
+    {
+      "id": 101,
+      "name": "土兀剌河营地",
+      "population": 55
+    },
+    {
+      "id": 102,
+      "name": "鄂尔浑河营地",
+      "population": 20
+    },
+    {
+      "id": 103,
+      "name": "杭爱牧集",
+      "population": 19
+    },
+    {
+      "id": 104,
+      "name": "阿尔泰牧集",
+      "population": 19
+    },
+    {
+      "id": 107,
+      "name": "甘州",
+      "population": 22
+    },
+    {
+      "id": 31,
+      "name": "疏勒",
+      "population": 22
+    },
+    {
+      "id": 110,
+      "name": "和阗",
+      "population": 22
+    },
+    {
+      "id": 112,
+      "name": "阿克苏",
+      "population": 20
+    },
+    {
+      "id": 32,
+      "name": "阿力麻里",
+      "population": 53
+    },
+    {
+      "id": 35,
+      "name": "日喀则",
+      "population": 17
+    },
+    {
+      "id": 116,
+      "name": "昌都",
+      "population": 20
+    },
+    {
+      "id": 117,
+      "name": "理塘",
+      "population": 19
+    },
+    {
+      "id": 118,
+      "name": "纳里牧集",
+      "population": 17
+    },
+    {
+      "id": 43,
+      "name": "鄯阐府",
+      "population": 24
+    },
+    {
+      "id": 124,
+      "name": "焉耆",
+      "population": 19
+    },
+    {
+      "id": 123,
+      "name": "哈密力",
+      "population": 20
+    },
+    {
+      "id": 129,
+      "name": "松林营地",
+      "population": 19
+    },
+    {
+      "id": 130,
+      "name": "乌苏里营地",
+      "population": 19
+    },
+    {
+      "id": 131,
+      "name": "下江渔集",
+      "population": 20
+    },
+    {
+      "id": 132,
+      "name": "北山营地",
+      "population": 17
+    }
+  ],
+  "regression_tests": {
+    "passed": 302,
+    "log": "output/population-20261027/tests.log"
+  },
+  "native_acceptance": {
+    "passed": true,
+    "checks": 139,
+    "errors": [],
+    "evidence": "output/population-20261027/native/acceptance.json"
+  },
+  "simulation": {
+    "months": 12,
+    "final_population": 1805,
+    "errors": 0,
+    "invalid_actions": 0,
+    "exact_reload": true,
+    "causal_edges_valid": true,
+    "real_model_calls": 0,
+    "evidence": "output/population-20261027/simulation.json"
+  },
+  "live": {
+    "database": "C:\\Users\\User\\AppData\\LocalLow\\JianghuStudio\\江湖未央 Unity\\Saves\\data\\world-nine-grades-1800-20261027.sqlite",
+    "population": 1800,
+    "month": 242,
+    "player": "沈行舟",
+    "wealth": 630.0,
+    "points": 25,
+    "ai_calls": 0,
+    "countries_complete": 12,
+    "sects_complete": 14,
+    "original_unchanged": true
+  },
+  "deployment": {
+    "save": "C:\\Users\\User\\AppData\\LocalLow\\JianghuStudio\\江湖未央 Unity\\Saves\\data\\world-nine-grades-1800-20261027.sqlite",
+    "retained_old_save": "C:\\Users\\User\\AppData\\LocalLow\\JianghuStudio\\江湖未央 Unity\\Saves\\world.sqlite",
+    "backup": "C:\\Users\\User\\AppData\\LocalLow\\JianghuStudio\\江湖未央 Unity\\Saves\\backups\\before-nine-grade-population-20261027.sqlite",
+    "previous_active_save": null,
+    "previous_build": "SectNineGrades",
+    "build": "PopulationNineGrades",
+    "population": 1800,
+    "month": 242,
+    "player_name": "沈行舟",
+    "player_wealth": 630.0,
+    "original_sha256": "b0d86a0410a57b5984b26754c2d19340bc1b3156a481b0f4bc0010d89396e057",
+    "original_unchanged": true
+  },
+  "source_sha256": {
+    "ai.py": "909160a85f2cb10ffb5d5ba798e9825c9183a8c81abc8e63ca6905cb41226a57",
+    "atlas.py": "4314a11a01f53ca0392a64c9f5ca7b9f084b84ecf00a39ba07d8372ad2257d07",
+    "atlas_expansion.py": "87ac10adbc53a2c4fd761b63b56df87ef544457f048624f19143f89da29e1187",
+    "atlas_migration.py": "c8f548da1c80323f57a999bfdebe5caf98bf29784fdc0d12021d2a61c72d4b5c",
+    "careers.py": "62a4f98b8b4f13a792b4fa24087fa211c5f831f372f55041c0ee4eedee2546bf",
+    "city_biomes.py": "9cc647c6192e4110dbef61035298e473f73128845b511f4a14a310929d338639",
+    "city_gardens.py": "465dc249dca3812f348ee8273b414f302bc8953143c8cdfc5e079d76fcf794fe",
+    "city_landscape.py": "fbe3a70ace9a4c40d84ece63eddc6b52364d13737fa0957324f41480d2c550b9",
+    "city_maps.py": "25c81ef5e788a79ee64dd96547806b420317a14e6624954648bffd99dd1360aa",
+    "city_plans.py": "48cb31a3f7355449314e7c1936a6405b419dc7d8d176a774b085beb291659548",
+    "city_regions.py": "c5bd7988d6be16611b479b320ac570d9720b221a0179e96c9d0249007c49ef98",
+    "combat.py": "51326f380170b3372dde644b1d0a2b2d648b6d70175d670ec3da01deac4513bc",
+    "combat_flow.py": "b6bea419dd699c9909ad9c3f0470b656d586d5606389a5f78c5672748316d90f",
+    "combat_realtime.py": "d21e7afb359671815bbd655c494a445d0fc300dc40c53398abf7d5236f6d8cbe",
+    "demography.py": "c57fe99c27270e72a7ca4895298d5e8671fa18e2afad67afc42b98e5587bb0a9",
+    "engine.py": "c4dcdce103365f700767f1dff3a074df736561b23ec2d24059b529e890d83da5",
+    "government.py": "ca32c32fd230a7de45851b9c918d8c0d20665b307bbad36801d8f85e96ad302e",
+    "historical_map.py": "1e08af6fe6bc9ad9d2b0e5e429d71461acfe412b9c7ead175cdc6186aeea809e",
+    "items.py": "ea004ccadf73fba730d19bc000f2b9bf7e1def3a2b7ea9d36a9c544348781106",
+    "martial.py": "72b1b8303b5d7bc7b901522ef914373ac59d1ca1a352288b4461b13deff822fe",
+    "organizations.py": "03c3e0950baeed193a081711ee081b1e85ae66afa058b43c1850dd941e6bd821",
+    "politics.py": "643ac2df5b8e23f1d3c751f1bec641792333671e14e9b612e0409de027772d0e",
+    "population.py": "152f17945dcb7bbd9c6af5fe76e5db2f997ce3286c22f5a2a8fd103b2d1a7cca",
+    "protagonist.py": "fcb0f96c25daf1e71d636e3bc4605f46a70f5d23ac15b22725e13da30a95c7b5",
+    "relationships.py": "0b51546065f525967838cab3a967fbd2102903dca5b9b79864007169e0450fae",
+    "sect_catalog.py": "b2d3b28f18d4da90800a34cfe33ad970466c901df6b01424380c0af74a8f1ec1",
+    "sect_migration.py": "70e88b2259ab2b8a885c21bb60ce08206097e58c6c208f186540bb097e7dca93",
+    "sect_ranks.py": "6dd4a29df89b82b1d75fdaca6d0e6409545dcbcd3f61eae2a87e18abf811c5ca",
+    "server.py": "9b3fba8b3e2809e3268d3d978261ebb8e9781d635f6d557ba253175630097ec1",
+    "settlements.py": "3654534a829f9082f05b6ef6b585155c463004bfeab733ab586d6e89993fee1f",
+    "social.py": "3d091c07d00f422f1b005451154da0e421ac26cfcfd5fda7348da78dc6599447",
+    "social_ranks.py": "91b62bfe7741eb8f315860c83f6084a7fb66e139a19fac46e45393704587a51a",
+    "society.py": "42fd1e982b3dda211fd88014294c4e7a1b9b5d63a6695a2b839058a376ff74ae",
+    "store.py": "f1e28ac64bb8a015e6fb15d776d58b183ee7577e4fbde46383911e52b7d5cfe8",
+    "territory.py": "9b0c79f44fd053d654455cad2b7ee8ef4e2457404b59f54984668d586b459ebe",
+    "__init__.py": "fa4bb541ffb1012e31431d164c85942d7e66419ef2c01b38bcb64e142969b8d7"
+  }
+}

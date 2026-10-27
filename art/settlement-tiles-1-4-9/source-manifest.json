@@ -1,0 +1,226 @@
+{
+  "tool": "built-in image_gen",
+  "expected": 3,
+  "count": 3,
+  "oneCell": 1,
+  "fourCell": 1,
+  "nineCell": 1,
+  "palette": {
+    "ink": "#1E1B17",
+    "grass": "#5E7A3E",
+    "forest": "#3B5A34",
+    "crops": "#C9A23A",
+    "earth": "#9C7445",
+    "stone": "#A39A86",
+    "water": "#3F6E6E",
+    "roof": "#3E4A55",
+    "plaster": "#D8CCB0",
+    "vermilion": "#B23A2A"
+  },
+  "validationScope": "Selected-file inventory, PNG decode, true alpha, source SHA-256 and sampled RGB only. Exact pigment/three-tone/projection compliance and engine integration are separate art/runtime acceptance.",
+  "failures": [],
+  "warnings": [],
+  "assets": [
+    {
+      "id": "01-village-1cell",
+      "label": "村落",
+      "file": "tiles/01-village-1cell.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "importNote": "Logical occupancy only. Calibrate actual ground diamond, display scale and ground-contact pivot in the target engine; image canvas size is not cell count.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1097304,
+      "sha256": "aa13836a5ba9c3b8fd77c4235e15e38abcab71f8730b5a3d351bd15622cfdc1a",
+      "sourceMatches": true,
+      "alpha": {
+        "clear": 1050137,
+        "solidAtLeast250": 495082,
+        "semiTransparent": 27297,
+        "max": 255,
+        "bounds": [
+          26,
+          281,
+          1228,
+          1113
+        ],
+        "margin": 26
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 3,
+        "samples": 55638,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.21136633236277363,
+        "uniqueSampledColors": 30005,
+        "topColors": [
+          [
+            "#000000",
+            579
+          ],
+          [
+            "#49535D",
+            383
+          ],
+          [
+            "#4A545E",
+            304
+          ],
+          [
+            "#49545E",
+            288
+          ],
+          [
+            "#E5B13F",
+            271
+          ],
+          [
+            "#48525C",
+            224
+          ]
+        ]
+      }
+    },
+    {
+      "id": "02-town-4cell",
+      "label": "小镇",
+      "file": "tiles/02-town-4cell.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "importNote": "Logical occupancy only. Calibrate actual ground diamond, display scale and ground-contact pivot in the target engine; image canvas size is not cell count.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1353149,
+      "sha256": "9ffe854a2abae43b872de9c28ca0a9657f8cf207b409d629d4a38c06c1f0f7e6",
+      "sourceMatches": true,
+      "alpha": {
+        "clear": 1005609,
+        "solidAtLeast250": 546105,
+        "semiTransparent": 20802,
+        "max": 255,
+        "bounds": [
+          17,
+          232,
+          1241,
+          1108
+        ],
+        "margin": 13
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 3,
+        "samples": 61171,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.3230125386212421,
+        "uniqueSampledColors": 34978,
+        "topColors": [
+          [
+            "#474F56",
+            475
+          ],
+          [
+            "#000000",
+            411
+          ],
+          [
+            "#484F56",
+            403
+          ],
+          [
+            "#484F57",
+            385
+          ],
+          [
+            "#474E56",
+            366
+          ],
+          [
+            "#485057",
+            342
+          ]
+        ]
+      }
+    },
+    {
+      "id": "03-city-9cell",
+      "label": "城市",
+      "file": "tiles/03-city-9cell.png",
+      "footprintCells": [
+        3,
+        3
+      ],
+      "occupiedCellCount": 9,
+      "logicalGroundDiamondPixels": [
+        768,
+        384
+      ],
+      "importNote": "Logical occupancy only. Calibrate actual ground diamond, display scale and ground-contact pivot in the target engine; image canvas size is not cell count.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1405783,
+      "sha256": "321c85c83612bd2cadea6d6b93d7409be9fbdbf12735038d98d4e9579a08382f",
+      "sourceMatches": true,
+      "alpha": {
+        "clear": 1037527,
+        "solidAtLeast250": 512635,
+        "semiTransparent": 22354,
+        "max": 255,
+        "bounds": [
+          14,
+          202,
+          1237,
+          1046
+        ],
+        "margin": 14
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 3,
+        "samples": 57395,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.18283822632633503,
+        "uniqueSampledColors": 41713,
+        "topColors": [
+          [
+            "#000000",
+            193
+          ],
+          [
+            "#383F43",
+            84
+          ],
+          [
+            "#444B50",
+            79
+          ],
+          [
+            "#373E42",
+            77
+          ],
+          [
+            "#383F44",
+            74
+          ],
+          [
+            "#454C51",
+            72
+          ]
+        ]
+      }
+    }
+  ]
+}

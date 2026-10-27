@@ -85,40 +85,13 @@ for i, (name, lon, lat, country, region, kind, trade, weight) in enumerate(_SITE
                        region=region, kind=kind, trade=trade, weight=weight,
                        color=COUNTRIES[country]['color']))
 
-# id/name/place of the first three organizations must not change in existing saves.
-_FACTIONS = [
-    ('栖云门', 1, '传艺修身', 'sect', '云门剑法', 'mastery'),
-    ('临川商会', 2, '互通有无', 'guild', '水陆行商', 'wealth'),
-    ('青溪义社', 0, '扶危济困', 'society', '义仓互济', 'belonging'),
-    ('武当派', 7, '以柔克刚，清修济世', 'sect', '太极剑', 'mastery'),
-    ('少林寺', 12, '禅武合一，护持众生', 'sect', '罗汉拳', 'mastery'),
-    ('华山派', 27, '险峰砺剑，守正出奇', 'sect', '华山剑法', 'mastery'),
-    ('峨眉派', 40, '刚柔并济，医武兼修', 'sect', '峨眉剑法', 'mastery'),
-    ('青城派', 41, '清静养气，以道御剑', 'sect', '青城剑法', 'mastery'),
-    ('唐门', 38, '机关巧技，慎用锋芒', 'sect', '暗器机关', 'mastery'),
-    ('丐帮', 6, '行侠仗义，四海为家', 'sect', '打狗棒法', 'belonging'),
-    ('衡山派', 9, '琴剑相和，侠隐衡岳', 'sect', '回风剑', 'mastery'),
-    ('泰山派', 18, '厚德载物，剑守东岳', 'sect', '东岳剑法', 'mastery'),
-    ('天山派', 33, '冰雪淬心，剑行西域', 'sect', '天山折梅手', 'mastery'),
-    ('昆仑派', 37, '高山问道，剑气长存', 'sect', '昆仑剑法', 'mastery'),
-    ('雪山寺', 34, '雪域传法，护佑行旅', 'sect', '雪山掌', 'mastery'),
-    ('段氏武院', 42, '礼剑并传，护持乡邦', 'sect', '一阳指', 'mastery'),
-    ('长白剑庄', 20, '霜刃守边，重诺轻利', 'sect', '寒霜剑', 'mastery'),
-    ('燕赵镖局', 14, '一诺千金，护送南北', 'guild', '长途护镖', 'renown'),
-    ('草原金帐', 24, '骑射传习，守望互助', 'sect', '草原骑射', 'mastery'),
-    ('河西商盟', 29, '丝路互市，共担风沙', 'guild', '驼队贸易', 'wealth'),
-    ('西域镖盟', 31, '守护绿洲，重约通商', 'guild', '沙海护镖', 'wealth'),
-    ('江南商会', 47, '诚信经营，舟行天下', 'guild', '江南织造', 'wealth'),
-    ('东海剑社', 50, '观潮悟剑，护航海路', 'sect', '潮生剑法', 'mastery'),
-    ('岭南药谷', 51, '行医济世，百草入武', 'sect', '药理拳法', 'mastery'),
-    ('琼海船帮', 53, '风浪同舟，海贸互济', 'guild', '南海航运', 'wealth'),
-]
+# Runtime IDs are dense; save upgrades resolve the stable key / name, never the index.
+from .sect_catalog import SCHOOLS
+
 _site_ids = {p['name']: p['id'] for p in PLACES}
-_FACTIONS.extend((name, _site_ids[home], ethos, kind, art, focus)
-                 for name, home, ethos, kind, art, focus in atlas_expansion.FACTIONS)
-FACTIONS = [dict(id=i, name=name, place=site, ethos=ethos, kind=kind, art=art, focus=focus,
-                 country=PLACES[site]['country'], leader=None, fund=100.)
-            for i, (name, site, ethos, kind, art, focus) in enumerate(_FACTIONS)]
+FACTIONS = [dict(**f, id=i, place=_site_ids[f['home']],
+                 country=PLACES[_site_ids[f['home']]]['country'], leader=None, fund=100.)
+            for i, f in enumerate(SCHOOLS)]
 
 
 def distance(a, b):

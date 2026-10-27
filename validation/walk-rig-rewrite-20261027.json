@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-27",
+  "passed": true,
+  "source_archive": "output/imagegen/puppet-cast24-modern-flat-20261026.zip",
+  "source_archive_sha256": "15dafb1ea37b12a72d7a16264bea7dd00d7750c01c759e45ab9f01c6698fb3f6",
+  "skins": 24,
+  "independent_components": 367,
+  "skeleton": "unity/paper-rig.json",
+  "skeleton_version": 3,
+  "runtime_data_version": 6,
+  "animation_clips": [
+    "walk"
+  ],
+  "static_inspection_pose": "bind (fixed; not an animation)",
+  "changes": [
+    "Rebuilt source-socket parent hierarchy with fixed per-skin bone lengths.",
+    "Shoulders come from torso panel coordinates; empty arms no longer inherit tool poses.",
+    "Single waist/pelvis, torso sleeve cleanup, corrected long-sleeve and shoe sockets.",
+    "Grounded two-bone leg IK, alternating support/swing, opposite arm swing, pose-preserving start/stop blend.",
+    "Removed idle, talk, attack, guard, hurt and defeated clips and their runtime selectors."
+  ],
+  "source_tests": {
+    "passed": true,
+    "count": 9,
+    "log": "output/rig-rewrite/source-tests.log"
+  },
+  "visible_alpha_socket_contacts": {
+    "cases": 4368,
+    "all_overlap": true,
+    "maximum_gap_world_units": 0.0,
+    "report": "output/rig-rewrite/socket-contact-audit.json",
+    "scope": "14 anatomical connections x (bind + 12 walk phases) x 24 skins; actual transformed source alpha around each joint"
+  },
+  "native_render": {
+    "passed": true,
+    "checks": 37,
+    "report": "output/rig-rewrite/native-final/render-regression.json",
+    "facts": {
+      "skins": 24,
+      "parts": 367,
+      "clips": 1,
+      "pose_samples": 5808,
+      "max_bone_length_error": 4.57763671875e-05,
+      "max_ankle_target_error": 3.05771245621145e-05,
+      "max_loop_seam": 0,
+      "max_bind_joint_error": 7.03395417076536e-05,
+      "max_transition_jump": 0
+    },
+    "resolutions": [
+      "1280x800",
+      "1680x960"
+    ],
+    "directions": [
+      "left",
+      "right"
+    ]
+  },
+  "offline_native_agreement": {
+    "sampled_joint_positions": 3360,
+    "maximum_error_world_units": 0.00018289730602866636
+  },
+  "visual_review": {
+    "all_24_native_comparisons_reviewed": true,
+    "sheets": [
+      "output/rig-rewrite/comparison-1.jpg",
+      "output/rig-rewrite/comparison-2.jpg",
+      "output/rig-rewrite/comparison-3.jpg"
+    ],
+    "native_gif": "output/rig-rewrite/walk-native.gif",
+    "note": "Independent component drawings differ from the finished illustration. Compare proportions, coverage and articulation; empty hands use a neutral posture. Long clothing remains rigid shadow-puppet artwork rather than simulated fabric."
+  },
+  "build": "unity/Build/WalkRebuilt/江湖未央.exe",
+  "active_build": "WalkRebuilt",
+  "build_log": "output/rig-rewrite/build-release.log",
+  "demo_launcher": "演示骨骼系统.bat",
+  "native_save": "output/rig-rewrite/native-final-save",
+  "simulation_side_effect_check": {
+    "check": "no simulation or model side effects",
+    "pass": true,
+    "facts": {
+      "month": 242,
+      "new_model_calls": 0
+    }
+  },
+  "superseded_by": "validation/hip-silhouette-repair-20261027.json",
+  "known_visual_issue": "The technical connection checks passed, but rear cloth and upper-trouser seat coverage were insufficient. The later hip repair adds full-source retention and stationary seat layers."
+}

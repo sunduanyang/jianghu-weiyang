@@ -1,0 +1,185 @@
+{
+  "months": 18,
+  "start": 244,
+  "end": 262,
+  "max_hungry": 13,
+  "last_hungry": 11,
+  "last_population": 1881,
+  "shipments": 309,
+  "packed_outputs": 639,
+  "max_cash_residual": 0.00078,
+  "max_goods_residual": 0.0,
+  "mean_seconds": 21.053,
+  "reload_equal": true,
+  "source_sha256": {
+    "jianghu/ai.py": "051ed01bd1006cc2c8478f2dcccdab6934dce21e2aa58eeeb555595ed05c2d01",
+    "jianghu/atlas.py": "4314a11a01f53ca0392a64c9f5ca7b9f084b84ecf00a39ba07d8372ad2257d07",
+    "jianghu/atlas_expansion.py": "87ac10adbc53a2c4fd761b63b56df87ef544457f048624f19143f89da29e1187",
+    "jianghu/atlas_migration.py": "c8f548da1c80323f57a999bfdebe5caf98bf29784fdc0d12021d2a61c72d4b5c",
+    "jianghu/careers.py": "156ccae4b885815526dbc0c3bcebad2597d1a10056eecc644622bd33e15a416f",
+    "jianghu/city_biomes.py": "9cc647c6192e4110dbef61035298e473f73128845b511f4a14a310929d338639",
+    "jianghu/city_gardens.py": "465dc249dca3812f348ee8273b414f302bc8953143c8cdfc5e079d76fcf794fe",
+    "jianghu/city_landscape.py": "fbe3a70ace9a4c40d84ece63eddc6b52364d13737fa0957324f41480d2c550b9",
+    "jianghu/city_maps.py": "9830be74288a980fefa13960c55e1c877a97078f6ee8c70659f5452631a6d075",
+    "jianghu/city_plans.py": "48cb31a3f7355449314e7c1936a6405b419dc7d8d176a774b085beb291659548",
+    "jianghu/city_regions.py": "c5bd7988d6be16611b479b320ac570d9720b221a0179e96c9d0249007c49ef98",
+    "jianghu/combat.py": "51326f380170b3372dde644b1d0a2b2d648b6d70175d670ec3da01deac4513bc",
+    "jianghu/combat_flow.py": "b6bea419dd699c9909ad9c3f0470b656d586d5606389a5f78c5672748316d90f",
+    "jianghu/combat_realtime.py": "d21e7afb359671815bbd655c494a445d0fc300dc40c53398abf7d5236f6d8cbe",
+    "jianghu/demography.py": "c57fe99c27270e72a7ca4895298d5e8671fa18e2afad67afc42b98e5587bb0a9",
+    "jianghu/economics.py": "1721db06fec6eea8a1aeffdc2f076af69eb2e5d4150dcab123eb0af62319b201",
+    "jianghu/engine.py": "e5b67de3173d5b3b452e576392a13bff1828f5f55e5d805f5fbc1b70b8d02870",
+    "jianghu/government.py": "7817774054eb484140a5cd4d71b45c282eff4e1584e14eca13854011d3aa9f98",
+    "jianghu/historical_map.py": "1e08af6fe6bc9ad9d2b0e5e429d71461acfe412b9c7ead175cdc6186aeea809e",
+    "jianghu/items.py": "95d574fc14c1925e6be4f5269786819cdd662eaa3584c36a6e4f040c0cced133",
+    "jianghu/martial.py": "72b1b8303b5d7bc7b901522ef914373ac59d1ca1a352288b4461b13deff822fe",
+    "jianghu/npc_memory.py": "eb5bfa500b8c0b094d59d1043ddf57d910c08ea7082bc2c9ff8d56e3fa2fb701",
+    "jianghu/npc_plans.py": "7f333f7e8561b53a75b7db8508f76240c5e39a7ecac0802dae857b2264fc8841",
+    "jianghu/organizations.py": "9fe524d3c19e2a7837ca36210b169349e215abee315e6b2c80700166df7e2799",
+    "jianghu/politics.py": "643ac2df5b8e23f1d3c751f1bec641792333671e14e9b612e0409de027772d0e",
+    "jianghu/population.py": "152f17945dcb7bbd9c6af5fe76e5db2f997ce3286c22f5a2a8fd103b2d1a7cca",
+    "jianghu/protagonist.py": "9dd2c36f9b870e77c5750ee349cebb929bf52930ed6251415ccadc97d9f7cdbf",
+    "jianghu/relationships.py": "0b51546065f525967838cab3a967fbd2102903dca5b9b79864007169e0450fae",
+    "jianghu/sect_catalog.py": "b2d3b28f18d4da90800a34cfe33ad970466c901df6b01424380c0af74a8f1ec1",
+    "jianghu/sect_migration.py": "70e88b2259ab2b8a885c21bb60ce08206097e58c6c208f186540bb097e7dca93",
+    "jianghu/sect_ranks.py": "6dd4a29df89b82b1d75fdaca6d0e6409545dcbcd3f61eae2a87e18abf811c5ca",
+    "jianghu/server.py": "3d44f66ff98025b1e6d55d1d62d367f64348b8448d7736c1096157999e4bd267",
+    "jianghu/settlements.py": "3654534a829f9082f05b6ef6b585155c463004bfeab733ab586d6e89993fee1f",
+    "jianghu/social.py": "e395725bf846a9896974cff8a3af8b1fa78b1ae4ecd345bd22aa9f1bc939145c",
+    "jianghu/social_ranks.py": "91b62bfe7741eb8f315860c83f6084a7fb66e139a19fac46e45393704587a51a",
+    "jianghu/society.py": "42fd1e982b3dda211fd88014294c4e7a1b9b5d63a6695a2b839058a376ff74ae",
+    "jianghu/store.py": "b98ca0fe845953a0b14623587da2a98ffcd0bcd8cd8a438cc3823343a09f50d4",
+    "jianghu/territory.py": "f4bac713250a0623ea308359afe697897bf4b251ea1722b761ee13c75d24ad27",
+    "jianghu/__init__.py": "fa4bb541ffb1012e31431d164c85942d7e66419ef2c01b38bcb64e142969b8d7",
+    "unity/JianghuUnity/Assets/Scripts/BattleScreen.cs": "ac93e6a49f1e7677f4386d4f89a4a3439536c3470d43832bc4f5bc6860ac89c6",
+    "unity/JianghuUnity/Assets/Scripts/CityAreas.cs": "0c3ef53821353cc83912a083201dfd76aa9793ce2d0d7a6aacf6cffdf50cd034",
+    "unity/JianghuUnity/Assets/Scripts/CityGroundSmoke.cs": "413a23979965c4e25260c6e3abf84544b8f2ea8411426c7b21257d28fc526e7b",
+    "unity/JianghuUnity/Assets/Scripts/CityLandscape.cs": "119cf0f46b796bccd2b8a49f63e536eea29f9f04dff2b386470778f1c8869556",
+    "unity/JianghuUnity/Assets/Scripts/CityLoading.cs": "bacbedb3897b37e9a814fffafd3001f05ef324882a344f8dbd8753b6cd7b0e2c",
+    "unity/JianghuUnity/Assets/Scripts/CityMap.cs": "42a90596968eff2fa690a7afb03cae68effc879fb217c87ae77dbcbc605194dd",
+    "unity/JianghuUnity/Assets/Scripts/CityMapSmoke.cs": "c89e338f03f686fcfdce0a88d5edf8d722812585eccabb854480fcf0ab5e8f1a",
+    "unity/JianghuUnity/Assets/Scripts/CityPeople.cs": "d2b60d768b6ba1eaceb196859cf26b0490ef76f071a197985f66a7df7e7370d1",
+    "unity/JianghuUnity/Assets/Scripts/CityPeopleSmoke.cs": "cedce59e0ac76f9ae3fead112a71fc5303a9a6c92e47f55e62fa70b0a67fc01e",
+    "unity/JianghuUnity/Assets/Scripts/CityRiverSmoke.cs": "7055b11f512a9b9e2aa751615be91e2a3c752a4ce1b8a18980f84f116156b7c5",
+    "unity/JianghuUnity/Assets/Scripts/CityRouting.cs": "2d63e900f73bc268983a6bb63e45edd475ec7f1a794932020f616463d0aacecd",
+    "unity/JianghuUnity/Assets/Scripts/CityTerrain.cs": "f964f6e52bd7583c62a9321511953641fa12b4fb61e61e3d4add00a4da899172",
+    "unity/JianghuUnity/Assets/Scripts/CityWalking.cs": "97dc8e4c4dc98b4330dbb99e76774e8cd4f13e7fb5a0fc564ef4ea606e66a7f7",
+    "unity/JianghuUnity/Assets/Scripts/CombatRanges.cs": "5dd52930ea909db7547b222728f2ebdb36b6f4e473ff55c6460ac6aa99d137eb",
+    "unity/JianghuUnity/Assets/Scripts/Economy.cs": "31bcfc4ba0f437200597117c46a73ea867755d826da835a1a2e1aa931c40db56",
+    "unity/JianghuUnity/Assets/Scripts/EconomySmoke.cs": "187142c59ad8dd5ce3bd930e1f15af95b8f9f6fc5b028a0edd01ed2a4fd18dec",
+    "unity/JianghuUnity/Assets/Scripts/GameClient.cs": "33f5154f603deb14005430c3ffe8223cd779534aebb163a97a6ec252222856a4",
+    "unity/JianghuUnity/Assets/Scripts/JianghuApp.cs": "19e9d3d93a9b72fadd3c87ed5d076bc84f8445e777476a1129d923daa47f7112",
+    "unity/JianghuUnity/Assets/Scripts/Json.cs": "7095efb0f241c03d8acb6411cdceccf55dc84f2d961aaa03ac1e5abac03be60d",
+    "unity/JianghuUnity/Assets/Scripts/NationalRanks.cs": "501ca1a5e4f339e6b0d3d017ba7d60897b4f814bb4c6e0e76295a590a54a87c9",
+    "unity/JianghuUnity/Assets/Scripts/NpcThinking.cs": "c94f0eee33e9c15243cc9f87d6d08c440daa8625469d3e9c0b0781645b1eee18",
+    "unity/JianghuUnity/Assets/Scripts/NpcThinkingSmoke.cs": "4e387092274262aea8cb59abef339c1516e90393deed27be8483d4a24b7ad7d8",
+    "unity/JianghuUnity/Assets/Scripts/Panels.cs": "d257cbbbc192e293fe2358d1df2542d4b623e454af1f93e6d78861c8ea851c17",
+    "unity/JianghuUnity/Assets/Scripts/PaperCast.cs": "a0dbc66157210dd6c767845a9df511e145b8c0dc8ba6c239ff2b905a9175660a",
+    "unity/JianghuUnity/Assets/Scripts/PaperRenderSmoke.cs": "f5ee980b8a1e9e3052561f2a012ac48277b4475669be01c62a11aa49d81c81b7",
+    "unity/JianghuUnity/Assets/Scripts/PaperRig.cs": "e92205e93eb08507a8e4b2af6e429f14588d9d485a390fe45842e19366cee282",
+    "unity/JianghuUnity/Assets/Scripts/RealtimeBattleScreen.cs": "2f3dd745a47d48a100193e1fa587eab5f73730b16a38520de581f9e4be48b402",
+    "unity/JianghuUnity/Assets/Scripts/ReferenceBattleUI.cs": "3b9645c52b2005f9f1396894efa9ad4b4261549319c39e54ba6de9d4a4443411",
+    "unity/JianghuUnity/Assets/Scripts/Screens.cs": "be79f8d63407882d5ce35aa5c3429baa8fe8e54fc3bc6f40114b93029222150c",
+    "unity/JianghuUnity/Assets/Scripts/SectRanks.cs": "d26b806ab4119d1aa93c61a457e4c8f4bc815d966c7ce437c726cc5f0cfbb1d9",
+    "unity/JianghuUnity/Assets/Scripts/SectRankSmoke.cs": "81e073d72b1b81912e55b7f78ffd82983240740d72b17c4ac845391a0516541a",
+    "unity/JianghuUnity/Assets/Scripts/ShadowTheater.cs": "d56175c429d03c6dd7258fdc0aaa34498c31c638acf9ebd57db188c10242260c",
+    "unity/JianghuUnity/Assets/Scripts/SocietyPanel.cs": "46517870730b5e3683f6694a4e3bffd2f0a9deb1d4fff0e72e5e901b0bc4c22d",
+    "unity/JianghuUnity/Assets/Scripts/Theme.cs": "0c69fc84c81d5afcf89206856a4ee5f123b0765cfa579b38ff15130d1e7aece9",
+    "unity/JianghuUnity/Assets/Scripts/UnitySmoke.cs": "17b6d808e2811fa7a0878a993dcdb3164891463e001755bbb931ab91cade831d",
+    "unity/JianghuUnity/Assets/Scripts/WorldUI.cs": "ca2be482cd4ee2614e83124ff70b66853a18bf09525cf6402c9659aeab129d69"
+  },
+  "assembly_sha256": "3cda8ebc821a9deceda99c6d440471d8b1998bf0fb520336d30da2b0c055f64e",
+  "full_regression_tests": 330,
+  "post_changes_focused_tests": 86,
+  "final_economy_tests": 19,
+  "build": "Economy",
+  "unity": "6000.6.7f1",
+  "formal_fast_forward": false,
+  "native_acceptance": {
+    "unity": "6000.6.7f1",
+    "checks": [
+      {
+        "check": "1800 NPC save",
+        "pass": true
+      },
+      {
+        "check": "model disabled",
+        "pass": true
+      },
+      {
+        "check": "13 goods and 49 finite town markets",
+        "pass": true
+      },
+      {
+        "check": "real player buy",
+        "pass": true
+      },
+      {
+        "check": "stale order rejected without another debit",
+        "pass": true
+      },
+      {
+        "check": "render town-market",
+        "pass": true
+      },
+      {
+        "check": "month advances once",
+        "pass": true
+      },
+      {
+        "check": "render household-month-end",
+        "pass": true
+      },
+      {
+        "check": "NPC seven need categories",
+        "pass": true
+      },
+      {
+        "check": "render npc-household",
+        "pass": true
+      },
+      {
+        "check": "government accounts balance",
+        "pass": true
+      },
+      {
+        "check": "no Unity errors or exceptions",
+        "pass": true
+      }
+    ],
+    "errors": [],
+    "passed": true
+  },
+  "formal_save": {
+    "month": 245,
+    "population": 1799,
+    "total_people": 1800,
+    "since": 245,
+    "player_unchanged": true,
+    "npcs_unchanged": true,
+    "rng_unchanged": true,
+    "full_checkpoint_equal": true,
+    "audit": {
+      "cash": 156150.5313889942,
+      "cash_residual": 0.0,
+      "goods_residuals": {
+        "grain": 0.0,
+        "fish": 0.0,
+        "meat": 0.0,
+        "fiber": 0.0,
+        "cloth": 0.0,
+        "herb": 0.0,
+        "medicine": 0.0,
+        "timber": 0.0,
+        "iron": 0.0,
+        "tools": 0.0,
+        "study": 0.0,
+        "leisure": 0.0,
+        "transport": 0.0
+      },
+      "negative_stock": false,
+      "negative_market_cash": false
+    }
+  },
+  "active_build": "Economy"
+}

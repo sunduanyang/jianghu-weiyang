@@ -4,11 +4,11 @@
 
 | 内容 | 来源与许可 |
 | --- | --- |
-| 海岸线及陆地轮廓 | [Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/)，公共领域。具体来源和原始摘要保存在 `static/geography*.json`，重建工具是 `scripts/build_map.py`。 |
-| 山水与人物小像 | 本项目通过 imagegen 生成并提供，原始提示词与接入记录见 `static/assets/ART.md`。没有提取其他游戏的美术文件。 |
-| 城中地图建筑、树木、城墙、石桥与地面 | 本项目通过内置 image_gen 生成，当前21张独立源图、提示词和导出摘要见 `art/city-map/song-20261026/`；旧版透明图集保留于 `art/city-map/`。运行纹理由 `unity/export_song_city_art.py` 标定和导出，田圃、山岭与交互标记沿用 `unity/bake_city.py`。按本仓库 MIT 许可证提供。 |
-| 24 套皮影皮肤与 405 个独立部件 | 本项目通过内置 image_gen 生成；原始 PNG、提示词、来源摘要和部件清单见 `art/puppet-cast-24/`，按本仓库 MIT 许可证提供。运行图集仅机械打包原始 RGBA 像素，骨骼动画由项目代码实现。 |
-| 骨骼标定参考图 | 用户于2026-10-26提供的三张 PNG，原图保存在 `art/rig-reference/`；运行图集由原图机械裁切、打包。来源和权利归属沿用用户提供素材时的许可。 |
+| 海岸线及陆地轮廓 | [Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/)，公共领域。具体来源和原始摘要保存在 `art/world-map/geography*.json`，重建工具是 `scripts/build_map.py`。 |
+| 山水与人物小像 | 本项目通过 imagegen 生成并提供，原始提示词与接入记录见 `art/unity-shared/ART.md`。没有提取其他游戏的美术文件。 |
+| 战斗山石背景与参考界面 | 按用户提供的《太吾绘卷》战斗截图参考重制；背景通过内置 image_gen 生成，提示词和记录见 `art/battle-ui/`，运行图位于 `Assets/Resources/BattleUI/stone-stage.png`。式轮、太极盘、状态和功法图标由本项目代码绘制，未提取原游戏文件。 |
+| 城中自然景观与聚落 | 用户提供的 `terrain-biomes-v3-20261026.zip`、`settlement-tiles-1-4-9-20261026.zip` 以及 `D:\Desktop\美术` 的31张PNG。自然原图、校验与分类见 `art/terrain-biomes-v3/`、`art/landscape-library-20261027/`；聚落原图见 `art/settlement-tiles-1-4-9/`。运行图只进行透明边缘和投影标定，未提取其他游戏文件。 |
+| 24 套现代皮影形象及透明部件 | 用户指定的 `puppet-cast24-modern-flat-20261026.zip`（内置 imagegen 生成）；原图、提示词、来源摘要、透明部件与骨骼绑定清单见 `art/puppet-modern-24/`。图集机械打包去底后的部件，动画由项目骨骼代码实现。 |
 | Unity | 用户自行安装，适用 [Unity 软件条款](https://unity.com/legal)。仓库不分发 Unity 编辑器或许可证。 |
 | Python | 用户自行安装；可选 Windows 打包工具复制本机 CPython，并把其 `LICENSE.txt` 一同放入成品运行时。参见 [Python 许可](https://docs.python.org/3/license.html)。 |
 | Pillow | 仅用于开发时生成地图资源，参见 [Pillow LICENSE](https://github.com/python-pillow/Pillow/blob/main/LICENSE)。 |

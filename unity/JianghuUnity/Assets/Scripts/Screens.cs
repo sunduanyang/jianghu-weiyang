@@ -33,7 +33,7 @@ public partial class JianghuApp {
         }
         // name block and portrait ring
         GUI.Label(new Rect(270,122,250,34),p["name"].S,new GUIStyle(heading){fontSize=26,alignment=TextAnchor.MiddleRight});
-        GUI.Label(new Rect(270,160,250,22),p["identity"]["title"].S,labelRight);
+        GUI.Label(new Rect(270,160,250,22),p["identity"]["grade_label"].S+" · "+p["identity"]["title"].S,labelRight);
         GUI.Label(new Rect(270,186,250,22),p["age_months"].I/12+"岁 · "+(p["alive"].B?"在世":"已故"),labelRight);
         Fill(new Rect(300,214,220,1),hairline);
         Rect ring=new Rect(540,120,300,300);
@@ -65,7 +65,7 @@ public partial class JianghuApp {
         // detail tabs (right)
         Rect side=new Rect(1240,112,380,770);Panel(side);
         GUILayout.BeginArea(new Rect(side.x+12,side.y+12,side.width-24,side.height-24));
-        personTab=GUILayout.SelectionGrid(personTab,new[]{"此刻","心性","身份","物品","关系","门中","武学","年谱"},4,chip);
+        personTab=GUILayout.SelectionGrid(personTab,new[]{"此刻","心性","身份","物品","关系","门中","武学","年谱","打算","家计","升降"},4,chip);
         personScroll=GUILayout.BeginScrollView(personScroll);DrawPersonTab();GUILayout.EndScrollView();
         GUILayout.EndArea();
     }
@@ -83,11 +83,12 @@ public partial class JianghuApp {
         var p=Person;
         // hero (left) and NPC (right)
         Rect hl=new Rect(70,250,360,456),hr=new Rect(1250,250,360,456);
-        DrawPaperPerson(hl,PaperPerson(-1,"男",216),true,"talk");
-        DrawPaperPerson(hr,p,false,"talk",true);
+        DrawPaperPerson(hl,PaperPerson(-1,"男",216),true,"bind");
+        DrawPaperPerson(hr,p,false,"bind",true);
         Rect plateL=new Rect(40,716,420,150),plateR=new Rect(1220,716,420,150);Panel(plateL);Panel(plateR);
         GUI.Label(new Rect(plateL.x,plateL.y+10,plateL.width,28),Hero["created"].B?Hero["name"].S:"过客",new GUIStyle(sub){alignment=TextAnchor.MiddleCenter});
         GUI.Label(new Rect(plateL.x+20,plateL.y+46,plateL.width-40,22),"银两 "+Num(W["player"]["wealth"])+" · 声望 "+Num(W["player"]["reputation"]),centerSmall);
+        if(Hero["identity"].Has)GUI.Label(new Rect(plateL.x+20,plateL.y+80,plateL.width-40,22),Hero["identity"]["grade_label"].S+" · "+Hero["identity"]["title"].S,centerSmall);
         GUI.Label(new Rect(plateR.x,plateR.y+10,plateR.width,28),p["name"].S,new GUIStyle(sub){alignment=TextAnchor.MiddleCenter});
         GUI.Label(new Rect(plateR.x+20,plateR.y+46,plateR.width-40,22),p["identity"]["title"].S+" · 心情 "+MoodWord(p),centerSmall);
         var rel=p["player_relation"];

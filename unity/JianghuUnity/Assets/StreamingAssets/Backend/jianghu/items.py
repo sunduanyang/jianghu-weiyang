@@ -11,9 +11,9 @@ GRADE_COLOR_NAMES = {9: '灰', 8: '白', 7: '绿', 6: '蓝', 5: '青',
                      4: '紫', 3: '金', 2: '橙', 1: '红'}
 GRADE_NAMES = {grade: name+'品' for grade, name in zip(range(9, 0, -1), '九八七六五四三二一')}
 CATEGORIES = {'manual': '书籍', 'food': '食品', 'wine': '酒', 'tea': '茶',
-              'weapon': '武器', 'armor': '衣甲', 'accessory': '佩饰', 'tool': '器具',
+              'weapon': '武器', 'shield': '盾牌', 'armor': '衣甲', 'accessory': '佩饰', 'tool': '器具',
               'medicine': '丹药', 'material': '材料'}
-SLOTS = {'weapon': '兵刃', 'armor': '衣甲', 'accessory': '佩饰', 'tool': '器具'}
+SLOTS = {'weapon': '兵刃', 'shield': '副手盾牌', 'armor': '衣甲', 'accessory': '佩饰', 'tool': '器具'}
 CONSUMABLES = ('food', 'wine', 'tea', 'medicine')
 
 
@@ -49,6 +49,18 @@ CATALOG = {
     'iron': template('生铁', 'material', 9, 5, .8, '未经精炼的铁料，可用于修补兵刃与衣甲。'),
     'timber': template('硬木料', 'material', 9, 4, .6, '纹理紧实的木料，可用于修补佩饰与器具。'),
 }
+# Physical weapon profiles feed the native arena; item identities stay stable.
+PHYSICAL_TEMPLATES = {
+    'iron_dagger': template('铁匕首', 'weapon', 9, 18, .6, '短刃近身，轻快省力。', attack=2, physical_profile='dagger'),
+    'hand_axe': template('单手战斧', 'weapon', 8, 32, 2.8, '斧头着力，柄部无伤。', attack=4, physical_profile='axe'),
+    'spiked_mace': template('钉头铁锤', 'weapon', 7, 56, 3.4, '锤头重击，压盾有力。', attack=6, physical_profile='mace'),
+    'long_spear': template('白蜡长枪', 'weapon', 8, 36, 2.6, '双手持杆，仅枪头造成伤害。', attack=4, physical_profile='spear'),
+    'great_sword': template('双手重剑', 'weapon', 6, 90, 3.8, '双手握持，无法同时举盾。', attack=8, physical_profile='greatsword'),
+    'great_axe': template('双手战斧', 'weapon', 6, 94, 5.6, '双手分担重斧，收势较慢。', attack=9, physical_profile='greataxe'),
+    'war_hammer': template('双手战锤', 'weapon', 6, 98, 6.1, '双手抡击，冲击沉重。', attack=10, physical_profile='warhammer'),
+    'wood_shield': template('藤木盾', 'shield', 9, 16, 1.1, '单手兵器可配盾；双手兵器占用副手。', defense=2),
+}
+CATALOG.update(PHYSICAL_TEMPLATES)
 # Keep old template IDs and their effects stable; add the missing grades around them.
 ORIGINAL_TEMPLATES = frozenset(CATALOG)
 CATALOG.update({
@@ -188,8 +200,16 @@ def initialize(w, legacy=False):
             for item in added:
                 item['origin_event'] = item['last_event'] = e['id']
             return True
+        if not w.items.get('physical_catalog'):
+            known = {i['template'] for i in w.items['objects'].values()}
+            added = [create(w, 'market', key, '物理战斗兵器登记') for key in PHYSICAL_TEMPLATES if key not in known]
+            w.items['physical_catalog'] = 1
+            e = w.emit('item_catalog', [], f'货栈登记物理兵器与盾牌{len(added)}件。', .25,
+                facts={'initial_condition':True, 'physical_catalog':1, 'items':[i['id'] for i in added]})
+            for item in added: item['origin_event'] = item['last_event'] = e['id']
+            return True
         return False
-    w.items = {'version': 2, 'next_id': 1, 'objects': {},
+    w.items = {'version': 2, 'physical_catalog': 1, 'next_id': 1, 'objects': {},
                'market': {'name': '五地货栈', 'wealth': 800.}, 'government': {'name': '县衙遗物库'}}
     prepare(w.items['market'])
     prepare(w.items['government'])
@@ -505,10 +525,28 @@ def produce(w, n, event):
     template_id = {'农人': 'ration', '药师': 'herb', '匠人': 'iron'}.get(n['job'])
     if not template_id or weight(w, n['id'])+CATALOG[template_id]['weight'] > capacity(w, n['id']):
         return
-    n['wealth'] -= 1  # Input cost, in addition to the month's labour opportunity.
+    from . import economics
+    materials = {}
+    material_cost = 0.
+    if economics.active(w):
+        good = {'ration':'grain', 'herb':'herb', 'iron':'iron'}[template_id]
+        stock = economics.prepare(n)['stock']; market = economics.market(w,n['place'])
+        missing = max(0., .5-stock[good])
+        if market['stock'][good] < missing or n['wealth'] < 1+missing*market['prices'][good]:
+            return
+        if missing:
+            _, material_cost = economics.buy(w,n['id'],good,missing)
+        stock[good] = economics.q(stock[good]-.5)
+        economics.state(w)['consumed'][good] += .5
+        market['used'][good] += .5
+        economics.prepare(n)['expenses'] += 1
+        materials = {good:.5}
+        economics.fee(w,n['place'],1.)
+    n['wealth'] -= 1  # Processing fee; modern mode also consumes real bulk inputs.
     item = create(w, n['id'], template_id, f"{n['name']}劳作所得")
     e = w.emit('item_produce', [n['id']], f"{n['name']}劳作时另备得{CATALOG[template_id]['name']}，耗费1银物料。", .15,
-               [event['id']], {'item_id': item['id'], 'template': template_id, 'input_cost': 1, 'producer': n['id']})
+               [event['id']], {'item_id': item['id'], 'template': template_id, 'input_cost': 1+material_cost,
+                              'bulk_inputs': materials, 'producer': n['id']})
     item['origin_event'] = item['last_event'] = e['id']
 
 

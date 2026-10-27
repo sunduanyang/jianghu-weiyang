@@ -118,6 +118,8 @@ def campaign(w, attacker, target, *, declare=False):
         causes.append(war['id'])
     g = w.governments[attacker]
     g['fund'] -= option['cost']
+    from . import economics
+    economics.fee(w, origin, option['cost'])
     g['expenses'] += option['cost']
     staging, defense = w.territory[origin], w.territory[target]
     attack = (staging['guard'] + min(18, math.sqrt(max(0, g['fund']))))*w.rng.uniform(.8, 1.2)

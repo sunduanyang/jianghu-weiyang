@@ -5,6 +5,7 @@ These are original, local rules, not a reproduction of another game's data.
 """
 from copy import deepcopy
 from .atlas import PLACES
+from . import social_ranks
 
 
 PROFESSIONS = {
@@ -35,11 +36,13 @@ PROFESSIONS = {
     '艺人': {'base': 9, 'trait': 'sociability', 'places': [0, 2, 3],
            'demand': [1, .75, 1.2, 1.15, .8], 'cost': 4, 'entry': 0,
            'description': '以曲艺娱人，城镇渡口容易谋生。'},
+    '短工': {'base': 6, 'trait': 'caution', 'places': [0, 1, 2, 3, 4],
+           'demand': [1, .85, 1.1, 1.1, .9], 'cost': 0, 'entry': 0,
+           'description': '没有固定产业，以搬运和杂役糊口，属于九品游民；攒下置业费后可另寻营生。'},
 }
-GRADES = {i: f'{s}品' for i, s in enumerate('一二三四五六七八九', 1)}
-LEVELS = [(0, '初入行', 9), (15, '熟手', 8), (35, '行家', 7),
-          (60, '名家', 6), (85, '宗匠', 5)]
-OFFICE_GRADES = {'县令': 4, '捕头': 6, '主簿': 6}
+GRADES = social_ranks.GRADES
+LEVELS = [(0, '初入行'), (15, '熟手'), (35, '行家'), (60, '名家'), (85, '宗匠')]
+OFFICE_GRADES = {title: social_ranks.grade_for(title) for title in ('县令', '捕头', '主簿')}
 
 
 def family_trade(w, n):
@@ -122,7 +125,8 @@ def entry_blockers(w, n, profession):
     return reasons
 
 
-def actions(w, n):
+def actions(w, n, planning=False):
+    from . import relationships
     if not n['alive'] or n['age_months'] < 120 or n['health'] <= 30:
         return []
     options = []
@@ -137,6 +141,7 @@ def actions(w, n):
         for tutor in tutors:
             job = tutor['career']['profession']
             if (not tutor['alive'] or tutor['age_months'] < 192 or tutor['health'] <= 30
+                    or not relationships.partner_available(w, tutor, planning)
                     or job not in PROFESSIONS or experience(tutor) < max(15, experience(n, job)+5)):
                 continue
             if job not in best or experience(tutor) > experience(best[job]):
@@ -150,7 +155,8 @@ def actions(w, n):
 def score(w, n, a):
     if a['kind'] == 'change_job':
         job = a['target']
-        difference = income(n, profession=job)-income(n)
+        from . import economics
+        difference = (economics.expected_income(w, n, job)-economics.expected_income(w, n)) if economics.active(w) else income(n, profession=job)-income(n)
         # Switching costs and a two-year commitment discourage wandering between jobs.
         return 4 + difference*4 + (7 if n['goal']['kind'] == 'wealth' else 0) - PROFESSIONS[job]['cost']*.35
     job = a['profession']
@@ -172,30 +178,33 @@ def grow(w, n):
                [n['last_event']], {'before': before, 'after': n['job'], 'profession': job,
                                    'experience': experience(n), 'entry': '成年承接学徒营生，免置业费'})
     c['last_event'] = e['id']
-    n['plan'] = None
+    from . import npc_plans
+    npc_plans.close(w, n, '中断', '成长后营生职责改变，重新安排事务', e['id'])
 
 
 def identity(w, n):
     if not n['alive'] and n.get('final_identity'):
         return deepcopy(n['final_identity'])
-    job = n['career']['profession']
+    occupation = social_ranks.occupation(n)
+    social_grade = social_ranks.grade_for(occupation)
     roles = []
     if n['age_months'] < 120:
         roles.append({'kind': 'life', 'title': '幼童', 'grade': 9})
     elif n['age_months'] < 192:
-        roles.append({'kind': 'livelihood', 'title': f'{job}学徒', 'grade': 9})
+        roles.append({'kind': 'livelihood', 'title': f'{occupation}学徒', 'grade': social_grade})
     else:
-        _, title, grade = level(n)
-        # A damaged public reputation limits professional standing, not ability.
-        grade = max(grade, 8) if n['reputation'] < -10 else grade
-        roles.append({'kind': 'livelihood', 'title': f'{job}·{title}', 'grade': grade})
+        title = f'{occupation}·{level(n)[1]}' if occupation in PROFESSIONS else occupation
+        roles.append({'kind': 'livelihood', 'title': title, 'grade': social_grade})
     if n['faction'] is not None:
         from .organizations import rank
         f = w.factions[n['faction']]
         standing = rank(w, n)
         roles.append({'kind': 'faction', 'title': f'{f["name"]}{standing["title"]}', 'grade': standing['grade']})
     if n['office']:
-        roles.append({'kind': 'office', 'title': n['office'], 'grade': OFFICE_GRADES[n['office']]})
+        roles.append({'kind': 'office', 'title': n['office'], 'grade': social_ranks.grade_for(n['office'])})
+    if n.get('social_status'):
+        title = n['social_status']['title']
+        roles.append({'kind': 'estate', 'title': title, 'grade': social_ranks.grade_for(title)})
     if n['spouse']:
         roles.append({'kind': 'family', 'title': '已婚', 'grade': 9})
     if n['children']:
@@ -204,9 +213,16 @@ def identity(w, n):
         roles.append({'kind': 'mentorship', 'title': '门徒', 'grade': 9})
     if any(w.npcs[int(i)]['mentor'] == n['id'] for i in n['relationships']):
         roles.append({'kind': 'mentorship', 'title': '授业师父', 'grade': 8})
-    primary = min(roles, key=lambda r: (r['grade'], {'office': 0, 'faction': 1}.get(r['kind'], 2)))
+    sect_member = social_ranks.is_sect_member(w, n)
+    primary = (next(r for r in roles if r['kind'] == 'faction') if sect_member else
+               min((r for r in roles if r['kind'] in ('life', 'livelihood', 'office', 'estate')),
+                   key=lambda r: (r['grade'], r['kind'] != 'office')))
     return {'grade': primary['grade'], 'grade_label': GRADES[primary['grade']],
-            'title': primary['title'], 'roles': roles}
+            'title': primary['title'], 'roles': roles,
+            'class_label': None if sect_member else social_ranks.CLASSES[primary['grade']][0],
+            'system': 'sect' if sect_member else 'nation',
+            'system_label': '门派品级' if sect_member else '社会品阶',
+            'country': None if sect_member else social_ranks.territory.owner(w, n['place'])}
 
 
 def sync_identity(w, n, cause):
@@ -220,26 +236,37 @@ def sync_identity(w, n, cause):
         new_roles = {r['title'] for r in current['roles']}
         changes = ([f'新增「{title}」' for title in sorted(new_roles-old_roles)]
                    + [f'卸下「{title}」' for title in sorted(old_roles-new_roles)])
-        summary = (f"{n['name']}的身份由{before['grade_label']}「{before['title']}」转为"
+        if before.get('system') != current['system']:
+            changes.append(f"转入{current['system_label']}")
+        if before.get('country') != current['country'] and current['country'] is not None:
+            changes.append(f"归属{w.countries[current['country']]['name']}")
+        direction = '转系' if before.get('system')!=current['system'] else '升阶' if current['grade']<before['grade'] else '降阶' if current['grade']>before['grade'] else '同阶改衔'
+        summary = (f"{n['name']}的身份由{before['grade_label']}「{before['title']}」{direction}为"
                    f"{current['grade_label']}「{current['title']}」。"
                    if (before['grade'], before['title']) != (current['grade'], current['title'])
                    else f"{n['name']}的身份关系更新：{'，'.join(changes)}。")
         e = w.emit('identity_change', [n['id']],
                    summary, .6,
-                   [cause, n.get('identity_event')], {'before': before, 'after': current})
+                   [cause, n.get('identity_event')], {'before': before, 'after': current,'direction':direction})
         n['identity_event'] = e['id']
+        from . import rank_progression
+        rank_progression.note_identity(w,n,before,current,e)
 
 
 def view(w, n):
+    from . import economics
     c = n['career']
     xp = experience(n)
     next_level = next((v for v in LEVELS if v[0] > xp), None)
     return {**deepcopy(c), 'experience_current': xp, 'level': level(n)[1],
             'next_level': {'experience': next_level[0], 'title': next_level[1]} if next_level else None,
-            'gross_income_estimate': income(n), 'identity': identity(w, n)}
+            'gross_income_estimate': economics.expected_income(w, n) if economics.active(w) else income(n),
+            'income_basis': '当前市集库存与实有银两，每次谋生估算' if economics.active(w) else '传统营生估算',
+            'identity': identity(w, n)}
 
 
 def catalog(w, n):
+    from . import economics
     return [{'name': job, **deepcopy(p), 'experience': experience(n, job),
-             'income_estimate': income(n, profession=job), 'blockers': entry_blockers(w, n, job)}
+             'income_estimate': economics.expected_income(w, n, job) if economics.active(w) else income(n, profession=job), 'blockers': entry_blockers(w, n, job)}
             for job, p in PROFESSIONS.items()]

@@ -1,0 +1,1911 @@
+{
+  "passed": true,
+  "tests": {
+    "count": 379,
+    "log": "output/local-life-final-tests.log"
+  },
+  "native": {
+    "unity": "6000.6.7f1",
+    "checks": [
+      {
+        "check": "census and presence cover region 临安府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 临安府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 建康府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 建康府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 抚州",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 抚州",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 江陵府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 江陵府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 襄阳府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 襄阳府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 成都府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 成都府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 广州",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 广州",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 泉州",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 泉州",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 中都",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 中都",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 南京开封府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 南京开封府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 京兆府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 京兆府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 上京会宁府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 上京会宁府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 克鲁伦河营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 克鲁伦河营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 兴庆府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 兴庆府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 沙州",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 沙州",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 虎思斡耳朵",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 虎思斡耳朵",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 逻些",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 逻些",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 大理城",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 大理城",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 高昌城",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 高昌城",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 海东聚落",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 海东聚落",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 黑水营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 黑水营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 开京",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 开京",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 镰仓",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 镰仓",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 平安京",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 平安京",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 太原府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 太原府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 济南府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 济南府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 辽阳府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 辽阳府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 兰州",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 兰州",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 斡难河营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 斡难河营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 土兀剌河营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 土兀剌河营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 鄂尔浑河营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 鄂尔浑河营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 杭爱牧集",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 杭爱牧集",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 阿尔泰牧集",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 阿尔泰牧集",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 甘州",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 甘州",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 疏勒",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 疏勒",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 和阗",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 和阗",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 阿克苏",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 阿克苏",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 阿力麻里",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 阿力麻里",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 日喀则",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 日喀则",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 昌都",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 昌都",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 理塘",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 理塘",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 纳里牧集",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 纳里牧集",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 鄯阐府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 鄯阐府",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 焉耆",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 焉耆",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 哈密力",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 哈密力",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 松林营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 松林营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 乌苏里营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 乌苏里营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 下江渔集",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 下江渔集",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "census and presence cover region 北山营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "home census unique 北山营地",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "all living people have one home and one current presence",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "approved layout retained",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "browsing preserves saved progress",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "selected cells show real positions before simulation",
+        "pass": true,
+        "facts": {
+          "cells": 900,
+          "populated_cells": 4,
+          "people": 56,
+          "empty_cells_in_buildings": 11,
+          "merged_facility_cells": 1,
+          "gate_visible": true,
+          "refresh_clears_old_people": true,
+          "failures": []
+        }
+      },
+      {
+        "check": "isolated world advances one month",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "selected cells show real weekly positions",
+        "pass": true,
+        "facts": {
+          "cells": 900,
+          "populated_cells": 14,
+          "people": 52,
+          "empty_cells_in_buildings": 1,
+          "merged_facility_cells": 2,
+          "gate_visible": true,
+          "refresh_clears_old_people": true,
+          "failures": []
+        }
+      },
+      {
+        "check": "render settlement-homes-and-presence",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "person exposes fixed home work and current cell",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "render person-home-work-current",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "language model stays disabled",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "no Unity errors or exceptions",
+        "pass": true,
+        "facts": null
+      }
+    ],
+    "errors": [],
+    "passed": true
+  },
+  "simulation": {
+    "migration_preserves_all_existing_fields": true,
+    "migration_creates_no_events": true,
+    "views_read_only": true,
+    "homes_unique": true,
+    "weekly_encounters": 13772,
+    "real_deliveries": 5057,
+    "freight_paid": 496.3782,
+    "rows": [
+      {
+        "place": "临安府",
+        "site": "临安府",
+        "kind": "city",
+        "homes": 24,
+        "present": 28,
+        "workers": 33
+      },
+      {
+        "place": "临安府",
+        "site": "临安府外镇",
+        "kind": "town",
+        "homes": 16,
+        "present": 11,
+        "workers": 13
+      },
+      {
+        "place": "临安府",
+        "site": "临安府北村",
+        "kind": "village",
+        "homes": 16,
+        "present": 17,
+        "workers": 6
+      },
+      {
+        "place": "建康府",
+        "site": "建康府",
+        "kind": "city",
+        "homes": 17,
+        "present": 14,
+        "workers": 15
+      },
+      {
+        "place": "建康府",
+        "site": "建康府外镇",
+        "kind": "town",
+        "homes": 14,
+        "present": 17,
+        "workers": 12
+      },
+      {
+        "place": "抚州",
+        "site": "抚州",
+        "kind": "city",
+        "homes": 16,
+        "present": 18,
+        "workers": 20
+      },
+      {
+        "place": "抚州",
+        "site": "抚州外镇",
+        "kind": "town",
+        "homes": 23,
+        "present": 21,
+        "workers": 17
+      },
+      {
+        "place": "江陵府",
+        "site": "江陵府",
+        "kind": "city",
+        "homes": 8,
+        "present": 17,
+        "workers": 47
+      },
+      {
+        "place": "江陵府",
+        "site": "江陵府外镇",
+        "kind": "town",
+        "homes": 7,
+        "present": 7,
+        "workers": 12
+      },
+      {
+        "place": "江陵府",
+        "site": "江陵府北村",
+        "kind": "village",
+        "homes": 13,
+        "present": 34,
+        "workers": 19
+      },
+      {
+        "place": "江陵府",
+        "site": "丐帮",
+        "kind": "sect",
+        "homes": 51,
+        "present": 21,
+        "workers": 0
+      },
+      {
+        "place": "襄阳府",
+        "site": "襄阳府",
+        "kind": "city",
+        "homes": 6,
+        "present": 10,
+        "workers": 27
+      },
+      {
+        "place": "襄阳府",
+        "site": "襄阳府外镇",
+        "kind": "town",
+        "homes": 3,
+        "present": 6,
+        "workers": 12
+      },
+      {
+        "place": "襄阳府",
+        "site": "襄阳府北村",
+        "kind": "village",
+        "homes": 11,
+        "present": 18,
+        "workers": 11
+      },
+      {
+        "place": "襄阳府",
+        "site": "武当派",
+        "kind": "sect",
+        "homes": 31,
+        "present": 17,
+        "workers": 0
+      },
+      {
+        "place": "成都府",
+        "site": "成都府",
+        "kind": "city",
+        "homes": 20,
+        "present": 18,
+        "workers": 24
+      },
+      {
+        "place": "成都府",
+        "site": "成都府外镇",
+        "kind": "town",
+        "homes": 22,
+        "present": 24,
+        "workers": 16
+      },
+      {
+        "place": "广州",
+        "site": "广州",
+        "kind": "city",
+        "homes": 17,
+        "present": 14,
+        "workers": 21
+      },
+      {
+        "place": "广州",
+        "site": "广州外镇",
+        "kind": "town",
+        "homes": 31,
+        "present": 34,
+        "workers": 24
+      },
+      {
+        "place": "泉州",
+        "site": "泉州",
+        "kind": "city",
+        "homes": 17,
+        "present": 11,
+        "workers": 17
+      },
+      {
+        "place": "泉州",
+        "site": "泉州外镇",
+        "kind": "town",
+        "homes": 13,
+        "present": 19,
+        "workers": 11
+      },
+      {
+        "place": "中都",
+        "site": "中都",
+        "kind": "city",
+        "homes": 14,
+        "present": 25,
+        "workers": 19
+      },
+      {
+        "place": "中都",
+        "site": "中都外镇",
+        "kind": "town",
+        "homes": 16,
+        "present": 11,
+        "workers": 14
+      },
+      {
+        "place": "中都",
+        "site": "中都北村",
+        "kind": "village",
+        "homes": 23,
+        "present": 17,
+        "workers": 12
+      },
+      {
+        "place": "南京开封府",
+        "site": "南京开封府",
+        "kind": "city",
+        "homes": 7,
+        "present": 10,
+        "workers": 31
+      },
+      {
+        "place": "南京开封府",
+        "site": "南京开封府外镇",
+        "kind": "town",
+        "homes": 4,
+        "present": 3,
+        "workers": 5
+      },
+      {
+        "place": "南京开封府",
+        "site": "南京开封府北村",
+        "kind": "village",
+        "homes": 3,
+        "present": 18,
+        "workers": 16
+      },
+      {
+        "place": "南京开封府",
+        "site": "少林寺",
+        "kind": "sect",
+        "homes": 41,
+        "present": 24,
+        "workers": 0
+      },
+      {
+        "place": "京兆府",
+        "site": "京兆府",
+        "kind": "city",
+        "homes": 16,
+        "present": 19,
+        "workers": 41
+      },
+      {
+        "place": "京兆府",
+        "site": "京兆府外镇",
+        "kind": "town",
+        "homes": 12,
+        "present": 6,
+        "workers": 12
+      },
+      {
+        "place": "京兆府",
+        "site": "京兆府北村",
+        "kind": "village",
+        "homes": 7,
+        "present": 22,
+        "workers": 14
+      },
+      {
+        "place": "京兆府",
+        "site": "全真教",
+        "kind": "sect",
+        "homes": 36,
+        "present": 24,
+        "workers": 0
+      },
+      {
+        "place": "上京会宁府",
+        "site": "上京会宁府",
+        "kind": "city",
+        "homes": 14,
+        "present": 11,
+        "workers": 13
+      },
+      {
+        "place": "上京会宁府",
+        "site": "上京会宁府外镇",
+        "kind": "town",
+        "homes": 14,
+        "present": 17,
+        "workers": 13
+      },
+      {
+        "place": "克鲁伦河营地",
+        "site": "克鲁伦河营地",
+        "kind": "city",
+        "homes": 10,
+        "present": 18,
+        "workers": 16
+      },
+      {
+        "place": "克鲁伦河营地",
+        "site": "克鲁伦河营地北村",
+        "kind": "village",
+        "homes": 13,
+        "present": 5,
+        "workers": 5
+      },
+      {
+        "place": "兴庆府",
+        "site": "兴庆府",
+        "kind": "city",
+        "homes": 7,
+        "present": 13,
+        "workers": 39
+      },
+      {
+        "place": "兴庆府",
+        "site": "兴庆府外镇",
+        "kind": "town",
+        "homes": 7,
+        "present": 8,
+        "workers": 8
+      },
+      {
+        "place": "兴庆府",
+        "site": "兴庆府北村",
+        "kind": "village",
+        "homes": 12,
+        "present": 21,
+        "workers": 14
+      },
+      {
+        "place": "兴庆府",
+        "site": "一品堂",
+        "kind": "sect",
+        "homes": 37,
+        "present": 21,
+        "workers": 0
+      },
+      {
+        "place": "沙州",
+        "site": "沙州",
+        "kind": "city",
+        "homes": 13,
+        "present": 17,
+        "workers": 16
+      },
+      {
+        "place": "沙州",
+        "site": "沙州北村",
+        "kind": "village",
+        "homes": 10,
+        "present": 6,
+        "workers": 6
+      },
+      {
+        "place": "虎思斡耳朵",
+        "site": "虎思斡耳朵",
+        "kind": "city",
+        "homes": 24,
+        "present": 14,
+        "workers": 27
+      },
+      {
+        "place": "虎思斡耳朵",
+        "site": "虎思斡耳朵外镇",
+        "kind": "town",
+        "homes": 16,
+        "present": 26,
+        "workers": 11
+      },
+      {
+        "place": "逻些",
+        "site": "逻些",
+        "kind": "city",
+        "homes": 7,
+        "present": 20,
+        "workers": 31
+      },
+      {
+        "place": "逻些",
+        "site": "逻些外镇",
+        "kind": "town",
+        "homes": 6,
+        "present": 4,
+        "workers": 7
+      },
+      {
+        "place": "逻些",
+        "site": "逻些北村",
+        "kind": "village",
+        "homes": 13,
+        "present": 21,
+        "workers": 22
+      },
+      {
+        "place": "逻些",
+        "site": "大轮寺",
+        "kind": "sect",
+        "homes": 41,
+        "present": 22,
+        "workers": 0
+      },
+      {
+        "place": "大理城",
+        "site": "大理城",
+        "kind": "city",
+        "homes": 14,
+        "present": 16,
+        "workers": 36
+      },
+      {
+        "place": "大理城",
+        "site": "大理城外镇",
+        "kind": "town",
+        "homes": 7,
+        "present": 5,
+        "workers": 10
+      },
+      {
+        "place": "大理城",
+        "site": "大理城北村",
+        "kind": "village",
+        "homes": 6,
+        "present": 22,
+        "workers": 14
+      },
+      {
+        "place": "大理城",
+        "site": "天龙寺",
+        "kind": "sect",
+        "homes": 39,
+        "present": 23,
+        "workers": 0
+      },
+      {
+        "place": "高昌城",
+        "site": "高昌城",
+        "kind": "city",
+        "homes": 10,
+        "present": 12,
+        "workers": 32
+      },
+      {
+        "place": "高昌城",
+        "site": "高昌城外镇",
+        "kind": "town",
+        "homes": 10,
+        "present": 23,
+        "workers": 12
+      },
+      {
+        "place": "高昌城",
+        "site": "柏孜克里克寺",
+        "kind": "sect",
+        "homes": 28,
+        "present": 13,
+        "workers": 0
+      },
+      {
+        "place": "海东聚落",
+        "site": "海东聚落",
+        "kind": "city",
+        "homes": 11,
+        "present": 16,
+        "workers": 47
+      },
+      {
+        "place": "海东聚落",
+        "site": "海东聚落外镇",
+        "kind": "town",
+        "homes": 1,
+        "present": 4,
+        "workers": 3
+      },
+      {
+        "place": "海东聚落",
+        "site": "海东聚落北村",
+        "kind": "village",
+        "homes": 9,
+        "present": 17,
+        "workers": 1
+      },
+      {
+        "place": "海东聚落",
+        "site": "海东祖灵社",
+        "kind": "sect",
+        "homes": 33,
+        "present": 17,
+        "workers": 0
+      },
+      {
+        "place": "黑水营地",
+        "site": "黑水营地",
+        "kind": "city",
+        "homes": 6,
+        "present": 10,
+        "workers": 29
+      },
+      {
+        "place": "黑水营地",
+        "site": "黑水营地外镇",
+        "kind": "town",
+        "homes": 9,
+        "present": 17,
+        "workers": 10
+      },
+      {
+        "place": "黑水营地",
+        "site": "黑水萨满坛",
+        "kind": "sect",
+        "homes": 27,
+        "present": 15,
+        "workers": 0
+      },
+      {
+        "place": "开京",
+        "site": "开京",
+        "kind": "city",
+        "homes": 15,
+        "present": 20,
+        "workers": 41
+      },
+      {
+        "place": "开京",
+        "site": "开京外镇",
+        "kind": "town",
+        "homes": 11,
+        "present": 6,
+        "workers": 13
+      },
+      {
+        "place": "开京",
+        "site": "开京北村",
+        "kind": "village",
+        "homes": 7,
+        "present": 17,
+        "workers": 14
+      },
+      {
+        "place": "开京",
+        "site": "都房",
+        "kind": "sect",
+        "homes": 39,
+        "present": 29,
+        "workers": 0
+      },
+      {
+        "place": "镰仓",
+        "site": "镰仓",
+        "kind": "city",
+        "homes": 24,
+        "present": 16,
+        "workers": 22
+      },
+      {
+        "place": "镰仓",
+        "site": "镰仓外镇",
+        "kind": "town",
+        "homes": 15,
+        "present": 23,
+        "workers": 9
+      },
+      {
+        "place": "平安京",
+        "site": "平安京",
+        "kind": "city",
+        "homes": 13,
+        "present": 15,
+        "workers": 27
+      },
+      {
+        "place": "平安京",
+        "site": "平安京外镇",
+        "kind": "town",
+        "homes": 11,
+        "present": 14,
+        "workers": 17
+      },
+      {
+        "place": "平安京",
+        "site": "鞍马寺",
+        "kind": "sect",
+        "homes": 23,
+        "present": 18,
+        "workers": 0
+      },
+      {
+        "place": "太原府",
+        "site": "太原府",
+        "kind": "city",
+        "homes": 12,
+        "present": 11,
+        "workers": 17
+      },
+      {
+        "place": "太原府",
+        "site": "太原府北村",
+        "kind": "village",
+        "homes": 12,
+        "present": 13,
+        "workers": 6
+      },
+      {
+        "place": "济南府",
+        "site": "济南府",
+        "kind": "city",
+        "homes": 12,
+        "present": 14,
+        "workers": 17
+      },
+      {
+        "place": "济南府",
+        "site": "济南府外镇",
+        "kind": "town",
+        "homes": 22,
+        "present": 20,
+        "workers": 15
+      },
+      {
+        "place": "辽阳府",
+        "site": "辽阳府",
+        "kind": "city",
+        "homes": 20,
+        "present": 16,
+        "workers": 15
+      },
+      {
+        "place": "辽阳府",
+        "site": "辽阳府外镇",
+        "kind": "town",
+        "homes": 16,
+        "present": 20,
+        "workers": 17
+      },
+      {
+        "place": "兰州",
+        "site": "兰州",
+        "kind": "city",
+        "homes": 9,
+        "present": 11,
+        "workers": 12
+      },
+      {
+        "place": "兰州",
+        "site": "兰州外镇",
+        "kind": "town",
+        "homes": 17,
+        "present": 15,
+        "workers": 13
+      },
+      {
+        "place": "斡难河营地",
+        "site": "斡难河营地",
+        "kind": "city",
+        "homes": 13,
+        "present": 13,
+        "workers": 10
+      },
+      {
+        "place": "斡难河营地",
+        "site": "斡难河营地外镇",
+        "kind": "town",
+        "homes": 14,
+        "present": 14,
+        "workers": 15
+      },
+      {
+        "place": "土兀剌河营地",
+        "site": "土兀剌河营地",
+        "kind": "city",
+        "homes": 2,
+        "present": 12,
+        "workers": 27
+      },
+      {
+        "place": "土兀剌河营地",
+        "site": "土兀剌河营地外镇",
+        "kind": "town",
+        "homes": 0,
+        "present": 4,
+        "workers": 7
+      },
+      {
+        "place": "土兀剌河营地",
+        "site": "土兀剌河营地北村",
+        "kind": "village",
+        "homes": 4,
+        "present": 14,
+        "workers": 17
+      },
+      {
+        "place": "土兀剌河营地",
+        "site": "克烈武帐",
+        "kind": "sect",
+        "homes": 48,
+        "present": 24,
+        "workers": 0
+      },
+      {
+        "place": "鄂尔浑河营地",
+        "site": "鄂尔浑河营地",
+        "kind": "city",
+        "homes": 12,
+        "present": 11,
+        "workers": 11
+      },
+      {
+        "place": "鄂尔浑河营地",
+        "site": "鄂尔浑河营地外镇",
+        "kind": "town",
+        "homes": 13,
+        "present": 14,
+        "workers": 13
+      },
+      {
+        "place": "杭爱牧集",
+        "site": "杭爱牧集",
+        "kind": "city",
+        "homes": 12,
+        "present": 12,
+        "workers": 14
+      },
+      {
+        "place": "杭爱牧集",
+        "site": "杭爱牧集北村",
+        "kind": "village",
+        "homes": 9,
+        "present": 9,
+        "workers": 5
+      },
+      {
+        "place": "阿尔泰牧集",
+        "site": "阿尔泰牧集",
+        "kind": "city",
+        "homes": 7,
+        "present": 9,
+        "workers": 9
+      },
+      {
+        "place": "阿尔泰牧集",
+        "site": "阿尔泰牧集北村",
+        "kind": "village",
+        "homes": 9,
+        "present": 7,
+        "workers": 6
+      },
+      {
+        "place": "甘州",
+        "site": "甘州",
+        "kind": "city",
+        "homes": 11,
+        "present": 16,
+        "workers": 18
+      },
+      {
+        "place": "甘州",
+        "site": "甘州北村",
+        "kind": "village",
+        "homes": 10,
+        "present": 5,
+        "workers": 2
+      },
+      {
+        "place": "疏勒",
+        "site": "疏勒",
+        "kind": "city",
+        "homes": 9,
+        "present": 14,
+        "workers": 16
+      },
+      {
+        "place": "疏勒",
+        "site": "疏勒北村",
+        "kind": "village",
+        "homes": 14,
+        "present": 9,
+        "workers": 4
+      },
+      {
+        "place": "和阗",
+        "site": "和阗",
+        "kind": "city",
+        "homes": 18,
+        "present": 12,
+        "workers": 14
+      },
+      {
+        "place": "和阗",
+        "site": "和阗外镇",
+        "kind": "town",
+        "homes": 10,
+        "present": 16,
+        "workers": 12
+      },
+      {
+        "place": "阿克苏",
+        "site": "阿克苏",
+        "kind": "city",
+        "homes": 12,
+        "present": 11,
+        "workers": 14
+      },
+      {
+        "place": "阿克苏",
+        "site": "阿克苏北村",
+        "kind": "village",
+        "homes": 2,
+        "present": 3,
+        "workers": 0
+      },
+      {
+        "place": "阿力麻里",
+        "site": "阿力麻里",
+        "kind": "city",
+        "homes": 6,
+        "present": 9,
+        "workers": 27
+      },
+      {
+        "place": "阿力麻里",
+        "site": "阿力麻里外镇",
+        "kind": "town",
+        "homes": 4,
+        "present": 4,
+        "workers": 5
+      },
+      {
+        "place": "阿力麻里",
+        "site": "阿力麻里北村",
+        "kind": "village",
+        "homes": 4,
+        "present": 11,
+        "workers": 18
+      },
+      {
+        "place": "阿力麻里",
+        "site": "天山派",
+        "kind": "sect",
+        "homes": 36,
+        "present": 26,
+        "workers": 0
+      },
+      {
+        "place": "日喀则",
+        "site": "日喀则",
+        "kind": "city",
+        "homes": 10,
+        "present": 11,
+        "workers": 12
+      },
+      {
+        "place": "日喀则",
+        "site": "日喀则北村",
+        "kind": "village",
+        "homes": 8,
+        "present": 7,
+        "workers": 5
+      },
+      {
+        "place": "昌都",
+        "site": "昌都",
+        "kind": "city",
+        "homes": 13,
+        "present": 12,
+        "workers": 15
+      },
+      {
+        "place": "昌都",
+        "site": "昌都外镇",
+        "kind": "town",
+        "homes": 12,
+        "present": 13,
+        "workers": 8
+      },
+      {
+        "place": "理塘",
+        "site": "理塘",
+        "kind": "city",
+        "homes": 7,
+        "present": 10,
+        "workers": 15
+      },
+      {
+        "place": "理塘",
+        "site": "理塘北村",
+        "kind": "village",
+        "homes": 14,
+        "present": 11,
+        "workers": 5
+      },
+      {
+        "place": "纳里牧集",
+        "site": "纳里牧集",
+        "kind": "city",
+        "homes": 7,
+        "present": 11,
+        "workers": 9
+      },
+      {
+        "place": "纳里牧集",
+        "site": "纳里牧集北村",
+        "kind": "village",
+        "homes": 9,
+        "present": 5,
+        "workers": 5
+      },
+      {
+        "place": "鄯阐府",
+        "site": "鄯阐府",
+        "kind": "city",
+        "homes": 7,
+        "present": 18,
+        "workers": 11
+      },
+      {
+        "place": "鄯阐府",
+        "site": "鄯阐府外镇",
+        "kind": "town",
+        "homes": 20,
+        "present": 9,
+        "workers": 14
+      },
+      {
+        "place": "焉耆",
+        "site": "焉耆",
+        "kind": "city",
+        "homes": 12,
+        "present": 10,
+        "workers": 16
+      },
+      {
+        "place": "焉耆",
+        "site": "焉耆北村",
+        "kind": "village",
+        "homes": 7,
+        "present": 9,
+        "workers": 2
+      },
+      {
+        "place": "哈密力",
+        "site": "哈密力",
+        "kind": "city",
+        "homes": 11,
+        "present": 9,
+        "workers": 17
+      },
+      {
+        "place": "哈密力",
+        "site": "哈密力北村",
+        "kind": "village",
+        "homes": 13,
+        "present": 15,
+        "workers": 4
+      },
+      {
+        "place": "松林营地",
+        "site": "松林营地",
+        "kind": "city",
+        "homes": 10,
+        "present": 13,
+        "workers": 13
+      },
+      {
+        "place": "松林营地",
+        "site": "松林营地北村",
+        "kind": "village",
+        "homes": 14,
+        "present": 11,
+        "workers": 10
+      },
+      {
+        "place": "乌苏里营地",
+        "site": "乌苏里营地",
+        "kind": "city",
+        "homes": 13,
+        "present": 11,
+        "workers": 13
+      },
+      {
+        "place": "乌苏里营地",
+        "site": "乌苏里营地外镇",
+        "kind": "town",
+        "homes": 13,
+        "present": 15,
+        "workers": 11
+      },
+      {
+        "place": "下江渔集",
+        "site": "下江渔集",
+        "kind": "city",
+        "homes": 13,
+        "present": 9,
+        "workers": 14
+      },
+      {
+        "place": "下江渔集",
+        "site": "下江渔集北村",
+        "kind": "village",
+        "homes": 4,
+        "present": 8,
+        "workers": 2
+      },
+      {
+        "place": "北山营地",
+        "site": "北山营地",
+        "kind": "city",
+        "homes": 8,
+        "present": 11,
+        "workers": 12
+      },
+      {
+        "place": "北山营地",
+        "site": "北山营地北村",
+        "kind": "village",
+        "homes": 8,
+        "present": 5,
+        "workers": 3
+      }
+    ],
+    "months": [
+      {
+        "month": 246,
+        "population": 1799,
+        "seconds": 23.121,
+        "cash_residual": 0.0,
+        "max_goods_residual": 0.0
+      },
+      {
+        "month": 247,
+        "population": 1799,
+        "seconds": 21.242,
+        "cash_residual": 3.4e-05,
+        "max_goods_residual": 0.0
+      },
+      {
+        "month": 248,
+        "population": 1799,
+        "seconds": 20.744,
+        "cash_residual": -4e-06,
+        "max_goods_residual": 0.0
+      },
+      {
+        "month": 249,
+        "population": 1799,
+        "seconds": 22.441,
+        "cash_residual": 0.000138,
+        "max_goods_residual": 0.0
+      },
+      {
+        "month": 250,
+        "population": 1799,
+        "seconds": 22.904,
+        "cash_residual": 0.000165,
+        "max_goods_residual": 0.0
+      },
+      {
+        "month": 251,
+        "population": 1799,
+        "seconds": 23.439,
+        "cash_residual": -3.1e-05,
+        "max_goods_residual": 0.0
+      },
+      {
+        "month": 252,
+        "population": 1799,
+        "seconds": 23.442,
+        "cash_residual": -0.000209,
+        "max_goods_residual": 0.0
+      },
+      {
+        "month": 253,
+        "population": 1801,
+        "seconds": 26.146,
+        "cash_residual": -0.000169,
+        "max_goods_residual": 0.0
+      },
+      {
+        "month": 254,
+        "population": 1809,
+        "seconds": 23.821,
+        "cash_residual": -0.000226,
+        "max_goods_residual": 0.0
+      },
+      {
+        "month": 255,
+        "population": 1812,
+        "seconds": 24.972,
+        "cash_residual": -0.000367,
+        "max_goods_residual": 0.0
+      },
+      {
+        "month": 256,
+        "population": 1813,
+        "seconds": 24.308,
+        "cash_residual": -0.000303,
+        "max_goods_residual": 0.0
+      },
+      {
+        "month": 257,
+        "population": 1818,
+        "seconds": 25.136,
+        "cash_residual": -0.000777,
+        "max_goods_residual": 0.0
+      }
+    ],
+    "reload_equal": true,
+    "audit": {
+      "cash": 155624.2400767891,
+      "cash_residual": -0.000777,
+      "goods_residuals": {
+        "grain": 0.0,
+        "fish": 0.0,
+        "meat": 0.0,
+        "fiber": 0.0,
+        "cloth": -0.0,
+        "herb": -0.0,
+        "medicine": -0.0,
+        "timber": -0.0,
+        "iron": -0.0,
+        "tools": 0.0,
+        "study": 0.0,
+        "leisure": -0.0,
+        "transport": -0.0
+      },
+      "negative_stock": false,
+      "negative_market_cash": false
+    },
+    "source_hashes": {
+      "jianghu\\__init__.py": "fa4bb541ffb1012e31431d164c85942d7e66419ef2c01b38bcb64e142969b8d7",
+      "jianghu\\ai.py": "5c5ee59a5f0d0244eab4c4196c2c9e2efe59522a9cf1cf0a183467926f9cdfeb",
+      "jianghu\\atlas.py": "4314a11a01f53ca0392a64c9f5ca7b9f084b84ecf00a39ba07d8372ad2257d07",
+      "jianghu\\atlas_expansion.py": "87ac10adbc53a2c4fd761b63b56df87ef544457f048624f19143f89da29e1187",
+      "jianghu\\atlas_migration.py": "c8f548da1c80323f57a999bfdebe5caf98bf29784fdc0d12021d2a61c72d4b5c",
+      "jianghu\\careers.py": "84d97756262bf833fcd54362f4dbfa6bac024d630e331eedef9b60d2374323c1",
+      "jianghu\\city_biomes.py": "9cc647c6192e4110dbef61035298e473f73128845b511f4a14a310929d338639",
+      "jianghu\\city_gardens.py": "465dc249dca3812f348ee8273b414f302bc8953143c8cdfc5e079d76fcf794fe",
+      "jianghu\\city_landscape.py": "fbe3a70ace9a4c40d84ece63eddc6b52364d13737fa0957324f41480d2c550b9",
+      "jianghu\\city_maps.py": "a21f1f30165f1551dafc0953316325ee4dbaf0d9c3aec35f821eb02e3206bf2e",
+      "jianghu\\city_plans.py": "48cb31a3f7355449314e7c1936a6405b419dc7d8d176a774b085beb291659548",
+      "jianghu\\city_regions.py": "443590725c6742bb155869da3553fd9bb7474b3cbbae9965647275f2bc4e157a",
+      "jianghu\\combat.py": "51326f380170b3372dde644b1d0a2b2d648b6d70175d670ec3da01deac4513bc",
+      "jianghu\\combat_flow.py": "b6bea419dd699c9909ad9c3f0470b656d586d5606389a5f78c5672748316d90f",
+      "jianghu\\combat_realtime.py": "d21e7afb359671815bbd655c494a445d0fc300dc40c53398abf7d5236f6d8cbe",
+      "jianghu\\demography.py": "c57fe99c27270e72a7ca4895298d5e8671fa18e2afad67afc42b98e5587bb0a9",
+      "jianghu\\economics.py": "7a226932c94cd8ac056a3da846feb2154a533a86c97d33458e35ff3110490e2c",
+      "jianghu\\engine.py": "24c5bd8e0944e0fa1fc831320e9bd8b97a6d30d26a9df7783cdae4c9e3c702b5",
+      "jianghu\\government.py": "7817774054eb484140a5cd4d71b45c282eff4e1584e14eca13854011d3aa9f98",
+      "jianghu\\historical_map.py": "1e08af6fe6bc9ad9d2b0e5e429d71461acfe412b9c7ead175cdc6186aeea809e",
+      "jianghu\\items.py": "95d574fc14c1925e6be4f5269786819cdd662eaa3584c36a6e4f040c0cced133",
+      "jianghu\\local_life.py": "4e2038d2f2b76a06c0cd28cea89d106b0c477f4d9d4a75c395f6c2477f3dad91",
+      "jianghu\\martial.py": "72b1b8303b5d7bc7b901522ef914373ac59d1ca1a352288b4461b13deff822fe",
+      "jianghu\\npc_memory.py": "eb5bfa500b8c0b094d59d1043ddf57d910c08ea7082bc2c9ff8d56e3fa2fb701",
+      "jianghu\\npc_plans.py": "38244a618670020c1363965ac90a0481e4ae9701c853936b15238a9b0feafe5f",
+      "jianghu\\organizations.py": "9dfed6f94045585c0ab9c7f9d048956b1c8388b5da9bbb9a446125a406814e09",
+      "jianghu\\politics.py": "643ac2df5b8e23f1d3c751f1bec641792333671e14e9b612e0409de027772d0e",
+      "jianghu\\population.py": "152f17945dcb7bbd9c6af5fe76e5db2f997ce3286c22f5a2a8fd103b2d1a7cca",
+      "jianghu\\protagonist.py": "830886d861623fd91f1508e2456d494763c1c646b976a4fe4b4385db67bf86db",
+      "jianghu\\rank_progression.py": "9b133e8a3932fe50df5ce1e91e155b8780cf3a35d70cbf8c55e0613680ac1e8b",
+      "jianghu\\relationships.py": "0b51546065f525967838cab3a967fbd2102903dca5b9b79864007169e0450fae",
+      "jianghu\\sect_catalog.py": "b2d3b28f18d4da90800a34cfe33ad970466c901df6b01424380c0af74a8f1ec1",
+      "jianghu\\sect_migration.py": "70e88b2259ab2b8a885c21bb60ce08206097e58c6c208f186540bb097e7dca93",
+      "jianghu\\sect_ranks.py": "c2628e718c54612ac2bed58338803afc948c566d9c79811c9a6dd00c8c040495",
+      "jianghu\\server.py": "a65d2d4a428a3ee348ac36921a5ca58840b129f49b649d9a7cff064a5fcf8fb0",
+      "jianghu\\settlements.py": "3654534a829f9082f05b6ef6b585155c463004bfeab733ab586d6e89993fee1f",
+      "jianghu\\social.py": "e395725bf846a9896974cff8a3af8b1fa78b1ae4ecd345bd22aa9f1bc939145c",
+      "jianghu\\social_ranks.py": "5e695446ee18a326abddad2b993503db66b4df20d2b3a1ab8b413e2dd84790f9",
+      "jianghu\\society.py": "2a6b83629a3fe6a696120bc175e413f8a5aa72097fba9e86dbea55e88f341bbd",
+      "jianghu\\store.py": "b98ca0fe845953a0b14623587da2a98ffcd0bcd8cd8a438cc3823343a09f50d4",
+      "jianghu\\territory.py": "f4bac713250a0623ea308359afe697897bf4b251ea1722b761ee13c75d24ad27"
+    }
+  },
+  "formal_migration": {
+    "source": "C:\\Users\\User\\AppData\\LocalLow\\JianghuStudio\\江湖未央 Unity\\Saves\\data\\world-nine-grades-1800-20261027.sqlite",
+    "backup": "C:\\Users\\User\\AppData\\LocalLow\\JianghuStudio\\江湖未央 Unity\\Saves\\backups\\before-local-life-20261027-192320.sqlite",
+    "month": 245,
+    "living": 1799,
+    "registered": 1799,
+    "events": 18619,
+    "all_existing_fields_preserved": {
+      "seed": true,
+      "month": true,
+      "npcs": true,
+      "population_generation": true,
+      "social_rank_version": true,
+      "settlements": true,
+      "city_map_version": true,
+      "city_positions": true,
+      "city_settlement_profiles": true,
+      "territory": true,
+      "campaigns": true,
+      "factions": true,
+      "sect_version": true,
+      "sect_history": true,
+      "government": true,
+      "governments": true,
+      "society": true,
+      "countries": true,
+      "map_version": true,
+      "atlas_history": true,
+      "player": true,
+      "items": true,
+      "economy": true,
+      "metrics": true,
+      "population_limit": true,
+      "random_state": true,
+      "battle": true,
+      "rank_system": true
+    },
+    "audit": {
+      "cash": 156150.5313889942,
+      "cash_residual": 0.0,
+      "goods_residuals": {
+        "grain": 0.0,
+        "fish": 0.0,
+        "meat": 0.0,
+        "fiber": 0.0,
+        "cloth": 0.0,
+        "herb": 0.0,
+        "medicine": 0.0,
+        "timber": 0.0,
+        "iron": 0.0,
+        "tools": 0.0,
+        "study": 0.0,
+        "leisure": 0.0,
+        "transport": 0.0
+      },
+      "negative_stock": false,
+      "negative_market_cash": false
+    }
+  },
+  "formal_native": {
+    "month": 245,
+    "population": 1799,
+    "autoplay": false,
+    "pending": 0,
+    "model_enabled": false,
+    "map_version": 8,
+    "home_total": 56.0,
+    "region_population": 56,
+    "person_home": "武当派",
+    "person_work": "南门驿口"
+  },
+  "performance": [
+    {
+      "local_life": false,
+      "seconds": 15.233,
+      "actions": 4908
+    },
+    {
+      "local_life": true,
+      "seconds": 12.234,
+      "actions": 4222
+    }
+  ],
+  "backend_module_count": 41,
+  "backend_modules_identical": true,
+  "source_hashes": {
+    "jianghu\\__init__.py": "fa4bb541ffb1012e31431d164c85942d7e66419ef2c01b38bcb64e142969b8d7",
+    "jianghu\\ai.py": "5c5ee59a5f0d0244eab4c4196c2c9e2efe59522a9cf1cf0a183467926f9cdfeb",
+    "jianghu\\atlas.py": "4314a11a01f53ca0392a64c9f5ca7b9f084b84ecf00a39ba07d8372ad2257d07",
+    "jianghu\\atlas_expansion.py": "87ac10adbc53a2c4fd761b63b56df87ef544457f048624f19143f89da29e1187",
+    "jianghu\\atlas_migration.py": "c8f548da1c80323f57a999bfdebe5caf98bf29784fdc0d12021d2a61c72d4b5c",
+    "jianghu\\careers.py": "84d97756262bf833fcd54362f4dbfa6bac024d630e331eedef9b60d2374323c1",
+    "jianghu\\city_biomes.py": "9cc647c6192e4110dbef61035298e473f73128845b511f4a14a310929d338639",
+    "jianghu\\city_gardens.py": "465dc249dca3812f348ee8273b414f302bc8953143c8cdfc5e079d76fcf794fe",
+    "jianghu\\city_landscape.py": "fbe3a70ace9a4c40d84ece63eddc6b52364d13737fa0957324f41480d2c550b9",
+    "jianghu\\city_maps.py": "a21f1f30165f1551dafc0953316325ee4dbaf0d9c3aec35f821eb02e3206bf2e",
+    "jianghu\\city_plans.py": "48cb31a3f7355449314e7c1936a6405b419dc7d8d176a774b085beb291659548",
+    "jianghu\\city_regions.py": "443590725c6742bb155869da3553fd9bb7474b3cbbae9965647275f2bc4e157a",
+    "jianghu\\combat.py": "51326f380170b3372dde644b1d0a2b2d648b6d70175d670ec3da01deac4513bc",
+    "jianghu\\combat_flow.py": "b6bea419dd699c9909ad9c3f0470b656d586d5606389a5f78c5672748316d90f",
+    "jianghu\\combat_realtime.py": "d21e7afb359671815bbd655c494a445d0fc300dc40c53398abf7d5236f6d8cbe",
+    "jianghu\\demography.py": "c57fe99c27270e72a7ca4895298d5e8671fa18e2afad67afc42b98e5587bb0a9",
+    "jianghu\\economics.py": "7a226932c94cd8ac056a3da846feb2154a533a86c97d33458e35ff3110490e2c",
+    "jianghu\\engine.py": "24c5bd8e0944e0fa1fc831320e9bd8b97a6d30d26a9df7783cdae4c9e3c702b5",
+    "jianghu\\government.py": "7817774054eb484140a5cd4d71b45c282eff4e1584e14eca13854011d3aa9f98",
+    "jianghu\\historical_map.py": "1e08af6fe6bc9ad9d2b0e5e429d71461acfe412b9c7ead175cdc6186aeea809e",
+    "jianghu\\items.py": "95d574fc14c1925e6be4f5269786819cdd662eaa3584c36a6e4f040c0cced133",
+    "jianghu\\local_life.py": "4e2038d2f2b76a06c0cd28cea89d106b0c477f4d9d4a75c395f6c2477f3dad91",
+    "jianghu\\martial.py": "72b1b8303b5d7bc7b901522ef914373ac59d1ca1a352288b4461b13deff822fe",
+    "jianghu\\npc_memory.py": "eb5bfa500b8c0b094d59d1043ddf57d910c08ea7082bc2c9ff8d56e3fa2fb701",
+    "jianghu\\npc_plans.py": "38244a618670020c1363965ac90a0481e4ae9701c853936b15238a9b0feafe5f",
+    "jianghu\\organizations.py": "9dfed6f94045585c0ab9c7f9d048956b1c8388b5da9bbb9a446125a406814e09",
+    "jianghu\\politics.py": "643ac2df5b8e23f1d3c751f1bec641792333671e14e9b612e0409de027772d0e",
+    "jianghu\\population.py": "152f17945dcb7bbd9c6af5fe76e5db2f997ce3286c22f5a2a8fd103b2d1a7cca",
+    "jianghu\\protagonist.py": "830886d861623fd91f1508e2456d494763c1c646b976a4fe4b4385db67bf86db",
+    "jianghu\\rank_progression.py": "9b133e8a3932fe50df5ce1e91e155b8780cf3a35d70cbf8c55e0613680ac1e8b",
+    "jianghu\\relationships.py": "0b51546065f525967838cab3a967fbd2102903dca5b9b79864007169e0450fae",
+    "jianghu\\sect_catalog.py": "b2d3b28f18d4da90800a34cfe33ad970466c901df6b01424380c0af74a8f1ec1",
+    "jianghu\\sect_migration.py": "70e88b2259ab2b8a885c21bb60ce08206097e58c6c208f186540bb097e7dca93",
+    "jianghu\\sect_ranks.py": "c2628e718c54612ac2bed58338803afc948c566d9c79811c9a6dd00c8c040495",
+    "jianghu\\server.py": "a65d2d4a428a3ee348ac36921a5ca58840b129f49b649d9a7cff064a5fcf8fb0",
+    "jianghu\\settlements.py": "3654534a829f9082f05b6ef6b585155c463004bfeab733ab586d6e89993fee1f",
+    "jianghu\\social.py": "e395725bf846a9896974cff8a3af8b1fa78b1ae4ecd345bd22aa9f1bc939145c",
+    "jianghu\\social_ranks.py": "5e695446ee18a326abddad2b993503db66b4df20d2b3a1ab8b413e2dd84790f9",
+    "jianghu\\society.py": "2a6b83629a3fe6a696120bc175e413f8a5aa72097fba9e86dbea55e88f341bbd",
+    "jianghu\\store.py": "b98ca0fe845953a0b14623587da2a98ffcd0bcd8cd8a438cc3823343a09f50d4",
+    "jianghu\\territory.py": "f4bac713250a0623ea308359afe697897bf4b251ea1722b761ee13c75d24ad27"
+  },
+  "unity_sources": {
+    "unity\\JianghuUnity\\Assets\\Scripts\\BattleScreen.cs": "ac93e6a49f1e7677f4386d4f89a4a3439536c3470d43832bc4f5bc6860ac89c6",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityAreas.cs": "0c3ef53821353cc83912a083201dfd76aa9793ce2d0d7a6aacf6cffdf50cd034",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityGroundSmoke.cs": "413a23979965c4e25260c6e3abf84544b8f2ea8411426c7b21257d28fc526e7b",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityLandscape.cs": "119cf0f46b796bccd2b8a49f63e536eea29f9f04dff2b386470778f1c8869556",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityLoading.cs": "bacbedb3897b37e9a814fffafd3001f05ef324882a344f8dbd8753b6cd7b0e2c",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityMap.cs": "ee7ee89f2e2c15a308d1603bf639a084a8b3ee2e7541c69be99f0f2f64bccb2e",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityMapSmoke.cs": "c89e338f03f686fcfdce0a88d5edf8d722812585eccabb854480fcf0ab5e8f1a",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityPeople.cs": "f0ebf93317cc4f27b4ffce012f1d7274f0d8d1222d3f7d36a87a34b196fa32d3",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityPeopleSmoke.cs": "70700ac95159e98acfa59784b3fed94eb7bc00da41c29d6a467fcbcc9a4ecd79",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityRiverSmoke.cs": "7055b11f512a9b9e2aa751615be91e2a3c752a4ce1b8a18980f84f116156b7c5",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityRouting.cs": "2d63e900f73bc268983a6bb63e45edd475ec7f1a794932020f616463d0aacecd",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityTerrain.cs": "f964f6e52bd7583c62a9321511953641fa12b4fb61e61e3d4add00a4da899172",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityWalking.cs": "97dc8e4c4dc98b4330dbb99e76774e8cd4f13e7fb5a0fc564ef4ea606e66a7f7",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CombatRanges.cs": "5dd52930ea909db7547b222728f2ebdb36b6f4e473ff55c6460ac6aa99d137eb",
+    "unity\\JianghuUnity\\Assets\\Scripts\\Economy.cs": "31bcfc4ba0f437200597117c46a73ea867755d826da835a1a2e1aa931c40db56",
+    "unity\\JianghuUnity\\Assets\\Scripts\\EconomySmoke.cs": "187142c59ad8dd5ce3bd930e1f15af95b8f9f6fc5b028a0edd01ed2a4fd18dec",
+    "unity\\JianghuUnity\\Assets\\Scripts\\GameClient.cs": "33f5154f603deb14005430c3ffe8223cd779534aebb163a97a6ec252222856a4",
+    "unity\\JianghuUnity\\Assets\\Scripts\\JianghuApp.cs": "075783b82e1edf37d14cc824a9e7bacbbe789e6eb5c629fce976a5821b9825b4",
+    "unity\\JianghuUnity\\Assets\\Scripts\\Json.cs": "7095efb0f241c03d8acb6411cdceccf55dc84f2d961aaa03ac1e5abac03be60d",
+    "unity\\JianghuUnity\\Assets\\Scripts\\LocalLifeSmoke.cs": "cb2efcd359ded2251bc98dfb14730b66d50c4d0fac56769bac1392041b342d95",
+    "unity\\JianghuUnity\\Assets\\Scripts\\NationalRanks.cs": "4c6cf6ee3522513d10284509a8f9ff1bce6988d50ccb0bb51404b4ec5ce58231",
+    "unity\\JianghuUnity\\Assets\\Scripts\\NpcThinking.cs": "c94f0eee33e9c15243cc9f87d6d08c440daa8625469d3e9c0b0781645b1eee18",
+    "unity\\JianghuUnity\\Assets\\Scripts\\NpcThinkingSmoke.cs": "4e387092274262aea8cb59abef339c1516e90393deed27be8483d4a24b7ad7d8",
+    "unity\\JianghuUnity\\Assets\\Scripts\\Panels.cs": "ef15155dab458ee8c1e0e0e8490554516360fc73d8c07d87b043dd9dd9f5672c",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PaperCast.cs": "a0dbc66157210dd6c767845a9df511e145b8c0dc8ba6c239ff2b905a9175660a",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PaperRenderSmoke.cs": "f5ee980b8a1e9e3052561f2a012ac48277b4475669be01c62a11aa49d81c81b7",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PaperRig.cs": "e92205e93eb08507a8e4b2af6e429f14588d9d485a390fe45842e19366cee282",
+    "unity\\JianghuUnity\\Assets\\Scripts\\RankProgress.cs": "6a702794abbffd0ee2eed97a3b688762dc87b1699020854eb8856d659cd3a029",
+    "unity\\JianghuUnity\\Assets\\Scripts\\RankProgressSmoke.cs": "a8f0df24d42b1a08bff17431704f13b98702ba47c9f28becb3c1025ae3555421",
+    "unity\\JianghuUnity\\Assets\\Scripts\\RealtimeBattleScreen.cs": "2f3dd745a47d48a100193e1fa587eab5f73730b16a38520de581f9e4be48b402",
+    "unity\\JianghuUnity\\Assets\\Scripts\\ReferenceBattleUI.cs": "3b9645c52b2005f9f1396894efa9ad4b4261549319c39e54ba6de9d4a4443411",
+    "unity\\JianghuUnity\\Assets\\Scripts\\Screens.cs": "d9df44cd150bbdf5ce0d8cf06449d71f96eb45ecf441991ed4f85a60412cc128",
+    "unity\\JianghuUnity\\Assets\\Scripts\\SectRanks.cs": "d26b806ab4119d1aa93c61a457e4c8f4bc815d966c7ce437c726cc5f0cfbb1d9",
+    "unity\\JianghuUnity\\Assets\\Scripts\\SectRankSmoke.cs": "81e073d72b1b81912e55b7f78ffd82983240740d72b17c4ac845391a0516541a",
+    "unity\\JianghuUnity\\Assets\\Scripts\\SettlementLayoutSmoke.cs": "1bbd2fc52e0a2cd302c4fda2ff448486100a23ea08eb809241df548770da115b",
+    "unity\\JianghuUnity\\Assets\\Scripts\\ShadowTheater.cs": "d56175c429d03c6dd7258fdc0aaa34498c31c638acf9ebd57db188c10242260c",
+    "unity\\JianghuUnity\\Assets\\Scripts\\SocietyPanel.cs": "dd4687db62c74bde955869555aa12a89b00cd7108a0f10114cc922fc6a9ff0cb",
+    "unity\\JianghuUnity\\Assets\\Scripts\\Theme.cs": "0c69fc84c81d5afcf89206856a4ee5f123b0765cfa579b38ff15130d1e7aece9",
+    "unity\\JianghuUnity\\Assets\\Scripts\\UnitySmoke.cs": "17b6d808e2811fa7a0878a993dcdb3164891463e001755bbb931ab91cade831d",
+    "unity\\JianghuUnity\\Assets\\Scripts\\WorldUI.cs": "ca2be482cd4ee2614e83124ff70b66853a18bf09525cf6402c9659aeab129d69"
+  },
+  "unity_assembly_sha256": "e734a9cb2c80c8e96d691cbf241a64b93c826655f847743e88e79fe43ae1672a",
+  "active_build": "LocalLife"
+}

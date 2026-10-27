@@ -1,0 +1,880 @@
+{
+  "id": "f-youth-farmer",
+  "description": "农家姑娘，二十岁农家姑娘，身材纤细，单髻插木簪；藏青短襦配赭黄长裙，布鞋",
+  "atlas": "f-youth-farmer",
+  "scale": 1,
+  "binding_basis": "independent exploded component panels",
+  "reference_image": "f-youth-farmer",
+  "reference_source": "02-f-youth-farmer.png",
+  "reference_source_rect": [
+    73,
+    101,
+    352,
+    995
+  ],
+  "reference_mirror": false,
+  "pixel_scale": 0.6711409395973155,
+  "reference_origin": [
+    167.4,
+    295.02
+  ],
+  "reference_size": [
+    279,
+    894
+  ],
+  "canvas": [
+    620,
+    700
+  ],
+  "canvas_origin": [
+    328.7248322147651,
+    250.68456375838923
+  ],
+  "bind_lean": -5.095352783914224,
+  "lengths": {
+    "spine": 84.33326208937595,
+    "upper_armNear": 96.1642123699477,
+    "upper_armFar": 96.1642123699477,
+    "upper_arm": 96.1642123699477,
+    "forearmNear": 78.2020187765789,
+    "forearmFar": 78.2020187765789,
+    "forearm": 78.2020187765789,
+    "thighNear": 135.81575062303534,
+    "thighFar": 139.06995481809074,
+    "thigh": 137.44285272056305,
+    "shinNear": 129.5626791381641,
+    "shinFar": 126.42990235808578,
+    "shin": 127.99629074812495
+  },
+  "shoulders": {
+    "Near": [
+      -20.319562069512962,
+      -63.90083783337722
+    ],
+    "Far": [
+      12.514707788689076,
+      -59.919418221924154
+    ]
+  },
+  "hips": {
+    "Near": [
+      -27.709814639045902,
+      99.93390572844046
+    ],
+    "Far": [
+      -3.4637268298807333,
+      102.09582918601704
+    ]
+  },
+  "feet": {
+    "Near": [
+      -16.711409395973156,
+      363.3977533147815
+    ],
+    "Far": [
+      3.6040268456375895,
+      363.51735931853386
+    ]
+  },
+  "arm_rest": {
+    "Near": [
+      -3,
+      -7
+    ],
+    "Far": [
+      5,
+      -7
+    ]
+  },
+  "sole": {
+    "Near": 35.91768292682927,
+    "Far": 35.79807692307693
+  },
+  "parts": {
+    "head-neck": {
+      "pivot": [
+        93.0,
+        176.54
+      ],
+      "size": [
+        151,
+        195
+      ],
+      "breadth": 1,
+      "source": "f-youth-farmer/split-bound-parts/head-neck.png",
+      "sha256": "1c5ec031324c51feab709817c464ededdcb07edd94311d6b6137a9f43e84ffab",
+      "source_component": "f-youth-farmer/head-neck.png",
+      "source_component_sha256": "1c5ec031324c51feab709817c464ededdcb07edd94311d6b6137a9f43e84ffab",
+      "source_sheet": "02-f-youth-farmer.png",
+      "source_rect": [
+        497,
+        137,
+        648,
+        332
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "joint": "neck",
+      "follow": "head",
+      "angle": 0,
+      "rest_angle": 0,
+      "height": 124.93599999999999,
+      "layer": 60,
+      "uv": [
+        0.1884765625,
+        0.603515625,
+        0.1474609375,
+        0.380859375
+      ]
+    },
+    "torso": {
+      "pivot": [
+        115.92,
+        107.25
+      ],
+      "size": [
+        169,
+        196
+      ],
+      "breadth": 0.87,
+      "source": "f-youth-farmer/split-bound-parts/torso.png",
+      "sha256": "f5821000459328a81d357a69a8ca526455f0506ad50ac5d0fa30793237580a1e",
+      "source_component": "f-youth-farmer/torso.png",
+      "source_component_sha256": "a59899f322ee1f0fb136fd925c0403df0df5dabfea813a444473a702034e876f",
+      "source_sheet": "02-f-youth-farmer.png",
+      "source_rect": [
+        746,
+        137,
+        915,
+        333
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            84.70235134268715,
+            0
+          ],
+          [
+            127.9384508690089,
+            0
+          ],
+          [
+            143.31128625614554,
+            52.05369289123364
+          ],
+          [
+            160.1169017380178,
+            111.25
+          ],
+          [
+            74.60550489707033,
+            111.25
+          ],
+          [
+            78.9375380725109,
+            42.44567077427324
+          ]
+        ],
+        "keep_connected_body": true
+      },
+      "bone": "torso",
+      "layer": 40,
+      "tip": [
+        105.84,
+        11.7
+      ],
+      "uv": [
+        0.0078125,
+        0.6015625,
+        0.1650390625,
+        0.3828125
+      ]
+    },
+    "pelvis": {
+      "pivot": [
+        98.5,
+        15.44
+      ],
+      "size": [
+        198,
+        194
+      ],
+      "breadth": 0.358,
+      "source": "f-youth-farmer/split-bound-parts/pelvis.png",
+      "sha256": "4e3b0b5391eb5b72af6f5326926e6b565421d4d4eb35216f60751dc7904e8098",
+      "source_component": "f-youth-farmer/pelvis.png",
+      "source_component_sha256": "4e3b0b5391eb5b72af6f5326926e6b565421d4d4eb35216f60751dc7904e8098",
+      "source_sheet": "02-f-youth-farmer.png",
+      "source_rect": [
+        1003,
+        137,
+        1201,
+        331
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "joint": "hip",
+      "follow": "pelvis",
+      "angle": 0,
+      "rest_angle": 0,
+      "height": 396.00000000000006,
+      "layer": 50,
+      "uv": [
+        0.3515625,
+        0.60546875,
+        0.193359375,
+        0.37890625
+      ]
+    },
+    "near-upper-arm": {
+      "pivot": [
+        19.0,
+        13.76
+      ],
+      "size": [
+        90,
+        173
+      ],
+      "breadth": 0.93,
+      "source": "f-youth-farmer/split-bound-parts/near-upper-arm.png",
+      "sha256": "746c1d90caddce4da99d97e82eec660530407d295928d9045fbc069a05f23386",
+      "source_component": "f-youth-farmer/near-upper-arm.png",
+      "source_component_sha256": "746c1d90caddce4da99d97e82eec660530407d295928d9045fbc069a05f23386",
+      "source_sheet": "02-f-youth-farmer.png",
+      "source_rect": [
+        1340,
+        147,
+        1430,
+        320
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "upperNear",
+      "layer": 72,
+      "tip": [
+        55.18,
+        144.48
+      ],
+      "uv": [
+        0.1220703125,
+        0.232421875,
+        0.087890625,
+        0.337890625
+      ]
+    },
+    "near-forearm": {
+      "pivot": [
+        43.46,
+        12.64
+      ],
+      "size": [
+        83,
+        159
+      ],
+      "breadth": 0.85,
+      "source": "f-youth-farmer/split-bound-parts/near-forearm.png",
+      "sha256": "75f170a406461fe2cb6995d082af774e8e961a7968789671981468579a1f4566",
+      "source_component": "f-youth-farmer/near-forearm.png",
+      "source_component_sha256": "81689e90d8ed939d29a62daf9c7a028f5e357af4a744d76adb7d72da156b5259",
+      "source_sheet": "02-f-youth-farmer.png",
+      "source_rect": [
+        791,
+        375,
+        874,
+        534
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "clip_tip": true
+      },
+      "bone": "forearmNear",
+      "layer": 75,
+      "tip": [
+        45.92,
+        134.3
+      ],
+      "uv": [
+        0.431640625,
+        0.259765625,
+        0.0810546875,
+        0.310546875
+      ]
+    },
+    "near-thigh": {
+      "pivot": [
+        96.94,
+        8.95
+      ],
+      "size": [
+        132,
+        180
+      ],
+      "breadth": 1,
+      "source": "f-youth-farmer/split-bound-parts/near-thigh.png",
+      "sha256": "e2d58e6944815614332575c5f40870ad7345f7274d50c22b13628e82c6288e5f",
+      "source_component": "f-youth-farmer/near-thigh.png",
+      "source_component_sha256": "e2d58e6944815614332575c5f40870ad7345f7274d50c22b13628e82c6288e5f",
+      "source_sheet": "02-f-youth-farmer.png",
+      "source_rect": [
+        758,
+        575,
+        890,
+        755
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "thighNear",
+      "layer": 25,
+      "tip": [
+        69.43,
+        161.1
+      ],
+      "uv": [
+        0.8076171875,
+        0.6328125,
+        0.12890625,
+        0.3515625
+      ]
+    },
+    "near-shin": {
+      "pivot": [
+        59.0,
+        10.44
+      ],
+      "size": [
+        101,
+        175
+      ],
+      "breadth": 1,
+      "source": "f-youth-farmer/split-bound-parts/near-shin.png",
+      "sha256": "aa27eab4f0163de0b3db9452ad16f0e744445cab1d38d93c4172fc2f3c5431dd",
+      "source_component": "f-youth-farmer/near-shin.png",
+      "source_component_sha256": "aa27eab4f0163de0b3db9452ad16f0e744445cab1d38d93c4172fc2f3c5431dd",
+      "source_sheet": "02-f-youth-farmer.png",
+      "source_rect": [
+        1337,
+        575,
+        1438,
+        750
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "shinNear",
+      "layer": 26,
+      "tip": [
+        51.0,
+        158.34
+      ],
+      "uv": [
+        0.0078125,
+        0.228515625,
+        0.0986328125,
+        0.341796875
+      ]
+    },
+    "near-hand": {
+      "pivot": [
+        26.88,
+        8.47
+      ],
+      "size": [
+        49,
+        122
+      ],
+      "breadth": 1,
+      "source": "f-youth-farmer/split-bound-parts/near-hand.png",
+      "sha256": "1999305a9c2248e58ab0773244201af12d5803b752b23a8f7b50dba66e32f330",
+      "source_component": "f-youth-farmer/near-hand.png",
+      "source_component_sha256": "1999305a9c2248e58ab0773244201af12d5803b752b23a8f7b50dba66e32f330",
+      "source_sheet": "02-f-youth-farmer.png",
+      "source_rect": [
+        1349,
+        396,
+        1398,
+        518
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "joint": "wristNear",
+      "follow": "handNear",
+      "angle": -3.4038802567773057,
+      "rest_angle": -3.4038802567773057,
+      "height": 60.00000000000001,
+      "layer": 80,
+      "uv": [
+        0.5947265625,
+        0.33203125,
+        0.0478515625,
+        0.23828125
+      ]
+    },
+    "near-foot": {
+      "pivot": [
+        37.68,
+        20.25
+      ],
+      "size": [
+        158,
+        82
+      ],
+      "breadth": 0.85,
+      "source": "f-youth-farmer/split-bound-parts/near-foot.png",
+      "sha256": "d7983eee0e7c1ff7f9eccdb812ba9eb2b55b208599cb96843ce8778555f61c1e",
+      "source_component": "f-youth-farmer/near-foot.png",
+      "source_component_sha256": "9a4862463ff9c67c6a9a71a0891a5a814dff358bbed0b55c97726b332627670c",
+      "source_sheet": "02-f-youth-farmer.png",
+      "source_rect": [
+        770,
+        851,
+        928,
+        933
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            0,
+            12.870000000000001
+          ],
+          [
+            158,
+            12.870000000000001
+          ],
+          [
+            158,
+            82
+          ],
+          [
+            0,
+            82
+          ]
+        ]
+      },
+      "joint": "ankleNear",
+      "follow": "footNear",
+      "angle": 0,
+      "rest_angle": 0,
+      "height": 51.00000000000001,
+      "layer": 29,
+      "uv": [
+        0.658203125,
+        0.41015625,
+        0.154296875,
+        0.16015625
+      ]
+    },
+    "far-upper-arm": {
+      "pivot": [
+        66.24,
+        11.2
+      ],
+      "size": [
+        97,
+        161
+      ],
+      "breadth": 0.85,
+      "source": "f-youth-farmer/split-bound-parts/far-upper-arm.png",
+      "sha256": "3fcafec555d1b032d1d37f02bea83c74215302238fe161190304dad06b393abc",
+      "source_component": "f-youth-farmer/far-upper-arm.png",
+      "source_component_sha256": "3fcafec555d1b032d1d37f02bea83c74215302238fe161190304dad06b393abc",
+      "source_sheet": "02-f-youth-farmer.png",
+      "source_rect": [
+        524,
+        375,
+        621,
+        536
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "upperFar",
+      "layer": 10,
+      "tip": [
+        35.52,
+        139.2
+      ],
+      "uv": [
+        0.3212890625,
+        0.255859375,
+        0.0947265625,
+        0.314453125
+      ]
+    },
+    "far-forearm": {
+      "pivot": [
+        29.97,
+        12.8
+      ],
+      "size": [
+        82,
+        161
+      ],
+      "breadth": 0.85,
+      "source": "f-youth-farmer/split-bound-parts/far-forearm.png",
+      "sha256": "053234f64b4f631961b7838a4574b09fdc82922a39147e433270f3c7cc5733f6",
+      "source_component": "f-youth-farmer/far-forearm.png",
+      "source_component_sha256": "bc209f1e7761ce7ef88d25af095077b67835bef1b5a8733a77705b449c19840d",
+      "source_sheet": "02-f-youth-farmer.png",
+      "source_rect": [
+        1082,
+        375,
+        1164,
+        536
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "clip_tip": true
+      },
+      "bone": "forearmFar",
+      "layer": 12,
+      "tip": [
+        40.5,
+        136.0
+      ],
+      "uv": [
+        0.2255859375,
+        0.255859375,
+        0.080078125,
+        0.314453125
+      ]
+    },
+    "far-thigh": {
+      "pivot": [
+        33.06,
+        8.95
+      ],
+      "size": [
+        115,
+        180
+      ],
+      "breadth": 1,
+      "source": "f-youth-farmer/split-bound-parts/far-thigh.png",
+      "sha256": "cc2c979b590a951772fca278c115756298a58c65faa125936f736bd5a761eb63",
+      "source_component": "f-youth-farmer/far-thigh.png",
+      "source_component_sha256": "cc2c979b590a951772fca278c115756298a58c65faa125936f736bd5a761eb63",
+      "source_sheet": "02-f-youth-farmer.png",
+      "source_rect": [
+        1080,
+        575,
+        1195,
+        755
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "thighFar",
+      "layer": 16,
+      "tip": [
+        62.7,
+        162.89
+      ],
+      "uv": [
+        0.6796875,
+        0.6328125,
+        0.1123046875,
+        0.3515625
+      ]
+    },
+    "far-shin": {
+      "pivot": [
+        35.7,
+        10.86
+      ],
+      "size": [
+        106,
+        182
+      ],
+      "breadth": 1,
+      "source": "f-youth-farmer/split-bound-parts/far-shin.png",
+      "sha256": "d71f31067fce2635efc702ba3953a0c5958c44da498789cba1a7ca55c91d5283",
+      "source_component": "f-youth-farmer/far-shin.png",
+      "source_component_sha256": "d71f31067fce2635efc702ba3953a0c5958c44da498789cba1a7ca55c91d5283",
+      "source_sheet": "02-f-youth-farmer.png",
+      "source_rect": [
+        535,
+        788,
+        641,
+        970
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "shinFar",
+      "layer": 17,
+      "tip": [
+        52.5,
+        164.71
+      ],
+      "uv": [
+        0.560546875,
+        0.62890625,
+        0.103515625,
+        0.35546875
+      ]
+    },
+    "far-hand": {
+      "pivot": [
+        19.89,
+        8.61
+      ],
+      "size": [
+        52,
+        124
+      ],
+      "breadth": 1,
+      "source": "f-youth-farmer/split-bound-parts/far-hand.png",
+      "sha256": "da78f8a889a87b3868a609d69b829ba9adfc842e584be039a93f8056c000500f",
+      "source_component": "f-youth-farmer/far-hand.png",
+      "source_component_sha256": "da78f8a889a87b3868a609d69b829ba9adfc842e584be039a93f8056c000500f",
+      "source_sheet": "02-f-youth-farmer.png",
+      "source_rect": [
+        542,
+        614,
+        594,
+        738
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "joint": "wristFar",
+      "follow": "handFar",
+      "angle": 5.771138761065376,
+      "rest_angle": 5.771138761065376,
+      "height": 60.00000000000001,
+      "layer": 14,
+      "uv": [
+        0.5283203125,
+        0.328125,
+        0.05078125,
+        0.2421875
+      ]
+    },
+    "far-foot": {
+      "pivot": [
+        36.72,
+        19.25
+      ],
+      "size": [
+        154,
+        78
+      ],
+      "breadth": 0.85,
+      "source": "f-youth-farmer/split-bound-parts/far-foot.png",
+      "sha256": "755cb09e9a4ec538d5ed1d377838ca21cf37498a76f67a196869073ee1312e47",
+      "source_component": "f-youth-farmer/far-foot.png",
+      "source_component_sha256": "3899aeec46ea5c44780b3e879ad858792c8b78e0897676895f476120836d1425",
+      "source_sheet": "02-f-youth-farmer.png",
+      "source_rect": [
+        1041,
+        853,
+        1195,
+        931
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            0,
+            12.23
+          ],
+          [
+            154,
+            12.23
+          ],
+          [
+            154,
+            78
+          ],
+          [
+            0,
+            78
+          ]
+        ]
+      },
+      "joint": "ankleFar",
+      "follow": "footFar",
+      "angle": 0,
+      "rest_angle": 0,
+      "height": 51.00000000000001,
+      "layer": 20,
+      "uv": [
+        0.828125,
+        0.41796875,
+        0.150390625,
+        0.15234375
+      ]
+    }
+  },
+  "stride": 30.621922407222172,
+  "lift": 22.96644180541663,
+  "bob": 2.0414614938148117,
+  "ground": 399.31543624161077,
+  "pelvis_structure": {
+    "seat_parts": [],
+    "description": "Upper trouser seat follows the waist; thighs articulate below the hip hinge."
+  },
+  "bind_joints": {
+    "hip": [
+      0.0,
+      0.0
+    ],
+    "neck": [
+      -7.489932885906038,
+      -83.99999999999999
+    ],
+    "shoulderFar": [
+      7.143599313953599,
+      -60.79410810211639
+    ],
+    "elbowFar": [
+      7.303637648498013,
+      35.369971098299594
+    ],
+    "wristFar": [
+      16.963228354489793,
+      112.97311567456734
+    ],
+    "hipFar": [
+      5.617449664429536,
+      102.00000000000003
+    ],
+    "ankleFar": [
+      3.6040268456375895,
+      363.51735931853386
+    ],
+    "kneeFar": [
+      27.4183641043506,
+      239.35054591332735
+    ],
+    "shoulderNear": [
+      -25.914522294277127,
+      -61.84366752355311
+    ],
+    "elbowNear": [
+      -12.37258833851199,
+      33.36227643726322
+    ],
+    "wristNear": [
+      7.993266169675978,
+      108.86583735251885
+    ],
+    "hipNear": [
+      -18.7248322147651,
+      102.00000000000001
+    ],
+    "ankleNear": [
+      -16.711409395973156,
+      363.3977533147815
+    ],
+    "kneeNear": [
+      5.173060268098009,
+      235.69670471696764
+    ]
+  },
+  "reference_landmarks": {
+    "hip": [
+      0.0,
+      0.0
+    ],
+    "neck": [
+      -7.489932885906038,
+      -83.99999999999999
+    ],
+    "shoulderFar": [
+      7.143599313953599,
+      -60.79410810211639
+    ],
+    "elbowFar": [
+      7.303637648498013,
+      35.369971098299594
+    ],
+    "wristFar": [
+      16.963228354489793,
+      112.97311567456734
+    ],
+    "hipFar": [
+      5.617449664429536,
+      102.00000000000003
+    ],
+    "ankleFar": [
+      3.6040268456375895,
+      363.51735931853386
+    ],
+    "kneeFar": [
+      27.4183641043506,
+      239.35054591332735
+    ],
+    "shoulderNear": [
+      -25.914522294277127,
+      -61.84366752355311
+    ],
+    "elbowNear": [
+      -12.37258833851199,
+      33.36227643726322
+    ],
+    "wristNear": [
+      7.993266169675978,
+      108.86583735251885
+    ],
+    "hipNear": [
+      -18.7248322147651,
+      102.00000000000001
+    ],
+    "ankleNear": [
+      -16.711409395973156,
+      363.3977533147815
+    ],
+    "kneeNear": [
+      5.173060268098009,
+      235.69670471696764
+    ]
+  },
+  "size": [
+    1024,
+    512
+  ],
+  "portrait": {
+    "size": [
+      151,
+      195
+    ],
+    "uv": [
+      0.1884765625,
+      0.603515625,
+      0.1474609375,
+      0.380859375
+    ]
+  },
+  "atlas_sha256": "07a6dcd22a2cf6bd1cb27cbfe23ba8e1be0ee7cec0e318c9a686616ff74b6172",
+  "reference_comparison": {
+    "silhouette_iou": 0.7762779570246483,
+    "note": "Compare proportions and assembly visually. Empty hands use a neutral bind pose instead of copying tool gestures; split drawings differ from the finished illustration."
+  }
+}

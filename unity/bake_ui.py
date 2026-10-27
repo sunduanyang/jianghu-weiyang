@@ -1174,7 +1174,7 @@ def paint_roads(di, geo, k):
 
 
 def bake_atlas():
-    geo = json.loads((ROOT / 'static' / 'geography-compact.json').read_text(encoding='utf-8'))
+    geo = json.loads((ROOT / 'art' / 'world-map' / 'geography-compact.json').read_text(encoding='utf-8'))
     W, H = 2048, 1216          # drawn at 1.6x of the 1280x760 map space, saved at 2048x1024
     k = W / 1280
     S = lambda p: (p[0] * k, p[1] * k)

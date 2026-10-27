@@ -1,0 +1,880 @@
+{
+  "id": "f-elder",
+  "description": "老妪，七十岁老妪，瘦小，背驼；白发低髻插骨簪；土褐长衫，袖口磨旧",
+  "atlas": "f-elder",
+  "scale": 1,
+  "binding_basis": "independent exploded component panels",
+  "reference_image": "f-elder",
+  "reference_source": "06-f-elder.png",
+  "reference_source_rect": [
+    45,
+    134,
+    356,
+    987
+  ],
+  "reference_mirror": false,
+  "pixel_scale": 0.6506447831184057,
+  "reference_origin": [
+    155.5,
+    307.08
+  ],
+  "reference_size": [
+    311,
+    853
+  ],
+  "canvas": [
+    620,
+    700
+  ],
+  "canvas_origin": [
+    310.0,
+    297.40257913247353
+  ],
+  "bind_lean": 26.625472036468526,
+  "lengths": {
+    "spine": 99.33384932833873,
+    "upper_armNear": 89.92260064298904,
+    "upper_armFar": 89.92260064298904,
+    "upper_arm": 89.92260064298904,
+    "forearmNear": 59.07374509879091,
+    "forearmFar": 59.07374509879091,
+    "forearm": 59.07374509879091,
+    "thighNear": 120.01107130195608,
+    "thighFar": 126.27484264771775,
+    "thigh": 123.14295697483692,
+    "shinNear": 108.8352442995936,
+    "shinFar": 102.64856964814913,
+    "shin": 105.74190697387137
+  },
+  "shoulders": {
+    "Near": [
+      -22.536014757641254,
+      -73.54565022293285
+    ],
+    "Far": [
+      16.321025468884354,
+      -71.72808281421781
+    ]
+  },
+  "hips": {
+    "Near": [
+      24.19434293505854,
+      93.4131341404286
+    ],
+    "Far": [
+      56.7549539878476,
+      77.08988525244628
+    ]
+  },
+  "feet": {
+    "Near": [
+      -18.283118405627203,
+      319.76362086752647
+    ],
+    "Far": [
+      14.236107854630706,
+      319.8395611114289
+    ]
+  },
+  "arm_rest": {
+    "Near": [
+      -3,
+      -7
+    ],
+    "Far": [
+      5,
+      -7
+    ]
+  },
+  "sole": {
+    "Near": 32.833800000000004,
+    "Far": 32.75785975609757
+  },
+  "parts": {
+    "head-neck": {
+      "pivot": [
+        81.6,
+        159.1
+      ],
+      "size": [
+        171,
+        186
+      ],
+      "breadth": 1,
+      "source": "f-elder/split-bound-parts/head-neck.png",
+      "sha256": "197206155caa99b4a66906cc33ec4fa378625aa4c6ad4c579626362221fe5a3f",
+      "source_component": "f-elder/head-neck.png",
+      "source_component_sha256": "197206155caa99b4a66906cc33ec4fa378625aa4c6ad4c579626362221fe5a3f",
+      "source_sheet": "06-f-elder.png",
+      "source_rect": [
+        496,
+        143,
+        667,
+        329
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "joint": "neck",
+      "follow": "head",
+      "angle": 0,
+      "rest_angle": 0,
+      "height": 113.93612903225808,
+      "layer": 60,
+      "uv": [
+        0.3076171875,
+        0.62109375,
+        0.1669921875,
+        0.36328125
+      ]
+    },
+    "torso": {
+      "pivot": [
+        107.73,
+        99.32
+      ],
+      "size": [
+        172,
+        192
+      ],
+      "breadth": 0.87,
+      "source": "f-elder/split-bound-parts/torso.png",
+      "sha256": "96f17ff3533d0ee694e7ebb12c7c6618a2322ec1e8c2dce38b4ba5b287eb1a3f",
+      "source_component": "f-elder/torso.png",
+      "source_component_sha256": "62b0d60712bb2303ca5b7c1cd48269d35b2168eeb1d01ea2196587f2afef32b1",
+      "source_sheet": "06-f-elder.png",
+      "source_rect": [
+        751,
+        137,
+        923,
+        329
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            85.80589690906366,
+            0
+          ],
+          [
+            123.65519868597892,
+            0
+          ],
+          [
+            137.11272820665988,
+            50.60601499178757
+          ],
+          [
+            146.42039737195782,
+            103.32
+          ],
+          [
+            71.56288941316987,
+            103.32
+          ],
+          [
+            80.75932333880829,
+            42.19505904136196
+          ]
+        ],
+        "keep_connected_body": true
+      },
+      "bone": "torso",
+      "layer": 40,
+      "tip": [
+        104.31,
+        15.28
+      ],
+      "uv": [
+        0.0078125,
+        0.609375,
+        0.16796875,
+        0.375
+      ]
+    },
+    "pelvis": {
+      "pivot": [
+        82.34,
+        14.64
+      ],
+      "size": [
+        180,
+        184
+      ],
+      "breadth": 0.397,
+      "source": "f-elder/split-bound-parts/pelvis.png",
+      "sha256": "d32c57fd05cb3e354b942b8f062cc75564d6a52aa4f6e450126c2f79f2d7fd73",
+      "source_component": "f-elder/pelvis.png",
+      "source_component_sha256": "d32c57fd05cb3e354b942b8f062cc75564d6a52aa4f6e450126c2f79f2d7fd73",
+      "source_sheet": "06-f-elder.png",
+      "source_rect": [
+        1028,
+        142,
+        1208,
+        326
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "joint": "hip",
+      "follow": "pelvis",
+      "angle": 0,
+      "rest_angle": 0,
+      "height": 344.1,
+      "layer": 50,
+      "uv": [
+        0.490234375,
+        0.625,
+        0.17578125,
+        0.359375
+      ]
+    },
+    "near-upper-arm": {
+      "pivot": [
+        66.3,
+        14.96
+      ],
+      "size": [
+        103,
+        188
+      ],
+      "breadth": 0.85,
+      "source": "f-elder/split-bound-parts/near-upper-arm.png",
+      "sha256": "0121990229c1987ddd3b7f9f342c92fc993ed28f41a637c7eee0ae9c796f80f0",
+      "source_component": "f-elder/near-upper-arm.png",
+      "source_component_sha256": "0121990229c1987ddd3b7f9f342c92fc993ed28f41a637c7eee0ae9c796f80f0",
+      "source_sheet": "06-f-elder.png",
+      "source_rect": [
+        1317,
+        140,
+        1420,
+        328
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "upperNear",
+      "layer": 72,
+      "tip": [
+        45.9,
+        158.95
+      ],
+      "uv": [
+        0.19140625,
+        0.6171875,
+        0.1005859375,
+        0.3671875
+      ]
+    },
+    "near-forearm": {
+      "pivot": [
+        81.42,
+        13.52
+      ],
+      "size": [
+        119,
+        170
+      ],
+      "breadth": 0.85,
+      "source": "f-elder/split-bound-parts/near-forearm.png",
+      "sha256": "d55f07ed5825b814f509705135ad2536063fd14bd84456875c7c41359a325e7e",
+      "source_component": "f-elder/near-forearm.png",
+      "source_component_sha256": "696d519a60f07571b04ebd3c99afd731d6f87c16872f6717444d8e3408965318",
+      "source_sheet": "06-f-elder.png",
+      "source_rect": [
+        775,
+        362,
+        894,
+        532
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "clip_tip": true
+      },
+      "bone": "forearmNear",
+      "layer": 75,
+      "tip": [
+        57.82,
+        143.65
+      ],
+      "uv": [
+        0.349609375,
+        0.24609375,
+        0.1162109375,
+        0.33203125
+      ]
+    },
+    "near-thigh": {
+      "pivot": [
+        85.8,
+        10.8
+      ],
+      "size": [
+        131,
+        181
+      ],
+      "breadth": 1,
+      "source": "f-elder/split-bound-parts/near-thigh.png",
+      "sha256": "0b675393869d7a09abfe480b94b9d1b0dc52becca489b601283f7de71e084ccb",
+      "source_component": "f-elder/near-thigh.png",
+      "source_component_sha256": "0b675393869d7a09abfe480b94b9d1b0dc52becca489b601283f7de71e084ccb",
+      "source_sheet": "06-f-elder.png",
+      "source_rect": [
+        784,
+        577,
+        915,
+        758
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "thighNear",
+      "layer": 25,
+      "tip": [
+        68.9,
+        158.4
+      ],
+      "uv": [
+        0.80859375,
+        0.630859375,
+        0.1279296875,
+        0.353515625
+      ]
+    },
+    "near-shin": {
+      "pivot": [
+        55.46,
+        10.32
+      ],
+      "size": [
+        95,
+        173
+      ],
+      "breadth": 1,
+      "source": "f-elder/split-bound-parts/near-shin.png",
+      "sha256": "04b1f87194dc892c942623fc91de4a1f29eb5bc3c551e38f022270cf79c28e89",
+      "source_component": "f-elder/near-shin.png",
+      "source_component_sha256": "04b1f87194dc892c942623fc91de4a1f29eb5bc3c551e38f022270cf79c28e89",
+      "source_sheet": "06-f-elder.png",
+      "source_rect": [
+        1335,
+        577,
+        1430,
+        750
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "shinNear",
+      "layer": 26,
+      "tip": [
+        47.94,
+        153.08
+      ],
+      "uv": [
+        0.1279296875,
+        0.240234375,
+        0.0927734375,
+        0.337890625
+      ]
+    },
+    "near-hand": {
+      "pivot": [
+        16.5,
+        12.64
+      ],
+      "size": [
+        56,
+        159
+      ],
+      "breadth": 1,
+      "source": "f-elder/split-bound-parts/near-hand.png",
+      "sha256": "20c40acc7a0af7e78de7b24ce30e576c329bf3ad829cf25c2811c3dd7d53aaad",
+      "source_component": "f-elder/near-hand.png",
+      "source_component_sha256": "20c40acc7a0af7e78de7b24ce30e576c329bf3ad829cf25c2811c3dd7d53aaad",
+      "source_sheet": "06-f-elder.png",
+      "source_rect": [
+        1359,
+        370,
+        1415,
+        529
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "joint": "wristNear",
+      "follow": "handNear",
+      "angle": 5.092279112891512,
+      "rest_angle": 5.092279112891512,
+      "height": 55.500000000000014,
+      "layer": 80,
+      "uv": [
+        0.59375,
+        0.267578125,
+        0.0546875,
+        0.310546875
+      ]
+    },
+    "near-foot": {
+      "pivot": [
+        46.44,
+        21.84
+      ],
+      "size": [
+        173,
+        85
+      ],
+      "breadth": 0.85,
+      "source": "f-elder/split-bound-parts/near-foot.png",
+      "sha256": "d458c36433dd57335841611fc3ebd1fc8bb8fa026be496e2d4a3209876c36278",
+      "source_component": "f-elder/near-foot.png",
+      "source_component_sha256": "d8ef3fd9883386877878b1a31689577fc663582750017472d0140e967242bc93",
+      "source_sheet": "06-f-elder.png",
+      "source_rect": [
+        755,
+        845,
+        928,
+        930
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            0,
+            14.190000000000001
+          ],
+          [
+            173,
+            14.190000000000001
+          ],
+          [
+            173,
+            85
+          ],
+          [
+            0,
+            85
+          ]
+        ]
+      },
+      "joint": "ankleNear",
+      "follow": "footNear",
+      "angle": 0,
+      "rest_angle": 0,
+      "height": 47.17500000000001,
+      "layer": 29,
+      "uv": [
+        0.732421875,
+        0.412109375,
+        0.1689453125,
+        0.166015625
+      ]
+    },
+    "far-upper-arm": {
+      "pivot": [
+        57.42,
+        13.6
+      ],
+      "size": [
+        100,
+        171
+      ],
+      "breadth": 0.85,
+      "source": "f-elder/split-bound-parts/far-upper-arm.png",
+      "sha256": "d6ab40d1f6466abe0d32092c516e949c628a094de8eb6586215e12de6cbc94d4",
+      "source_component": "f-elder/far-upper-arm.png",
+      "source_component_sha256": "d6ab40d1f6466abe0d32092c516e949c628a094de8eb6586215e12de6cbc94d4",
+      "source_sheet": "06-f-elder.png",
+      "source_rect": [
+        526,
+        362,
+        626,
+        533
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "upperFar",
+      "layer": 10,
+      "tip": [
+        41.58,
+        146.2
+      ],
+      "uv": [
+        0.236328125,
+        0.244140625,
+        0.09765625,
+        0.333984375
+      ]
+    },
+    "far-forearm": {
+      "pivot": [
+        40.18,
+        20.16
+      ],
+      "size": [
+        99,
+        169
+      ],
+      "breadth": 0.85,
+      "source": "f-elder/split-bound-parts/far-forearm.png",
+      "sha256": "fffb14a21c475fd15b985d44452572e7ec55e2cf8a3666966fd1ef354e26f706",
+      "source_component": "f-elder/far-forearm.png",
+      "source_component_sha256": "aafbaf8d024334ff99880f3ee161bb5414b0a1215f982e0c2f264908a6fb44d6",
+      "source_sheet": "06-f-elder.png",
+      "source_rect": [
+        1080,
+        362,
+        1179,
+        531
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "clip_tip": true
+      },
+      "bone": "forearmFar",
+      "layer": 12,
+      "tip": [
+        60.76,
+        142.8
+      ],
+      "uv": [
+        0.4814453125,
+        0.248046875,
+        0.0966796875,
+        0.330078125
+      ]
+    },
+    "far-thigh": {
+      "pivot": [
+        30.51,
+        12.74
+      ],
+      "size": [
+        114,
+        183
+      ],
+      "breadth": 1,
+      "source": "f-elder/split-bound-parts/far-thigh.png",
+      "sha256": "bdca68f116dec70eb1096c62f553f0847a93b1cc37b7374316b37ee7083d76ef",
+      "source_component": "f-elder/far-thigh.png",
+      "source_component_sha256": "bdca68f116dec70eb1096c62f553f0847a93b1cc37b7374316b37ee7083d76ef",
+      "source_sheet": "06-f-elder.png",
+      "source_rect": [
+        1081,
+        577,
+        1195,
+        760
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "thighFar",
+      "layer": 16,
+      "tip": [
+        68.93,
+        161.98
+      ],
+      "uv": [
+        0.681640625,
+        0.626953125,
+        0.111328125,
+        0.357421875
+      ]
+    },
+    "far-shin": {
+      "pivot": [
+        38.16,
+        10.5
+      ],
+      "size": [
+        107,
+        176
+      ],
+      "breadth": 1,
+      "source": "f-elder/split-bound-parts/far-shin.png",
+      "sha256": "b98c120b90bbd9fbd146a07ba4b8a3b2c3747d4e94cc296b5029d1860aed0e3f",
+      "source_component": "f-elder/far-shin.png",
+      "source_component_sha256": "b98c120b90bbd9fbd146a07ba4b8a3b2c3747d4e94cc296b5029d1860aed0e3f",
+      "source_sheet": "06-f-elder.png",
+      "source_rect": [
+        533,
+        796,
+        640,
+        972
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "shinFar",
+      "layer": 17,
+      "tip": [
+        54.06,
+        155.75
+      ],
+      "uv": [
+        0.0078125,
+        0.234375,
+        0.1044921875,
+        0.34375
+      ]
+    },
+    "far-hand": {
+      "pivot": [
+        15.9,
+        6.7
+      ],
+      "size": [
+        54,
+        135
+      ],
+      "breadth": 1,
+      "source": "f-elder/split-bound-parts/far-hand.png",
+      "sha256": "f2772b8ed9a44554aa7fba0a275059bdaeeb89ad5e68d6dc8e528f6389ad9b47",
+      "source_component": "f-elder/far-hand.png",
+      "source_component_sha256": "f2772b8ed9a44554aa7fba0a275059bdaeeb89ad5e68d6dc8e528f6389ad9b47",
+      "source_sheet": "06-f-elder.png",
+      "source_rect": [
+        552,
+        598,
+        606,
+        733
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "joint": "wristFar",
+      "follow": "handFar",
+      "angle": 6.972731836377026,
+      "rest_angle": 6.972731836377026,
+      "height": 55.500000000000014,
+      "layer": 14,
+      "uv": [
+        0.6640625,
+        0.314453125,
+        0.052734375,
+        0.263671875
+      ]
+    },
+    "far-foot": {
+      "pivot": [
+        47.52,
+        21.06
+      ],
+      "size": [
+        177,
+        82
+      ],
+      "breadth": 0.85,
+      "source": "f-elder/split-bound-parts/far-foot.png",
+      "sha256": "ce90c4bbbc5293a4b2090f2d5d39ac358878d7de4d7e5c2cae81fe73e3641024",
+      "source_component": "f-elder/far-foot.png",
+      "source_component_sha256": "bdf65981ce7c2f93e42de0c44a70aaf75c6304447bd34671c8d5be9149a80573",
+      "source_sheet": "06-f-elder.png",
+      "source_rect": [
+        1033,
+        845,
+        1210,
+        927
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            0,
+            13.68
+          ],
+          [
+            177,
+            13.68
+          ],
+          [
+            177,
+            82
+          ],
+          [
+            0,
+            82
+          ]
+        ]
+      },
+      "joint": "ankleFar",
+      "follow": "footFar",
+      "angle": 0,
+      "rest_angle": 0,
+      "height": 47.17500000000001,
+      "layer": 20,
+      "uv": [
+        0.0078125,
+        0.04296875,
+        0.1728515625,
+        0.16015625
+      ]
+    }
+  },
+  "stride": 26.713185886687594,
+  "lift": 20.034889415015698,
+  "bob": 1.7808790591125065,
+  "ground": 352.59742086752647,
+  "pelvis_structure": {
+    "seat_parts": [],
+    "description": "Upper trouser seat follows the waist; thighs articulate below the hip hinge."
+  },
+  "bind_joints": {
+    "hip": [
+      0.0,
+      0.0
+    ],
+    "neck": [
+      44.517116060961314,
+      -88.80000000000001
+    ],
+    "shoulderFar": [
+      46.73567450066872,
+      -56.80730996559161
+    ],
+    "elbowFar": [
+      -0.4165456706598505,
+      19.761236052424486
+    ],
+    "wristFar": [
+      -25.031687435670094,
+      73.46228032425752
+    ],
+    "hipFar": [
+      16.188042203985923,
+      94.35000000000001
+    ],
+    "ankleFar": [
+      14.236107854630706,
+      319.8395611114289
+    ],
+    "kneeFar": [
+      34.72569285163398,
+      219.25673078009703
+    ],
+    "shoulderNear": [
+      12.81378044726086,
+      -75.84617102082348
+    ],
+    "elbowNear": [
+      -23.22327557334723,
+      6.539535869182913
+    ],
+    "wristNear": [
+      -40.125123614679126,
+      63.143730879664666
+    ],
+    "hipNear": [
+      -20.23505275498242,
+      94.35000000000002
+    ],
+    "ankleNear": [
+      -18.283118405627203,
+      319.76362086752647
+    ],
+    "kneeNear": [
+      0.48512319955447225,
+      212.5588471454494
+    ]
+  },
+  "reference_landmarks": {
+    "hip": [
+      0.0,
+      0.0
+    ],
+    "neck": [
+      44.517116060961314,
+      -88.80000000000001
+    ],
+    "shoulderFar": [
+      46.73567450066872,
+      -56.80730996559161
+    ],
+    "elbowFar": [
+      -0.4165456706598505,
+      19.761236052424486
+    ],
+    "wristFar": [
+      -25.031687435670094,
+      73.46228032425752
+    ],
+    "hipFar": [
+      16.188042203985923,
+      94.35000000000001
+    ],
+    "ankleFar": [
+      14.236107854630706,
+      319.8395611114289
+    ],
+    "kneeFar": [
+      34.72569285163398,
+      219.25673078009703
+    ],
+    "shoulderNear": [
+      12.81378044726086,
+      -75.84617102082348
+    ],
+    "elbowNear": [
+      -23.22327557334723,
+      6.539535869182913
+    ],
+    "wristNear": [
+      -40.125123614679126,
+      63.143730879664666
+    ],
+    "hipNear": [
+      -20.23505275498242,
+      94.35000000000002
+    ],
+    "ankleNear": [
+      -18.283118405627203,
+      319.76362086752647
+    ],
+    "kneeNear": [
+      0.48512319955447225,
+      212.5588471454494
+    ]
+  },
+  "size": [
+    1024,
+    512
+  ],
+  "portrait": {
+    "size": [
+      171,
+      186
+    ],
+    "uv": [
+      0.3076171875,
+      0.62109375,
+      0.1669921875,
+      0.36328125
+    ]
+  },
+  "atlas_sha256": "9c1e52d7dec7e0f88295fdb76f8eb1ef102595d47baff1252e8a4f8f03183ba5",
+  "reference_comparison": {
+    "silhouette_iou": 0.7031048773491049,
+    "note": "Compare proportions and assembly visually. Empty hands use a neutral bind pose instead of copying tool gestures; split drawings differ from the finished illustration."
+  }
+}

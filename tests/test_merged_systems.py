@@ -16,7 +16,10 @@ class MergedSystemsTests(unittest.TestCase):
     def setUp(self):
         self.w = World(population=0,durable=False)
         self.addCleanup(self.w.store.close)
-        self.target = SITES['对马府中']
+        self.target = SITES['平安京']
+        origin = next(r['b'] if r['a']==self.target else r['a'] for r in self.w.routes if self.target in (r['a'], r['b']) and not r['sea'])
+        self.w.territory[origin]['owner'] = 10
+        territory.refresh_relations(self.w)
 
     def adult(self, place=None, **values):
         w = self.w
@@ -49,7 +52,7 @@ class MergedSystemsTests(unittest.TestCase):
         self.assertNotIn(self.target,{p['id'] for p in japan['places']})
         self.assertIn(event['id'],[e['id'] for e in korea['events']])
         self.assertIn(event['id'],[e['id'] for e in japan['events']])
-        self.assertTrue(any(f['name']=='对马船众' for f in korea['factions']))
+        self.assertTrue(any(f['name']=='鞍马寺' for f in korea['factions']))
 
     def test_faction_duties_improve_captor_and_record_interior_venue(self):
         w = self.w

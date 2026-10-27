@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-26",
+  "feature": "Reference-matched warm amber backlit cloth with shared ink-green battle UI",
+  "build": "unity/Build/WarmTheater/江湖未央.exe",
+  "active_build": "WarmTheater",
+  "previous_active_build": "PlainTheater",
+  "background_source": "unity/JianghuUnity/Assets/Scripts/ShadowTheater.cs",
+  "shared_renderer": "JianghuApp.StagePanel",
+  "shared_assets": [
+    "unity/JianghuUnity/Assets/Resources/UI/screen.png",
+    "unity/JianghuUnity/Assets/Resources/UI/frame_stage.png"
+  ],
+  "style": "Same warm cloth, amber edge shading and thin frame as the first user reference; ink-green UI retained",
+  "native_acceptance": {
+    "model_calls": 0,
+    "bundled_python": true,
+    "rendered_resolution": [
+      1680,
+      960
+    ],
+    "path": "unity/validation/warm-theater-verified-20261026/acceptance.json",
+    "save": "unity/validation/warm-theater-verified-save-20261026",
+    "checks": 26,
+    "passed": true
+  },
+  "initial_attempt": {
+    "rerun_without_source_changes": true,
+    "failed_check": "windup resolves on continuous clock",
+    "passed": false,
+    "path": "unity/validation/warm-theater-reference-20261026/acceptance.json"
+  },
+  "screenshots": [
+    "unity/validation/warm-theater-verified-20261026/combat-opening.png",
+    "unity/validation/warm-theater-verified-20261026/combat-windup.png",
+    "unity/validation/warm-theater-verified-20261026/combat-result.png"
+  ]
+}

@@ -1,0 +1,1566 @@
+{
+  "pack": "terrain-biomes-v3-20261026",
+  "layout_version": 2,
+  "total_cities": 168,
+  "tiers": {
+    "small": 41,
+    "large": 34,
+    "medium": 93
+  },
+  "size_rules": {
+    "large": "capital or weight >= 8: 40x40",
+    "medium": "other city / port: 30x30",
+    "small": "town / mountain: 20x20"
+  },
+  "source_tiles": 32,
+  "source_hashes_verified": true,
+  "web_unity_exports_identical": true,
+  "asset_usage": {
+    "02-meadow": 31574,
+    "03-woodland": 1680,
+    "11-gravel-land": 37029,
+    "01-open-plains": 31681,
+    "04-bamboo-forest": 1668,
+    "09-rice-paddies": 3612,
+    "05-scrubland": 1971,
+    "31-river-delta": 340,
+    "14-shallows": 3320,
+    "15-stream": 1044,
+    "12-mudflat": 1027,
+    "13-riverbank": 972,
+    "30-fjord": 337,
+    "24-river-valley": 312,
+    "23-lake": 471,
+    "26-escarpment": 61,
+    "16-low-hills": 985,
+    "18-grand-canyon": 53,
+    "20-deep-forest": 232,
+    "19-natural-barrier": 62,
+    "08-farmland": 3596,
+    "07-dryland": 8320,
+    "32-basin": 1515,
+    "28-terraced-fields": 1295,
+    "17-mountain-massif": 64,
+    "25-stone-forest": 51,
+    "22-wetland": 126,
+    "21-bog": 152,
+    "06-wilderness": 317,
+    "10-sand-flat": 4708,
+    "29-plateau": 116,
+    "27-sinkhole": 62
+  },
+  "cities": [
+    {
+      "place": 0,
+      "name": "青溪镇",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "ec83c9bebf84b516",
+      "facilities": 14,
+      "four_cell_biomes": 4
+    },
+    {
+      "place": 1,
+      "name": "栖云山",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "5c3fda87db1054de",
+      "facilities": 13,
+      "four_cell_biomes": 12
+    },
+    {
+      "place": 2,
+      "name": "抚州",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "03480051c387ac5f",
+      "facilities": 14,
+      "four_cell_biomes": 45
+    },
+    {
+      "place": 3,
+      "name": "桃花渡",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "393ceb5747e26ec7",
+      "facilities": 13,
+      "four_cell_biomes": 8
+    },
+    {
+      "place": 4,
+      "name": "寒石寨",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "cc7c434a60ea0581",
+      "facilities": 12,
+      "four_cell_biomes": 16
+    },
+    {
+      "place": 5,
+      "name": "江陵府",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "2630e0a92c9de084",
+      "facilities": 13,
+      "four_cell_biomes": 48
+    },
+    {
+      "place": 6,
+      "name": "襄阳府",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "8c94f93c4f0ebc12",
+      "facilities": 14,
+      "four_cell_biomes": 67
+    },
+    {
+      "place": 7,
+      "name": "武当山",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "8ea690149af017dd",
+      "facilities": 13,
+      "four_cell_biomes": 11
+    },
+    {
+      "place": 8,
+      "name": "潭州",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "a7005292f48516ab",
+      "facilities": 13,
+      "four_cell_biomes": 55
+    },
+    {
+      "place": 9,
+      "name": "衡山",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "ce3b3c750f9ecfa8",
+      "facilities": 13,
+      "four_cell_biomes": 11
+    },
+    {
+      "place": 10,
+      "name": "庐州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "0b0e78139d0b4aaf",
+      "facilities": 13,
+      "four_cell_biomes": 24
+    },
+    {
+      "place": 11,
+      "name": "河南府",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "df6a7e612aea8e13",
+      "facilities": 13,
+      "four_cell_biomes": 68
+    },
+    {
+      "place": 12,
+      "name": "嵩山",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "2b433cebda63365c",
+      "facilities": 13,
+      "four_cell_biomes": 9
+    },
+    {
+      "place": 13,
+      "name": "南京开封府",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "7ef5f31633ea94ab",
+      "facilities": 14,
+      "four_cell_biomes": 25
+    },
+    {
+      "place": 14,
+      "name": "中都",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "936da366b5591c12",
+      "facilities": 14,
+      "four_cell_biomes": 17
+    },
+    {
+      "place": 15,
+      "name": "直沽",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "47924f0f1d0e44d3",
+      "facilities": 13,
+      "four_cell_biomes": 41
+    },
+    {
+      "place": 16,
+      "name": "太原府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "c4f6a3d2628ce466",
+      "facilities": 12,
+      "four_cell_biomes": 24
+    },
+    {
+      "place": 17,
+      "name": "济南府",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "977a021775b3e223",
+      "facilities": 12,
+      "four_cell_biomes": 33
+    },
+    {
+      "place": 18,
+      "name": "泰山",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "66d8edfe775b4c8c",
+      "facilities": 13,
+      "four_cell_biomes": 14
+    },
+    {
+      "place": 19,
+      "name": "沈州",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "ff6dcc8e57d3adef",
+      "facilities": 12,
+      "four_cell_biomes": 23
+    },
+    {
+      "place": 20,
+      "name": "长白山",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "b0e8a7d0a780e4e0",
+      "facilities": 13,
+      "four_cell_biomes": 15
+    },
+    {
+      "place": 21,
+      "name": "上京会宁府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "2a6039b4776518ed",
+      "facilities": 12,
+      "four_cell_biomes": 26
+    },
+    {
+      "place": 22,
+      "name": "黑水营地",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "6579b147330310a5",
+      "facilities": 13,
+      "four_cell_biomes": 21
+    },
+    {
+      "place": 23,
+      "name": "丰州",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "418af314cd77300f",
+      "facilities": 12,
+      "four_cell_biomes": 27
+    },
+    {
+      "place": 24,
+      "name": "克鲁伦河营地",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "8383b825f56a67ad",
+      "facilities": 13,
+      "four_cell_biomes": 10
+    },
+    {
+      "place": 25,
+      "name": "兴庆府",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "11ccf12a22a13921",
+      "facilities": 13,
+      "four_cell_biomes": 77
+    },
+    {
+      "place": 26,
+      "name": "京兆府",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "4c8401bbce155a7c",
+      "facilities": 12,
+      "four_cell_biomes": 9
+    },
+    {
+      "place": 27,
+      "name": "华山",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "da2e2cd9de8baec3",
+      "facilities": 13,
+      "four_cell_biomes": 11
+    },
+    {
+      "place": 28,
+      "name": "兰州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "20a5f85730871f64",
+      "facilities": 12,
+      "four_cell_biomes": 26
+    },
+    {
+      "place": 29,
+      "name": "沙州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "a3530e55c1eca92f",
+      "facilities": 14,
+      "four_cell_biomes": 38
+    },
+    {
+      "place": 30,
+      "name": "别失八里",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "4cbe931355fbc10e",
+      "facilities": 12,
+      "four_cell_biomes": 41
+    },
+    {
+      "place": 31,
+      "name": "疏勒",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "a96807f18ed55700",
+      "facilities": 13,
+      "four_cell_biomes": 29
+    },
+    {
+      "place": 32,
+      "name": "阿力麻里",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "c2d0f9713e88f8a1",
+      "facilities": 12,
+      "four_cell_biomes": 33
+    },
+    {
+      "place": 33,
+      "name": "天山",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "5da896a791213b87",
+      "facilities": 13,
+      "four_cell_biomes": 14
+    },
+    {
+      "place": 34,
+      "name": "逻些",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "dcebd6d4460a93b9",
+      "facilities": 14,
+      "four_cell_biomes": 123
+    },
+    {
+      "place": 35,
+      "name": "日喀则",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "bbb2e3e9a65ec277",
+      "facilities": 12,
+      "four_cell_biomes": 14
+    },
+    {
+      "place": 36,
+      "name": "西宁州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "2e6bbc1e8859deed",
+      "facilities": 12,
+      "four_cell_biomes": 21
+    },
+    {
+      "place": 37,
+      "name": "昆仑山",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "5a021f00fad978de",
+      "facilities": 13,
+      "four_cell_biomes": 13
+    },
+    {
+      "place": 38,
+      "name": "成都府",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "e68105384c7d74bb",
+      "facilities": 14,
+      "four_cell_biomes": 50
+    },
+    {
+      "place": 39,
+      "name": "重庆府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "8c501fecc638eb61",
+      "facilities": 13,
+      "four_cell_biomes": 22
+    },
+    {
+      "place": 40,
+      "name": "峨眉山",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "ed3d82e5b2bbb1c8",
+      "facilities": 13,
+      "four_cell_biomes": 14
+    },
+    {
+      "place": 41,
+      "name": "青城山",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "3e71e1e55a71ab12",
+      "facilities": 13,
+      "four_cell_biomes": 14
+    },
+    {
+      "place": 42,
+      "name": "大理城",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "105c35e641257901",
+      "facilities": 15,
+      "four_cell_biomes": 103
+    },
+    {
+      "place": 43,
+      "name": "鄯阐府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "cdc7bdda516a86a6",
+      "facilities": 12,
+      "four_cell_biomes": 21
+    },
+    {
+      "place": 44,
+      "name": "矩州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "3661b3ccfc98a7f1",
+      "facilities": 13,
+      "four_cell_biomes": 27
+    },
+    {
+      "place": 45,
+      "name": "临安府",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "a2c590694dbbabea",
+      "facilities": 14,
+      "four_cell_biomes": 81
+    },
+    {
+      "place": 46,
+      "name": "建康府",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "95e3f62dbea29521",
+      "facilities": 13,
+      "four_cell_biomes": 105
+    },
+    {
+      "place": 47,
+      "name": "平江府",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "a0765dd5e9194434",
+      "facilities": 14,
+      "four_cell_biomes": 64
+    },
+    {
+      "place": 48,
+      "name": "华亭县",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "1ff1f1b7a87257c4",
+      "facilities": 13,
+      "four_cell_biomes": 35
+    },
+    {
+      "place": 49,
+      "name": "福州",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "baa0116a0cfebc61",
+      "facilities": 13,
+      "four_cell_biomes": 87
+    },
+    {
+      "place": 50,
+      "name": "海东聚落",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "c3cef3b0219a796a",
+      "facilities": 14,
+      "four_cell_biomes": 69
+    },
+    {
+      "place": 51,
+      "name": "广州",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "7f4e6c709f1a1655",
+      "facilities": 14,
+      "four_cell_biomes": 88
+    },
+    {
+      "place": 52,
+      "name": "静江府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "555096575abdc89d",
+      "facilities": 13,
+      "four_cell_biomes": 28
+    },
+    {
+      "place": 53,
+      "name": "琼州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "a643a159961184df",
+      "facilities": 14,
+      "four_cell_biomes": 43
+    },
+    {
+      "place": 54,
+      "name": "官富场",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "2fe957e1a38776e8",
+      "facilities": 13,
+      "four_cell_biomes": 38
+    },
+    {
+      "place": 55,
+      "name": "香山海澳",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "ac0983e23a775277",
+      "facilities": 13,
+      "four_cell_biomes": 39
+    },
+    {
+      "place": 56,
+      "name": "高昌城",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "3114161aed808324",
+      "facilities": 13,
+      "four_cell_biomes": 34
+    },
+    {
+      "place": 57,
+      "name": "虎思斡耳朵",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "1b2cd86be12d6023",
+      "facilities": 13,
+      "four_cell_biomes": 70
+    },
+    {
+      "place": 58,
+      "name": "越州",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "bd8f8213ef1bf45b",
+      "facilities": 13,
+      "four_cell_biomes": 58
+    },
+    {
+      "place": 59,
+      "name": "明州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "c6aff9b9f375d06e",
+      "facilities": 13,
+      "four_cell_biomes": 38
+    },
+    {
+      "place": 60,
+      "name": "温州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "f1f20a1bff4371a3",
+      "facilities": 13,
+      "four_cell_biomes": 33
+    },
+    {
+      "place": 61,
+      "name": "泉州",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "a8377d242f417e9d",
+      "facilities": 13,
+      "four_cell_biomes": 94
+    },
+    {
+      "place": 62,
+      "name": "建宁府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "95fc32c897f8b082",
+      "facilities": 13,
+      "four_cell_biomes": 23
+    },
+    {
+      "place": 63,
+      "name": "隆兴府",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "e10ce82b9e1ae23f",
+      "facilities": 13,
+      "four_cell_biomes": 43
+    },
+    {
+      "place": 64,
+      "name": "赣州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "05c25f6295abfc9c",
+      "facilities": 13,
+      "four_cell_biomes": 26
+    },
+    {
+      "place": 65,
+      "name": "饶州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "1e32649f02c41eca",
+      "facilities": 13,
+      "four_cell_biomes": 25
+    },
+    {
+      "place": 66,
+      "name": "徽州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "2ab25862f000a947",
+      "facilities": 13,
+      "four_cell_biomes": 26
+    },
+    {
+      "place": 67,
+      "name": "扬州",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "deb126383fdff88f",
+      "facilities": 12,
+      "four_cell_biomes": 58
+    },
+    {
+      "place": 68,
+      "name": "楚州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "b6cec3c2a5e7a61b",
+      "facilities": 12,
+      "four_cell_biomes": 30
+    },
+    {
+      "place": 69,
+      "name": "寿春府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "339837cb287a42ad",
+      "facilities": 12,
+      "four_cell_biomes": 18
+    },
+    {
+      "place": 70,
+      "name": "鄂州",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "64dbb1477887635f",
+      "facilities": 13,
+      "four_cell_biomes": 76
+    },
+    {
+      "place": 71,
+      "name": "岳州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "a6f4108cbd76d0e5",
+      "facilities": 13,
+      "four_cell_biomes": 24
+    },
+    {
+      "place": 72,
+      "name": "潼川府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "8d3126114ca6f27a",
+      "facilities": 13,
+      "four_cell_biomes": 41
+    },
+    {
+      "place": 73,
+      "name": "遂宁府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "3342b3e00c5ad11a",
+      "facilities": 13,
+      "four_cell_biomes": 35
+    },
+    {
+      "place": 74,
+      "name": "利州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "e3b57dbd912443f6",
+      "facilities": 12,
+      "four_cell_biomes": 33
+    },
+    {
+      "place": 75,
+      "name": "兴元府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "a64af0462817d7c7",
+      "facilities": 12,
+      "four_cell_biomes": 36
+    },
+    {
+      "place": 76,
+      "name": "夔州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "3b3aa701152aaae1",
+      "facilities": 13,
+      "four_cell_biomes": 31
+    },
+    {
+      "place": 77,
+      "name": "潮州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "a58a8554ac067b6a",
+      "facilities": 13,
+      "four_cell_biomes": 38
+    },
+    {
+      "place": 78,
+      "name": "邕州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "deb0f6b8fbb3a8ec",
+      "facilities": 13,
+      "four_cell_biomes": 31
+    },
+    {
+      "place": 79,
+      "name": "雷州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "ba15c543dde3b046",
+      "facilities": 13,
+      "four_cell_biomes": 42
+    },
+    {
+      "place": 80,
+      "name": "儋州",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "9839695ae1af3fec",
+      "facilities": 13,
+      "four_cell_biomes": 11
+    },
+    {
+      "place": 81,
+      "name": "大同府",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "83d740737bcb4b80",
+      "facilities": 12,
+      "four_cell_biomes": 42
+    },
+    {
+      "place": 82,
+      "name": "平阳府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "354307c6ccf3b54f",
+      "facilities": 12,
+      "four_cell_biomes": 27
+    },
+    {
+      "place": 83,
+      "name": "潞州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "d863f9247974c24b",
+      "facilities": 12,
+      "four_cell_biomes": 28
+    },
+    {
+      "place": 84,
+      "name": "平定州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "0b9039548081e186",
+      "facilities": 12,
+      "four_cell_biomes": 14
+    },
+    {
+      "place": 85,
+      "name": "真定府",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "c83b1a2356f16cc2",
+      "facilities": 12,
+      "four_cell_biomes": 38
+    },
+    {
+      "place": 86,
+      "name": "邢州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "e889f908eafd125f",
+      "facilities": 12,
+      "four_cell_biomes": 23
+    },
+    {
+      "place": 87,
+      "name": "河间府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "1adcf0f0b2d3133d",
+      "facilities": 12,
+      "four_cell_biomes": 25
+    },
+    {
+      "place": 88,
+      "name": "大兴府近郊",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "852c76efdc88c9c2",
+      "facilities": 12,
+      "four_cell_biomes": 12
+    },
+    {
+      "place": 89,
+      "name": "益都府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "4b4ea11d9313d262",
+      "facilities": 12,
+      "four_cell_biomes": 21
+    },
+    {
+      "place": 90,
+      "name": "登州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "c639243ce1eb400d",
+      "facilities": 13,
+      "four_cell_biomes": 37
+    },
+    {
+      "place": 91,
+      "name": "东平府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "8678c53cd9261b5c",
+      "facilities": 12,
+      "four_cell_biomes": 26
+    },
+    {
+      "place": 92,
+      "name": "归德府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "c054839f66f99110",
+      "facilities": 12,
+      "four_cell_biomes": 25
+    },
+    {
+      "place": 93,
+      "name": "凤翔府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "c1fadbc91f8035a0",
+      "facilities": 12,
+      "four_cell_biomes": 20
+    },
+    {
+      "place": 94,
+      "name": "秦州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "b7b95f7add82c046",
+      "facilities": 12,
+      "four_cell_biomes": 33
+    },
+    {
+      "place": 95,
+      "name": "巩州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "70ee4e9c7cf41e41",
+      "facilities": 12,
+      "four_cell_biomes": 35
+    },
+    {
+      "place": 96,
+      "name": "锦州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "34b2dbbd28c97ed4",
+      "facilities": 12,
+      "four_cell_biomes": 21
+    },
+    {
+      "place": 97,
+      "name": "大定府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "a1029488fd66ad56",
+      "facilities": 12,
+      "four_cell_biomes": 30
+    },
+    {
+      "place": 98,
+      "name": "辽阳府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "5ccd0bf14e6dc117",
+      "facilities": 12,
+      "four_cell_biomes": 20
+    },
+    {
+      "place": 99,
+      "name": "肇州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "8c4d4ced92a8940a",
+      "facilities": 12,
+      "four_cell_biomes": 17
+    },
+    {
+      "place": 100,
+      "name": "斡难河营地",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "1d59ff95ab552f94",
+      "facilities": 12,
+      "four_cell_biomes": 5
+    },
+    {
+      "place": 101,
+      "name": "土兀剌河营地",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "90ca2d9db7b5f2b6",
+      "facilities": 12,
+      "four_cell_biomes": 7
+    },
+    {
+      "place": 102,
+      "name": "鄂尔浑河营地",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "a8cce4082cb7a357",
+      "facilities": 12,
+      "four_cell_biomes": 10
+    },
+    {
+      "place": 103,
+      "name": "杭爱牧集",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "6fc3e39f99e72ed3",
+      "facilities": 12,
+      "four_cell_biomes": 11
+    },
+    {
+      "place": 104,
+      "name": "阿尔泰牧集",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "278a96e94439627e",
+      "facilities": 12,
+      "four_cell_biomes": 11
+    },
+    {
+      "place": 105,
+      "name": "灵州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "05e72bda8de4b58c",
+      "facilities": 12,
+      "four_cell_biomes": 42
+    },
+    {
+      "place": 106,
+      "name": "凉州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "abbe714508f8a229",
+      "facilities": 12,
+      "four_cell_biomes": 27
+    },
+    {
+      "place": 107,
+      "name": "甘州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "55982974edf9a9ef",
+      "facilities": 12,
+      "four_cell_biomes": 33
+    },
+    {
+      "place": 108,
+      "name": "肃州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "40845c3ebea484b6",
+      "facilities": 12,
+      "four_cell_biomes": 34
+    },
+    {
+      "place": 109,
+      "name": "瓜州",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "b725a1fae47bab6e",
+      "facilities": 12,
+      "four_cell_biomes": 7
+    },
+    {
+      "place": 110,
+      "name": "和阗",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "c24ecafab9be1c35",
+      "facilities": 12,
+      "four_cell_biomes": 30
+    },
+    {
+      "place": 111,
+      "name": "莎车",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "2ae29306695242f6",
+      "facilities": 12,
+      "four_cell_biomes": 33
+    },
+    {
+      "place": 112,
+      "name": "阿克苏",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "51af53d7b3dd753b",
+      "facilities": 12,
+      "four_cell_biomes": 31
+    },
+    {
+      "place": 113,
+      "name": "伊丽河渡",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "aad5f4b3ecf3823c",
+      "facilities": 12,
+      "four_cell_biomes": 6
+    },
+    {
+      "place": 114,
+      "name": "江孜",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "a50ce695d24616b7",
+      "facilities": 12,
+      "four_cell_biomes": 13
+    },
+    {
+      "place": 115,
+      "name": "当雄牧集",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "10008942c68c8b9c",
+      "facilities": 12,
+      "four_cell_biomes": 15
+    },
+    {
+      "place": 116,
+      "name": "昌都",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "b061e3eda41c328c",
+      "facilities": 12,
+      "four_cell_biomes": 10
+    },
+    {
+      "place": 117,
+      "name": "理塘",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "ef95634fc64f6dea",
+      "facilities": 12,
+      "four_cell_biomes": 10
+    },
+    {
+      "place": 118,
+      "name": "纳里牧集",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "b8cf04a6f7e894f7",
+      "facilities": 12,
+      "four_cell_biomes": 6
+    },
+    {
+      "place": 119,
+      "name": "永昌府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "66595282e977af9c",
+      "facilities": 12,
+      "four_cell_biomes": 20
+    },
+    {
+      "place": 120,
+      "name": "威楚府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "d6a73d86a6dc0cb2",
+      "facilities": 12,
+      "four_cell_biomes": 21
+    },
+    {
+      "place": 121,
+      "name": "通海郡",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "b613b3281a9b5317",
+      "facilities": 12,
+      "four_cell_biomes": 11
+    },
+    {
+      "place": 122,
+      "name": "善巨郡",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "65603e76b3acdc7e",
+      "facilities": 12,
+      "four_cell_biomes": 4
+    },
+    {
+      "place": 123,
+      "name": "哈密力",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "d31e0fc222a5dd80",
+      "facilities": 12,
+      "four_cell_biomes": 24
+    },
+    {
+      "place": 124,
+      "name": "焉耆",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "12be688a1d99dbb8",
+      "facilities": 12,
+      "four_cell_biomes": 8
+    },
+    {
+      "place": 125,
+      "name": "轮台驿",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "f736b9f0c989f3ae",
+      "facilities": 12,
+      "four_cell_biomes": 6
+    },
+    {
+      "place": 126,
+      "name": "海北聚落",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "2d2b36332e57c6c1",
+      "facilities": 13,
+      "four_cell_biomes": 47
+    },
+    {
+      "place": 127,
+      "name": "海中聚落",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "55a1758a5f0357da",
+      "facilities": 13,
+      "four_cell_biomes": 15
+    },
+    {
+      "place": 128,
+      "name": "海南聚落",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "69433dfd2e76c896",
+      "facilities": 13,
+      "four_cell_biomes": 34
+    },
+    {
+      "place": 129,
+      "name": "松林营地",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "6e3f355d59d3df35",
+      "facilities": 12,
+      "four_cell_biomes": 5
+    },
+    {
+      "place": 130,
+      "name": "乌苏里营地",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "1d990ecde64da4b1",
+      "facilities": 12,
+      "four_cell_biomes": 5
+    },
+    {
+      "place": 131,
+      "name": "下江渔集",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "05358c66aa140740",
+      "facilities": 12,
+      "four_cell_biomes": 25
+    },
+    {
+      "place": 132,
+      "name": "北山营地",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "f9064dce43c39fbf",
+      "facilities": 12,
+      "four_cell_biomes": 5
+    },
+    {
+      "place": 133,
+      "name": "开京",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "f7478254d4b5445f",
+      "facilities": 16,
+      "four_cell_biomes": 68
+    },
+    {
+      "place": 134,
+      "name": "西京平壤",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "8bf200be90ddaaa3",
+      "facilities": 13,
+      "four_cell_biomes": 21
+    },
+    {
+      "place": 135,
+      "name": "义州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "53f095a204507043",
+      "facilities": 12,
+      "four_cell_biomes": 22
+    },
+    {
+      "place": 136,
+      "name": "南京汉阳",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "d61b4b3f47671ecb",
+      "facilities": 12,
+      "four_cell_biomes": 26
+    },
+    {
+      "place": 137,
+      "name": "忠州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "f239f84a1c331022",
+      "facilities": 12,
+      "four_cell_biomes": 19
+    },
+    {
+      "place": 138,
+      "name": "全州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "fbaf1c7f36b9998d",
+      "facilities": 12,
+      "four_cell_biomes": 29
+    },
+    {
+      "place": 139,
+      "name": "罗州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "64cd0d648604ce29",
+      "facilities": 12,
+      "four_cell_biomes": 18
+    },
+    {
+      "place": 140,
+      "name": "东京庆州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "caa613c805456dee",
+      "facilities": 13,
+      "four_cell_biomes": 22
+    },
+    {
+      "place": 141,
+      "name": "金州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "44b23fd67f8abff3",
+      "facilities": 13,
+      "four_cell_biomes": 38
+    },
+    {
+      "place": 142,
+      "name": "溟州",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "b318604df3b69b10",
+      "facilities": 13,
+      "four_cell_biomes": 34
+    },
+    {
+      "place": 143,
+      "name": "登州海津",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "a73ccb68fe3d3585",
+      "facilities": 13,
+      "four_cell_biomes": 37
+    },
+    {
+      "place": 144,
+      "name": "耽罗",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "c7911dce832cbbff",
+      "facilities": 13,
+      "four_cell_biomes": 43
+    },
+    {
+      "place": 145,
+      "name": "镰仓",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "93d4639354291494",
+      "facilities": 14,
+      "four_cell_biomes": 130
+    },
+    {
+      "place": 146,
+      "name": "平安京",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "a1314ff25c872c6c",
+      "facilities": 14,
+      "four_cell_biomes": 62
+    },
+    {
+      "place": 147,
+      "name": "奈良",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "5667f8ca872877bf",
+      "facilities": 13,
+      "four_cell_biomes": 23
+    },
+    {
+      "place": 148,
+      "name": "难波津",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "b06c79a8cddfed3a",
+      "facilities": 13,
+      "four_cell_biomes": 45
+    },
+    {
+      "place": 149,
+      "name": "博多津",
+      "tier": "large",
+      "size": 40,
+      "layout_id": "c82dda6ac3a67fb5",
+      "facilities": 14,
+      "four_cell_biomes": 90
+    },
+    {
+      "place": 150,
+      "name": "大宰府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "16304dd8c70612c6",
+      "facilities": 12,
+      "four_cell_biomes": 22
+    },
+    {
+      "place": 151,
+      "name": "府内",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "162f22bd211b65c4",
+      "facilities": 13,
+      "four_cell_biomes": 38
+    },
+    {
+      "place": 152,
+      "name": "肥后国府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "e7dad227aa322ee4",
+      "facilities": 12,
+      "four_cell_biomes": 22
+    },
+    {
+      "place": 153,
+      "name": "萨摩国府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "03ec8cdc83475521",
+      "facilities": 12,
+      "four_cell_biomes": 21
+    },
+    {
+      "place": 154,
+      "name": "对马府中",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "5bc17dc650bb1fb2",
+      "facilities": 14,
+      "four_cell_biomes": 35
+    },
+    {
+      "place": 155,
+      "name": "长门府中",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "8d3fa4bdfc6bd0b3",
+      "facilities": 13,
+      "four_cell_biomes": 46
+    },
+    {
+      "place": 156,
+      "name": "备前国府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "b17a989ae2874084",
+      "facilities": 12,
+      "four_cell_biomes": 33
+    },
+    {
+      "place": 157,
+      "name": "出云国府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "8be99c3717457073",
+      "facilities": 12,
+      "four_cell_biomes": 19
+    },
+    {
+      "place": 158,
+      "name": "阿波国府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "e556871643c7fd00",
+      "facilities": 12,
+      "four_cell_biomes": 21
+    },
+    {
+      "place": 159,
+      "name": "伊予国府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "e48f692090e9b5fe",
+      "facilities": 12,
+      "four_cell_biomes": 20
+    },
+    {
+      "place": 160,
+      "name": "尾张国府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "879c02024acee1aa",
+      "facilities": 12,
+      "four_cell_biomes": 18
+    },
+    {
+      "place": 161,
+      "name": "骏府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "0c365d55f9f987ba",
+      "facilities": 12,
+      "four_cell_biomes": 30
+    },
+    {
+      "place": 162,
+      "name": "越前国府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "c2689bb4e92e4b7f",
+      "facilities": 12,
+      "four_cell_biomes": 18
+    },
+    {
+      "place": 163,
+      "name": "越后国府",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "993a6ece74dce60a",
+      "facilities": 13,
+      "four_cell_biomes": 38
+    },
+    {
+      "place": 164,
+      "name": "松本",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "b55753ed0db05548",
+      "facilities": 12,
+      "four_cell_biomes": 16
+    },
+    {
+      "place": 165,
+      "name": "宇都宫",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "e607bc31293d478c",
+      "facilities": 12,
+      "four_cell_biomes": 17
+    },
+    {
+      "place": 166,
+      "name": "多贺城",
+      "tier": "medium",
+      "size": 30,
+      "layout_id": "25131a2f6a7b8559",
+      "facilities": 12,
+      "four_cell_biomes": 32
+    },
+    {
+      "place": 167,
+      "name": "平泉",
+      "tier": "small",
+      "size": 20,
+      "layout_id": "5ba1274770929f52",
+      "facilities": 12,
+      "four_cell_biomes": 6
+    }
+  ]
+}

@@ -1,6 +1,4 @@
 # Source-art tests and Unity asset generation share the image dependencies.
 -r requirements-test.txt
-# Needed only when regenerating Unity map assets.
-scipy>=1.11
 # Only needed to rebuild the bundled font subsets (unity/build_fonts.py).
 fonttools>=4.50

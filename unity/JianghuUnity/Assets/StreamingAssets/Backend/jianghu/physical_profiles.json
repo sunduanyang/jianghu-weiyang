@@ -1,0 +1,122 @@
+{
+  "unarmed": {
+    "name": "徒手",
+    "mass": 0.12,
+    "reach": 0.13,
+    "tail": 0.035,
+    "cost": 4,
+    "handling": 1.16,
+    "damage": 0.56,
+    "pressure": 0.55,
+    "distance": 0.95,
+    "support_grip": 0
+  },
+  "dagger": {
+    "name": "匕首",
+    "mass": 0.28,
+    "reach": 0.58,
+    "tail": 0.12,
+    "cost": 5,
+    "handling": 1.18,
+    "damage": 0.72,
+    "pressure": 0.75,
+    "distance": 1.18,
+    "support_grip": 0
+  },
+  "sabre": {
+    "name": "短刀",
+    "mass": 0.52,
+    "reach": 0.97,
+    "tail": 0.14,
+    "cost": 7,
+    "handling": 1.08,
+    "damage": 0.93,
+    "pressure": 0.95,
+    "distance": 1.65,
+    "support_grip": 0
+  },
+  "sword": {
+    "name": "单手剑",
+    "mass": 0.7,
+    "reach": 1.18,
+    "tail": 0.16,
+    "cost": 9,
+    "handling": 1,
+    "damage": 1,
+    "pressure": 1,
+    "distance": 1.95,
+    "support_grip": 0
+  },
+  "axe": {
+    "name": "单手斧",
+    "mass": 1.05,
+    "reach": 0.96,
+    "tail": 0.2,
+    "cost": 12,
+    "handling": 0.82,
+    "damage": 1.2,
+    "pressure": 1.3,
+    "distance": 1.65,
+    "support_grip": 0
+  },
+  "mace": {
+    "name": "钉头锤",
+    "mass": 1.3,
+    "reach": 0.9,
+    "tail": 0.18,
+    "cost": 14,
+    "handling": 0.72,
+    "damage": 1.15,
+    "pressure": 1.45,
+    "distance": 1.58,
+    "support_grip": 0
+  },
+  "spear": {
+    "name": "长枪",
+    "mass": 1,
+    "reach": 2,
+    "tail": 0.3,
+    "cost": 11,
+    "handling": 0.86,
+    "damage": 1.02,
+    "pressure": 0.95,
+    "distance": 2.7,
+    "support_grip": 0.44
+  },
+  "greatsword": {
+    "name": "双手大剑",
+    "mass": 1.45,
+    "reach": 1.55,
+    "tail": 0.2,
+    "cost": 13,
+    "handling": 0.78,
+    "damage": 1.18,
+    "pressure": 1.2,
+    "distance": 2.25,
+    "support_grip": 0.22
+  },
+  "greataxe": {
+    "name": "双手战斧",
+    "mass": 2.15,
+    "reach": 1.5,
+    "tail": 0.24,
+    "cost": 17,
+    "handling": 0.62,
+    "damage": 1.4,
+    "pressure": 1.55,
+    "distance": 2.1,
+    "support_grip": 0.38
+  },
+  "warhammer": {
+    "name": "双手战锤",
+    "mass": 2.35,
+    "reach": 1.35,
+    "tail": 0.24,
+    "cost": 18,
+    "handling": 0.58,
+    "damage": 1.42,
+    "pressure": 1.65,
+    "distance": 2,
+    "support_grip": 0.36
+  }
+}

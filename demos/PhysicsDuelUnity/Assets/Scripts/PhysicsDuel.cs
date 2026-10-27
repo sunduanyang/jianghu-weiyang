@@ -1,0 +1,305 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Jianghu;
+using UnityEngine;
+
+// A separate, offline active-ragdoll arena. All contacts, joints and impulses
+// are resolved by Unity Physics2D; the paper atlas only supplies the drawing.
+public sealed partial class PhysicsDuel : MonoBehaviour {
+    public static PhysicsDuel Instance;
+    public const float Unit = 122, Ground = 728;
+    [NonSerialized] public Fighter player, enemy;
+    public bool started, training, paused, bones, muted, help;
+    bool finished, smoke;
+    bool fixtureMode;
+    string result = "", notice = "拉开距离，观察对手的剑尖。", smokePath = "";
+    float elapsed, resultAt, noticeUntil, shake, slowUntil, hurtFlash;
+    int wins, losses, round = 1;
+    public int hits, blocks, headHits, knockouts;
+    public float strongestImpact;
+    public PhysicsMaterial2D bodyMaterial,footMaterial,bladeMaterial,shieldMaterial;
+    readonly List<HitPacket> contacts=new List<HitPacket>();
+    public int rejectedHandleContacts,rejectedRestContacts,blockedBodyContacts,duplicateStrokeContacts;
+    J catalog;
+    Font font;
+    Texture2D background, disk;
+    AudioSource sound;
+    AudioClip strikeSound, blockSound;
+    readonly List<Spark> sparks = new List<Spark>();
+    readonly List<FloatingText> floating = new List<FloatingText>();
+    GUIStyle text, button;
+    readonly Color ink = new Color(.13f,.19f,.18f), vermilion = new Color(.65f,.21f,.15f), jade = new Color(.22f,.39f,.34f);
+
+    sealed class Spark { public Vector2 p,v; public float life,max; public Color color; }
+    sealed class FloatingText { public Vector2 p; public string value; public float life; public Color color; }
+
+    void Awake() {
+        Instance = this;
+        Application.targetFrameRate = 90;
+        Time.fixedDeltaTime = 1f/120;
+        Physics2D.simulationMode=SimulationMode2D.FixedUpdate;
+        Physics2D.gravity = new Vector2(0,-18);
+        Physics2D.velocityIterations = 30;
+        Physics2D.positionIterations = 40;
+        Physics2D.defaultContactOffset=.005f;
+        Physics2D.IgnoreLayerCollision(11,9,true);
+        Physics2D.IgnoreLayerCollision(11,10,false);
+        Physics2D.IgnoreLayerCollision(11,11,true);
+        bodyMaterial=Material("布衣",.22f,0);footMaterial=Material("鞋底",.9f,0);
+        bladeMaterial=Material("剑刃",.08f,.03f);shieldMaterial=Material("木盾",.35f,.02f);
+        font = Resources.Load<Font>("Fonts/NotoSerifSC-Regular");
+        catalog = J.Parse(Resources.Load<TextAsset>("PaperCast/index").text);
+        background = PaperBackground();
+        disk = new Texture2D(96,96,TextureFormat.RGBA32,false);
+        var pixels = new Color[96*96];
+        for(int y=0;y<96;y++) for(int x=0;x<96;x++) pixels[y*96+x] = new Color(1,1,1,Mathf.Clamp01((47.5f-Vector2.Distance(new Vector2(x,y),new Vector2(47.5f,47.5f)))*1.4f));
+        disk.SetPixels(pixels); disk.Apply();
+        sound = gameObject.AddComponent<AudioSource>();
+        strikeSound = Tone(false); blockSound = Tone(true);
+        StaticBox("地面",new Vector2(0,-.3f),new Vector2(22,.6f));
+        StaticBox("左界",new Vector2(-6.15f,3),new Vector2(.3f,8));
+        StaticBox("右界",new Vector2(6.15f,3),new Vector2(.3f,8));
+        smokePath = Arg("-duelSmoke"); smoke = smokePath.Length>0;
+        if(smoke&&int.TryParse(Arg("-duelFps"),out int renderFps))Application.targetFrameRate=Mathf.Clamp(renderFps,15,120);
+        ResetRound();
+        if(smoke) { Application.runInBackground = true; StartCoroutine(Arg("-duelCheck")=="arms"?ArmSmoke():Arg("-duelCheck")=="spar"?SparringSmoke():Arg("-duelCheck")=="drive"?DriveSmoke():Arg("-duelCheck")=="grips"?GripSmoke():Smoke()); }
+    }
+    static string Arg(string key) { var a=Environment.GetCommandLineArgs();int i=Array.IndexOf(a,key);return i>=0&&i+1<a.Length?a[i+1]:""; }
+    static PhysicsMaterial2D Material(string name,float friction,float bounce)=>new PhysicsMaterial2D(name){friction=friction,bounciness=bounce};
+    static void StaticBox(string name,Vector2 p,Vector2 size) { var go=new GameObject(name);go.layer=8;go.transform.position=p;go.AddComponent<BoxCollider2D>().size=size; }
+    void ResetRound() {
+        controls.ReleaseAll();
+        if(player!=null){player.root.SetActive(false);Destroy(player.root);}
+        if(enemy!=null){enemy.root.SetActive(false);Destroy(enemy.root);}
+        contacts.Clear();
+        queuedContacts.Clear();clashes.Clear();colliderIds.Clear();nextColliderId=0;
+        player = new Fighter(this,catalog,"m-youth-farmer",-2.05f,1,true,DuelWeapon.All[playerWeaponIndex]);
+        enemy = new Fighter(this,catalog,"f-youth-farmer",2.05f,-1,false,DuelWeapon.All[enemyWeaponIndex]);
+        finished=false; result=""; elapsed=0; sparks.Clear();floating.Clear();slowUntil=0;
+        Time.timeScale=1; paused=false; help=false; hurtFlash=0;
+        notice=player.weapon.TwoHanded?"双手持械：左键主控，右键牵引副手，两手合力运械，K 架杆。":"按住左键拖动运剑，按住右键拖动举盾；轮盘在按下处出现。"; noticeUntil=5;
+    }
+    void Begin(bool practice) { training=practice; started=true; help=false; round=1;wins=losses=0;ResetRound(); }
+    void Update() {
+        if(!smoke) {
+            if(Input.GetKeyDown(KeyCode.Return)){if(armory)ApplyArmory();else if(!started)Begin(false);}
+            if(Input.GetKeyDown(KeyCode.Escape)){if(armory)CloseArmory();else if(started)paused=!paused;}
+            if(Input.GetKeyDown(KeyCode.W)){if(armory)CloseArmory();else OpenArmory();}
+            if(Input.GetKeyDown(KeyCode.R)&&started) { if(finished)round++;ResetRound(); }
+            if(Input.GetKeyDown(KeyCode.H)) help=!help;
+            if(Input.GetKeyDown(KeyCode.V)) bones=!bones;
+            if(Input.GetKeyDown(KeyCode.M)) muted=!muted;
+        }
+        Time.timeScale=(paused||help||armory)&&started?0:Time.unscaledTime<slowUntil?.32f:1;
+        if(!Live){controls.ReleaseAll();player.ClearMouseCapture();}
+        else if(!smoke)controls.Poll(ToCanvas);
+        if(!started||paused||help||armory) return;
+        if(!finished) elapsed+=Time.deltaTime;
+        for(int i=sparks.Count-1;i>=0;i--) { var p=sparks[i];p.life-=Time.deltaTime;p.v+=Vector2.down*8*Time.deltaTime;p.p+=p.v*Time.deltaTime;if(p.life<=0)sparks.RemoveAt(i); }
+        for(int i=floating.Count-1;i>=0;i--) { floating[i].life-=Time.deltaTime;floating[i].p+=Vector2.up*.5f*Time.deltaTime;if(floating[i].life<=0)floating.RemoveAt(i); }
+        shake=Mathf.MoveTowards(shake,0,Time.unscaledDeltaTime*15);hurtFlash=Mathf.MoveTowards(hurtFlash,0,Time.unscaledDeltaTime*2);
+        if(!fixtureMode){player.ReadInput(enemy,smoke);enemy.ReadAI(player,training);}
+        if(!finished&&(player.health<=0||enemy.health<=0)) {
+            finished=true;resultAt=Time.time;knockouts++;
+            if(player.health<=0&&enemy.health<=0)result="两败俱伤";
+            else if(player.health>0) { result=training?"练习完成":"你赢了这一场";wins++; }
+            else { result="胜败乃兵家常事";losses++; }
+            notice=player.health>0?"漂亮的一击。按 R 再来一场。":"调整距离与盾牌位置，再试一次。";noticeUntil=9999;
+        }
+    }
+    void FixedUpdate() {
+        if(player==null) return;
+        ResolveContacts();
+        physicsStep++;
+        if(fixtureMode)return;
+        player.Step(started&&!finished,enemy);
+        enemy.Step(started&&!finished,player);
+    }
+    void OnApplicationFocus(bool focus) {if(!smoke&&!focus&&player!=null){controls.ReleaseAll();player.ClearMouseCapture();if(started)paused=true;} }
+    public bool Live => started&&!paused&&!help&&!finished&&!armory;
+    public bool IsSmoke => smoke;
+
+    public void Contact(DuelContact weapon,DuelContact other,Collision2D collision) {
+        if(!Live||weapon.owner==other.owner||weapon.kind!="sword"||collision.contactCount==0)return;
+        if(collision.otherCollider!=weapon.limb.shape){rejectedHandleContacts++;return;}
+        var contact=collision.GetContact(0);
+        Vector2 relative=weapon.limb.VelocityAt(contact.point)-other.limb.VelocityAt(contact.point);
+        float speed=Mathf.Max(0,-Vector2.Dot(relative,contact.normal));
+        if(speed<.01f)separatingContacts++;
+        uint ownId=ColliderId(collision.otherCollider),otherId=ColliderId(collision.collider);
+        ulong directed=Pair(ownId,otherId);if(!queuedContacts.Add(directed))return;
+        bool ownFirst=ownId<otherId;
+        float fraction=Vector2.Dot(contact.point-weapon.limb.A,(weapon.limb.B-weapon.limb.A).normalized)/weapon.limb.length;
+        contacts.Add(new HitPacket {weapon=weapon,other=other,point=contact.point,normal=contact.normal,relativeVelocity=relative,speed=speed,bladeFraction=fraction,step=physicsStep,strokeId=weapon.owner.attackId,attackActive=weapon.owner.IsAttacking,directedPair=directed,guardPair=ownFirst?directed:Pair(otherId,ownId),strokeLow=ownFirst?weapon.owner.attackId:other.owner.attackId,strokeHigh=ownFirst?other.owner.attackId:weapon.owner.attackId});
+    }
+    void ResolveContacts() {
+        if(contacts.Count==0){queuedContacts.Clear();return;}
+        // Resolve guard impacts first, then check each body contact's own
+        // incoming path. Exposed targets remain hittable in the same step.
+        foreach(var hit in contacts.OrderByDescending(h=>h.blocked))ResolveHit(hit);
+        contacts.Clear();
+        queuedContacts.Clear();
+    }
+    void ResolveHit(HitPacket hit) {
+        var weapon=hit.weapon;var other=hit.other;
+        if(!Live||weapon==null||other==null||weapon.owner.health<=0)return;
+        float speed=hit.speed;Vector2 point=hit.point;
+        if(hit.blocked) {
+            ResolveClash(hit);
+            return;
+        }
+        Fighter target=other.owner;
+        if(target.health<=0||elapsed<.7f)return;
+        if(hit.bladeFraction<weapon.owner.weapon.HitFraction){rejectedHandleContacts++;return;}
+        if(speed<1.5f||!hit.attackActive){rejectedRestContacts++;return;}
+        if(GuardOccludes(hit)){blockedBodyContacts++;return;}
+        if(!weapon.owner.RegisterHit(target,hit.strokeId)){duplicateStrokeContacts++;return;}
+        if(SameStepGuardContact(hit))exposedGuardHits++;
+        weapon.owner.lastHit=Time.time;
+        bool head=other.kind=="head";
+        float effectiveMass=1/(1/weapon.limb.rb.mass+1/other.limb.rb.mass);
+        float energy=.5f*effectiveMass*speed*speed;
+        float damage=Mathf.Clamp(4+Mathf.Sqrt(energy)*4.4f,6,25)*weapon.owner.weapon.damage*(head?1.35f:other.kind=="leg"||other.kind=="foot"?.8f:1);
+        Vector2 impulse=new Vector2(weapon.owner.facing,.15f)*Mathf.Min(3.5f,damage*.11f);
+        target.Hit(damage,impulse,point);hits++;if(head)headHits++;
+        strongestImpact=Mathf.Max(strongestImpact,speed);
+        Impact(point,false,damage);
+        floating.Add(new FloatingText {p=point+Vector2.up*.2f,value=(head?"要害 ":"")+Mathf.RoundToInt(damage),life=.85f,color=vermilion});
+        notice=head?"命中要害 · 注意保护头部":"命中 · 趁对手失衡调整站位";noticeUntil=elapsed+1.7f;
+        if(target==player)hurtFlash=.12f;
+        if(damage>=18&&!smoke)slowUntil=Time.unscaledTime+.065f;
+    }
+    void Impact(Vector2 p,bool block,float damage) {
+        shake=Mathf.Min(4,block?1.5f:damage*.13f);
+        for(int i=0;i<(block?12:8);i++)sparks.Add(new Spark {p=p,v=UnityEngine.Random.insideUnitCircle*(block?3.3f:1.6f)+Vector2.up,life=.25f+i*.018f,max=.5f,color=block?new Color(.78f,.52f,.19f):vermilion});
+        if(!muted)sound.PlayOneShot(block?blockSound:strikeSound,block?.26f:.2f);
+    }
+    static AudioClip Tone(bool metal) {
+        int n=6615;var a=new float[n];var random=new System.Random(metal?17:42);
+        for(int i=0;i<n;i++) {float t=i/44100f,env=Mathf.Exp(-t*(metal?35:48));a[i]=((float)random.NextDouble()-.5f)*env*.55f+Mathf.Sin(2*Mathf.PI*(metal?1350:110)*t)*env*.23f;}
+        var clip=AudioClip.Create(metal?"剑盾相击":"受击",n,1,44100,false);clip.SetData(a,0);return clip;
+    }
+
+    public static Vector2 Point(J p)=>new Vector2((float)p[0].N,(float)p[1].N);
+    public static Vector2 ScreenPoint(Vector2 p)=>new Vector2(800+p.x*Unit,Ground-p.y*Unit);
+    static Vector2 ToCanvas(Vector2 screen) {float s=Mathf.Min(Screen.width/1600f,Screen.height/950f);return new Vector2((screen.x-(Screen.width-1600*s)/2)/s,((Screen.height-screen.y)-(Screen.height-950*s)/2)/s);}
+    void Fill(Rect r,Color color) {Color c=GUI.color;GUI.color=color;GUI.DrawTexture(r,Texture2D.whiteTexture);GUI.color=c;}
+    public void Circle(Vector2 center,Vector2 size,Color color) {Color c=GUI.color;GUI.color=color;GUI.DrawTexture(new Rect(center-size/2,size),disk);GUI.color=c;}
+    public void Line(Vector2 a,Vector2 b,float width,Color color) {Matrix4x4 m=GUI.matrix;GUI.matrix=m*Matrix4x4.Translate(a)*Matrix4x4.Rotate(Quaternion.Euler(0,0,Mathf.Atan2(b.y-a.y,b.x-a.x)*Mathf.Rad2Deg))*Matrix4x4.Translate(-a);Fill(new Rect(a.x,a.y-width/2,(b-a).magnitude,width),color);GUI.matrix=m;}
+    void Label(Rect r,string value,int size,Color color,TextAnchor align=TextAnchor.MiddleLeft) {text.fontSize=size;text.normal.textColor=color;text.alignment=align;GUI.Label(r,value,text);}
+    bool Button(Rect r,string value,bool primary=false) {bool hover=r.Contains(Event.current.mousePosition);Fill(r,primary?(hover?new Color(.28f,.43f,.37f):jade):new Color(.19f,.27f,.24f,hover?.16f:.08f));button.normal.textColor=primary?new Color(.97f,.93f,.82f):ink;return GUI.Button(r,value,button);}
+    void OnGUI() {
+        if(text==null){text=new GUIStyle(GUI.skin.label){font=font,wordWrap=true};button=new GUIStyle(GUI.skin.button){font=font,fontSize=23,normal={background=null},hover={background=null},active={background=null},focused={background=null}};}
+        float s=Mathf.Min(Screen.width/1600f,Screen.height/950f);GUI.matrix=Matrix4x4.TRS(new Vector3((Screen.width-1600*s)/2,(Screen.height-950*s)/2),Quaternion.identity,new Vector3(s,s,1));
+        GUI.DrawTexture(new Rect(0,0,1600,950),background);
+        Circle(new Vector2(1220,270),new Vector2(210,210),new Color(.92f,.79f,.55f,.36f));
+        DrawScenery();
+        Matrix4x4 steady=GUI.matrix;
+        if(shake>.1f)GUI.matrix*=Matrix4x4.Translate(new Vector3(Mathf.Sin(Time.unscaledTime*122)*shake,Mathf.Cos(Time.unscaledTime*97)*shake*.5f));
+        player.Draw(bones);enemy.Draw(bones);
+        foreach(var p in sparks)Circle(ScreenPoint(p.p),Vector2.one*(p.life*6+1),new Color(p.color.r,p.color.g,p.color.b,p.life/p.max));
+        foreach(var f in floating)Label(new Rect(ScreenPoint(f.p)-new Vector2(70,25),new Vector2(140,50)),f.value,29,new Color(f.color.r,f.color.g,f.color.b,f.life),TextAnchor.MiddleCenter);
+        GUI.matrix=steady;
+        if(hurtFlash>0)Fill(new Rect(0,145,1600,620),new Color(.7f,.1f,.05f,hurtFlash));
+        DrawHud();
+        if(armory)DrawArmory();
+        else if(!started)DrawWelcome();
+        else if(paused)DrawPause();
+        else if(help)DrawHelp();
+        else if(finished&&Time.time-resultAt>1.3f)DrawResult();
+        GUI.matrix=Matrix4x4.identity;
+    }
+    void DrawScenery() {
+        var faint=new Color(.21f,.29f,.25f,.15f);
+        for(int i=0;i<8;i++) {
+            float x=65+i*15;Line(new Vector2(x,718),new Vector2(x-42,270+i*12),3,faint);
+            for(int j=0;j<5;j++){Vector2 p=new Vector2(x-26,355+j*62);Line(p,p+new Vector2(40,20),2,faint);Line(p,p+new Vector2(-37,-20),2,faint);}
+        }
+        Line(new Vector2(70,736),new Vector2(1530,736),5,new Color(.24f,.28f,.23f,.55f));
+        Line(new Vector2(70,744),new Vector2(1530,744),1,new Color(.31f,.3f,.22f,.3f));
+        for(int x=160;x<1500;x+=180) {Line(new Vector2(x,724),new Vector2(x,630),7,new Color(.25f,.28f,.24f,.25f));Circle(new Vector2(x,628),Vector2.one*13,new Color(.25f,.28f,.24f,.25f));}
+        Line(new Vector2(160,650),new Vector2(1420,650),2,new Color(.28f,.3f,.24f,.19f));
+        Label(new Rect(1320,387,70,220),"点到\n为止",35,new Color(.23f,.32f,.27f,.24f),TextAnchor.MiddleCenter);
+        Label(new Rect(75,912,300,30),"江 湖 未 央  /  独 立 演 武",14,new Color(.24f,.32f,.28f,.65f));
+        Label(new Rect(1250,912,275,30),"PHYSICS DUEL · 0.9",14,new Color(.24f,.32f,.28f,.65f),TextAnchor.MiddleRight);
+    }
+    void DrawHud() {
+        Label(new Rect(72,33,480,37),"布衣客 / 你 · "+player.weapon.name,25,ink);
+        Label(new Rect(1048,33,480,37),"黄裳客 / "+(training?"陪练":"对手")+" · "+enemy.weapon.name,25,ink,TextAnchor.MiddleRight);
+        Bar(new Rect(72,83,480,12),player.health/120,jade,false);Bar(new Rect(1048,83,480,12),enemy.health/120,vermilion,true);
+        Bar(new Rect(72,105,290,4),player.stamina/100,player.stamina<20?vermilion:new Color(.61f,.49f,.27f),false);Bar(new Rect(1238,105,290,4),enemy.stamina/100,enemy.stamina<20?vermilion:new Color(.61f,.49f,.27f),true);
+        Label(new Rect(72,114,440,24),"气血 "+Mathf.CeilToInt(player.health)+"    气力 "+Mathf.CeilToInt(player.stamina)+"  "+player.CombatState,14,ink);
+        Label(new Rect(1088,114,440,24),"气血 "+Mathf.CeilToInt(enemy.health)+"    气力 "+Mathf.CeilToInt(enemy.stamina)+"  "+enemy.CombatState,14,ink,TextAnchor.MiddleRight);
+        Label(new Rect(600,30,400,40),"纸 上 争 锋",31,ink,TextAnchor.MiddleCenter);
+        Label(new Rect(600,78,400,30),training?"自 由 练 习":"第 "+round+" 场   ·   "+((int)elapsed/60).ToString("00")+":"+((int)elapsed%60).ToString("00"),17,ink,TextAnchor.MiddleCenter);
+        Line(new Vector2(72,156),new Vector2(1528,156),1,new Color(.2f,.28f,.23f,.2f));
+        if(started&&!finished)Label(new Rect(450,184,700,35),elapsed<noticeUntil?notice:"距离、角度与挥动速度，决定这一剑。",18,new Color(.32f,.38f,.30f),TextAnchor.MiddleCenter);
+        DrawControls();
+        if(Button(new Rect(72,178,128,34),"兵器 W"))OpenArmory();
+        if(Button(new Rect(1400,178,128,34),"操作 H"))help=!help;
+    }
+    void Bar(Rect r,float ratio,Color c,bool reverse) {Fill(r,new Color(.15f,.22f,.19f,.12f));float w=r.width*Mathf.Clamp01(ratio);Fill(new Rect(reverse?r.xMax-w:r.x,r.y,w,r.height),c);}
+    void Panel(Rect r) {Fill(new Rect(0,158,1600,640),new Color(.9f,.87f,.77f,.66f));Fill(r,new Color(.94f,.91f,.82f,.98f));Line(r.min,new Vector2(r.xMax,r.y),2,new Color(.24f,.36f,.30f,.6f));}
+    void DrawWelcome() {
+        Rect r=new Rect(478,252,644,408);Panel(r);
+        Label(new Rect(520,283,560,30),"江湖未央 · 物理格斗试作",18,jade,TextAnchor.MiddleCenter);
+        Label(new Rect(520,331,560,78),"纸上争锋",68,ink,TextAnchor.MiddleCenter);
+        Label(new Rect(540,424,520,58),"分清握持，顺势发力。\n试试用一记有分量的挥砍，打破对手的平衡。",20,ink,TextAnchor.MiddleCenter);
+        if(Button(new Rect(537,520,246,63),"进入擂台  ↵",true))Begin(false);
+        if(Button(new Rect(809,520,246,63),"自由练习"))Begin(true);
+        if(Button(new Rect(650,602,300,38),"选择双方兵器  W"))OpenArmory();
+    }
+    void DrawPause() {
+        Panel(new Rect(520,290,560,332));Label(new Rect(550,322,500,60),"歇 一 歇",42,ink,TextAnchor.MiddleCenter);
+        if(Button(new Rect(580,410,440,55),"继续交手",true))paused=false;
+        if(Button(new Rect(580,480,210,52),"重新开局"))ResetRound();
+        if(Button(new Rect(810,480,210,52),training?"切换对战":"切换练习")){training=!training;ResetRound();}
+        if(Button(new Rect(580,548,210,43),"兵器选择 W"))OpenArmory();
+        if(Button(new Rect(810,548,210,43),"返回首页")){started=false;paused=false;ResetRound();}
+    }
+    void DrawHelp() {
+        Panel(new Rect(400,230,800,480));Label(new Rect(445,258,710,55),"交 手 要 诀",38,ink,TextAnchor.MiddleCenter);
+        Label(new Rect(450,335,700,245),"擂台内左键主控兵器、右键控制副手；轮盘在按下处出现。\n底盘固定在按下点，滑块随拖动变化，超出时停在边缘。\n推满伸直，松开隐藏；下次按下会在新位置生成。\n双手款：右键牵引副手，两手合力运械，K 架杆；单手款右键控盾。\nJ 变招 · L 直刺 · K 防守 · S 沉身 · V 碰撞框。\nR 重开 · Esc 暂停；窗口失焦会暂停并释放轮盘。",21,ink);
+        if(Button(new Rect(570,620,460,52),"明白了 · 返回擂台",true))help=false;
+    }
+    void DrawResult() {
+        Panel(new Rect(500,260,600,360));Label(new Rect(530,292,540,65),result,40,ink,TextAnchor.MiddleCenter);
+        Label(new Rect(540,376,520,63),"本局用时 "+((int)elapsed)+" 秒\n累计战绩 "+wins+" 胜 · "+losses+" 负",21,jade,TextAnchor.MiddleCenter);
+        if(Button(new Rect(560,476,480,59),"再来一场  R",true)){round++;ResetRound();}
+        if(Button(new Rect(560,552,480,38),"返回首页")){started=false;ResetRound();}
+    }
+    static Texture2D PaperBackground() {
+        const int w=800,h=475;var t=new Texture2D(w,h,TextureFormat.RGB24,false);var p=new Color[w*h];var random=new System.Random(119);
+        for(int y=0;y<h;y++)for(int x=0;x<w;x++) {
+            float grain=((float)random.NextDouble()-.5f)*.028f;
+            float vignette=Mathf.Pow(Mathf.Abs((float)x/w-.5f)*1.25f,2)*.045f;
+            Color c=new Color(.915f+grain-vignette,.891f+grain-vignette,.813f+grain-vignette);
+            float screenY=h-y;
+            for(int layer=0;layer<3;layer++) {float ridge=225+layer*47+Mathf.Sin(x*.007f+layer*3)*36+Mathf.Sin(x*.019f+layer*2)*18+Mathf.Sin(x*.036f+layer)*9;if(screenY>ridge&&screenY<365)c=Color.Lerp(c,new Color(.34f,.45f,.40f),.035f+layer*.012f);}
+            if(screenY>369)c=Color.Lerp(c,new Color(.65f,.61f,.48f),.13f);
+            p[y*w+x]=c;
+        }
+        t.SetPixels(p);t.Apply();return t;
+    }
+
+
+}
+
+public sealed class DuelContact : MonoBehaviour {
+    [NonSerialized] public PhysicsDuel.Fighter owner;
+    [NonSerialized] public PhysicsDuel.Limb limb;
+    public string kind;
+    void OnCollisionEnter2D(Collision2D collision) {Deliver(collision);}
+    void OnCollisionStay2D(Collision2D collision) {Deliver(collision);}
+    void Deliver(Collision2D collision) {
+        var own=collision.otherCollider.GetComponent<DuelContact>();if(own==null)return;
+        if(own.kind=="foot"&&collision.collider.gameObject.layer==8) {
+            for(int i=0;i<collision.contactCount;i++)if(collision.GetContact(i).normal.y>.5f)own.limb.lastGroundContact=Time.fixedTime;
+        }
+        if(own.kind!="sword")return;
+        var other=collision.collider.GetComponent<DuelContact>();if(other!=null)PhysicsDuel.Instance.Contact(own,other,collision);
+    }
+}

@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-26",
+  "feature": "Unity shadow puppet theatre battle presentation",
+  "build": "unity/Build/Current/江湖未央.exe",
+  "backup": "unity/Build/BeforeShadowTheater-20261026-2215",
+  "asset": "art/shadow-theater/ornate-stage-v1.png",
+  "prompt": "art/shadow-theater/prompt.txt",
+  "generation": "built-in imagegen",
+  "unit_tests": {
+    "failed": 0,
+    "passed": 43,
+    "command": "python -m unittest tests.test_combat_realtime tests.test_combat_flow"
+  },
+  "native_acceptance": {
+    "model_calls": 0,
+    "checks": 26,
+    "passed": true,
+    "bundled_python": true,
+    "save": "unity/validation/shadow-theater-final-save-1680",
+    "path": "unity/validation/shadow-theater-final-1680/acceptance.json",
+    "rendered_resolution": [
+      1680,
+      960
+    ]
+  },
+  "screenshots": [
+    "unity/validation/shadow-theater-final-1680/combat-opening.png",
+    "unity/validation/shadow-theater-final-1680/combat-windup.png",
+    "unity/validation/shadow-theater-final-1680/combat-result.png"
+  ],
+  "superseded_by": "validation/plain-theater-20261026.json"
+}

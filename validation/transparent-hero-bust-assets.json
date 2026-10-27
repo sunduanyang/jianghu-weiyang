@@ -1,0 +1,319 @@
+{
+  "date": "2026-10-27",
+  "method": "copy existing transparent split assembly without changing pixels",
+  "characters": [
+    {
+      "id": "m-youth-farmer",
+      "source": "art\\puppet-modern-24\\m-youth-farmer\\split-rest-composite.png",
+      "size": [
+        365,
+        899
+      ],
+      "transparent_fraction": 0.5692931263047222,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "f7b0be4bef30f203a24c65dc9516f27cd3cbcba3d37d5f0e1e37321250b75f6a",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "f-youth-farmer",
+      "source": "art\\puppet-modern-24\\f-youth-farmer\\split-rest-composite.png",
+      "size": [
+        279,
+        894
+      ],
+      "transparent_fraction": 0.49384987932292546,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "d25b86ec3201764681f4cffd525dd09c43fbf7c60875eeb40687e04ae6b2b352",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "m-middle-farmer",
+      "source": "art\\puppet-modern-24\\m-middle-farmer\\split-rest-composite.png",
+      "size": [
+        269,
+        886
+      ],
+      "transparent_fraction": 0.4506406975085384,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "b2829ba749535e8ba8f678d5e1d36627ffb09075001906b32e7216acda9a0f6e",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "f-middle-farmer",
+      "source": "art\\puppet-modern-24\\f-middle-farmer\\split-rest-composite.png",
+      "size": [
+        258,
+        892
+      ],
+      "transparent_fraction": 0.40849758403726494,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "02eafdf7edf22c3dd237fa80c2e385e5e532ccef6764f5b68d69a4f5baac9490",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "m-elder",
+      "source": "art\\puppet-modern-24\\m-elder\\split-rest-composite.png",
+      "size": [
+        297,
+        886
+      ],
+      "transparent_fraction": 0.47863890979015133,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "d41d28c7ab550b830a3ed11e4fd9a17367e023b9ac5fb8905df74e8ce8b20966",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "f-elder",
+      "source": "art\\puppet-modern-24\\f-elder\\split-rest-composite.png",
+      "size": [
+        311,
+        853
+      ],
+      "transparent_fraction": 0.4717867334129967,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "8b85fc48382f14cad8353f17e27fb2b3dd994e26fb40eda9a10ada628265ecd3",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "m-child",
+      "source": "art\\puppet-modern-24\\m-child\\split-rest-composite.png",
+      "size": [
+        221,
+        772
+      ],
+      "transparent_fraction": 0.43117717393852717,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "384afad3b8613a4cf19d2cbec7bbf31f058ac3f6175325ee05c8c28c59a02215",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "f-child",
+      "source": "art\\puppet-modern-24\\f-child\\split-rest-composite.png",
+      "size": [
+        312,
+        808
+      ],
+      "transparent_fraction": 0.49018627824320893,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "db8e3cfec5eef0013b4e2ba3843e06376c52c9931936793961119c54a4d97952",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "m-scholar",
+      "source": "art\\puppet-modern-24\\m-scholar\\split-rest-composite.png",
+      "size": [
+        312,
+        914
+      ],
+      "transparent_fraction": 0.42279287998653425,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "36554063f9c34e476e3d835ee4e9f834eae37d4bb56dc604a4abda160df19742",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "f-scholar",
+      "source": "art\\puppet-modern-24\\f-scholar\\split-rest-composite.png",
+      "size": [
+        337,
+        924
+      ],
+      "transparent_fraction": 0.4562089740131283,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "3aa8419438dbc1574202a588794b930467d0ce055ee7a66f8fcfa748f2e5f32c",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "m-merchant",
+      "source": "art\\puppet-modern-24\\m-merchant\\split-rest-composite.png",
+      "size": [
+        298,
+        912
+      ],
+      "transparent_fraction": 0.41576150947839396,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "46539077b3d45a3877aee50dff12fdce6b911ea32eb51d8d21aae3f752721119",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "f-merchant",
+      "source": "art\\puppet-modern-24\\f-merchant\\split-rest-composite.png",
+      "size": [
+        311,
+        912
+      ],
+      "transparent_fraction": 0.45601342584757715,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "d2d3364e69e288b8761ffae8bdd9bf8e25ba834ef86825b40108ed6c7463bfaf",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "m-escort",
+      "source": "art\\puppet-modern-24\\m-escort\\split-rest-composite.png",
+      "size": [
+        311,
+        921
+      ],
+      "transparent_fraction": 0.4137296591500222,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "77e20397bade0b1212364ecf385e1601d3253d930143431bf1529a3d0c3e575c",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "f-escort",
+      "source": "art\\puppet-modern-24\\f-escort\\split-rest-composite.png",
+      "size": [
+        319,
+        917
+      ],
+      "transparent_fraction": 0.539362716777826,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "033c2d7183d92af7a95983a7865895d22d64b7bfb7580809447abe940165f906",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "m-fisher",
+      "source": "art\\puppet-modern-24\\m-fisher\\split-rest-composite.png",
+      "size": [
+        317,
+        892
+      ],
+      "transparent_fraction": 0.5362493103789733,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "7e7e09e9f909b4d1fb28055df89f4206d529a7fbe031ea6a0422b737a105875d",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "m-hunter",
+      "source": "art\\puppet-modern-24\\m-hunter\\split-rest-composite.png",
+      "size": [
+        293,
+        918
+      ],
+      "transparent_fraction": 0.34026337118085764,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "b82cb9eb09c0c04b416fd43eb46d8e0ed872334db342c057f5e7c5cf3b6075d6",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "m-artisan",
+      "source": "art\\puppet-modern-24\\m-artisan\\split-rest-composite.png",
+      "size": [
+        372,
+        839
+      ],
+      "transparent_fraction": 0.530508670075743,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "4621d435f6620a89f11d164ea46e2959190d609dd98c910f1b4531e46bf6027f",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "f-healer",
+      "source": "art\\puppet-modern-24\\f-healer\\split-rest-composite.png",
+      "size": [
+        394,
+        832
+      ],
+      "transparent_fraction": 0.5885609869191722,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "89e7d2bb98e66156dc8c6f06d69fd1381124925da1e5ffc36d3059a778488f85",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "m-performer",
+      "source": "art\\puppet-modern-24\\m-performer\\split-rest-composite.png",
+      "size": [
+        528,
+        864
+      ],
+      "transparent_fraction": 0.6542157687991021,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "df2b31e34daf7cd7bb14b408e333baf6685b88ec696d98cff7f6a39238d0d909",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "m-daoist",
+      "source": "art\\puppet-modern-24\\m-daoist\\split-rest-composite.png",
+      "size": [
+        565,
+        888
+      ],
+      "transparent_fraction": 0.5897612213983895,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "502069bb49e635a96c8ebffad4a3634a9bac98d607d4bb1a118c2e030d8ea842",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "m-monk",
+      "source": "art\\puppet-modern-24\\m-monk\\split-rest-composite.png",
+      "size": [
+        320,
+        846
+      ],
+      "transparent_fraction": 0.5048721926713948,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "5b4b6fe8d3bacb01307c636ca6b907f428b807a31feea4f05327c5440302db19",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "m-official",
+      "source": "art\\puppet-modern-24\\m-official\\split-rest-composite.png",
+      "size": [
+        348,
+        823
+      ],
+      "transparent_fraction": 0.49735338891914915,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "6713d51c7104984d7c46538ea624e5cdfe8199bf0efb5874a9fa1437e2bf8094",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "m-beggar",
+      "source": "art\\puppet-modern-24\\m-beggar\\split-rest-composite.png",
+      "size": [
+        370,
+        882
+      ],
+      "transparent_fraction": 0.5006925292639578,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "cf320266445227c3736f1b1d61c0dd3e50b13c9d06be3b18957a54ae7d35b336",
+      "alpha_import_enabled": true
+    },
+    {
+      "id": "f-swordswoman",
+      "source": "art\\puppet-modern-24\\f-swordswoman\\split-rest-composite.png",
+      "size": [
+        432,
+        894
+      ],
+      "transparent_fraction": 0.6784893114591101,
+      "transparent_corners": true,
+      "source_identical": true,
+      "sha256": "430b4d3d9ca1d36a75d829835f9821e90de160dd37851e49f6e4bf745a252ba4",
+      "alpha_import_enabled": true
+    }
+  ],
+  "passed": true
+}

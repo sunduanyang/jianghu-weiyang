@@ -1,0 +1,26 @@
+{
+  "desktop": "1440x1050",
+  "responsive": [
+    {
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "width": 320,
+      "scroll": 320
+    }
+  ],
+  "browserSwapDirections": 54,
+  "checked": [
+    "presets",
+    "independent slots",
+    "expressions",
+    "left garment asset",
+    "wear overlay",
+    "joint guides",
+    "keyboard",
+    "state restore",
+    "SVG download"
+  ],
+  "pageErrors": []
+}

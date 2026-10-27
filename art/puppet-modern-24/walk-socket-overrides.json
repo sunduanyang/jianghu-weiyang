@@ -1,0 +1,114 @@
+{
+  "basis": "Visible cuff/skin sockets measured on independent source panels. All values are source pixels before mirror.",
+  "characters": {
+    "m-scholar": {
+      "near-upper-arm": {
+        "tip": [
+          72,
+          160
+        ]
+      },
+      "far-upper-arm": {
+        "tip": [
+          55,
+          145
+        ]
+      },
+      "near-forearm": {
+        "pivot": [
+          45,
+          15
+        ],
+        "tip": [
+          62,
+          145
+        ]
+      }
+    },
+    "m-monk": {
+      "near-forearm": {
+        "breadth": 0.9
+      }
+    },
+    "m-official": {
+      "near-forearm": {
+        "breadth": 0.95
+      }
+    },
+    "m-fisher": {
+      "pelvis": {
+        "target_height_fraction": 0.22155
+      },
+      "torso": {
+        "preserve_original_body": true
+      }
+    },
+    "m-youth-farmer": {
+      "pelvis": {
+        "target_height_fraction": 0.24
+      },
+      "torso": {
+        "restore_authored_hem": true
+      }
+    },
+    "m-middle-farmer": {
+      "pelvis": {
+        "target_height_fraction": 0.205
+      }
+    },
+    "m-child": {
+      "pelvis": {
+        "target_height_fraction": 0.252
+      },
+      "torso": {
+        "restore_authored_hem": true
+      }
+    },
+    "m-escort": {
+      "pelvis": {
+        "target_height_fraction": 0.244
+      },
+      "torso": {
+        "restore_authored_hem": true
+      }
+    },
+    "f-escort": {
+      "pelvis": {
+        "target_height_fraction": 0.259
+      },
+      "torso": {
+        "restore_authored_hem": true
+      }
+    },
+    "m-hunter": {
+      "pelvis": {
+        "target_height_fraction": 0.243
+      },
+      "torso": {
+        "restore_authored_hem": true
+      }
+    },
+    "m-artisan": {
+      "pelvis": {
+        "target_height_fraction": 0.245
+      },
+      "torso": {
+        "restore_authored_hem": true
+      }
+    },
+    "m-beggar": {
+      "pelvis": {
+        "target_height_fraction": 0.32
+      },
+      "torso": {
+        "restore_authored_hem": true
+      }
+    },
+    "f-swordswoman": {
+      "torso": {
+        "restore_authored_hem": true
+      }
+    }
+  },
+  "hip_revision": "Preserve authored rear cloth; locate hip hinges inside complete trouser panels; costume-specific garment lengths, checked against finished illustrations."
+}

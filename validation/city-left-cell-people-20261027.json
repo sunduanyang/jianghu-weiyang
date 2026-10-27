@@ -1,0 +1,432 @@
+{
+  "pass": true,
+  "checks": [
+    {
+      "check": "each cell matches actual facility occupants: 江陵府",
+      "pass": true,
+      "facts": {
+        "cells": 900,
+        "populated_cells": 6,
+        "people": 90,
+        "empty_cells_in_buildings": 19,
+        "merged_facility_cells": 2,
+        "gate_visible": true,
+        "refresh_clears_old_people": true,
+        "failures": []
+      }
+    },
+    {
+      "check": "changing region clears selected occupants",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "selection displays populated cell",
+      "pass": true,
+      "facts": {
+        "row": 10,
+        "col": 25,
+        "people": [
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93
+        ],
+        "scroll_y": 0,
+        "roster_open": true,
+        "roster_mode": "人物",
+        "query": ""
+      }
+    },
+    {
+      "check": "selecting a cell opens left people tab and clears old search",
+      "pass": true,
+      "facts": {
+        "row": 10,
+        "col": 25,
+        "people": [
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93
+        ],
+        "scroll_y": 0,
+        "roster_open": true,
+        "roster_mode": "人物",
+        "query": ""
+      }
+    },
+    {
+      "check": "capture populated-5-1280x800",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 5260
+      }
+    },
+    {
+      "check": "capture populated-5-1920x1080",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 10086
+      }
+    },
+    {
+      "check": "capture scrolled-people-5",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 10057
+      }
+    },
+    {
+      "check": "another cell in same building does not inherit occupants",
+      "pass": true,
+      "facts": {
+        "row": 9,
+        "col": 24,
+        "people": [],
+        "scroll_y": 0,
+        "roster_open": true,
+        "roster_mode": "人物",
+        "query": ""
+      }
+    },
+    {
+      "check": "capture empty-in-same-building-5",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 10275
+      }
+    },
+    {
+      "check": "switching back restores occupants and resets scroll",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "refreshing same region keeps selected cell",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "each cell matches actual facility occupants: 南京开封府",
+      "pass": true,
+      "facts": {
+        "cells": 900,
+        "populated_cells": 6,
+        "people": 76,
+        "empty_cells_in_buildings": 19,
+        "merged_facility_cells": 2,
+        "gate_visible": true,
+        "refresh_clears_old_people": true,
+        "failures": []
+      }
+    },
+    {
+      "check": "changing region clears selected occupants",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "selection displays populated cell",
+      "pass": true,
+      "facts": {
+        "row": 7,
+        "col": 20,
+        "people": [
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142
+        ],
+        "scroll_y": 0,
+        "roster_open": true,
+        "roster_mode": "人物",
+        "query": ""
+      }
+    },
+    {
+      "check": "selecting a cell opens left people tab and clears old search",
+      "pass": true,
+      "facts": {
+        "row": 7,
+        "col": 20,
+        "people": [
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142
+        ],
+        "scroll_y": 0,
+        "roster_open": true,
+        "roster_mode": "人物",
+        "query": ""
+      }
+    },
+    {
+      "check": "capture populated-13-1280x800",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 5379
+      }
+    },
+    {
+      "check": "capture populated-13-1920x1080",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 10773
+      }
+    },
+    {
+      "check": "capture scrolled-people-13",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 10775
+      }
+    },
+    {
+      "check": "another cell in same building does not inherit occupants",
+      "pass": true,
+      "facts": {
+        "row": 6,
+        "col": 19,
+        "people": [],
+        "scroll_y": 0,
+        "roster_open": true,
+        "roster_mode": "人物",
+        "query": ""
+      }
+    },
+    {
+      "check": "capture empty-in-same-building-13",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 9983
+      }
+    },
+    {
+      "check": "switching back restores occupants and resets scroll",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "refreshing same region keeps selected cell",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "browsing preserves month, events, hero and model calls",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "no Unity errors or exceptions",
+      "pass": true,
+      "facts": []
+    }
+  ],
+  "save_dir": "D:\\Desktop\\新游戏\\tmp\\left-cell-people-20261027\\save",
+  "build": "D:\\Desktop\\新游戏\\unity\\Build\\LeftCellPeople\\江湖未央.exe",
+  "assembly_sha256": "0564c0f8adf9202ec1266f9b755537d7e707443e4a50a48e7c59bbd06e4aacad",
+  "people_panel": "left roster",
+  "right_panel": "original settlement details restored",
+  "resolutions": [
+    "1280x800",
+    "1920x1080"
+  ],
+  "save_source": {
+    "source": "C:\\Users\\User\\AppData\\LocalLow\\JianghuStudio\\江湖未央 Unity\\Saves\\data\\world-nine-grades-1800-20261027.sqlite",
+    "source_access": "read-only SQLite online backup",
+    "copied_save": "D:\\Desktop\\新游戏\\tmp\\left-cell-people-20261027\\save\\world.sqlite",
+    "output": "D:\\Desktop\\新游戏\\tmp\\left-cell-people-20261027"
+  }
+}

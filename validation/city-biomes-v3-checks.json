@@ -1,0 +1,49 @@
+{
+  "pack": "terrain-biomes-v3-20261026",
+  "map_version": 2,
+  "map_protagonist_settlement_tests": {
+    "total": 35,
+    "passed": 35
+  },
+  "full_regression": {
+    "total": 244,
+    "passed": 243,
+    "failed": 1,
+    "seconds": 222.92,
+    "failure": {
+      "test": "test_paper_cast.PaperCastTests.test_resting_assembly_matches_the_supplied_final_silhouette_and_pigment",
+      "skin": "m-daoist",
+      "reference_size": [
+        565,
+        888
+      ],
+      "composite_size": [
+        602,
+        913
+      ],
+      "scope": "character source art, unchanged by city-map work"
+    },
+    "log": "output/city-biomes-v3-regression-final.log"
+  },
+  "native": {
+    "checks": 300,
+    "passed": true,
+    "cities": 49,
+    "report": "validation/city-biomes-v3-native.json"
+  },
+  "web_visuals": {
+    "sizes_checked": [
+      20,
+      30,
+      40
+    ],
+    "detail_zoom": 4,
+    "screenshot": "output/city-biomes-v3-acceptance/web-detail.png"
+  },
+  "build": {
+    "path": "unity/Build/BiomesV3/江湖未央.exe",
+    "graphics": "Direct3D11",
+    "active_build": "BiomesV3"
+  },
+  "backend_hashes_match": true
+}

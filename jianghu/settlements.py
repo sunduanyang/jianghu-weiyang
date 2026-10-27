@@ -67,7 +67,7 @@ def align_factions(w):
 
 def register_position(w, n, event_id):
     from . import city_maps
-    city = city_maps.world_layout(w, n['place'])
+    city = city_maps._world_layout(w, n['place'])
     # Spread by a hash of the id: new worlds deal residents round-robin over the hubs, so a plain
     # id % 7 would put every resident of one hub in the inn whenever the hub count is a multiple of 7.
     spread = zlib.crc32(str(n['id']).encode())

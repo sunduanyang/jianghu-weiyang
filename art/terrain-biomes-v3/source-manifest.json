@@ -1,0 +1,2814 @@
+{
+  "tool": "built-in image_gen",
+  "expected": 32,
+  "count": 32,
+  "oneCell": 16,
+  "fourCell": 16,
+  "palette": {
+    "ink": "#1E1B17",
+    "grass": "#5E7A3E",
+    "forest": "#3B5A34",
+    "crops": "#C9A23A",
+    "earth": "#9C7445",
+    "stone": "#A39A86",
+    "water": "#3F6E6E",
+    "slate": "#3E4A55",
+    "warmWhite": "#D8CCB0",
+    "vermilion": "#B23A2A"
+  },
+  "validationScope": "Inventory, PNG decoding, SHA-256, true alpha and sampled colors only. Occupancy is a logical import contract; exact projection, tone count and runtime anchor alignment need separate acceptance.",
+  "failures": [],
+  "warnings": [
+    {
+      "id": "28-terraced-fields",
+      "warning": "inspect_edge_margin",
+      "margin": 1
+    }
+  ],
+  "assets": [
+    {
+      "id": "01-open-plains",
+      "label": "原野",
+      "group": "平地",
+      "file": "tiles/01-open-plains.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 899813,
+      "sha256": "dab62494f3b18cd1ae3f43644eda0958ab96494b9e2564019ab3889eea228f3e",
+      "alpha": {
+        "clear": 1084855,
+        "solidAtLeast250": 469873,
+        "semiTransparent": 17788,
+        "max": 255,
+        "bounds": [
+          9,
+          403,
+          1240,
+          1161
+        ],
+        "margin": 9
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 118297,
+        "exactFraction": 0.00006762639796444542,
+        "withinRGBDistance18Fraction": 0.21432496174881865,
+        "uniqueSampledColors": 30133,
+        "topColors": [
+          [
+            "#7D8531",
+            355
+          ],
+          [
+            "#7C8532",
+            338
+          ],
+          [
+            "#7D8632",
+            324
+          ],
+          [
+            "#7C8431",
+            321
+          ],
+          [
+            "#7E8632",
+            298
+          ],
+          [
+            "#7D8532",
+            298
+          ],
+          [
+            "#7C8531",
+            295
+          ],
+          [
+            "#7C8632",
+            295
+          ]
+        ]
+      }
+    },
+    {
+      "id": "02-meadow",
+      "label": "草甸",
+      "group": "平地",
+      "file": "tiles/02-meadow.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1035433,
+      "sha256": "ba372b9339cad0ea6e07d8d75c785f17fbea14afef0dc500f9e09defc2c16190",
+      "alpha": {
+        "clear": 1055236,
+        "solidAtLeast250": 493021,
+        "semiTransparent": 24259,
+        "max": 255,
+        "bounds": [
+          10,
+          373,
+          1244,
+          1159
+        ],
+        "margin": 10
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 124512,
+        "exactFraction": 0.000024094063222821896,
+        "withinRGBDistance18Fraction": 0.30385826265741456,
+        "uniqueSampledColors": 39160,
+        "topColors": [
+          [
+            "#446761",
+            357
+          ],
+          [
+            "#436660",
+            230
+          ],
+          [
+            "#6D7A31",
+            215
+          ],
+          [
+            "#6E7B31",
+            207
+          ],
+          [
+            "#6E7B32",
+            193
+          ],
+          [
+            "#6F7C31",
+            191
+          ],
+          [
+            "#446661",
+            185
+          ],
+          [
+            "#6D7A32",
+            183
+          ]
+        ]
+      }
+    },
+    {
+      "id": "03-woodland",
+      "label": "林地",
+      "group": "植被",
+      "file": "tiles/03-woodland.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1006310,
+      "sha256": "ca9c26962cb01aa6640fad030857b4c97d0302bd40a905b8101f2dae8176661a",
+      "alpha": {
+        "clear": 1072833,
+        "solidAtLeast250": 469323,
+        "semiTransparent": 30360,
+        "max": 255,
+        "bounds": [
+          7,
+          390,
+          1246,
+          1141
+        ],
+        "margin": 7
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 118579,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.28236871621450677,
+        "uniqueSampledColors": 33541,
+        "topColors": [
+          [
+            "#7B8736",
+            369
+          ],
+          [
+            "#7A8636",
+            316
+          ],
+          [
+            "#7B8737",
+            309
+          ],
+          [
+            "#7B8636",
+            306
+          ],
+          [
+            "#7C8737",
+            274
+          ],
+          [
+            "#7C8837",
+            272
+          ],
+          [
+            "#7B8637",
+            264
+          ],
+          [
+            "#7A8635",
+            258
+          ]
+        ]
+      }
+    },
+    {
+      "id": "04-bamboo-forest",
+      "label": "竹林",
+      "group": "植被",
+      "file": "tiles/04-bamboo-forest.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1117643,
+      "sha256": "701e0eaed6dd840871a3a3aa3cf9f293b79c57d8ef25000fd4c2dca9e255cff7",
+      "alpha": {
+        "clear": 1043838,
+        "solidAtLeast250": 489683,
+        "semiTransparent": 38995,
+        "max": 255,
+        "bounds": [
+          13,
+          374,
+          1241,
+          1156
+        ],
+        "margin": 13
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 123883,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.18130009767280417,
+        "uniqueSampledColors": 33825,
+        "topColors": [
+          [
+            "#788831",
+            104
+          ],
+          [
+            "#758530",
+            103
+          ],
+          [
+            "#778730",
+            94
+          ],
+          [
+            "#778731",
+            93
+          ],
+          [
+            "#788830",
+            89
+          ],
+          [
+            "#798930",
+            88
+          ],
+          [
+            "#768631",
+            86
+          ],
+          [
+            "#788832",
+            83
+          ]
+        ]
+      }
+    },
+    {
+      "id": "05-scrubland",
+      "label": "灌丛",
+      "group": "植被",
+      "file": "tiles/05-scrubland.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1050191,
+      "sha256": "62d15c82e6012029b20c53c29b898375317d6083af68c65771d30830ae103c20",
+      "alpha": {
+        "clear": 1016266,
+        "solidAtLeast250": 533416,
+        "semiTransparent": 22834,
+        "max": 255,
+        "bounds": [
+          3,
+          324,
+          1249,
+          1174
+        ],
+        "margin": 3
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 134386,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.19819028767877606,
+        "uniqueSampledColors": 32056,
+        "topColors": [
+          [
+            "#AE7B3A",
+            275
+          ],
+          [
+            "#AD7B3A",
+            260
+          ],
+          [
+            "#AD7A39",
+            224
+          ],
+          [
+            "#AC7A3A",
+            223
+          ],
+          [
+            "#AD7A3A",
+            216
+          ],
+          [
+            "#AC7A39",
+            211
+          ],
+          [
+            "#75792F",
+            205
+          ],
+          [
+            "#74782F",
+            204
+          ]
+        ]
+      }
+    },
+    {
+      "id": "06-wilderness",
+      "label": "荒野",
+      "group": "荒地",
+      "file": "tiles/06-wilderness.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1031727,
+      "sha256": "c8908a9bc91a0c3f21d8e2b09025f3f02b4055b708e93ae756515b970ffcf383",
+      "alpha": {
+        "clear": 1066184,
+        "solidAtLeast250": 487216,
+        "semiTransparent": 19116,
+        "max": 255,
+        "bounds": [
+          10,
+          381,
+          1243,
+          1158
+        ],
+        "margin": 10
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 122962,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.2376343911127015,
+        "uniqueSampledColors": 39213,
+        "topColors": [
+          [
+            "#966A3A",
+            440
+          ],
+          [
+            "#976A3A",
+            427
+          ],
+          [
+            "#986B3A",
+            423
+          ],
+          [
+            "#976B3A",
+            418
+          ],
+          [
+            "#996C3B",
+            384
+          ],
+          [
+            "#986B3B",
+            373
+          ],
+          [
+            "#976B3B",
+            359
+          ],
+          [
+            "#956939",
+            353
+          ]
+        ]
+      }
+    },
+    {
+      "id": "07-dryland",
+      "label": "旱地",
+      "group": "荒地",
+      "file": "tiles/07-dryland.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 997083,
+      "sha256": "448cf7ae086292b1f87c75c5e767dd724e26a6de5dd35fa027d5328fc4d701d8",
+      "alpha": {
+        "clear": 1109278,
+        "solidAtLeast250": 441316,
+        "semiTransparent": 21922,
+        "max": 255,
+        "bounds": [
+          6,
+          430,
+          1243,
+          1155
+        ],
+        "margin": 6
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 111378,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.31604086983066676,
+        "uniqueSampledColors": 39872,
+        "topColors": [
+          [
+            "#AC753A",
+            177
+          ],
+          [
+            "#AB7439",
+            170
+          ],
+          [
+            "#D3A132",
+            159
+          ],
+          [
+            "#AD763A",
+            156
+          ],
+          [
+            "#AC7539",
+            151
+          ],
+          [
+            "#AB7438",
+            140
+          ],
+          [
+            "#D2A031",
+            138
+          ],
+          [
+            "#D4A233",
+            137
+          ]
+        ]
+      }
+    },
+    {
+      "id": "08-farmland",
+      "label": "农田",
+      "group": "耕地",
+      "file": "tiles/08-farmland.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 939090,
+      "sha256": "312c9e97c0f9e56c14ee45844b76742eff6420f6ad36c57bb2d99cd13f76d17d",
+      "alpha": {
+        "clear": 1122555,
+        "solidAtLeast250": 429608,
+        "semiTransparent": 20353,
+        "max": 255,
+        "bounds": [
+          33,
+          412,
+          1221,
+          1145
+        ],
+        "margin": 33
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 108512,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.3850726186965497,
+        "uniqueSampledColors": 36728,
+        "topColors": [
+          [
+            "#000000",
+            281
+          ],
+          [
+            "#D8A635",
+            231
+          ],
+          [
+            "#D7A535",
+            229
+          ],
+          [
+            "#D8A534",
+            202
+          ],
+          [
+            "#D6A434",
+            196
+          ],
+          [
+            "#D9A736",
+            191
+          ],
+          [
+            "#D9A635",
+            186
+          ],
+          [
+            "#D7A433",
+            182
+          ]
+        ]
+      }
+    },
+    {
+      "id": "09-rice-paddies",
+      "label": "水田",
+      "group": "耕地",
+      "file": "tiles/09-rice-paddies.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1097396,
+      "sha256": "82029c4df8834a4d9cc199f9152cbe6206ee7216128e22a5d9a0fdd01ddeff03",
+      "alpha": {
+        "clear": 1061090,
+        "solidAtLeast250": 489759,
+        "semiTransparent": 21667,
+        "max": 255,
+        "bounds": [
+          9,
+          375,
+          1242,
+          1157
+        ],
+        "margin": 9
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 123535,
+        "exactFraction": 0.000016189743797304408,
+        "withinRGBDistance18Fraction": 0.2792649856316024,
+        "uniqueSampledColors": 64039,
+        "topColors": [
+          [
+            "#3C706C",
+            253
+          ],
+          [
+            "#000000",
+            238
+          ],
+          [
+            "#3C716C",
+            191
+          ],
+          [
+            "#3B6F6B",
+            180
+          ],
+          [
+            "#3C706B",
+            155
+          ],
+          [
+            "#3B706B",
+            140
+          ],
+          [
+            "#3B706C",
+            139
+          ],
+          [
+            "#3B6F6A",
+            127
+          ]
+        ]
+      }
+    },
+    {
+      "id": "10-sand-flat",
+      "label": "沙地",
+      "group": "荒地",
+      "file": "tiles/10-sand-flat.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 886904,
+      "sha256": "ef3538e1cf7a6031baf5ae430b628f18ec9b8f8e759717c0a4eb4f76af0277d6",
+      "alpha": {
+        "clear": 1086725,
+        "solidAtLeast250": 470983,
+        "semiTransparent": 14808,
+        "max": 255,
+        "bounds": [
+          7,
+          409,
+          1247,
+          1158
+        ],
+        "margin": 7
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 118546,
+        "exactFraction": 0.00000843554400823309,
+        "withinRGBDistance18Fraction": 0.22462166585123075,
+        "uniqueSampledColors": 27739,
+        "topColors": [
+          [
+            "#D89B3F",
+            482
+          ],
+          [
+            "#D99C3F",
+            447
+          ],
+          [
+            "#3F3F3F",
+            397
+          ],
+          [
+            "#D99D40",
+            337
+          ],
+          [
+            "#D89C3F",
+            308
+          ],
+          [
+            "#DEA344",
+            308
+          ],
+          [
+            "#DDA243",
+            289
+          ],
+          [
+            "#E9B04B",
+            286
+          ]
+        ]
+      }
+    },
+    {
+      "id": "11-gravel-land",
+      "label": "砾地",
+      "group": "荒地",
+      "file": "tiles/11-gravel-land.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1068153,
+      "sha256": "9182600ab072d097ec4b4a27ce83b8302481d91a9906d4ace545b246b2b31a3f",
+      "alpha": {
+        "clear": 1097648,
+        "solidAtLeast250": 461917,
+        "semiTransparent": 12951,
+        "max": 255,
+        "bounds": [
+          14,
+          420,
+          1241,
+          1173
+        ],
+        "margin": 13
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 116236,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.2110963901028941,
+        "uniqueSampledColors": 33506,
+        "topColors": [
+          [
+            "#5C5D5C",
+            868
+          ],
+          [
+            "#5D5E5D",
+            797
+          ],
+          [
+            "#5C5D5D",
+            734
+          ],
+          [
+            "#5E5F5E",
+            715
+          ],
+          [
+            "#5D5E5E",
+            589
+          ],
+          [
+            "#5B5C5C",
+            579
+          ],
+          [
+            "#5B5C5B",
+            565
+          ],
+          [
+            "#5B5D5C",
+            480
+          ]
+        ]
+      }
+    },
+    {
+      "id": "12-mudflat",
+      "label": "泥地",
+      "group": "荒地",
+      "file": "tiles/12-mudflat.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 882801,
+      "sha256": "3f1901ef56a04405990515fecaeb44465ffa8f3539b31df955e23bc13ed2e016",
+      "alpha": {
+        "clear": 1095890,
+        "solidAtLeast250": 445811,
+        "semiTransparent": 30815,
+        "max": 255,
+        "bounds": [
+          38,
+          400,
+          1219,
+          1149
+        ],
+        "margin": 35
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 112952,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.12088320702599334,
+        "uniqueSampledColors": 31053,
+        "topColors": [
+          [
+            "#664A2F",
+            1984
+          ],
+          [
+            "#674A30",
+            1769
+          ],
+          [
+            "#664A30",
+            1754
+          ],
+          [
+            "#674B30",
+            1588
+          ],
+          [
+            "#674A2F",
+            1561
+          ],
+          [
+            "#65492F",
+            1456
+          ],
+          [
+            "#684B30",
+            1370
+          ],
+          [
+            "#66492F",
+            1328
+          ]
+        ]
+      }
+    },
+    {
+      "id": "13-riverbank",
+      "label": "河滩",
+      "group": "水岸",
+      "file": "tiles/13-riverbank.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 988513,
+      "sha256": "60dfdc850ac41e312950595bf0f83f0b6daf6a5bc5471f77f9f98ac386ef0f3b",
+      "alpha": {
+        "clear": 1075208,
+        "solidAtLeast250": 481602,
+        "semiTransparent": 15706,
+        "max": 255,
+        "bounds": [
+          14,
+          392,
+          1243,
+          1170
+        ],
+        "margin": 11
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 121216,
+        "exactFraction": 0.000008249736008447729,
+        "withinRGBDistance18Fraction": 0.3732758051742344,
+        "uniqueSampledColors": 42556,
+        "topColors": [
+          [
+            "#3D6265",
+            2036
+          ],
+          [
+            "#3D6365",
+            1829
+          ],
+          [
+            "#3E6365",
+            1466
+          ],
+          [
+            "#3D6264",
+            1434
+          ],
+          [
+            "#3E6366",
+            1318
+          ],
+          [
+            "#3D6366",
+            900
+          ],
+          [
+            "#3E6466",
+            838
+          ],
+          [
+            "#3C6264",
+            766
+          ]
+        ]
+      }
+    },
+    {
+      "id": "14-shallows",
+      "label": "浅滩",
+      "group": "水岸",
+      "file": "tiles/14-shallows.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 940818,
+      "sha256": "b73b41af8457a79f86f83fb87999a36052ddb3689160c01e6f0704c3cbc12f95",
+      "alpha": {
+        "clear": 1088314,
+        "solidAtLeast250": 465873,
+        "semiTransparent": 18329,
+        "max": 255,
+        "bounds": [
+          13,
+          402,
+          1237,
+          1164
+        ],
+        "margin": 13
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 117375,
+        "exactFraction": 0.000008519701810436635,
+        "withinRGBDistance18Fraction": 0.5710500532481363,
+        "uniqueSampledColors": 38652,
+        "topColors": [
+          [
+            "#426C6C",
+            932
+          ],
+          [
+            "#416B6B",
+            841
+          ],
+          [
+            "#436C6C",
+            818
+          ],
+          [
+            "#426B6B",
+            816
+          ],
+          [
+            "#416A6A",
+            719
+          ],
+          [
+            "#426B6C",
+            708
+          ],
+          [
+            "#436D6D",
+            689
+          ],
+          [
+            "#416A6B",
+            626
+          ]
+        ]
+      }
+    },
+    {
+      "id": "15-stream",
+      "label": "溪流",
+      "group": "水岸",
+      "file": "tiles/15-stream.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 889533,
+      "sha256": "dad15d604bf959363859398e119c57f5b215909a44b21184dec7675906778430",
+      "alpha": {
+        "clear": 1095206,
+        "solidAtLeast250": 459505,
+        "semiTransparent": 17805,
+        "max": 255,
+        "bounds": [
+          15,
+          419,
+          1241,
+          1167
+        ],
+        "margin": 13
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 115680,
+        "exactFraction": 0.000017289073305670816,
+        "withinRGBDistance18Fraction": 0.2563796680497925,
+        "uniqueSampledColors": 35390,
+        "topColors": [
+          [
+            "#6E7C2A",
+            1149
+          ],
+          [
+            "#6E7C2B",
+            950
+          ],
+          [
+            "#6F7D2B",
+            944
+          ],
+          [
+            "#6D7B2A",
+            787
+          ],
+          [
+            "#6F7D2A",
+            702
+          ],
+          [
+            "#6D7C2A",
+            594
+          ],
+          [
+            "#6E7D2A",
+            562
+          ],
+          [
+            "#3E6765",
+            557
+          ]
+        ]
+      }
+    },
+    {
+      "id": "16-low-hills",
+      "label": "丘陵",
+      "group": "平地",
+      "file": "tiles/16-low-hills.png",
+      "footprintCells": [
+        1,
+        1
+      ],
+      "occupiedCellCount": 1,
+      "logicalGroundDiamondPixels": [
+        256,
+        128
+      ],
+      "referenceGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 974427,
+      "sha256": "4b0158afd35ab3e28437ea406da3f5551e5dd64a03b9e135c9f4e43052b79f05",
+      "alpha": {
+        "clear": 1070766,
+        "solidAtLeast250": 473765,
+        "semiTransparent": 27985,
+        "max": 255,
+        "bounds": [
+          8,
+          402,
+          1244,
+          1147
+        ],
+        "margin": 8
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 119642,
+        "exactFraction": 0.00000835826883535882,
+        "withinRGBDistance18Fraction": 0.35661389812941946,
+        "uniqueSampledColors": 39488,
+        "topColors": [
+          [
+            "#767F38",
+            526
+          ],
+          [
+            "#757E37",
+            502
+          ],
+          [
+            "#777F38",
+            458
+          ],
+          [
+            "#747D37",
+            378
+          ],
+          [
+            "#767F37",
+            357
+          ],
+          [
+            "#757E38",
+            357
+          ],
+          [
+            "#747D36",
+            317
+          ],
+          [
+            "#777F39",
+            314
+          ]
+        ]
+      }
+    },
+    {
+      "id": "17-mountain-massif",
+      "label": "山岳",
+      "group": "山岳",
+      "file": "tiles/17-mountain-massif.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1094457,
+      "sha256": "dffa48a679634389488a010541c6ade852752bf4ac5266170c6b03d36abb8e7e",
+      "alpha": {
+        "clear": 1041347,
+        "solidAtLeast250": 511145,
+        "semiTransparent": 20024,
+        "max": 255,
+        "bounds": [
+          9,
+          311,
+          1244,
+          1153
+        ],
+        "margin": 9
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 128955,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.23238338955449575,
+        "uniqueSampledColors": 37229,
+        "topColors": [
+          [
+            "#6D7832",
+            290
+          ],
+          [
+            "#6E7932",
+            253
+          ],
+          [
+            "#6C7731",
+            244
+          ],
+          [
+            "#6E7933",
+            227
+          ],
+          [
+            "#6F7A33",
+            213
+          ],
+          [
+            "#6E7832",
+            210
+          ],
+          [
+            "#3A3D42",
+            198
+          ],
+          [
+            "#6D7831",
+            190
+          ]
+        ]
+      }
+    },
+    {
+      "id": "18-grand-canyon",
+      "label": "峡谷",
+      "group": "险地",
+      "file": "tiles/18-grand-canyon.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1014185,
+      "sha256": "78cf07a4425d6b4ff41982314ec66f23aa9219201d66f9bfa847c676926d7a36",
+      "alpha": {
+        "clear": 1050788,
+        "solidAtLeast250": 502267,
+        "semiTransparent": 19461,
+        "max": 255,
+        "bounds": [
+          9,
+          389,
+          1243,
+          1150
+        ],
+        "margin": 9
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 126508,
+        "exactFraction": 0.00013437885351124038,
+        "withinRGBDistance18Fraction": 0.362435577196699,
+        "uniqueSampledColors": 42327,
+        "topColors": [
+          [
+            "#3D3E43",
+            243
+          ],
+          [
+            "#3E3F44",
+            242
+          ],
+          [
+            "#6A7B31",
+            189
+          ],
+          [
+            "#3F6B6A",
+            179
+          ],
+          [
+            "#3F6C6B",
+            179
+          ],
+          [
+            "#6A7B30",
+            173
+          ],
+          [
+            "#AC9573",
+            170
+          ],
+          [
+            "#6B7B31",
+            167
+          ]
+        ]
+      }
+    },
+    {
+      "id": "19-natural-barrier",
+      "label": "天险",
+      "group": "险地",
+      "file": "tiles/19-natural-barrier.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1121555,
+      "sha256": "ada8417375657278c5d48acb9fa202e2c8c989f21ded07afa74cd0493b5a4504",
+      "alpha": {
+        "clear": 996950,
+        "solidAtLeast250": 557923,
+        "semiTransparent": 17643,
+        "max": 255,
+        "bounds": [
+          12,
+          327,
+          1244,
+          1197
+        ],
+        "margin": 10
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 140558,
+        "exactFraction": 0.000021343502326441753,
+        "withinRGBDistance18Fraction": 0.17421989498996857,
+        "uniqueSampledColors": 40943,
+        "topColors": [
+          [
+            "#3B3C3F",
+            221
+          ],
+          [
+            "#3F3F42",
+            219
+          ],
+          [
+            "#3E3F42",
+            201
+          ],
+          [
+            "#3E3F41",
+            199
+          ],
+          [
+            "#242A30",
+            198
+          ],
+          [
+            "#3F3F41",
+            196
+          ],
+          [
+            "#3F4043",
+            195
+          ],
+          [
+            "#252B31",
+            182
+          ]
+        ]
+      }
+    },
+    {
+      "id": "20-deep-forest",
+      "label": "密林",
+      "group": "植被",
+      "file": "tiles/20-deep-forest.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1116555,
+      "sha256": "7dcdd8a807d3dce16a1be6ece5b0345a9be9cfa9e2f0e8afbeee4954e3b118c9",
+      "alpha": {
+        "clear": 1036460,
+        "solidAtLeast250": 504348,
+        "semiTransparent": 31708,
+        "max": 255,
+        "bounds": [
+          12,
+          351,
+          1242,
+          1164
+        ],
+        "margin": 12
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 127630,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.3359163206142756,
+        "uniqueSampledColors": 34657,
+        "topColors": [
+          [
+            "#182424",
+            72
+          ],
+          [
+            "#6F8830",
+            70
+          ],
+          [
+            "#172323",
+            70
+          ],
+          [
+            "#718A31",
+            68
+          ],
+          [
+            "#6F892F",
+            68
+          ],
+          [
+            "#192625",
+            66
+          ],
+          [
+            "#172322",
+            64
+          ],
+          [
+            "#6E8730",
+            63
+          ]
+        ]
+      }
+    },
+    {
+      "id": "21-bog",
+      "label": "沼泽",
+      "group": "水岸",
+      "file": "tiles/21-bog.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1166398,
+      "sha256": "baf3d1f8c74bb1e607ae619a511b7b5116b7d397bed05cdb59775edaa1d5baca",
+      "alpha": {
+        "clear": 1066781,
+        "solidAtLeast250": 473619,
+        "semiTransparent": 32116,
+        "max": 255,
+        "bounds": [
+          8,
+          376,
+          1246,
+          1156
+        ],
+        "margin": 8
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 119810,
+        "exactFraction": 0.000016693097404223353,
+        "withinRGBDistance18Fraction": 0.1926466905934396,
+        "uniqueSampledColors": 65020,
+        "topColors": [
+          [
+            "#37605D",
+            430
+          ],
+          [
+            "#38615E",
+            362
+          ],
+          [
+            "#38605D",
+            335
+          ],
+          [
+            "#37605C",
+            286
+          ],
+          [
+            "#375F5C",
+            283
+          ],
+          [
+            "#38615D",
+            268
+          ],
+          [
+            "#39625F",
+            244
+          ],
+          [
+            "#365F5C",
+            240
+          ]
+        ]
+      }
+    },
+    {
+      "id": "22-wetland",
+      "label": "湿地",
+      "group": "水岸",
+      "file": "tiles/22-wetland.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1072355,
+      "sha256": "99d0691d78962a44e693ae77dd77745012cfbe8fae4fee357363282bb2f10a8a",
+      "alpha": {
+        "clear": 1082433,
+        "solidAtLeast250": 466914,
+        "semiTransparent": 23169,
+        "max": 255,
+        "bounds": [
+          14,
+          401,
+          1240,
+          1169
+        ],
+        "margin": 14
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 117794,
+        "exactFraction": 0.000016978793486934818,
+        "withinRGBDistance18Fraction": 0.30785099410835864,
+        "uniqueSampledColors": 53579,
+        "topColors": [
+          [
+            "#3B6362",
+            686
+          ],
+          [
+            "#3B6261",
+            640
+          ],
+          [
+            "#3C6362",
+            584
+          ],
+          [
+            "#3B6262",
+            568
+          ],
+          [
+            "#3A6261",
+            519
+          ],
+          [
+            "#3A6161",
+            420
+          ],
+          [
+            "#3C6363",
+            387
+          ],
+          [
+            "#3C6463",
+            374
+          ]
+        ]
+      }
+    },
+    {
+      "id": "23-lake",
+      "label": "湖泊",
+      "group": "水岸",
+      "file": "tiles/23-lake.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 949120,
+      "sha256": "c1bcfa9652f6f1219127c6c811e6e305a8d991087b3710028f427382af97694f",
+      "alpha": {
+        "clear": 1065152,
+        "solidAtLeast250": 488515,
+        "semiTransparent": 18849,
+        "max": 255,
+        "bounds": [
+          12,
+          381,
+          1243,
+          1163
+        ],
+        "margin": 11
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 123165,
+        "exactFraction": 0.000024357569114602362,
+        "withinRGBDistance18Fraction": 0.51944951893801,
+        "uniqueSampledColors": 39580,
+        "topColors": [
+          [
+            "#3F696F",
+            5470
+          ],
+          [
+            "#3F6A70",
+            2622
+          ],
+          [
+            "#3F6970",
+            2622
+          ],
+          [
+            "#3F686F",
+            2318
+          ],
+          [
+            "#3F686E",
+            2153
+          ],
+          [
+            "#3E686E",
+            1852
+          ],
+          [
+            "#3E696F",
+            1429
+          ],
+          [
+            "#3E686F",
+            1405
+          ]
+        ]
+      }
+    },
+    {
+      "id": "24-river-valley",
+      "label": "河谷",
+      "group": "山水",
+      "file": "tiles/24-river-valley.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1112869,
+      "sha256": "d3432b4f2664c84d25020e8dc5bbeab61cdf93aab5730cb50173f96591222098",
+      "alpha": {
+        "clear": 1032139,
+        "solidAtLeast250": 520758,
+        "semiTransparent": 19619,
+        "max": 255,
+        "bounds": [
+          10,
+          349,
+          1245,
+          1158
+        ],
+        "margin": 9
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 131286,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.2908764072330637,
+        "uniqueSampledColors": 46925,
+        "topColors": [
+          [
+            "#456B69",
+            459
+          ],
+          [
+            "#446A68",
+            433
+          ],
+          [
+            "#788134",
+            319
+          ],
+          [
+            "#456A68",
+            317
+          ],
+          [
+            "#788135",
+            302
+          ],
+          [
+            "#798235",
+            290
+          ],
+          [
+            "#456B68",
+            279
+          ],
+          [
+            "#446B69",
+            256
+          ]
+        ]
+      }
+    },
+    {
+      "id": "25-stone-forest",
+      "label": "石林",
+      "group": "山岳",
+      "file": "tiles/25-stone-forest.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1139319,
+      "sha256": "0be8b045af88ba134f091bb7147d62446548d00b4e7fef222b0ca9b5ce43e13c",
+      "alpha": {
+        "clear": 1034724,
+        "solidAtLeast250": 515074,
+        "semiTransparent": 22718,
+        "max": 255,
+        "bounds": [
+          11,
+          345,
+          1243,
+          1158
+        ],
+        "margin": 11
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 130058,
+        "exactFraction": 0.000007688877270141013,
+        "withinRGBDistance18Fraction": 0.2814821079825924,
+        "uniqueSampledColors": 39036,
+        "topColors": [
+          [
+            "#393C3F",
+            139
+          ],
+          [
+            "#3A3D40",
+            132
+          ],
+          [
+            "#383B3F",
+            123
+          ],
+          [
+            "#3A3C3F",
+            123
+          ],
+          [
+            "#3D3F42",
+            109
+          ],
+          [
+            "#373A3E",
+            106
+          ],
+          [
+            "#393C40",
+            105
+          ],
+          [
+            "#3B3D40",
+            105
+          ]
+        ]
+      }
+    },
+    {
+      "id": "26-escarpment",
+      "label": "断崖",
+      "group": "险地",
+      "file": "tiles/26-escarpment.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1067809,
+      "sha256": "f690ceca659ceeb0a8f26736e09c1c93a86733fc50c2bae64bacb3ffb9c96a03",
+      "alpha": {
+        "clear": 1038041,
+        "solidAtLeast250": 516270,
+        "semiTransparent": 18205,
+        "max": 255,
+        "bounds": [
+          5,
+          384,
+          1251,
+          1160
+        ],
+        "margin": 3
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 130098,
+        "exactFraction": 0.00001537302648772464,
+        "withinRGBDistance18Fraction": 0.36664668173223264,
+        "uniqueSampledColors": 50326,
+        "topColors": [
+          [
+            "#6C7A34",
+            426
+          ],
+          [
+            "#6D7B34",
+            411
+          ],
+          [
+            "#6C7A33",
+            324
+          ],
+          [
+            "#6E7B34",
+            311
+          ],
+          [
+            "#6D7A34",
+            276
+          ],
+          [
+            "#6E7C34",
+            255
+          ],
+          [
+            "#3F4046",
+            196
+          ],
+          [
+            "#6D7B33",
+            195
+          ]
+        ]
+      }
+    },
+    {
+      "id": "27-sinkhole",
+      "label": "天坑",
+      "group": "险地",
+      "file": "tiles/27-sinkhole.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1130533,
+      "sha256": "988ee7b592ae73cd4c3f43556ebdd6736acd5b8db37a9b74bf580c7cb3070a20",
+      "alpha": {
+        "clear": 1027662,
+        "solidAtLeast250": 521325,
+        "semiTransparent": 23529,
+        "max": 255,
+        "bounds": [
+          10,
+          326,
+          1244,
+          1155
+        ],
+        "margin": 10
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 131517,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.29311039637461317,
+        "uniqueSampledColors": 46268,
+        "topColors": [
+          [
+            "#3F5427",
+            166
+          ],
+          [
+            "#3F5327",
+            159
+          ],
+          [
+            "#3F5326",
+            143
+          ],
+          [
+            "#3F5527",
+            121
+          ],
+          [
+            "#3F5428",
+            116
+          ],
+          [
+            "#3F5426",
+            110
+          ],
+          [
+            "#3F5528",
+            105
+          ],
+          [
+            "#697733",
+            102
+          ]
+        ]
+      }
+    },
+    {
+      "id": "28-terraced-fields",
+      "label": "梯田",
+      "group": "耕地",
+      "file": "tiles/28-terraced-fields.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1295251,
+      "sha256": "deb5272763f24c8e02bddbd31f1d1459ee3c8a35e3d16d421e504469b5a1df9e",
+      "alpha": {
+        "clear": 992392,
+        "solidAtLeast250": 552624,
+        "semiTransparent": 27500,
+        "max": 255,
+        "bounds": [
+          2,
+          273,
+          1253,
+          1150
+        ],
+        "margin": 1
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 139935,
+        "exactFraction": 0.000021438525029477973,
+        "withinRGBDistance18Fraction": 0.3412084181941616,
+        "uniqueSampledColors": 64633,
+        "topColors": [
+          [
+            "#000000",
+            364
+          ],
+          [
+            "#010100",
+            86
+          ],
+          [
+            "#020201",
+            86
+          ],
+          [
+            "#D2A235",
+            78
+          ],
+          [
+            "#D3A234",
+            74
+          ],
+          [
+            "#D19F32",
+            73
+          ],
+          [
+            "#D1A134",
+            73
+          ],
+          [
+            "#D1A033",
+            71
+          ]
+        ]
+      }
+    },
+    {
+      "id": "29-plateau",
+      "label": "高原",
+      "group": "山岳",
+      "file": "tiles/29-plateau.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1060576,
+      "sha256": "fb9260794905fdc4da1576de1f289b56fd3f46ff720378d991ad3569231c748c",
+      "alpha": {
+        "clear": 1049183,
+        "solidAtLeast250": 500753,
+        "semiTransparent": 22580,
+        "max": 255,
+        "bounds": [
+          10,
+          385,
+          1246,
+          1153
+        ],
+        "margin": 8
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 126422,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.26095141668380506,
+        "uniqueSampledColors": 45810,
+        "topColors": [
+          [
+            "#798738",
+            731
+          ],
+          [
+            "#798739",
+            575
+          ],
+          [
+            "#788638",
+            543
+          ],
+          [
+            "#7A8839",
+            480
+          ],
+          [
+            "#788637",
+            462
+          ],
+          [
+            "#788738",
+            456
+          ],
+          [
+            "#798638",
+            330
+          ],
+          [
+            "#7A8739",
+            326
+          ]
+        ]
+      }
+    },
+    {
+      "id": "30-fjord",
+      "label": "峡湾",
+      "group": "山水",
+      "file": "tiles/30-fjord.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1119894,
+      "sha256": "52a1dc026b3191d33c9bca999b6b441ad8362363a3b9844b43dd3f57217aef03",
+      "alpha": {
+        "clear": 1036380,
+        "solidAtLeast250": 513821,
+        "semiTransparent": 22315,
+        "max": 255,
+        "bounds": [
+          9,
+          367,
+          1245,
+          1155
+        ],
+        "margin": 9
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 129626,
+        "exactFraction": 0,
+        "withinRGBDistance18Fraction": 0.3163022850354096,
+        "uniqueSampledColors": 44385,
+        "topColors": [
+          [
+            "#366266",
+            1894
+          ],
+          [
+            "#376266",
+            1476
+          ],
+          [
+            "#376367",
+            1117
+          ],
+          [
+            "#376366",
+            1072
+          ],
+          [
+            "#366165",
+            1064
+          ],
+          [
+            "#366265",
+            1060
+          ],
+          [
+            "#366366",
+            532
+          ],
+          [
+            "#356165",
+            513
+          ]
+        ]
+      }
+    },
+    {
+      "id": "31-river-delta",
+      "label": "三角洲",
+      "group": "山水",
+      "file": "tiles/31-river-delta.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1001423,
+      "sha256": "3c413fd667c9ce3a4360d16fb3f40b51bca29a6557fcf3d1bff300672768bc75",
+      "alpha": {
+        "clear": 1065963,
+        "solidAtLeast250": 487093,
+        "semiTransparent": 19460,
+        "max": 255,
+        "bounds": [
+          8,
+          401,
+          1244,
+          1184
+        ],
+        "margin": 8
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 122689,
+        "exactFraction": 0.0001222603493385715,
+        "withinRGBDistance18Fraction": 0.3894644181629975,
+        "uniqueSampledColors": 42279,
+        "topColors": [
+          [
+            "#000000",
+            305
+          ],
+          [
+            "#386366",
+            285
+          ],
+          [
+            "#3A6568",
+            283
+          ],
+          [
+            "#396467",
+            277
+          ],
+          [
+            "#3B6669",
+            248
+          ],
+          [
+            "#386266",
+            246
+          ],
+          [
+            "#376165",
+            240
+          ],
+          [
+            "#376265",
+            236
+          ]
+        ]
+      }
+    },
+    {
+      "id": "32-basin",
+      "label": "盆地",
+      "group": "山水",
+      "file": "tiles/32-basin.png",
+      "footprintCells": [
+        2,
+        2
+      ],
+      "occupiedCellCount": 4,
+      "logicalGroundDiamondPixels": [
+        512,
+        256
+      ],
+      "referenceGroundDiamondPixels": [
+        1024,
+        512
+      ],
+      "referenceGroundCentre": [
+        768,
+        1152
+      ],
+      "suggestedPivotFromBottom": [
+        0.5,
+        0.25
+      ],
+      "pivotStatus": "Guide-based suggestion; calibrate actual ground contact before runtime use.",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 1116794,
+      "sha256": "19c16e6fd8f0dcdbe1ea0d8dd9c20ac8a9f8cd5628f46d0373ffa8efb4dc8168",
+      "alpha": {
+        "clear": 1038922,
+        "solidAtLeast250": 510795,
+        "semiTransparent": 22799,
+        "max": 255,
+        "bounds": [
+          9,
+          365,
+          1244,
+          1152
+        ],
+        "margin": 9
+      },
+      "paletteSample": {
+        "minimumAlpha": 240,
+        "stride": 2,
+        "samples": 128940,
+        "exactFraction": 0.000007755545214828603,
+        "withinRGBDistance18Fraction": 0.2795408717232821,
+        "uniqueSampledColors": 47051,
+        "topColors": [
+          [
+            "#768036",
+            469
+          ],
+          [
+            "#768136",
+            361
+          ],
+          [
+            "#758035",
+            356
+          ],
+          [
+            "#758036",
+            351
+          ],
+          [
+            "#757E35",
+            304
+          ],
+          [
+            "#000000",
+            296
+          ],
+          [
+            "#768035",
+            292
+          ],
+          [
+            "#778136",
+            292
+          ]
+        ]
+      }
+    }
+  ]
+}

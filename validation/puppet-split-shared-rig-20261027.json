@@ -1,0 +1,107 @@
+{
+  "date": "2026-10-27",
+  "passed": true,
+  "skins": 24,
+  "independent_components": 367,
+  "source_archive": "output/imagegen/puppet-cast24-modern-flat-20261026.zip",
+  "source_archive_sha256": "15dafb1ea37b12a72d7a16264bea7dd00d7750c01c759e45ab9f01c6698fb3f6",
+  "binding_basis": "independent exploded component panels",
+  "final_illustration_role": "Visual and geometric reference only; actor and portrait pixels come from the right-hand exploded panels.",
+  "shared_skeleton": "unity/paper-rig.json",
+  "shared_animation_clips": [
+    "idle",
+    "walk",
+    "talk",
+    "attack",
+    "guard",
+    "hurt",
+    "defeated"
+  ],
+  "retargeting": "One common hierarchy and animation parameter library; skin proportions and bind offsets vary. Active clips use common relative arm angles, while the reference idle preserves the calibrated bind pose. Transitions blend the bind-pose weight.",
+  "equipment_policy": "no hand-held objects",
+  "removed_handheld_props": [
+    "farmer hoe",
+    "elder cane",
+    "scholar scroll",
+    "fisher basket",
+    "artisan hammer",
+    "performer fan",
+    "daoist whisk",
+    "monk beads",
+    "beggar staff"
+  ],
+  "embedded_grip_images_replaced_with_same_character_bare_hand": [
+    "m-elder",
+    "m-scholar"
+  ],
+  "retained_worn_or_back_equipment": {
+    "m-merchant": "hip",
+    "m-escort": "neck",
+    "f-escort": "hip",
+    "m-hunter": "neck",
+    "f-healer": "neck",
+    "m-official": "hip",
+    "f-swordswoman": "hip"
+  },
+  "source_tests": {
+    "passed": true,
+    "count": 8,
+    "log": "output/split-binding/final-source-tests.log",
+    "includes": "Every opaque drawable RGB pixel is traced to a right-hand exploded panel, including source and bind mirrors and masks."
+  },
+  "joint_overlap_audit": {
+    "report": "output/split-binding/joint-overlap-audit.json",
+    "count": 336,
+    "statuses": {
+      "overlapping": 296,
+      "hidden_component": 40
+    },
+    "scope": "24 split-component rest assemblies; independent alpha transforms identical to bake_split_cast.render_rest",
+    "socket_radius": "max(18, round(reference_height * .04))"
+  },
+  "native_render": {
+    "passed": true,
+    "checks": 153,
+    "report": "output/split-binding/final-native/render-regression.json",
+    "facts": {
+      "skins": 24,
+      "parts": 367,
+      "clips": 7,
+      "pose_samples": 16968,
+      "max_bone_length_error": 4.57763671875e-05,
+      "transition_joint_jump": 0,
+      "max_ground_penetration": 0,
+      "max_support_foot_gap": 3.14567987516057e-05,
+      "max_reverse_knee": 1.44436244227109e-05,
+      "max_loop_seam": 0,
+      "reference_landmark_error_pixels": 0.0160751517365376,
+      "reference_landmark_error_world_units": 0.0108128823339939,
+      "age_sex_profession_controls": true,
+      "shared_action_angle_error_degrees": 3.0517578125e-05,
+      "shared_action_samples": 29088
+    }
+  },
+  "native_gameplay": {
+    "passed": true,
+    "checks": 77,
+    "report": "output/split-binding/final-ui/acceptance.json"
+  },
+  "build": "unity/Build/SplitBound/江湖未央.exe",
+  "active_build": "SplitBound",
+  "embedded_index_matches_source": true,
+  "embedded_index_sha256": "84db709ac24db6226af1b8dfb50b6a7ef4abc64ab3eba22f7dfe969ddb77e657",
+  "animation": "output/split-binding/empty-hands-shared-actions.gif",
+  "animation_frames": 72,
+  "screenshots": [
+    "validation/screenshots/split-puppet-source-binding-20261027.jpg",
+    "validation/screenshots/split-shared-empty-hands-20261027.png",
+    "validation/screenshots/split-empty-hands-comparison-20261027.png",
+    "validation/screenshots/split-reference-comparison-20261027.png"
+  ],
+  "isolated_save_directories": [
+    "output/split-binding/empty-render-save",
+    "output/split-binding/empty-ui-save"
+  ],
+  "reference_comparison_limit": "The independent component drawings differ from the assembled illustration. Visual similarity guides placement and proportions; pixel identity to the assembled illustration is not an acceptance criterion.",
+  "supersedes": "validation/puppet-reference-binding-20261027.json"
+}

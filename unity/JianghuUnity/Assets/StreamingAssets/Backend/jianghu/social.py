@@ -13,6 +13,8 @@ COSTS = {'work': 2, 'travel': 2, 'duel': 2, 'extort': 2, 'faction_task': 2}
 LIMITS = {'trade': 1, 'travel': 1, 'duel': 1, 'family': 1, 'report': 1,
           'steal': 1, 'extort': 1, 'smear': 1, 'embezzle': 1, 'gamble': 1, 'join': 1,
           'faction_task': 1, 'faction_study': 1, 'leave_faction': 1, 'reconcile': 1, 'swear': 1}
+LIMITS.update(donate_relief=1, neighbor_care=1)
+LIMITS['faction_guide'] = 1
 CRIMES = {'betrayal', 'theft_exposed', 'extortion', 'extortion_resisted', 'slander_exposed', 'embezzlement_exposed'}
 
 
@@ -28,6 +30,7 @@ def initialize(w, n):
                 'pressure': 0., 'loneliness': 25., 'last_review_attempt': -100,
                 'last_ai_review':n['reviews'][-1]['month'] if n['reviews'] else None,
                 'trigger_events': [], 'settlement_logged': False,'probation_until':-1}
+    defaults.update(planning_history=[], plan_revision=0, decision=None)
     for k,v in defaults.items():
         n.setdefault(k,v)
 
@@ -186,11 +189,15 @@ def execute(w, n, a, facts):
                       {**settled(),'stake':6,'payout':paid,'won':won})
     if k=='care':
         n['wealth']-=2;q['health']=min(100,q['health']+5)
+        from . import economics
+        economics.fee(w, n['place'], 2)
         w.link(n,q,3,2)
         return w.emit('care',[n['id'],q['id']],f"{n['name']}花2银照料{q['name']}，对方恢复5体力。",.4,parents,
                       {**settled(),'cost':2,'health_gain':5})
     if k=='leisure':
         n['wealth']-=2;n['health']=min(100,n['health']+3)
+        from . import economics
+        economics.fee(w, n['place'], 2)
         n['pressure']=max(0,n['pressure']-8);n['mood']['joy']=min(100,n['mood']['joy']+8)
         text=f"{n['name']}花2银在茶肆听曲消遣，暂缓心中压力。"
     elif k=='meditate':

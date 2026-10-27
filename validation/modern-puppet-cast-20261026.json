@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-26",
+  "source_archive": "puppet-cast24-modern-flat-20261026.zip",
+  "archive_sha256": "15dafb1ea37b12a72d7a16264bea7dd00d7750c01c759e45ab9f01c6698fb3f6",
+  "skins": 24,
+  "transparent_parts": 376,
+  "clips": [
+    "idle",
+    "walk",
+    "talk",
+    "attack",
+    "guard",
+    "hurt",
+    "defeated"
+  ],
+  "binding": "Rigid 2D parts with FK arms, two-segment IK legs, independent head/hands/feet and prop attachments; age-specific lengths and manual anatomical landmarks.",
+  "old_runtime_resources_removed": true,
+  "source_index_sha256": "57ba90c16885baf26084a2bd1ca4d81654001a2809a247852ab1c0f0a171f0cc",
+  "exact_current_index_packed_in_player": true,
+  "source_tests": {
+    "passed": true,
+    "tests": 239,
+    "log": "output/modern-cast/python-tests.log"
+  },
+  "native_rig_render": {
+    "passed": true,
+    "checks": 153,
+    "pose_samples": 16968,
+    "maximum_attachment_error_pixels": 0.00030517578125,
+    "window_sizes": [
+      [
+        1280,
+        800
+      ],
+      [
+        1680,
+        960
+      ],
+      [
+        1920,
+        1080
+      ]
+    ],
+    "report": "output/modern-cast/release-render/render-regression.json"
+  },
+  "native_ui_and_gameplay": {
+    "passed": true,
+    "checks": 77,
+    "report": "output/modern-cast/visible-ui/acceptance.json"
+  },
+  "player": "unity/Build/ModernCast/江湖未央.exe",
+  "default_launcher": "启动Unity版.bat",
+  "demo_launcher": "演示骨骼系统.bat",
+  "preview": "output/modern-cast/modern-cast-animation.gif",
+  "screenshots": [
+    "validation/screenshots/modern-cast24-20261026.png",
+    "validation/screenshots/modern-cast-battle-20261026.png"
+  ],
+  "save_policy": "All automated checks used disposable output/modern-cast/*-save directories.",
+  "limitations": [
+    "Rigid paper-puppet articulation; no cloth simulation.",
+    "Concept boards use different piece scales; anatomical anchors and part sizes are calibrated for assembly."
+  ]
+}

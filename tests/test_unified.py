@@ -63,7 +63,7 @@ class UnifiedTests(unittest.TestCase):
         b = w.start_battle(1)['battle']
         base = martial.stats(w.player)['attack']
         self.assertEqual(b['fighters'][0]['attack'], base+2)
-        w.battle_action(b['id'], b['round'], 'surrender')
+        w.battle_action(b['id'], b['revision'], 'surrender')
         self.assertEqual(sword['durability'], 98)
         sword['durability'] = 0
         b = w.start_battle(1)['battle']

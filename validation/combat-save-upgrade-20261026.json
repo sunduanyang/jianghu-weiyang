@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-26",
+  "issue": "Default Unity save resumed an active ruleset 2 bout after the realtime engine was merged.",
+  "observed_legacy_ruleset": 2,
+  "observed_legacy_round": 4,
+  "fix": "On load, archive an unsettled legacy bout and restart against the same opponent using ruleset 3; keep finished historical results.",
+  "preserved": [
+    "all non-battle world fields",
+    "existing events and experiences",
+    "complete legacy battle in upgrade event",
+    "world random state",
+    "month",
+    "health, stamina, skill, relationships and inventory"
+  ],
+  "default_unity_save": {
+    "backed_up": true,
+    "backup_name": "before-realtime-20261026.sqlite",
+    "migrated": true,
+    "ruleset": 3,
+    "elapsed": 0,
+    "integrity": "ok"
+  },
+  "verification": {
+    "combat_tests": 59,
+    "combat_tests_passed": true,
+    "native_checks": 28,
+    "native_passed": true,
+    "native_report": "output/combat-restore-20261026/native-focused/acceptance.json",
+    "actual_launcher_used": true,
+    "existing_save_copy_verified_in_native_ui": true,
+    "physical_space_start_verified": true,
+    "full_suite": {
+      "tests": 225,
+      "passed": 220,
+      "failures": 1,
+      "errors": 4,
+      "affected_module": "test_paper_cast",
+      "details": "Concurrent art edits remove reference-jade, reference-bamboo, reference-body and reference-plain from the cast index.",
+      "log": "output/combat-restore-regression-20261026.log"
+    },
+    "initial_native_attempt": {
+      "passed": false,
+      "failed_checks": [
+        "windup resolves on continuous clock",
+        "held movement changes fractional distance"
+      ],
+      "report": "output/combat-restore-20261026/native/acceptance.json",
+      "retry": "Kept player in foreground; all 28 checks passed."
+    },
+    "new_model_calls": 0
+  },
+  "runtime_engine_sha256": "ddcd411ed1d06e7230c43bd8533b4eb53b83ae4d9d9440eb397334318bdbaed9",
+  "migration_method_matches_source_mirror_and_runtime": true,
+  "source_note": "Other chats are concurrently editing social simulation and art. Their uncommitted changes were preserved; runtime verification used the existing default player with the combat-save migration."
+}

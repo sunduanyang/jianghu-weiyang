@@ -1,0 +1,166 @@
+{
+  "unity": "6000.6.7f1",
+  "checks": [
+    {
+      "check": "/api/hero",
+      "pass": true,
+      "facts": {
+        "error": ""
+      }
+    },
+    {
+      "check": "render walk-ready",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 5905
+      }
+    },
+    {
+      "check": "fixture provides a multi-cell affordable route",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "destination starts a walk",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "accepting the destination preserves the starting tile",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "walk visits every planned cell in order",
+      "pass": true,
+      "facts": {
+        "visited_steps": 6,
+        "expected_steps": 6
+      }
+    },
+    {
+      "check": "each step charges its terrain cost",
+      "pass": true,
+      "facts": {
+        "expected_cost": 12,
+        "spent": 12
+      }
+    },
+    {
+      "check": "hero and minimap interpolate between adjacent cells",
+      "pass": true,
+      "facts": {
+        "interior_frames": 11
+      }
+    },
+    {
+      "check": "walking has only a short landing pause",
+      "pass": true,
+      "facts": {
+        "longest_landing_seconds": 0.1464922,
+        "elapsed_seconds": 0.9506149,
+        "steps": 6
+      }
+    },
+    {
+      "check": "walking does not refresh the whole world per tile",
+      "pass": true,
+      "facts": {
+        "world_refreshes": 1
+      }
+    },
+    {
+      "check": "render walk-arrival",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 5567
+      }
+    },
+    {
+      "check": "return route starts",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "stop finishes only the current adjacent step",
+      "pass": true,
+      "facts": {
+        "stopped_at": "(2, 16)",
+        "spent": 2
+      }
+    },
+    {
+      "check": "reroute fixture starts",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "destination can change during an in-flight step",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "changed route reaches the new destination",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "blocked destination does not start movement",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "unaffordable destination leaves the hero in place",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "page-exit fixture starts",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "leaving the city cancels all remaining steps",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "keyboard fixture has three affordable straight cells",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "held keyboard direction walks continuously and stops on release",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "city walking preserves month and makes no model calls",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "no Unity errors or exceptions",
+      "pass": true,
+      "facts": []
+    }
+  ],
+  "passed": true,
+  "build": "unity/Build/CityWalkSmooth/江湖未央.exe",
+  "step_animation_seconds": 0.09,
+  "landing_pause_seconds": 0.025,
+  "unit_tests": {
+    "test_protagonist.py": 15,
+    "test_simulation.py": 16
+  },
+  "save_timing": {
+    "step_save_ms": [
+      2.3,
+      1.55,
+      1.64
+    ],
+    "before_step_save_ms": 968.5,
+    "before_world_refresh_ms": 269.6
+  },
+  "test_save": "tmp/city-walk-smooth-20261027/save-final/world.sqlite"
+}

@@ -5,9 +5,9 @@
   "description": "Asset authoring tools for the Jianghu Weiyang Unity project",
   "license": "MIT",
   "scripts": {
-    "bake:puppets": "node unity/bake_puppets.cjs",
+    "bake:puppets": "python unity/bake_paper_cast.py",
     "bake:paper-cast": "python unity/bake_paper_cast.py",
-    "test:puppets": "node prototypes/shadow-puppets/verify.cjs"
+    "test:puppets": "python -m unittest discover -s tests -p test_paper_cast.py -v"
   },
   "devDependencies": {
     "sharp": "0.35.5"

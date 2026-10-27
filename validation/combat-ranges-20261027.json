@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-27",
+  "project": "江湖未央",
+  "feature": "双方攻击范围与连续距离提示",
+  "build": "unity/Build/CombatRanges/江湖未央.exe",
+  "launcher": "启动Unity版.bat",
+  "previous_active_build": "UnityOnly",
+  "active_build": "CombatRanges",
+  "implemented": [
+    "双方脚下分层射程色带、近端盲区、远近边界数字和目标位置标记",
+    "按统一距离比例绘制人物间距与攻击区域",
+    "双方独立距离尺、精确间距和过近／过远／射程内提示",
+    "正在施展的功法以金线单独显示射程",
+    "功法卡片同时显示射程状态和资源不足等施展条件",
+    "使用规则层实际距离与同一命中范围判定，保留出手时重新判距"
+  ],
+  "validation": {
+    "python_command": "python -X utf8 -m unittest tests.test_combat_realtime tests.test_combat_flow tests.test_martial",
+    "python_tests": 62,
+    "python_passed": true,
+    "native_checks": 20,
+    "native_passed": true,
+    "native_report": "output/combat-ranges-20261026/verified/acceptance.json",
+    "tested_window_sizes": [
+      [
+        1280,
+        800
+      ],
+      [
+        1680,
+        960
+      ],
+      [
+        1920,
+        1080
+      ]
+    ],
+    "runtime_exceptions": 0,
+    "new_model_calls": 0,
+    "independent_test_save": "output/combat-ranges-20261026/verified-save",
+    "screenshots": {
+      "opening": "validation/screenshots/combat-range-opening-20261027.png",
+      "too-close": "validation/screenshots/combat-range-too-close-20261027.png",
+      "too-far": "validation/screenshots/combat-range-too-far-20261027.png",
+      "casting": "validation/screenshots/combat-range-casting-20261027.png"
+    },
+    "initial_native_run": "output/combat-ranges-20261026/native/acceptance.json",
+    "initial_native_failures": [
+      "Hidden initial window captured a blank backbuffer; acceptance now primes a real resize.",
+      "AI retreat prevented the acceptance scenario reaching fist range; acceptance now exercises a legal in-range technique after real movement."
+    ],
+    "source_backend_build_hashes": {
+      "jianghu/combat_realtime.py": "d21e7afb359671815bbd655c494a445d0fc300dc40c53398abf7d5236f6d8cbe",
+      "unity/JianghuUnity/Assets/StreamingAssets/Backend/jianghu/combat_realtime.py": "d21e7afb359671815bbd655c494a445d0fc300dc40c53398abf7d5236f6d8cbe",
+      "unity/Build/CombatRanges/江湖未央_Data/StreamingAssets/Backend/jianghu/combat_realtime.py": "d21e7afb359671815bbd655c494a445d0fc300dc40c53398abf7d5236f6d8cbe"
+    }
+  },
+  "limits": [
+    "射程内表示距离允许攻击，不保证通过命中判定，也不表示资源和回气条件已满足。",
+    "兵器与功法数值沿用本作既有规则。",
+    "原生验收通过游戏动作处理函数执行指令，未单独验证物理键盘输入。"
+  ]
+}

@@ -38,7 +38,7 @@ class CareerTests(unittest.TestCase):
         n['career']['experience']['渔人'] = 80
         self.assertGreater(careers.income(n), first)
 
-    def test_work_books_tax_and_crossing_a_grade_has_a_real_cause(self):
+    def test_work_books_tax_and_professional_progress_has_a_real_cause(self):
         n = self.person(xp=14.7)
         money, treasury, estimate = n['wealth'], self.w.government['fund'], (careers.income(n)+items.bonuses(self.w,n['id'])['income'])*.5
         e = self.w.execute(n, {'id': 'work:self'})
@@ -48,7 +48,8 @@ class CareerTests(unittest.TestCase):
         self.assertEqual(careers.identity(self.w, n)['grade'], 8)
         change = next(e for e in self.w.store.history(n['id']) if e['kind'] == 'identity_change')
         self.assertIn(e['id'], change['causes'])
-        self.assertEqual(change['facts']['before']['grade'], 9)
+        self.assertEqual(change['facts']['before']['grade'], 8)
+        self.assertEqual(change['facts']['after']['grade'], 8)
 
     def test_learning_pays_actual_tutor_and_does_not_rewrite_current_profession(self):
         n = self.person()
@@ -109,7 +110,7 @@ class CareerTests(unittest.TestCase):
         careers.grow(self.w, child)
         self.assertEqual(child['job'], '匠人')
         self.assertEqual(careers.experience(child), 22)
-        self.assertEqual(careers.identity(self.w, child)['grade'], 8)
+        self.assertEqual(careers.identity(self.w, child)['grade'], 7)
         self.assertIsNone(child['office'])
 
     def test_apprentice_earns_fraction_of_adult_income_and_young_children_cannot_work(self):
@@ -134,8 +135,10 @@ class CareerTests(unittest.TestCase):
 
     def test_identity_combines_real_roles_and_does_not_inherit_parent_rank(self):
         n = self.person('匠人', 90)
-        n.update({'office': '县令', 'faction': 0, 'spouse': 2})
-        self.w.factions[0]['leader'] = n['id']
+        faction = self.w.factions[0]
+        faction['kind'] = 'guild'
+        n.update({'office': '县令', 'faction': faction['id'], 'spouse': 2})
+        faction['leader'] = n['id']
         identity = careers.identity(self.w, n)
         self.assertEqual(identity['grade'], 4)
         self.assertEqual({r['kind'] for r in identity['roles']}, {'office', 'faction', 'family', 'livelihood'})
@@ -203,9 +206,9 @@ class CareerTests(unittest.TestCase):
         self.w.month_step()
         self.assertTrue(self.w.npc_detail(1)['career_options'])
 
-    def test_professional_standing_changes_with_public_reputation_but_skill_remains(self):
+    def test_social_estate_does_not_change_with_reputation_or_trade_experience(self):
         n = self.person(xp=90)
-        self.assertEqual(careers.identity(self.w, n)['grade'], 5)
+        self.assertEqual(careers.identity(self.w, n)['grade'], 8)
         n['reputation'] = -20
         self.assertEqual(careers.identity(self.w, n)['grade'], 8)
         self.assertEqual(careers.experience(n), 90)

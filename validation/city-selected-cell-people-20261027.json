@@ -1,0 +1,282 @@
+{
+  "pass": true,
+  "checks": [
+    {
+      "check": "each cell matches actual facility occupants: 江陵府",
+      "pass": true,
+      "facts": {
+        "cells": 900,
+        "populated_cells": 6,
+        "people": 90,
+        "empty_cells_in_buildings": 19,
+        "merged_facility_cells": 2,
+        "gate_visible": true,
+        "refresh_clears_old_people": true,
+        "failures": []
+      }
+    },
+    {
+      "check": "changing region clears selected occupants",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "selection displays populated cell",
+      "pass": true,
+      "facts": {
+        "row": 10,
+        "col": 25,
+        "people": [
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93
+        ],
+        "scroll_y": 0
+      }
+    },
+    {
+      "check": "capture populated-5-1280x800",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 5233
+      }
+    },
+    {
+      "check": "capture populated-5-1920x1080",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 10069
+      }
+    },
+    {
+      "check": "capture scrolled-people-5",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 10063
+      }
+    },
+    {
+      "check": "another cell in same building does not inherit occupants",
+      "pass": true,
+      "facts": {
+        "row": 9,
+        "col": 24,
+        "people": [],
+        "scroll_y": 0
+      }
+    },
+    {
+      "check": "capture empty-in-same-building-5",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 10483
+      }
+    },
+    {
+      "check": "switching back restores occupants and resets scroll",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "refreshing same region keeps selected cell",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "each cell matches actual facility occupants: 南京开封府",
+      "pass": true,
+      "facts": {
+        "cells": 900,
+        "populated_cells": 6,
+        "people": 76,
+        "empty_cells_in_buildings": 19,
+        "merged_facility_cells": 2,
+        "gate_visible": true,
+        "refresh_clears_old_people": true,
+        "failures": []
+      }
+    },
+    {
+      "check": "changing region clears selected occupants",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "selection displays populated cell",
+      "pass": true,
+      "facts": {
+        "row": 7,
+        "col": 20,
+        "people": [
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142
+        ],
+        "scroll_y": 0
+      }
+    },
+    {
+      "check": "capture populated-13-1280x800",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 5345
+      }
+    },
+    {
+      "check": "capture populated-13-1920x1080",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 10784
+      }
+    },
+    {
+      "check": "capture scrolled-people-13",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 10773
+      }
+    },
+    {
+      "check": "another cell in same building does not inherit occupants",
+      "pass": true,
+      "facts": {
+        "row": 6,
+        "col": 19,
+        "people": [],
+        "scroll_y": 0
+      }
+    },
+    {
+      "check": "capture empty-in-same-building-13",
+      "pass": true,
+      "facts": {
+        "sampled_colors": 10187
+      }
+    },
+    {
+      "check": "switching back restores occupants and resets scroll",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "refreshing same region keeps selected cell",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "browsing preserves month, events, hero and model calls",
+      "pass": true,
+      "facts": null
+    },
+    {
+      "check": "no Unity errors or exceptions",
+      "pass": true,
+      "facts": []
+    }
+  ],
+  "save_dir": "D:\\Desktop\\新游戏\\tmp\\selected-cell-people-20261027\\save",
+  "build": "D:\\Desktop\\新游戏\\unity\\Build\\SelectedCellPeople\\江湖未央.exe",
+  "assembly_sha256": "6297804913454d0e5c44bfff79f54c00f605382a1174e9c920ae6bbbce5e5628",
+  "source_save_unchanged": true,
+  "resolutions": [
+    "1280x800",
+    "1920x1080"
+  ]
+}

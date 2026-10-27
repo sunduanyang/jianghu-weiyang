@@ -1,0 +1,80 @@
+{
+  "pack": "settlement-tiles-1-4-9-20261026",
+  "source_count": 3,
+  "legacy_assets": false,
+  "assets": [
+    {
+      "id": "01-village-1cell",
+      "label": "村落",
+      "size": 1,
+      "source_sha256": "aa13836a5ba9c3b8fd77c4235e15e38abcab71f8730b5a3d351bd15622cfdc1a",
+      "runtime_sha256": "de4673eff3783549515c103c7018427a8c7af5ce10ef2abe21b080050558af2f",
+      "source_pivot": [
+        626.5,
+        758
+      ],
+      "source_bottom": 1111,
+      "canvas": [
+        1024,
+        1024
+      ],
+      "pivot": [
+        512,
+        684
+      ],
+      "diamond": [
+        1016,
+        512
+      ]
+    },
+    {
+      "id": "02-town-4cell",
+      "label": "小镇",
+      "size": 2,
+      "source_sha256": "9ffe854a2abae43b872de9c28ca0a9657f8cf207b409d629d4a38c06c1f0f7e6",
+      "runtime_sha256": "86dcc30793b51f1b4c5d06c008f1464d2fdcc7cedaf35833f39e242e0c7cd2fb",
+      "source_pivot": [
+        628.5,
+        686
+      ],
+      "source_bottom": 1106,
+      "canvas": [
+        1024,
+        1024
+      ],
+      "pivot": [
+        512,
+        684
+      ],
+      "diamond": [
+        1016,
+        512
+      ]
+    },
+    {
+      "id": "03-city-9cell",
+      "label": "城市",
+      "size": 3,
+      "source_sha256": "321c85c83612bd2cadea6d6b93d7409be9fbdbf12735038d98d4e9579a08382f",
+      "runtime_sha256": "35bad23209cea0f0e4b2be7480359c8f2c464350240df372c8f3e7fde113d0a4",
+      "source_pivot": [
+        625.0,
+        633
+      ],
+      "source_bottom": 1044,
+      "canvas": [
+        1024,
+        1024
+      ],
+      "pivot": [
+        512,
+        684
+      ],
+      "diamond": [
+        1016,
+        512
+      ]
+    }
+  ],
+  "archive_sha256": "d0b65a9c42966924d17f968847da8d487be86dd0e29aad6c2616f29176a17698"
+}

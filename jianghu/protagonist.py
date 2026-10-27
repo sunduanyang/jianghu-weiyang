@@ -10,12 +10,18 @@ HOME = next(p['id'] for p in PLACES if p['name'] == '临安府')
 
 
 def initialize(w):
+    from . import organizations
     if 'protagonist' in w.player:
+        h = w.player['protagonist']
+        organizations.prepare(h)
+        h.setdefault('faction', None)
+        h.setdefault('contribution', 0.)
         return
-    gate = next(n for n in city_maps.world_layout(w, HOME)['nodes'] if n['id'] == 'gate')
+    gate = next(n for n in city_maps._world_layout(w, HOME)['nodes'] if n['id'] == 'gate')
     w.player['protagonist'] = dict(created=False, sex='男', age_months=216, place=HOME,
                                   row=gate['row'], col=gate['col'], points=POINTS_PER_MONTH,
                                   revision=0, started_month=None, records=[])
+    initialize(w)
 
 
 def on_month(w):
@@ -28,7 +34,7 @@ def on_month(w):
 
 def connections(w):
     h = w.player['protagonist']
-    city = city_maps.world_layout(w, h['place'])
+    city = city_maps._world_layout(w, h['place'])
     at_exit = any(n['kind'] in ('gate', 'dock') and (n['row'], n['col']) == (h['row'], h['col'])
                   for n in city['nodes'])
     result = []
@@ -48,26 +54,33 @@ def connections(w):
 
 
 def view(w):
+    from . import organizations
+    from . import rank_progression
+    from .social_ranks import player_identity
     h = deepcopy(w.player['protagonist'])
-    city = city_maps.world_layout(w, h['place'])
+    h['rank_progression'] = rank_progression.view(w,'player')
+    city = city_maps._world_layout(w, h['place'])
     node = next((n for n in city['nodes'] if (n['row'], n['col']) == (h['row'], h['col'])), None)
+    area = city_maps.city_regions.area_at(city,h['row'],h['col'])
     h.update(name=w.player['name'], max_points=POINTS_PER_MONTH,
-             place_name=PLACES[h['place']]['name'], node=node['id'] if node else None,
-             position_name=node['name'] if node else city_maps.TERRAIN[city['rows'][h['row']][h['col']]],
+             place_name=PLACES[h['place']]['name'], node=area['id'] if area and area['kind']!='landscape' else node['id'] if node else None,
+             position_name=area['name'] if area else node['name'] if node else city_maps.TERRAIN[city['rows'][h['row']][h['col']]],
              turn=w.month-h['started_month']+1 if h['created'] else 1,
-             connections=connections(w),
+             connections=connections(w), membership=organizations.player_membership(w), identity=player_identity(w),
              journal=[e for i in reversed(h['records'][-8:]) if (e := w.store.event(i))])
     return h
 
 
-def record(w, kind, text, facts):
+def record(w, kind, text, facts, causes=()):
     # Player records have no NPC participant; the protagonist keeps their event IDs.
     from .engine import date
     event = w.store.append(dict(month=w.month, date=date(w.month), kind=kind, people=[],
                                 summary=text, importance=.7 if kind == 'hero_created' else .4,
-                                causes=[], facts=facts))
+                                causes=list(causes), facts=facts))
     h = w.player['protagonist']
     h['records'].append(event['id'])
+    from . import rank_progression
+    rank_progression.on_event(w,event,who='player')
     return event
 
 
@@ -77,7 +90,7 @@ def integer(value, label):
     return value
 
 
-def perform(w, body):
+def perform(w, body, defer_end_turn=None):
     h = w.player['protagonist']
     action = body.get('action')
     if w.battle and w.battle['status'] == 'active':
@@ -98,7 +111,7 @@ def perform(w, body):
             raise ValueError('请选择性别、16至60岁年龄和有效出身地点')
         if place not in {p['id'] for p in w.active_places}:
             raise ValueError('请选择合并后的主要城镇作为出身地点')
-        gate = next(n for n in city_maps.world_layout(w, place)['nodes'] if n['id'] == 'gate')
+        gate = next(n for n in city_maps._world_layout(w, place)['nodes'] if n['id'] == 'gate')
         w.player['name'] = name.strip()
         h.update(created=True, sex=sex, age_months=age*12, place=place, row=gate['row'], col=gate['col'],
                  started_month=w.month, points=POINTS_PER_MONTH)
@@ -114,9 +127,11 @@ def perform(w, body):
                 raise ValueError('只能沿相邻驿道或航路逐段远行')
             if not route['enabled']:
                 raise ValueError(route['reason'])
-            gate = next(n for n in city_maps.world_layout(w, target)['nodes'] if n['id'] == 'gate')
+            gate = next(n for n in city_maps._world_layout(w, target)['nodes'] if n['id'] == 'gate')
             origin = h['place']
             w.player['wealth'] = round(w.player['wealth']-route['silver'], 4)
+            from . import economics
+            economics.fee(w, origin, route['silver'])
             h.update(place=target, row=gate['row'], col=gate['col'], points=h['points']-route['points'])
             record(w, 'hero_travel', f"{w.player['name']}由{PLACES[origin]['name']}"
                    f"{'乘舟' if route['sea'] else '沿驿道'}抵达{route['name']}，"
@@ -127,7 +142,7 @@ def perform(w, body):
             row, col = integer(body.get('row'), '行坐标'), integer(body.get('col'), '列坐标')
             if place != h['place']:
                 raise ValueError('主角不在此处，请先沿大地图前往')
-            city = city_maps.world_layout(w, place)
+            city = city_maps._world_layout(w, place)
             if not (0 <= row < city['size'] and 0 <= col < city['size']) or city['rows'][row][col] in '~^#':
                 raise ValueError('水域、山岭、城垣或地图外不可通行')
             if (row, col) == (h['row'], h['col']):
@@ -143,7 +158,11 @@ def perform(w, body):
             record(w, 'hero_walk', f"{w.player['name']}在{city['name']}移步至"
                    f"{node['name'] if node else '地格'}（{row+1}，{col+1}），消耗{cost}行动力。",
                    dict(place=place, origin=origin, destination=[row, col], path=path, points=cost))
+        elif isinstance(action, str) and action.startswith('sect_'):
+            from . import organizations
+            organizations.player_action(w, action, integer(body.get('faction'), '门派'))
         elif action == 'end_turn':
+            if defer_end_turn is not None:return defer_end_turn()
             record(w, 'hero_end_turn', f"{w.player['name']}结束本月行程，江湖推移一月。",
                    dict(unused_points=h['points'], next_month=w.month+1))
             # The existing monthly simulation also refreshes the protagonist exactly once.
@@ -153,5 +172,8 @@ def perform(w, body):
         else:
             raise ValueError('未知主角指令')
     h['revision'] += 1
-    w.checkpoint()
+    if action == 'walk':
+        w.store.save_player(w.player, w.month)
+    else:
+        w.checkpoint()
     return view(w)

@@ -1,0 +1,100 @@
+01-forest-meadow — 森林草甸
+Use case: style-transfer.
+Input image 1: edit target. Redraw this terrain asset with a different, FLAT painting treatment while preserving its isometric diamond footprint, terrain identity, camera and broad composition.
+User direction: 平涂上色，每种颜色最多三个明暗层次，可以有少量干笔皴擦和纸纹；不要渐变，不要高光反光，不要写实光影，不要照片质感。稍微简化一下，确保缩小仍能一眼认出是什么地形。
+REQUIRED OUTPUT STYLE: a hand-inked 2D game-map illustration made of large SOLID COLOR CUTOUT SHAPES. Each color/material has ONE, TWO or at most THREE flat tones total, separated by crisp hard edges. Think limited-color screen print: almost all interiors are completely uniform paint. Muted sage/olive and earthy tones, clear moderately bold dark-brown ink outlines.
+SIMPLIFY: keep characteristic major landforms, reduce minor clutter by about half; no individual leaves, tiny flowers, pebbles, grass speckles, dense cracks or stippled foliage. Trees have simple lobed canopies containing only 2-3 broad solid green patches; grass is mostly one uninterrupted matte green. Rocks have only 2-3 broad solid planes. Keep hand-drawn shape character and a few sparse dry-brush marks, but NO all-over mottling, no watercolor washes, no painterly rendering.
+STRICT EXCLUSIONS: NO gradients of any kind; NO highlights or reflections; NO white stone edges; NO shiny or reflective water; NO glows, haze, halos, bloom, vignettes; NO simulated realistic lighting or ambient occlusion; NO realistic shadows or photographic texture.
+Readability: instantly identifiable terrain at 128 px width; prioritize distinct silhouette and medium-size structural shapes. Remain a finished terrain illustration, not an abstract symbol.
+Technical: ONE complete isolated flat diamond terrain tile, landscape 1536x1024, all corners intact and margin around the entire silhouette, real transparent alpha outside and fully opaque flat paint inside. No thick soil slab, no floating-island block, no extra background, no text, no UI, no tokens, no characters, no watermark.
+
+Terrain: woodland and meadow. Retain the loose groves, recognizable winding dirt path and mossy slate rock groups. Redraw canopies as 2-3 large clean color shapes, not many individual marks. Remove half the small bushes, grass tufts and pebbles. Grass uses one flat base and a few large darker shapes, not textured shading.
+
+========================================================================
+
+02-river-wetland — 河湾湖泊
+Use case: style-transfer.
+Input image 1: edit target. Redraw this terrain asset with a different, FLAT painting treatment while preserving its isometric diamond footprint, terrain identity, camera and broad composition.
+User direction: 平涂上色，每种颜色最多三个明暗层次，可以有少量干笔皴擦和纸纹；不要渐变，不要高光反光，不要写实光影，不要照片质感。稍微简化一下，确保缩小仍能一眼认出是什么地形。
+REQUIRED OUTPUT STYLE: a hand-inked 2D game-map illustration made of large SOLID COLOR CUTOUT SHAPES. Each color/material has ONE, TWO or at most THREE flat tones total, separated by crisp hard edges. Think limited-color screen print: almost all interiors are completely uniform paint. Muted sage/olive and earthy tones, clear moderately bold dark-brown ink outlines.
+SIMPLIFY: keep characteristic major landforms, reduce minor clutter by about half; no individual leaves, tiny flowers, pebbles, grass speckles, dense cracks or stippled foliage. Trees have simple lobed canopies containing only 2-3 broad solid green patches; grass is mostly one uninterrupted matte green. Rocks have only 2-3 broad solid planes. Keep hand-drawn shape character and a few sparse dry-brush marks, but NO all-over mottling, no watercolor washes, no painterly rendering.
+STRICT EXCLUSIONS: NO gradients of any kind; NO highlights or reflections; NO white stone edges; NO shiny or reflective water; NO glows, haze, halos, bloom, vignettes; NO simulated realistic lighting or ambient occlusion; NO realistic shadows or photographic texture.
+Readability: instantly identifiable terrain at 128 px width; prioritize distinct silhouette and medium-size structural shapes. Remain a finished terrain illustration, not an abstract symbol.
+Technical: ONE complete isolated flat diamond terrain tile, landscape 1536x1024, all corners intact and margin around the entire silhouette, real transparent alpha outside and fully opaque flat paint inside. No thick soil slab, no floating-island block, no extra background, no text, no UI, no tokens, no characters, no watermark.
+
+Input image 2: STYLE REFERENCE ONLY, the revised forest tile. Match its flat paint treatment, bold shapes, simplified graphic detail and contour thickness. Do not copy its forest content.
+Terrain-specific direction: Recognizable river/wetland: retain the broad curved turquoise watercourse around the grassy central islet, low banks, reeds and simplified willows. Water uses two or three completely flat teal shapes with NO white sparkling foam, glints, reflections, transparency simulation, glossy highlights or rippling realistic shading. Sparse simple dark water lines are allowed.
+
+========================================================================
+
+03-karst-peaks — 奇峰山地
+Use case: style-transfer.
+Input image 1: edit target. Redraw this terrain asset with a different, FLAT painting treatment while preserving its isometric diamond footprint, terrain identity, camera and broad composition.
+User direction: 平涂上色，每种颜色最多三个明暗层次，可以有少量干笔皴擦和纸纹；不要渐变，不要高光反光，不要写实光影，不要照片质感。稍微简化一下，确保缩小仍能一眼认出是什么地形。
+REQUIRED OUTPUT STYLE: a hand-inked 2D game-map illustration made of large SOLID COLOR CUTOUT SHAPES. Each color/material has ONE, TWO or at most THREE flat tones total, separated by crisp hard edges. Think limited-color screen print: almost all interiors are completely uniform paint. Muted sage/olive and earthy tones, clear moderately bold dark-brown ink outlines.
+SIMPLIFY: keep characteristic major landforms, reduce minor clutter by about half; no individual leaves, tiny flowers, pebbles, grass speckles, dense cracks or stippled foliage. Trees have simple lobed canopies containing only 2-3 broad solid green patches; grass is mostly one uninterrupted matte green. Rocks have only 2-3 broad solid planes. Keep hand-drawn shape character and a few sparse dry-brush marks, but NO all-over mottling, no watercolor washes, no painterly rendering.
+STRICT EXCLUSIONS: NO gradients of any kind; NO highlights or reflections; NO white stone edges; NO shiny or reflective water; NO glows, haze, halos, bloom, vignettes; NO simulated realistic lighting or ambient occlusion; NO realistic shadows or photographic texture.
+Readability: instantly identifiable terrain at 128 px width; prioritize distinct silhouette and medium-size structural shapes. Remain a finished terrain illustration, not an abstract symbol.
+Technical: ONE complete isolated flat diamond terrain tile, landscape 1536x1024, all corners intact and margin around the entire silhouette, real transparent alpha outside and fully opaque flat paint inside. No thick soil slab, no floating-island block, no extra background, no text, no UI, no tokens, no characters, no watermark.
+
+Input image 2: STYLE REFERENCE ONLY, the revised forest tile. Match its flat paint treatment, bold shapes, simplified graphic detail and contour thickness. Do not copy its forest content.
+Terrain-specific direction: Recognizable karst mountain terrain: preserve three unmistakable tall narrow rock pinnacles and their mossy caps. Rock faces use no more than three flat gray-brown tones divided into large clear angular planes; eliminate fine fissures and tiny vegetation. Keep a simple winding trail and several supporting foothill shapes.
+
+========================================================================
+
+04-terraced-fields — 梯田平原
+Use case: style-transfer.
+Input image 1: edit target. Redraw this terrain asset with a different, FLAT painting treatment while preserving its isometric diamond footprint, terrain identity, camera and broad composition.
+User direction: 平涂上色，每种颜色最多三个明暗层次，可以有少量干笔皴擦和纸纹；不要渐变，不要高光反光，不要写实光影，不要照片质感。稍微简化一下，确保缩小仍能一眼认出是什么地形。
+REQUIRED OUTPUT STYLE: a hand-inked 2D game-map illustration made of large SOLID COLOR CUTOUT SHAPES. Each color/material has ONE, TWO or at most THREE flat tones total, separated by crisp hard edges. Think limited-color screen print: almost all interiors are completely uniform paint. Muted sage/olive and earthy tones, clear moderately bold dark-brown ink outlines.
+SIMPLIFY: keep characteristic major landforms, reduce minor clutter by about half; no individual leaves, tiny flowers, pebbles, grass speckles, dense cracks or stippled foliage. Trees have simple lobed canopies containing only 2-3 broad solid green patches; grass is mostly one uninterrupted matte green. Rocks have only 2-3 broad solid planes. Keep hand-drawn shape character and a few sparse dry-brush marks, but NO all-over mottling, no watercolor washes, no painterly rendering.
+STRICT EXCLUSIONS: NO gradients of any kind; NO highlights or reflections; NO white stone edges; NO shiny or reflective water; NO glows, haze, halos, bloom, vignettes; NO simulated realistic lighting or ambient occlusion; NO realistic shadows or photographic texture.
+Readability: instantly identifiable terrain at 128 px width; prioritize distinct silhouette and medium-size structural shapes. Remain a finished terrain illustration, not an abstract symbol.
+Technical: ONE complete isolated flat diamond terrain tile, landscape 1536x1024, all corners intact and margin around the entire silhouette, real transparent alpha outside and fully opaque flat paint inside. No thick soil slab, no floating-island block, no extra background, no text, no UI, no tokens, no characters, no watermark.
+
+Input image 2: STYLE REFERENCE ONLY, the revised forest tile. Match its flat paint treatment, bold shapes, simplified graphic detail and contour thickness. Do not copy its forest content.
+Terrain-specific direction: Recognizable terraced farmland: preserve the sweeping curved rice-field bands and ochre dividing ridges, the small interior watercourse, and sparse peripheral rocks and trees. Merge tiny rice plants into clean green or straw-gold field blocks, with only a few restrained short ink planting marks. Water remains matte flat teal without white shine.
+
+========================================================================
+
+05-desert-canyon — 荒漠峡谷
+Use case: style-transfer.
+Input image 1: edit target. Redraw this terrain asset with a different, FLAT painting treatment while preserving its isometric diamond footprint, terrain identity, camera and broad composition.
+User direction: 平涂上色，每种颜色最多三个明暗层次，可以有少量干笔皴擦和纸纹；不要渐变，不要高光反光，不要写实光影，不要照片质感。稍微简化一下，确保缩小仍能一眼认出是什么地形。
+REQUIRED OUTPUT STYLE: a hand-inked 2D game-map illustration made of large SOLID COLOR CUTOUT SHAPES. Each color/material has ONE, TWO or at most THREE flat tones total, separated by crisp hard edges. Think limited-color screen print: almost all interiors are completely uniform paint. Muted sage/olive and earthy tones, clear moderately bold dark-brown ink outlines.
+SIMPLIFY: keep characteristic major landforms, reduce minor clutter by about half; no individual leaves, tiny flowers, pebbles, grass speckles, dense cracks or stippled foliage. Trees have simple lobed canopies containing only 2-3 broad solid green patches; grass is mostly one uninterrupted matte green. Rocks have only 2-3 broad solid planes. Keep hand-drawn shape character and a few sparse dry-brush marks, but NO all-over mottling, no watercolor washes, no painterly rendering.
+STRICT EXCLUSIONS: NO gradients of any kind; NO highlights or reflections; NO white stone edges; NO shiny or reflective water; NO glows, haze, halos, bloom, vignettes; NO simulated realistic lighting or ambient occlusion; NO realistic shadows or photographic texture.
+Readability: instantly identifiable terrain at 128 px width; prioritize distinct silhouette and medium-size structural shapes. Remain a finished terrain illustration, not an abstract symbol.
+Technical: ONE complete isolated flat diamond terrain tile, landscape 1536x1024, all corners intact and margin around the entire silhouette, real transparent alpha outside and fully opaque flat paint inside. No thick soil slab, no floating-island block, no extra background, no text, no UI, no tokens, no characters, no watermark.
+
+Input image 2: STYLE REFERENCE ONLY, the revised forest tile. Match its flat paint treatment, bold shapes, simplified graphic detail and contour thickness. Do not copy its forest content.
+Terrain-specific direction: Recognizable desert canyon: preserve the prominent stepped sandstone mesas and winding dry ravine. Use no more than three solid ochre/terracotta value steps for sandstone. Merge fine erosion lines into a few broad contour bands; simplify shrubs and scattered stones. No painterly gradients or realistic cast-light simulation.
+
+========================================================================
+
+06-volcanic-crater — 熔岩火山
+Use case: style-transfer.
+Input image 1: edit target. Redraw this terrain asset with a different, FLAT painting treatment while preserving its isometric diamond footprint, terrain identity, camera and broad composition.
+User direction: 平涂上色，每种颜色最多三个明暗层次，可以有少量干笔皴擦和纸纹；不要渐变，不要高光反光，不要写实光影，不要照片质感。稍微简化一下，确保缩小仍能一眼认出是什么地形。
+REQUIRED OUTPUT STYLE: a hand-inked 2D game-map illustration made of large SOLID COLOR CUTOUT SHAPES. Each color/material has ONE, TWO or at most THREE flat tones total, separated by crisp hard edges. Think limited-color screen print: almost all interiors are completely uniform paint. Muted sage/olive and earthy tones, clear moderately bold dark-brown ink outlines.
+SIMPLIFY: keep characteristic major landforms, reduce minor clutter by about half; no individual leaves, tiny flowers, pebbles, grass speckles, dense cracks or stippled foliage. Trees have simple lobed canopies containing only 2-3 broad solid green patches; grass is mostly one uninterrupted matte green. Rocks have only 2-3 broad solid planes. Keep hand-drawn shape character and a few sparse dry-brush marks, but NO all-over mottling, no watercolor washes, no painterly rendering.
+STRICT EXCLUSIONS: NO gradients of any kind; NO highlights or reflections; NO white stone edges; NO shiny or reflective water; NO glows, haze, halos, bloom, vignettes; NO simulated realistic lighting or ambient occlusion; NO realistic shadows or photographic texture.
+Readability: instantly identifiable terrain at 128 px width; prioritize distinct silhouette and medium-size structural shapes. Remain a finished terrain illustration, not an abstract symbol.
+Technical: ONE complete isolated flat diamond terrain tile, landscape 1536x1024, all corners intact and margin around the entire silhouette, real transparent alpha outside and fully opaque flat paint inside. No thick soil slab, no floating-island block, no extra background, no text, no UI, no tokens, no characters, no watermark.
+
+Input image 2: STYLE REFERENCE ONLY, the revised forest tile. Match its flat paint treatment, bold shapes, simplified graphic detail and contour thickness. Do not copy its forest content.
+Terrain-specific direction: Recognizable volcanic crater: preserve the large central basalt crater, contained lava pool and branching lava fissure. Basalt uses up to three flat dark gray-brown value steps. Lava uses flat vermilion, red-orange and at most one ochre-orange accent, with hard edges and NO glow, bloom, shiny yellow-white highlights, reflected orange light or gradients. Simplify small rock cracks and peripheral debris.
+
+
+========================================================================
+
+07-ocean — 海洋
+Use case: stylized-concept.
+Asset type: one additional OCEAN terrain tile for an existing flat-colored 2D isometric strategy-map asset set.
+Input image 1: STYLE REFERENCE ONLY. Match its hand-inked dark-brown outlines, matte flat color treatment, restrained paper character and orthographic isometric diamond presentation. The subject of the new tile is entirely open ocean.
+Subject: ONE complete flat diamond-shaped ocean tile filled edge to edge with uninterrupted seawater. Muted medium/deep blue-teal water, with a few broad, gently curved dark-blue current shapes and only a handful of short stylized wave marks. Read immediately as open ocean at 128 px width. Use a maximum of THREE flat blue value steps TOTAL across the water (including current shapes and wave marks); water should have large calm areas.
+User style requirements: 平涂上色，每种颜色最多三个明暗层次，可以有少量干笔皴擦和纸纹；不要渐变，不要高光反光，不要写实光影，不要照片质感。稍微简化一下，确保缩小仍能一眼认出是什么地形。
+Style: clean broad SOLID COLOR shapes with crisp boundaries and gently irregular hand-drawn contour; subtle sparse dry-brush or paper grain allowed inside paint, but mostly uniform flat fill. Every blue region remains opaque and matte. No white, shiny or light-reflecting marks.
+Composition: landscape 1536x1024 canvas, a single centered horizontal isometric rhombus with roughly 2:1 ground-footprint diagonals, all four straight edges and sharp corners completely visible, thin dark outline on the diamond perimeter, generous transparent margin. No thick extruded sides and no water cube.
+Background: actual alpha transparency outside the rhombus only; no shadows, glow, haze, vignette, gradient background or checkerboard.
+Avoid: land, coast, islands, rocks, trees, beaches, animals, boats, ships, buildings, resource icons, characters, text, labels, logos, UI, symbols or watermark. No gradients, reflections, glossy highlights, white foam, bloom, realistic waves, modeled lighting, photorealism or 3D rendering.

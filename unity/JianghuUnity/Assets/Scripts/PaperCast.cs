@@ -9,12 +9,10 @@ public partial class JianghuApp {
     readonly Dictionary<string,Texture2D> paperAtlases=new Dictionary<string,Texture2D>();
     readonly Dictionary<string,List<J>> paperLayers=new Dictionary<string,List<J>>();
     readonly Dictionary<string,PaperAnimator> paperActors=new Dictionary<string,PaperAnimator>();
-    string paperPreviewSkin="m-youth-farmer",paperPreviewClip="idle";
-    bool paperPreviewLeft,paperPreviewBones,paperPreviewGallery,paperPreviewAnimate=true;
+    string paperPreviewSkin="m-youth-farmer",paperPreviewClip="walk";
+    bool paperPreviewLeft,paperPreviewBones,paperPreviewGallery,paperPreviewAnimate=true,paperPreviewCompare,paperPreviewOverlay;
     float paperPreviewPhase=.5f;
     Vector2 paperSkinScroll;
-    float paperBattleStart;
-    string paperBattleKey="";
     double paperGuiPivotDrift;
     int paperGuiPivotSamples;
     double paperGuiEndpointDrift;
@@ -29,6 +27,8 @@ public partial class JianghuApp {
     }
     readonly List<PaperFigureDraw> paperDraws=new List<PaperFigureDraw>();
     Vector2 paperDrawOrigin,paperPixelOrigin;
+    Rect paperCompareReferenceViewport,paperCompareRigViewport;
+    Rect PaperViewport(Rect r){Vector2 a=GUI.matrix.MultiplyPoint3x4(r.min+paperDrawOrigin),b=GUI.matrix.MultiplyPoint3x4(r.max+paperDrawOrigin);return Rect.MinMaxRect(a.x,a.y,b.x,b.y);}
     J PaperCast {get{if(paperCast==null){var textAsset=Resources.Load<TextAsset>("PaperCast/index");if(textAsset==null)throw new InvalidOperationException("Missing PaperCast/index; run python unity/bake_paper_cast.py");paperCast=J.Parse(textAsset.text);}return paperCast;}}
     Texture2D PaperAtlas(string id){if(!paperAtlases.TryGetValue(id,out var atlas)){atlas=Resources.Load<Texture2D>("PaperCast/"+id);if(atlas==null)throw new InvalidOperationException("Missing paper puppet atlas: "+id);paperAtlases[id]=atlas;}return atlas;}
 
@@ -57,13 +57,26 @@ public partial class JianghuApp {
     }
     J PaperPerson(int id,string sex,int months){if(id<0)return Hero["created"].B?Hero:J.O("sex",sex,"age_months",months);var p=Npc(id);return p.Has?p:J.O("sex",sex,"age_months",months);}
     static Rect PaperUV(J part)=>new Rect((float)part["uv"][0].N,(float)part["uv"][1].N,(float)part["uv"][2].N,(float)part["uv"][3].N);
-    void DrawPaperPortrait(Rect r,J person,bool player=false,bool deceased=false){
-        string id=PaperSkinFor(person,player);J part=PaperCast["skins"][id]["parts"]["head-neck"];
-        Fill(r,new Color(.15f,.17f,.16f,.72f));
+    void DrawPaperPortrait(Rect r,J person,bool player=false,bool deceased=false,bool backdrop=true){
+        string id=PaperSkinFor(person,player);var skin=PaperCast["skins"][id];J part=skin["portrait"].Has?skin["portrait"]:skin["parts"]["head-neck"];
+        if(backdrop)Fill(r,new Color(.15f,.17f,.16f,.72f));
         float aspect=(float)(part["size"][0].N/part["size"][1].N),h=Mathf.Min(r.height,r.width/aspect),w=h*aspect;
         Rect target=new Rect(r.center.x-w/2,r.center.y-h/2,w,h);var old=GUI.color;
         if(deceased)GUI.color=new Color(.64f,.63f,.59f,1);
         GUI.DrawTextureWithTexCoords(target,PaperAtlas(id),PaperUV(part));GUI.color=old;
+    }
+    void DrawPaperBust(Rect r,J person,bool player=false){
+        string id=PaperSkinFor(person,player);var skin=PaperCast["skins"][id];
+        var texture=Resources.Load<Texture2D>("PaperBust/"+id);
+        if(texture==null){DrawPaperPortrait(r,person,player,backdrop:false);return;}
+        // Frame the resting assembly of independent split components at its waist.
+        Vector2 waist=PaperRig.Point(skin["reference_origin"]);
+        float height=Mathf.Clamp(waist.y+texture.height*.035f,1,texture.height);
+        float width=Mathf.Min(texture.width,height*r.width/r.height);
+        float x=Mathf.Clamp(waist.x-width/2,0,texture.width-width);
+        float fit=Mathf.Min(r.width/width,r.height/height);
+        Rect target=new Rect(r.center.x-width*fit/2,r.yMax-height*fit,width*fit,height*fit);
+        GUI.DrawTextureWithTexCoords(target,texture,new Rect(x/texture.width,1-height/texture.height,width/texture.width,height/texture.height),true);
     }
 
     void PaperPart(Texture2D atlas,J part,Vector2 pivot,float angle,float size,bool left,Vector2? endpoint){
@@ -113,12 +126,16 @@ public partial class JianghuApp {
             foreach(var draw in paperDraws){
                 Rect viewport=draw.PixelViewport;paperPixelOrigin=viewport.position;
                 GUI.BeginGroup(viewport);
-                try{RenderPaperFigure(new Rect(0,0,viewport.width,viewport.height),draw.Skin,draw.Clip,draw.Phase,draw.Left,draw.Bones,draw.Pose);}
+                try{
+                    bool theater=Page==3&&battleView&&!personScreen&&!dialogueOpen;
+                    if(theater)RenderPaperFigure(new Rect(4,-2,viewport.width,viewport.height),draw.Skin,draw.Clip,draw.Phase,draw.Left,false,draw.Pose,new Color(.12f,.16f,.13f,.14f));
+                    RenderPaperFigure(new Rect(0,0,viewport.width,viewport.height),draw.Skin,draw.Clip,draw.Phase,draw.Left,draw.Bones,draw.Pose,theater?new Color(1,.99f,.96f,.97f):(Color?)null);
+                }
                 finally{GUI.EndGroup();}
             }
         }finally{GUI.matrix=original;GUI.color=color;paperDraws.Clear();}
     }
-    void RenderPaperFigure(Rect r,string id,string clip,float phase,bool left,bool bones,PaperPose sampled){
+    void RenderPaperFigure(Rect r,string id,string clip,float phase,bool left,bool bones,PaperPose sampled,Color? tint=null){
         var skin=PaperCast["skins"][id];if(!skin.Has)throw new InvalidOperationException("Unknown paper skin: "+id);
         var rig=PaperCast["rig"];var pose=sampled??PaperRig.Sample(rig,skin,clip,phase);var p=pose.Joints;
         if(!paperLayers.TryGetValue(id,out var layers)){layers=skin["parts"].D.Values.OrderBy(v=>v["layer"].N).ToList();paperLayers[id]=layers;}
@@ -128,11 +145,14 @@ public partial class JianghuApp {
         if(skin["canvas"].Has){Vector2 canvas=PaperRig.Point(skin["canvas"]),anchor=PaperRig.Point(skin["canvas_origin"]);fit=Mathf.Min(r.width/canvas.x,r.height/canvas.y);screenOrigin=r.center+new Vector2((left?-1:1)*(anchor.x-canvas.x/2)*fit,(anchor.y-canvas.y/2)*fit);}
         Matrix4x4 old=GUI.matrix;Color color=GUI.color;
         try{
-            GUI.color=Color.white;var atlas=PaperAtlas(id);
+            GUI.color=tint??Color.white;
             foreach(var part in layers){
+                if(part["hidden"].B)continue;
+                var atlas=PaperAtlas(id);
                 Vector2 pivot;float angle,scale;Vector2? endpoint=null;
                 if(part["bone"].Has){
                     var bone=rig["bones"][part["bone"].S];Vector2 a=p[bone[0].S],b=p[bone[1].S],delta=b-a;
+                    if(part["freeze_to_body"].B){delta=PaperRig.Rotate(PaperRig.Point(skin["bind_joints"][bone[1].S])-PaperRig.Point(skin["bind_joints"][bone[0].S]),pose.Angles["body"]-(float)skin["bind_lean"].N);b=a+delta;}
                     Vector2 local=PaperRig.Point(part["tip"])-PaperRig.Point(part["pivot"]);
                     if(part["mirror"].B)local.x=-local.x;
                     pivot=a;angle=Mathf.Atan2(delta.y,delta.x)*Mathf.Rad2Deg-Mathf.Atan2(local.y,local.x)*Mathf.Rad2Deg;scale=delta.magnitude/local.magnitude;
@@ -154,7 +174,7 @@ public partial class JianghuApp {
             }
         }finally{GUI.matrix=old;GUI.color=color;}
     }
-    void DrawPaperPerson(Rect r,J person,bool player,string clip="idle",bool left=false,float phase=-1){
+    void DrawPaperPerson(Rect r,J person,bool player,string clip="bind",bool left=false,float phase=-1){
         string id=PaperSkinFor(person,player);float now=Time.realtimeSinceStartup;
         if(phase<0)phase=PaperRig.Phase(PaperCast["rig"],clip,now);
         string key=W["database"].S+":"+(player?"player":person["id"].S);
@@ -162,34 +182,15 @@ public partial class JianghuApp {
         DrawPaperFigure(r,id,clip,phase,left,false,animator.Sample(PaperCast["rig"],PaperCast["skins"][id],clip,phase,now));
     }
 
-    string PaperBattleAnimation(J battle,int side,float elapsed,out float phase){
-        var rig=PaperCast["rig"];string clip="idle";float local=elapsed;
-        if(battle["status"].S=="finished"){
-            if(battle["winner"].Has&&battle["winner"].I!=side)clip="defeated";
-        }else if(battle["log"].A.Count>0&&elapsed<1.8f){
-            int round=battle["log"].A.Last()["round"].I;
-            int first=battle["log"].A.First(r=>r["round"].I==round)["side"].I;
-            int actor=elapsed<.9f?first:1-first;local=elapsed-(elapsed<.9f?0:.9f);
-            var row=battle["log"].A.LastOrDefault(r=>r["round"].I==round&&r["side"].I==actor);
-            if(row!=null){
-                if(side==actor){string action=row["action"].S;clip=row["outcome"].S=="windup"||action=="guard"||action=="parry"||action=="continue"?"guard":action=="advance"||action=="retreat"?"walk":action=="breathe"||action=="wait"||action=="cancel"||action.StartsWith("mode_")?"idle":action=="surrender"?"defeated":row["outcome"].S=="interrupted"?"hurt":"attack";}
-                else if(row["damage"].N>0)clip="hurt";
-                else if(battle["fighters"][side]["guarding"].B)clip="guard";
-            }
-        }else if(battle["fighters"][side]["guarding"].B)clip="guard";
-        phase=PaperRig.Phase(rig,clip,local);return clip;
-    }
-
     void DrawPuppets(){
         GUILayout.BeginHorizontal();H("皮影衣橱");GUILayout.FlexibleSpace();if(Btn(paperPreviewGallery?"返回单人":"全部皮肤"))paperPreviewGallery=!paperPreviewGallery;GUILayout.EndHorizontal();
-        GUILayout.BeginHorizontal();T("铆钉定轴 · 双腿逆运动学 · 七种通用动作",small);GUILayout.FlexibleSpace();if(GUILayout.Button(paperReferenceView?"返回衣橱":"参考素材演示",chip))paperReferenceView=!paperReferenceView;GUILayout.EndHorizontal();
-        if(paperReferenceView&&!paperPreviewGallery){DrawPaperReference();return;}
+        T("二十四种新形象 · 独立部件骨骼绑定 · 统一关节骨架 · 行走",small);
         if(paperPreviewGallery){
             var skins=PaperCast["skins"].D.ToArray();Rect gallery=GUILayoutUtility.GetRect(1200,620,GUILayout.ExpandWidth(true));StagePanel(gallery);gallery=new Rect(gallery.x+16,gallery.y+16,gallery.width-32,gallery.height-32);
             int rows=Mathf.CeilToInt(skins.Length/6f);
             for(int i=0;i<skins.Length;i++){
                 Rect cell=new Rect(gallery.x+(i%6)*gallery.width/6,gallery.y+(i/6)*gallery.height/rows,gallery.width/6,gallery.height/rows);
-                DrawPaperFigure(new Rect(cell.x,cell.y,cell.width,cell.height-19),skins[i].Key,paperPreviewClip,.55f,paperPreviewLeft,paperPreviewBones);
+                DrawPaperFigure(new Rect(cell.x,cell.y,cell.width,cell.height-19),skins[i].Key,paperPreviewClip,paperPreviewAnimate?PaperRig.Phase(PaperCast["rig"],paperPreviewClip,Time.realtimeSinceStartup):paperPreviewPhase,paperPreviewLeft,paperPreviewBones);
                 string label=skins[i].Value["description"].S.Split('，')[0];GUI.Label(new Rect(cell.x,cell.yMax-20,cell.width,20),label,new GUIStyle(centerSmall){normal={textColor=new Color(.23f,.16f,.09f)}});
             }
             return;
@@ -198,46 +199,65 @@ public partial class JianghuApp {
         paperSkinScroll=GUILayout.BeginScrollView(paperSkinScroll,GUILayout.Height(470));
         foreach(var pair in PaperCast["skins"].D){string label=pair.Value["description"].S;int comma=label.IndexOf('，');if(comma>0)label=label.Substring(0,comma);if(GUILayout.Button(label,paperPreviewSkin==pair.Key?selected:chip)){paperPreviewSkin=pair.Key;}}
         GUILayout.EndScrollView();GUILayout.EndVertical();GUILayout.BeginVertical();
-        GUILayout.BeginHorizontal();foreach(var pair in PaperCast["rig"]["clips"].D)if(GUILayout.Button(pair.Value["label"].S,paperPreviewClip==pair.Key?selected:chip))paperPreviewClip=pair.Key;GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();foreach(var pair in PaperCast["rig"]["clips"].D)if(GUILayout.Button(pair.Value["label"].S,paperPreviewClip==pair.Key?selected:chip)){paperPreviewClip=pair.Key;paperPreviewAnimate=true;}GUILayout.EndHorizontal();
         Rect r=GUILayoutUtility.GetRect(660,480,GUILayout.ExpandWidth(true));StagePanel(r);
         float phase=paperPreviewAnimate?PaperRig.Phase(PaperCast["rig"],paperPreviewClip,Time.realtimeSinceStartup,true):paperPreviewPhase;
-        DrawPaperFigure(r,paperPreviewSkin,paperPreviewClip,phase,paperPreviewLeft,paperPreviewBones);
+        if(paperPreviewCompare){
+            float half=r.width*.5f;Rect original=new Rect(r.x,r.y,half,r.height),bound=new Rect(r.x+half,r.y,half,r.height);
+            paperCompareReferenceViewport=PaperViewport(original);paperCompareRigViewport=PaperViewport(bound);
+            DrawPaperReferenceFrame(original,paperPreviewSkin,paperPreviewLeft,1);DrawPaperFigure(bound,paperPreviewSkin,paperPreviewClip,phase,paperPreviewLeft,paperPreviewBones);
+            var compareLabel=new GUIStyle(centerSmall){normal={textColor=new Color(.23f,.16f,.09f)}};GUI.Label(new Rect(original.x+8,original.y+8,200,22),"素材成品图",compareLabel);GUI.Label(new Rect(bound.x+8,bound.y+8,200,22),"拆分部件骨架绑定",compareLabel);
+        }else{
+            if(paperPreviewOverlay)DrawPaperReferenceFrame(r,paperPreviewSkin,paperPreviewLeft,.5f);
+            DrawPaperFigure(r,paperPreviewSkin,paperPreviewClip,phase,paperPreviewLeft,paperPreviewBones);
+        }
         GUILayout.BeginHorizontal();paperPreviewAnimate=GUILayout.Toggle(paperPreviewAnimate,"播放动作");paperPreviewLeft=GUILayout.Toggle(paperPreviewLeft,"面朝左");paperPreviewBones=GUILayout.Toggle(paperPreviewBones,"显示骨骼与关节");GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();paperPreviewCompare=GUILayout.Toggle(paperPreviewCompare,"最终效果对照");paperPreviewOverlay=GUILayout.Toggle(paperPreviewOverlay,"原画叠加");if(GUILayout.Button("查看绑定姿态",chip)){paperPreviewAnimate=false;paperPreviewPhase=0;paperPreviewClip="bind";}GUILayout.EndHorizontal();
         float scrub=GUILayout.HorizontalSlider(paperPreviewPhase,0,1);if(Mathf.Abs(scrub-paperPreviewPhase)>.0001f){paperPreviewPhase=scrub;paperPreviewAnimate=false;}T(PaperCast["skins"][paperPreviewSkin]["description"].S,small);
         GUILayout.EndVertical();GUILayout.EndHorizontal();
     }
 
     public bool ValidatePaperCast(out J facts){
-        double error=0,transitionJump=0,groundError=0,loopError=0,supportError=0,reverseKnee=0,referenceError=0;int samples=0,parts=0;
-        foreach(var pair in PaperCast["skins"].D){var skin=pair.Value;PaperAtlas(pair.Key);parts+=skin["parts"].D.Count;
-            var animator=new PaperAnimator();var before=animator.Sample(PaperCast["rig"],skin,"idle",.4f,0);var switched=animator.Sample(PaperCast["rig"],skin,"attack",.55f,.1f);
-            foreach(var joint in before.Joints)transitionJump=Math.Max(transitionJump,Vector2.Distance(joint.Value,switched.Joints[joint.Key]));
-            foreach(string clip in PaperCast["rig"]["clips"].D.Keys)for(int step=0;step<=100;step++){
-                var parameters=PaperRig.Parameters(PaperCast["rig"],clip,step/100f);var pose=PaperRig.Evaluate(PaperCast["rig"],skin,parameters);
-                foreach(var bone in PaperCast["rig"]["bones"].D){string key=bone.Key.StartsWith("upper")?"upper_arm":bone.Key.StartsWith("forearm")?"forearm":bone.Key.StartsWith("thigh")?"thigh":bone.Key.StartsWith("shin")?"shin":"spine",side=bone.Key.EndsWith("Near")?"Near":"Far";double length=Vector2.Distance(pose.Joints[bone.Value[0].S],pose.Joints[bone.Value[1].S]);error=Math.Max(error,Math.Abs(length-(key=="spine"?PaperRig.Length(PaperCast["rig"],skin,key):PaperRig.Segment(PaperCast["rig"],skin,key,side))));}
-                foreach(string side in new[]{"Near","Far"})if(Mathf.Abs(pose.Angles["foot"+side])<.001f){float sole=pose.Joints["ankle"+side].y+PaperRig.Sole(skin,side);groundError=Math.Max(groundError,Math.Max(0,sole-PaperRig.Ground(PaperCast["rig"],skin)));}
-                foreach(string side in new[]{"Near","Far"}){
-                    string prefix=side=="Near"?"near":"far";
-                    if(parameters[prefix+"_foot_lift"]<.001f&&Mathf.Abs(pose.Angles["foot"+side])<.001f)supportError=Math.Max(supportError,Vector2.Distance(pose.Joints["ankle"+side],PaperRig.FootGoal(PaperCast["rig"],skin,parameters,side)));
-                    Vector2 axis=(pose.Joints["ankle"+side]-pose.Joints["hip"+side]).normalized;
-                    float pole=skin["knee_poles"][side].Has?(float)skin["knee_poles"][side].N:1;reverseKnee=Math.Max(reverseKnee,Math.Max(0,-Vector2.Dot(pose.Joints["knee"+side]-pose.Joints["hip"+side],new Vector2(axis.y,-axis.x))*pole));
+        double lengthError=0,supportError=0,loopError=0,bindError=0,transitionError=0;int samples=0,parts=0;
+        var rig=PaperCast["rig"];var exported=new List<J>();
+        foreach(var pair in PaperCast["skins"].D){
+            var skin=pair.Value;PaperAtlas(pair.Key);parts+=skin["parts"].D.Count;
+            foreach(string clip in new[]{"bind","walk"})for(int step=0;step<=120;step++){
+                float phase=step/120f;var parameters=PaperRig.Parameters(rig,clip,phase);var pose=PaperRig.Evaluate(rig,skin,parameters);
+                foreach(var bone in rig["bones"].D){
+                    string key=bone.Key.StartsWith("upper")?"upper_arm":bone.Key.StartsWith("forearm")?"forearm":bone.Key.StartsWith("thigh")?"thigh":bone.Key.StartsWith("shin")?"shin":"spine",side=bone.Key.EndsWith("Near")?"Near":"Far";
+                    double actual=Vector2.Distance(pose.Joints[bone.Value[0].S],pose.Joints[bone.Value[1].S]);
+                    lengthError=Math.Max(lengthError,Math.Abs(actual-(key=="spine"?PaperRig.Length(rig,skin,key):PaperRig.Segment(rig,skin,key,side))));
                 }
+                foreach(string side in new[]{"Near","Far"})supportError=Math.Max(supportError,Vector2.Distance(pose.Joints["ankle"+side],PaperRig.FootGoal(rig,skin,parameters,side)));
+                if(step%30==0){var joints=J.O();foreach(var joint in pose.Joints)joints[joint.Key]=new J(new List<J>{new J(joint.Value.x),new J(joint.Value.y)});exported.Add(J.O("skin",pair.Key,"pose",clip,"phase",phase,"joints",joints));}
                 samples++;
             }
-            foreach(var clip in PaperCast["rig"]["clips"].D)if(clip.Value["loop"].B){var start=PaperRig.Sample(PaperCast["rig"],skin,clip.Key,0);var end=PaperRig.Sample(PaperCast["rig"],skin,clip.Key,1);foreach(var joint in start.Joints)loopError=Math.Max(loopError,Vector2.Distance(joint.Value,end.Joints[joint.Key]));}
-            if(skin["reference_landmarks"].Has){var pose=PaperRig.Sample(PaperCast["rig"],skin,"idle",0);foreach(var joint in skin["reference_landmarks"].D)referenceError=Math.Max(referenceError,Vector2.Distance(pose.Joints[joint.Key],PaperRig.Point(joint.Value)));}
+            var bind=PaperRig.Sample(rig,skin,"bind",0);foreach(var j in skin["bind_joints"].D)bindError=Math.Max(bindError,Vector2.Distance(bind.Joints[j.Key],PaperRig.Point(j.Value)));
+            var start=PaperRig.Sample(rig,skin,"walk",0);var end=PaperRig.Sample(rig,skin,"walk",1);foreach(var j in start.Joints)loopError=Math.Max(loopError,Vector2.Distance(j.Value,end.Joints[j.Key]));
+            var animator=new PaperAnimator();animator.Sample(rig,skin,"walk",.4f,0);var before=animator.Sample(rig,skin,"walk",.4f,.1f);var changed=animator.Sample(rig,skin,"bind",.4f,.1f);foreach(var j in before.Joints)transitionError=Math.Max(transitionError,Vector2.Distance(j.Value,changed.Joints[j.Key]));
         }
-        bool mapping=PaperSkinFor(J.O("sex","女","age_months",240,"job","行商"))=="f-merchant"&&PaperSkinFor(J.O("sex","男","age_months",96,"job","行商"))=="m-child"&&PaperSkinFor(J.O("sex","女","age_months",840,"job","镖师"))=="f-elder";
-        facts=J.O("skins",PaperCast["skins"].D.Count,"parts",parts,"clips",PaperCast["rig"]["clips"].D.Count,"pose_samples",samples,"max_bone_length_error",error,"transition_joint_jump",transitionJump,"max_ground_penetration",groundError,"max_support_foot_gap",supportError,"max_reverse_knee",reverseKnee,"max_loop_seam",loopError,"reference_landmark_error_pixels",referenceError,"age_sex_profession_controls",mapping);
-        return PaperCast["skins"].D.Count==PaperCast["expected_skins"].I&&parts==PaperCast["expected_parts"].I&&error<.001&&transitionJump<.001&&groundError<.001&&supportError<.001&&reverseKnee<.001&&loopError<.001&&referenceError<.1&&mapping;
+        facts=J.O("skins",PaperCast["skins"].D.Count,"parts",parts,"clips",rig["clips"].D.Count,"pose_samples",samples,"max_bone_length_error",lengthError,"max_ankle_target_error",supportError,"max_loop_seam",loopError,"max_bind_joint_error",bindError,"max_transition_jump",transitionError,"sampled_joints",new J(exported));
+        return PaperCast["skins"].D.Count==24&&parts==PaperCast["expected_parts"].I&&rig["clips"].D.Count==1&&rig["clips"]["walk"].Has&&lengthError<.002&&supportError<.002&&loopError<.002&&bindError<.002&&transitionError<.002;
+    }
+    void DrawPaperReferenceFrame(Rect r,string id,bool left,float opacity){
+        var s=PaperCast["skins"][id];var texture=Resources.Load<Texture2D>("PaperReference/"+id);if(texture==null)return;
+        Vector2 canvas=PaperRig.Point(s["canvas"]),anchor=PaperRig.Point(s["canvas_origin"]),origin=PaperRig.Point(s["reference_origin"]);float fit=Mathf.Min(r.width/canvas.x,r.height/canvas.y),unit=(float)s["pixel_scale"].N;
+        Vector2 root=r.center+new Vector2((left?-1:1)*(anchor.x-canvas.x/2)*fit,(anchor.y-canvas.y/2)*fit);
+        Rect image=new Rect(root.x-(left?texture.width-origin.x:origin.x)*unit*fit,root.y-origin.y*unit*fit,texture.width*unit*fit,texture.height*unit*fit);
+        Color color=GUI.color;GUI.color=new Color(1,1,1,opacity);GUI.DrawTextureWithTexCoords(image,texture,new Rect(left?1:0,0,left?-1:1,1));GUI.color=color;
     }
     public void PaperSmokePerson(){personScreen=true;dialogueOpen=false;}
     public void PaperSmokeDialogue(){personScreen=false;dialogueOpen=true;dialogueText="同一身皮影，从此处相逢，也到演武场见招。";}
     public void PaperSmokeStage(){personScreen=false;dialogueOpen=false;}
-    public void PaperSmokeGallery(string clip,bool left){paperPreviewGallery=true;paperPreviewClip=clip;paperPreviewLeft=left;}
+    public void PaperSmokeGallery(string clip,bool left,bool bones=false){paperPreviewGallery=true;paperPreviewClip=clip;paperPreviewLeft=left;paperPreviewBones=bones;}
     public void PaperSmokeStudio(){paperPreviewGallery=false;paperPreviewClip="walk";paperPreviewLeft=false;paperPreviewBones=true;}
-    public void PaperSmokePose(string skin,string clip,bool left,bool bones,float phase){paperReferenceView=false;paperPreviewGallery=false;paperPreviewSkin=skin;paperPreviewClip=clip;paperPreviewLeft=left;paperPreviewBones=bones;paperPreviewAnimate=false;paperPreviewPhase=phase;}
+    public void PaperSmokePose(string skin,string clip,bool left,bool bones,float phase){paperPreviewCompare=false;paperPreviewOverlay=false;paperPreviewGallery=false;paperPreviewSkin=skin;paperPreviewClip=clip;paperPreviewLeft=left;paperPreviewBones=bones;paperPreviewAnimate=false;paperPreviewPhase=phase;}
+    public void OpenPaperDemo(){Page=5;paperPreviewSkin=GameClient.Arg("-paperSkin","m-youth-farmer");if(!PaperCast["skins"][paperPreviewSkin].Has)paperPreviewSkin="m-youth-farmer";paperPreviewBones=false;paperPreviewClip="walk";}
     public void PaperSmokePlay(bool playing){paperPreviewAnimate=playing;}
+    public void PaperSmokeComparison(string skin,bool overlay=false,bool bones=true){PaperSmokePose(skin,"bind",false,bones,0);paperPreviewCompare=!overlay;paperPreviewOverlay=overlay;}
+    public void PaperSmokeWalkComparison(string skin,float phase){PaperSmokePose(skin,"walk",false,false,phase);paperPreviewCompare=true;}
+    public J PaperReferenceViewports(){var a=paperCompareReferenceViewport;var b=paperCompareRigViewport;return J.O("reference",J.O("x",a.x,"y",a.y,"width",a.width,"height",a.height),"rig",J.O("x",b.x,"y",b.y,"width",b.width,"height",b.height),"skin",paperPreviewSkin);}
     public void ResetPaperGuiProbe(){paperGuiPivotDrift=0;paperGuiPivotSamples=0;paperGuiEndpointDrift=0;paperGuiEndpointSamples=0;}
     public bool PaperGuiProbe(out J facts){facts=J.O("width",Screen.width,"height",Screen.height,"pivot_samples",paperGuiPivotSamples,"maximum_pivot_drift_pixels",paperGuiPivotDrift,"endpoint_samples",paperGuiEndpointSamples,"maximum_attachment_error_pixels",paperGuiEndpointDrift);return paperGuiPivotSamples>0&&paperGuiEndpointSamples>0&&paperGuiPivotDrift<.5&&paperGuiEndpointDrift<.5;}
 }

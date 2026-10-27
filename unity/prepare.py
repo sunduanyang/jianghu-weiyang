@@ -44,21 +44,27 @@ def prepare(backend_only=False, bundle_python=False, include_local_save=False):
     assets = PROJECT / 'Assets'
     backend = assets / 'StreamingAssets' / 'Backend'
     backend.mkdir(parents=True, exist_ok=True)
-    for source in sorted((ROOT / 'jianghu').glob('*.py')):
+    for source in sorted(p for p in (ROOT / 'jianghu').iterdir() if p.suffix in ('.py', '.json')):
         target = backend / 'jianghu' / source.name
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, target)
+    for retired in ('combat.py', 'combat_flow.py', 'combat_realtime.py'):
+        old = backend / 'jianghu' / retired
+        if old.exists(): old.unlink()
+        meta = Path(str(old)+'.meta')
+        if meta.exists(): meta.unlink()
+        for compiled in (backend / 'jianghu' / '__pycache__').glob(retired[:-3]+'.*.pyc'): compiled.unlink()
     if backend_only:
         print('Shared engine synchronized into Unity.')
         return
     resources = assets / 'Resources' / 'Art'
     resources.mkdir(parents=True, exist_ok=True)
     for name in ('portraits.png', 'river-valley.png'):
-        shutil.copy2(ROOT / 'static' / 'assets' / name, resources / name)
-    shutil.copy2(ROOT / 'static' / 'geography-compact.json', assets / 'Resources' / 'geography.json')
+        shutil.copy2(ROOT / 'art' / 'unity-shared' / name, resources / name)
+    shutil.copy2(ROOT / 'art' / 'world-map' / 'geography-compact.json', assets / 'Resources' / 'geography.json')
     # Bake vector geography masks; ownership colours and interaction stay native in Unity.
     from PIL import Image, ImageDraw, ImageChops
-    geo = json.loads((ROOT / 'static' / 'geography-compact.json').read_text(encoding='utf-8'))
+    geo = json.loads((ROOT / 'art' / 'world-map' / 'geography-compact.json').read_text(encoding='utf-8'))
     maps = assets / 'Resources' / 'Map'
     maps.mkdir(parents=True, exist_ok=True)
     def polygons(path):
@@ -94,21 +100,19 @@ def prepare(backend_only=False, bundle_python=False, include_local_save=False):
     import bake_ui
     bake_ui.bake_ui()
     bake_ui.bake_atlas()
-    import bake_city
-    bake_city.main()
+    import import_city_biomes
+    import_city_biomes.main()
+    import import_city_settlements
+    import_city_settlements.main()
     import bake_paper_cast
     bake_paper_cast.bake()
-    reference = assets / 'StreamingAssets' / 'OriginalPuppets'
-    reference.mkdir(parents=True, exist_ok=True)
-    for name in ('puppet.js', 'rig-spec.json'):
-        shutil.copy2(ROOT / 'prototypes' / 'shadow-puppets' / name, reference / name)
     if bundle_python:
         bundle_runtime(assets)
     snapshot = backend / 'seed-world.sqlite'
     active = ROOT / 'data' / 'active_world.txt'
     source = Path(active.read_text(encoding='utf-8').strip()) if active.exists() else ROOT / 'data' / 'world.sqlite'
     if include_local_save and source.exists() and not snapshot.exists():
-        # SQLite backup includes committed WAL pages and works with the web game open.
+        # SQLite backup includes committed WAL pages from a running world.
         with sqlite3.connect(source.as_uri() + '?mode=ro', uri=True) as src:
             with sqlite3.connect(snapshot) as dst:
                 src.backup(dst)

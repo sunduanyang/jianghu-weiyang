@@ -7,10 +7,17 @@ public partial class JianghuApp {
     // walk costs and saves; every client derives the same terraces from the city.
     const float CityRise=.28f;
     int[,] cityLevels;
+    int cityMaxLevel=12;
+    readonly HashSet<Vector2Int> cityPickSet=new HashSet<Vector2Int>();
+    readonly List<Vector2Int> cityPickCells=new List<Vector2Int>();
     readonly Dictionary<int,Texture2D> cityFaces=new Dictionary<int,Texture2D>();
 
     void BuildCityTerrain(){
         int size=City["size"].I;cityLevels=new int[size,size];
+        if(City["elevations"].A.Count==size){
+            cityMaxLevel=0;for(int r=0;r<size;r++)for(int c=0;c<size;c++){cityLevels[r,c]=City["elevations"][r][c].I;cityMaxLevel=Mathf.Max(cityMaxLevel,cityLevels[r,c]);}
+            return;
+        }
         float seed=City["place"].I*.731f;
         for(int row=0;row<size;row++)for(int col=0;col<size;col++){
             char t=CityTile(row,col);
@@ -23,7 +30,7 @@ public partial class JianghuApp {
             cityLevels[row,col]=level;
         }
         // A facility occupies one level across its entire 1x1 or 2x2 foundation.
-        foreach(var node in City["nodes"].A){
+        foreach(var node in CitySites){
             var corner=CityLotCorner(node);int extent=CityLotSize(node),level=0;
             for(int r=0;r<extent;r++)for(int c=0;c<extent;c++)level=Mathf.Max(level,cityLevels[corner.x+r,corner.y+c]);
             SetCityLotLevel(node,level);
@@ -52,13 +59,20 @@ public partial class JianghuApp {
     int CityLevel(Vector2Int q)=>CityInside(q)&&cityLevels!=null?cityLevels[q.x,q.y]:-2;
     int CityGroundLevel(Vector2Int q)=>CityInside(q)&&CityTile(q.x,q.y)=='='?0:CityLevel(q);
     Vector2 CitySurface(Vector2Int q,float tw,float th,Vector2 center)=>CityXY(q,tw,th,center)-new Vector2(0,CityLevel(q)*tw*CityRise);
+    Vector2 CityGroundSurface(Vector2Int q,float tw,float th,Vector2 center)=>CityXY(q,tw,th,center)-new Vector2(0,CityGroundLevel(q)*tw*CityRise);
     Vector2Int CitySurfacePick(Vector2 mouse,float tw,float th,Vector2 center){
         // Test the raised diamonds in reverse paint order. The flat inverse
         // would select the tile behind a hill, and miss the actual map edges.
-        int size=City["size"].I;
-        for(int sum=(size-1)*2;sum>=0;sum--)for(int row=size-1;row>=0;row--){
-            int col=sum-row;if(col<0||col>=size)continue;
-            var q=new Vector2Int(row,col);var d=mouse-CitySurface(q,tw,th,center);
+        cityPickSet.Clear();cityPickCells.Clear();
+        for(int level=-2;level<=cityMaxLevel;level++){
+            var flat=CityPick(mouse+new Vector2(0,level*tw*CityRise),tw,th,center);
+            for(int r=-1;r<=1;r++)for(int c=-1;c<=1;c++){
+                var q=flat+new Vector2Int(r,c);if(CityInside(q)&&cityPickSet.Add(q))cityPickCells.Add(q);
+            }
+        }
+        cityPickCells.Sort((a,b)=>{int depth=(b.x+b.y).CompareTo(a.x+a.y);return depth!=0?depth:b.x.CompareTo(a.x);});
+        foreach(var q in cityPickCells){
+            int row=q.x,col=q.y;var d=mouse-CitySurface(q,tw,th,center);
             if(Mathf.Abs(d.x)/tw+Mathf.Abs(d.y)/th<=1.001f)return q;
             int level=CityGroundLevel(q);
             var ground=CityXY(q,tw,th,center)-new Vector2(0,level*tw*CityRise);d=mouse-ground;
@@ -74,6 +88,7 @@ public partial class JianghuApp {
     }
     Texture2D CityFace(int steps,bool right){
         int key=steps*2+(right?1:0);if(cityFaces.TryGetValue(key,out var cached))return cached;
+        cityFaceBuilds++;
         int depth=Mathf.RoundToInt(128*CityRise*steps),height=64+depth;
         var pixels=new Color32[128*height];
         for(int y=0;y<height;y++)for(int x=0;x<128;x++){
@@ -92,7 +107,7 @@ public partial class JianghuApp {
         texture.SetPixels32(pixels);texture.Apply(false,true);cityFaces[key]=texture;return texture;
     }
     void DrawCityBlock(Vector2Int q,Vector2 p,float tw,float th,Color tint){
-        char terrain=CityTile(q.x,q.y);bool water=terrain=='~'||terrain=='=';int level=water?0:CityLevel(q);
+        char terrain=CityTile(q.x,q.y);bool water=terrain=='~'||terrain=='='||terrain=='s';int level=water?0:CityLevel(q);
         Color earth=water?new Color(.30f,.47f,.48f):terrain=='^'?new Color(.52f,.51f,.42f):new Color(.61f,.55f,.39f);
         var old=GUI.color;GUI.color=earth*tint;
         for(int side=0;side<2;side++){
@@ -114,7 +129,7 @@ public partial class JianghuApp {
             var edge=p+new Vector2(direction*tw*.5f,th*.5f);
             for(int i=1;i<=3;i++){
                 var tread=edge+new Vector2(0,tw*CityRise*i/4);
-                Line(tread-new Vector2(tw*.13f,direction*-th*.13f),tread+new Vector2(tw*.13f,direction*-th*.13f),new Color(.82f,.76f,.59f),1);
+                CityLine(tread-new Vector2(tw*.13f,direction*-th*.13f),tread+new Vector2(tw*.13f,direction*-th*.13f),new Color(.82f,.76f,.59f),1);
             }
         }
     }

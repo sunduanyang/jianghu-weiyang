@@ -1,6 +1,7 @@
 from copy import deepcopy
 import json
 from pathlib import Path
+import re
 import unittest
 from unittest.mock import patch
 
@@ -11,6 +12,46 @@ from jianghu.historical_map import TERRITORIES, ERA
 
 
 class AtlasTests(unittest.TestCase):
+    def test_quanzhou_and_haidong_have_separate_hover_regions(self):
+        from PIL import Image, ImageChops
+
+        root = Path(__file__).resolve().parents[1]
+        quanzhou, haidong = (next(p for p in PLACES if p['name'] == name)
+                            for name in ('泉州', '海东聚落'))
+
+        def contains(path, point):
+            x, y = point
+            for section in re.split('[Mm]', path):
+                numbers = [float(n) for n in re.findall(r'-?\d+(?:\.\d+)?', section)]
+                ring = list(zip(numbers[::2], numbers[1::2]))
+                hit = False
+                for a, b in zip(ring, ring[1:]+ring[:1]):
+                    if (a[1]>y) != (b[1]>y) and x < (b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]:
+                        hit = not hit
+                if hit:
+                    return True
+            return False
+
+        for relative in ('art/world-map/geography.json', 'art/world-map/geography-compact.json',
+                         'unity/JianghuUnity/Assets/Resources/geography.json'):
+            data = json.loads((root/relative).read_text(encoding='utf-8'))
+            for place in (quanzhou, haidong):
+                with self.subTest(file=relative, place=place['name']):
+                    owners = {t['country'] for t in data['territories']
+                              if contains(t['path'], (place['x'], place['y']))}
+                    self.assertEqual(owners, {place['country']})
+
+        masks = root/'unity/JianghuUnity/Assets/Resources/Map'
+        with Image.open(masks/f"cell-{quanzhou['id']}.png") as q, \
+                Image.open(masks/f"cell-{haidong['id']}.png") as h:
+            qa, ha = q.getchannel('A'), h.getchannel('A')
+        self.assertIsNone(ImageChops.multiply(qa, ha).getbbox())
+        for place, own, other in ((quanzhou, qa, ha), (haidong, ha, qa)):
+            point = (round(place['x']), round(place['y']))
+            with self.subTest(mask=place['name']):
+                self.assertGreater(own.getpixel(point), 0)
+                self.assertEqual(other.getpixel(point), 0)
+
     def world(self):
         w = World(population=0, durable=False)
         self.addCleanup(w.store.close)
@@ -24,7 +65,7 @@ class AtlasTests(unittest.TestCase):
         return n
 
     def test_historical_territories_and_remote_sites_are_reachable(self):
-        data = json.loads((Path(__file__).resolve().parents[1]/'static/geography.json').read_text(encoding='utf-8'))
+        data = json.loads((Path(__file__).resolve().parents[1]/'art/world-map/geography.json').read_text(encoding='utf-8'))
         self.assertNotIn('provinces', data)
         self.assertEqual({p['country'] for p in data['territories']}, {c['id'] for c in COUNTRIES})
         self.assertEqual(data['era']['year'], 1200)
@@ -76,25 +117,21 @@ class AtlasTests(unittest.TestCase):
     def test_joining_requires_local_presence_and_training_uses_home_school(self):
         w = self.world()
         n = self.adult(w, 7)
-        self.assertIsNone(w.execute(n, {'id': 'join:4'}))  # Shaolin is elsewhere.
-        self.assertIsNotNone(w.execute(n, {'id': 'join:3'}))
+        self.assertIsNone(w.execute(n, {'id': 'join:2'}))  # Shaolin is elsewhere.
+        self.assertIsNotNone(w.execute(n, {'id': 'join:0'}))
         event = w.execute(n, {'id': 'train:self'})
         self.assertEqual(event['facts']['training_multiplier'], 1.25)
         w.residents[7].remove(n['id']); n['place'] = 6; w.reindex()
         event = w.execute(n, {'id': 'train:self'})
         self.assertEqual(event['facts']['training_multiplier'], 1)
 
-    def test_trade_guild_bonus_only_applies_at_its_home(self):
+    def test_removed_guild_income_bonus_does_not_survive_sect_membership(self):
         w = self.world()
-        n = self.adult(w, 2)
-        w.execute(n, {'id': 'join:1'})
+        n = self.adult(w, w.factions[0]['place'])
+        self.assertIsNotNone(w.execute(n, {'id': 'join:0'}))
         event = w.execute(n, {'id': 'work:self'})
-        self.assertEqual(event['facts']['guild_multiplier'], 1.12)
-        w.month += 1; social.reset_month(w, n)
-        n['place'] = 31; w.reindex()
-        event = w.execute(n, {'id': 'work:self'})
-        self.assertEqual(event['facts']['guild_multiplier'], 1)
-        self.assertEqual(event['facts']['tax_country'], 4)
+        self.assertNotIn('guild_multiplier', event['facts'])
+        self.assertEqual(event['facts']['tax_country'], 0)
 
     def test_period_ownership_names_and_settlements_match_the_drawn_ranges(self):
         places = {p['name']: p for p in PLACES}

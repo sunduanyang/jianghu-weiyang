@@ -1,0 +1,983 @@
+{
+  "id": "f-swordswoman",
+  "description": "门派女弟子，二十岁门派女弟子，身形修长；高髻发带飘在脑后；藏青劲装，领缘竹叶纹，佩剑",
+  "atlas": "f-swordswoman",
+  "scale": 1,
+  "binding_basis": "independent exploded component panels",
+  "reference_image": "f-swordswoman",
+  "reference_source": "24-f-swordswoman.png",
+  "reference_source_rect": [
+    29,
+    98,
+    461,
+    992
+  ],
+  "reference_mirror": false,
+  "pixel_scale": 0.6711409395973155,
+  "reference_origin": [
+    332.64,
+    384.42
+  ],
+  "reference_size": [
+    432,
+    894
+  ],
+  "canvas": [
+    620,
+    700
+  ],
+  "canvas_origin": [
+    388.28187919463085,
+    310.68456375838923
+  ],
+  "bind_lean": 1.3840582824879921,
+  "lengths": {
+    "spine": 120.03502033920344,
+    "upper_armNear": 90.74413328324698,
+    "upper_armFar": 90.74413328324698,
+    "upper_arm": 90.74413328324698,
+    "forearmNear": 54.310444956121664,
+    "forearmFar": 54.310444956121664,
+    "forearm": 54.310444956121664,
+    "thighNear": 124.25747725035708,
+    "thighFar": 127.69147747297554,
+    "thigh": 125.97447736166632,
+    "shinNear": 111.83172952532136,
+    "shinFar": 108.45504550215105,
+    "shin": 110.1433875137362
+  },
+  "shoulders": {
+    "Near": [
+      -30.507000394129427,
+      -91.71693166427144
+    ],
+    "Far": [
+      17.71028572805205,
+      -84.82874793253123
+    ]
+  },
+  "hips": {
+    "Near": [
+      -12.463476800749577,
+      84.32564522054774
+    ],
+    "Far": [
+      19.419835945354027,
+      83.55531014748752
+    ]
+  },
+  "feet": {
+    "Near": [
+      -12.483221476510044,
+      316.54786867404323
+    ],
+    "Far": [
+      15.38255033557048,
+      316.60432513049966
+    ]
+  },
+  "arm_rest": {
+    "Near": [
+      -3,
+      -7
+    ],
+    "Far": [
+      5,
+      -7
+    ]
+  },
+  "sole": {
+    "Near": 22.767567567567568,
+    "Far": 22.711111111111116
+  },
+  "parts": {
+    "head-neck": {
+      "pivot": [
+        165.0,
+        160.0
+      ],
+      "size": [
+        219,
+        180
+      ],
+      "breadth": 1.3,
+      "source": "f-swordswoman/split-bound-parts/head-neck.png",
+      "sha256": "e74996c1d8a26b2b917db6ae404885013741181f695181f4545782658f4ca98d",
+      "source_component": "f-swordswoman/head-neck.png",
+      "source_component_sha256": "e74996c1d8a26b2b917db6ae404885013741181f695181f4545782658f4ca98d",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        551,
+        163,
+        770,
+        343
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "joint": "neck",
+      "follow": "head",
+      "angle": 0,
+      "rest_angle": 0,
+      "height": 136.0,
+      "layer": 60,
+      "uv": [
+        0.1689453125,
+        0.7552083333333334,
+        0.2138671875,
+        0.234375
+      ]
+    },
+    "torso": {
+      "pivot": [
+        96.0,
+        152.0
+      ],
+      "size": [
+        149,
+        184
+      ],
+      "breadth": 0.9,
+      "source": "f-swordswoman/split-bound-parts/torso.png",
+      "sha256": "121e7f4401558fd04548ad1668cef0b517ba8195d42e27b398a2c6cfc304962e",
+      "source_component": "f-swordswoman/torso.png",
+      "source_component_sha256": "9dac342c43b8a2af51a2b3ac66475a44d258fadd8638f8fa9bd5d661140ea404",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        831,
+        163,
+        980,
+        347
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            46.94647202007476,
+            0
+          ],
+          [
+            110.46505197901276,
+            0
+          ],
+          [
+            133.04943596441294,
+            71.28400796167546
+          ],
+          [
+            160.9301039580255,
+            156
+          ],
+          [
+            35.30446803923702,
+            156
+          ],
+          [
+            38.47732802554969,
+            57.16876797080035
+          ]
+        ],
+        "restore_lower_body": {
+          "erase_polygons": [
+            [
+              [
+                0,
+                92
+              ],
+              [
+                51,
+                79
+              ],
+              [
+                62,
+                109
+              ],
+              [
+                57,
+                172
+              ],
+              [
+                0,
+                184
+              ]
+            ]
+          ],
+          "waist_y": 152.0
+        },
+        "keep_connected_body": true
+      },
+      "bone": "torso",
+      "layer": 40,
+      "tip": [
+        78.0,
+        12.0
+      ],
+      "uv": [
+        0.0078125,
+        0.75,
+        0.1455078125,
+        0.23958333333333334
+      ]
+    },
+    "pelvis": {
+      "pivot": [
+        82.68,
+        10.56
+      ],
+      "size": [
+        156,
+        176
+      ],
+      "breadth": 0.78,
+      "source": "f-swordswoman/split-bound-parts/pelvis.png",
+      "sha256": "efc8854f0f757765673916e83f2ce4551f4fba9e3517ed2010d164792965c800",
+      "source_component": "f-swordswoman/pelvis.png",
+      "source_component_sha256": "efc8854f0f757765673916e83f2ce4551f4fba9e3517ed2010d164792965c800",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        1065,
+        168,
+        1221,
+        344
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "joint": "hip",
+      "follow": "pelvis",
+      "angle": 15,
+      "rest_angle": 15,
+      "height": 234.00000000000003,
+      "layer": 50,
+      "uv": [
+        0.3984375,
+        0.7604166666666666,
+        0.15234375,
+        0.22916666666666666
+      ]
+    },
+    "near-upper-arm": {
+      "pivot": [
+        41.28,
+        14.04
+      ],
+      "size": [
+        86,
+        156
+      ],
+      "breadth": 0.58,
+      "source": "f-swordswoman/split-bound-parts/near-upper-arm.png",
+      "sha256": "3984d0d00bbbafe5e6322845d5862b7647f0081e3b3138322b7f2f7f8958127c",
+      "source_component": "f-swordswoman/near-upper-arm.png",
+      "source_component_sha256": "3984d0d00bbbafe5e6322845d5862b7647f0081e3b3138322b7f2f7f8958127c",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        1364,
+        178,
+        1450,
+        334
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "upperNear",
+      "layer": 72,
+      "tip": [
+        53.32,
+        113.88
+      ],
+      "uv": [
+        0.134765625,
+        0.5260416666666667,
+        0.083984375,
+        0.203125
+      ]
+    },
+    "far-upper-arm": {
+      "pivot": [
+        41.31,
+        14.4
+      ],
+      "size": [
+        81,
+        160
+      ],
+      "breadth": 0.58,
+      "source": "f-swordswoman/split-bound-parts/far-upper-arm.png",
+      "sha256": "595a2bfbb78c3cc90958c5e53a43401c00a2fe09a8a442048b57ddb907bb0e14",
+      "source_component": "f-swordswoman/far-upper-arm.png",
+      "source_component_sha256": "595a2bfbb78c3cc90958c5e53a43401c00a2fe09a8a442048b57ddb907bb0e14",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        616,
+        388,
+        697,
+        548
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "upperFar",
+      "layer": 10,
+      "tip": [
+        34.83,
+        118.4
+      ],
+      "uv": [
+        0.8525390625,
+        0.78125,
+        0.0791015625,
+        0.20833333333333334
+      ]
+    },
+    "near-forearm": {
+      "pivot": [
+        48.19,
+        14.0
+      ],
+      "size": [
+        79,
+        140
+      ],
+      "breadth": 0.9,
+      "source": "f-swordswoman/split-bound-parts/near-forearm.png",
+      "sha256": "337671d0e6e9e4a670ed352a44ec544f4c028dcc0cf820146198a206fa0ad644",
+      "source_component": "f-swordswoman/near-forearm.png",
+      "source_component_sha256": "337671d0e6e9e4a670ed352a44ec544f4c028dcc0cf820146198a206fa0ad644",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        866,
+        388,
+        945,
+        528
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "forearmNear",
+      "layer": 75,
+      "tip": [
+        28.44,
+        110.6
+      ],
+      "uv": [
+        0.759765625,
+        0.546875,
+        0.0771484375,
+        0.18229166666666666
+      ]
+    },
+    "far-forearm": {
+      "pivot": [
+        24.75,
+        13.9
+      ],
+      "size": [
+        55,
+        139
+      ],
+      "breadth": 0.9,
+      "source": "f-swordswoman/split-bound-parts/far-forearm.png",
+      "sha256": "a8190aac1daa9abe150d34df3e3015bb1e6633fb5768d5acf91902ef0dd44c29",
+      "source_component": "f-swordswoman/far-forearm.png",
+      "source_component_sha256": "a8190aac1daa9abe150d34df3e3015bb1e6633fb5768d5acf91902ef0dd44c29",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        1127,
+        388,
+        1182,
+        527
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "forearmFar",
+      "layer": 12,
+      "tip": [
+        32.45,
+        111.2
+      ],
+      "uv": [
+        0.8525390625,
+        0.5481770833333333,
+        0.0537109375,
+        0.18098958333333334
+      ]
+    },
+    "near-hand": {
+      "pivot": [
+        23.18,
+        74.0
+      ],
+      "size": [
+        61,
+        148
+      ],
+      "breadth": 1,
+      "source": "f-swordswoman/split-bound-parts/near-hand.png",
+      "sha256": "2502cee73a9cabd1cd279ef5b3c67924d78741dd6b65c47017fc590c4c2e7fc3",
+      "source_component": "f-swordswoman/near-hand.png",
+      "source_component_sha256": "80e60a1e782391e61b55ac9c5deacb3f27860eb866d05a2a4da8dc153e1caaab",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        1366,
+        395,
+        1427,
+        543
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            0,
+            64.0
+          ],
+          [
+            61,
+            64.0
+          ],
+          [
+            61,
+            148
+          ],
+          [
+            0,
+            148
+          ]
+        ]
+      },
+      "joint": "wristNear",
+      "follow": "handNear",
+      "angle": 12.668845324687547,
+      "rest_angle": 12.668845324687547,
+      "height": 93.0,
+      "layer": 80,
+      "uv": [
+        0.6044921875,
+        0.5364583333333333,
+        0.0595703125,
+        0.19270833333333334
+      ]
+    },
+    "far-hand": {
+      "pivot": [
+        39.6,
+        74.97
+      ],
+      "size": [
+        66,
+        147
+      ],
+      "breadth": 1,
+      "source": "f-swordswoman/split-bound-parts/far-hand.png",
+      "sha256": "82546a436ec9e60eac970ad341e92abb7ee7e0b63e081b8f6e959d2ce5721919",
+      "source_component": "f-swordswoman/far-hand.png",
+      "source_component_sha256": "226b24fecfa28f58bbe099ccedf969d413ca4456f9da3261ce3219f8d6118613",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        616,
+        607,
+        682,
+        754
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            0,
+            64.97
+          ],
+          [
+            66,
+            64.97
+          ],
+          [
+            66,
+            147
+          ],
+          [
+            0,
+            147
+          ]
+        ]
+      },
+      "joint": "wristFar",
+      "follow": "handFar",
+      "angle": -17.145470164169993,
+      "rest_angle": -17.145470164169993,
+      "height": 93.0,
+      "layer": 14,
+      "uv": [
+        0.6796875,
+        0.5377604166666667,
+        0.064453125,
+        0.19140625
+      ]
+    },
+    "near-thigh": {
+      "pivot": [
+        75.24,
+        10.92
+      ],
+      "size": [
+        114,
+        156
+      ],
+      "breadth": 0.78,
+      "source": "f-swordswoman/split-bound-parts/near-thigh.png",
+      "sha256": "aa60575f11fc8c7d78c8ae9ed003c852901a0eac4e0afd5d6b9da086b8c3e073",
+      "source_component": "f-swordswoman/near-thigh.png",
+      "source_component_sha256": "aa60575f11fc8c7d78c8ae9ed003c852901a0eac4e0afd5d6b9da086b8c3e073",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        847,
+        599,
+        961,
+        755
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "thighNear",
+      "layer": 25,
+      "tip": [
+        45.0,
+        134.0
+      ],
+      "uv": [
+        0.0078125,
+        0.5260416666666667,
+        0.111328125,
+        0.203125
+      ]
+    },
+    "far-thigh": {
+      "pivot": [
+        41.04,
+        11.2
+      ],
+      "size": [
+        108,
+        160
+      ],
+      "breadth": 0.78,
+      "source": "f-swordswoman/split-bound-parts/far-thigh.png",
+      "sha256": "19d5f0be31abc2eaf3e78ef1d30d62190b09bd40dde589ba0e23a55b94ddf254",
+      "source_component": "f-swordswoman/far-thigh.png",
+      "source_component_sha256": "19d5f0be31abc2eaf3e78ef1d30d62190b09bd40dde589ba0e23a55b94ddf254",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        1115,
+        599,
+        1223,
+        759
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "thighFar",
+      "layer": 16,
+      "tip": [
+        70.2,
+        145.6
+      ],
+      "uv": [
+        0.7314453125,
+        0.78125,
+        0.10546875,
+        0.20833333333333334
+      ]
+    },
+    "near-shin": {
+      "pivot": [
+        43.55,
+        16.4
+      ],
+      "size": [
+        67,
+        164
+      ],
+      "breadth": 0.9,
+      "source": "f-swordswoman/split-bound-parts/near-shin.png",
+      "sha256": "a4b5f05b42ed42a6e5c7fabed50f6e734584442113820c8017a6a01dace9ad0f",
+      "source_component": "f-swordswoman/near-shin.png",
+      "source_component_sha256": "62607ee517ae57348126c56cb5e88ef76795ed80dc438621b03442e42ce08b3b",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        1377,
+        595,
+        1444,
+        759
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "clip_tip": true
+      },
+      "bone": "shinNear",
+      "layer": 26,
+      "tip": [
+        24.12,
+        137.76
+      ],
+      "uv": [
+        0.650390625,
+        0.7760416666666666,
+        0.0654296875,
+        0.21354166666666666
+      ]
+    },
+    "far-shin": {
+      "pivot": [
+        22.4,
+        17.5
+      ],
+      "size": [
+        70,
+        175
+      ],
+      "breadth": 0.9,
+      "source": "f-swordswoman/split-bound-parts/far-shin.png",
+      "sha256": "d408606536f00e54afa578b2ec9458c8f8db105b6b7d3c94b34566cc9583708c",
+      "source_component": "f-swordswoman/far-shin.png",
+      "source_component_sha256": "d35607145bebea6febc49cddb8f79b9fd8cbb23a6309076747e1e65c149120f8",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        625,
+        795,
+        695,
+        970
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "clip_tip": true
+      },
+      "bone": "shinFar",
+      "layer": 17,
+      "tip": [
+        44.8,
+        147.0
+      ],
+      "uv": [
+        0.56640625,
+        0.76171875,
+        0.068359375,
+        0.22786458333333334
+      ]
+    },
+    "near-foot": {
+      "pivot": [
+        38.400000000000006,
+        106.56
+      ],
+      "size": [
+        120,
+        148
+      ],
+      "breadth": 1,
+      "source": "f-swordswoman/split-bound-parts/near-foot.png",
+      "sha256": "846f8ceb9a26809f8bd05910506313a0a6fa75b07e86c49684a5a128b1eb7c58",
+      "source_component": "f-swordswoman/near-foot.png",
+      "source_component_sha256": "d563b731d70a4e1c34dc659c772d2466b47c1c136fbcc732da9591e79a66ac71",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        832,
+        801,
+        952,
+        949
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": true,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            0,
+            93.24000000000001
+          ],
+          [
+            120,
+            93.24000000000001
+          ],
+          [
+            120,
+            148
+          ],
+          [
+            0,
+            148
+          ]
+        ]
+      },
+      "joint": "ankleNear",
+      "follow": "footNear",
+      "angle": 0,
+      "rest_angle": 0,
+      "height": 90.0,
+      "layer": 29,
+      "uv": [
+        0.4716796875,
+        0.5364583333333333,
+        0.1171875,
+        0.19270833333333334
+      ]
+    },
+    "far-foot": {
+      "pivot": [
+        36.16,
+        94.5
+      ],
+      "size": [
+        113,
+        135
+      ],
+      "breadth": 1,
+      "source": "f-swordswoman/split-bound-parts/far-foot.png",
+      "sha256": "4e61866716bbf13c9604a3fb81d42effda733aeff074408947161a5eb6d6d59d",
+      "source_component": "f-swordswoman/far-foot.png",
+      "source_component_sha256": "7e475b7fe491b523c1da65ae5486eb16f9f32cbf5f9ac53e900b98fbd1002e8f",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        1104,
+        819,
+        1217,
+        954
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            0,
+            82.35
+          ],
+          [
+            113,
+            82.35
+          ],
+          [
+            113,
+            135
+          ],
+          [
+            0,
+            135
+          ]
+        ]
+      },
+      "joint": "ankleFar",
+      "follow": "footFar",
+      "angle": 0,
+      "rest_angle": 0,
+      "height": 84.00000000000001,
+      "layer": 20,
+      "uv": [
+        0.0078125,
+        0.32942708333333337,
+        0.1103515625,
+        0.17578125
+      ]
+    },
+    "prop": {
+      "pivot": [
+        144.0,
+        50.0
+      ],
+      "size": [
+        227,
+        155
+      ],
+      "breadth": 1,
+      "source": "f-swordswoman/split-bound-parts/prop.png",
+      "sha256": "9b35e7b0ce387d3e6b87408c8a617b25951ff0c4367102ed00c12618d3d92f10",
+      "source_component": "f-swordswoman/prop.png",
+      "source_component_sha256": "9b35e7b0ce387d3e6b87408c8a617b25951ff0c4367102ed00c12618d3d92f10",
+      "source_sheet": "24-f-swordswoman.png",
+      "source_rect": [
+        1272,
+        792,
+        1499,
+        947
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "joint": "hip",
+      "follow": "body",
+      "angle": -36.38405828248799,
+      "rest_angle": -35,
+      "height": 144.0,
+      "layer": 70,
+      "uv": [
+        0.234375,
+        0.52734375,
+        0.2216796875,
+        0.20182291666666666
+      ]
+    }
+  },
+  "stride": 27.01087309188135,
+  "lift": 20.258154818911013,
+  "bob": 1.8007248727920901,
+  "ground": 339.31543624161077,
+  "pelvis_structure": {
+    "seat_parts": [],
+    "description": "Upper trouser seat follows the waist; thighs articulate below the hip hinge."
+  },
+  "bind_joints": {
+    "hip": [
+      0.0,
+      0.0
+    ],
+    "neck": [
+      2.899328859060398,
+      -120.00000000000001
+    ],
+    "shoulderFar": [
+      19.75407441615242,
+      -84.37622437826474
+    ],
+    "elbowFar": [
+      9.664014052819873,
+      5.805195033895757
+    ],
+    "wristFar": [
+      10.24785154847919,
+      60.11250177166893
+    ],
+    "hipFar": [
+      17.395973154362427,
+      83.99999999999997
+    ],
+    "ankleFar": [
+      15.38255033557048,
+      316.60432513049966
+    ],
+    "kneeFar": [
+      36.58345068221702,
+      210.2416497252372
+    ],
+    "shoulderNear": [
+      -28.28276690305235,
+      -92.4270400005521
+    ],
+    "elbowNear": [
+      -25.723803703964922,
+      -1.7189949732591288
+    ],
+    "wristNear": [
+      -17.58753179119411,
+      51.97854231378391
+    ],
+    "hipNear": [
+      -14.49664429530199,
+      83.99999999999999
+    ],
+    "ankleNear": [
+      -12.483221476510044,
+      316.54786867404323
+    ],
+    "kneeNear": [
+      6.879067335322162,
+      206.40506364079633
+    ]
+  },
+  "reference_landmarks": {
+    "hip": [
+      0.0,
+      0.0
+    ],
+    "neck": [
+      2.899328859060398,
+      -120.00000000000001
+    ],
+    "shoulderFar": [
+      19.75407441615242,
+      -84.37622437826474
+    ],
+    "elbowFar": [
+      9.664014052819873,
+      5.805195033895757
+    ],
+    "wristFar": [
+      10.24785154847919,
+      60.11250177166893
+    ],
+    "hipFar": [
+      17.395973154362427,
+      83.99999999999997
+    ],
+    "ankleFar": [
+      15.38255033557048,
+      316.60432513049966
+    ],
+    "kneeFar": [
+      36.58345068221702,
+      210.2416497252372
+    ],
+    "shoulderNear": [
+      -28.28276690305235,
+      -92.4270400005521
+    ],
+    "elbowNear": [
+      -25.723803703964922,
+      -1.7189949732591288
+    ],
+    "wristNear": [
+      -17.58753179119411,
+      51.97854231378391
+    ],
+    "hipNear": [
+      -14.49664429530199,
+      83.99999999999999
+    ],
+    "ankleNear": [
+      -12.483221476510044,
+      316.54786867404323
+    ],
+    "kneeNear": [
+      6.879067335322162,
+      206.40506364079633
+    ]
+  },
+  "size": [
+    1024,
+    768
+  ],
+  "portrait": {
+    "size": [
+      219,
+      180
+    ],
+    "uv": [
+      0.1689453125,
+      0.7552083333333334,
+      0.2138671875,
+      0.234375
+    ]
+  },
+  "atlas_sha256": "296c58386199f06d0dd83dd0cb8e9deb252fefb74a312b927daa838b2c7556c9",
+  "reference_comparison": {
+    "silhouette_iou": 0.5212643199581256,
+    "note": "Compare proportions and assembly visually. Empty hands use a neutral bind pose instead of copying tool gestures; split drawings differ from the finished illustration."
+  }
+}

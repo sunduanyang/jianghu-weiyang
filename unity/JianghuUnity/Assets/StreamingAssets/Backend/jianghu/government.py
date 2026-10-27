@@ -59,6 +59,7 @@ def appoint(w, g=None):
             continue
         occupied = {i for k, i in g['offices'].items() if k != office and i}
         candidates = [n for n in w.npcs.values() if n['alive'] and 252 <= n['age_months'] <= 840 and n['id'] not in occupied
+                      and n['faction'] is None and not n.get('social_status')
                       and territory.owner(w, n['place']) == g['country']
                       and (not n['office'] or n.get('office_country', 0) == g['country'])]
         if not candidates:
@@ -150,6 +151,8 @@ def monthly(w, g=None):
             case['status'] = '当事人去世结案'
             continue
         g['fund'] -= 2
+        from . import economics
+        economics.fee(w, offender['place'], 2)
         g['expenses'] += 2
         restitution = min(offender['wealth'], case['amount'])
         offender['wealth'] -= restitution
@@ -217,6 +220,10 @@ def annual(w, g=None):
                          or round(max(.05, min(.15, .07+(100-t['compassion'])*.0006)), 4))
         budget = min(g['fund']*.2, max(12, population*.15))
         g['fund'] -= budget
+        from . import economics
+        seats = [p['id'] for p in w.active_places if territory.owner(w, p['id']) == g['country']]
+        if seats:
+            economics.fee(w, seats[0], budget)
         g['expenses'] += budget
         improvement = .12 * min(1, budget/max(12, population*.15))
         share = POLICIES[policy]['security_share']

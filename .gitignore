@@ -4,6 +4,7 @@ __pycache__/
 data/
 reports/
 output/
+/tmp/
 .worktrees/
 unity/JianghuUnity/Library/
 unity/JianghuUnity/Temp/

@@ -1,0 +1,1122 @@
+{
+  "id": "m-beggar",
+  "description": "丐帮弟子，三十岁丐帮弟子，瘦高；头发蓬乱随意束起，额上一道旧疤；百衲衣，赤脚，手持竹棒",
+  "atlas": "m-beggar",
+  "scale": 1,
+  "binding_basis": "independent exploded component panels",
+  "reference_image": "m-beggar",
+  "reference_source": "23-m-beggar.png",
+  "reference_source_rect": [
+    163,
+    90,
+    533,
+    972
+  ],
+  "reference_mirror": false,
+  "pixel_scale": 0.6802721088435374,
+  "reference_origin": [
+    177.6,
+    352.8
+  ],
+  "reference_size": [
+    370,
+    882
+  ],
+  "canvas": [
+    620,
+    700
+  ],
+  "canvas_origin": [
+    304.96598639455783,
+    292.72108843537416
+  ],
+  "bind_lean": 2.463674789505591,
+  "lengths": {
+    "spine": 117.10824605030928,
+    "upper_armNear": 108.46826804148347,
+    "upper_armFar": 108.46826804148347,
+    "upper_arm": 108.46826804148347,
+    "forearmNear": 59.99999999999999,
+    "forearmFar": 59.99999999999999,
+    "forearm": 59.99999999999999,
+    "thighNear": 140.58997491220038,
+    "thighFar": 140.24732379499602,
+    "thigh": 140.4186493535982,
+    "shinNear": 103.85778064536346,
+    "shinFar": 104.89984000271494,
+    "shin": 104.3788103240392
+  },
+  "shoulders": {
+    "Near": [
+      -25.092088650647984,
+      -84.25064542793253
+    ],
+    "Far": [
+      22.2922437072161,
+      -86.53312771877376
+    ]
+  },
+  "hips": {
+    "Near": [
+      -16.506619215006936,
+      84.78792490542028
+    ],
+    "Far": [
+      26.242945392608704,
+      82.94859251344194
+    ]
+  },
+  "feet": {
+    "Near": [
+      -18.095238095238088,
+      324.7810392242003
+    ],
+    "Far": [
+      20.61224489795919,
+      325.4699563407452
+    ]
+  },
+  "arm_rest": {
+    "Near": [
+      -3,
+      -7
+    ],
+    "Far": [
+      5,
+      -7
+    ]
+  },
+  "sole": {
+    "Near": 32.49787234042554,
+    "Far": 31.808955223880595
+  },
+  "parts": {
+    "head-neck": {
+      "pivot": [
+        83.0,
+        167.0
+      ],
+      "size": [
+        164,
+        173
+      ],
+      "breadth": 0.9,
+      "source": "m-beggar/split-bound-parts/head-neck.png",
+      "sha256": "10275ac24c04661c8def37f58627eed8d6a432bb350f3989d691e76848b83b6d",
+      "source_component": "m-beggar/head-neck.png",
+      "source_component_sha256": "10275ac24c04661c8def37f58627eed8d6a432bb350f3989d691e76848b83b6d",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        624,
+        147,
+        788,
+        320
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "joint": "neck",
+      "follow": "head",
+      "angle": 0,
+      "rest_angle": 0,
+      "height": 127.42196531791907,
+      "layer": 60,
+      "uv": [
+        0.109375,
+        0.7643229166666666,
+        0.16015625,
+        0.22526041666666666
+      ]
+    },
+    "torso": {
+      "pivot": [
+        112.0,
+        148.78
+      ],
+      "size": [
+        200,
+        173
+      ],
+      "breadth": 0.9,
+      "source": "m-beggar/split-bound-parts/torso.png",
+      "sha256": "b32c72ed9b2b04225344b44f64f56568a6ba2f9bdb708f2ac376e2c17f088b07",
+      "source_component": "m-beggar/torso.png",
+      "source_component_sha256": "3d9002f706c34ad98debdedaf023858e6fd347490b3c5bbb726238c5762edd4e",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        830,
+        147,
+        1030,
+        320
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            87.52340071464666,
+            0
+          ],
+          [
+            149.86189925286942,
+            0
+          ],
+          [
+            172.02669873312638,
+            68.56259863567456
+          ],
+          [
+            175.7237985057388,
+            152.78
+          ],
+          [
+            52.43210139680937,
+            152.78
+          ],
+          [
+            79.21160090955028,
+            54.709598960513965
+          ]
+        ],
+        "restore_lower_body": {
+          "keep_polygon": [
+            [
+              82.0,
+              0
+            ],
+            [
+              128.0,
+              0
+            ],
+            [
+              166.0,
+              51.9
+            ],
+            [
+              154.0,
+              173
+            ],
+            [
+              54.0,
+              173
+            ],
+            [
+              58.0,
+              88.23
+            ],
+            [
+              44.0,
+              43.25
+            ]
+          ],
+          "waist_y": 148.78
+        },
+        "keep_connected_body": true
+      },
+      "bone": "torso",
+      "layer": 40,
+      "tip": [
+        118.0,
+        10.38
+      ],
+      "uv": [
+        0.443359375,
+        0.7643229166666666,
+        0.1953125,
+        0.22526041666666666
+      ]
+    },
+    "pelvis": {
+      "pivot": [
+        99.0,
+        15.39
+      ],
+      "size": [
+        198,
+        171
+      ],
+      "breadth": 0.6,
+      "source": "m-beggar/split-bound-parts/pelvis.png",
+      "sha256": "0bba0c38c572a40f815b418c22af3f654098ef99d751e720615dbb1f70fa0785",
+      "source_component": "m-beggar/pelvis.png",
+      "source_component_sha256": "0bba0c38c572a40f815b418c22af3f654098ef99d751e720615dbb1f70fa0785",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        1069,
+        149,
+        1267,
+        320
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "joint": "hip",
+      "follow": "pelvis",
+      "angle": 0,
+      "rest_angle": 0,
+      "height": 192.0,
+      "layer": 50,
+      "uv": [
+        0.654296875,
+        0.7669270833333334,
+        0.193359375,
+        0.22265625
+      ]
+    },
+    "near-upper-arm": {
+      "pivot": [
+        86.14,
+        13.84
+      ],
+      "size": [
+        146,
+        173
+      ],
+      "breadth": 0.84,
+      "source": "m-beggar/split-bound-parts/near-upper-arm.png",
+      "sha256": "812604b9ea50a929175c54cfc0182312acb84281eb8c65142539fa0f31af8385",
+      "source_component": "m-beggar/near-upper-arm.png",
+      "source_component_sha256": "812604b9ea50a929175c54cfc0182312acb84281eb8c65142539fa0f31af8385",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        1319,
+        147,
+        1465,
+        320
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "upperNear",
+      "layer": 72,
+      "tip": [
+        45.26,
+        122.83
+      ],
+      "uv": [
+        0.28515625,
+        0.7643229166666666,
+        0.142578125,
+        0.22526041666666666
+      ]
+    },
+    "far-upper-arm": {
+      "pivot": [
+        47.04,
+        12.88
+      ],
+      "size": [
+        147,
+        161
+      ],
+      "breadth": 0.84,
+      "source": "m-beggar/split-bound-parts/far-upper-arm.png",
+      "sha256": "a0a50323d2b8d0aea3fb78c6c6201153bf6bbf58a8b405ce7a36896cbff661eb",
+      "source_component": "m-beggar/far-upper-arm.png",
+      "source_component_sha256": "a0a50323d2b8d0aea3fb78c6c6201153bf6bbf58a8b405ce7a36896cbff661eb",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        631,
+        358,
+        778,
+        519
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "upperFar",
+      "layer": 10,
+      "tip": [
+        92.61,
+        115.92
+      ],
+      "uv": [
+        0.0078125,
+        0.53125,
+        0.1435546875,
+        0.20963541666666666
+      ]
+    },
+    "near-forearm": {
+      "pivot": [
+        52.78,
+        13.2
+      ],
+      "size": [
+        91,
+        132
+      ],
+      "breadth": 0.86,
+      "source": "m-beggar/split-bound-parts/near-forearm.png",
+      "sha256": "7b4c7ef63d1d4398deb5f27770681e3a996941fafd4a8b3cd0127e04aea1d227",
+      "source_component": "m-beggar/near-forearm.png",
+      "source_component_sha256": "7b4c7ef63d1d4398deb5f27770681e3a996941fafd4a8b3cd0127e04aea1d227",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        895,
+        358,
+        986,
+        490
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "forearmNear",
+      "layer": 75,
+      "tip": [
+        26.39,
+        108.24
+      ],
+      "uv": [
+        0.2626953125,
+        0.33854166666666663,
+        0.0888671875,
+        0.171875
+      ]
+    },
+    "far-forearm": {
+      "pivot": [
+        59.78,
+        11.79
+      ],
+      "size": [
+        98,
+        131
+      ],
+      "breadth": 0.86,
+      "source": "m-beggar/split-bound-parts/far-forearm.png",
+      "sha256": "0e64d0719c0e1402ee24d9bafd736cee0c0d438f413f2645a7eecd67d7783641",
+      "source_component": "m-beggar/far-forearm.png",
+      "source_component_sha256": "0e64d0719c0e1402ee24d9bafd736cee0c0d438f413f2645a7eecd67d7783641",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        1121,
+        358,
+        1219,
+        489
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {},
+      "bone": "forearmFar",
+      "layer": 12,
+      "tip": [
+        31.36,
+        106.11
+      ],
+      "uv": [
+        0.3671875,
+        0.33984375,
+        0.095703125,
+        0.17057291666666666
+      ]
+    },
+    "near-hand": {
+      "pivot": [
+        31.24,
+        90.63
+      ],
+      "size": [
+        71,
+        159
+      ],
+      "breadth": 1,
+      "source": "m-beggar/split-bound-parts/near-hand.png",
+      "sha256": "b6dcf213bdd26d24723a959084a8be11e0d748dfe564354e56df2d42c6f3c378",
+      "source_component": "m-beggar/near-hand.png",
+      "source_component_sha256": "7060573773c1406b15033a693bbe894287e0b84337599234737e1b1bff1a0390",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        1365,
+        358,
+        1436,
+        517
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            0,
+            80.63
+          ],
+          [
+            71,
+            80.63
+          ],
+          [
+            71,
+            159
+          ],
+          [
+            0,
+            159
+          ]
+        ]
+      },
+      "joint": "wristNear",
+      "follow": "handNear",
+      "angle": 16.096927017026022,
+      "rest_angle": 16.096927017026022,
+      "height": 86.99999999999999,
+      "layer": 80,
+      "uv": [
+        0.6826171875,
+        0.5338541666666667,
+        0.0693359375,
+        0.20703125
+      ]
+    },
+    "far-hand": {
+      "pivot": [
+        50.96,
+        78.65
+      ],
+      "size": [
+        91,
+        143
+      ],
+      "breadth": 1,
+      "source": "m-beggar/split-bound-parts/far-hand.png",
+      "sha256": "99b5ad201ba89790d7a8ed91b7c23d36353637011ada24e4b331379e82f0e5bf",
+      "source_component": "m-beggar/far-hand.png",
+      "source_component_sha256": "f712b4dc0ebd683ab616446ae05abf46d747dc72ab84ba5177f264ae6f443e50",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        658,
+        557,
+        749,
+        700
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            0,
+            68.65
+          ],
+          [
+            91,
+            68.65
+          ],
+          [
+            91,
+            143
+          ],
+          [
+            0,
+            143
+          ]
+        ]
+      },
+      "joint": "wristFar",
+      "follow": "handFar",
+      "angle": 7.202738538578536,
+      "rest_angle": 7.202738538578536,
+      "height": 86.99999999999999,
+      "layer": 14,
+      "uv": [
+        0.86328125,
+        0.5546875,
+        0.0888671875,
+        0.18619791666666666
+      ]
+    },
+    "near-thigh": {
+      "pivot": [
+        62.367295296670875,
+        46.53854490734637
+      ],
+      "size": [
+        113,
+        160
+      ],
+      "breadth": 0.65533594884607,
+      "source": "m-beggar/split-bound-parts/near-thigh.png",
+      "sha256": "1afb0f5f24270d1434bcd566feaf59ad7cd23ce866144a016ff26104545a25f8",
+      "source_component": "m-beggar/near-thigh.png",
+      "source_component_sha256": "7a7e80acf2744fc21c6542264a8e16fc20c4913e9e471f997e14ca9a30876616",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        870,
+        557,
+        983,
+        717
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "axial_clip_after_mirror": {
+          "origin": [
+            66.67,
+            17.6
+          ],
+          "axis": [
+            -0.147067486848847,
+            0.9891264602223339
+          ],
+          "minimum": 14.504257528528337
+        }
+      },
+      "bone": "thighNear",
+      "layer": 25,
+      "tip": [
+        48.59,
+        139.2
+      ],
+      "waist_source_anchor": [
+        66.67,
+        17.6
+      ],
+      "waist_top_projection": -21.869182576038607,
+      "binding_role": "hip hinge inside full waist-to-knee trouser panel",
+      "uv": [
+        0.556640625,
+        0.5325520833333333,
+        0.1103515625,
+        0.20833333333333334
+      ]
+    },
+    "far-thigh": {
+      "pivot": [
+        56.62579339308501,
+        49.97192928429691
+      ],
+      "size": [
+        119,
+        160
+      ],
+      "breadth": 0.6228582858401351,
+      "source": "m-beggar/split-bound-parts/far-thigh.png",
+      "sha256": "aade30a9505e0b8b5375312c41b8ebedc35e93575a753e1a7ec5517f50f4faa5",
+      "source_component": "m-beggar/far-thigh.png",
+      "source_component_sha256": "84f4f3847f37bc5a6bc6eaa82c095ffa7fa222db84a1490c0385ef5823d535e1",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        1118,
+        557,
+        1237,
+        717
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "axial_clip_after_mirror": {
+          "origin": [
+            52.36,
+            16.0
+          ],
+          "axis": [
+            0.12458979676883813,
+            0.9922083362586204
+          ],
+          "minimum": 19.33860922460095
+        }
+      },
+      "bone": "thighFar",
+      "layer": 16,
+      "tip": [
+        67.83,
+        139.2
+      ],
+      "waist_source_anchor": [
+        52.36,
+        16.0
+      ],
+      "waist_top_projection": -21.028367374497073,
+      "binding_role": "hip hinge inside full waist-to-knee trouser panel",
+      "uv": [
+        0.298828125,
+        0.5325520833333333,
+        0.1162109375,
+        0.20833333333333334
+      ]
+    },
+    "near-shin": {
+      "pivot": [
+        37.72,
+        45.53
+      ],
+      "size": [
+        82,
+        157
+      ],
+      "breadth": 0.84,
+      "source": "m-beggar/split-bound-parts/near-shin.png",
+      "sha256": "7af34932f37e57f5c72633ceb2532f1ab78c107befc1f404eafa006dd762c495",
+      "source_component": "m-beggar/near-shin.png",
+      "source_component_sha256": "3763b1fe64d649e5a15141e61d7c5543e29af0fef5043f0ab3fdb851f531c08e",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        1356,
+        557,
+        1438,
+        714
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "clip_tip": true
+      },
+      "bone": "shinNear",
+      "layer": 26,
+      "tip": [
+        44.28,
+        138.16
+      ],
+      "uv": [
+        0.767578125,
+        0.5364583333333333,
+        0.080078125,
+        0.20442708333333334
+      ]
+    },
+    "far-shin": {
+      "pivot": [
+        51.04,
+        50.75
+      ],
+      "size": [
+        88,
+        175
+      ],
+      "breadth": 0.84,
+      "source": "m-beggar/split-bound-parts/far-shin.png",
+      "sha256": "7e65ef53aedd0708010dce896fdf33572a01c8e9a6f82d250cfa6c68dc2c956a",
+      "source_component": "m-beggar/far-shin.png",
+      "source_component_sha256": "ae4c302e222ee868006764d4164eadeafd62d07d2a3838da16ce21ab3728c3d5",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        669,
+        755,
+        757,
+        930
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "clip_tip": true
+      },
+      "bone": "shinFar",
+      "layer": 17,
+      "tip": [
+        44.88,
+        152.25
+      ],
+      "uv": [
+        0.0078125,
+        0.76171875,
+        0.0859375,
+        0.22786458333333334
+      ]
+    },
+    "near-foot": {
+      "pivot": [
+        37.8,
+        60.63
+      ],
+      "size": [
+        105,
+        141
+      ],
+      "breadth": 1,
+      "source": "m-beggar/split-bound-parts/near-foot.png",
+      "sha256": "6d8ea44036ba6105ff7b0946956402953055ddd419dbe3f5169e0032f9b540bf",
+      "source_component": "m-beggar/near-foot.png",
+      "source_component_sha256": "84f34efc7ce198196fccf73cc4ceceb4fab5f121d05e221cb1e7e4b943a0fc45",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        859,
+        783,
+        964,
+        924
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": true,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            0,
+            47.940000000000005
+          ],
+          [
+            105,
+            47.940000000000005
+          ],
+          [
+            105,
+            141
+          ],
+          [
+            0,
+            141
+          ]
+        ]
+      },
+      "joint": "ankleNear",
+      "follow": "footNear",
+      "angle": 0,
+      "rest_angle": 0,
+      "height": 60.0,
+      "layer": 29,
+      "uv": [
+        0.0078125,
+        0.32682291666666663,
+        0.1025390625,
+        0.18359375
+      ]
+    },
+    "far-foot": {
+      "pivot": [
+        38.44,
+        58.96
+      ],
+      "size": [
+        124,
+        134
+      ],
+      "breadth": 1,
+      "source": "m-beggar/split-bound-parts/far-foot.png",
+      "sha256": "e922691ea7c1fb7f8b992c484ed8fc569bbaf5a683f02d63ff472c0fd69ee948",
+      "source_component": "m-beggar/far-foot.png",
+      "source_component_sha256": "a992f5900522d46a97930352def867a4b9d68eb29d236e7ea9c5ba58da1b0730",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        1124,
+        778,
+        1248,
+        912
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "source_mask": {
+        "keep_polygon": [
+          [
+            0,
+            46.900000000000006
+          ],
+          [
+            124,
+            46.900000000000006
+          ],
+          [
+            124,
+            134
+          ],
+          [
+            0,
+            134
+          ]
+        ]
+      },
+      "joint": "ankleFar",
+      "follow": "footFar",
+      "angle": 0,
+      "rest_angle": 0,
+      "height": 60.0,
+      "layer": 20,
+      "uv": [
+        0.1259765625,
+        0.3359375,
+        0.12109375,
+        0.17447916666666666
+      ]
+    },
+    "near-seat": {
+      "pivot": [
+        62.367295296670875,
+        46.53854490734637
+      ],
+      "size": [
+        113,
+        160
+      ],
+      "breadth": 0.65533594884607,
+      "source_component": "m-beggar/near-thigh.png",
+      "source_component_sha256": "7a7e80acf2744fc21c6542264a8e16fc20c4913e9e471f997e14ca9a30876616",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        870,
+        557,
+        983,
+        717
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "bone": "thighNear",
+      "layer": 34,
+      "tip": [
+        48.59,
+        139.2
+      ],
+      "waist_source_anchor": [
+        66.67,
+        17.6
+      ],
+      "waist_top_projection": -21.869182576038607,
+      "source": "m-beggar/split-bound-parts/near-seat.png",
+      "sha256": "a49ec57dbc6998a788e1c03a8b614dd3dd64987beeb3ddba235c3023bfdcf624",
+      "freeze_to_body": true,
+      "source_mask": {
+        "axial_clip_after_mirror": {
+          "origin": [
+            66.67,
+            17.6
+          ],
+          "axis": [
+            -0.147067486848847,
+            0.9891264602223339
+          ],
+          "maximum": 44.009079382591445
+        },
+        "waist_envelope": {
+          "span": [
+            -44.09218317732324,
+            47.114183430366936
+          ],
+          "hip_depth": 84.78792490542028
+        }
+      },
+      "occluded_source": "m-beggar/split-bound-parts/near-seat-waist-hidden.png",
+      "occluded_source_sha256": "d90697223060b6f616dc699f4deff58b7f2a13a9c8f28d0465e07038a48b5648",
+      "binding_role": "stationary upper-trouser seat supporting the pelvis",
+      "uv": [
+        0.4306640625,
+        0.5325520833333333,
+        0.1103515625,
+        0.20833333333333334
+      ]
+    },
+    "far-seat": {
+      "pivot": [
+        56.62579339308501,
+        49.97192928429691
+      ],
+      "size": [
+        119,
+        160
+      ],
+      "breadth": 0.6228582858401351,
+      "source_component": "m-beggar/far-thigh.png",
+      "source_component_sha256": "84f4f3847f37bc5a6bc6eaa82c095ffa7fa222db84a1490c0385ef5823d535e1",
+      "source_sheet": "23-m-beggar.png",
+      "source_rect": [
+        1118,
+        557,
+        1237,
+        717
+      ],
+      "source_region": "right-hand exploded component panel",
+      "source_extraction_mirror": false,
+      "source_mirror": false,
+      "bone": "thighFar",
+      "layer": 32,
+      "tip": [
+        67.83,
+        139.2
+      ],
+      "waist_source_anchor": [
+        52.36,
+        16.0
+      ],
+      "waist_top_projection": -21.028367374497073,
+      "source": "m-beggar/split-bound-parts/far-seat.png",
+      "sha256": "3e66c65fa439166aaa014bafacbe74684e85850f05dd821410374acc5a8c3f4b",
+      "freeze_to_body": true,
+      "source_mask": {
+        "axial_clip_after_mirror": {
+          "origin": [
+            52.36,
+            16.0
+          ],
+          "axis": [
+            0.12458979676883813,
+            0.9922083362586204
+          ],
+          "maximum": 49.13880230853918
+        },
+        "waist_envelope": {
+          "span": [
+            -44.09218317732324,
+            47.114183430366936
+          ],
+          "hip_depth": 82.94859251344194
+        }
+      },
+      "occluded_source": "m-beggar/split-bound-parts/far-seat-waist-hidden.png",
+      "occluded_source_sha256": "6b293697ec3883c9c19b41d99ab1d782a4080a31d12f7b6e209ad3a8c9a96a66",
+      "binding_role": "stationary upper-trouser seat supporting the pelvis",
+      "uv": [
+        0.1669921875,
+        0.5325520833333333,
+        0.1162109375,
+        0.20833333333333334
+      ]
+    }
+  },
+  "stride": 30.08571400336235,
+  "lift": 22.564285502521763,
+  "bob": 2.0057142668908234,
+  "ground": 357.27891156462584,
+  "pelvis_structure": {
+    "seat_parts": [
+      "near-seat",
+      "far-seat"
+    ],
+    "description": "Upper trouser seat follows the waist; thighs articulate below the hip hinge."
+  },
+  "bind_joints": {
+    "hip": [
+      0.0,
+      0.0
+    ],
+    "neck": [
+      5.034013605442181,
+      -117.0
+    ],
+    "shoulderFar": [
+      25.991350384450733,
+      -85.49488889687055
+    ],
+    "elbowFar": [
+      11.901583186906489,
+      22.05437252429455
+    ],
+    "wristFar": [
+      11.41602938272681,
+      82.05240780465391
+    ],
+    "hipFar": [
+      22.653061224489804,
+      83.99999999999997
+    ],
+    "ankleFar": [
+      20.61224489795919,
+      325.4699563407452
+    ],
+    "kneeFar": [
+      42.37868729929485,
+      222.85320128688218
+    ],
+    "shoulderNear": [
+      -21.447298217542414,
+      -85.25137868118607
+    ],
+    "elbowNear": [
+      -20.4319805513246,
+      23.212137313621
+    ],
+    "wristNear": [
+      -12.562696357780712,
+      82.6938518676017
+    ],
+    "hipNear": [
+      -20.1360544217687,
+      83.99999999999996
+    ],
+    "ankleNear": [
+      -18.095238095238088,
+      324.7810392242003
+    ],
+    "kneeNear": [
+      1.8606409190618933,
+      222.8585123062169
+    ]
+  },
+  "reference_landmarks": {
+    "hip": [
+      0.0,
+      0.0
+    ],
+    "neck": [
+      5.034013605442181,
+      -117.0
+    ],
+    "shoulderFar": [
+      25.991350384450733,
+      -85.49488889687055
+    ],
+    "elbowFar": [
+      11.901583186906489,
+      22.05437252429455
+    ],
+    "wristFar": [
+      11.41602938272681,
+      82.05240780465391
+    ],
+    "hipFar": [
+      22.653061224489804,
+      83.99999999999997
+    ],
+    "ankleFar": [
+      20.61224489795919,
+      325.4699563407452
+    ],
+    "kneeFar": [
+      42.37868729929485,
+      222.85320128688218
+    ],
+    "shoulderNear": [
+      -21.447298217542414,
+      -85.25137868118607
+    ],
+    "elbowNear": [
+      -20.4319805513246,
+      23.212137313621
+    ],
+    "wristNear": [
+      -12.562696357780712,
+      82.6938518676017
+    ],
+    "hipNear": [
+      -20.1360544217687,
+      83.99999999999996
+    ],
+    "ankleNear": [
+      -18.095238095238088,
+      324.7810392242003
+    ],
+    "kneeNear": [
+      1.8606409190618933,
+      222.8585123062169
+    ]
+  },
+  "size": [
+    1024,
+    768
+  ],
+  "portrait": {
+    "size": [
+      164,
+      173
+    ],
+    "uv": [
+      0.109375,
+      0.7643229166666666,
+      0.16015625,
+      0.22526041666666666
+    ]
+  },
+  "atlas_sha256": "1c059fc5c01851ad67196d48be264e5b3b24451ab5946db78a0e3ef857c7a715",
+  "reference_comparison": {
+    "silhouette_iou": 0.5809902579202342,
+    "note": "Compare proportions and assembly visually. Empty hands use a neutral bind pose instead of copying tool gestures; split drawings differ from the finished illustration."
+  }
+}

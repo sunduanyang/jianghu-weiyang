@@ -1,0 +1,244 @@
+{
+  "source": "D:\\Desktop\\美术",
+  "count": 31,
+  "unique_count": 30,
+  "files": [
+    {
+      "id": 1,
+      "file": "ChatGPT 图像 2026年10月27日 01_51_36.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "0dee534da2fc12af93439f067e05542128432e11ae1c703025385d98c2d55fce"
+    },
+    {
+      "id": 2,
+      "file": "ChatGPT 图像 2026年10月27日 01_51_50.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "f1b3507bf55b50221cb15f0b6b1c2eeb6ad23bdfc62f8d50ff08e393f8d5d162"
+    },
+    {
+      "id": 3,
+      "file": "ChatGPT 图像 2026年10月27日 01_52_01.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "ca11424c9db2346419bb4659f46c354ca7bd279dc03986644d5895b04d8e8265"
+    },
+    {
+      "id": 4,
+      "file": "ChatGPT 图像 2026年10月27日 01_57_39.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "9da84763c940e13cb29f3f8c89c8d1bda365c95d7d12c64e802c8687ffe14045"
+    },
+    {
+      "id": 5,
+      "file": "ChatGPT 图像 2026年10月27日 01_57_47.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "56a57aad42e4dcd84af3a1c6730758794527dcb2ed5a1428d3b1ad5c74cbc771"
+    },
+    {
+      "id": 6,
+      "file": "ChatGPT 图像 2026年10月27日 01_57_53.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "80c84294e2e94926d898c11e2231852f7dc3776ffd2a095b082992c434288642"
+    },
+    {
+      "id": 7,
+      "file": "ChatGPT 图像 2026年10月27日 01_58_02.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "b4ce4c3a4eb95277e6ca7eef61d5f21bc3fd56839bb513308b8a68959a3f2688"
+    },
+    {
+      "id": 8,
+      "file": "ChatGPT 图像 2026年10月27日 01_59_16.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "c8908a9bc91a0c3f21d8e2b09025f3f02b4055b708e93ae756515b970ffcf383",
+      "terrain_pack_equivalent": "06-wilderness"
+    },
+    {
+      "id": 9,
+      "file": "ChatGPT 图像 2026年10月27日 01_59_22.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "ef3538e1cf7a6031baf5ae430b628f18ec9b8f8e759717c0a4eb4f76af0277d6",
+      "terrain_pack_equivalent": "10-sand-flat"
+    },
+    {
+      "id": 10,
+      "file": "ChatGPT 图像 2026年10月27日 01_59_28.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "448cf7ae086292b1f87c75c5e767dd724e26a6de5dd35fa027d5328fc4d701d8",
+      "terrain_pack_equivalent": "07-dryland"
+    },
+    {
+      "id": 11,
+      "file": "ChatGPT 图像 2026年10月27日 01_59_33.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "9182600ab072d097ec4b4a27ce83b8302481d91a9906d4ace545b246b2b31a3f",
+      "terrain_pack_equivalent": "11-gravel-land"
+    },
+    {
+      "id": 12,
+      "file": "ChatGPT 图像 2026年10月27日 01_59_40.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "312c9e97c0f9e56c14ee45844b76742eff6420f6ad36c57bb2d99cd13f76d17d",
+      "terrain_pack_equivalent": "08-farmland"
+    },
+    {
+      "id": 13,
+      "file": "ChatGPT 图像 2026年10月27日 01_59_44.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "82029c4df8834a4d9cc199f9152cbe6206ee7216128e22a5d9a0fdd01ddeff03",
+      "terrain_pack_equivalent": "09-rice-paddies"
+    },
+    {
+      "id": 14,
+      "file": "ChatGPT 图像 2026年10月27日 01_59_52.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "3f1901ef56a04405990515fecaeb44465ffa8f3539b31df955e23bc13ed2e016",
+      "terrain_pack_equivalent": "12-mudflat"
+    },
+    {
+      "id": 15,
+      "file": "ChatGPT 图像 2026年10月27日 02_00_01.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "b73b41af8457a79f86f83fb87999a36052ddb3689160c01e6f0704c3cbc12f95",
+      "terrain_pack_equivalent": "14-shallows"
+    },
+    {
+      "id": 16,
+      "file": "ChatGPT 图像 2026年10月27日 02_00_10.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "4b0158afd35ab3e28437ea406da3f5551e5dd64a03b9e135c9f4e43052b79f05",
+      "terrain_pack_equivalent": "16-low-hills"
+    },
+    {
+      "id": 17,
+      "file": "ChatGPT 图像 2026年10月27日 02_00_14.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "99d0691d78962a44e693ae77dd77745012cfbe8fae4fee357363282bb2f10a8a",
+      "terrain_pack_equivalent": "22-wetland"
+    },
+    {
+      "id": 18,
+      "file": "ChatGPT 图像 2026年10月27日 02_00_21.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "c1bcfa9652f6f1219127c6c811e6e305a8d991087b3710028f427382af97694f",
+      "terrain_pack_equivalent": "23-lake"
+    },
+    {
+      "id": 19,
+      "file": "ChatGPT 图像 2026年10月27日 02_00_31.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "dffa48a679634389488a010541c6ade852752bf4ac5266170c6b03d36abb8e7e",
+      "terrain_pack_equivalent": "17-mountain-massif"
+    },
+    {
+      "id": 20,
+      "file": "ChatGPT 图像 2026年10月27日 02_00_40.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "f690ceca659ceeb0a8f26736e09c1c93a86733fc50c2bae64bacb3ffb9c96a03",
+      "terrain_pack_equivalent": "26-escarpment"
+    },
+    {
+      "id": 21,
+      "file": "ChatGPT 图像 2026年10月27日 02_01_18.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "dab62494f3b18cd1ae3f43644eda0958ab96494b9e2564019ab3889eea228f3e",
+      "terrain_pack_equivalent": "01-open-plains"
+    },
+    {
+      "id": 22,
+      "file": "ChatGPT 图像 2026年10月27日 02_03_05.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "701e0eaed6dd840871a3a3aa3cf9f293b79c57d8ef25000fd4c2dca9e255cff7",
+      "terrain_pack_equivalent": "04-bamboo-forest"
+    },
+    {
+      "id": 23,
+      "file": "ChatGPT 图像 2026年10月27日 02_03_23.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "0be8b045af88ba134f091bb7147d62446548d00b4e7fef222b0ca9b5ce43e13c",
+      "terrain_pack_equivalent": "25-stone-forest"
+    },
+    {
+      "id": 24,
+      "file": "ChatGPT 图像 2026年10月27日 02_03_30.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "ada8417375657278c5d48acb9fa202e2c8c989f21ded07afa74cd0493b5a4504",
+      "terrain_pack_equivalent": "19-natural-barrier"
+    },
+    {
+      "id": 25,
+      "file": "ChatGPT 图像 2026年10月27日 02_03_38.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "7dcdd8a807d3dce16a1be6ece5b0345a9be9cfa9e2f0e8afbeee4954e3b118c9",
+      "terrain_pack_equivalent": "20-deep-forest"
+    },
+    {
+      "id": 26,
+      "file": "ChatGPT 图像 2026年10月27日 02_03_50.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "52a1dc026b3191d33c9bca999b6b441ad8362363a3b9844b43dd3f57217aef03",
+      "terrain_pack_equivalent": "30-fjord"
+    },
+    {
+      "id": 27,
+      "file": "ChatGPT 图像 2026年10月27日 02_05_47.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "fe48345c511e3c783df24093a708c55d6b2e04baf097d2a1865eef0e4ae1daad"
+    },
+    {
+      "id": 28,
+      "file": "ChatGPT 图像 2026年10月27日 02_11_41.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "b3db89ae841671bd883d6fa7dece42301238feef5025358602eba6edd6417654"
+    },
+    {
+      "id": 29,
+      "file": "ChatGPT 图像 2026年10月27日 02_12_02.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "37542026d0561f01a30e22e187c69bea07430cd78596d34cdd3fe18578f9225b"
+    },
+    {
+      "id": 30,
+      "file": "ChatGPT 图像 2026年10月27日 02_20_14.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "8a5566b77a9106870eb7b32c18d10899859b84b63411f8772e52662b531f517c"
+    },
+    {
+      "id": 31,
+      "file": "ChatGPT 图像 2026年10月27日 02_20_30.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "b3db89ae841671bd883d6fa7dece42301238feef5025358602eba6edd6417654",
+      "duplicate_of": 28
+    }
+  ]
+}

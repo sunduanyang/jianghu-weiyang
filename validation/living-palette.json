@@ -1,0 +1,1566 @@
+{
+  "map_version": 5,
+  "art_pack": "landscape-mix-20261027",
+  "places": 168,
+  "sizes": {
+    "20": 134,
+    "30": 34
+  },
+  "archived_files": 31,
+  "unique_archived_files": 30,
+  "original_pack_matches": 19,
+  "selected_assets": 27,
+  "actually_used_assets": 25,
+  "used_assets": {
+    "34-ancient-grove": 14316,
+    "01-open-plains": 6684,
+    "33-winding-meadow": 14322,
+    "08-farmland": 11336,
+    "37-river-terraces": 527,
+    "28-terraced-fields": 557,
+    "42-blue-water": 5241,
+    "32-basin": 92,
+    "04-bamboo-forest": 1031,
+    "20-deep-forest": 1109,
+    "24-river-valley": 91,
+    "02-meadow": 7455,
+    "23-lake": 46,
+    "16-low-hills": 1213,
+    "35-jagged-peaks": 36,
+    "03-woodland": 2775,
+    "17-mountain-massif": 29,
+    "36-green-spires": 50,
+    "29-plateau": 110,
+    "31-river-delta": 49,
+    "11-gravel-land": 1385,
+    "07-dryland": 5186,
+    "41-deep-sea": 976,
+    "43-snowfield": 1428,
+    "38-red-mesas": 17
+  },
+  "max_complex_fraction": 0.2,
+  "legacy_v4_fingerprints_preserved": 168,
+  "maps": [
+    {
+      "place": 0,
+      "name": "青溪镇",
+      "size": 20,
+      "layout_id": "7c2649abf8285b04",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 1,
+      "name": "栖云山",
+      "size": 20,
+      "layout_id": "4b63912f425f8fef",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.12
+    },
+    {
+      "place": 2,
+      "name": "抚州",
+      "size": 30,
+      "layout_id": "efb0238c78b8855c",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.1111
+    },
+    {
+      "place": 3,
+      "name": "桃花渡",
+      "size": 20,
+      "layout_id": "bce878ccf33ec4cd",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 4,
+      "name": "寒石寨",
+      "size": 20,
+      "layout_id": "bdeeb59e9fffad83",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 5,
+      "name": "江陵府",
+      "size": 30,
+      "layout_id": "2bb48eff7f121e61",
+      "settlements": 4,
+      "distinct_assets": 15,
+      "complex_fraction": 0.0889
+    },
+    {
+      "place": 6,
+      "name": "襄阳府",
+      "size": 30,
+      "layout_id": "5ffa05335fc5ff37",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.0978
+    },
+    {
+      "place": 7,
+      "name": "武当山",
+      "size": 20,
+      "layout_id": "7a5886f12d69290b",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.19
+    },
+    {
+      "place": 8,
+      "name": "潭州",
+      "size": 30,
+      "layout_id": "ccf305a0b4f5152f",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.1422
+    },
+    {
+      "place": 9,
+      "name": "衡山",
+      "size": 20,
+      "layout_id": "81614a1ad692b812",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.17
+    },
+    {
+      "place": 10,
+      "name": "庐州",
+      "size": 20,
+      "layout_id": "8de20ffbbacb456a",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 11,
+      "name": "河南府",
+      "size": 30,
+      "layout_id": "a8edc9c5d6bfa6c9",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.1244
+    },
+    {
+      "place": 12,
+      "name": "嵩山",
+      "size": 20,
+      "layout_id": "2342e8d14cd46986",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 13,
+      "name": "南京开封府",
+      "size": 30,
+      "layout_id": "c590097feae4349f",
+      "settlements": 4,
+      "distinct_assets": 15,
+      "complex_fraction": 0.0711
+    },
+    {
+      "place": 14,
+      "name": "中都",
+      "size": 30,
+      "layout_id": "61412023b8651f13",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.1022
+    },
+    {
+      "place": 15,
+      "name": "直沽",
+      "size": 20,
+      "layout_id": "ff13b534661d31be",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.12
+    },
+    {
+      "place": 16,
+      "name": "太原府",
+      "size": 20,
+      "layout_id": "03de1b8e9c39809e",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.12
+    },
+    {
+      "place": 17,
+      "name": "济南府",
+      "size": 30,
+      "layout_id": "f5a4dbed9590405e",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.1644
+    },
+    {
+      "place": 18,
+      "name": "泰山",
+      "size": 20,
+      "layout_id": "65b540451d75fc06",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.2
+    },
+    {
+      "place": 19,
+      "name": "沈州",
+      "size": 30,
+      "layout_id": "47e5109a1d8ef044",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.0978
+    },
+    {
+      "place": 20,
+      "name": "长白山",
+      "size": 20,
+      "layout_id": "64ec4d65460f4aed",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.17
+    },
+    {
+      "place": 21,
+      "name": "上京会宁府",
+      "size": 20,
+      "layout_id": "e654a00aa2384153",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.11
+    },
+    {
+      "place": 22,
+      "name": "黑水营地",
+      "size": 20,
+      "layout_id": "4742109ceb2db7b3",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 23,
+      "name": "丰州",
+      "size": 30,
+      "layout_id": "06bce51a5a10d03c",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.12
+    },
+    {
+      "place": 24,
+      "name": "克鲁伦河营地",
+      "size": 20,
+      "layout_id": "156a7a976818302b",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.07
+    },
+    {
+      "place": 25,
+      "name": "兴庆府",
+      "size": 30,
+      "layout_id": "7a30461fecf3903f",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.1067
+    },
+    {
+      "place": 26,
+      "name": "京兆府",
+      "size": 30,
+      "layout_id": "6b7e327ffae437ea",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.0756
+    },
+    {
+      "place": 27,
+      "name": "华山",
+      "size": 20,
+      "layout_id": "f12dc7cfc747f66d",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 28,
+      "name": "兰州",
+      "size": 20,
+      "layout_id": "1e3a9406177b94c8",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 29,
+      "name": "沙州",
+      "size": 20,
+      "layout_id": "856bb4f99ad44868",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 30,
+      "name": "别失八里",
+      "size": 30,
+      "layout_id": "61e7914f3ce8f21d",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.1378
+    },
+    {
+      "place": 31,
+      "name": "疏勒",
+      "size": 20,
+      "layout_id": "60637adc9b1276a4",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 32,
+      "name": "阿力麻里",
+      "size": 20,
+      "layout_id": "6c496499cc1f14ba",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.17
+    },
+    {
+      "place": 33,
+      "name": "天山",
+      "size": 20,
+      "layout_id": "d3ab6e37147c98db",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 34,
+      "name": "逻些",
+      "size": 30,
+      "layout_id": "a42762fe204afc80",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.1378
+    },
+    {
+      "place": 35,
+      "name": "日喀则",
+      "size": 20,
+      "layout_id": "ff82747c29a4c212",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 36,
+      "name": "西宁州",
+      "size": 20,
+      "layout_id": "f2dd61e49d7bf895",
+      "settlements": 4,
+      "distinct_assets": 9,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 37,
+      "name": "昆仑山",
+      "size": 20,
+      "layout_id": "12bf84a0ba057762",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.19
+    },
+    {
+      "place": 38,
+      "name": "成都府",
+      "size": 30,
+      "layout_id": "f6670c75823dada8",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.1156
+    },
+    {
+      "place": 39,
+      "name": "重庆府",
+      "size": 20,
+      "layout_id": "47681a21c83db33b",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 40,
+      "name": "峨眉山",
+      "size": 20,
+      "layout_id": "f6455868596b9f9d",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.19
+    },
+    {
+      "place": 41,
+      "name": "青城山",
+      "size": 20,
+      "layout_id": "1f83405d37c1bc80",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 42,
+      "name": "大理城",
+      "size": 30,
+      "layout_id": "e64816765ee7b106",
+      "settlements": 4,
+      "distinct_assets": 16,
+      "complex_fraction": 0.1244
+    },
+    {
+      "place": 43,
+      "name": "鄯阐府",
+      "size": 20,
+      "layout_id": "af24247ea747cd84",
+      "settlements": 4,
+      "distinct_assets": 9,
+      "complex_fraction": 0.11
+    },
+    {
+      "place": 44,
+      "name": "矩州",
+      "size": 20,
+      "layout_id": "4a73341c7d87004b",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 45,
+      "name": "临安府",
+      "size": 30,
+      "layout_id": "52f37ecefe60185c",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.1378
+    },
+    {
+      "place": 46,
+      "name": "建康府",
+      "size": 30,
+      "layout_id": "2132c517515c9c5a",
+      "settlements": 4,
+      "distinct_assets": 17,
+      "complex_fraction": 0.0978
+    },
+    {
+      "place": 47,
+      "name": "平江府",
+      "size": 30,
+      "layout_id": "560230eb8671feec",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.1244
+    },
+    {
+      "place": 48,
+      "name": "华亭县",
+      "size": 20,
+      "layout_id": "87cadfeb0231f04e",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.11
+    },
+    {
+      "place": 49,
+      "name": "福州",
+      "size": 30,
+      "layout_id": "63d3e92d7727665e",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.1022
+    },
+    {
+      "place": 50,
+      "name": "海东聚落",
+      "size": 20,
+      "layout_id": "0dcd15c73ec35d74",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.1
+    },
+    {
+      "place": 51,
+      "name": "广州",
+      "size": 30,
+      "layout_id": "5299dc4087a1087e",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.1022
+    },
+    {
+      "place": 52,
+      "name": "静江府",
+      "size": 20,
+      "layout_id": "3385865ed14bc0ae",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.12
+    },
+    {
+      "place": 53,
+      "name": "琼州",
+      "size": 20,
+      "layout_id": "225aadeb0aae737a",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 54,
+      "name": "官富场",
+      "size": 20,
+      "layout_id": "54801f2b3c15cdd5",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 55,
+      "name": "香山海澳",
+      "size": 20,
+      "layout_id": "60f085183f2c9e3c",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 56,
+      "name": "高昌城",
+      "size": 30,
+      "layout_id": "dda83dc96807122d",
+      "settlements": 4,
+      "distinct_assets": 9,
+      "complex_fraction": 0.1467
+    },
+    {
+      "place": 57,
+      "name": "虎思斡耳朵",
+      "size": 30,
+      "layout_id": "67d78ac9baaadf86",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.0711
+    },
+    {
+      "place": 58,
+      "name": "越州",
+      "size": 30,
+      "layout_id": "7ea8ef05bc6e399f",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.1111
+    },
+    {
+      "place": 59,
+      "name": "明州",
+      "size": 20,
+      "layout_id": "7dd0cfd0498e60b4",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.05
+    },
+    {
+      "place": 60,
+      "name": "温州",
+      "size": 20,
+      "layout_id": "0e8066adff564175",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 61,
+      "name": "泉州",
+      "size": 30,
+      "layout_id": "486b1d40c89b23d9",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.1067
+    },
+    {
+      "place": 62,
+      "name": "建宁府",
+      "size": 20,
+      "layout_id": "29a4da905bdae7ba",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.17
+    },
+    {
+      "place": 63,
+      "name": "隆兴府",
+      "size": 30,
+      "layout_id": "58731cb27775c0c2",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.1289
+    },
+    {
+      "place": 64,
+      "name": "赣州",
+      "size": 20,
+      "layout_id": "14f64d9bc48ac4cd",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.12
+    },
+    {
+      "place": 65,
+      "name": "饶州",
+      "size": 20,
+      "layout_id": "5729f1fc3deaf671",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 66,
+      "name": "徽州",
+      "size": 20,
+      "layout_id": "d6fbc5b13b5c2325",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 67,
+      "name": "扬州",
+      "size": 30,
+      "layout_id": "85e02eb38adeb1bd",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.1378
+    },
+    {
+      "place": 68,
+      "name": "楚州",
+      "size": 20,
+      "layout_id": "c4e8650b73ff80d0",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 69,
+      "name": "寿春府",
+      "size": 20,
+      "layout_id": "8112356fd4253330",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 70,
+      "name": "鄂州",
+      "size": 30,
+      "layout_id": "988ee7890ff93040",
+      "settlements": 4,
+      "distinct_assets": 15,
+      "complex_fraction": 0.1378
+    },
+    {
+      "place": 71,
+      "name": "岳州",
+      "size": 20,
+      "layout_id": "62ffe5307a9f7444",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 72,
+      "name": "潼川府",
+      "size": 20,
+      "layout_id": "b94d6102f7925e2a",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 73,
+      "name": "遂宁府",
+      "size": 20,
+      "layout_id": "3ee5688235428609",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 74,
+      "name": "利州",
+      "size": 20,
+      "layout_id": "6ebb76dd8b23f17b",
+      "settlements": 4,
+      "distinct_assets": 9,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 75,
+      "name": "兴元府",
+      "size": 20,
+      "layout_id": "fa823657b5471d89",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 76,
+      "name": "夔州",
+      "size": 20,
+      "layout_id": "74cdbc5c481810d9",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.18
+    },
+    {
+      "place": 77,
+      "name": "潮州",
+      "size": 20,
+      "layout_id": "a9b055d3eb665244",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 78,
+      "name": "邕州",
+      "size": 20,
+      "layout_id": "4cf7437f89ba502f",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.12
+    },
+    {
+      "place": 79,
+      "name": "雷州",
+      "size": 20,
+      "layout_id": "28177b940f99ab1b",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 80,
+      "name": "儋州",
+      "size": 20,
+      "layout_id": "38f9661c8be0c10b",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.12
+    },
+    {
+      "place": 81,
+      "name": "大同府",
+      "size": 30,
+      "layout_id": "9e6c4727f99443fc",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.1644
+    },
+    {
+      "place": 82,
+      "name": "平阳府",
+      "size": 20,
+      "layout_id": "18dfaf2ebed5cb2c",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.12
+    },
+    {
+      "place": 83,
+      "name": "潞州",
+      "size": 20,
+      "layout_id": "43cc55e9516e8fa5",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 84,
+      "name": "平定州",
+      "size": 20,
+      "layout_id": "5e8dbe4df007d933",
+      "settlements": 4,
+      "distinct_assets": 9,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 85,
+      "name": "真定府",
+      "size": 30,
+      "layout_id": "9fbec919450b2952",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.1289
+    },
+    {
+      "place": 86,
+      "name": "邢州",
+      "size": 20,
+      "layout_id": "50adb3f8a7269ba3",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.17
+    },
+    {
+      "place": 87,
+      "name": "河间府",
+      "size": 20,
+      "layout_id": "60824fe2f4974d0e",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.08
+    },
+    {
+      "place": 88,
+      "name": "大兴府近郊",
+      "size": 20,
+      "layout_id": "4d823ac68d6ab249",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 89,
+      "name": "益都府",
+      "size": 20,
+      "layout_id": "d443987266789b6c",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 90,
+      "name": "登州",
+      "size": 20,
+      "layout_id": "d73794ed947a7b12",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.12
+    },
+    {
+      "place": 91,
+      "name": "东平府",
+      "size": 20,
+      "layout_id": "8ebaf37fc0bb042f",
+      "settlements": 4,
+      "distinct_assets": 9,
+      "complex_fraction": 0.1
+    },
+    {
+      "place": 92,
+      "name": "归德府",
+      "size": 20,
+      "layout_id": "868bbe8abd0349b5",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 93,
+      "name": "凤翔府",
+      "size": 20,
+      "layout_id": "d972e14f005b1abd",
+      "settlements": 4,
+      "distinct_assets": 9,
+      "complex_fraction": 0.11
+    },
+    {
+      "place": 94,
+      "name": "秦州",
+      "size": 20,
+      "layout_id": "d2114170fe956e87",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 95,
+      "name": "巩州",
+      "size": 20,
+      "layout_id": "663dbfd4250cc30f",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 96,
+      "name": "锦州",
+      "size": 20,
+      "layout_id": "75d5dc2a487b7330",
+      "settlements": 4,
+      "distinct_assets": 8,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 97,
+      "name": "大定府",
+      "size": 20,
+      "layout_id": "8a6225e9f2012db5",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.11
+    },
+    {
+      "place": 98,
+      "name": "辽阳府",
+      "size": 20,
+      "layout_id": "cee0abeb7eba5895",
+      "settlements": 4,
+      "distinct_assets": 9,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 99,
+      "name": "肇州",
+      "size": 20,
+      "layout_id": "ef3523bad324f4ee",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 100,
+      "name": "斡难河营地",
+      "size": 20,
+      "layout_id": "e80e4512c9cd47a6",
+      "settlements": 4,
+      "distinct_assets": 8,
+      "complex_fraction": 0.03
+    },
+    {
+      "place": 101,
+      "name": "土兀剌河营地",
+      "size": 20,
+      "layout_id": "bd2155b9212d4087",
+      "settlements": 4,
+      "distinct_assets": 8,
+      "complex_fraction": 0.07
+    },
+    {
+      "place": 102,
+      "name": "鄂尔浑河营地",
+      "size": 20,
+      "layout_id": "8ed132fe842a9368",
+      "settlements": 4,
+      "distinct_assets": 8,
+      "complex_fraction": 0.08
+    },
+    {
+      "place": 103,
+      "name": "杭爱牧集",
+      "size": 20,
+      "layout_id": "7c3f51426bfb227a",
+      "settlements": 4,
+      "distinct_assets": 8,
+      "complex_fraction": 0.05
+    },
+    {
+      "place": 104,
+      "name": "阿尔泰牧集",
+      "size": 20,
+      "layout_id": "3b9f53f6908195f8",
+      "settlements": 4,
+      "distinct_assets": 8,
+      "complex_fraction": 0.05
+    },
+    {
+      "place": 105,
+      "name": "灵州",
+      "size": 20,
+      "layout_id": "81c6971e14105ae0",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.11
+    },
+    {
+      "place": 106,
+      "name": "凉州",
+      "size": 20,
+      "layout_id": "3f9c27008cd7df9c",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.11
+    },
+    {
+      "place": 107,
+      "name": "甘州",
+      "size": 20,
+      "layout_id": "d053241a475dbcb9",
+      "settlements": 4,
+      "distinct_assets": 9,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 108,
+      "name": "肃州",
+      "size": 20,
+      "layout_id": "40518e27966650df",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.11
+    },
+    {
+      "place": 109,
+      "name": "瓜州",
+      "size": 20,
+      "layout_id": "c9788916303e8c61",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 110,
+      "name": "和阗",
+      "size": 20,
+      "layout_id": "3f2eabc07648f4e7",
+      "settlements": 4,
+      "distinct_assets": 9,
+      "complex_fraction": 0.1
+    },
+    {
+      "place": 111,
+      "name": "莎车",
+      "size": 20,
+      "layout_id": "a65267a2cdcbfb2d",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 112,
+      "name": "阿克苏",
+      "size": 20,
+      "layout_id": "313419a95587229a",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.12
+    },
+    {
+      "place": 113,
+      "name": "伊丽河渡",
+      "size": 20,
+      "layout_id": "ebf80e34ac1ef4b2",
+      "settlements": 4,
+      "distinct_assets": 9,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 114,
+      "name": "江孜",
+      "size": 20,
+      "layout_id": "d2fbf6ecb185bab3",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.1
+    },
+    {
+      "place": 115,
+      "name": "当雄牧集",
+      "size": 20,
+      "layout_id": "19807120b7948dc4",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 116,
+      "name": "昌都",
+      "size": 20,
+      "layout_id": "991d62ca0ebef0a4",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.2
+    },
+    {
+      "place": 117,
+      "name": "理塘",
+      "size": 20,
+      "layout_id": "481c49538afaf902",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.17
+    },
+    {
+      "place": 118,
+      "name": "纳里牧集",
+      "size": 20,
+      "layout_id": "343851d83bd899e8",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.17
+    },
+    {
+      "place": 119,
+      "name": "永昌府",
+      "size": 20,
+      "layout_id": "5012ec365d651f9d",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 120,
+      "name": "威楚府",
+      "size": 20,
+      "layout_id": "82b4dc3b1a65d45e",
+      "settlements": 4,
+      "distinct_assets": 9,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 121,
+      "name": "通海郡",
+      "size": 20,
+      "layout_id": "611c831196680e29",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 122,
+      "name": "善巨郡",
+      "size": 20,
+      "layout_id": "4906fc4fe1fa3dbe",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 123,
+      "name": "哈密力",
+      "size": 20,
+      "layout_id": "9134b8c15863adce",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 124,
+      "name": "焉耆",
+      "size": 20,
+      "layout_id": "4ff1ce2ead817d16",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 125,
+      "name": "轮台驿",
+      "size": 20,
+      "layout_id": "5fe0c8bde71e275e",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 126,
+      "name": "海北聚落",
+      "size": 20,
+      "layout_id": "3cd1e589fde40159",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 127,
+      "name": "海中聚落",
+      "size": 20,
+      "layout_id": "7efe62151b78c790",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.12
+    },
+    {
+      "place": 128,
+      "name": "海南聚落",
+      "size": 20,
+      "layout_id": "b03d2ed32849c759",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 129,
+      "name": "松林营地",
+      "size": 20,
+      "layout_id": "e80411d832682ddf",
+      "settlements": 4,
+      "distinct_assets": 8,
+      "complex_fraction": 0.07
+    },
+    {
+      "place": 130,
+      "name": "乌苏里营地",
+      "size": 20,
+      "layout_id": "0bd5ad6f66e97a3e",
+      "settlements": 4,
+      "distinct_assets": 8,
+      "complex_fraction": 0.11
+    },
+    {
+      "place": 131,
+      "name": "下江渔集",
+      "size": 20,
+      "layout_id": "55892961cbc51a45",
+      "settlements": 4,
+      "distinct_assets": 8,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 132,
+      "name": "北山营地",
+      "size": 20,
+      "layout_id": "b68cb0348d77660f",
+      "settlements": 4,
+      "distinct_assets": 8,
+      "complex_fraction": 0.12
+    },
+    {
+      "place": 133,
+      "name": "开京",
+      "size": 30,
+      "layout_id": "f325657fff49162b",
+      "settlements": 4,
+      "distinct_assets": 16,
+      "complex_fraction": 0.1378
+    },
+    {
+      "place": 134,
+      "name": "西京平壤",
+      "size": 20,
+      "layout_id": "1878d3556e8ad67b",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 135,
+      "name": "义州",
+      "size": 20,
+      "layout_id": "19cc5c911eb55a22",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.11
+    },
+    {
+      "place": 136,
+      "name": "南京汉阳",
+      "size": 20,
+      "layout_id": "a149d4bc9a9bfc46",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.11
+    },
+    {
+      "place": 137,
+      "name": "忠州",
+      "size": 20,
+      "layout_id": "0700d8cc6c908f2e",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 138,
+      "name": "全州",
+      "size": 20,
+      "layout_id": "b8a62b8ce341daa2",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 139,
+      "name": "罗州",
+      "size": 20,
+      "layout_id": "2d16cbb9092af41e",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 140,
+      "name": "东京庆州",
+      "size": 20,
+      "layout_id": "8069207146410c8d",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.18
+    },
+    {
+      "place": 141,
+      "name": "金州",
+      "size": 20,
+      "layout_id": "56f4b05eb94b13db",
+      "settlements": 4,
+      "distinct_assets": 14,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 142,
+      "name": "溟州",
+      "size": 20,
+      "layout_id": "f0031f6189bd83b1",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 143,
+      "name": "登州海津",
+      "size": 20,
+      "layout_id": "8a7e0eb131ff8822",
+      "settlements": 4,
+      "distinct_assets": 11,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 144,
+      "name": "耽罗",
+      "size": 20,
+      "layout_id": "1190f2bb8db9b846",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.12
+    },
+    {
+      "place": 145,
+      "name": "镰仓",
+      "size": 30,
+      "layout_id": "69de19b50c2e2beb",
+      "settlements": 4,
+      "distinct_assets": 17,
+      "complex_fraction": 0.1378
+    },
+    {
+      "place": 146,
+      "name": "平安京",
+      "size": 30,
+      "layout_id": "dea5463cb38bac03",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.1022
+    },
+    {
+      "place": 147,
+      "name": "奈良",
+      "size": 20,
+      "layout_id": "ea71d898e51eaecd",
+      "settlements": 4,
+      "distinct_assets": 9,
+      "complex_fraction": 0.09
+    },
+    {
+      "place": 148,
+      "name": "难波津",
+      "size": 20,
+      "layout_id": "67edede71aadf651",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 149,
+      "name": "博多津",
+      "size": 30,
+      "layout_id": "35b17502769f7087",
+      "settlements": 4,
+      "distinct_assets": 15,
+      "complex_fraction": 0.1467
+    },
+    {
+      "place": 150,
+      "name": "大宰府",
+      "size": 20,
+      "layout_id": "3fb6030c0caa9ca4",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.17
+    },
+    {
+      "place": 151,
+      "name": "府内",
+      "size": 20,
+      "layout_id": "bf36bfe2c4429e92",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 152,
+      "name": "肥后国府",
+      "size": 20,
+      "layout_id": "f3ec8f9930db91cd",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.18
+    },
+    {
+      "place": 153,
+      "name": "萨摩国府",
+      "size": 20,
+      "layout_id": "62de1919fa2dc1f7",
+      "settlements": 4,
+      "distinct_assets": 9,
+      "complex_fraction": 0.11
+    },
+    {
+      "place": 154,
+      "name": "对马府中",
+      "size": 20,
+      "layout_id": "592be2c40561cb95",
+      "settlements": 4,
+      "distinct_assets": 12,
+      "complex_fraction": 0.11
+    },
+    {
+      "place": 155,
+      "name": "长门府中",
+      "size": 20,
+      "layout_id": "3a93ec207cf39c36",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 156,
+      "name": "备前国府",
+      "size": 20,
+      "layout_id": "da757b5c95e5bc1f",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.15
+    },
+    {
+      "place": 157,
+      "name": "出云国府",
+      "size": 20,
+      "layout_id": "852b7230e0a444d7",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.1
+    },
+    {
+      "place": 158,
+      "name": "阿波国府",
+      "size": 20,
+      "layout_id": "1cbf4968689cd857",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 159,
+      "name": "伊予国府",
+      "size": 20,
+      "layout_id": "759c65a006e707f8",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 160,
+      "name": "尾张国府",
+      "size": 20,
+      "layout_id": "d2d2ee76c735c7dc",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.14
+    },
+    {
+      "place": 161,
+      "name": "骏府",
+      "size": 20,
+      "layout_id": "0e5629408e8ffc6a",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 162,
+      "name": "越前国府",
+      "size": 20,
+      "layout_id": "f16bc547dabcb763",
+      "settlements": 4,
+      "distinct_assets": 9,
+      "complex_fraction": 0.12
+    },
+    {
+      "place": 163,
+      "name": "越后国府",
+      "size": 20,
+      "layout_id": "1fb5e0929291af93",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.09
+    },
+    {
+      "place": 164,
+      "name": "松本",
+      "size": 20,
+      "layout_id": "e77a43bc377a296e",
+      "settlements": 4,
+      "distinct_assets": 13,
+      "complex_fraction": 0.16
+    },
+    {
+      "place": 165,
+      "name": "宇都宫",
+      "size": 20,
+      "layout_id": "b72f2df6f0c57b0e",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 166,
+      "name": "多贺城",
+      "size": 20,
+      "layout_id": "2ee8cbfa15eaaa82",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.13
+    },
+    {
+      "place": 167,
+      "name": "平泉",
+      "size": 20,
+      "layout_id": "dc69e32aedb0da07",
+      "settlements": 4,
+      "distinct_assets": 10,
+      "complex_fraction": 0.15
+    }
+  ],
+  "native_checks": 476,
+  "native_passed": true,
+  "native_report": "validation/living-palette-native.json",
+  "backend_synchronized": true,
+  "build": "unity/Build/LivingPalette/江湖未央.exe",
+  "rules_tests": {
+    "count": 47,
+    "passed": true
+  }
+}

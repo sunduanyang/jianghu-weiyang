@@ -1,0 +1,2603 @@
+{
+  "map_version": 3,
+  "terrain_pack": "terrain-biomes-v3-20261026",
+  "settlement_pack": "settlement-tiles-1-4-9-20261026",
+  "total_places": 168,
+  "active_regions": 49,
+  "sizes": {
+    "10": 41,
+    "30": 34,
+    "20": 93
+  },
+  "settlement_footprints": {
+    "1": 1444,
+    "2": 643,
+    "3": 34
+  },
+  "source_assets_verified": true,
+  "legacy_v2_layout_fingerprints_preserved": 168,
+  "layout_seed": 42,
+  "seed_rules": "Independent seeded geography, irregular street tree and coherent terrain patches; stable on reload.",
+  "elevation_rules": "Water level 0; walkable neighbours differ by at most 1; every terrain and settlement lot is horizontal.",
+  "cities": [
+    {
+      "place": 0,
+      "name": "青溪镇",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "3fdf6a959988acc9",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 5
+      }
+    },
+    {
+      "place": 1,
+      "name": "栖云山",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "ff73906a94cde192",
+      "elevations": [
+        3,
+        9
+      ],
+      "lots": {
+        "1": 10,
+        "2": 3
+      }
+    },
+    {
+      "place": 2,
+      "name": "抚州",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "ba105bd771b8a558",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "3": 1,
+        "2": 4
+      }
+    },
+    {
+      "place": 3,
+      "name": "桃花渡",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "a72e48380fa260a6",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 10,
+        "2": 3
+      }
+    },
+    {
+      "place": 4,
+      "name": "寒石寨",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "1546a11e63acd131",
+      "elevations": [
+        2,
+        7
+      ],
+      "lots": {
+        "1": 9,
+        "2": 3
+      }
+    },
+    {
+      "place": 5,
+      "name": "江陵府",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "e73efa75e2ff64d4",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "3": 1,
+        "2": 3
+      }
+    },
+    {
+      "place": 6,
+      "name": "襄阳府",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "57fba700aed747e0",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "3": 1,
+        "2": 4
+      }
+    },
+    {
+      "place": 7,
+      "name": "武当山",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "50d2e7db11bac463",
+      "elevations": [
+        3,
+        8
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 8,
+      "name": "潭州",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "0b2f3ebf3a03573a",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "3": 1,
+        "2": 3
+      }
+    },
+    {
+      "place": 9,
+      "name": "衡山",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "c179fb6c48695779",
+      "elevations": [
+        2,
+        8
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 10,
+      "name": "庐州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "ab57a7dcb8c345a4",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 11,
+      "name": "河南府",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "c253528bb25dd236",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 3,
+        "3": 1
+      }
+    },
+    {
+      "place": 12,
+      "name": "嵩山",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "70c606ec3577f9e9",
+      "elevations": [
+        2,
+        9
+      ],
+      "lots": {
+        "1": 11,
+        "2": 2
+      }
+    },
+    {
+      "place": 13,
+      "name": "南京开封府",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "aa5ce05133335c0f",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "3": 1,
+        "2": 4
+      }
+    },
+    {
+      "place": 14,
+      "name": "中都",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "374e9dc814a7d6c5",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "3": 1,
+        "2": 5
+      }
+    },
+    {
+      "place": 15,
+      "name": "直沽",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "0dc2f6f6756f4e1c",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 16,
+      "name": "太原府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "574e391bc40630bf",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 17,
+      "name": "济南府",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "fdbb4edaa3ae6265",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "3": 1,
+        "2": 3
+      }
+    },
+    {
+      "place": 18,
+      "name": "泰山",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "98a1f6cfa13f7ecc",
+      "elevations": [
+        2,
+        9
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 19,
+      "name": "沈州",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "a70f1a0b0e8c37e4",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "3": 1,
+        "2": 3
+      }
+    },
+    {
+      "place": 20,
+      "name": "长白山",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "c19a79dd16db2f81",
+      "elevations": [
+        2,
+        9
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 21,
+      "name": "上京会宁府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "da946da5f00d3072",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 22,
+      "name": "黑水营地",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "e61b4dd86eecbc43",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 23,
+      "name": "丰州",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "f0cbbe5600d95844",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "3": 1,
+        "2": 3
+      }
+    },
+    {
+      "place": 24,
+      "name": "克鲁伦河营地",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "d65da16fe5c8535a",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 5
+      }
+    },
+    {
+      "place": 25,
+      "name": "兴庆府",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "54cf4a952f8ff88c",
+      "elevations": [
+        0,
+        9
+      ],
+      "lots": {
+        "1": 8,
+        "3": 1,
+        "2": 4
+      }
+    },
+    {
+      "place": 26,
+      "name": "京兆府",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "a3c8f653c9813e69",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "3": 1,
+        "2": 3
+      }
+    },
+    {
+      "place": 27,
+      "name": "华山",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "a36812a9221f7d11",
+      "elevations": [
+        2,
+        9
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 28,
+      "name": "兰州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "e4706da395bb560d",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 29,
+      "name": "沙州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "1987d5c9ac4a7e85",
+      "elevations": [
+        0,
+        8
+      ],
+      "lots": {
+        "1": 9,
+        "2": 5
+      }
+    },
+    {
+      "place": 30,
+      "name": "别失八里",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "ed4317c72093a9d9",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "3": 1,
+        "2": 3
+      }
+    },
+    {
+      "place": 31,
+      "name": "疏勒",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "2acc6ad9cdd87196",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 5
+      }
+    },
+    {
+      "place": 32,
+      "name": "阿力麻里",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "fb3ae4d60d74a20c",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 33,
+      "name": "天山",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "5dbadcb56465c1f7",
+      "elevations": [
+        2,
+        7
+      ],
+      "lots": {
+        "1": 10,
+        "2": 3
+      }
+    },
+    {
+      "place": 34,
+      "name": "逻些",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "39627ec2d134600c",
+      "elevations": [
+        0,
+        8
+      ],
+      "lots": {
+        "1": 8,
+        "3": 1,
+        "2": 5
+      }
+    },
+    {
+      "place": 35,
+      "name": "日喀则",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "54a8fd93991dc016",
+      "elevations": [
+        2,
+        9
+      ],
+      "lots": {
+        "1": 12
+      }
+    },
+    {
+      "place": 36,
+      "name": "西宁州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "7e8d37903c4cda60",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 37,
+      "name": "昆仑山",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "46f98688f8c94150",
+      "elevations": [
+        2,
+        9
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 38,
+      "name": "成都府",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "4f9e98f0d45e657e",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "3": 1,
+        "2": 4
+      }
+    },
+    {
+      "place": 39,
+      "name": "重庆府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "77dc8393a01ca41c",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 40,
+      "name": "峨眉山",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "a9e32adf47dfcc26",
+      "elevations": [
+        3,
+        8
+      ],
+      "lots": {
+        "1": 12,
+        "2": 1
+      }
+    },
+    {
+      "place": 41,
+      "name": "青城山",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "4db98e6805a5719d",
+      "elevations": [
+        2,
+        9
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 42,
+      "name": "大理城",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "bf0ff146cc605f8f",
+      "elevations": [
+        0,
+        9
+      ],
+      "lots": {
+        "1": 9,
+        "3": 1,
+        "2": 5
+      }
+    },
+    {
+      "place": 43,
+      "name": "鄯阐府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "37c083412acddd6c",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 44,
+      "name": "矩州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "100f4a31f3b65be0",
+      "elevations": [
+        0,
+        5
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 45,
+      "name": "临安府",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "6d49166f95dbf9ab",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "3": 1,
+        "2": 4
+      }
+    },
+    {
+      "place": 46,
+      "name": "建康府",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "e7a97f74c65cf3c4",
+      "elevations": [
+        0,
+        8
+      ],
+      "lots": {
+        "1": 9,
+        "3": 1,
+        "2": 3
+      }
+    },
+    {
+      "place": 47,
+      "name": "平江府",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "f480526b74cc73a3",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4,
+        "3": 1
+      }
+    },
+    {
+      "place": 48,
+      "name": "华亭县",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "7883e4f12445645b",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 49,
+      "name": "福州",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "65531e1c54ae5398",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "3": 1,
+        "2": 3
+      }
+    },
+    {
+      "place": 50,
+      "name": "海东聚落",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "c7774af6835e6dcc",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 5
+      }
+    },
+    {
+      "place": 51,
+      "name": "广州",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "4e9c17e41be73c25",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4,
+        "3": 1
+      }
+    },
+    {
+      "place": 52,
+      "name": "静江府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "47e66821c46b6ca0",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 53,
+      "name": "琼州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "d968e27dfab873e8",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 5
+      }
+    },
+    {
+      "place": 54,
+      "name": "官富场",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "2b66a60488251a27",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 55,
+      "name": "香山海澳",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "a245a1b0b85e633b",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 56,
+      "name": "高昌城",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "75bdfbbfd9619bd6",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "3": 1,
+        "2": 4
+      }
+    },
+    {
+      "place": 57,
+      "name": "虎思斡耳朵",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "dfe4f996d9876980",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "3": 1,
+        "2": 4
+      }
+    },
+    {
+      "place": 58,
+      "name": "越州",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "313c96c7656b97c0",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "3": 1,
+        "2": 3
+      }
+    },
+    {
+      "place": 59,
+      "name": "明州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "c7e1d53dff58a606",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 60,
+      "name": "温州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "537c7b77e9071cd3",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 61,
+      "name": "泉州",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "b1f74a8f171f5527",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 3,
+        "3": 1
+      }
+    },
+    {
+      "place": 62,
+      "name": "建宁府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "9323b7ca75c501ad",
+      "elevations": [
+        0,
+        5
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 63,
+      "name": "隆兴府",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "1c6e04735098d314",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "3": 1,
+        "2": 3
+      }
+    },
+    {
+      "place": 64,
+      "name": "赣州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "f53f4ac4fcad90e4",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 65,
+      "name": "饶州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "fd39943f096efb52",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 10,
+        "2": 3
+      }
+    },
+    {
+      "place": 66,
+      "name": "徽州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "9a8a471d9ed198de",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 67,
+      "name": "扬州",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "2e5c163d5e8a7216",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "3": 1,
+        "2": 3
+      }
+    },
+    {
+      "place": 68,
+      "name": "楚州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "7aacf0a7f5f35c4f",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 69,
+      "name": "寿春府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "dad6f784b045f273",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 70,
+      "name": "鄂州",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "b382f644fb5d5d09",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "3": 1,
+        "2": 3
+      }
+    },
+    {
+      "place": 71,
+      "name": "岳州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "6eacf6bdd6825eb6",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 10,
+        "2": 3
+      }
+    },
+    {
+      "place": 72,
+      "name": "潼川府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "392b334c6755623e",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 10,
+        "2": 3
+      }
+    },
+    {
+      "place": 73,
+      "name": "遂宁府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "4678b2ee9fcbdd65",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 74,
+      "name": "利州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "c017aa0dc6c7f0e3",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 75,
+      "name": "兴元府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "e06c52c9bf8634d6",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 76,
+      "name": "夔州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "a6fe0c10d6c3fe9b",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 77,
+      "name": "潮州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "ae6aa50e8aaf508c",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 78,
+      "name": "邕州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "900da3dc6699e128",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 79,
+      "name": "雷州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "053f959d3fb7ad5f",
+      "elevations": [
+        0,
+        5
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 80,
+      "name": "儋州",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "baadca0a69788a47",
+      "elevations": [
+        0,
+        5
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 81,
+      "name": "大同府",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "2c384d54a078946d",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "3": 1,
+        "2": 3
+      }
+    },
+    {
+      "place": 82,
+      "name": "平阳府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "c8ca01a7b988e9c9",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 83,
+      "name": "潞州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "0de56edd6974066d",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 84,
+      "name": "平定州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "fe218b9b03fd4d05",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 85,
+      "name": "真定府",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "c28b5093809c4879",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "3": 1,
+        "2": 3
+      }
+    },
+    {
+      "place": 86,
+      "name": "邢州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "35f99ee0b1def2f7",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 87,
+      "name": "河间府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "b9459d5f21b9fbfd",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 88,
+      "name": "大兴府近郊",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "eae4fbb19498f49e",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 89,
+      "name": "益都府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "447aea0c0cf3e576",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 90,
+      "name": "登州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "e14a95bdaf1192a1",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 91,
+      "name": "东平府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "056427e46f49ce83",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 92,
+      "name": "归德府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "a9ec5a9b0c77366f",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 93,
+      "name": "凤翔府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "1a627299514ec976",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 94,
+      "name": "秦州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "531231ca40c8f285",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 95,
+      "name": "巩州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "7e1a994ac7bce059",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 96,
+      "name": "锦州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "034c8079f9cf2552",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 97,
+      "name": "大定府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "8d3779a857ea8e4e",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 98,
+      "name": "辽阳府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "2e089ca802ce1663",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 99,
+      "name": "肇州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "aef49e68df800050",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 100,
+      "name": "斡难河营地",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "180dbea28f50c723",
+      "elevations": [
+        2,
+        5
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 101,
+      "name": "土兀剌河营地",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "a6025603c18847af",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 102,
+      "name": "鄂尔浑河营地",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "f5cac12082130e44",
+      "elevations": [
+        2,
+        5
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 103,
+      "name": "杭爱牧集",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "87a14f6e95dfee7c",
+      "elevations": [
+        2,
+        5
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 104,
+      "name": "阿尔泰牧集",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "c35dd6d44a8b5fe1",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 105,
+      "name": "灵州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "a41fe81bbd27b719",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 106,
+      "name": "凉州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "e7895eadfc17272d",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 107,
+      "name": "甘州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "526762910ea89989",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 108,
+      "name": "肃州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "ef6ed129dde3f72e",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 109,
+      "name": "瓜州",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "1aaea7a6448faa81",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 110,
+      "name": "和阗",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "486442d0fa572c69",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 111,
+      "name": "莎车",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "8aa5db5a0d86df73",
+      "elevations": [
+        0,
+        5
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 112,
+      "name": "阿克苏",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "02cdf3d80ca59dc6",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 113,
+      "name": "伊丽河渡",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "e6814658b9f7f685",
+      "elevations": [
+        0,
+        5
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 114,
+      "name": "江孜",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "0b714e84b036e4e9",
+      "elevations": [
+        2,
+        8
+      ],
+      "lots": {
+        "1": 10,
+        "2": 2
+      }
+    },
+    {
+      "place": 115,
+      "name": "当雄牧集",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "0f9d915889a2d5e5",
+      "elevations": [
+        2,
+        9
+      ],
+      "lots": {
+        "1": 9,
+        "2": 3
+      }
+    },
+    {
+      "place": 116,
+      "name": "昌都",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "98fde926c506209c",
+      "elevations": [
+        3,
+        8
+      ],
+      "lots": {
+        "1": 9,
+        "2": 3
+      }
+    },
+    {
+      "place": 117,
+      "name": "理塘",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "81cbbff1d38d9cd8",
+      "elevations": [
+        2,
+        9
+      ],
+      "lots": {
+        "1": 10,
+        "2": 2
+      }
+    },
+    {
+      "place": 118,
+      "name": "纳里牧集",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "15011a7bce69e766",
+      "elevations": [
+        2,
+        9
+      ],
+      "lots": {
+        "1": 9,
+        "2": 3
+      }
+    },
+    {
+      "place": 119,
+      "name": "永昌府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "4bfbf7756f76f4f2",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 120,
+      "name": "威楚府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "f5605fab1c1621b3",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 121,
+      "name": "通海郡",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "a7614223c50a5678",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 122,
+      "name": "善巨郡",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "613763ac3b65d37d",
+      "elevations": [
+        2,
+        5
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 123,
+      "name": "哈密力",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "d7b307833eec2d5d",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 124,
+      "name": "焉耆",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "effdc661192a5a69",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 125,
+      "name": "轮台驿",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "95e9a6a861183bc5",
+      "elevations": [
+        0,
+        5
+      ],
+      "lots": {
+        "1": 9,
+        "2": 3
+      }
+    },
+    {
+      "place": 126,
+      "name": "海北聚落",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "2c299af3208d6f7e",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 127,
+      "name": "海中聚落",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "c65f99d692d8263d",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 10,
+        "2": 3
+      }
+    },
+    {
+      "place": 128,
+      "name": "海南聚落",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "34a6b79933b2c3fc",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 129,
+      "name": "松林营地",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "ca0460ae9d727ca2",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 130,
+      "name": "乌苏里营地",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "71bce22ee02613a4",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 131,
+      "name": "下江渔集",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "827d7af7129785c9",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 132,
+      "name": "北山营地",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "d787ba65d9c7c482",
+      "elevations": [
+        2,
+        5
+      ],
+      "lots": {
+        "1": 9,
+        "2": 3
+      }
+    },
+    {
+      "place": 133,
+      "name": "开京",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "d1b9316e2711ac46",
+      "elevations": [
+        0,
+        9
+      ],
+      "lots": {
+        "1": 9,
+        "3": 1,
+        "2": 6
+      }
+    },
+    {
+      "place": 134,
+      "name": "西京平壤",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "ab77769766c63502",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 5
+      }
+    },
+    {
+      "place": 135,
+      "name": "义州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "4c3a1f375a118537",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 136,
+      "name": "南京汉阳",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "425d3f4e5755c322",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 137,
+      "name": "忠州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "71c6f93b752120fd",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 138,
+      "name": "全州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "ea921ccdaa57b009",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 139,
+      "name": "罗州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "2c2b46395a096374",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 140,
+      "name": "东京庆州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "2bd413d4d3c25eb5",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 5
+      }
+    },
+    {
+      "place": 141,
+      "name": "金州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "efeaf0782298a076",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 142,
+      "name": "溟州",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "e2dde14b9eca3a89",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 143,
+      "name": "登州海津",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "e6d017388317c5c2",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 144,
+      "name": "耽罗",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "f01e7eb48fe430ca",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 145,
+      "name": "镰仓",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "ed39a424e04413d6",
+      "elevations": [
+        0,
+        9
+      ],
+      "lots": {
+        "1": 9,
+        "3": 1,
+        "2": 4
+      }
+    },
+    {
+      "place": 146,
+      "name": "平安京",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "e9cc73442630cd7f",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "3": 1,
+        "2": 5
+      }
+    },
+    {
+      "place": 147,
+      "name": "奈良",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "6703687a575f806b",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 5
+      }
+    },
+    {
+      "place": 148,
+      "name": "难波津",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "889526ba02b3c9b3",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 149,
+      "name": "博多津",
+      "size": 30,
+      "tier": "large",
+      "layout_id": "9d97dddfd6635742",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4,
+        "3": 1
+      }
+    },
+    {
+      "place": 150,
+      "name": "大宰府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "c75601d46ecad81e",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 151,
+      "name": "府内",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "261e133779b53d28",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 152,
+      "name": "肥后国府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "98f2af2006e21836",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 153,
+      "name": "萨摩国府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "f3b60e8f52b4af2d",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 154,
+      "name": "对马府中",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "43efe11b358831aa",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 5
+      }
+    },
+    {
+      "place": 155,
+      "name": "长门府中",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "eb0655437bdb5272",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 156,
+      "name": "备前国府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "7d0ba7fe02b746c9",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 157,
+      "name": "出云国府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "bf8f4215d51ec1a9",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 158,
+      "name": "阿波国府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "f9275f6d512d0aba",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 159,
+      "name": "伊予国府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "fa208af4c4ff07b8",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 160,
+      "name": "尾张国府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "f4008e8e09e62722",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 161,
+      "name": "骏府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "23fe4ba01f994f76",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 162,
+      "name": "越前国府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "5c006c87aa3f260b",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 163,
+      "name": "越后国府",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "53c3966babf109cc",
+      "elevations": [
+        0,
+        6
+      ],
+      "lots": {
+        "1": 9,
+        "2": 4
+      }
+    },
+    {
+      "place": 164,
+      "name": "松本",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "f481e937eaaf05b9",
+      "elevations": [
+        2,
+        9
+      ],
+      "lots": {
+        "1": 10,
+        "2": 2
+      }
+    },
+    {
+      "place": 165,
+      "name": "宇都宫",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "bffa7b721b810779",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 166,
+      "name": "多贺城",
+      "size": 20,
+      "tier": "medium",
+      "layout_id": "f8f080d45ebd86a4",
+      "elevations": [
+        2,
+        6
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    },
+    {
+      "place": 167,
+      "name": "平泉",
+      "size": 10,
+      "tier": "small",
+      "layout_id": "7f9b1025c2ae8d27",
+      "elevations": [
+        2,
+        5
+      ],
+      "lots": {
+        "1": 8,
+        "2": 4
+      }
+    }
+  ],
+  "checks": {
+    "related_suite": {
+      "tests": 38,
+      "passed": true,
+      "log": "output/living-regions-rules.log"
+    },
+    "final_elevation_and_protagonist_suite": {
+      "tests": 16,
+      "passed": true,
+      "log": "output/living-regions-final-rules.log"
+    },
+    "native": {
+      "checks": 303,
+      "passed": true,
+      "report": "validation/living-regions-native.json"
+    },
+    "web_frontend_absent": true,
+    "final_backend_synchronized": true
+  },
+  "build": "unity/Build/LivingRegions/江湖未央.exe",
+  "screenshots": [
+    "validation/screenshots/living-regions-default.png",
+    "validation/screenshots/living-regions-nine-cell.png",
+    "validation/screenshots/living-regions-small.png",
+    "validation/screenshots/living-regions-medium.png"
+  ]
+}

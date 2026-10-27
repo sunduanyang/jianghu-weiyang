@@ -1,0 +1,2204 @@
+{
+  "version": 1,
+  "basis": "Final assembled illustration; all landmarks share one source-pixel coordinate system.",
+  "characters": {
+    "m-youth-farmer": {
+      "source_rect": [
+        46,
+        91,
+        411,
+        990
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          189.8,
+          170.81
+        ],
+        "hip": [
+          208.05,
+          350.61
+        ],
+        "shoulderNear": [
+          146.0,
+          202.275
+        ],
+        "elbowNear": [
+          105.85,
+          323.64
+        ],
+        "wristNear": [
+          116.8,
+          458.49
+        ],
+        "shoulderFar": [
+          215.35,
+          211.265
+        ],
+        "elbowFar": [
+          244.55,
+          323.64
+        ],
+        "wristFar": [
+          299.3,
+          283.185
+        ],
+        "hipNear": [
+          167.9,
+          449.5
+        ],
+        "kneeNear": [
+          141.87770410166638,
+          674.6400511152549
+        ],
+        "ankleNear": [
+          120.45,
+          836.07
+        ],
+        "hipFar": [
+          222.65,
+          449.5
+        ],
+        "kneeFar": [
+          233.07623278926576,
+          665.5019242271328
+        ],
+        "ankleFar": [
+          219.0,
+          827.08
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "2787c286e6841d0258f6569007de8a778204ba087b7e0c47805f7d7d7f89e5dd",
+      "background_rgb": [
+        253.0,
+        252.0,
+        246.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": true,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeNear": {
+          "previous": [
+            138.7,
+            674.25
+          ],
+          "corrected": [
+            141.87770410166638,
+            674.6400511152549
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        },
+        "kneeFar": {
+          "previous": [
+            208.05,
+            665.26
+          ],
+          "corrected": [
+            233.07623278926576,
+            665.5019242271328
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "f-youth-farmer": {
+      "source_rect": [
+        73,
+        101,
+        352,
+        995
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          156.24,
+          169.86
+        ],
+        "hip": [
+          167.4,
+          295.02
+        ],
+        "shoulderNear": [
+          119.97,
+          196.68
+        ],
+        "elbowNear": [
+          111.6,
+          339.72
+        ],
+        "wristNear": [
+          119.97,
+          455.94
+        ],
+        "shoulderFar": [
+          172.98,
+          205.62
+        ],
+        "elbowFar": [
+          189.72,
+          339.72
+        ],
+        "wristFar": [
+          200.88,
+          447.0
+        ],
+        "hipNear": [
+          139.5,
+          447.0
+        ],
+        "kneeNear": [
+          130.66980067517787,
+          643.7983627469597
+        ],
+        "ankleNear": [
+          119.97,
+          831.42
+        ],
+        "hipFar": [
+          175.77,
+          447.0
+        ],
+        "kneeFar": [
+          178.82565561602598,
+          643.6760520977483
+        ],
+        "ankleFar": [
+          181.35,
+          822.48
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "7bb5f2a153452a568df1851c186c642370286f3ada7bb37633db1d38d483da8d",
+      "background_rgb": [
+        254.0,
+        253.0,
+        245.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeNear": {
+          "previous": [
+            128.34,
+            643.68
+          ],
+          "corrected": [
+            130.66980067517787,
+            643.7983627469597
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        },
+        "kneeFar": {
+          "previous": [
+            178.56,
+            643.68
+          ],
+          "corrected": [
+            178.82565561602598,
+            643.6760520977483
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "m-middle-farmer": {
+      "source_rect": [
+        86,
+        106,
+        355,
+        992
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          156.02,
+          159.48
+        ],
+        "hip": [
+          166.78,
+          345.54
+        ],
+        "shoulderNear": [
+          102.22,
+          203.78
+        ],
+        "elbowNear": [
+          86.08,
+          363.26
+        ],
+        "wristNear": [
+          96.84,
+          451.86
+        ],
+        "shoulderFar": [
+          182.92,
+          194.92
+        ],
+        "elbowFar": [
+          188.3,
+          354.4
+        ],
+        "wristFar": [
+          193.68,
+          451.86
+        ],
+        "hipNear": [
+          126.43,
+          460.72
+        ],
+        "kneeNear": [
+          103.41441105798656,
+          675.9272832541973
+        ],
+        "ankleNear": [
+          72.63,
+          823.98
+        ],
+        "hipFar": [
+          177.54,
+          460.72
+        ],
+        "kneeFar": [
+          182.59123169762844,
+          664.597164877131
+        ],
+        "ankleFar": [
+          174.85,
+          823.98
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "b546a98a447ef93603630f8e40e255488a763a75ba25ad2d4a20d5d8933cf69a",
+      "background_rgb": [
+        253.0,
+        252.0,
+        246.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeNear": {
+          "previous": [
+            86.08,
+            673.36
+          ],
+          "corrected": [
+            103.41441105798656,
+            675.9272832541973
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        },
+        "kneeFar": {
+          "previous": [
+            169.47,
+            664.5
+          ],
+          "corrected": [
+            182.59123169762844,
+            664.597164877131
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "f-middle-farmer": {
+      "source_rect": [
+        87,
+        98,
+        345,
+        990
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          149.64,
+          160.56
+        ],
+        "hip": [
+          147.06,
+          338.96
+        ],
+        "shoulderNear": [
+          103.2,
+          205.16
+        ],
+        "elbowNear": [
+          82.56,
+          347.88
+        ],
+        "wristNear": [
+          92.88,
+          454.92
+        ],
+        "shoulderFar": [
+          159.96,
+          196.24
+        ],
+        "elbowFar": [
+          175.44,
+          347.88
+        ],
+        "wristFar": [
+          180.6,
+          454.92
+        ],
+        "hipNear": [
+          110.94,
+          463.84
+        ],
+        "kneeNear": [
+          100.62,
+          651.16
+        ],
+        "ankleNear": [
+          85.14,
+          829.56
+        ],
+        "hipFar": [
+          157.38,
+          463.84
+        ],
+        "kneeFar": [
+          160.21794605159656,
+          651.1562696142763
+        ],
+        "ankleFar": [
+          162.54,
+          820.64
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "e4f763a631514778dbf71606f4011b3d557946caa5832a13a65a97a3beeaedf9",
+      "background_rgb": [
+        252.0,
+        252.0,
+        244.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeFar": {
+          "previous": [
+            159.96,
+            651.16
+          ],
+          "corrected": [
+            160.21794605159656,
+            651.1562696142763
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "m-elder": {
+      "source_rect": [
+        71,
+        99,
+        368,
+        985
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          154.44,
+          159.48
+        ],
+        "hip": [
+          115.83,
+          318.96
+        ],
+        "shoulderNear": [
+          121.77,
+          194.92
+        ],
+        "elbowNear": [
+          118.8,
+          336.68
+        ],
+        "wristNear": [
+          216.81,
+          327.82
+        ],
+        "shoulderFar": [
+          166.32,
+          194.92
+        ],
+        "elbowFar": [
+          172.26,
+          283.52
+        ],
+        "wristFar": [
+          225.72,
+          327.82
+        ],
+        "hipNear": [
+          100.98,
+          451.86
+        ],
+        "kneeNear": [
+          89.1,
+          646.78
+        ],
+        "ankleNear": [
+          77.22,
+          832.84
+        ],
+        "hipFar": [
+          148.5,
+          451.86
+        ],
+        "kneeFar": [
+          164.3091947545626,
+          646.2286172230802
+        ],
+        "ankleFar": [
+          169.29,
+          823.98
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "2a94ccb8451358ed0395b9536f6e21c2af0793811a7ae418ae38e59f43ccffdb",
+      "background_rgb": [
+        253.0,
+        252.0,
+        245.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeFar": {
+          "previous": [
+            154.44,
+            646.78
+          ],
+          "corrected": [
+            164.3091947545626,
+            646.2286172230802
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "f-elder": {
+      "source_rect": [
+        45,
+        134,
+        356,
+        987
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          223.92,
+          170.6
+        ],
+        "hip": [
+          155.5,
+          307.08
+        ],
+        "shoulderNear": [
+          167.94,
+          204.72
+        ],
+        "elbowNear": [
+          146.17,
+          341.2
+        ],
+        "wristNear": [
+          143.06,
+          426.5
+        ],
+        "shoulderFar": [
+          214.59,
+          213.25
+        ],
+        "elbowFar": [
+          223.92,
+          341.2
+        ],
+        "wristFar": [
+          255.02,
+          426.5
+        ],
+        "hipNear": [
+          124.4,
+          452.09
+        ],
+        "kneeNear": [
+          130.62,
+          631.22
+        ],
+        "ankleNear": [
+          118.18,
+          793.29
+        ],
+        "hipFar": [
+          180.38,
+          452.09
+        ],
+        "kneeFar": [
+          202.15,
+          639.75
+        ],
+        "ankleFar": [
+          199.04,
+          793.29
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "8a4361f9db2a117ef5b04a64190282be95bb7616f2867c6bf3430096f33eb98e",
+      "background_rgb": [
+        254.0,
+        254.0,
+        248.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": true,
+      "forward_knee_constraint": true
+    },
+    "m-child": {
+      "source_rect": [
+        97,
+        188,
+        318,
+        960
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          106.08,
+          239.32
+        ],
+        "hip": [
+          106.08,
+          362.84
+        ],
+        "shoulderNear": [
+          81.77,
+          270.2
+        ],
+        "elbowNear": [
+          59.67,
+          378.28
+        ],
+        "wristNear": [
+          64.09,
+          455.48
+        ],
+        "shoulderFar": [
+          132.6,
+          270.2
+        ],
+        "elbowFar": [
+          137.02,
+          370.56
+        ],
+        "wristFar": [
+          141.44,
+          455.48
+        ],
+        "hipNear": [
+          83.98,
+          455.48
+        ],
+        "kneeNear": [
+          75.73786003541667,
+          587.1304171235481
+        ],
+        "ankleNear": [
+          61.88,
+          725.68
+        ],
+        "hipFar": [
+          134.81,
+          455.48
+        ],
+        "kneeFar": [
+          141.44,
+          579.0
+        ],
+        "ankleFar": [
+          148.07,
+          710.24
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "802b7546f57254f19c2b543fa4d7ab564e25eb3bf2be681a77bde45dc6cec540",
+      "background_rgb": [
+        252.0,
+        251.0,
+        245.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeNear": {
+          "previous": [
+            70.72,
+            586.72
+          ],
+          "corrected": [
+            75.73786003541667,
+            587.1304171235481
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "f-child": {
+      "source_rect": [
+        47,
+        171,
+        359,
+        979
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          162.24,
+          242.4
+        ],
+        "hip": [
+          168.48,
+          355.52
+        ],
+        "shoulderNear": [
+          124.8,
+          274.72
+        ],
+        "elbowNear": [
+          99.84,
+          387.84
+        ],
+        "wristNear": [
+          109.2,
+          468.64
+        ],
+        "shoulderFar": [
+          196.56,
+          274.72
+        ],
+        "elbowFar": [
+          212.16,
+          371.68
+        ],
+        "wristFar": [
+          237.12,
+          468.64
+        ],
+        "hipNear": [
+          137.28,
+          476.72
+        ],
+        "kneeNear": [
+          121.68,
+          614.08
+        ],
+        "ankleNear": [
+          106.08,
+          751.44
+        ],
+        "hipFar": [
+          196.56,
+          476.72
+        ],
+        "kneeFar": [
+          199.77410538764997,
+          614.042391206085
+        ],
+        "ankleFar": [
+          199.68,
+          743.36
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "e5b57a16b5bce9f99a32096f641501276c7e89651fb4c045b5bc2d7a7b2db006",
+      "background_rgb": [
+        253.5,
+        252.0,
+        245.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": true,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeFar": {
+          "previous": [
+            196.56,
+            614.08
+          ],
+          "corrected": [
+            199.77410538764997,
+            614.042391206085
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "m-scholar": {
+      "source_rect": [
+        51,
+        86,
+        363,
+        1000
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          165.36,
+          173.66
+        ],
+        "hip": [
+          180.96,
+          319.9
+        ],
+        "shoulderNear": [
+          118.56,
+          210.22
+        ],
+        "elbowNear": [
+          131.04,
+          356.46
+        ],
+        "wristNear": [
+          240.24,
+          347.32
+        ],
+        "shoulderFar": [
+          202.8,
+          210.22
+        ],
+        "elbowFar": [
+          218.4,
+          356.46
+        ],
+        "wristFar": [
+          240.24,
+          356.46
+        ],
+        "hipNear": [
+          137.28,
+          457.0
+        ],
+        "kneeNear": [
+          127.7122383929528,
+          677.2368114957868
+        ],
+        "ankleNear": [
+          109.2,
+          850.02
+        ],
+        "hipFar": [
+          193.44,
+          457.0
+        ],
+        "kneeFar": [
+          205.92,
+          667.22
+        ],
+        "ankleFar": [
+          215.28,
+          831.74
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "672d67a9526ea8db678c8fed4499802f57f78070f0d7855bc61ea4528061c6a6",
+      "background_rgb": [
+        253.0,
+        252.0,
+        245.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeNear": {
+          "previous": [
+            115.44,
+            676.36
+          ],
+          "corrected": [
+            127.7122383929528,
+            677.2368114957868
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "f-scholar": {
+      "source_rect": [
+        30,
+        74,
+        367,
+        998
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          215.68,
+          184.8
+        ],
+        "hip": [
+          222.42,
+          314.16
+        ],
+        "shoulderNear": [
+          161.76,
+          221.76
+        ],
+        "elbowNear": [
+          158.39,
+          378.84
+        ],
+        "wristNear": [
+          178.61,
+          471.24
+        ],
+        "shoulderFar": [
+          232.53,
+          221.76
+        ],
+        "elbowFar": [
+          256.12,
+          378.84
+        ],
+        "wristFar": [
+          266.23,
+          471.24
+        ],
+        "hipNear": [
+          165.13,
+          462.0
+        ],
+        "kneeNear": [
+          161.14054419209967,
+          674.7229342180967
+        ],
+        "ankleNear": [
+          151.65,
+          868.56
+        ],
+        "hipFar": [
+          222.42,
+          462.0
+        ],
+        "kneeFar": [
+          235.9,
+          674.52
+        ],
+        "ankleFar": [
+          246.01,
+          859.32
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "ccee2b3a99fc659468f09168832c1354b5c2188d20036801d3e7b2c6820774fa",
+      "background_rgb": [
+        253.0,
+        252.0,
+        246.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": true,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeNear": {
+          "previous": [
+            155.02,
+            674.52
+          ],
+          "corrected": [
+            161.14054419209967,
+            674.7229342180967
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "m-merchant": {
+      "source_rect": [
+        71,
+        89,
+        369,
+        1001
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          163.9,
+          173.28
+        ],
+        "hip": [
+          178.8,
+          355.68
+        ],
+        "shoulderNear": [
+          119.2,
+          209.76
+        ],
+        "elbowNear": [
+          116.22,
+          383.04
+        ],
+        "wristNear": [
+          131.12,
+          474.24
+        ],
+        "shoulderFar": [
+          190.72,
+          218.88
+        ],
+        "elbowFar": [
+          208.6,
+          383.04
+        ],
+        "wristFar": [
+          220.52,
+          474.24
+        ],
+        "hipNear": [
+          137.08,
+          492.48
+        ],
+        "kneeNear": [
+          125.78058065911338,
+          684.8010158109582
+        ],
+        "ankleNear": [
+          107.28,
+          848.16
+        ],
+        "hipFar": [
+          190.72,
+          492.48
+        ],
+        "kneeFar": [
+          200.59448161635603,
+          683.745273933373
+        ],
+        "ankleFar": [
+          199.66,
+          839.04
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "f8aaf8ed915b5112837d14de9f5b2091b1ec9fe0199f296bfac12bc3397be4d0",
+      "background_rgb": [
+        252.0,
+        252.0,
+        244.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeNear": {
+          "previous": [
+            116.22,
+            684.0
+          ],
+          "corrected": [
+            125.78058065911338,
+            684.8010158109582
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        },
+        "kneeFar": {
+          "previous": [
+            190.72,
+            684.0
+          ],
+          "corrected": [
+            200.59448161635603,
+            683.745273933373
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "f-merchant": {
+      "source_rect": [
+        44,
+        85,
+        355,
+        997
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          192.82,
+          182.4
+        ],
+        "hip": [
+          202.15,
+          319.2
+        ],
+        "shoulderNear": [
+          146.17,
+          218.88
+        ],
+        "elbowNear": [
+          133.73,
+          383.04
+        ],
+        "wristNear": [
+          152.39,
+          483.36
+        ],
+        "shoulderFar": [
+          217.7,
+          218.88
+        ],
+        "elbowFar": [
+          230.14,
+          373.92
+        ],
+        "wristFar": [
+          242.58,
+          483.36
+        ],
+        "hipNear": [
+          149.28,
+          474.24
+        ],
+        "kneeNear": [
+          144.05327458425165,
+          684.7634774114952
+        ],
+        "ankleNear": [
+          127.51,
+          857.28
+        ],
+        "hipFar": [
+          202.15,
+          474.24
+        ],
+        "kneeFar": [
+          211.48,
+          674.88
+        ],
+        "ankleFar": [
+          217.7,
+          839.04
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "17ac809c23c426cca0961fa6f0e66d970e350acd112de44822f3c64312c7517f",
+      "background_rgb": [
+        253.0,
+        252.0,
+        246.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeNear": {
+          "previous": [
+            130.62,
+            684.0
+          ],
+          "corrected": [
+            144.05327458425165,
+            684.7634774114952
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "m-escort": {
+      "source_rect": [
+        55,
+        78,
+        366,
+        999
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          174.16,
+          193.41
+        ],
+        "hip": [
+          183.49,
+          359.19
+        ],
+        "shoulderNear": [
+          102.63,
+          230.25
+        ],
+        "elbowNear": [
+          83.97,
+          386.82
+        ],
+        "wristNear": [
+          102.63,
+          478.92
+        ],
+        "shoulderFar": [
+          202.15,
+          221.04
+        ],
+        "elbowFar": [
+          223.92,
+          368.4
+        ],
+        "wristFar": [
+          236.36,
+          478.92
+        ],
+        "hipNear": [
+          136.84,
+          478.92
+        ],
+        "kneeNear": [
+          118.18,
+          709.17
+        ],
+        "ankleNear": [
+          99.52,
+          865.74
+        ],
+        "hipFar": [
+          202.15,
+          478.92
+        ],
+        "kneeFar": [
+          216.91103764607473,
+          708.7174028739472
+        ],
+        "ankleFar": [
+          211.48,
+          847.32
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "a624f97469685a72f779cce21a0c723f9320ec575a7140f808561a2d180b7232",
+      "background_rgb": [
+        253.0,
+        252.0,
+        245.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeFar": {
+          "previous": [
+            199.04,
+            709.17
+          ],
+          "corrected": [
+            216.91103764607473,
+            708.7174028739472
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "f-escort": {
+      "source_rect": [
+        53,
+        82,
+        372,
+        999
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          165.88,
+          192.57
+        ],
+        "hip": [
+          169.07,
+          330.12
+        ],
+        "shoulderNear": [
+          118.03,
+          229.25
+        ],
+        "elbowNear": [
+          102.08,
+          366.8
+        ],
+        "wristNear": [
+          108.46,
+          458.5
+        ],
+        "shoulderFar": [
+          197.78,
+          229.25
+        ],
+        "elbowFar": [
+          213.73,
+          366.8
+        ],
+        "wristFar": [
+          223.3,
+          467.67
+        ],
+        "hipNear": [
+          137.17,
+          476.84
+        ],
+        "kneeNear": [
+          121.22,
+          696.92
+        ],
+        "ankleNear": [
+          102.08,
+          861.98
+        ],
+        "hipFar": [
+          204.16,
+          476.84
+        ],
+        "kneeFar": [
+          218.8162635801137,
+          687.2401474283472
+        ],
+        "ankleFar": [
+          216.92,
+          843.64
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "6f417c2458ab7b4eda987faf65e2abc358e82ba314c12f745b9351b9f1a1d7f8",
+      "background_rgb": [
+        254.0,
+        253.0,
+        246.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeFar": {
+          "previous": [
+            204.16,
+            687.75
+          ],
+          "corrected": [
+            218.8162635801137,
+            687.2401474283472
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "m-fisher": {
+      "source_rect": [
+        53,
+        83,
+        370,
+        975
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          161.67,
+          187.32
+        ],
+        "hip": [
+          164.84,
+          356.8
+        ],
+        "shoulderNear": [
+          110.95,
+          223.0
+        ],
+        "elbowNear": [
+          114.12,
+          374.64
+        ],
+        "wristNear": [
+          136.31,
+          481.68
+        ],
+        "shoulderFar": [
+          196.54,
+          223.0
+        ],
+        "elbowFar": [
+          209.22,
+          356.8
+        ],
+        "wristFar": [
+          215.56,
+          481.68
+        ],
+        "hipNear": [
+          114.12,
+          499.52
+        ],
+        "kneeNear": [
+          91.93,
+          677.92
+        ],
+        "ankleNear": [
+          69.74,
+          838.48
+        ],
+        "hipFar": [
+          180.69,
+          499.52
+        ],
+        "kneeFar": [
+          187.28612606249735,
+          677.8261973711727
+        ],
+        "ankleFar": [
+          183.86,
+          829.56
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "bab4b079ec2668a8c9e8db9f57d053be8a21d56ceec28e0b61f8db7ca17f909c",
+      "background_rgb": [
+        253.0,
+        253.0,
+        246.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeFar": {
+          "previous": [
+            177.52,
+            677.92
+          ],
+          "corrected": [
+            187.28612606249735,
+            677.8261973711727
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "m-hunter": {
+      "source_rect": [
+        99,
+        86,
+        392,
+        1004
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          175.8,
+          192.78
+        ],
+        "hip": [
+          169.94,
+          367.2
+        ],
+        "shoulderNear": [
+          93.76,
+          238.68
+        ],
+        "elbowNear": [
+          79.11,
+          394.74
+        ],
+        "wristNear": [
+          102.55,
+          477.36
+        ],
+        "shoulderFar": [
+          199.24,
+          229.5
+        ],
+        "elbowFar": [
+          202.17,
+          367.2
+        ],
+        "wristFar": [
+          210.96,
+          468.18
+        ],
+        "hipNear": [
+          125.99,
+          504.9
+        ],
+        "kneeNear": [
+          105.13471373149723,
+          708.3494323773326
+        ],
+        "ankleNear": [
+          79.11,
+          862.92
+        ],
+        "hipFar": [
+          190.45,
+          504.9
+        ],
+        "kneeFar": [
+          209.44865731751648,
+          697.0992138905141
+        ],
+        "ankleFar": [
+          216.82,
+          835.38
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "ac7b558c20fe0341e59f4706ac982b3213c7c7e64de25ec2a81792a2cb2e70c9",
+      "background_rgb": [
+        242.0,
+        234.0,
+        217.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeNear": {
+          "previous": [
+            93.76,
+            706.86
+          ],
+          "corrected": [
+            105.13471373149723,
+            708.3494323773326
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        },
+        "kneeFar": {
+          "previous": [
+            202.17,
+            697.68
+          ],
+          "corrected": [
+            209.44865731751648,
+            697.0992138905141
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "m-artisan": {
+      "source_rect": [
+        53,
+        138,
+        425,
+        977
+      ],
+      "mirror": true,
+      "landmarks": {
+        "neck": [
+          178.56,
+          184.58
+        ],
+        "hip": [
+          178.56,
+          352.38
+        ],
+        "shoulderNear": [
+          241.8,
+          218.14
+        ],
+        "elbowNear": [
+          290.16,
+          335.6
+        ],
+        "wristNear": [
+          305.04,
+          436.28
+        ],
+        "shoulderFar": [
+          133.92,
+          218.14
+        ],
+        "elbowFar": [
+          89.28,
+          343.99
+        ],
+        "wristFar": [
+          44.64,
+          419.5
+        ],
+        "hipNear": [
+          234.36,
+          469.84
+        ],
+        "kneeNear": [
+          252.96,
+          671.2
+        ],
+        "ankleNear": [
+          271.56,
+          788.66
+        ],
+        "hipFar": [
+          145.08,
+          469.84
+        ],
+        "kneeFar": [
+          93.87132131013902,
+          658.8796850580284
+        ],
+        "ankleFar": [
+          74.4,
+          788.66
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "07ceaa49b31be4f45b26e3edff35a28cc8bfc859379156b38e3da1413fa004fa",
+      "background_rgb": [
+        247.0,
+        242.0,
+        232.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": true,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeFar": {
+          "previous": [
+            111.6,
+            662.81
+          ],
+          "corrected": [
+            93.87132131013902,
+            658.8796850580284
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "f-healer": {
+      "source_rect": [
+        41,
+        155,
+        435,
+        987
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          232.46,
+          183.04
+        ],
+        "hip": [
+          228.52,
+          324.48
+        ],
+        "shoulderNear": [
+          169.42,
+          216.32
+        ],
+        "elbowNear": [
+          137.9,
+          357.76
+        ],
+        "wristNear": [
+          114.26,
+          424.32
+        ],
+        "shoulderFar": [
+          256.1,
+          216.32
+        ],
+        "elbowFar": [
+          283.68,
+          349.44
+        ],
+        "wristFar": [
+          334.9,
+          424.32
+        ],
+        "hipNear": [
+          204.88,
+          440.96
+        ],
+        "kneeNear": [
+          220.64,
+          632.32
+        ],
+        "ankleNear": [
+          220.64,
+          782.08
+        ],
+        "hipFar": [
+          157.6,
+          440.96
+        ],
+        "kneeFar": [
+          118.2,
+          632.32
+        ],
+        "ankleFar": [
+          47.28,
+          740.48
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "22d77f0b3c4662019eabdd28b1fdab3e243bbac8955b2d15b871c35b0e0ead9c",
+      "background_rgb": [
+        240.0,
+        233.0,
+        222.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": true,
+      "forward_knee_constraint": true
+    },
+    "m-performer": {
+      "source_rect": [
+        32,
+        120,
+        560,
+        984
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          211.2,
+          181.44
+        ],
+        "hip": [
+          216.48,
+          354.24
+        ],
+        "shoulderNear": [
+          153.12,
+          207.36
+        ],
+        "elbowNear": [
+          227.04,
+          311.04
+        ],
+        "wristNear": [
+          385.44,
+          302.4
+        ],
+        "shoulderFar": [
+          184.8,
+          224.64
+        ],
+        "elbowFar": [
+          126.72,
+          388.8
+        ],
+        "wristFar": [
+          116.16,
+          475.2
+        ],
+        "hipNear": [
+          221.76,
+          457.92
+        ],
+        "kneeNear": [
+          258.72,
+          622.08
+        ],
+        "ankleNear": [
+          285.12,
+          820.8
+        ],
+        "hipFar": [
+          190.08,
+          457.92
+        ],
+        "kneeFar": [
+          158.4,
+          639.36
+        ],
+        "ankleFar": [
+          121.44,
+          794.88
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "c5a9fb4acae0de4c844bbdeb324dc99788ce6fd237a0f73d2145066369bf6e53",
+      "background_rgb": [
+        248.0,
+        245.0,
+        237.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": true,
+      "forward_knee_constraint": true
+    },
+    "m-daoist": {
+      "source_rect": [
+        35,
+        106,
+        600,
+        994
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          253.89999999999998,
+          184.86
+        ],
+        "hip": [
+          229.82,
+          376.59
+        ],
+        "shoulderNear": [
+          205.74,
+          221.38
+        ],
+        "elbowNear": [
+          211.76,
+          394.85
+        ],
+        "wristNear": [
+          368.28,
+          413.11
+        ],
+        "shoulderFar": [
+          277.98,
+          221.38
+        ],
+        "elbowFar": [
+          302.06,
+          349.2
+        ],
+        "wristFar": [
+          362.26,
+          413.11
+        ],
+        "hipNear": [
+          217.78,
+          504.40999999999997
+        ],
+        "kneeNear": [
+          200.75585643131507,
+          670.614164014482
+        ],
+        "ankleNear": [
+          169.62,
+          842.22
+        ],
+        "hipFar": [
+          271.96,
+          504.40999999999997
+        ],
+        "kneeFar": [
+          284.0,
+          668.75
+        ],
+        "ankleFar": [
+          284.0,
+          842.22
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "a94d95fb89bb186f348d93d64d8cf9bc4bdd2689403c5911feb49f54d64c2ddc",
+      "background_rgb": [
+        245.0,
+        240.0,
+        229.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeNear": {
+          "previous": [
+            187.68,
+            668.75
+          ],
+          "corrected": [
+            200.75585643131507,
+            670.614164014482
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "m-monk": {
+      "source_rect": [
+        79,
+        146,
+        399,
+        992
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          182.4,
+          143.82
+        ],
+        "hip": [
+          160.0,
+          313.02
+        ],
+        "shoulderNear": [
+          121.6,
+          177.66
+        ],
+        "elbowNear": [
+          147.2,
+          296.1
+        ],
+        "wristNear": [
+          256.0,
+          296.1
+        ],
+        "shoulderFar": [
+          201.6,
+          177.66
+        ],
+        "elbowFar": [
+          211.2,
+          287.64
+        ],
+        "wristFar": [
+          262.4,
+          287.64
+        ],
+        "hipNear": [
+          137.6,
+          448.38
+        ],
+        "kneeNear": [
+          131.51177055459902,
+          617.5915051118576
+        ],
+        "ankleNear": [
+          124.8,
+          795.24
+        ],
+        "hipFar": [
+          201.6,
+          448.38
+        ],
+        "kneeFar": [
+          211.2,
+          617.58
+        ],
+        "ankleFar": [
+          217.6,
+          778.32
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "7b211adead16d858b35c8c65a5ca29c8100f7b3e9250525aa0b8503df415a7f6",
+      "background_rgb": [
+        244.0,
+        242.0,
+        232.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeNear": {
+          "previous": [
+            131.2,
+            617.58
+          ],
+          "corrected": [
+            131.51177055459902,
+            617.5915051118576
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "m-official": {
+      "source_rect": [
+        54,
+        151,
+        402,
+        974
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          201.84,
+          172.83
+        ],
+        "hip": [
+          198.36,
+          370.35
+        ],
+        "shoulderNear": [
+          142.68,
+          205.75
+        ],
+        "elbowNear": [
+          149.64,
+          337.43
+        ],
+        "wristNear": [
+          278.4,
+          395.04
+        ],
+        "shoulderFar": [
+          226.2,
+          205.75
+        ],
+        "elbowFar": [
+          236.64,
+          345.66
+        ],
+        "wristFar": [
+          281.88,
+          395.04
+        ],
+        "hipNear": [
+          146.16,
+          477.34
+        ],
+        "kneeNear": [
+          132.24,
+          641.94
+        ],
+        "ankleNear": [
+          118.32,
+          773.62
+        ],
+        "hipFar": [
+          219.24,
+          477.34
+        ],
+        "kneeFar": [
+          229.68,
+          641.94
+        ],
+        "ankleFar": [
+          233.16,
+          757.16
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "b90859384c5cca67127d037de599054571677ee0dab95cd3a0cc443c6bc97b4f",
+      "background_rgb": [
+        244.0,
+        240.0,
+        228.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true
+    },
+    "m-beggar": {
+      "source_rect": [
+        163,
+        90,
+        533,
+        972
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          185.0,
+          180.81
+        ],
+        "hip": [
+          177.6,
+          352.8
+        ],
+        "shoulderNear": [
+          111.0,
+          202.86
+        ],
+        "elbowNear": [
+          81.4,
+          352.8
+        ],
+        "wristNear": [
+          81.4,
+          441.0
+        ],
+        "shoulderFar": [
+          225.7,
+          211.68
+        ],
+        "elbowFar": [
+          240.5,
+          370.44
+        ],
+        "wristFar": [
+          303.4,
+          405.72
+        ],
+        "hipNear": [
+          148.0,
+          476.28
+        ],
+        "kneeNear": [
+          92.84439362535548,
+          679.2339077855987
+        ],
+        "ankleNear": [
+          51.8,
+          829.08
+        ],
+        "hipFar": [
+          210.9,
+          476.28
+        ],
+        "kneeFar": [
+          199.7640020575532,
+          688.4748678687256
+        ],
+        "ankleFar": [
+          185.0,
+          846.72
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "508612e68e238bcdb1f7de7c90a5015b6f6c783b237611b385d120aa0aec3f4c",
+      "background_rgb": [
+        240.0,
+        236.0,
+        226.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": true,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeNear": {
+          "previous": [
+            92.5,
+            679.14
+          ],
+          "corrected": [
+            92.84439362535548,
+            679.2339077855987
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        },
+        "kneeFar": {
+          "previous": [
+            192.4,
+            687.96
+          ],
+          "corrected": [
+            199.7640020575532,
+            688.4748678687256
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    },
+    "f-swordswoman": {
+      "source_rect": [
+        29,
+        98,
+        461,
+        992
+      ],
+      "mirror": false,
+      "landmarks": {
+        "neck": [
+          336.96,
+          205.62
+        ],
+        "hip": [
+          332.64,
+          384.42
+        ],
+        "shoulderNear": [
+          285.12,
+          241.38
+        ],
+        "elbowNear": [
+          267.84,
+          375.48
+        ],
+        "wristNear": [
+          267.84,
+          455.94
+        ],
+        "shoulderFar": [
+          367.2,
+          250.32
+        ],
+        "elbowFar": [
+          380.16,
+          375.48
+        ],
+        "wristFar": [
+          388.8,
+          455.94
+        ],
+        "hipNear": [
+          311.04,
+          509.58
+        ],
+        "kneeNear": [
+          311.04,
+          688.38
+        ],
+        "ankleNear": [
+          311.04,
+          849.3
+        ],
+        "hipFar": [
+          358.56,
+          509.58
+        ],
+        "kneeFar": [
+          362.5275793224718,
+          688.5446554890656
+        ],
+        "ankleFar": [
+          354.24,
+          840.36
+        ]
+      },
+      "upper_radius": 0.042,
+      "forearm_radius": 0.028,
+      "reference_sha256": "fc229590a3c5019f7a82fdd43f21a9a06efbf2f374b95f1fbc20c9ce9ea0e553",
+      "background_rgb": [
+        246.0,
+        243.0,
+        234.0
+      ],
+      "alpha_recipe": "remove exterior paper and all enclosed regions matching measured paper color",
+      "visible_far_arm": false,
+      "forward_knee_constraint": true,
+      "knee_adjustments": {
+        "kneeFar": {
+          "previous": [
+            349.92,
+            688.38
+          ],
+          "corrected": [
+            362.5275793224718,
+            688.5446554890656
+          ],
+          "reason": "Place the hidden hinge on the front side of the hip-to-ankle axis."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+01-forest-meadow — 森林草甸
+Use case: stylized-concept.
+Asset type: one original 2D isometric terrain tile PNG for a strategy game.
+Input image: the attached image is a visual STYLE AND TILE GEOMETRY REFERENCE only. Create new terrain artwork.
+Primary request: Create ONE isolated diamond-shaped terrain tile, with the same pleasing hand-drawn, dark-ink-outlined, muted-color strategy-map visual language as the reference.
+Composition: landscape 1536x1024 canvas. A single complete flat 2:1 rhombus ground footprint viewed from a fixed orthographic isometric camera, horizontal long diagonal, approximately the following matching anchors in every tile of this set: left ground corner (64,608), top ground corner (768,256), right ground corner (1472,608), bottom ground corner (768,960). Keep all four ground corners clear and complete and the whole asset inside the canvas with transparent padding. Elevated natural features may rise above the back ground edge but do not extend outside the canvas. Ground has a fine dark boundary and absolutely NO thick block base, NO extruded floating island, NO vertical soil slab. Draw landscape detail at the same map scale as the reference, with many small readable details and broad quiet areas, not a close-up diorama.
+Style: expressive clean dark charcoal-brown ink contours, irregular organic shapes, flat painted color regions with restrained two- or three-tone cel shading, subtle illustrated texture. Muted sage and olive foliage, earthen brown terrain, blue-green water where present. Warm diffuse light from upper left. Stylized overhead game map illustration with clear silhouettes, no photorealism, no rendered 3D plastic look.
+Backdrop: actual transparent alpha everywhere outside the illustrated tile silhouette; no painted checkerboard or backdrop, no background shadow.
+Constraints: ONE TILE ONLY, no collage, no sheet, no neighboring tiles, no characters, no resource tokens, no roadsigns, no badges or UI, no text, no numbers, no logo or watermark. Original artwork inspired by the broad reference aesthetic.
+Subject: A lush green woodland and open meadow tile. A loose grove of small rounded deciduous trees, a few slender conifers, mossy layered slate rocks and grass clumps, with a winding earthy footpath through an open grassy clearing. Varied greens and warm brown earth. Rolling modest terrain, airy space between trees, modest height.
+
+========================================================================
+
+02-river-wetland — 河湾湖泊
+Use case: stylized-concept.
+Asset type: one original 2D isometric terrain tile PNG for a strategy game.
+Input image: the attached image is a visual STYLE AND TILE GEOMETRY REFERENCE only. Create new terrain artwork.
+Primary request: Create ONE isolated diamond-shaped terrain tile, with the same pleasing hand-drawn, dark-ink-outlined, muted-color strategy-map visual language as the reference.
+Composition: landscape 1536x1024 canvas. A single complete flat 2:1 rhombus ground footprint viewed from a fixed orthographic isometric camera, horizontal long diagonal, approximately the following matching anchors in every tile of this set: left ground corner (64,608), top ground corner (768,256), right ground corner (1472,608), bottom ground corner (768,960). Keep all four ground corners clear and complete and the whole asset inside the canvas with transparent padding. Elevated natural features may rise above the back ground edge but do not extend outside the canvas. Ground has a fine dark boundary and absolutely NO thick block base, NO extruded floating island, NO vertical soil slab. Draw landscape detail at the same map scale as the reference, with many small readable details and broad quiet areas, not a close-up diorama.
+Style: expressive clean dark charcoal-brown ink contours, irregular organic shapes, flat painted color regions with restrained two- or three-tone cel shading, subtle illustrated texture. Muted sage and olive foliage, earthen brown terrain, blue-green water where present. Warm diffuse light from upper left. Stylized overhead game map illustration with clear silhouettes, no photorealism, no rendered 3D plastic look.
+Backdrop: actual transparent alpha everywhere outside the illustrated tile silhouette; no painted checkerboard or backdrop, no background shadow.
+Constraints: ONE TILE ONLY, no collage, no sheet, no neighboring tiles, no characters, no resource tokens, no roadsigns, no badges or UI, no text, no numbers, no logo or watermark. Original artwork inspired by the broad reference aesthetic.
+Subject: A blue-green winding river bending around a small grassy islet and widening into a clear shallow pool, all water contained within the tile so the four perimeter edges remain grassy land. Rounded river rocks, pale reeds, a few small willows and rippled water highlights. Low banks with sage-green meadows and scattered shrubs. Water is opaque painted artwork, not transparent holes.
+
+========================================================================
+
+03-karst-peaks — 奇峰山地
+Use case: stylized-concept.
+Asset type: one original 2D isometric terrain tile PNG for a strategy game.
+Input image: the attached image is a visual STYLE AND TILE GEOMETRY REFERENCE only. Create new terrain artwork.
+Primary request: Create ONE isolated diamond-shaped terrain tile, with the same pleasing hand-drawn, dark-ink-outlined, muted-color strategy-map visual language as the reference.
+Composition: landscape 1536x1024 canvas. A single complete flat 2:1 rhombus ground footprint viewed from a fixed orthographic isometric camera, horizontal long diagonal, approximately the following matching anchors in every tile of this set: left ground corner (64,608), top ground corner (768,256), right ground corner (1472,608), bottom ground corner (768,960). Keep all four ground corners clear and complete and the whole asset inside the canvas with transparent padding. Elevated natural features may rise above the back ground edge but do not extend outside the canvas. Ground has a fine dark boundary and absolutely NO thick block base, NO extruded floating island, NO vertical soil slab. Draw landscape detail at the same map scale as the reference, with many small readable details and broad quiet areas, not a close-up diorama.
+Style: expressive clean dark charcoal-brown ink contours, irregular organic shapes, flat painted color regions with restrained two- or three-tone cel shading, subtle illustrated texture. Muted sage and olive foliage, earthen brown terrain, blue-green water where present. Warm diffuse light from upper left. Stylized overhead game map illustration with clear silhouettes, no photorealism, no rendered 3D plastic look.
+Backdrop: actual transparent alpha everywhere outside the illustrated tile silhouette; no painted checkerboard or backdrop, no background shadow.
+Constraints: ONE TILE ONLY, no collage, no sheet, no neighboring tiles, no characters, no resource tokens, no roadsigns, no badges or UI, no text, no numbers, no logo or watermark. Original artwork inspired by the broad reference aesthetic.
+Subject: A group of three steep narrow weathered karst rock pinnacles of different heights, each with green moss and small vegetation on ledges, surrounded by grassy foothills. One tallest peak toward the back half, two smaller rock spires, low slate boulders, a tiny winding mountain trail and scattered small trees. Dark gray rock with warm shadow faces, moss olive and sage green. Entire peak silhouettes fully visible.
+
+========================================================================
+
+04-terraced-fields — 梯田平原
+Use case: stylized-concept.
+Asset type: one original 2D isometric terrain tile PNG for a strategy game.
+Input image: the attached image is a visual STYLE AND TILE GEOMETRY REFERENCE only. Create new terrain artwork.
+Primary request: Create ONE isolated diamond-shaped terrain tile, with the same pleasing hand-drawn, dark-ink-outlined, muted-color strategy-map visual language as the reference.
+Composition: landscape 1536x1024 canvas. A single complete flat 2:1 rhombus ground footprint viewed from a fixed orthographic isometric camera, horizontal long diagonal, approximately the following matching anchors in every tile of this set: left ground corner (64,608), top ground corner (768,256), right ground corner (1472,608), bottom ground corner (768,960). Keep all four ground corners clear and complete and the whole asset inside the canvas with transparent padding. Elevated natural features may rise above the back ground edge but do not extend outside the canvas. Ground has a fine dark boundary and absolutely NO thick block base, NO extruded floating island, NO vertical soil slab. Draw landscape detail at the same map scale as the reference, with many small readable details and broad quiet areas, not a close-up diorama.
+Style: expressive clean dark charcoal-brown ink contours, irregular organic shapes, flat painted color regions with restrained two- or three-tone cel shading, subtle illustrated texture. Muted sage and olive foliage, earthen brown terrain, blue-green water where present. Warm diffuse light from upper left. Stylized overhead game map illustration with clear silhouettes, no photorealism, no rendered 3D plastic look.
+Backdrop: actual transparent alpha everywhere outside the illustrated tile silhouette; no painted checkerboard or backdrop, no background shadow.
+Constraints: ONE TILE ONLY, no collage, no sheet, no neighboring tiles, no characters, no resource tokens, no roadsigns, no badges or UI, no text, no numbers, no logo or watermark. Original artwork inspired by the broad reference aesthetic.
+Subject: A peaceful cultivated plain with graceful curved agricultural terraces and small rice paddy plots at low elevation, alternating muted olive green and golden straw tones. Thin ochre earthen ridges between fields, a tiny narrow irrigation pool in the interior, sparse rounded trees, grass and stones on the perimeter. Elegant flowing field patterns like the reference, no buildings, no agricultural symbols.
+
+========================================================================
+
+05-desert-canyon — 荒漠峡谷
+Use case: stylized-concept.
+Asset type: one original 2D isometric terrain tile PNG for a strategy game.
+Input image: the attached image is a visual STYLE AND TILE GEOMETRY REFERENCE only. Create new terrain artwork.
+Primary request: Create ONE isolated diamond-shaped terrain tile, with the same pleasing hand-drawn, dark-ink-outlined, muted-color strategy-map visual language as the reference.
+Composition: landscape 1536x1024 canvas. A single complete flat 2:1 rhombus ground footprint viewed from a fixed orthographic isometric camera, horizontal long diagonal, approximately the following matching anchors in every tile of this set: left ground corner (64,608), top ground corner (768,256), right ground corner (1472,608), bottom ground corner (768,960). Keep all four ground corners clear and complete and the whole asset inside the canvas with transparent padding. Elevated natural features may rise above the back ground edge but do not extend outside the canvas. Ground has a fine dark boundary and absolutely NO thick block base, NO extruded floating island, NO vertical soil slab. Draw landscape detail at the same map scale as the reference, with many small readable details and broad quiet areas, not a close-up diorama.
+Style: expressive clean dark charcoal-brown ink contours, irregular organic shapes, flat painted color regions with restrained two- or three-tone cel shading, subtle illustrated texture. Muted sage and olive foliage, earthen brown terrain, blue-green water where present. Warm diffuse light from upper left. Stylized overhead game map illustration with clear silhouettes, no photorealism, no rendered 3D plastic look.
+Backdrop: actual transparent alpha everywhere outside the illustrated tile silhouette; no painted checkerboard or backdrop, no background shadow.
+Constraints: ONE TILE ONLY, no collage, no sheet, no neighboring tiles, no characters, no resource tokens, no roadsigns, no badges or UI, no text, no numbers, no logo or watermark. Original artwork inspired by the broad reference aesthetic.
+Subject: An arid ochre and muted terracotta canyon landscape with curving eroded sandstone shelves, a shallow central ravine, sparse dry sage shrubs, small dark stones and wind-shaped sand bands. Two low mesas of different sizes. Stylized readable layered earth shapes and warm red-brown shadows, matching the line weight and visual density of the green tiles.
+
+========================================================================
+
+06-volcanic-crater — 熔岩火山
+Use case: stylized-concept.
+Asset type: one original 2D isometric terrain tile PNG for a strategy game.
+Input image: the attached image is a visual STYLE AND TILE GEOMETRY REFERENCE only. Create new terrain artwork.
+Primary request: Create ONE isolated diamond-shaped terrain tile, with the same pleasing hand-drawn, dark-ink-outlined, muted-color strategy-map visual language as the reference.
+Composition: landscape 1536x1024 canvas. A single complete flat 2:1 rhombus ground footprint viewed from a fixed orthographic isometric camera, horizontal long diagonal, approximately the following matching anchors in every tile of this set: left ground corner (64,608), top ground corner (768,256), right ground corner (1472,608), bottom ground corner (768,960). Keep all four ground corners clear and complete and the whole asset inside the canvas with transparent padding. Elevated natural features may rise above the back ground edge but do not extend outside the canvas. Ground has a fine dark boundary and absolutely NO thick block base, NO extruded floating island, NO vertical soil slab. Draw landscape detail at the same map scale as the reference, with many small readable details and broad quiet areas, not a close-up diorama.
+Style: expressive clean dark charcoal-brown ink contours, irregular organic shapes, flat painted color regions with restrained two- or three-tone cel shading, subtle illustrated texture. Muted sage and olive foliage, earthen brown terrain, blue-green water where present. Warm diffuse light from upper left. Stylized overhead game map illustration with clear silhouettes, no photorealism, no rendered 3D plastic look.
+Backdrop: actual transparent alpha everywhere outside the illustrated tile silhouette; no painted checkerboard or backdrop, no background shadow.
+Constraints: ONE TILE ONLY, no collage, no sheet, no neighboring tiles, no characters, no resource tokens, no roadsigns, no badges or UI, no text, no numbers, no logo or watermark. Original artwork inspired by the broad reference aesthetic.
+Subject: A dormant-looking dark basalt volcanic crater with a small visible deep red-orange lava pool in its hollow center, curved jagged crater rim, cracked charcoal stone shelves, sparse reddish mineral patches and a few dark moss-green shrubs along the outer perimeter. A tiny branching molten fissure within the tile interior. Graphic subtle warm lava, no flame columns, no smoke plume, all elevated silhouettes fully visible.

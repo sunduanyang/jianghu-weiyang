@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Jianghu {
 // Dark lamplight skin with a layout modelled on 太吾绘卷:
 //   戏 — the map (天下 / 城中) fills the screen; panels float over it: top status bar, roster on the left,
-//        travel journal and place card on the right, and a bottom dock with the hero, the month dial and
+//        city overview and place card on the right, and a bottom dock with the hero, the month dial and
 //        function medallions. The globe at the bottom right switches 天下 ⇄ 城中.
 //   书 — 人物, 行囊, 功法, 势力, 年谱, 皮影 and settings open as full-screen pages with a bottom tab strip.
 // Textures come from unity/bake_ui.py; fonts are subsets of Noto Serif CJK SC (SIL OFL).
@@ -21,15 +21,14 @@ public partial class JianghuApp {
         centerTitle, centerSmall, bigNumber, titleBrush, medalGlyph, medalLabel, tagStyle, tagOnStyle, dialogueStyle, valueStyle, labelRight, resGlyph, resValue, moonLabel, globeOn, globeOff;
     static readonly int[] BookTabs={-1,2,3,4,6,5,7,8};
     static readonly string[] BookTabNames={"人物","行囊","功法","势力","年谱","皮影","模型","存档"};
-    float transitionStart=-10;
-    bool transitionToStage, rosterOpen=true, advanceOpen, personScreen, dialogueOpen;
+    bool rosterOpen=true, advanceOpen, personScreen, dialogueOpen;
     int basePage;
     readonly Color vermilion=new Color(.56f,.17f,.13f), muted=new Color(.60f,.63f,.58f), paperText=new Color(.97f,.93f,.85f),
         hairline=new Color(.35f,.40f,.38f,.65f), brass=new Color(.79f,.64f,.35f,1f), jade=new Color(.24f,.56f,.48f), shadowInk=new Color(.08f,.06f,.04f,.92f);
     static readonly Vector2[] HaloOffsets={new Vector2(-1,0),new Vector2(1,0),new Vector2(0,-1),new Vector2(0,1),new Vector2(-1,-1),new Vector2(1,1),new Vector2(-1,1),new Vector2(1,-1)};
 
     // fixed layout of the 戏 screen (virtual 1680×960)
-    static readonly Rect TopBar=new Rect(0,0,1680,58), Dock=new Rect(0,806,1680,154), Tracker=new Rect(1420,70,252,176), PlaceCard=new Rect(1420,254,252,540), LayerRow=new Rect(590,62,500,34), AdvancePopup=new Rect(1056,598,310,200);
+    static readonly Rect TopBar=new Rect(0,0,1680,58), Dock=new Rect(0,806,1680,154), PlaceCard=new Rect(1420,254,252,540), LayerRow=new Rect(755,62,170,34), AdvancePopup=new Rect(1056,598,310,200);
     Rect LeftPanel=>rosterOpen?new Rect(8,70,262,640):new Rect(8,70,26,120);
 
     static bool IsStagePage(int page)=>page==0||page==1;
@@ -164,7 +163,8 @@ public partial class JianghuApp {
     }
     bool OverUI(Vector2 m){
         if(personScreen||dialogueOpen||!IsStagePage(Page))return true;
-        if(TopBar.Contains(m)||LeftPanel.Contains(m)||Tracker.Contains(m)||PlaceCard.Contains(m))return true;
+        if(TopBar.Contains(m)||LeftPanel.Contains(m)||PlaceCard.Contains(m))return true;
+        if(Page==1&&CityOverviewRect.Contains(m))return true;
         if(m.y>Dock.y+40||new Rect(740,812,200,150).Contains(m)||new Rect(1520,780,160,180).Contains(m)||new Rect(0,712,300,248).Contains(m))return true;
         if(Page==0&&LayerRow.Contains(m))return true;
         if(advanceOpen&&AdvancePopup.Contains(m))return true;
@@ -189,7 +189,7 @@ public partial class JianghuApp {
         Resource(ref x,"武",Num(p["skill"]),"武学");
         Resource(ref x,"体",Num(p["health"]),"体力");
         GUI.Label(new Rect(640,4,400,30),W["date"].S,centerTitle);
-        GUI.Label(new Rect(640,32,400,20),W["battle_active"].B?"切磋进行中":W["autoplay"].B?"自行演化":W["job"]["remaining"].I>0?"推演中 · 余"+W["job"]["remaining"].S+"月":"江湖已暂停",centerSmall);
+        GUI.Label(new Rect(640,32,400,20),W["battle_active"].B?"切磋进行中":W["autoplay"].B?"自行演化":W["job"]["remaining"].I>0?"推演中 · 余"+W["job"]["remaining"].S+"月":W["ai"]["busy"].B?"江湖已暂停 · 后台思考中":"江湖已暂停",centerSmall);
         Fill(new Rect(700,52,280,1),new Color(.79f,.64f,.35f,.6f));
         float rx=1110;
         Resource(ref rx,"人",W["population"].S,"在世");
@@ -200,26 +200,17 @@ public partial class JianghuApp {
     }
     void DrawLayerRow(){
         GUILayout.BeginArea(LayerRow);GUILayout.BeginHorizontal();GUILayout.FlexibleSpace();
-        foreach(string layer in new[]{"疆域","州路","门派","行路"})if(GUILayout.Button(layer,mapLayer==layer?selected:chip,GUILayout.Height(30)))mapLayer=layer;
+        GUILayout.Label("疆域",selected,GUILayout.Height(30));
         if(GUILayout.Button("全图",chip,GUILayout.Height(30))){mapZoom=1;mapPan=Vector2.zero;}
         GUILayout.FlexibleSpace();GUILayout.EndHorizontal();GUILayout.EndArea();
-    }
-    void DrawTracker(){
-        Panel(Tracker);
-        GUILayout.BeginArea(new Rect(Tracker.x+12,Tracker.y+8,Tracker.width-24,Tracker.height-14));
-        GUILayout.BeginHorizontal();GUILayout.Label("行旅手记",sub);GUILayout.FlexibleSpace();if(GUILayout.Button("年谱 ›",linkStyle))Go(6);GUILayout.EndHorizontal();
-        var notes=Hero["journal"].A.Count>0?Hero["journal"].A.AsEnumerable().Reverse().Take(3).ToList():W["world_events"].A.Take(3).ToList();
-        if(notes.Count==0)GUILayout.Label("江湖尚无新事。",small);
-        foreach(var e in notes){string s=e["summary"].Has?e["summary"].S:e["text"].Has?e["text"].S:e.S;if(s.Length>34)s=s.Substring(0,33)+"…";if(GUILayout.Button(s,rowStyle)&&e["id"].Has)OpenEvent(e["id"].I);}
-        GUILayout.EndArea();
     }
     void DrawDock(){
         var bar=UI("bottombar");if(bar!=null)GUI.DrawTexture(Dock,bar,ScaleMode.StretchToFill);else Fill(new Rect(0,850,1680,110),new Color(.08f,.10f,.10f,.96f));
         // hero (left)
         Rect hp=new Rect(4,712,200,240);
-        if(Hero["created"].B){DrawPaperPerson(hp,Hero,true);GUI.Label(new Rect(208,880,200,24),Hero["name"].S,sub);GUI.Label(new Rect(208,904,260,20),Hero["place_name"].S+" · "+Hero["position_name"].S,caption);
+        if(Hero["created"].B){DrawPaperBust(hp,Hero,true);GUI.Label(new Rect(208,880,200,24),Hero["name"].S,sub);GUI.Label(new Rect(208,904,260,20),Hero["place_name"].S+" · "+Hero["position_name"].S,caption);
             if(GUI.Button(new Rect(208,926,90,24),"定位主角",linkStyle)){SelectedPlace=Hero["place"].I;mapZoom=1.6f;mapPan=new Vector2(640-(float)Place(SelectedPlace)["x"].N,380-(float)Place(SelectedPlace)["y"].N);if(Page!=0)Go(0);}}
-        else{DrawPaperPerson(hp,J.O("sex",heroSex,"age_months",int.TryParse(heroAge,out int ha)?ha*12:216),true);GUI.Label(new Rect(208,880,240,24),"尚未立主角",sub);if(GUI.Button(new Rect(208,906,110,30),"创建主角",selected))creatingHero=!creatingHero;}
+        else{DrawPaperBust(hp,J.O("sex",heroSex,"age_months",int.TryParse(heroAge,out int ha)?ha*12:216),true);GUI.Label(new Rect(208,880,240,24),"尚未立主角",sub);if(GUI.Button(new Rect(208,906,110,30),"创建主角",selected))creatingHero=!creatingHero;}
         // month dial (centre)
         Rect moon=new Rect(765,812,150,150);Tex(moon,"moon");
         bool hero=Hero["created"].B;
@@ -283,20 +274,5 @@ public partial class JianghuApp {
     void CloseBook(){personScreen=false;dialogueOpen=false;if(!IsStagePage(Page))Go(basePage);}
     void OpenPersonScreen(){if(SelectedPerson<0&&W["npcs"].A.Count>0)SelectPerson(W["npcs"].A[0]["id"].I);personScreen=true;dialogueOpen=false;}
 
-    // ---------------------------------------------------------------- 开幕 / 翻页
-    void BeginTransition(int page){if(IsStagePage(page)==IsStagePage(Page))return;transitionStart=Time.realtimeSinceStartup;transitionToStage=IsStagePage(page);}
-    void DrawTransition(Rect r){
-        float t=(Time.realtimeSinceStartup-transitionStart)/.55f;if(t<0||t>=1)return;
-        float e=1-Mathf.Pow(1-t,3);
-        if(transitionToStage){
-            float half=r.width*.5f*(1-e);var cur=UI("curtain");
-            Rect a=new Rect(r.x,r.y,half,r.height),b=new Rect(r.xMax-half,r.y,half,r.height);
-            if(cur!=null){GUI.DrawTextureWithTexCoords(a,cur,new Rect(0,0,half/cur.width,1));GUI.DrawTextureWithTexCoords(b,cur,new Rect(0,0,half/cur.width,1));}
-            else{Fill(a,new Color(.38f,.11f,.09f));Fill(b,new Color(.38f,.11f,.09f));}
-            Fill(new Rect(a.xMax-2,r.y,2,r.height),brass);Fill(new Rect(b.x,r.y,2,r.height),brass);
-        } else {
-            var old=GUI.color;GUI.color=new Color(1,1,1,1-e);Tile(r,"bg");GUI.color=old;
-        }
-    }
 }
 }

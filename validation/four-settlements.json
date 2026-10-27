@@ -1,0 +1,2211 @@
+{
+  "map_version": 4,
+  "places": 168,
+  "legacy_v3_fingerprints_preserved": 168,
+  "fixed_settlements_per_map": {
+    "nine_cell": 1,
+    "four_cell": 1,
+    "one_cell": 2
+  },
+  "maps": [
+    {
+      "place": 0,
+      "name": "青溪镇",
+      "size": 10,
+      "layout_id": "89b985bb3ae04aa4",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 68
+    },
+    {
+      "place": 1,
+      "name": "栖云山",
+      "size": 10,
+      "layout_id": "dd1c100e1c80cfe3",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 68
+    },
+    {
+      "place": 2,
+      "name": "抚州",
+      "size": 30,
+      "layout_id": "9c7e743d4eb86b8c",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 586
+    },
+    {
+      "place": 3,
+      "name": "桃花渡",
+      "size": 10,
+      "layout_id": "ddfacd2b6bc4c65c",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 74
+    },
+    {
+      "place": 4,
+      "name": "寒石寨",
+      "size": 10,
+      "layout_id": "66586f5d5116f8ff",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 65
+    },
+    {
+      "place": 5,
+      "name": "江陵府",
+      "size": 30,
+      "layout_id": "ecd471603ec318f1",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 658
+    },
+    {
+      "place": 6,
+      "name": "襄阳府",
+      "size": 30,
+      "layout_id": "3d2752f1ca04ce73",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 673
+    },
+    {
+      "place": 7,
+      "name": "武当山",
+      "size": 10,
+      "layout_id": "8545a06681ba3dfc",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 71
+    },
+    {
+      "place": 8,
+      "name": "潭州",
+      "size": 30,
+      "layout_id": "13de980bbb66fe6a",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 550
+    },
+    {
+      "place": 9,
+      "name": "衡山",
+      "size": 10,
+      "layout_id": "ea7adbc4f0dc00be",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 65
+    },
+    {
+      "place": 10,
+      "name": "庐州",
+      "size": 20,
+      "layout_id": "f6917ed8ba1dcebe",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 263
+    },
+    {
+      "place": 11,
+      "name": "河南府",
+      "size": 30,
+      "layout_id": "8fec86b52ae4097b",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 544
+    },
+    {
+      "place": 12,
+      "name": "嵩山",
+      "size": 10,
+      "layout_id": "d204debd67eb33d3",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 65
+    },
+    {
+      "place": 13,
+      "name": "南京开封府",
+      "size": 30,
+      "layout_id": "fafeccc795f2158b",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 709
+    },
+    {
+      "place": 14,
+      "name": "中都",
+      "size": 30,
+      "layout_id": "bf08b922c5960a46",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 640
+    },
+    {
+      "place": 15,
+      "name": "直沽",
+      "size": 20,
+      "layout_id": "a036027ed195805d",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 263
+    },
+    {
+      "place": 16,
+      "name": "太原府",
+      "size": 20,
+      "layout_id": "26b3411ff3a7820c",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 281
+    },
+    {
+      "place": 17,
+      "name": "济南府",
+      "size": 30,
+      "layout_id": "46a409a1f9669381",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 568
+    },
+    {
+      "place": 18,
+      "name": "泰山",
+      "size": 10,
+      "layout_id": "aac7c6ef400f683e",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 65
+    },
+    {
+      "place": 19,
+      "name": "沈州",
+      "size": 30,
+      "layout_id": "899e70d07a0b0882",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 544
+    },
+    {
+      "place": 20,
+      "name": "长白山",
+      "size": 10,
+      "layout_id": "e1a15585c48cbf8e",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 65
+    },
+    {
+      "place": 21,
+      "name": "上京会宁府",
+      "size": 20,
+      "layout_id": "08cf1792a751dcae",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 275
+    },
+    {
+      "place": 22,
+      "name": "黑水营地",
+      "size": 10,
+      "layout_id": "0484787719488c91",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 62
+    },
+    {
+      "place": 23,
+      "name": "丰州",
+      "size": 30,
+      "layout_id": "9de7dba913009512",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 595
+    },
+    {
+      "place": 24,
+      "name": "克鲁伦河营地",
+      "size": 10,
+      "layout_id": "f4ea588999c08fb9",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 71
+    },
+    {
+      "place": 25,
+      "name": "兴庆府",
+      "size": 30,
+      "layout_id": "967cae79e0bae419",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 586
+    },
+    {
+      "place": 26,
+      "name": "京兆府",
+      "size": 30,
+      "layout_id": "5988fa8b9f63f33f",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 658
+    },
+    {
+      "place": 27,
+      "name": "华山",
+      "size": 10,
+      "layout_id": "7ffa61625e053b69",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 65
+    },
+    {
+      "place": 28,
+      "name": "兰州",
+      "size": 20,
+      "layout_id": "34d80bd9782994e6",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 266
+    },
+    {
+      "place": 29,
+      "name": "沙州",
+      "size": 20,
+      "layout_id": "792fc37256a7961d",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 272
+    },
+    {
+      "place": 30,
+      "name": "别失八里",
+      "size": 30,
+      "layout_id": "ba8f978fb90077c7",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 568
+    },
+    {
+      "place": 31,
+      "name": "疏勒",
+      "size": 20,
+      "layout_id": "d64e660201251fd5",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 269
+    },
+    {
+      "place": 32,
+      "name": "阿力麻里",
+      "size": 20,
+      "layout_id": "64c7f4999ab9c586",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 254
+    },
+    {
+      "place": 33,
+      "name": "天山",
+      "size": 10,
+      "layout_id": "f2f7bfc9520bf4ad",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 68
+    },
+    {
+      "place": 34,
+      "name": "逻些",
+      "size": 30,
+      "layout_id": "520e42db0802cb63",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 529
+    },
+    {
+      "place": 35,
+      "name": "日喀则",
+      "size": 10,
+      "layout_id": "c2faf31d418a6fa8",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 74
+    },
+    {
+      "place": 36,
+      "name": "西宁州",
+      "size": 20,
+      "layout_id": "cf9113e63ec6675a",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 257
+    },
+    {
+      "place": 37,
+      "name": "昆仑山",
+      "size": 10,
+      "layout_id": "bffa563d742fc7ac",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 65
+    },
+    {
+      "place": 38,
+      "name": "成都府",
+      "size": 30,
+      "layout_id": "822878d5885c0dd8",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 589
+    },
+    {
+      "place": 39,
+      "name": "重庆府",
+      "size": 20,
+      "layout_id": "07bce614ad9a8075",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 293
+    },
+    {
+      "place": 40,
+      "name": "峨眉山",
+      "size": 10,
+      "layout_id": "db51106c25c5d21b",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 68
+    },
+    {
+      "place": 41,
+      "name": "青城山",
+      "size": 10,
+      "layout_id": "92cb1b0977d74488",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 56
+    },
+    {
+      "place": 42,
+      "name": "大理城",
+      "size": 30,
+      "layout_id": "db25ef6da4cd1292",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 505
+    },
+    {
+      "place": 43,
+      "name": "鄯阐府",
+      "size": 20,
+      "layout_id": "5292739ea4cd453e",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 248
+    },
+    {
+      "place": 44,
+      "name": "矩州",
+      "size": 20,
+      "layout_id": "9acff7cc54cde2ce",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 263
+    },
+    {
+      "place": 45,
+      "name": "临安府",
+      "size": 30,
+      "layout_id": "1e4c0dfcc305bbc5",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 544
+    },
+    {
+      "place": 46,
+      "name": "建康府",
+      "size": 30,
+      "layout_id": "b55dffba58254256",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 568
+    },
+    {
+      "place": 47,
+      "name": "平江府",
+      "size": 30,
+      "layout_id": "89081d20fcdc667c",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 580
+    },
+    {
+      "place": 48,
+      "name": "华亭县",
+      "size": 20,
+      "layout_id": "dc3fcf3c1f7301f9",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 242
+    },
+    {
+      "place": 49,
+      "name": "福州",
+      "size": 30,
+      "layout_id": "1bbe893a99bccb7e",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 544
+    },
+    {
+      "place": 50,
+      "name": "海东聚落",
+      "size": 20,
+      "layout_id": "08026f3bae2cc53d",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 236
+    },
+    {
+      "place": 51,
+      "name": "广州",
+      "size": 30,
+      "layout_id": "31a7b2ecf2b2c002",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 541
+    },
+    {
+      "place": 52,
+      "name": "静江府",
+      "size": 20,
+      "layout_id": "0317c8a0a471cadd",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 254
+    },
+    {
+      "place": 53,
+      "name": "琼州",
+      "size": 20,
+      "layout_id": "fb4a258cefeff3de",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 272
+    },
+    {
+      "place": 54,
+      "name": "官富场",
+      "size": 20,
+      "layout_id": "cd2c8fd7fa3c4b06",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 260
+    },
+    {
+      "place": 55,
+      "name": "香山海澳",
+      "size": 20,
+      "layout_id": "ef7ffe646eab20a5",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 257
+    },
+    {
+      "place": 56,
+      "name": "高昌城",
+      "size": 30,
+      "layout_id": "64e20360309d0e8a",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 685
+    },
+    {
+      "place": 57,
+      "name": "虎思斡耳朵",
+      "size": 30,
+      "layout_id": "a5b2d967832880ce",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 610
+    },
+    {
+      "place": 58,
+      "name": "越州",
+      "size": 30,
+      "layout_id": "6041de8fdb2a1c39",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 565
+    },
+    {
+      "place": 59,
+      "name": "明州",
+      "size": 20,
+      "layout_id": "0b46c2a05958cc81",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 278
+    },
+    {
+      "place": 60,
+      "name": "温州",
+      "size": 20,
+      "layout_id": "239b16b22133e8f2",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 266
+    },
+    {
+      "place": 61,
+      "name": "泉州",
+      "size": 30,
+      "layout_id": "74d3560612913bdc",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 574
+    },
+    {
+      "place": 62,
+      "name": "建宁府",
+      "size": 20,
+      "layout_id": "067c8169845c9342",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 272
+    },
+    {
+      "place": 63,
+      "name": "隆兴府",
+      "size": 30,
+      "layout_id": "cb83da8555a38e43",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 574
+    },
+    {
+      "place": 64,
+      "name": "赣州",
+      "size": 20,
+      "layout_id": "f69f9a03aaf66093",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 290
+    },
+    {
+      "place": 65,
+      "name": "饶州",
+      "size": 20,
+      "layout_id": "e2773cd683eb2649",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 269
+    },
+    {
+      "place": 66,
+      "name": "徽州",
+      "size": 20,
+      "layout_id": "d7ca35d96a5bcaa0",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 281
+    },
+    {
+      "place": 67,
+      "name": "扬州",
+      "size": 30,
+      "layout_id": "cf28fc57220feb9b",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 544
+    },
+    {
+      "place": 68,
+      "name": "楚州",
+      "size": 20,
+      "layout_id": "1d4439a670237eb5",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 251
+    },
+    {
+      "place": 69,
+      "name": "寿春府",
+      "size": 20,
+      "layout_id": "75dbaa3fdba1a787",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 266
+    },
+    {
+      "place": 70,
+      "name": "鄂州",
+      "size": 30,
+      "layout_id": "932193a9876a3c7d",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 529
+    },
+    {
+      "place": 71,
+      "name": "岳州",
+      "size": 20,
+      "layout_id": "fcaa602179a37820",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 269
+    },
+    {
+      "place": 72,
+      "name": "潼川府",
+      "size": 20,
+      "layout_id": "5339fe615f8c03aa",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 272
+    },
+    {
+      "place": 73,
+      "name": "遂宁府",
+      "size": 20,
+      "layout_id": "fc1a6e8f7274ed30",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 254
+    },
+    {
+      "place": 74,
+      "name": "利州",
+      "size": 20,
+      "layout_id": "82b6c83030a46819",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 278
+    },
+    {
+      "place": 75,
+      "name": "兴元府",
+      "size": 20,
+      "layout_id": "be8467a860e35283",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 260
+    },
+    {
+      "place": 76,
+      "name": "夔州",
+      "size": 20,
+      "layout_id": "ed47b06735071de4",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 266
+    },
+    {
+      "place": 77,
+      "name": "潮州",
+      "size": 20,
+      "layout_id": "875af83ba6454b80",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 239
+    },
+    {
+      "place": 78,
+      "name": "邕州",
+      "size": 20,
+      "layout_id": "103bc92441c4ee59",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 251
+    },
+    {
+      "place": 79,
+      "name": "雷州",
+      "size": 20,
+      "layout_id": "0968f48bcde4d6e9",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 260
+    },
+    {
+      "place": 80,
+      "name": "儋州",
+      "size": 10,
+      "layout_id": "4748d174b97e9501",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 74
+    },
+    {
+      "place": 81,
+      "name": "大同府",
+      "size": 30,
+      "layout_id": "1a42dc9b5c5b88ae",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 580
+    },
+    {
+      "place": 82,
+      "name": "平阳府",
+      "size": 20,
+      "layout_id": "e1dcde60b713e7dc",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 269
+    },
+    {
+      "place": 83,
+      "name": "潞州",
+      "size": 20,
+      "layout_id": "77920ac5934c9038",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 296
+    },
+    {
+      "place": 84,
+      "name": "平定州",
+      "size": 20,
+      "layout_id": "081e6d7dcc63d7c0",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 254
+    },
+    {
+      "place": 85,
+      "name": "真定府",
+      "size": 30,
+      "layout_id": "f73403c2ca5f6dbc",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 568
+    },
+    {
+      "place": 86,
+      "name": "邢州",
+      "size": 20,
+      "layout_id": "c2571e084af81aa5",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 281
+    },
+    {
+      "place": 87,
+      "name": "河间府",
+      "size": 20,
+      "layout_id": "e029b62f233fb2ef",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 269
+    },
+    {
+      "place": 88,
+      "name": "大兴府近郊",
+      "size": 10,
+      "layout_id": "d0dde342ce0e419f",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 65
+    },
+    {
+      "place": 89,
+      "name": "益都府",
+      "size": 20,
+      "layout_id": "ef79f6828bda9f20",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 254
+    },
+    {
+      "place": 90,
+      "name": "登州",
+      "size": 20,
+      "layout_id": "27dff0ad23c8a8d6",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 269
+    },
+    {
+      "place": 91,
+      "name": "东平府",
+      "size": 20,
+      "layout_id": "9edd4c6cc9f18e41",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 290
+    },
+    {
+      "place": 92,
+      "name": "归德府",
+      "size": 20,
+      "layout_id": "81e8aeba969a9785",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 266
+    },
+    {
+      "place": 93,
+      "name": "凤翔府",
+      "size": 20,
+      "layout_id": "11ac1af61793a14a",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 293
+    },
+    {
+      "place": 94,
+      "name": "秦州",
+      "size": 20,
+      "layout_id": "a5fcf9004200c898",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 260
+    },
+    {
+      "place": 95,
+      "name": "巩州",
+      "size": 20,
+      "layout_id": "a98e12b5cad7144d",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 266
+    },
+    {
+      "place": 96,
+      "name": "锦州",
+      "size": 20,
+      "layout_id": "b883f7f4e3b17747",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 245
+    },
+    {
+      "place": 97,
+      "name": "大定府",
+      "size": 20,
+      "layout_id": "0272ad360aa4859f",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 272
+    },
+    {
+      "place": 98,
+      "name": "辽阳府",
+      "size": 20,
+      "layout_id": "685b1796ae3b6bd6",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 263
+    },
+    {
+      "place": 99,
+      "name": "肇州",
+      "size": 20,
+      "layout_id": "85c5d5118d414408",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 254
+    },
+    {
+      "place": 100,
+      "name": "斡难河营地",
+      "size": 10,
+      "layout_id": "eb2b3d75cf25c8ee",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 83
+    },
+    {
+      "place": 101,
+      "name": "土兀剌河营地",
+      "size": 10,
+      "layout_id": "40e9ab86e8fd863a",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 71
+    },
+    {
+      "place": 102,
+      "name": "鄂尔浑河营地",
+      "size": 10,
+      "layout_id": "57bc75e2d414c505",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 77
+    },
+    {
+      "place": 103,
+      "name": "杭爱牧集",
+      "size": 10,
+      "layout_id": "2711371f012f7bce",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 77
+    },
+    {
+      "place": 104,
+      "name": "阿尔泰牧集",
+      "size": 10,
+      "layout_id": "d330299a2424ef5b",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 71
+    },
+    {
+      "place": 105,
+      "name": "灵州",
+      "size": 20,
+      "layout_id": "f0f5e75c4a0db793",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 287
+    },
+    {
+      "place": 106,
+      "name": "凉州",
+      "size": 20,
+      "layout_id": "84b39abdfc52c77d",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 275
+    },
+    {
+      "place": 107,
+      "name": "甘州",
+      "size": 20,
+      "layout_id": "20e033a4204dfa18",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 284
+    },
+    {
+      "place": 108,
+      "name": "肃州",
+      "size": 20,
+      "layout_id": "57164f7b15dd25a3",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 293
+    },
+    {
+      "place": 109,
+      "name": "瓜州",
+      "size": 10,
+      "layout_id": "cc34d9888e842e57",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 83
+    },
+    {
+      "place": 110,
+      "name": "和阗",
+      "size": 20,
+      "layout_id": "c65121c82ee9ef2f",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 275
+    },
+    {
+      "place": 111,
+      "name": "莎车",
+      "size": 20,
+      "layout_id": "3dff31f2b412e275",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 269
+    },
+    {
+      "place": 112,
+      "name": "阿克苏",
+      "size": 20,
+      "layout_id": "68316c361921956b",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 266
+    },
+    {
+      "place": 113,
+      "name": "伊丽河渡",
+      "size": 10,
+      "layout_id": "a868299ae49cf5fc",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 74
+    },
+    {
+      "place": 114,
+      "name": "江孜",
+      "size": 10,
+      "layout_id": "934c6805393fa9dd",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 71
+    },
+    {
+      "place": 115,
+      "name": "当雄牧集",
+      "size": 10,
+      "layout_id": "a446b1c4e6ed179b",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 77
+    },
+    {
+      "place": 116,
+      "name": "昌都",
+      "size": 10,
+      "layout_id": "b44023d08992f93f",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 77
+    },
+    {
+      "place": 117,
+      "name": "理塘",
+      "size": 10,
+      "layout_id": "dd02b24597f8ce4f",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 71
+    },
+    {
+      "place": 118,
+      "name": "纳里牧集",
+      "size": 10,
+      "layout_id": "214d808ff0af1473",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 68
+    },
+    {
+      "place": 119,
+      "name": "永昌府",
+      "size": 20,
+      "layout_id": "9e3ade96bd4fae27",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 260
+    },
+    {
+      "place": 120,
+      "name": "威楚府",
+      "size": 20,
+      "layout_id": "d3e3bffde877b416",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 275
+    },
+    {
+      "place": 121,
+      "name": "通海郡",
+      "size": 10,
+      "layout_id": "7c51e9631897b93c",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 74
+    },
+    {
+      "place": 122,
+      "name": "善巨郡",
+      "size": 10,
+      "layout_id": "32a2ac1d070698a8",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 71
+    },
+    {
+      "place": 123,
+      "name": "哈密力",
+      "size": 20,
+      "layout_id": "ca75dc96a9e6813f",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 254
+    },
+    {
+      "place": 124,
+      "name": "焉耆",
+      "size": 10,
+      "layout_id": "b20f23f96a3c7472",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 74
+    },
+    {
+      "place": 125,
+      "name": "轮台驿",
+      "size": 10,
+      "layout_id": "5d6f4e81bb7d5d6a",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 65
+    },
+    {
+      "place": 126,
+      "name": "海北聚落",
+      "size": 20,
+      "layout_id": "9d9ddbcce119d287",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 233
+    },
+    {
+      "place": 127,
+      "name": "海中聚落",
+      "size": 10,
+      "layout_id": "d951db2797ab36ee",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 71
+    },
+    {
+      "place": 128,
+      "name": "海南聚落",
+      "size": 20,
+      "layout_id": "2181c1a2a4af0fc5",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 236
+    },
+    {
+      "place": 129,
+      "name": "松林营地",
+      "size": 10,
+      "layout_id": "68c2116cbe04324f",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 65
+    },
+    {
+      "place": 130,
+      "name": "乌苏里营地",
+      "size": 10,
+      "layout_id": "b1a26c8f71adc513",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 71
+    },
+    {
+      "place": 131,
+      "name": "下江渔集",
+      "size": 20,
+      "layout_id": "61d74fe5d88e8f9e",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 266
+    },
+    {
+      "place": 132,
+      "name": "北山营地",
+      "size": 10,
+      "layout_id": "b73a672038c90939",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 65
+    },
+    {
+      "place": 133,
+      "name": "开京",
+      "size": 30,
+      "layout_id": "5d2c06a31f291aad",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 619
+    },
+    {
+      "place": 134,
+      "name": "西京平壤",
+      "size": 20,
+      "layout_id": "7c8e0dda63ada2a0",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 248
+    },
+    {
+      "place": 135,
+      "name": "义州",
+      "size": 20,
+      "layout_id": "3ef503f0df0018dd",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 251
+    },
+    {
+      "place": 136,
+      "name": "南京汉阳",
+      "size": 20,
+      "layout_id": "62e0275bbd6013db",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 266
+    },
+    {
+      "place": 137,
+      "name": "忠州",
+      "size": 20,
+      "layout_id": "8ba0e041652e1aba",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 266
+    },
+    {
+      "place": 138,
+      "name": "全州",
+      "size": 20,
+      "layout_id": "fa32d0df7c3b08e4",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 284
+    },
+    {
+      "place": 139,
+      "name": "罗州",
+      "size": 20,
+      "layout_id": "74e3c5a98eff2545",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 266
+    },
+    {
+      "place": 140,
+      "name": "东京庆州",
+      "size": 20,
+      "layout_id": "3db25f25a5c217cb",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 254
+    },
+    {
+      "place": 141,
+      "name": "金州",
+      "size": 20,
+      "layout_id": "a02197b048dae58b",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 275
+    },
+    {
+      "place": 142,
+      "name": "溟州",
+      "size": 20,
+      "layout_id": "82e41189ba9ec42e",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 251
+    },
+    {
+      "place": 143,
+      "name": "登州海津",
+      "size": 20,
+      "layout_id": "146b9760b15f95a1",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 260
+    },
+    {
+      "place": 144,
+      "name": "耽罗",
+      "size": 20,
+      "layout_id": "56f98d4ea5c061eb",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 260
+    },
+    {
+      "place": 145,
+      "name": "镰仓",
+      "size": 30,
+      "layout_id": "58292a16e93eea0c",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 565
+    },
+    {
+      "place": 146,
+      "name": "平安京",
+      "size": 30,
+      "layout_id": "520bebaafeb0ab12",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 601
+    },
+    {
+      "place": 147,
+      "name": "奈良",
+      "size": 20,
+      "layout_id": "4c66c3e7ae69b71e",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 275
+    },
+    {
+      "place": 148,
+      "name": "难波津",
+      "size": 20,
+      "layout_id": "c4af0ba7a4cae38b",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 233
+    },
+    {
+      "place": 149,
+      "name": "博多津",
+      "size": 30,
+      "layout_id": "cad2af2fd0e98273",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 475
+    },
+    {
+      "place": 150,
+      "name": "大宰府",
+      "size": 20,
+      "layout_id": "e108e10f073ee424",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 275
+    },
+    {
+      "place": 151,
+      "name": "府内",
+      "size": 20,
+      "layout_id": "7f1b96472d00f901",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 239
+    },
+    {
+      "place": 152,
+      "name": "肥后国府",
+      "size": 20,
+      "layout_id": "8fb7a30793e6057d",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 269
+    },
+    {
+      "place": 153,
+      "name": "萨摩国府",
+      "size": 20,
+      "layout_id": "9eeefc1024250e5a",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 245
+    },
+    {
+      "place": 154,
+      "name": "对马府中",
+      "size": 20,
+      "layout_id": "4930320a8840791d",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 257
+    },
+    {
+      "place": 155,
+      "name": "长门府中",
+      "size": 20,
+      "layout_id": "f6de4ff6770f6e13",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 284
+    },
+    {
+      "place": 156,
+      "name": "备前国府",
+      "size": 20,
+      "layout_id": "f250bb31d4ab8ab7",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 248
+    },
+    {
+      "place": 157,
+      "name": "出云国府",
+      "size": 20,
+      "layout_id": "055a635d285c3df5",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 251
+    },
+    {
+      "place": 158,
+      "name": "阿波国府",
+      "size": 20,
+      "layout_id": "6f0daa0800b382b6",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 290
+    },
+    {
+      "place": 159,
+      "name": "伊予国府",
+      "size": 20,
+      "layout_id": "3647bcbb99fe8f4f",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 269
+    },
+    {
+      "place": 160,
+      "name": "尾张国府",
+      "size": 20,
+      "layout_id": "69f34de3f41ace87",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 281
+    },
+    {
+      "place": 161,
+      "name": "骏府",
+      "size": 20,
+      "layout_id": "4a25090876af99ad",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 266
+    },
+    {
+      "place": 162,
+      "name": "越前国府",
+      "size": 20,
+      "layout_id": "2e00408d9ab45290",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 287
+    },
+    {
+      "place": 163,
+      "name": "越后国府",
+      "size": 20,
+      "layout_id": "ad7ed88ce6fc60e3",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 248
+    },
+    {
+      "place": 164,
+      "name": "松本",
+      "size": 10,
+      "layout_id": "16e9dbc4f40e0caa",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 59
+    },
+    {
+      "place": 165,
+      "name": "宇都宫",
+      "size": 20,
+      "layout_id": "30874e6ee76f1ab6",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 275
+    },
+    {
+      "place": 166,
+      "name": "多贺城",
+      "size": 20,
+      "layout_id": "c7f053cdc3fe4b78",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 272
+    },
+    {
+      "place": 167,
+      "name": "平泉",
+      "size": 10,
+      "layout_id": "519f6830f7e63ef7",
+      "visible_settlements": 4,
+      "footprints": {
+        "3": 1,
+        "2": 1,
+        "1": 2
+      },
+      "whole_areas": 80
+    }
+  ],
+  "rules_tests": {
+    "count": 43,
+    "passed": true
+  },
+  "native": {
+    "checks": 362,
+    "passed": true,
+    "report": "validation/four-settlements-native.json"
+  },
+  "backend_sha256": {
+    "city_maps.py": "be3e3931dc4caec5d409fddfefc8636765d4fd5232d73bb5d335a3bcfe36b3e9",
+    "city_regions.py": "6908430d96a8bc88757928aedee23b59c1f48950f8a1136217d64a620a7677f0",
+    "protagonist.py": "1ca3515636571cb71c976cf45151ab9fb244eded77597922a143808a2ae14ee4"
+  },
+  "build": "unity/Build/FourSettlements/江湖未央.exe"
+}

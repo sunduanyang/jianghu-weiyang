@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-27",
+  "approved_sects": 14,
+  "opening_countries": 12,
+  "city_map_version": 6,
+  "ordinary_settlements_per_map": 4,
+  "additional_cells_per_sect": 9,
+  "full_suite": {
+    "tests": 284,
+    "passed": true,
+    "log": "validation/sects-tests.log"
+  },
+  "final_sect_suite": {
+    "tests": 6,
+    "passed": true
+  },
+  "martial_suite": {
+    "tests": 16,
+    "passed": true
+  },
+  "unity_build": {
+    "version": "6000.6.7f1",
+    "succeeded": true,
+    "path": "unity/Build/SectSystem/江湖未央.exe"
+  },
+  "native": {
+    "checks": 541,
+    "passed": true,
+    "path": "validation/sects-native-verified/acceptance.json"
+  },
+  "save_migration": {
+    "source": "C:\\Users\\User\\AppData\\LocalLow\\JianghuStudio\\江湖未央 Unity\\Saves\\world.sqlite",
+    "tested_copy": "D:\\Desktop\\新游戏\\validation\\sects-save-copy\\world.sqlite",
+    "old_organizations": 34,
+    "new_sects": 14,
+    "month": 242,
+    "npcs": 1173,
+    "released": 60,
+    "retained": 0,
+    "source_unchanged": true,
+    "treasuries_conserved": true,
+    "reload_idempotent": true,
+    "passed": true,
+    "random_state_preserved": true
+  },
+  "backend_parity": true
+}

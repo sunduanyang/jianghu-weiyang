@@ -1,0 +1,349 @@
+{
+  "pack": "landscape-mix-20261027",
+  "assets": [
+    {
+      "id": "01-open-plains",
+      "label": "原野",
+      "size": 1,
+      "cells": 1,
+      "selected": true,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "02-meadow",
+      "label": "草甸",
+      "size": 1,
+      "cells": 1,
+      "selected": true,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "03-woodland",
+      "label": "林地",
+      "size": 1,
+      "cells": 1,
+      "selected": true,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "04-bamboo-forest",
+      "label": "竹林",
+      "size": 1,
+      "cells": 1,
+      "selected": true,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "05-scrubland",
+      "label": "灌丛",
+      "size": 1,
+      "cells": 1,
+      "selected": false,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "06-wilderness",
+      "label": "荒野",
+      "size": 1,
+      "cells": 1,
+      "selected": false,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "07-dryland",
+      "label": "旱地",
+      "size": 1,
+      "cells": 1,
+      "selected": true,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "08-farmland",
+      "label": "农田",
+      "size": 1,
+      "cells": 1,
+      "selected": true,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "09-rice-paddies",
+      "label": "水田",
+      "size": 1,
+      "cells": 1,
+      "selected": false,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "10-sand-flat",
+      "label": "沙地",
+      "size": 1,
+      "cells": 1,
+      "selected": true,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "11-gravel-land",
+      "label": "砾地",
+      "size": 1,
+      "cells": 1,
+      "selected": true,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "12-mudflat",
+      "label": "泥地",
+      "size": 1,
+      "cells": 1,
+      "selected": false,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "13-riverbank",
+      "label": "河滩",
+      "size": 1,
+      "cells": 1,
+      "selected": false,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "14-shallows",
+      "label": "浅滩",
+      "size": 1,
+      "cells": 1,
+      "selected": true,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "15-stream",
+      "label": "溪流",
+      "size": 1,
+      "cells": 1,
+      "selected": false,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "16-low-hills",
+      "label": "丘陵",
+      "size": 1,
+      "cells": 1,
+      "selected": true,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "17-mountain-massif",
+      "label": "山岳",
+      "size": 2,
+      "cells": 4,
+      "selected": true,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "18-grand-canyon",
+      "label": "峡谷",
+      "size": 2,
+      "cells": 4,
+      "selected": false,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "19-natural-barrier",
+      "label": "天险",
+      "size": 2,
+      "cells": 4,
+      "selected": false,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "20-deep-forest",
+      "label": "密林",
+      "size": 2,
+      "cells": 4,
+      "selected": true,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "21-bog",
+      "label": "沼泽",
+      "size": 2,
+      "cells": 4,
+      "selected": false,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "22-wetland",
+      "label": "湿地",
+      "size": 2,
+      "cells": 4,
+      "selected": false,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "23-lake",
+      "label": "湖泊",
+      "size": 2,
+      "cells": 4,
+      "selected": true,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "24-river-valley",
+      "label": "河谷",
+      "size": 2,
+      "cells": 4,
+      "selected": true,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "25-stone-forest",
+      "label": "石林",
+      "size": 2,
+      "cells": 4,
+      "selected": false,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "26-escarpment",
+      "label": "断崖",
+      "size": 2,
+      "cells": 4,
+      "selected": false,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "27-sinkhole",
+      "label": "天坑",
+      "size": 2,
+      "cells": 4,
+      "selected": false,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "28-terraced-fields",
+      "label": "梯田",
+      "size": 2,
+      "cells": 4,
+      "selected": true,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "29-plateau",
+      "label": "高原",
+      "size": 2,
+      "cells": 4,
+      "selected": true,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "30-fjord",
+      "label": "峡湾",
+      "size": 2,
+      "cells": 4,
+      "selected": false,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "31-river-delta",
+      "label": "三角洲",
+      "size": 2,
+      "cells": 4,
+      "selected": true,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "32-basin",
+      "label": "盆地",
+      "size": 2,
+      "cells": 4,
+      "selected": true,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "33-winding-meadow",
+      "label": "曲径草坡",
+      "size": 1,
+      "cells": 1,
+      "selected": true,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "34-ancient-grove",
+      "label": "疏林古木",
+      "size": 1,
+      "cells": 1,
+      "selected": true,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "35-jagged-peaks",
+      "label": "青灰群峰",
+      "size": 2,
+      "cells": 4,
+      "selected": true,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "36-green-spires",
+      "label": "苍翠奇峰",
+      "size": 2,
+      "cells": 4,
+      "selected": true,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "37-river-terraces",
+      "label": "溪谷梯田",
+      "size": 2,
+      "cells": 4,
+      "selected": true,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "38-red-mesas",
+      "label": "丹霞岩台",
+      "size": 2,
+      "cells": 4,
+      "selected": true,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "39-lava-basin",
+      "label": "熔岩盆地",
+      "size": 2,
+      "cells": 4,
+      "selected": false,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "40-volcanic-caldera",
+      "label": "火山口",
+      "size": 2,
+      "cells": 4,
+      "selected": true,
+      "reason": "细节与主体较丰富，整片占四格"
+    },
+    {
+      "id": "41-deep-sea",
+      "label": "深蓝海面",
+      "size": 1,
+      "cells": 1,
+      "selected": true,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "42-blue-water",
+      "label": "碧蓝水面",
+      "size": 1,
+      "cells": 1,
+      "selected": true,
+      "reason": "地面简洁，缩小后仍清晰"
+    },
+    {
+      "id": "43-snowfield",
+      "label": "皑皑雪原",
+      "size": 1,
+      "cells": 1,
+      "selected": true,
+      "reason": "地面简洁，缩小后仍清晰"
+    }
+  ]
+}

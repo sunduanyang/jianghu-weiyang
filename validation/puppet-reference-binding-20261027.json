@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-27",
+  "purpose": "Correct the puppet binding against all 24 supplied assembled final illustrations.",
+  "source_archive": "output/imagegen/puppet-cast24-modern-flat-20261026.zip",
+  "source_archive_sha256": "15dafb1ea37b12a72d7a16264bea7dd00d7750c01c759e45ab9f01c6698fb3f6",
+  "skins": 24,
+  "parts": 374,
+  "mesh_layers": 94,
+  "binding_basis": "assembled final illustration",
+  "single_uniform_pixel_scale_per_character": true,
+  "layered_shared_vertex_skinning": true,
+  "occluded_far_arms_hidden": true,
+  "forward_knee_annotations_corrected": 26,
+  "source_tests": {
+    "passed": true,
+    "count": 8,
+    "log": "output/reference-alignment/final-source-tests.log"
+  },
+  "native_render": {
+    "passed": true,
+    "checks": 153,
+    "report": "output/reference-alignment/final/render-regression.json",
+    "rig_facts": {
+      "skins": 24,
+      "parts": 374,
+      "clips": 7,
+      "pose_samples": 16968,
+      "max_bone_length_error": 4.57763671875e-05,
+      "transition_joint_jump": 0,
+      "max_ground_penetration": 0,
+      "max_support_foot_gap": 3.14567987516057e-05,
+      "max_reverse_knee": 1.44436244227109e-05,
+      "max_loop_seam": 0,
+      "reference_landmark_error_pixels": 0.0160751517365376,
+      "reference_landmark_error_world_units": 0.0108128823339939,
+      "age_sex_profession_controls": true
+    }
+  },
+  "native_reference_comparison": {
+    "passed": true,
+    "characters": 24,
+    "maximum_mean_rgb_error": 3.4109796512695354,
+    "rgb_mae_limit": 5.1000000000000005,
+    "registration_limit_pixels": 1,
+    "filter_sigma_pixels": 1,
+    "report": "output/reference-alignment/final/reference-pixel-comparison.json",
+    "note": "Screenshot comparison permits subpixel rasterization alignment within one screen pixel and applies a one-pixel Gaussian filter; this is not an assertion of pixel-identical runtime rendering."
+  },
+  "native_gameplay": {
+    "passed": true,
+    "checks": 77,
+    "report": "output/reference-alignment/final-ui/acceptance.json"
+  },
+  "build": "unity/Build/ReferenceAligned/江湖未央.exe",
+  "active_build": "ReferenceAligned",
+  "embedded_index_matches_live_source": true,
+  "embedded_index_sha256": "5669b92220a3b5d3e167dee88613c6e521a9c30d9e4ff6164aa19f6f368024ba",
+  "comparison_screenshot": "validation/screenshots/puppet-reference-comparison-20261027.png",
+  "animation": "output/reference-alignment/reference-bound-animation.gif",
+  "animation_frames": 72,
+  "isolated_save_directories": [
+    "output/reference-alignment/final-render-save",
+    "output/reference-alignment/final-ui-save"
+  ],
+  "passed": true,
+  "superseded_by": "validation/puppet-split-shared-rig-20261027.json",
+  "historical_method_rejected_by_user": "This older implementation cut visible surfaces from the final illustration rather than binding the original exploded components."
+}

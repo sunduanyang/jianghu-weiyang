@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-26",
+  "feature": "Shared ink-green battle UI with plain white cloth and one soft backlight",
+  "build": "unity/Build/PlainTheater/江湖未央.exe",
+  "active_build": "PlainTheater",
+  "previous_active_build": "ModernCast",
+  "background_source": "unity/JianghuUnity/Assets/Scripts/ShadowTheater.cs",
+  "background_generation": "Unity Texture2D procedural cloth and one broad diffuse light",
+  "palette_source": [
+    "unity/JianghuUnity/Assets/Scripts/Theme.cs",
+    "unity/JianghuUnity/Assets/Scripts/JianghuApp.cs"
+  ],
+  "native_acceptance": {
+    "bundled_python": true,
+    "checks": 26,
+    "passed": true,
+    "rendered_resolution": [
+      1680,
+      960
+    ],
+    "save": "unity/validation/plain-theater-visible-save-20261026",
+    "path": "unity/validation/plain-theater-visible-20261026/acceptance.json",
+    "model_calls": 0
+  },
+  "screenshots": [
+    "unity/validation/plain-theater-visible-20261026/combat-opening.png",
+    "unity/validation/plain-theater-visible-20261026/combat-windup.png",
+    "unity/validation/plain-theater-visible-20261026/combat-result.png"
+  ],
+  "superseded_by": "validation/warm-theater-20261026.json"
+}

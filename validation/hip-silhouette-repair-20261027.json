@@ -1,0 +1,96 @@
+{
+  "date": "2026-10-27",
+  "passed": true,
+  "scope": "Repair missing rear hip silhouette and preserve full transparent source pieces before rig masking.",
+  "source_archive": "output/imagegen/puppet-cast24-modern-flat-20261026.zip",
+  "source_archive_sha256": "15dafb1ea37b12a72d7a16264bea7dd00d7750c01c759e45ab9f01c6698fb3f6",
+  "skins": 24,
+  "runtime_layers": 385,
+  "data_version": 7,
+  "animation_clips": [
+    "walk"
+  ],
+  "complete_transparent_sources": {
+    "count": 376,
+    "characters": 24,
+    "all_have_transparent_background": true,
+    "all_preserved_byte_for_byte": true,
+    "archive": "output/hip-silhouette-repair-20261027/full-cutouts.zip",
+    "manifest": "output/hip-silhouette-repair-20261027/full-cutouts/manifest.json",
+    "note": "The source components were already RGBA. Full originals are exported separately from runtime masks; the original white board background is not used as actor texture."
+  },
+  "fixes": [
+    "Restored authored rear hems for affected costumes and the fisherman straw cape.",
+    "Removed universal 28-percent shortening and calibrated garment lengths per costume.",
+    "Moved short-costume hip hinges inside full trouser panels without changing skeleton bone lengths or knee positions.",
+    "18 stationary upper-trouser layers now support the pelvis, while lower trouser sections follow the legs.",
+    "Tucked excess waistband corners under the body silhouette; covered pixels are saved as editable hidden source layers.",
+    "Combining each trouser leg, seat and covered source layer reconstructs every original alpha pixel."
+  ],
+  "source_tests": {
+    "passed": true,
+    "count": 11,
+    "log": "output/hip-silhouette-repair-20261027/source-tests.log"
+  },
+  "visible_alpha_contacts": {
+    "passed": true,
+    "cases": 4368,
+    "failures": 0,
+    "report": "output/hip-silhouette-repair-20261027/socket-contact-audit.json"
+  },
+  "native_checks": {
+    "passed": true,
+    "count": 109,
+    "report": "output/hip-silhouette-repair-20261027/native-release/render-regression.json",
+    "facts": {
+      "skins": 24,
+      "parts": 385,
+      "clips": 1,
+      "pose_samples": 5808,
+      "max_bone_length_error": 4.57763671875e-05,
+      "max_ankle_target_error": 3.05771245621145e-05,
+      "max_loop_seam": 0,
+      "max_bind_joint_error": 7.03395417076536e-05,
+      "max_transition_jump": 0
+    }
+  },
+  "offline_native_agreement": {
+    "joint_positions": 3360,
+    "maximum_error_world_units": 0.00018289730602866636
+  },
+  "visual_review": {
+    "finished_illustration_comparisons": 24,
+    "affected_walk_phase_images": 72,
+    "walk_phase_characters": 9,
+    "comparison_sheets": [
+      "output/hip-silhouette-repair-20261027/native-before-after-1.jpg",
+      "output/hip-silhouette-repair-20261027/native-before-after-2.jpg",
+      "output/hip-silhouette-repair-20261027/native-before-after-3.jpg"
+    ],
+    "walk_phase_sheets": [
+      "output/hip-silhouette-repair-20261027/native-walk-phases-1.jpg",
+      "output/hip-silhouette-repair-20261027/native-walk-phases-2.jpg",
+      "output/hip-silhouette-repair-20261027/native-walk-phases-3.jpg"
+    ],
+    "native_gif": "output/hip-silhouette-repair-20261027/hip-walk-before-after.gif",
+    "scope_note": "Actual native screenshots checked for rear hip coverage, restored hems, cape and articulation. The independent drawings still differ from the finished illustration; clothing is rigid cutout artwork."
+  },
+  "build": "unity/Build/HipRestored/江湖未央.exe",
+  "build_sha256": "9806abde4a406ed68647e9505852c49f6aa72a372f4f084e2aa2821affea57a2",
+  "build_log": "output/hip-silhouette-repair-20261027/build-release.log",
+  "previous_active_build": "LivingPalette",
+  "active_build": "HipRestored",
+  "source_changes_after_final_build": [
+    "unity/JianghuUnity/Assets/Scripts/CityBridges.cs",
+    "unity/JianghuUnity/Assets/Scripts/CityRiverSmoke.cs"
+  ],
+  "isolated_save": "output/hip-silhouette-repair-20261027/release-save",
+  "no_world_or_model_side_effects": {
+    "check": "no simulation or model side effects",
+    "pass": true,
+    "facts": {
+      "month": 242,
+      "new_model_calls": 0
+    }
+  }
+}

@@ -1,0 +1,475 @@
+{
+  "date": "2026-10-27",
+  "feature": "priority and two-stage NPC deliberation",
+  "build": "PriorityThinking",
+  "native": {
+    "checks": [
+      {
+        "check": "saved enabled preference and v6 continuous mode",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "no monthly quota or end-month wait",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "ordinary and high-standing candidates found",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "recent player contact takes an active model turn",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "latest interaction replaces an in-flight obsolete snapshot",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "recent NPC receives two actual stages and cites newest own contact",
+        "pass": true,
+        "facts": {
+          "month": 247,
+          "level": "intensive",
+          "label": "重点深思",
+          "reasons": [
+            "最近与玩家互动"
+          ],
+          "assessment": {
+            "focus": "谋生 · 农人",
+            "alternatives": [
+              {
+                "action_id": "court:720",
+                "benefit": "缓解内心压力，维持身心平衡",
+                "risk": "可能消耗时间，影响谋生进度",
+                "action_label": "倾诉心意 · 白南川沐"
+              },
+              {
+                "action_id": "leisure:self",
+                "benefit": "花费2银进行消遣，提升生活满意度",
+                "risk": "消耗资源，可能影响其他必要支出",
+                "action_label": "消遣 · 茶酒游憩，花费2银"
+              }
+            ],
+            "fallback_action_id": "work:self",
+            "fallback_reason": "当前首要任务是维持基本生活，谋生是首要责任，无法因其他活动而中断。",
+            "player_stance": "暂缓承诺",
+            "player_consideration": "玩家的建议是意见，需依自身处境判断，当前应优先保障生计，待条件成熟再考虑合作。",
+            "player_memory_id": 32035,
+            "memory_ids": [
+              32035,
+              32034
+            ],
+            "fallback_label": "谋生 · 农人"
+          },
+          "signature": {
+            "month": 247,
+            "place": 51,
+            "job": "农人",
+            "faction": 0,
+            "office": null,
+            "grade": 7,
+            "contact_event": 32035,
+            "major_event": 32035
+          },
+          "rounds": 2
+        }
+      },
+      {
+        "check": "deep review compares alternatives and has a fallback",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "recent person's view has the requested identity",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "render recent-player-deep-thought",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "actual high standing receives deep review without inventing player contact",
+        "pass": true,
+        "facts": {
+          "month": 247,
+          "level": "deep",
+          "label": "深入思考",
+          "reasons": [
+            "一品人物"
+          ],
+          "assessment": {
+            "focus": "travel:5",
+            "alternatives": [
+              {
+                "action_id": "faction_task:0",
+                "benefit": "完成门中差事以巩固地位",
+                "risk": "可能延误远行计划",
+                "action_label": "门中差事 · 巡山护民，两周 / 酬银3 / 贡献2"
+              },
+              {
+                "action_id": "court:5",
+                "benefit": "与林令仪增进关系",
+                "risk": "可能消耗时间与资源",
+                "action_label": "倾诉心意 · 林令仪"
+              }
+            ],
+            "fallback_action_id": "travel:5",
+            "fallback_reason": "远行是当前最紧迫的需要，以确保自由与视野的拓展，同时履行门中职责。",
+            "player_stance": "暂无直接往来",
+            "player_consideration": "暂无直接往来",
+            "player_memory_id": 0,
+            "memory_ids": [],
+            "fallback_label": "远行 · 江陵府 · 189公里 / 4.7银 / 境内"
+          },
+          "signature": {
+            "month": 247,
+            "place": 6,
+            "job": "镖师",
+            "faction": 0,
+            "office": null,
+            "grade": 1,
+            "contact_event": 0,
+            "major_event": 0
+          },
+          "rounds": 2
+        }
+      },
+      {
+        "check": "thinking preserves paused calendar and protagonist",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "small queue bounds GPU work",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "accepted deep reviews counted",
+        "pass": true,
+        "facts": {
+          "calls": 242,
+          "successes": 236,
+          "failed": 0,
+          "rejected": 10,
+          "stale": 0,
+          "latency_ms": 2730070.17649998,
+          "prompt_tokens": 927878,
+          "completion_tokens": 61503,
+          "last_error": "",
+          "last_result": {
+            "npc_id": 452,
+            "applied": true,
+            "reason": "计划已采用；心理变化经过限幅结算"
+          },
+          "busy": true,
+          "scheduled": 9,
+          "coverage": 224,
+          "eligible": 1683,
+          "session_applied": 3,
+          "queue_refreshed": 3,
+          "deep_completed": 3,
+          "current_npc": 1,
+          "current_name": "沈知秋",
+          "current_stage": "复核计划",
+          "current_depth": "深入思考",
+          "policy_active": 198,
+          "month_completed": 172,
+          "recent_player_contacts": 2,
+          "high_status_attention": 148,
+          "plan_executions": 141,
+          "policy_actions": 50,
+          "policy_ranking_changes": 11,
+          "queued": 1,
+          "pending": 2,
+          "managed_model": true,
+          "average_ms": 11568.0939682203,
+          "config": {
+            "enabled": true,
+            "backend": "llamacpp",
+            "url": "http://127.0.0.1:11435",
+            "model": "qwen3:4b",
+            "cooldown_months": 1,
+            "queue_limit": 2,
+            "timeout": 80,
+            "max_tokens": 600,
+            "config_version": 6,
+            "context_size": 8192,
+            "auto_start": true,
+            "deep_max_tokens": 1000,
+            "assessment_tokens": 700
+          },
+          "mode": "LLM计划与生活方针"
+        }
+      },
+      {
+        "check": "high person's view has the requested identity",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "render high-standing-deep-thought",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "render priority-model-settings",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "normal month advances once without waiting for model",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "no Unity errors or exceptions",
+        "pass": true,
+        "facts": null
+      }
+    ],
+    "errors": [],
+    "passed": true
+  },
+  "backend": {
+    "modules": 43,
+    "feature_source_match": true,
+    "current_unpacked_source_changes": [
+      "martial.py"
+    ],
+    "parity_at_staging": {
+      "modules": 43,
+      "mismatch": [],
+      "hashes": {
+        "ai.py": "3b92a9bf761e6e8aab7982f92cf377dde84665dcc6a09a057bf29f3c75cfa507",
+        "atlas.py": "4314a11a01f53ca0392a64c9f5ca7b9f084b84ecf00a39ba07d8372ad2257d07",
+        "atlas_expansion.py": "87ac10adbc53a2c4fd761b63b56df87ef544457f048624f19143f89da29e1187",
+        "atlas_migration.py": "c8f548da1c80323f57a999bfdebe5caf98bf29784fdc0d12021d2a61c72d4b5c",
+        "careers.py": "84d97756262bf833fcd54362f4dbfa6bac024d630e331eedef9b60d2374323c1",
+        "city_biomes.py": "9cc647c6192e4110dbef61035298e473f73128845b511f4a14a310929d338639",
+        "city_gardens.py": "465dc249dca3812f348ee8273b414f302bc8953143c8cdfc5e079d76fcf794fe",
+        "city_landscape.py": "fbe3a70ace9a4c40d84ece63eddc6b52364d13737fa0957324f41480d2c550b9",
+        "city_maps.py": "a21f1f30165f1551dafc0953316325ee4dbaf0d9c3aec35f821eb02e3206bf2e",
+        "city_plans.py": "48cb31a3f7355449314e7c1936a6405b419dc7d8d176a774b085beb291659548",
+        "city_regions.py": "443590725c6742bb155869da3553fd9bb7474b3cbbae9965647275f2bc4e157a",
+        "deliberation.py": "4ce4a9195556e79a074caaeecdcd0131ca48d17f49138eebf1f41eca18656935",
+        "demography.py": "c57fe99c27270e72a7ca4895298d5e8671fa18e2afad67afc42b98e5587bb0a9",
+        "economics.py": "7a226932c94cd8ac056a3da846feb2154a533a86c97d33458e35ff3110490e2c",
+        "engine.py": "66e8fac528c512023cd2ddb10160778e49e3fc83847106ed31ec8f58b8ce8c68",
+        "government.py": "7817774054eb484140a5cd4d71b45c282eff4e1584e14eca13854011d3aa9f98",
+        "historical_map.py": "1e08af6fe6bc9ad9d2b0e5e429d71461acfe412b9c7ead175cdc6186aeea809e",
+        "items.py": "5db297333c486d35b63b4574eae1ab7259caf75de99052a3f7db1ceda2e17b73",
+        "llm_policy.py": "2bb9824410750a8ba21eab917401188be97b1f7a3c0f7297e69425e9f8cf416a",
+        "local_life.py": "4e2038d2f2b76a06c0cd28cea89d106b0c477f4d9d4a75c395f6c2477f3dad91",
+        "martial.py": "72b1b8303b5d7bc7b901522ef914373ac59d1ca1a352288b4461b13deff822fe",
+        "model_service.py": "ffaa248333cb59927e353f2ffff491bc680e6da179c30abd559fe66635447782",
+        "npc_attention.py": "a19ea00d5aa9cf13f64404097d90602c55624da6df76ab72b5eb8ecc47c5d266",
+        "npc_memory.py": "eb5bfa500b8c0b094d59d1043ddf57d910c08ea7082bc2c9ff8d56e3fa2fb701",
+        "npc_plans.py": "5db3dfcf33e924c8ffc7a9bcd1e84f5e63c9bb0eb162858e1a38a0628fe906cf",
+        "organizations.py": "9dfed6f94045585c0ab9c7f9d048956b1c8388b5da9bbb9a446125a406814e09",
+        "physical_combat.py": "ee998f90665c31817f36bb44b4e4484c5a06282cdaddf2f7c69b530a14072136",
+        "politics.py": "643ac2df5b8e23f1d3c751f1bec641792333671e14e9b612e0409de027772d0e",
+        "population.py": "152f17945dcb7bbd9c6af5fe76e5db2f997ce3286c22f5a2a8fd103b2d1a7cca",
+        "protagonist.py": "6d30b9609bf80b787ec16fabea7f595842087b735d849caa51d6534e02baba36",
+        "rank_progression.py": "9b133e8a3932fe50df5ce1e91e155b8780cf3a35d70cbf8c55e0613680ac1e8b",
+        "relationships.py": "0b51546065f525967838cab3a967fbd2102903dca5b9b79864007169e0450fae",
+        "sect_catalog.py": "b2d3b28f18d4da90800a34cfe33ad970466c901df6b01424380c0af74a8f1ec1",
+        "sect_migration.py": "70e88b2259ab2b8a885c21bb60ce08206097e58c6c208f186540bb097e7dca93",
+        "sect_ranks.py": "c2628e718c54612ac2bed58338803afc948c566d9c79811c9a6dd00c8c040495",
+        "server.py": "73ff874da5fb8507b2d5218d0f0b6d19f150d2306e610a7781e85fb4ab72cdfb",
+        "settlements.py": "3654534a829f9082f05b6ef6b585155c463004bfeab733ab586d6e89993fee1f",
+        "social.py": "e395725bf846a9896974cff8a3af8b1fa78b1ae4ecd345bd22aa9f1bc939145c",
+        "social_ranks.py": "5e695446ee18a326abddad2b993503db66b4df20d2b3a1ab8b413e2dd84790f9",
+        "society.py": "2a6b83629a3fe6a696120bc175e413f8a5aa72097fba9e86dbea55e88f341bbd",
+        "store.py": "b98ca0fe845953a0b14623587da2a98ffcd0bcd8cd8a438cc3823343a09f50d4",
+        "territory.py": "f4bac713250a0623ea308359afe697897bf4b251ea1722b761ee13c75d24ad27",
+        "__init__.py": "fa4bb541ffb1012e31431d164c85942d7e66419ef2c01b38bcb64e142969b8d7"
+      }
+    },
+    "packaged_hashes": {
+      "ai.py": "3b92a9bf761e6e8aab7982f92cf377dde84665dcc6a09a057bf29f3c75cfa507",
+      "atlas.py": "4314a11a01f53ca0392a64c9f5ca7b9f084b84ecf00a39ba07d8372ad2257d07",
+      "atlas_expansion.py": "87ac10adbc53a2c4fd761b63b56df87ef544457f048624f19143f89da29e1187",
+      "atlas_migration.py": "c8f548da1c80323f57a999bfdebe5caf98bf29784fdc0d12021d2a61c72d4b5c",
+      "careers.py": "84d97756262bf833fcd54362f4dbfa6bac024d630e331eedef9b60d2374323c1",
+      "city_biomes.py": "9cc647c6192e4110dbef61035298e473f73128845b511f4a14a310929d338639",
+      "city_gardens.py": "465dc249dca3812f348ee8273b414f302bc8953143c8cdfc5e079d76fcf794fe",
+      "city_landscape.py": "fbe3a70ace9a4c40d84ece63eddc6b52364d13737fa0957324f41480d2c550b9",
+      "city_maps.py": "a21f1f30165f1551dafc0953316325ee4dbaf0d9c3aec35f821eb02e3206bf2e",
+      "city_plans.py": "48cb31a3f7355449314e7c1936a6405b419dc7d8d176a774b085beb291659548",
+      "city_regions.py": "443590725c6742bb155869da3553fd9bb7474b3cbbae9965647275f2bc4e157a",
+      "deliberation.py": "4ce4a9195556e79a074caaeecdcd0131ca48d17f49138eebf1f41eca18656935",
+      "demography.py": "c57fe99c27270e72a7ca4895298d5e8671fa18e2afad67afc42b98e5587bb0a9",
+      "economics.py": "7a226932c94cd8ac056a3da846feb2154a533a86c97d33458e35ff3110490e2c",
+      "engine.py": "66e8fac528c512023cd2ddb10160778e49e3fc83847106ed31ec8f58b8ce8c68",
+      "government.py": "7817774054eb484140a5cd4d71b45c282eff4e1584e14eca13854011d3aa9f98",
+      "historical_map.py": "1e08af6fe6bc9ad9d2b0e5e429d71461acfe412b9c7ead175cdc6186aeea809e",
+      "items.py": "5db297333c486d35b63b4574eae1ab7259caf75de99052a3f7db1ceda2e17b73",
+      "llm_policy.py": "2bb9824410750a8ba21eab917401188be97b1f7a3c0f7297e69425e9f8cf416a",
+      "local_life.py": "4e2038d2f2b76a06c0cd28cea89d106b0c477f4d9d4a75c395f6c2477f3dad91",
+      "martial.py": "72b1b8303b5d7bc7b901522ef914373ac59d1ca1a352288b4461b13deff822fe",
+      "model_service.py": "ffaa248333cb59927e353f2ffff491bc680e6da179c30abd559fe66635447782",
+      "npc_attention.py": "a19ea00d5aa9cf13f64404097d90602c55624da6df76ab72b5eb8ecc47c5d266",
+      "npc_memory.py": "eb5bfa500b8c0b094d59d1043ddf57d910c08ea7082bc2c9ff8d56e3fa2fb701",
+      "npc_plans.py": "5db3dfcf33e924c8ffc7a9bcd1e84f5e63c9bb0eb162858e1a38a0628fe906cf",
+      "organizations.py": "9dfed6f94045585c0ab9c7f9d048956b1c8388b5da9bbb9a446125a406814e09",
+      "physical_combat.py": "ee998f90665c31817f36bb44b4e4484c5a06282cdaddf2f7c69b530a14072136",
+      "politics.py": "643ac2df5b8e23f1d3c751f1bec641792333671e14e9b612e0409de027772d0e",
+      "population.py": "152f17945dcb7bbd9c6af5fe76e5db2f997ce3286c22f5a2a8fd103b2d1a7cca",
+      "protagonist.py": "6d30b9609bf80b787ec16fabea7f595842087b735d849caa51d6534e02baba36",
+      "rank_progression.py": "9b133e8a3932fe50df5ce1e91e155b8780cf3a35d70cbf8c55e0613680ac1e8b",
+      "relationships.py": "0b51546065f525967838cab3a967fbd2102903dca5b9b79864007169e0450fae",
+      "sect_catalog.py": "b2d3b28f18d4da90800a34cfe33ad970466c901df6b01424380c0af74a8f1ec1",
+      "sect_migration.py": "70e88b2259ab2b8a885c21bb60ce08206097e58c6c208f186540bb097e7dca93",
+      "sect_ranks.py": "c2628e718c54612ac2bed58338803afc948c566d9c79811c9a6dd00c8c040495",
+      "server.py": "73ff874da5fb8507b2d5218d0f0b6d19f150d2306e610a7781e85fb4ab72cdfb",
+      "settlements.py": "3654534a829f9082f05b6ef6b585155c463004bfeab733ab586d6e89993fee1f",
+      "social.py": "e395725bf846a9896974cff8a3af8b1fa78b1ae4ecd345bd22aa9f1bc939145c",
+      "social_ranks.py": "5e695446ee18a326abddad2b993503db66b4df20d2b3a1ab8b413e2dd84790f9",
+      "society.py": "2a6b83629a3fe6a696120bc175e413f8a5aa72097fba9e86dbea55e88f341bbd",
+      "store.py": "b98ca0fe845953a0b14623587da2a98ffcd0bcd8cd8a438cc3823343a09f50d4",
+      "territory.py": "f4bac713250a0623ea308359afe697897bf4b251ea1722b761ee13c75d24ad27",
+      "__init__.py": "fa4bb541ffb1012e31431d164c85942d7e66419ef2c01b38bcb64e142969b8d7"
+    }
+  },
+  "checks": {
+    "focused": {
+      "count": 53,
+      "passed": true,
+      "log": "output\\priority-thinking-20261027\\focused-verified.log"
+    },
+    "regression": {
+      "log": "output\\priority-thinking-20261027\\regression-verified.log",
+      "pending": false,
+      "count": 367,
+      "passed": true
+    }
+  },
+  "deployed": {
+    "backup": "C:\\Users\\User\\AppData\\LocalLow\\JianghuStudio\\江湖未央 Unity\\Saves\\backups\\before-priority-thinking-20261027-222909",
+    "save_audit": {
+      "physical_unchanged": false,
+      "physical_differences": [
+        "/items/market/inventory",
+        "/items/next_id",
+        "/items/objects/8523",
+        "/items/objects/8524",
+        "/items/objects/8525",
+        "/items/objects/8526",
+        "/items/objects/8527",
+        "/items/objects/8528",
+        "/items/objects/8529",
+        "/items/objects/8530",
+        "/items/physical_catalog"
+      ],
+      "existing_world_preserved": true,
+      "unexpected_differences": [],
+      "catalog_registration": {
+        "templates": [
+          "iron_dagger",
+          "hand_axe",
+          "spiked_mace",
+          "long_spear",
+          "great_sword",
+          "great_axe",
+          "war_hammer",
+          "wood_shield"
+        ],
+        "count": 8,
+        "existing_objects_unchanged": true,
+        "basis": "items.initialize physical_catalog migration"
+      },
+      "old_history_unchanged": true,
+      "month": 247,
+      "living": 1798,
+      "old_events": 32032,
+      "new_events": 1,
+      "attention_migrated": true,
+      "backup": "C:\\Users\\User\\AppData\\LocalLow\\JianghuStudio\\江湖未央 Unity\\Saves\\backups\\before-priority-thinking-20261027-222909"
+    },
+    "grounding": {
+      "deep": [
+        [
+          "94",
+          "deep",
+          2
+        ],
+        [
+          "349",
+          "deep",
+          2
+        ],
+        [
+          "452",
+          "deep",
+          2
+        ],
+        [
+          "508",
+          "intensive",
+          2
+        ],
+        [
+          "517",
+          "deep",
+          2
+        ],
+        [
+          "943",
+          "deep",
+          2
+        ]
+      ],
+      "grounded_contacts": [
+        {
+          "npc_id": 508,
+          "event": 12991,
+          "stance": "暂缓承诺",
+          "cited": 12991
+        }
+      ]
+    },
+    "live": {
+      "month": 247,
+      "population": 1798,
+      "autoplay": false,
+      "ai_budget_wait": false,
+      "config": {
+        "enabled": true,
+        "backend": "llamacpp",
+        "url": "http://127.0.0.1:11435",
+        "model": "qwen3:4b",
+        "cooldown_months": 1,
+        "queue_limit": 2,
+        "timeout": 80,
+        "max_tokens": 600,
+        "config_version": 6,
+        "context_size": 8192,
+        "auto_start": true,
+        "deep_max_tokens": 1000,
+        "assessment_tokens": 700
+      },
+      "session_applied": 31,
+      "deep_completed": 12,
+      "managed_model": true
+    }
+  },
+  "evidence": {
+    "preliminary_real_model": "output\\priority-thinking-20261027\\real-model-v2\\report.json",
+    "native_acceptance": "output\\priority-thinking-20261027\\native-verified\\acceptance\\acceptance.json",
+    "build_log": "output\\priority-thinking-20261027\\unity-build-final.log"
+  },
+  "corrections": [
+    "Reject denial of recorded player contact; require an explicit response stance.",
+    "Use a transient monotonic session clock so exported world replay remains deterministic."
+  ],
+  "limits": "Two-stage calls and legal execution verified in selected cases; population-wide long-term behavior and balance remain uncalibrated.",
+  "passed": true
+}

@@ -1,6 +1,6 @@
-"""Rebuild static/geography-compact.json for the consolidated town regions.
+"""Rebuild art/world-map/geography-compact.json for the consolidated town regions.
 
-It reuses the land and political layers of static/geography.json, recomputes the town cells for the
+It reuses the land and political layers of art/world-map/geography.json, recomputes the town cells for the
 current settlements.HUBS and lays a winding road for every consolidated route. Roads are a path search
 over a cost field (sea and mountain ranges are expensive, a smooth noise field makes them meander, and
 cells already used by a road are cheaper so routes share trunks); sea routes are gentle arcs.
@@ -210,13 +210,13 @@ def label_anchors(data):
 
 
 def main():
-    full = json.loads((ROOT / 'static' / 'geography.json').read_text(encoding='utf-8'))
+    full = json.loads((ROOT / 'art' / 'world-map' / 'geography.json').read_text(encoding='utf-8'))
     hubs = [PLACES[h] for h in settlements.HUBS]
     data = {**full, **political_layers(hubs)}
     data['note'] = f'{len(hubs)}处主要城镇区域，按各方疆域广狭设置；周边小聚落与山门并入所属城镇。'
     data['roads'] = roads(full['land'])
     label_anchors(data)
-    target = ROOT / 'static' / 'geography-compact.json'
+    target = ROOT / 'art' / 'world-map' / 'geography-compact.json'
     target.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     print(f'{target.name}: {len(data["cells"])} cells, {len(data["roads"])} roads, {target.stat().st_size} bytes')
 

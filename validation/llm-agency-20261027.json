@@ -1,0 +1,4787 @@
+{
+  "passed": true,
+  "regression_tests": 391,
+  "final_focused_tests": 38,
+  "native": {
+    "unity": "6000.6.7f1",
+    "checks": [
+      {
+        "check": "saved LLM preference survives native startup",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "world paused while background thoughts run",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "actual model produces at least three accepted personal decisions",
+        "pass": true,
+        "facts": {
+          "calls": 4,
+          "successes": 3,
+          "failed": 0,
+          "rejected": 0,
+          "stale": 0,
+          "latency_ms": 29586.9620999947,
+          "prompt_tokens": 10406,
+          "completion_tokens": 780,
+          "last_error": "",
+          "last_result": {
+            "npc_id": 66,
+            "applied": true,
+            "reason": "计划已采用；心理变化经过限幅结算"
+          },
+          "busy": true,
+          "scheduled": 5,
+          "coverage": 3,
+          "eligible": 1678,
+          "policy_active": 3,
+          "month_used": 5,
+          "plan_executions": 0,
+          "policy_actions": 0,
+          "policy_ranking_changes": 0,
+          "queued": 1,
+          "pending": 2,
+          "managed_model": true,
+          "average_ms": 9862.32069999824,
+          "config": {
+            "enabled": true,
+            "backend": "llamacpp",
+            "url": "http://127.0.0.1:11435",
+            "model": "qwen3:4b",
+            "reviews_per_month": 6,
+            "cooldown_months": 3,
+            "queue_limit": 2,
+            "timeout": 80,
+            "max_tokens": 600,
+            "config_version": 4,
+            "context_size": 8192,
+            "auto_start": true,
+            "turn_wait_seconds": 30,
+            "turn_min_decisions": 2
+          },
+          "mode": "LLM计划与生活方针"
+        }
+      },
+      {
+        "check": "installed local model starts automatically",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "background thinking preserves calendar and protagonist",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "model life policies are active",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "person exposes model policy and own settlement context",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "render model-life-policy",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "normal end-month accepts asynchronous LLM turn",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "normal end-month advances exactly once",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "model plans really execute during that month",
+        "pass": true,
+        "facts": {
+          "calls": 5,
+          "successes": 5,
+          "failed": 0,
+          "rejected": 0,
+          "stale": 0,
+          "latency_ms": 47635.3076999985,
+          "prompt_tokens": 17537,
+          "completion_tokens": 1310,
+          "last_error": "",
+          "last_result": {
+            "npc_id": 66,
+            "applied": true,
+            "reason": "计划已采用；心理变化经过限幅结算"
+          },
+          "busy": false,
+          "scheduled": 5,
+          "coverage": 3,
+          "eligible": 1682,
+          "policy_active": 2,
+          "month_used": 0,
+          "plan_executions": 6,
+          "policy_actions": 1,
+          "policy_ranking_changes": 0,
+          "queued": 0,
+          "pending": 2,
+          "managed_model": true,
+          "average_ms": 9527.0615399997,
+          "config": {
+            "enabled": true,
+            "backend": "llamacpp",
+            "url": "http://127.0.0.1:11435",
+            "model": "qwen3:4b",
+            "reviews_per_month": 6,
+            "cooldown_months": 3,
+            "queue_limit": 2,
+            "timeout": 80,
+            "max_tokens": 600,
+            "config_version": 4,
+            "context_size": 8192,
+            "auto_start": true,
+            "turn_wait_seconds": 30,
+            "turn_min_decisions": 2
+          },
+          "mode": "LLM计划与生活方针"
+        }
+      },
+      {
+        "check": "monthly inference budget is bounded",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "render llm-participation-settings",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "inference can be disabled",
+        "pass": true,
+        "facts": null
+      },
+      {
+        "check": "no Unity errors or exceptions",
+        "pass": true,
+        "facts": null
+      }
+    ],
+    "errors": [],
+    "passed": true
+  },
+  "packaged_real_model": {
+    "real_requests": 4,
+    "decisions": [
+      {
+        "npc_id": 19,
+        "role": "disciple",
+        "context": {
+          "npc_id": 19,
+          "month": 245,
+          "situation": {
+            "place": 6,
+            "faction": 0,
+            "job": "镖师"
+          },
+          "settlement_life": {
+            "enabled": true,
+            "working": true,
+            "since": 245,
+            "home": {
+              "place": 6,
+              "settlement_id": "sect_wudang",
+              "since": 245,
+              "reason": "现时户居登记",
+              "event_id": null,
+              "name": "武当派",
+              "place_name": "襄阳府",
+              "facility": null
+            },
+            "work": {
+              "place": 6,
+              "settlement_id": "settlement_0",
+              "node": "gate",
+              "name": "襄阳府",
+              "place_name": "襄阳府",
+              "facility": "南门驿口"
+            },
+            "current": {
+              "place": 6,
+              "settlement_id": "settlement_0",
+              "node": "market",
+              "row": 10,
+              "col": 15,
+              "name": "襄阳府",
+              "place_name": "襄阳府",
+              "facility": "街心市集"
+            },
+            "commute_cost": 10,
+            "basis": "住所固定登记；每周按实际行动更新在场位置。通勤与拜访包含在该次行动时间内。"
+          },
+          "life_policy": null,
+          "self": {
+            "name": "傅长宁",
+            "age_months": 325,
+            "wealth": 87.26168750000001,
+            "health": 99.0,
+            "skill": 20.562653159501615,
+            "job": "镖师",
+            "traits": {
+              "compassion": 23.93954676775875,
+              "ambition": 24.878312510678278,
+              "caution": 53.809,
+              "sociability": 69.0101605786498,
+              "loyalty": 63.59574593342927,
+              "honesty": 36.2522,
+              "greed": 41.7334,
+              "aggression": 76.59572810197037
+            },
+            "mood": {
+              "joy": 20.496,
+              "anger": 0.0,
+              "fear": 0.0
+            },
+            "beliefs": {
+              "trust": 0.3840763950170329,
+              "justice": 0.6092686692079747,
+              "tradition": 0.6
+            },
+            "desires": {
+              "wealth": 70.3033,
+              "mastery": 43.0192,
+              "belonging": 60.429,
+              "renown": 15.7316,
+              "freedom": 57.5215,
+              "revenge": 0.0
+            },
+            "goal": {
+              "kind": "wealth",
+              "title": "安家立业",
+              "since": 242,
+              "horizon_years": 5,
+              "target": 480.74,
+              "cause": 19,
+              "progress": 0.1707,
+              "status": "追求中",
+              "minimum_months": 48
+            },
+            "pregnancy": null,
+            "illness": null,
+            "office": null,
+            "generation": 0,
+            "spouse": null,
+            "children": [],
+            "family_size": 3,
+            "career": {
+              "profession": "镖师",
+              "experience": {
+                "镖师": 22.258
+              },
+              "since": 242,
+              "last_change": 218,
+              "last_event": 12201,
+              "source": "九品世界期初登记"
+            },
+            "martial": {
+              "arts": {
+                "breath": {
+                  "practice": 22.61891847545178,
+                  "realm": 0
+                },
+                "bridge_fist": {
+                  "practice": 22.61891847545178,
+                  "realm": 0
+                },
+                "cloud_step": {
+                  "practice": 22.61891847545178,
+                  "realm": 0
+                },
+                "river_sword": {
+                  "practice": 22.61891847545178,
+                  "realm": 0
+                },
+                "reed_cut": {
+                  "practice": 22.61891847545178,
+                  "realm": 0
+                },
+                "wudang_sword": {
+                  "practice": 20.5627,
+                  "realm": 0
+                }
+              },
+              "loadout": {
+                "inner": "breath",
+                "movement": "cloud_step",
+                "attacks": [
+                  "bridge_fist",
+                  "river_sword",
+                  "reed_cut",
+                  "wudang_sword"
+                ]
+              },
+              "focus": "breath",
+              "stamina": 100
+            }
+          },
+          "public_institutions": {
+            "name": "临安府行台",
+            "tax_rate": 0.09,
+            "offices": {
+              "县令": 754,
+              "捕头": 653,
+              "主簿": 529
+            },
+            "policy": "balanced",
+            "policy_reason": "沿用既有施政，待年度公议。"
+          },
+          "location": {
+            "id": 6,
+            "name": "襄阳府",
+            "lon": 112.14,
+            "lat": 32.04,
+            "x": 670.81,
+            "y": 431.26,
+            "country": 0,
+            "region": "京西南路",
+            "kind": "city",
+            "trade": 1.2,
+            "weight": 8,
+            "color": "#8d9b68",
+            "owner": 0,
+            "guard": 55.0,
+            "stability": 100.0,
+            "changed_month": null,
+            "last_battle": -6,
+            "event_id": null,
+            "native_country": 0,
+            "guard_max": 55.0,
+            "occupied": false,
+            "interior_authored": true,
+            "country_name": "南宋"
+          },
+          "membership": {
+            "key": "wudang",
+            "name": "武当派",
+            "home": "武当山",
+            "seat_name": "武当山门",
+            "ethos": "以柔克刚，清修济世",
+            "tradition": "道门",
+            "ranks": [
+              "掌门",
+              "护法长老",
+              "长老",
+              "堂主",
+              "执事",
+              "真传弟子",
+              "内门弟子",
+              "外门弟子",
+              "记名弟子"
+            ],
+            "duty": "巡山护民",
+            "art_id": "wudang_sword",
+            "art": "武当剑法",
+            "prototype": "river_sword",
+            "basis": "武侠小说中的武当传承；采用跨时代江湖设定。",
+            "focus": "mastery",
+            "public_axis": "security",
+            "kind": "sect",
+            "id": 0,
+            "place": 6,
+            "country": 0,
+            "leader": 1,
+            "fund": 64.0,
+            "opening_fund": 100.0,
+            "account_since": 242,
+            "revenue": 66.0,
+            "expenses": 102.0,
+            "tasks_completed": 34,
+            "leader_since": 242,
+            "leader_review_since": 242,
+            "vacancy_previous": null,
+            "vacancy_event": null,
+            "last_event": 18378,
+            "records": [
+              14922,
+              14954,
+              15121,
+              15593,
+              15892,
+              16548,
+              16690,
+              16802,
+              16880,
+              16940,
+              16942,
+              17377,
+              17448,
+              17690,
+              17692,
+              17842,
+              17843,
+              17999,
+              18017,
+              18183,
+              18258,
+              18370,
+              18376,
+              18378
+            ],
+            "native_place": 7
+          },
+          "my_contribution": 6.8927,
+          "social_identity": {
+            "grade": 7,
+            "grade_label": "七品",
+            "title": "武当派内门弟子",
+            "roles": [
+              {
+                "kind": "livelihood",
+                "title": "镖师·熟手",
+                "grade": 6
+              },
+              {
+                "kind": "faction",
+                "title": "武当派内门弟子",
+                "grade": 7
+              }
+            ],
+            "class_label": null,
+            "system": "sect",
+            "system_label": "门派品级",
+            "country": null
+          },
+          "rank_progression": {
+            "enabled": true,
+            "version": 1,
+            "next_assessment": "景和21年7月",
+            "sect": {
+              "current": 7,
+              "target": 6,
+              "requirements": [
+                {
+                  "label": "有效贡献",
+                  "current": 6.8927,
+                  "required": 8,
+                  "met": false
+                },
+                {
+                  "label": "武学",
+                  "current": 20.562653159501615,
+                  "required": 20,
+                  "met": true
+                },
+                {
+                  "label": "声望",
+                  "current": 8.363371661384036,
+                  "required": 0,
+                  "met": true
+                },
+                {
+                  "label": "近半年履职月数",
+                  "current": 0,
+                  "required": 1,
+                  "met": false
+                },
+                {
+                  "label": "入门月数",
+                  "current": 3,
+                  "required": 0,
+                  "met": true
+                },
+                {
+                  "label": "年龄（月）",
+                  "current": 325,
+                  "required": 120,
+                  "met": true
+                }
+              ],
+              "blocked": "",
+              "qualified": false,
+              "required_months": 3,
+              "completed_months": 0,
+              "leader_only": false,
+              "penalty": 0.0,
+              "reason": "当前品级登记，后续按实际经历考核",
+              "deficient_months": 0
+            },
+            "options": [],
+            "warning": "",
+            "history": [],
+            "description": "门派逐阶考核，病伤可休养；社会品阶随真实营生、家业与任职改变。查看界面不推进考核。"
+          },
+          "local_economy": {
+            "enabled": true,
+            "version": 1,
+            "place": 6,
+            "name": "襄阳府",
+            "cash": 17.0094,
+            "since": 245,
+            "month": 245,
+            "towns": [
+              {
+                "id": 45,
+                "name": "临安府"
+              },
+              {
+                "id": 46,
+                "name": "建康府"
+              },
+              {
+                "id": 2,
+                "name": "抚州"
+              },
+              {
+                "id": 5,
+                "name": "江陵府"
+              },
+              {
+                "id": 6,
+                "name": "襄阳府"
+              },
+              {
+                "id": 38,
+                "name": "成都府"
+              },
+              {
+                "id": 51,
+                "name": "广州"
+              },
+              {
+                "id": 61,
+                "name": "泉州"
+              },
+              {
+                "id": 14,
+                "name": "中都"
+              },
+              {
+                "id": 13,
+                "name": "南京开封府"
+              },
+              {
+                "id": 26,
+                "name": "京兆府"
+              },
+              {
+                "id": 21,
+                "name": "上京会宁府"
+              },
+              {
+                "id": 24,
+                "name": "克鲁伦河营地"
+              },
+              {
+                "id": 25,
+                "name": "兴庆府"
+              },
+              {
+                "id": 29,
+                "name": "沙州"
+              },
+              {
+                "id": 57,
+                "name": "虎思斡耳朵"
+              },
+              {
+                "id": 34,
+                "name": "逻些"
+              },
+              {
+                "id": 42,
+                "name": "大理城"
+              },
+              {
+                "id": 56,
+                "name": "高昌城"
+              },
+              {
+                "id": 50,
+                "name": "海东聚落"
+              },
+              {
+                "id": 22,
+                "name": "黑水营地"
+              },
+              {
+                "id": 133,
+                "name": "开京"
+              },
+              {
+                "id": 145,
+                "name": "镰仓"
+              },
+              {
+                "id": 146,
+                "name": "平安京"
+              },
+              {
+                "id": 16,
+                "name": "太原府"
+              },
+              {
+                "id": 17,
+                "name": "济南府"
+              },
+              {
+                "id": 98,
+                "name": "辽阳府"
+              },
+              {
+                "id": 28,
+                "name": "兰州"
+              },
+              {
+                "id": 100,
+                "name": "斡难河营地"
+              },
+              {
+                "id": 101,
+                "name": "土兀剌河营地"
+              },
+              {
+                "id": 102,
+                "name": "鄂尔浑河营地"
+              },
+              {
+                "id": 103,
+                "name": "杭爱牧集"
+              },
+              {
+                "id": 104,
+                "name": "阿尔泰牧集"
+              },
+              {
+                "id": 107,
+                "name": "甘州"
+              },
+              {
+                "id": 31,
+                "name": "疏勒"
+              },
+              {
+                "id": 110,
+                "name": "和阗"
+              },
+              {
+                "id": 112,
+                "name": "阿克苏"
+              },
+              {
+                "id": 32,
+                "name": "阿力麻里"
+              },
+              {
+                "id": 35,
+                "name": "日喀则"
+              },
+              {
+                "id": 116,
+                "name": "昌都"
+              },
+              {
+                "id": 117,
+                "name": "理塘"
+              },
+              {
+                "id": 118,
+                "name": "纳里牧集"
+              },
+              {
+                "id": 43,
+                "name": "鄯阐府"
+              },
+              {
+                "id": 124,
+                "name": "焉耆"
+              },
+              {
+                "id": 123,
+                "name": "哈密力"
+              },
+              {
+                "id": 129,
+                "name": "松林营地"
+              },
+              {
+                "id": 130,
+                "name": "乌苏里营地"
+              },
+              {
+                "id": 131,
+                "name": "下江渔集"
+              },
+              {
+                "id": 132,
+                "name": "北山营地"
+              }
+            ],
+            "goods": [
+              {
+                "id": "grain",
+                "name": "谷粮",
+                "price": 2.0,
+                "sell_price": 1.7,
+                "stock": 53.55,
+                "target": 35.699999999999996,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "fish",
+                "name": "鱼鲜",
+                "price": 2.5,
+                "sell_price": 2.125,
+                "stock": 15.3,
+                "target": 10.200000000000001,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "meat",
+                "name": "肉食",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 11.475,
+                "target": 7.6499999999999995,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "fiber",
+                "name": "麻棉",
+                "price": 2.0,
+                "sell_price": 1.7,
+                "stock": 6.12,
+                "target": 3.06,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "cloth",
+                "name": "布匹",
+                "price": 5.0,
+                "sell_price": 4.25,
+                "stock": 6.12,
+                "target": 3.06,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "herb",
+                "name": "药材",
+                "price": 1.4,
+                "sell_price": 1.19,
+                "stock": 5.1,
+                "target": 2.5500000000000003,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "medicine",
+                "name": "成药",
+                "price": 3.2,
+                "sell_price": 2.72,
+                "stock": 1.53,
+                "target": 0.765,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "timber",
+                "name": "木材",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 4.08,
+                "target": 2.04,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "iron",
+                "name": "铁料",
+                "price": 4.0,
+                "sell_price": 3.4,
+                "stock": 2.55,
+                "target": 1.2750000000000001,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "tools",
+                "name": "日用器具",
+                "price": 8.0,
+                "sell_price": 6.8,
+                "stock": 3.57,
+                "target": 1.7850000000000001,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "study",
+                "name": "文教服务",
+                "price": 4.0,
+                "sell_price": 3.4,
+                "stock": 0.0,
+                "target": 3.315,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "leisure",
+                "name": "游艺服务",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 0.0,
+                "target": 2.12,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "transport",
+                "name": "行旅服务",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 0.0,
+                "target": 4.08,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              }
+            ],
+            "household": {
+              "stock": {
+                "grain": 0.5,
+                "fish": 0.0,
+                "meat": 0.0,
+                "fiber": 0.0,
+                "cloth": 0.0,
+                "herb": 0.0,
+                "medicine": 0.0,
+                "timber": 0.0,
+                "iron": 0.0,
+                "tools": 0.0,
+                "study": 0.0,
+                "leisure": 0.0,
+                "transport": 0.0
+              },
+              "needs": {},
+              "satisfaction": 1.0,
+              "income": 0.0,
+              "expenses": 0.0,
+              "month": null,
+              "records": []
+            },
+            "settlement_date": ""
+          },
+          "current_plan": null,
+          "responsibilities": {
+            "key": "disciple",
+            "label": "入门求学",
+            "duties": [
+              "faction_task",
+              "faction_study",
+              "train"
+            ]
+          },
+          "possessions": [
+            {
+              "id": "241",
+              "name": "粗布衣",
+              "durability": 100
+            },
+            {
+              "id": "242",
+              "name": "麦饼",
+              "durability": 100
+            },
+            {
+              "id": "243",
+              "name": "金疮药",
+              "durability": 100
+            },
+            {
+              "id": "244",
+              "name": "枣木剑",
+              "durability": 100
+            },
+            {
+              "id": "245",
+              "name": "青锋剑",
+              "durability": 100
+            }
+          ],
+          "equipment_bonuses": {
+            "attack": 6.0,
+            "defense": 1.0,
+            "income": 0.0,
+            "training": 0.15,
+            "recovery": 0.0
+          },
+          "known_people": [
+            {
+              "id": 674,
+              "observed": {
+                "name": "宋明宁沐",
+                "place": 6,
+                "seen_month": 245,
+                "job": "农人",
+                "identity": "农人·初入行",
+                "identity_grade": 8,
+                "skill_band": 0,
+                "wealth_band": "拮据"
+              },
+              "my_relation": {
+                "affinity": -92.1414,
+                "trust": -98,
+                "romance": 0,
+                "last_event": 17113,
+                "label": "仇怨",
+                "last_contact": 245,
+                "contact_since": 243,
+                "sworn": false
+              }
+            },
+            {
+              "id": 608,
+              "observed": {
+                "name": "谢云章沐",
+                "place": 6,
+                "seen_month": 244,
+                "job": "行商",
+                "identity": "行商·熟手",
+                "identity_grade": 6,
+                "skill_band": 1,
+                "wealth_band": "有余"
+              },
+              "my_relation": {
+                "affinity": 6.9258,
+                "trust": 2.0,
+                "romance": 0,
+                "last_event": 8625,
+                "label": "相识",
+                "last_contact": 244,
+                "contact_since": 244,
+                "sworn": false
+              }
+            },
+            {
+              "id": 35,
+              "observed": {
+                "name": "秦寒松",
+                "place": 6,
+                "seen_month": 244,
+                "job": "农人",
+                "identity": "武当派记名弟子",
+                "identity_grade": 9,
+                "skill_band": 0,
+                "wealth_band": "有余"
+              },
+              "my_relation": {
+                "affinity": 4.0273,
+                "trust": 2.0,
+                "romance": 0,
+                "last_event": 8243,
+                "label": "相识",
+                "last_contact": 244,
+                "contact_since": 244,
+                "sworn": false
+              }
+            }
+          ],
+          "memories": [
+            {
+              "event_id": 14207,
+              "fact": "傅长宁威逼宋明宁沐交银，强索2.0银。",
+              "interpretation": "只是这回被抓住了；下次要更会掩饰。",
+              "source": "亲历",
+              "salience": 0.88
+            },
+            {
+              "event_id": 10256,
+              "fact": "傅长宁威逼宋明宁沐交银，强索3.3银。",
+              "interpretation": "只是这回被抓住了；下次要更会掩饰。",
+              "source": "亲历",
+              "salience": 0.88
+            },
+            {
+              "event_id": 6275,
+              "fact": "傅长宁威逼宋明宁沐交银，强索3.9银。",
+              "interpretation": "只是这回被抓住了；下次要更会掩饰。",
+              "source": "亲历",
+              "salience": 0.88
+            }
+          ],
+          "allowed_actions": [
+            {
+              "id": "work:self",
+              "kind": "work",
+              "target": null,
+              "label": "谋生 · 镖师",
+              "time_cost": 2
+            },
+            {
+              "id": "faction_task:0",
+              "kind": "faction_task",
+              "target": 0,
+              "label": "门中差事 · 巡山护民，两周 / 酬银3 / 贡献2",
+              "time_cost": 2
+            },
+            {
+              "id": "learn_trade:2",
+              "kind": "learn_trade",
+              "target": 2,
+              "profession": "镖师",
+              "label": "学艺 · 向陆归尘学镖师（2银）",
+              "time_cost": 1
+            },
+            {
+              "id": "faction_study:0",
+              "kind": "faction_study",
+              "target": 0,
+              "label": "门中请益 · 向沈知秋请益，2银 / 一周",
+              "tutor": 1,
+              "time_cost": 1
+            },
+            {
+              "id": "smear:674",
+              "kind": "smear",
+              "target": 674,
+              "label": "造谣中伤 · 宋明宁沐",
+              "time_cost": 1
+            },
+            {
+              "id": "change_job:农人",
+              "kind": "change_job",
+              "target": "农人",
+              "label": "转业 · 农人（4银）",
+              "time_cost": 1
+            },
+            {
+              "id": "befriend:674",
+              "kind": "befriend",
+              "target": 674,
+              "label": "结交 · 宋明宁沐",
+              "time_cost": 1
+            },
+            {
+              "id": "extort:674",
+              "kind": "extort",
+              "target": 674,
+              "label": "勒索 · 宋明宁沐",
+              "time_cost": 2
+            },
+            {
+              "id": "train:self",
+              "kind": "train",
+              "target": null,
+              "label": "习武 · 花费1.5银，练功一周",
+              "time_cost": 1
+            },
+            {
+              "id": "duty:0",
+              "kind": "duty",
+              "target": 0,
+              "label": "尽责 · 武当派",
+              "time_cost": 1
+            },
+            {
+              "id": "leisure:self",
+              "kind": "leisure",
+              "target": null,
+              "label": "消遣 · 茶酒游憩，花费2银",
+              "time_cost": 1
+            },
+            {
+              "id": "reconcile:6",
+              "kind": "reconcile",
+              "target": 6,
+              "label": "赔礼和解 · 萧若水（赠礼2银）",
+              "time_cost": 1
+            },
+            {
+              "id": "gamble:self",
+              "kind": "gamble",
+              "target": null,
+              "label": "赌局 · 押6银，有赢有输",
+              "time_cost": 1
+            },
+            {
+              "id": "duel:674",
+              "kind": "duel",
+              "target": 674,
+              "label": "寻仇比武 · 宋明宁沐",
+              "time_cost": 2
+            },
+            {
+              "id": "travel:5",
+              "kind": "travel",
+              "target": 5,
+              "label": "远行 · 江陵府 · 189公里 / 4.7银 / 境内",
+              "km": 189,
+              "fare": 4.72,
+              "toll": 0.0,
+              "cost": 4.72,
+              "border": "境内",
+              "origin_country": 0,
+              "destination_country": 0,
+              "migration": null,
+              "time_cost": 2
+            },
+            {
+              "id": "meditate:self",
+              "kind": "meditate",
+              "target": null,
+              "label": "静思 · 缓解愤怒与不安",
+              "time_cost": 1
+            },
+            {
+              "id": "steal:674",
+              "kind": "steal",
+              "target": 674,
+              "label": "行窃 · 宋明宁沐",
+              "time_cost": 1
+            },
+            {
+              "id": "rest:self",
+              "kind": "rest",
+              "target": null,
+              "label": "休养 · 恢复体力",
+              "time_cost": 1
+            },
+            {
+              "id": "extort:35",
+              "kind": "extort",
+              "target": 35,
+              "label": "勒索 · 秦寒松",
+              "time_cost": 2
+            },
+            {
+              "id": "extort:6",
+              "kind": "extort",
+              "target": 6,
+              "label": "勒索 · 萧若水",
+              "time_cost": 2
+            }
+          ],
+          "allowed_goals": [
+            "wealth"
+          ],
+          "time_budget": 4,
+          "baseline_action": "work:self"
+        },
+        "response": {
+          "action_id": "work:self",
+          "plan": [
+            "work:self",
+            "faction_task:0",
+            "extort:674",
+            "travel:5"
+          ],
+          "goal": "wealth",
+          "reason": "当前需要通过谋生和门中差事来积累财富，同时通过勒索和远行来增加收入。",
+          "life_policy": {
+            "title": "安家立业",
+            "priorities": [
+              {
+                "kind": "work",
+                "weight": 12
+              },
+              {
+                "kind": "faction_task",
+                "weight": 12
+              },
+              {
+                "kind": "extort",
+                "weight": 12
+              },
+              {
+                "kind": "travel",
+                "weight": 12
+              }
+            ]
+          },
+          "reflection": {
+            "event_ids": [
+              14207,
+              10256,
+              6275
+            ],
+            "interpretation": "多次勒索宋明宁沐未果，需更谨慎行事。",
+            "trait": "greed",
+            "direction": 1,
+            "belief": "justice",
+            "belief_direction": 1
+          }
+        },
+        "applied": true,
+        "validation": "计划已采用；心理变化经过限幅结算",
+        "latency_ms": 7325.269000000844,
+        "usage": {
+          "completion_tokens": 251,
+          "prompt_tokens": 3455,
+          "total_tokens": 3706,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        }
+      },
+      {
+        "npc_id": 2,
+        "role": "elder",
+        "context": {
+          "npc_id": 2,
+          "month": 245,
+          "situation": {
+            "place": 6,
+            "faction": 0,
+            "job": "镖师"
+          },
+          "settlement_life": {
+            "enabled": true,
+            "working": true,
+            "since": 245,
+            "home": {
+              "place": 6,
+              "settlement_id": "sect_wudang",
+              "since": 245,
+              "reason": "现时户居登记",
+              "event_id": null,
+              "name": "武当派",
+              "place_name": "襄阳府",
+              "facility": null
+            },
+            "work": {
+              "place": 6,
+              "settlement_id": "settlement_0",
+              "node": "gate",
+              "name": "襄阳府",
+              "place_name": "襄阳府",
+              "facility": "南门驿口"
+            },
+            "current": {
+              "place": 6,
+              "settlement_id": "sect_wudang",
+              "node": "faction_0",
+              "row": 11,
+              "col": 24,
+              "name": "武当派",
+              "place_name": "襄阳府",
+              "facility": "武当派"
+            },
+            "commute_cost": 10,
+            "basis": "住所固定登记；每周按实际行动更新在场位置。通勤与拜访包含在该次行动时间内。"
+          },
+          "life_policy": null,
+          "self": {
+            "name": "陆归尘",
+            "age_months": 728,
+            "wealth": 77.08365568170802,
+            "health": 97.4325,
+            "skill": 69.6279,
+            "job": "镖师",
+            "traits": {
+              "compassion": 71.27062311931476,
+              "ambition": 61.0891,
+              "caution": 79.37203925884883,
+              "sociability": 33.65411932961433,
+              "loyalty": 36.43848642320095,
+              "honesty": 60.28276128989786,
+              "greed": 58.84113463176631,
+              "aggression": 33.88576117044623
+            },
+            "mood": {
+              "joy": -6.4799999999999995,
+              "anger": 2.327112,
+              "fear": 5.14332
+            },
+            "beliefs": {
+              "trust": 0.5162,
+              "justice": 0.5927475680781931,
+              "tradition": 0.6
+            },
+            "desires": {
+              "wealth": 54.5765,
+              "mastery": 64.624,
+              "belonging": 50.0976,
+              "renown": 58.031,
+              "freedom": 52.9621,
+              "revenge": 0.0
+            },
+            "goal": {
+              "kind": "mastery",
+              "title": "武学有成",
+              "since": 242,
+              "horizon_years": 8,
+              "target": 95,
+              "cause": 2,
+              "progress": 0.7308,
+              "status": "追求中",
+              "minimum_months": 48
+            },
+            "pregnancy": null,
+            "illness": null,
+            "office": null,
+            "generation": 0,
+            "spouse": null,
+            "children": [],
+            "family_size": 4,
+            "career": {
+              "profession": "镖师",
+              "experience": {
+                "镖师": 53.9913
+              },
+              "since": 242,
+              "last_change": 218,
+              "last_event": null,
+              "source": "九品世界期初登记"
+            },
+            "martial": {
+              "arts": {
+                "breath": {
+                  "practice": 70,
+                  "realm": 1
+                },
+                "bridge_fist": {
+                  "practice": 70,
+                  "realm": 1
+                },
+                "cloud_step": {
+                  "practice": 65.0,
+                  "realm": 1
+                },
+                "river_sword": {
+                  "practice": 65.0,
+                  "realm": 1
+                },
+                "wave_palm": {
+                  "practice": 65.0,
+                  "realm": 1
+                },
+                "iron_root": {
+                  "practice": 65.0,
+                  "realm": 1
+                },
+                "reed_cut": {
+                  "practice": 65.0,
+                  "realm": 1
+                },
+                "wudang_sword": {
+                  "practice": 69.2435,
+                  "realm": 1
+                }
+              },
+              "loadout": {
+                "inner": "breath",
+                "movement": "cloud_step",
+                "attacks": [
+                  "bridge_fist",
+                  "river_sword",
+                  "wave_palm",
+                  "wudang_sword"
+                ]
+              },
+              "focus": "bridge_fist",
+              "stamina": 92.5
+            }
+          },
+          "public_institutions": {
+            "name": "临安府行台",
+            "tax_rate": 0.09,
+            "offices": {
+              "县令": 754,
+              "捕头": 653,
+              "主簿": 529
+            },
+            "policy": "balanced",
+            "policy_reason": "沿用既有施政，待年度公议。"
+          },
+          "location": {
+            "id": 6,
+            "name": "襄阳府",
+            "lon": 112.14,
+            "lat": 32.04,
+            "x": 670.81,
+            "y": 431.26,
+            "country": 0,
+            "region": "京西南路",
+            "kind": "city",
+            "trade": 1.2,
+            "weight": 8,
+            "color": "#8d9b68",
+            "owner": 0,
+            "guard": 55.0,
+            "stability": 100.0,
+            "changed_month": null,
+            "last_battle": -6,
+            "event_id": null,
+            "native_country": 0,
+            "guard_max": 55.0,
+            "occupied": false,
+            "interior_authored": true,
+            "country_name": "南宋"
+          },
+          "membership": {
+            "key": "wudang",
+            "name": "武当派",
+            "home": "武当山",
+            "seat_name": "武当山门",
+            "ethos": "以柔克刚，清修济世",
+            "tradition": "道门",
+            "ranks": [
+              "掌门",
+              "护法长老",
+              "长老",
+              "堂主",
+              "执事",
+              "真传弟子",
+              "内门弟子",
+              "外门弟子",
+              "记名弟子"
+            ],
+            "duty": "巡山护民",
+            "art_id": "wudang_sword",
+            "art": "武当剑法",
+            "prototype": "river_sword",
+            "basis": "武侠小说中的武当传承；采用跨时代江湖设定。",
+            "focus": "mastery",
+            "public_axis": "security",
+            "kind": "sect",
+            "id": 0,
+            "place": 6,
+            "country": 0,
+            "leader": 1,
+            "fund": 64.0,
+            "opening_fund": 100.0,
+            "account_since": 242,
+            "revenue": 66.0,
+            "expenses": 102.0,
+            "tasks_completed": 34,
+            "leader_since": 242,
+            "leader_review_since": 242,
+            "vacancy_previous": null,
+            "vacancy_event": null,
+            "last_event": 18378,
+            "records": [
+              14922,
+              14954,
+              15121,
+              15593,
+              15892,
+              16548,
+              16690,
+              16802,
+              16880,
+              16940,
+              16942,
+              17377,
+              17448,
+              17690,
+              17692,
+              17842,
+              17843,
+              17999,
+              18017,
+              18183,
+              18258,
+              18370,
+              18376,
+              18378
+            ],
+            "native_place": 7
+          },
+          "my_contribution": 87.5659,
+          "social_identity": {
+            "grade": 2,
+            "grade_label": "二品",
+            "title": "武当派护法长老",
+            "roles": [
+              {
+                "kind": "livelihood",
+                "title": "镖师·行家",
+                "grade": 6
+              },
+              {
+                "kind": "faction",
+                "title": "武当派护法长老",
+                "grade": 2
+              }
+            ],
+            "class_label": null,
+            "system": "sect",
+            "system_label": "门派品级",
+            "country": null
+          },
+          "rank_progression": {
+            "enabled": true,
+            "version": 1,
+            "next_assessment": "景和21年7月",
+            "sect": {
+              "current": 2,
+              "target": 2,
+              "requirements": [
+                {
+                  "label": "有效贡献",
+                  "current": 87.5659,
+                  "required": 70,
+                  "met": true
+                },
+                {
+                  "label": "武学",
+                  "current": 69.6279,
+                  "required": 65,
+                  "met": true
+                },
+                {
+                  "label": "声望",
+                  "current": 44.42265859709761,
+                  "required": 30,
+                  "met": true
+                },
+                {
+                  "label": "近半年履职月数",
+                  "current": 0,
+                  "required": 2,
+                  "met": false
+                },
+                {
+                  "label": "入门月数",
+                  "current": 3,
+                  "required": 12,
+                  "met": false
+                },
+                {
+                  "label": "年龄（月）",
+                  "current": 728,
+                  "required": 192,
+                  "met": true
+                }
+              ],
+              "blocked": "",
+              "qualified": false,
+              "required_months": 12,
+              "completed_months": 0,
+              "leader_only": true,
+              "penalty": 0.0,
+              "reason": "当前品级登记，后续按实际经历考核",
+              "deficient_months": 0
+            },
+            "options": [],
+            "warning": "",
+            "history": [],
+            "description": "门派逐阶考核，病伤可休养；社会品阶随真实营生、家业与任职改变。查看界面不推进考核。"
+          },
+          "local_economy": {
+            "enabled": true,
+            "version": 1,
+            "place": 6,
+            "name": "襄阳府",
+            "cash": 17.0094,
+            "since": 245,
+            "month": 245,
+            "towns": [
+              {
+                "id": 45,
+                "name": "临安府"
+              },
+              {
+                "id": 46,
+                "name": "建康府"
+              },
+              {
+                "id": 2,
+                "name": "抚州"
+              },
+              {
+                "id": 5,
+                "name": "江陵府"
+              },
+              {
+                "id": 6,
+                "name": "襄阳府"
+              },
+              {
+                "id": 38,
+                "name": "成都府"
+              },
+              {
+                "id": 51,
+                "name": "广州"
+              },
+              {
+                "id": 61,
+                "name": "泉州"
+              },
+              {
+                "id": 14,
+                "name": "中都"
+              },
+              {
+                "id": 13,
+                "name": "南京开封府"
+              },
+              {
+                "id": 26,
+                "name": "京兆府"
+              },
+              {
+                "id": 21,
+                "name": "上京会宁府"
+              },
+              {
+                "id": 24,
+                "name": "克鲁伦河营地"
+              },
+              {
+                "id": 25,
+                "name": "兴庆府"
+              },
+              {
+                "id": 29,
+                "name": "沙州"
+              },
+              {
+                "id": 57,
+                "name": "虎思斡耳朵"
+              },
+              {
+                "id": 34,
+                "name": "逻些"
+              },
+              {
+                "id": 42,
+                "name": "大理城"
+              },
+              {
+                "id": 56,
+                "name": "高昌城"
+              },
+              {
+                "id": 50,
+                "name": "海东聚落"
+              },
+              {
+                "id": 22,
+                "name": "黑水营地"
+              },
+              {
+                "id": 133,
+                "name": "开京"
+              },
+              {
+                "id": 145,
+                "name": "镰仓"
+              },
+              {
+                "id": 146,
+                "name": "平安京"
+              },
+              {
+                "id": 16,
+                "name": "太原府"
+              },
+              {
+                "id": 17,
+                "name": "济南府"
+              },
+              {
+                "id": 98,
+                "name": "辽阳府"
+              },
+              {
+                "id": 28,
+                "name": "兰州"
+              },
+              {
+                "id": 100,
+                "name": "斡难河营地"
+              },
+              {
+                "id": 101,
+                "name": "土兀剌河营地"
+              },
+              {
+                "id": 102,
+                "name": "鄂尔浑河营地"
+              },
+              {
+                "id": 103,
+                "name": "杭爱牧集"
+              },
+              {
+                "id": 104,
+                "name": "阿尔泰牧集"
+              },
+              {
+                "id": 107,
+                "name": "甘州"
+              },
+              {
+                "id": 31,
+                "name": "疏勒"
+              },
+              {
+                "id": 110,
+                "name": "和阗"
+              },
+              {
+                "id": 112,
+                "name": "阿克苏"
+              },
+              {
+                "id": 32,
+                "name": "阿力麻里"
+              },
+              {
+                "id": 35,
+                "name": "日喀则"
+              },
+              {
+                "id": 116,
+                "name": "昌都"
+              },
+              {
+                "id": 117,
+                "name": "理塘"
+              },
+              {
+                "id": 118,
+                "name": "纳里牧集"
+              },
+              {
+                "id": 43,
+                "name": "鄯阐府"
+              },
+              {
+                "id": 124,
+                "name": "焉耆"
+              },
+              {
+                "id": 123,
+                "name": "哈密力"
+              },
+              {
+                "id": 129,
+                "name": "松林营地"
+              },
+              {
+                "id": 130,
+                "name": "乌苏里营地"
+              },
+              {
+                "id": 131,
+                "name": "下江渔集"
+              },
+              {
+                "id": 132,
+                "name": "北山营地"
+              }
+            ],
+            "goods": [
+              {
+                "id": "grain",
+                "name": "谷粮",
+                "price": 2.0,
+                "sell_price": 1.7,
+                "stock": 53.55,
+                "target": 35.699999999999996,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "fish",
+                "name": "鱼鲜",
+                "price": 2.5,
+                "sell_price": 2.125,
+                "stock": 15.3,
+                "target": 10.200000000000001,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "meat",
+                "name": "肉食",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 11.475,
+                "target": 7.6499999999999995,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "fiber",
+                "name": "麻棉",
+                "price": 2.0,
+                "sell_price": 1.7,
+                "stock": 6.12,
+                "target": 3.06,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "cloth",
+                "name": "布匹",
+                "price": 5.0,
+                "sell_price": 4.25,
+                "stock": 6.12,
+                "target": 3.06,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "herb",
+                "name": "药材",
+                "price": 1.4,
+                "sell_price": 1.19,
+                "stock": 5.1,
+                "target": 2.5500000000000003,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "medicine",
+                "name": "成药",
+                "price": 3.2,
+                "sell_price": 2.72,
+                "stock": 1.53,
+                "target": 0.765,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "timber",
+                "name": "木材",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 4.08,
+                "target": 2.04,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "iron",
+                "name": "铁料",
+                "price": 4.0,
+                "sell_price": 3.4,
+                "stock": 2.55,
+                "target": 1.2750000000000001,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "tools",
+                "name": "日用器具",
+                "price": 8.0,
+                "sell_price": 6.8,
+                "stock": 3.57,
+                "target": 1.7850000000000001,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "study",
+                "name": "文教服务",
+                "price": 4.0,
+                "sell_price": 3.4,
+                "stock": 0.0,
+                "target": 3.315,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "leisure",
+                "name": "游艺服务",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 0.0,
+                "target": 2.12,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "transport",
+                "name": "行旅服务",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 0.0,
+                "target": 4.08,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              }
+            ],
+            "household": {
+              "stock": {
+                "grain": 0.5,
+                "fish": 0.0,
+                "meat": 0.0,
+                "fiber": 0.0,
+                "cloth": 0.0,
+                "herb": 0.0,
+                "medicine": 0.0,
+                "timber": 0.0,
+                "iron": 0.0,
+                "tools": 0.0,
+                "study": 0.0,
+                "leisure": 0.0,
+                "transport": 0.0
+              },
+              "needs": {},
+              "satisfaction": 1.0,
+              "income": 0.0,
+              "expenses": 0.0,
+              "month": null,
+              "records": []
+            },
+            "settlement_date": ""
+          },
+          "current_plan": null,
+          "responsibilities": {
+            "key": "elder",
+            "label": "传艺护持",
+            "duties": [
+              "faction_guide",
+              "teach",
+              "duty"
+            ]
+          },
+          "possessions": [
+            {
+              "id": "156",
+              "name": "粗布衣",
+              "durability": 100
+            },
+            {
+              "id": "157",
+              "name": "麦饼",
+              "durability": 100
+            },
+            {
+              "id": "158",
+              "name": "金疮药",
+              "durability": 100
+            },
+            {
+              "id": "159",
+              "name": "枣木剑",
+              "durability": 100
+            },
+            {
+              "id": "160",
+              "name": "青锋剑",
+              "durability": 98
+            }
+          ],
+          "equipment_bonuses": {
+            "attack": 6.0,
+            "defense": 1.0,
+            "income": 0.0,
+            "training": 0.15,
+            "recovery": 0.0
+          },
+          "known_people": [
+            {
+              "id": 17,
+              "observed": {
+                "name": "钟南枝",
+                "place": 6,
+                "seen_month": 245,
+                "job": "镖师",
+                "identity": "武当派真传弟子",
+                "identity_grade": 6,
+                "skill_band": 1,
+                "wealth_band": "有余"
+              },
+              "my_relation": {
+                "affinity": 15.0,
+                "trust": 11.0,
+                "romance": 0,
+                "last_event": 16441,
+                "label": "相识",
+                "last_contact": 245,
+                "contact_since": 243,
+                "sworn": false
+              }
+            },
+            {
+              "id": 29,
+              "observed": {
+                "name": "江闻溪",
+                "place": 6,
+                "seen_month": 245,
+                "job": "农人",
+                "identity": "武当派真传弟子",
+                "identity_grade": 6,
+                "skill_band": 1,
+                "wealth_band": "有余"
+              },
+              "my_relation": {
+                "affinity": 6.0,
+                "trust": 6.0,
+                "romance": 0,
+                "last_event": 17842,
+                "label": "相识",
+                "last_contact": 245,
+                "contact_since": 243,
+                "sworn": false
+              }
+            },
+            {
+              "id": 10,
+              "observed": {},
+              "my_relation": {
+                "affinity": -5.0,
+                "trust": -4.0,
+                "romance": 0.0,
+                "last_event": null,
+                "label": "相识",
+                "last_contact": 245,
+                "contact_since": 245,
+                "sworn": false
+              }
+            }
+          ],
+          "memories": [
+            {
+              "event_id": 17842,
+              "fact": "江闻溪在武当派请益武当剑法，付银2两，武学增长1.50。",
+              "interpretation": "日常的积累，也在铺就往后的路。",
+              "source": "亲历",
+              "salience": 0.45
+            },
+            {
+              "event_id": 5592,
+              "fact": "江闻溪在武当派请益武当剑法，付银2两，武学增长1.50。",
+              "interpretation": "日常的积累，也在铺就往后的路。",
+              "source": "亲历",
+              "salience": 0.45
+            },
+            {
+              "event_id": 6543,
+              "fact": "钟南枝花2银向陆归尘学习镖师手艺，熟练度增长3.61。",
+              "interpretation": "日常的积累，也在铺就往后的路。",
+              "source": "亲历",
+              "salience": 0.35
+            }
+          ],
+          "allowed_actions": [
+            {
+              "id": "faction_guide:31",
+              "kind": "faction_guide",
+              "target": 31,
+              "label": "同门授业 · 指点叶望舒（双方各一周）",
+              "time_cost": 1
+            },
+            {
+              "id": "faction_study:0",
+              "kind": "faction_study",
+              "target": 0,
+              "label": "门中请益 · 向沈知秋请益，2银 / 一周",
+              "tutor": 1,
+              "time_cost": 1
+            },
+            {
+              "id": "faction_task:0",
+              "kind": "faction_task",
+              "target": 0,
+              "label": "门中差事 · 巡山护民，两周 / 酬银3 / 贡献2",
+              "time_cost": 2
+            },
+            {
+              "id": "work:self",
+              "kind": "work",
+              "target": null,
+              "label": "谋生 · 镖师",
+              "time_cost": 2
+            },
+            {
+              "id": "reconcile:10",
+              "kind": "reconcile",
+              "target": 10,
+              "label": "赔礼和解 · 柳照野（赠礼2银）",
+              "time_cost": 1
+            },
+            {
+              "id": "duty:0",
+              "kind": "duty",
+              "target": 0,
+              "label": "尽责 · 武当派",
+              "time_cost": 1
+            },
+            {
+              "id": "train:self",
+              "kind": "train",
+              "target": null,
+              "label": "习武 · 花费1.5银，练功一周",
+              "time_cost": 1
+            },
+            {
+              "id": "change_job:农人",
+              "kind": "change_job",
+              "target": "农人",
+              "label": "转业 · 农人（4银）",
+              "time_cost": 1
+            },
+            {
+              "id": "befriend:17",
+              "kind": "befriend",
+              "target": 17,
+              "label": "结交 · 钟南枝",
+              "time_cost": 1
+            },
+            {
+              "id": "leisure:self",
+              "kind": "leisure",
+              "target": null,
+              "label": "消遣 · 茶酒游憩，花费2银",
+              "time_cost": 1
+            },
+            {
+              "id": "learn_trade:624",
+              "kind": "learn_trade",
+              "target": 624,
+              "profession": "行商",
+              "label": "学艺 · 向苏清月沐学行商（2银）",
+              "time_cost": 1
+            },
+            {
+              "id": "rumor:17",
+              "kind": "rumor",
+              "target": 17,
+              "label": "交换见闻 · 钟南枝",
+              "time_cost": 1
+            },
+            {
+              "id": "gamble:self",
+              "kind": "gamble",
+              "target": null,
+              "label": "赌局 · 押6银，有赢有输",
+              "time_cost": 1
+            },
+            {
+              "id": "travel:5",
+              "kind": "travel",
+              "target": 5,
+              "label": "远行 · 江陵府 · 189公里 / 4.7银 / 境内",
+              "km": 189,
+              "fare": 4.72,
+              "toll": 0.0,
+              "cost": 4.72,
+              "border": "境内",
+              "origin_country": 0,
+              "destination_country": 0,
+              "migration": null,
+              "time_cost": 2
+            },
+            {
+              "id": "meditate:self",
+              "kind": "meditate",
+              "target": null,
+              "label": "静思 · 缓解愤怒与不安",
+              "time_cost": 1
+            },
+            {
+              "id": "extort:17",
+              "kind": "extort",
+              "target": 17,
+              "label": "勒索 · 钟南枝",
+              "time_cost": 2
+            },
+            {
+              "id": "rest:self",
+              "kind": "rest",
+              "target": null,
+              "label": "休养 · 恢复体力",
+              "time_cost": 1
+            },
+            {
+              "id": "steal:17",
+              "kind": "steal",
+              "target": 17,
+              "label": "行窃 · 钟南枝",
+              "time_cost": 1
+            },
+            {
+              "id": "faction_guide:33",
+              "kind": "faction_guide",
+              "target": 33,
+              "label": "同门授业 · 指点唐临渊（双方各一周）",
+              "time_cost": 1
+            },
+            {
+              "id": "reconcile:23",
+              "kind": "reconcile",
+              "target": 23,
+              "label": "赔礼和解 · 顾若水（赠礼2银）",
+              "time_cost": 1
+            }
+          ],
+          "allowed_goals": [
+            "mastery"
+          ],
+          "time_budget": 4,
+          "baseline_action": "faction_guide:31"
+        },
+        "response": {
+          "action_id": "faction_task:0",
+          "plan": [
+            "faction_task:0",
+            "work:self",
+            "faction_guide:31",
+            "train:self"
+          ],
+          "goal": "mastery",
+          "reason": "当前需要通过巡山护民来积累贡献，同时保持镖师的谋生能力，以及继续提升武学修为。",
+          "life_policy": {
+            "title": "武学有成与门派责任",
+            "priorities": [
+              {
+                "kind": "faction_task",
+                "weight": 12
+              },
+              {
+                "kind": "work",
+                "weight": 12
+              },
+              {
+                "kind": "train",
+                "weight": 12
+              },
+              {
+                "kind": "faction_guide",
+                "weight": 12
+              }
+            ]
+          },
+          "reflection": {
+            "event_ids": [
+              17842,
+              6543
+            ],
+            "interpretation": "与钟南枝和江闻溪的互动让我意识到门派责任与个人修为的平衡。",
+            "trait": "caution",
+            "direction": 1,
+            "belief": "tradition",
+            "belief_direction": 1
+          }
+        },
+        "applied": true,
+        "validation": "计划已采用；心理变化经过限幅结算",
+        "latency_ms": 7747.60679999963,
+        "usage": {
+          "completion_tokens": 258,
+          "prompt_tokens": 3433,
+          "total_tokens": 3691,
+          "prompt_tokens_details": {
+            "cached_tokens": 398
+          }
+        }
+      },
+      {
+        "npc_id": 508,
+        "role": "merchant",
+        "context": {
+          "npc_id": 508,
+          "month": 245,
+          "situation": {
+            "place": 45,
+            "faction": null,
+            "job": "行商"
+          },
+          "settlement_life": {
+            "enabled": true,
+            "working": true,
+            "since": 245,
+            "home": {
+              "place": 45,
+              "settlement_id": "settlement_0",
+              "since": 245,
+              "reason": "现时户居登记",
+              "event_id": null,
+              "name": "临安府",
+              "place_name": "临安府",
+              "facility": null
+            },
+            "work": {
+              "place": 45,
+              "settlement_id": "settlement_0",
+              "node": "market",
+              "name": "临安府",
+              "place_name": "临安府",
+              "facility": "御街夜市"
+            },
+            "current": {
+              "place": 45,
+              "settlement_id": "settlement_0",
+              "node": "market",
+              "row": 10,
+              "col": 17,
+              "name": "临安府",
+              "place_name": "临安府",
+              "facility": "御街夜市"
+            },
+            "commute_cost": 0,
+            "basis": "住所固定登记；每周按实际行动更新在场位置。通勤与拜访包含在该次行动时间内。"
+          },
+          "life_policy": null,
+          "self": {
+            "name": "谢修章星",
+            "age_months": 397,
+            "wealth": 97.47585,
+            "health": 97.4954,
+            "skill": 8.250059729566352,
+            "job": "行商",
+            "traits": {
+              "compassion": 23.2879,
+              "ambition": 70.7473,
+              "caution": 68.8627,
+              "sociability": 70.44370530691853,
+              "loyalty": 21.181910936516623,
+              "honesty": 26.4772,
+              "greed": 66.2424,
+              "aggression": 80.7272629185242
+            },
+            "mood": {
+              "joy": 31.248,
+              "anger": 21.0816,
+              "fear": 0.0
+            },
+            "beliefs": {
+              "trust": 0.5261809351121077,
+              "justice": 0.7952837228434385,
+              "tradition": 0.6
+            },
+            "desires": {
+              "wealth": 64.7719,
+              "mastery": 40.1499,
+              "belonging": 50.0565,
+              "renown": 69.8238,
+              "freedom": 47.8667,
+              "revenge": 60
+            },
+            "goal": {
+              "kind": "wealth",
+              "title": "安家立业",
+              "since": 242,
+              "horizon_years": 15,
+              "target": 482.02,
+              "cause": 508,
+              "progress": 0.1937,
+              "status": "追求中",
+              "minimum_months": 48
+            },
+            "pregnancy": null,
+            "illness": null,
+            "office": null,
+            "generation": 0,
+            "spouse": null,
+            "children": [],
+            "family_size": 4,
+            "career": {
+              "profession": "行商",
+              "experience": {
+                "行商": 27.0955
+              },
+              "since": 242,
+              "last_change": 218,
+              "last_event": 14125,
+              "source": "九品世界期初登记"
+            },
+            "martial": {
+              "arts": {
+                "breath": {
+                  "practice": 9.075065702522988,
+                  "realm": 0
+                },
+                "bridge_fist": {
+                  "practice": 9.075065702522988,
+                  "realm": 0
+                },
+                "cloud_step": {
+                  "practice": 9.075065702522988,
+                  "realm": 0
+                }
+              },
+              "loadout": {
+                "inner": "breath",
+                "movement": "cloud_step",
+                "attacks": [
+                  "bridge_fist"
+                ]
+              },
+              "focus": "breath",
+              "stamina": 100
+            }
+          },
+          "public_institutions": {
+            "name": "临安府行台",
+            "tax_rate": 0.09,
+            "offices": {
+              "县令": 754,
+              "捕头": 653,
+              "主簿": 529
+            },
+            "policy": "balanced",
+            "policy_reason": "沿用既有施政，待年度公议。"
+          },
+          "location": {
+            "id": 45,
+            "name": "临安府",
+            "lon": 120.16,
+            "lat": 30.25,
+            "x": 803.14,
+            "y": 464.38,
+            "country": 0,
+            "region": "两浙西路",
+            "kind": "capital",
+            "trade": 1.35,
+            "weight": 15,
+            "color": "#8d9b68",
+            "owner": 0,
+            "guard": 80.0,
+            "stability": 100.0,
+            "changed_month": null,
+            "last_battle": -6,
+            "event_id": null,
+            "native_country": 0,
+            "guard_max": 80.0,
+            "occupied": false,
+            "interior_authored": true,
+            "country_name": "南宋"
+          },
+          "membership": null,
+          "my_contribution": 0.0,
+          "social_identity": {
+            "grade": 6,
+            "grade_label": "六品",
+            "title": "行商·熟手",
+            "roles": [
+              {
+                "kind": "livelihood",
+                "title": "行商·熟手",
+                "grade": 6
+              }
+            ],
+            "class_label": "商旅",
+            "system": "nation",
+            "system_label": "社会品阶",
+            "country": 0
+          },
+          "rank_progression": {
+            "enabled": true,
+            "version": 1,
+            "next_assessment": "景和21年7月",
+            "sect": null,
+            "options": [
+              {
+                "id": "recognize_notable",
+                "kind": "recognize_notable",
+                "target": null,
+                "label": "立业乡里",
+                "title": "乡绅",
+                "cost": 60.0,
+                "requirements": [
+                  {
+                    "label": "声望",
+                    "current": -6.0,
+                    "required": 30.0,
+                    "met": false
+                  },
+                  {
+                    "label": "乡里公益月数",
+                    "current": 0,
+                    "required": 6,
+                    "met": false
+                  },
+                  {
+                    "label": "定居月数",
+                    "current": 0,
+                    "required": 12,
+                    "met": false
+                  },
+                  {
+                    "label": "可用银两",
+                    "current": 97.47585,
+                    "required": 160.0,
+                    "met": false
+                  }
+                ],
+                "enabled": false,
+                "reason": "声望尚未达标；乡里公益月数尚未达标；定居月数尚未达标；可用银两尚未达标",
+                "time_cost": 2
+              },
+              {
+                "id": "establish_business",
+                "kind": "establish_business",
+                "target": null,
+                "label": "筹办商号",
+                "title": "豪商",
+                "cost": 120.0,
+                "requirements": [
+                  {
+                    "label": "商旅熟练度",
+                    "current": 27.0955,
+                    "required": 45.0,
+                    "met": false
+                  },
+                  {
+                    "label": "实际经营月数",
+                    "current": 0,
+                    "required": 12,
+                    "met": false
+                  },
+                  {
+                    "label": "声望",
+                    "current": -6.0,
+                    "required": 30.0,
+                    "met": false
+                  },
+                  {
+                    "label": "累计营业收入",
+                    "current": 0.0,
+                    "required": 120.0,
+                    "met": false
+                  },
+                  {
+                    "label": "可用银两",
+                    "current": 97.47585,
+                    "required": 300.0,
+                    "met": false
+                  }
+                ],
+                "enabled": false,
+                "reason": "商旅熟练度尚未达标；实际经营月数尚未达标；声望尚未达标；累计营业收入尚未达标；可用银两尚未达标",
+                "time_cost": 2
+              }
+            ],
+            "warning": "",
+            "history": [],
+            "description": "门派逐阶考核，病伤可休养；社会品阶随真实营生、家业与任职改变。查看界面不推进考核。"
+          },
+          "local_economy": {
+            "enabled": true,
+            "version": 1,
+            "place": 45,
+            "name": "临安府",
+            "cash": 18.677,
+            "since": 245,
+            "month": 245,
+            "towns": [
+              {
+                "id": 45,
+                "name": "临安府"
+              },
+              {
+                "id": 46,
+                "name": "建康府"
+              },
+              {
+                "id": 2,
+                "name": "抚州"
+              },
+              {
+                "id": 5,
+                "name": "江陵府"
+              },
+              {
+                "id": 6,
+                "name": "襄阳府"
+              },
+              {
+                "id": 38,
+                "name": "成都府"
+              },
+              {
+                "id": 51,
+                "name": "广州"
+              },
+              {
+                "id": 61,
+                "name": "泉州"
+              },
+              {
+                "id": 14,
+                "name": "中都"
+              },
+              {
+                "id": 13,
+                "name": "南京开封府"
+              },
+              {
+                "id": 26,
+                "name": "京兆府"
+              },
+              {
+                "id": 21,
+                "name": "上京会宁府"
+              },
+              {
+                "id": 24,
+                "name": "克鲁伦河营地"
+              },
+              {
+                "id": 25,
+                "name": "兴庆府"
+              },
+              {
+                "id": 29,
+                "name": "沙州"
+              },
+              {
+                "id": 57,
+                "name": "虎思斡耳朵"
+              },
+              {
+                "id": 34,
+                "name": "逻些"
+              },
+              {
+                "id": 42,
+                "name": "大理城"
+              },
+              {
+                "id": 56,
+                "name": "高昌城"
+              },
+              {
+                "id": 50,
+                "name": "海东聚落"
+              },
+              {
+                "id": 22,
+                "name": "黑水营地"
+              },
+              {
+                "id": 133,
+                "name": "开京"
+              },
+              {
+                "id": 145,
+                "name": "镰仓"
+              },
+              {
+                "id": 146,
+                "name": "平安京"
+              },
+              {
+                "id": 16,
+                "name": "太原府"
+              },
+              {
+                "id": 17,
+                "name": "济南府"
+              },
+              {
+                "id": 98,
+                "name": "辽阳府"
+              },
+              {
+                "id": 28,
+                "name": "兰州"
+              },
+              {
+                "id": 100,
+                "name": "斡难河营地"
+              },
+              {
+                "id": 101,
+                "name": "土兀剌河营地"
+              },
+              {
+                "id": 102,
+                "name": "鄂尔浑河营地"
+              },
+              {
+                "id": 103,
+                "name": "杭爱牧集"
+              },
+              {
+                "id": 104,
+                "name": "阿尔泰牧集"
+              },
+              {
+                "id": 107,
+                "name": "甘州"
+              },
+              {
+                "id": 31,
+                "name": "疏勒"
+              },
+              {
+                "id": 110,
+                "name": "和阗"
+              },
+              {
+                "id": 112,
+                "name": "阿克苏"
+              },
+              {
+                "id": 32,
+                "name": "阿力麻里"
+              },
+              {
+                "id": 35,
+                "name": "日喀则"
+              },
+              {
+                "id": 116,
+                "name": "昌都"
+              },
+              {
+                "id": 117,
+                "name": "理塘"
+              },
+              {
+                "id": 118,
+                "name": "纳里牧集"
+              },
+              {
+                "id": 43,
+                "name": "鄯阐府"
+              },
+              {
+                "id": 124,
+                "name": "焉耆"
+              },
+              {
+                "id": 123,
+                "name": "哈密力"
+              },
+              {
+                "id": 129,
+                "name": "松林营地"
+              },
+              {
+                "id": 130,
+                "name": "乌苏里营地"
+              },
+              {
+                "id": 131,
+                "name": "下江渔集"
+              },
+              {
+                "id": 132,
+                "name": "北山营地"
+              }
+            ],
+            "goods": [
+              {
+                "id": "grain",
+                "name": "谷粮",
+                "price": 2.0,
+                "sell_price": 1.7,
+                "stock": 58.8,
+                "target": 39.199999999999996,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "fish",
+                "name": "鱼鲜",
+                "price": 2.5,
+                "sell_price": 2.125,
+                "stock": 16.8,
+                "target": 11.200000000000001,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "meat",
+                "name": "肉食",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 12.6,
+                "target": 8.4,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "fiber",
+                "name": "麻棉",
+                "price": 2.0,
+                "sell_price": 1.7,
+                "stock": 6.72,
+                "target": 3.36,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "cloth",
+                "name": "布匹",
+                "price": 5.0,
+                "sell_price": 4.25,
+                "stock": 6.72,
+                "target": 3.36,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "herb",
+                "name": "药材",
+                "price": 1.4,
+                "sell_price": 1.19,
+                "stock": 5.6,
+                "target": 2.8000000000000003,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "medicine",
+                "name": "成药",
+                "price": 3.2,
+                "sell_price": 2.72,
+                "stock": 1.68,
+                "target": 0.84,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "timber",
+                "name": "木材",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 4.48,
+                "target": 2.24,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "iron",
+                "name": "铁料",
+                "price": 4.0,
+                "sell_price": 3.4,
+                "stock": 2.8,
+                "target": 1.4000000000000001,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "tools",
+                "name": "日用器具",
+                "price": 8.0,
+                "sell_price": 6.8,
+                "stock": 3.92,
+                "target": 1.9600000000000002,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "study",
+                "name": "文教服务",
+                "price": 4.0,
+                "sell_price": 3.4,
+                "stock": 0.0,
+                "target": 3.64,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "leisure",
+                "name": "游艺服务",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 0.0,
+                "target": 3.08,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "transport",
+                "name": "行旅服务",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 0.0,
+                "target": 4.48,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              }
+            ],
+            "household": {
+              "stock": {
+                "grain": 0.5,
+                "fish": 0.0,
+                "meat": 0.0,
+                "fiber": 0.0,
+                "cloth": 0.0,
+                "herb": 0.0,
+                "medicine": 0.0,
+                "timber": 0.0,
+                "iron": 0.0,
+                "tools": 0.0,
+                "study": 0.0,
+                "leisure": 0.0,
+                "transport": 0.0
+              },
+              "needs": {},
+              "satisfaction": 1.0,
+              "income": 0.0,
+              "expenses": 0.0,
+              "month": null,
+              "records": []
+            },
+            "settlement_date": ""
+          },
+          "current_plan": null,
+          "responsibilities": {
+            "key": "merchant",
+            "label": "经营与互信",
+            "duties": [
+              "trade",
+              "learn_trade",
+              "work"
+            ]
+          },
+          "possessions": [
+            {
+              "id": "2651",
+              "name": "粗布衣",
+              "durability": 100
+            },
+            {
+              "id": "2652",
+              "name": "麦饼",
+              "durability": 100
+            },
+            {
+              "id": "2653",
+              "name": "金疮药",
+              "durability": 100
+            },
+            {
+              "id": "2654",
+              "name": "枣木剑",
+              "durability": 100
+            },
+            {
+              "id": "2655",
+              "name": "乌木算盘",
+              "durability": 98
+            }
+          ],
+          "equipment_bonuses": {
+            "attack": 2.0,
+            "defense": 1.0,
+            "income": 2.5,
+            "training": 0.08,
+            "recovery": 0.0
+          },
+          "known_people": [
+            {
+              "id": 539,
+              "observed": {
+                "name": "傅怀川星",
+                "place": 45,
+                "seen_month": 245,
+                "job": "农人",
+                "identity": "农人·行家",
+                "identity_grade": 8,
+                "skill_band": 1,
+                "wealth_band": "有余"
+              },
+              "my_relation": {
+                "affinity": -82.3952,
+                "trust": -98,
+                "romance": 0,
+                "last_event": 16433,
+                "label": "仇怨",
+                "last_contact": 245,
+                "contact_since": 243,
+                "sworn": false
+              }
+            },
+            {
+              "id": 587,
+              "observed": {
+                "name": "温景瑾沐",
+                "place": 45,
+                "seen_month": 245,
+                "job": "农人",
+                "identity": "农人·熟手",
+                "identity_grade": 8,
+                "skill_band": 0,
+                "wealth_band": "拮据"
+              },
+              "my_relation": {
+                "affinity": -28.1907,
+                "trust": -33.0,
+                "romance": 0,
+                "last_event": 18405,
+                "label": "仇怨",
+                "last_contact": 245,
+                "contact_since": 245,
+                "sworn": false
+              }
+            },
+            {
+              "id": 540,
+              "observed": {
+                "name": "白怀竹星",
+                "place": 45,
+                "seen_month": 245,
+                "job": "匠人",
+                "identity": "匠人·行家",
+                "identity_grade": 7,
+                "skill_band": 1,
+                "wealth_band": "有余"
+              },
+              "my_relation": {
+                "affinity": 10.2378,
+                "trust": 4.0,
+                "romance": 0,
+                "last_event": 16521,
+                "label": "相识",
+                "last_contact": 245,
+                "contact_since": 244,
+                "sworn": false
+              }
+            }
+          ],
+          "memories": [
+            {
+              "event_id": 15246,
+              "fact": "谢修章星故意向白怀竹星编造傅怀川星不守信用的传言。",
+              "interpretation": "规矩管不住所有机会，这次得手值得记住。",
+              "source": "亲历",
+              "salience": 0.6
+            },
+            {
+              "event_id": 13011,
+              "fact": "临安府行台据已提交的证据判令傅怀川星偿还12.0银，另罚3.0银，拘束劳役1个月。",
+              "interpretation": "讨回了部分公道，往后仍要看人行事。",
+              "source": "亲历",
+              "salience": 0.9
+            },
+            {
+              "event_id": 18405,
+              "fact": "谢修章星窃取温景瑾沐6.1银，被当场发现。",
+              "interpretation": "只是这回被抓住了；下次要更会掩饰。",
+              "source": "亲历",
+              "salience": 0.88
+            }
+          ],
+          "allowed_actions": [
+            {
+              "id": "change_job:农人",
+              "kind": "change_job",
+              "target": "农人",
+              "label": "转业 · 农人（4银）",
+              "time_cost": 1
+            },
+            {
+              "id": "duel:539",
+              "kind": "duel",
+              "target": 539,
+              "label": "寻仇比武 · 傅怀川星",
+              "time_cost": 2
+            },
+            {
+              "id": "learn_trade:527",
+              "kind": "learn_trade",
+              "target": 527,
+              "profession": "行商",
+              "label": "学艺 · 向温望瑾星学行商（2银）",
+              "time_cost": 1
+            },
+            {
+              "id": "smear:539",
+              "kind": "smear",
+              "target": 539,
+              "label": "造谣中伤 · 傅怀川星",
+              "time_cost": 1
+            },
+            {
+              "id": "befriend:532",
+              "kind": "befriend",
+              "target": 532,
+              "label": "结交 · 裴望风星",
+              "time_cost": 1
+            },
+            {
+              "id": "mentor:540",
+              "kind": "mentor",
+              "target": 540,
+              "label": "拜师 · 白怀竹星",
+              "time_cost": 1
+            },
+            {
+              "id": "gamble:self",
+              "kind": "gamble",
+              "target": null,
+              "label": "赌局 · 押6银，有赢有输",
+              "time_cost": 1
+            },
+            {
+              "id": "train:self",
+              "kind": "train",
+              "target": null,
+              "label": "习武 · 花费1.5银，练功一周",
+              "time_cost": 1
+            },
+            {
+              "id": "meditate:self",
+              "kind": "meditate",
+              "target": null,
+              "label": "静思 · 缓解愤怒与不安",
+              "time_cost": 1
+            },
+            {
+              "id": "leisure:self",
+              "kind": "leisure",
+              "target": null,
+              "label": "消遣 · 茶酒游憩，花费2银",
+              "time_cost": 1
+            },
+            {
+              "id": "rumor:540",
+              "kind": "rumor",
+              "target": 540,
+              "label": "交换见闻 · 白怀竹星",
+              "time_cost": 1
+            },
+            {
+              "id": "steal:539",
+              "kind": "steal",
+              "target": 539,
+              "label": "行窃 · 傅怀川星",
+              "time_cost": 1
+            },
+            {
+              "id": "travel:46",
+              "kind": "travel",
+              "target": 46,
+              "label": "远行 · 建康府 · 239公里 / 5.2银 / 境内",
+              "km": 239,
+              "fare": 5.17,
+              "toll": 0.0,
+              "cost": 5.17,
+              "border": "境内",
+              "origin_country": 0,
+              "destination_country": 0,
+              "migration": null,
+              "time_cost": 2
+            },
+            {
+              "id": "reconcile:539",
+              "kind": "reconcile",
+              "target": 539,
+              "label": "赔礼和解 · 傅怀川星（赠礼2银）",
+              "time_cost": 1
+            },
+            {
+              "id": "rest:self",
+              "kind": "rest",
+              "target": null,
+              "label": "休养 · 恢复体力",
+              "time_cost": 1
+            },
+            {
+              "id": "work:self",
+              "kind": "work",
+              "target": null,
+              "label": "谋生 · 行商",
+              "time_cost": 2
+            },
+            {
+              "id": "change_job:艺人",
+              "kind": "change_job",
+              "target": "艺人",
+              "label": "转业 · 艺人（4银）",
+              "time_cost": 1
+            },
+            {
+              "id": "change_job:短工",
+              "kind": "change_job",
+              "target": "短工",
+              "label": "转业 · 短工（0银）",
+              "time_cost": 1
+            },
+            {
+              "id": "duel:587",
+              "kind": "duel",
+              "target": 587,
+              "label": "寻仇比武 · 温景瑾沐",
+              "time_cost": 2
+            },
+            {
+              "id": "befriend:530",
+              "kind": "befriend",
+              "target": 530,
+              "label": "结交 · 柳望霁星",
+              "time_cost": 1
+            }
+          ],
+          "allowed_goals": [
+            "wealth",
+            "belonging",
+            "freedom",
+            "mastery",
+            "renown",
+            "revenge"
+          ],
+          "time_budget": 4,
+          "baseline_action": "change_job:农人"
+        },
+        "response": {
+          "action_id": "work:self",
+          "plan": [
+            "work:self",
+            "travel:46",
+            "learn_trade:527",
+            "rest:self"
+          ],
+          "goal": "wealth",
+          "reason": "当前经济状况需要通过谋生维持基本生活，同时寻找机会提升自身能力以增加财富积累。",
+          "life_policy": {
+            "title": "以商立身，以利养家",
+            "priorities": [
+              {
+                "kind": "work",
+                "weight": 12
+              },
+              {
+                "kind": "travel",
+                "weight": 6
+              },
+              {
+                "kind": "learn_trade",
+                "weight": 6
+              },
+              {
+                "kind": "rest",
+                "weight": 12
+              }
+            ]
+          },
+          "reflection": {
+            "event_ids": [
+              15246,
+              13011,
+              18405
+            ],
+            "interpretation": "通过谋生和旅行积累资源，同时通过学习提升自身能力以应对未来的挑战。",
+            "trait": "ambition",
+            "direction": 1,
+            "belief": "justice",
+            "belief_direction": 1
+          }
+        },
+        "applied": true,
+        "validation": "计划已采用；心理变化经过限幅结算",
+        "latency_ms": 8079.647700000351,
+        "usage": {
+          "completion_tokens": 254,
+          "prompt_tokens": 3587,
+          "total_tokens": 3841,
+          "prompt_tokens_details": {
+            "cached_tokens": 398
+          }
+        }
+      },
+      {
+        "npc_id": 506,
+        "role": "healer",
+        "context": {
+          "npc_id": 506,
+          "month": 245,
+          "situation": {
+            "place": 45,
+            "faction": null,
+            "job": "药师"
+          },
+          "settlement_life": {
+            "enabled": true,
+            "working": true,
+            "since": 245,
+            "home": {
+              "place": 45,
+              "settlement_id": "settlement_2",
+              "since": 245,
+              "reason": "现时户居登记",
+              "event_id": null,
+              "name": "临安府北村",
+              "place_name": "临安府",
+              "facility": null
+            },
+            "work": {
+              "place": 45,
+              "settlement_id": "settlement_0",
+              "node": "clinic",
+              "name": "临安府",
+              "place_name": "临安府",
+              "facility": "仁济医馆"
+            },
+            "current": {
+              "place": 45,
+              "settlement_id": "settlement_2",
+              "node": "residence",
+              "row": 3,
+              "col": 4,
+              "name": "临安府北村",
+              "place_name": "临安府",
+              "facility": "居民街坊"
+            },
+            "commute_cost": 20,
+            "basis": "住所固定登记；每周按实际行动更新在场位置。通勤与拜访包含在该次行动时间内。"
+          },
+          "life_policy": null,
+          "self": {
+            "name": "萧修衡星",
+            "age_months": 368,
+            "wealth": 63.27000000000001,
+            "health": 97.2,
+            "skill": 22.1497,
+            "job": "药师",
+            "traits": {
+              "compassion": 44.39098844657931,
+              "ambition": 65.0933,
+              "caution": 32.927654084555805,
+              "sociability": 17.38046085210559,
+              "loyalty": 78.0829257177142,
+              "honesty": 50.963112523890146,
+              "greed": 30.90872265368469,
+              "aggression": 58.600524458765676
+            },
+            "mood": {
+              "joy": 37.6051,
+              "anger": 0.0,
+              "fear": 0.0
+            },
+            "beliefs": {
+              "trust": 0.5333170097557669,
+              "justice": 0.6228408433807584,
+              "tradition": 0.6
+            },
+            "desires": {
+              "wealth": 42.5598,
+              "mastery": 81.1473,
+              "belonging": 38.3436,
+              "renown": 49.6436,
+              "freedom": 58.9643,
+              "revenge": 0.0
+            },
+            "goal": {
+              "kind": "mastery",
+              "title": "武学有成",
+              "since": 242,
+              "horizon_years": 9,
+              "target": 55.927178155327724,
+              "cause": 506,
+              "progress": 0.3902,
+              "status": "追求中",
+              "minimum_months": 48
+            },
+            "pregnancy": null,
+            "illness": null,
+            "office": null,
+            "generation": 0,
+            "spouse": null,
+            "children": [],
+            "family_size": 3,
+            "career": {
+              "profession": "药师",
+              "experience": {
+                "药师": 25.683,
+                "行商": 3.3258
+              },
+              "since": 242,
+              "last_change": 218,
+              "last_event": 11897,
+              "source": "九品世界期初登记"
+            },
+            "martial": {
+              "arts": {
+                "breath": {
+                  "practice": 28.2318,
+                  "realm": 0
+                },
+                "bridge_fist": {
+                  "practice": 26.4067,
+                  "realm": 0
+                },
+                "cloud_step": {
+                  "practice": 27.6092,
+                  "realm": 0
+                },
+                "river_sword": {
+                  "practice": 23.0198959708605,
+                  "realm": 0
+                },
+                "reed_cut": {
+                  "practice": 26.3923,
+                  "realm": 0
+                }
+              },
+              "loadout": {
+                "inner": "breath",
+                "movement": "cloud_step",
+                "attacks": [
+                  "bridge_fist",
+                  "river_sword",
+                  "reed_cut"
+                ]
+              },
+              "focus": "reed_cut",
+              "stamina": 90.0
+            }
+          },
+          "public_institutions": {
+            "name": "临安府行台",
+            "tax_rate": 0.09,
+            "offices": {
+              "县令": 754,
+              "捕头": 653,
+              "主簿": 529
+            },
+            "policy": "balanced",
+            "policy_reason": "沿用既有施政，待年度公议。"
+          },
+          "location": {
+            "id": 45,
+            "name": "临安府",
+            "lon": 120.16,
+            "lat": 30.25,
+            "x": 803.14,
+            "y": 464.38,
+            "country": 0,
+            "region": "两浙西路",
+            "kind": "capital",
+            "trade": 1.35,
+            "weight": 15,
+            "color": "#8d9b68",
+            "owner": 0,
+            "guard": 80.0,
+            "stability": 100.0,
+            "changed_month": null,
+            "last_battle": -6,
+            "event_id": null,
+            "native_country": 0,
+            "guard_max": 80.0,
+            "occupied": false,
+            "interior_authored": true,
+            "country_name": "南宋"
+          },
+          "membership": null,
+          "my_contribution": 0.0,
+          "social_identity": {
+            "grade": 5,
+            "grade_label": "五品",
+            "title": "药师·熟手",
+            "roles": [
+              {
+                "kind": "livelihood",
+                "title": "药师·熟手",
+                "grade": 5
+              }
+            ],
+            "class_label": "士人",
+            "system": "nation",
+            "system_label": "社会品阶",
+            "country": 0
+          },
+          "rank_progression": {
+            "enabled": true,
+            "version": 1,
+            "next_assessment": "景和21年7月",
+            "sect": null,
+            "options": [
+              {
+                "id": "recognize_notable",
+                "kind": "recognize_notable",
+                "target": null,
+                "label": "立业乡里",
+                "title": "乡绅",
+                "cost": 60.0,
+                "requirements": [
+                  {
+                    "label": "声望",
+                    "current": 0.0,
+                    "required": 30.0,
+                    "met": false
+                  },
+                  {
+                    "label": "乡里公益月数",
+                    "current": 0,
+                    "required": 6,
+                    "met": false
+                  },
+                  {
+                    "label": "定居月数",
+                    "current": 0,
+                    "required": 12,
+                    "met": false
+                  },
+                  {
+                    "label": "可用银两",
+                    "current": 63.27000000000001,
+                    "required": 160.0,
+                    "met": false
+                  }
+                ],
+                "enabled": false,
+                "reason": "声望尚未达标；乡里公益月数尚未达标；定居月数尚未达标；可用银两尚未达标",
+                "time_cost": 2
+              }
+            ],
+            "warning": "",
+            "history": [],
+            "description": "门派逐阶考核，病伤可休养；社会品阶随真实营生、家业与任职改变。查看界面不推进考核。"
+          },
+          "local_economy": {
+            "enabled": true,
+            "version": 1,
+            "place": 45,
+            "name": "临安府",
+            "cash": 18.677,
+            "since": 245,
+            "month": 245,
+            "towns": [
+              {
+                "id": 45,
+                "name": "临安府"
+              },
+              {
+                "id": 46,
+                "name": "建康府"
+              },
+              {
+                "id": 2,
+                "name": "抚州"
+              },
+              {
+                "id": 5,
+                "name": "江陵府"
+              },
+              {
+                "id": 6,
+                "name": "襄阳府"
+              },
+              {
+                "id": 38,
+                "name": "成都府"
+              },
+              {
+                "id": 51,
+                "name": "广州"
+              },
+              {
+                "id": 61,
+                "name": "泉州"
+              },
+              {
+                "id": 14,
+                "name": "中都"
+              },
+              {
+                "id": 13,
+                "name": "南京开封府"
+              },
+              {
+                "id": 26,
+                "name": "京兆府"
+              },
+              {
+                "id": 21,
+                "name": "上京会宁府"
+              },
+              {
+                "id": 24,
+                "name": "克鲁伦河营地"
+              },
+              {
+                "id": 25,
+                "name": "兴庆府"
+              },
+              {
+                "id": 29,
+                "name": "沙州"
+              },
+              {
+                "id": 57,
+                "name": "虎思斡耳朵"
+              },
+              {
+                "id": 34,
+                "name": "逻些"
+              },
+              {
+                "id": 42,
+                "name": "大理城"
+              },
+              {
+                "id": 56,
+                "name": "高昌城"
+              },
+              {
+                "id": 50,
+                "name": "海东聚落"
+              },
+              {
+                "id": 22,
+                "name": "黑水营地"
+              },
+              {
+                "id": 133,
+                "name": "开京"
+              },
+              {
+                "id": 145,
+                "name": "镰仓"
+              },
+              {
+                "id": 146,
+                "name": "平安京"
+              },
+              {
+                "id": 16,
+                "name": "太原府"
+              },
+              {
+                "id": 17,
+                "name": "济南府"
+              },
+              {
+                "id": 98,
+                "name": "辽阳府"
+              },
+              {
+                "id": 28,
+                "name": "兰州"
+              },
+              {
+                "id": 100,
+                "name": "斡难河营地"
+              },
+              {
+                "id": 101,
+                "name": "土兀剌河营地"
+              },
+              {
+                "id": 102,
+                "name": "鄂尔浑河营地"
+              },
+              {
+                "id": 103,
+                "name": "杭爱牧集"
+              },
+              {
+                "id": 104,
+                "name": "阿尔泰牧集"
+              },
+              {
+                "id": 107,
+                "name": "甘州"
+              },
+              {
+                "id": 31,
+                "name": "疏勒"
+              },
+              {
+                "id": 110,
+                "name": "和阗"
+              },
+              {
+                "id": 112,
+                "name": "阿克苏"
+              },
+              {
+                "id": 32,
+                "name": "阿力麻里"
+              },
+              {
+                "id": 35,
+                "name": "日喀则"
+              },
+              {
+                "id": 116,
+                "name": "昌都"
+              },
+              {
+                "id": 117,
+                "name": "理塘"
+              },
+              {
+                "id": 118,
+                "name": "纳里牧集"
+              },
+              {
+                "id": 43,
+                "name": "鄯阐府"
+              },
+              {
+                "id": 124,
+                "name": "焉耆"
+              },
+              {
+                "id": 123,
+                "name": "哈密力"
+              },
+              {
+                "id": 129,
+                "name": "松林营地"
+              },
+              {
+                "id": 130,
+                "name": "乌苏里营地"
+              },
+              {
+                "id": 131,
+                "name": "下江渔集"
+              },
+              {
+                "id": 132,
+                "name": "北山营地"
+              }
+            ],
+            "goods": [
+              {
+                "id": "grain",
+                "name": "谷粮",
+                "price": 2.0,
+                "sell_price": 1.7,
+                "stock": 58.8,
+                "target": 39.199999999999996,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "fish",
+                "name": "鱼鲜",
+                "price": 2.5,
+                "sell_price": 2.125,
+                "stock": 16.8,
+                "target": 11.200000000000001,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "meat",
+                "name": "肉食",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 12.6,
+                "target": 8.4,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "fiber",
+                "name": "麻棉",
+                "price": 2.0,
+                "sell_price": 1.7,
+                "stock": 6.72,
+                "target": 3.36,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "cloth",
+                "name": "布匹",
+                "price": 5.0,
+                "sell_price": 4.25,
+                "stock": 6.72,
+                "target": 3.36,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "herb",
+                "name": "药材",
+                "price": 1.4,
+                "sell_price": 1.19,
+                "stock": 5.6,
+                "target": 2.8000000000000003,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "medicine",
+                "name": "成药",
+                "price": 3.2,
+                "sell_price": 2.72,
+                "stock": 1.68,
+                "target": 0.84,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "timber",
+                "name": "木材",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 4.48,
+                "target": 2.24,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "iron",
+                "name": "铁料",
+                "price": 4.0,
+                "sell_price": 3.4,
+                "stock": 2.8,
+                "target": 1.4000000000000001,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "tools",
+                "name": "日用器具",
+                "price": 8.0,
+                "sell_price": 6.8,
+                "stock": 3.92,
+                "target": 1.9600000000000002,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "study",
+                "name": "文教服务",
+                "price": 4.0,
+                "sell_price": 3.4,
+                "stock": 0.0,
+                "target": 3.64,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "leisure",
+                "name": "游艺服务",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 0.0,
+                "target": 3.08,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              },
+              {
+                "id": "transport",
+                "name": "行旅服务",
+                "price": 3.0,
+                "sell_price": 2.55,
+                "stock": 0.0,
+                "target": 4.48,
+                "produced": 0.0,
+                "consumed": 0.0,
+                "spoiled": 0.0
+              }
+            ],
+            "household": {
+              "stock": {
+                "grain": 0.5,
+                "fish": 0.0,
+                "meat": 0.0,
+                "fiber": 0.0,
+                "cloth": 0.0,
+                "herb": 0.0,
+                "medicine": 0.0,
+                "timber": 0.0,
+                "iron": 0.0,
+                "tools": 0.0,
+                "study": 0.0,
+                "leisure": 0.0,
+                "transport": 0.0
+              },
+              "needs": {},
+              "satisfaction": 1.0,
+              "income": 0.0,
+              "expenses": 0.0,
+              "month": null,
+              "records": []
+            },
+            "settlement_date": ""
+          },
+          "current_plan": null,
+          "responsibilities": {
+            "key": "healer",
+            "label": "医药与照护",
+            "duties": [
+              "neighbor_care",
+              "care",
+              "learn_trade"
+            ]
+          },
+          "possessions": [
+            {
+              "id": "2642",
+              "name": "粗布衣",
+              "durability": 100
+            },
+            {
+              "id": "2643",
+              "name": "麦饼",
+              "durability": 100
+            },
+            {
+              "id": "2644",
+              "name": "金疮药",
+              "durability": 100
+            },
+            {
+              "id": "2645",
+              "name": "枣木剑",
+              "durability": 96
+            },
+            {
+              "id": "2646",
+              "name": "采药篓",
+              "durability": 100
+            }
+          ],
+          "equipment_bonuses": {
+            "attack": 2.0,
+            "defense": 1.0,
+            "income": 2.0,
+            "training": 0.08,
+            "recovery": 0.0
+          },
+          "known_people": [
+            {
+              "id": 515,
+              "observed": {
+                "name": "秦望舟星",
+                "place": 45,
+                "seen_month": 242,
+                "job": "幼童",
+                "identity": "幼童",
+                "identity_grade": 9,
+                "skill_band": 0,
+                "wealth_band": "拮据"
+              },
+              "my_relation": {
+                "affinity": 25.0,
+                "trust": 30.0,
+                "romance": 0,
+                "last_event": 14516,
+                "label": "友人",
+                "last_contact": 242,
+                "contact_since": 242,
+                "sworn": false
+              }
+            },
+            {
+              "id": 526,
+              "observed": {
+                "name": "萧望衡星",
+                "place": 45,
+                "seen_month": 245,
+                "job": "行商",
+                "identity": "行商·行家",
+                "identity_grade": 6,
+                "skill_band": 0,
+                "wealth_band": "有余"
+              },
+              "my_relation": {
+                "affinity": 21.9979,
+                "trust": 8.0,
+                "romance": 11,
+                "last_event": 18595,
+                "label": "友人",
+                "last_contact": 245,
+                "contact_since": 243,
+                "sworn": false
+              }
+            },
+            {
+              "id": 505,
+              "observed": {
+                "name": "林修雪星",
+                "place": 45,
+                "seen_month": 245,
+                "job": "书生",
+                "identity": "乡绅",
+                "identity_grade": 4,
+                "skill_band": 0,
+                "wealth_band": "有余"
+              },
+              "my_relation": {
+                "affinity": 9.5381,
+                "trust": 4.0,
+                "romance": 0,
+                "last_event": 17663,
+                "label": "相识",
+                "last_contact": 245,
+                "contact_since": 243,
+                "sworn": false
+              }
+            }
+          ],
+          "memories": [
+            {
+              "event_id": 14516,
+              "fact": "秦望舟星修习游云步，进度达到19.6。",
+              "interpretation": "武学不负日积月累，急不得，也停不得。",
+              "source": "亲历",
+              "salience": 0.15
+            },
+            {
+              "event_id": 7784,
+              "fact": "秦望舟星修习长桥拳，进度达到15.7。",
+              "interpretation": "武学不负日积月累，急不得，也停不得。",
+              "source": "亲历",
+              "salience": 0.15
+            },
+            {
+              "event_id": 3152,
+              "fact": "秦望舟星修习正元功，进度达到14.7。",
+              "interpretation": "武学不负日积月累，急不得，也停不得。",
+              "source": "亲历",
+              "salience": 0.15
+            }
+          ],
+          "allowed_actions": [
+            {
+              "id": "change_job:农人",
+              "kind": "change_job",
+              "target": "农人",
+              "label": "转业 · 农人（4银）",
+              "time_cost": 1
+            },
+            {
+              "id": "court:526",
+              "kind": "court",
+              "target": 526,
+              "label": "倾诉心意 · 萧望衡星",
+              "time_cost": 1
+            },
+            {
+              "id": "work:self",
+              "kind": "work",
+              "target": null,
+              "label": "谋生 · 药师",
+              "time_cost": 2
+            },
+            {
+              "id": "train:self",
+              "kind": "train",
+              "target": null,
+              "label": "习武 · 花费1.5银，练功一周",
+              "time_cost": 1
+            },
+            {
+              "id": "learn_trade:519",
+              "kind": "learn_trade",
+              "target": 519,
+              "profession": "镖师",
+              "label": "学艺 · 向傅望山星学镖师（2银）",
+              "time_cost": 1
+            },
+            {
+              "id": "extort:526",
+              "kind": "extort",
+              "target": 526,
+              "label": "勒索 · 萧望衡星",
+              "time_cost": 2
+            },
+            {
+              "id": "befriend:505",
+              "kind": "befriend",
+              "target": 505,
+              "label": "结交 · 林修雪星",
+              "time_cost": 1
+            },
+            {
+              "id": "gamble:self",
+              "kind": "gamble",
+              "target": null,
+              "label": "赌局 · 押6银，有赢有输",
+              "time_cost": 1
+            },
+            {
+              "id": "reconcile:514",
+              "kind": "reconcile",
+              "target": 514,
+              "label": "赔礼和解 · 宋望宁星（赠礼2银）",
+              "time_cost": 1
+            },
+            {
+              "id": "leisure:self",
+              "kind": "leisure",
+              "target": null,
+              "label": "消遣 · 茶酒游憩，花费2银",
+              "time_cost": 1
+            },
+            {
+              "id": "travel:46",
+              "kind": "travel",
+              "target": 46,
+              "label": "远行 · 建康府 · 239公里 / 5.2银 / 境内",
+              "km": 239,
+              "fare": 5.17,
+              "toll": 0.0,
+              "cost": 5.17,
+              "border": "境内",
+              "origin_country": 0,
+              "destination_country": 0,
+              "migration": null,
+              "time_cost": 2
+            },
+            {
+              "id": "rumor:505",
+              "kind": "rumor",
+              "target": 505,
+              "label": "交换见闻 · 林修雪星",
+              "time_cost": 1
+            },
+            {
+              "id": "aid:515",
+              "kind": "aid",
+              "target": 515,
+              "label": "接济 · 秦望舟星",
+              "time_cost": 1
+            },
+            {
+              "id": "steal:526",
+              "kind": "steal",
+              "target": 526,
+              "label": "行窃 · 萧望衡星",
+              "time_cost": 1
+            },
+            {
+              "id": "meditate:self",
+              "kind": "meditate",
+              "target": null,
+              "label": "静思 · 缓解愤怒与不安",
+              "time_cost": 1
+            },
+            {
+              "id": "rest:self",
+              "kind": "rest",
+              "target": null,
+              "label": "休养 · 恢复体力",
+              "time_cost": 1
+            },
+            {
+              "id": "trade:526",
+              "kind": "trade",
+              "target": 526,
+              "label": "合营 · 萧望衡星",
+              "time_cost": 1
+            },
+            {
+              "id": "change_job:镖师",
+              "kind": "change_job",
+              "target": "镖师",
+              "label": "转业 · 镖师（6银）",
+              "time_cost": 1
+            },
+            {
+              "id": "change_job:艺人",
+              "kind": "change_job",
+              "target": "艺人",
+              "label": "转业 · 艺人（4银）",
+              "time_cost": 1
+            },
+            {
+              "id": "extort:505",
+              "kind": "extort",
+              "target": 505,
+              "label": "勒索 · 林修雪星",
+              "time_cost": 2
+            }
+          ],
+          "allowed_goals": [
+            "mastery"
+          ],
+          "time_budget": 4,
+          "baseline_action": "change_job:农人"
+        },
+        "response": {
+          "action_id": "train:self",
+          "plan": [
+            "train:self",
+            "work:self",
+            "travel:46",
+            "aid:515"
+          ],
+          "goal": "mastery",
+          "reason": "武学需持续精进，以求突破瓶颈。",
+          "life_policy": {
+            "title": "武学有成",
+            "priorities": [
+              {
+                "kind": "meditate",
+                "weight": 12
+              },
+              {
+                "kind": "train",
+                "weight": 12
+              },
+              {
+                "kind": "work",
+                "weight": 12
+              },
+              {
+                "kind": "aid",
+                "weight": 12
+              }
+            ]
+          },
+          "reflection": {
+            "event_ids": [
+              14516,
+              7784,
+              3152
+            ],
+            "interpretation": "武学进步需长期坚持，不能急于求成。",
+            "trait": "ambition",
+            "direction": 1,
+            "belief": "tradition",
+            "belief_direction": 1
+          }
+        },
+        "applied": true,
+        "validation": "计划已采用；心理变化经过限幅结算",
+        "latency_ms": 7305.152799999632,
+        "usage": {
+          "completion_tokens": 234,
+          "prompt_tokens": 3369,
+          "total_tokens": 3603,
+          "prompt_tokens_details": {
+            "cached_tokens": 400
+          }
+        }
+      }
+    ],
+    "monthly": [
+      {
+        "month": 246,
+        "ai_plan_steps": 5,
+        "policy_actions": 1,
+        "policy_ranking_changes": 1,
+        "audit": {
+          "cash": 156150.5314389942,
+          "cash_residual": 5e-05,
+          "goods_residuals": {
+            "grain": 0.0,
+            "fish": -0.0,
+            "meat": -0.0,
+            "fiber": -0.0,
+            "cloth": 0.0,
+            "herb": -0.0,
+            "medicine": 0.0,
+            "timber": 0.0,
+            "iron": -0.0,
+            "tools": -0.0,
+            "study": -0.0,
+            "leisure": -0.0,
+            "transport": 0.0
+          },
+          "negative_stock": false,
+          "negative_market_cash": false
+        }
+      },
+      {
+        "month": 247,
+        "ai_plan_steps": 8,
+        "policy_actions": 2,
+        "policy_ranking_changes": 1,
+        "audit": {
+          "cash": 156150.5314889942,
+          "cash_residual": 0.0001,
+          "goods_residuals": {
+            "grain": -0.0,
+            "fish": 0.0,
+            "meat": -0.0,
+            "fiber": 0.0,
+            "cloth": 0.0,
+            "herb": -0.0,
+            "medicine": 0.0,
+            "timber": 0.0,
+            "iron": -0.0,
+            "tools": -0.0,
+            "study": -0.0,
+            "leisure": 0.0,
+            "transport": 0.0
+          },
+          "negative_stock": false,
+          "negative_market_cash": false
+        }
+      },
+      {
+        "month": 248,
+        "ai_plan_steps": 8,
+        "policy_actions": 4,
+        "policy_ranking_changes": 1,
+        "audit": {
+          "cash": 156150.5315474942,
+          "cash_residual": 0.000159,
+          "goods_residuals": {
+            "grain": -0.0,
+            "fish": -0.0,
+            "meat": -0.0,
+            "fiber": -0.0,
+            "cloth": 0.0,
+            "herb": -0.0,
+            "medicine": 0.0,
+            "timber": 0.0,
+            "iron": -0.0,
+            "tools": -0.0,
+            "study": -0.0,
+            "leisure": -0.0,
+            "transport": 0.0
+          },
+          "negative_stock": false,
+          "negative_market_cash": false
+        }
+      },
+      {
+        "month": 249,
+        "ai_plan_steps": 8,
+        "policy_actions": 5,
+        "policy_ranking_changes": 2,
+        "audit": {
+          "cash": 156150.5315737442,
+          "cash_residual": 0.000185,
+          "goods_residuals": {
+            "grain": -0.0,
+            "fish": 0.0,
+            "meat": -0.0,
+            "fiber": -0.0,
+            "cloth": 0.0,
+            "herb": 0.0,
+            "medicine": 0.0,
+            "timber": -0.0,
+            "iron": -0.0,
+            "tools": -0.0,
+            "study": -0.0,
+            "leisure": -0.0,
+            "transport": 0.0
+          },
+          "negative_stock": false,
+          "negative_market_cash": false
+        }
+      }
+    ],
+    "reload_equal": true,
+    "backend_origin": "D:\\Desktop\\新游戏\\unity\\Build\\LLMAgency\\江湖未央_Data\\StreamingAssets\\Backend\\jianghu\\ai.py",
+    "actor_plans": [
+      {
+        "id": 19,
+        "policy": {
+          "title": "安家立业",
+          "priorities": [
+            {
+              "kind": "work",
+              "weight": 12
+            },
+            {
+              "kind": "faction_task",
+              "weight": 12
+            },
+            {
+              "kind": "extort",
+              "weight": 12
+            },
+            {
+              "kind": "travel",
+              "weight": 12
+            }
+          ],
+          "created": 245,
+          "until": 257,
+          "place": 6,
+          "job": "镖师",
+          "faction": 0,
+          "request_month": 245,
+          "source": "LLM"
+        },
+        "last_action": {
+          "id": "work:self",
+          "kind": "work",
+          "target": null,
+          "label": "谋生 · 农人",
+          "time_cost": 2,
+          "month": 249,
+          "week": 1,
+          "event_id": 39795,
+          "source": "规则"
+        }
+      },
+      {
+        "id": 2,
+        "policy": {
+          "title": "武学有成与门派责任",
+          "priorities": [
+            {
+              "kind": "faction_task",
+              "weight": 12
+            },
+            {
+              "kind": "work",
+              "weight": 12
+            },
+            {
+              "kind": "train",
+              "weight": 12
+            },
+            {
+              "kind": "faction_guide",
+              "weight": 12
+            }
+          ],
+          "created": 245,
+          "until": 257,
+          "place": 6,
+          "job": "镖师",
+          "faction": 0,
+          "request_month": 245,
+          "source": "LLM"
+        },
+        "last_action": {
+          "id": "work:self",
+          "kind": "work",
+          "target": null,
+          "label": "谋生 · 镖师",
+          "time_cost": 2,
+          "month": 249,
+          "week": 1,
+          "event_id": 38770,
+          "source": "规则",
+          "llm_policy": true
+        }
+      },
+      {
+        "id": 508,
+        "policy": {
+          "title": "以商立身，以利养家",
+          "priorities": [
+            {
+              "kind": "work",
+              "weight": 12
+            },
+            {
+              "kind": "travel",
+              "weight": 6
+            },
+            {
+              "kind": "learn_trade",
+              "weight": 6
+            },
+            {
+              "kind": "rest",
+              "weight": 12
+            }
+          ],
+          "created": 245,
+          "until": 257,
+          "place": 45,
+          "job": "行商",
+          "faction": null,
+          "request_month": 245,
+          "source": "LLM"
+        },
+        "last_action": {
+          "id": "befriend:586",
+          "kind": "befriend",
+          "target": 586,
+          "label": "结交 · 萧景衡沐",
+          "time_cost": 1,
+          "month": 249,
+          "week": 4,
+          "event_id": 42477,
+          "source": "规则"
+        }
+      },
+      {
+        "id": 506,
+        "policy": {
+          "title": "武学有成",
+          "priorities": [
+            {
+              "kind": "meditate",
+              "weight": 12
+            },
+            {
+              "kind": "train",
+              "weight": 12
+            },
+            {
+              "kind": "work",
+              "weight": 12
+            },
+            {
+              "kind": "aid",
+              "weight": 12
+            }
+          ],
+          "created": 245,
+          "until": 257,
+          "place": 45,
+          "job": "药师",
+          "faction": null,
+          "request_month": 245,
+          "source": "LLM"
+        },
+        "last_action": {
+          "id": "work:self",
+          "kind": "work",
+          "target": null,
+          "label": "谋生 · 药师",
+          "time_cost": 2,
+          "month": 249,
+          "week": 3,
+          "event_id": 42006,
+          "source": "规则"
+        }
+      }
+    ],
+    "source_hashes": {
+      "jianghu\\ai.py": "78a051ea87782c1a78341738ce24b5a50114e122cd04a2503abe2d80d166d9ef",
+      "jianghu\\atlas.py": "4314a11a01f53ca0392a64c9f5ca7b9f084b84ecf00a39ba07d8372ad2257d07",
+      "jianghu\\atlas_expansion.py": "87ac10adbc53a2c4fd761b63b56df87ef544457f048624f19143f89da29e1187",
+      "jianghu\\atlas_migration.py": "c8f548da1c80323f57a999bfdebe5caf98bf29784fdc0d12021d2a61c72d4b5c",
+      "jianghu\\careers.py": "84d97756262bf833fcd54362f4dbfa6bac024d630e331eedef9b60d2374323c1",
+      "jianghu\\city_biomes.py": "9cc647c6192e4110dbef61035298e473f73128845b511f4a14a310929d338639",
+      "jianghu\\city_gardens.py": "465dc249dca3812f348ee8273b414f302bc8953143c8cdfc5e079d76fcf794fe",
+      "jianghu\\city_landscape.py": "fbe3a70ace9a4c40d84ece63eddc6b52364d13737fa0957324f41480d2c550b9",
+      "jianghu\\city_maps.py": "a21f1f30165f1551dafc0953316325ee4dbaf0d9c3aec35f821eb02e3206bf2e",
+      "jianghu\\city_plans.py": "48cb31a3f7355449314e7c1936a6405b419dc7d8d176a774b085beb291659548",
+      "jianghu\\city_regions.py": "443590725c6742bb155869da3553fd9bb7474b3cbbae9965647275f2bc4e157a",
+      "jianghu\\combat.py": "51326f380170b3372dde644b1d0a2b2d648b6d70175d670ec3da01deac4513bc",
+      "jianghu\\combat_flow.py": "b6bea419dd699c9909ad9c3f0470b656d586d5606389a5f78c5672748316d90f",
+      "jianghu\\combat_realtime.py": "d21e7afb359671815bbd655c494a445d0fc300dc40c53398abf7d5236f6d8cbe",
+      "jianghu\\demography.py": "c57fe99c27270e72a7ca4895298d5e8671fa18e2afad67afc42b98e5587bb0a9",
+      "jianghu\\economics.py": "7a226932c94cd8ac056a3da846feb2154a533a86c97d33458e35ff3110490e2c",
+      "jianghu\\engine.py": "bcfa8b5fda541393d356a14f6ea42348dac8d40e87e977158b49631cf2c2f097",
+      "jianghu\\government.py": "7817774054eb484140a5cd4d71b45c282eff4e1584e14eca13854011d3aa9f98",
+      "jianghu\\historical_map.py": "1e08af6fe6bc9ad9d2b0e5e429d71461acfe412b9c7ead175cdc6186aeea809e",
+      "jianghu\\items.py": "95d574fc14c1925e6be4f5269786819cdd662eaa3584c36a6e4f040c0cced133",
+      "jianghu\\llm_policy.py": "2bb9824410750a8ba21eab917401188be97b1f7a3c0f7297e69425e9f8cf416a",
+      "jianghu\\local_life.py": "4e2038d2f2b76a06c0cd28cea89d106b0c477f4d9d4a75c395f6c2477f3dad91",
+      "jianghu\\martial.py": "72b1b8303b5d7bc7b901522ef914373ac59d1ca1a352288b4461b13deff822fe",
+      "jianghu\\model_service.py": "ffaa248333cb59927e353f2ffff491bc680e6da179c30abd559fe66635447782",
+      "jianghu\\npc_memory.py": "eb5bfa500b8c0b094d59d1043ddf57d910c08ea7082bc2c9ff8d56e3fa2fb701",
+      "jianghu\\npc_plans.py": "5ebfb6b009aaad87cc962a4bd3ff268eb4032b6e0f115d464402406c3b03c66d",
+      "jianghu\\organizations.py": "9dfed6f94045585c0ab9c7f9d048956b1c8388b5da9bbb9a446125a406814e09",
+      "jianghu\\politics.py": "643ac2df5b8e23f1d3c751f1bec641792333671e14e9b612e0409de027772d0e",
+      "jianghu\\population.py": "152f17945dcb7bbd9c6af5fe76e5db2f997ce3286c22f5a2a8fd103b2d1a7cca",
+      "jianghu\\protagonist.py": "6d30b9609bf80b787ec16fabea7f595842087b735d849caa51d6534e02baba36",
+      "jianghu\\rank_progression.py": "9b133e8a3932fe50df5ce1e91e155b8780cf3a35d70cbf8c55e0613680ac1e8b",
+      "jianghu\\relationships.py": "0b51546065f525967838cab3a967fbd2102903dca5b9b79864007169e0450fae",
+      "jianghu\\sect_catalog.py": "b2d3b28f18d4da90800a34cfe33ad970466c901df6b01424380c0af74a8f1ec1",
+      "jianghu\\sect_migration.py": "70e88b2259ab2b8a885c21bb60ce08206097e58c6c208f186540bb097e7dca93",
+      "jianghu\\sect_ranks.py": "c2628e718c54612ac2bed58338803afc948c566d9c79811c9a6dd00c8c040495",
+      "jianghu\\server.py": "279a345dae4e8622f139d51e9e17d05f66f1bc2d2cf52e014f7631f1396471c3",
+      "jianghu\\settlements.py": "3654534a829f9082f05b6ef6b585155c463004bfeab733ab586d6e89993fee1f",
+      "jianghu\\social.py": "e395725bf846a9896974cff8a3af8b1fa78b1ae4ecd345bd22aa9f1bc939145c",
+      "jianghu\\social_ranks.py": "5e695446ee18a326abddad2b993503db66b4df20d2b3a1ab8b413e2dd84790f9",
+      "jianghu\\society.py": "2a6b83629a3fe6a696120bc175e413f8a5aa72097fba9e86dbea55e88f341bbd",
+      "jianghu\\store.py": "b98ca0fe845953a0b14623587da2a98ffcd0bcd8cd8a438cc3823343a09f50d4",
+      "jianghu\\territory.py": "f4bac713250a0623ea308359afe697897bf4b251ea1722b761ee13c75d24ad27",
+      "jianghu\\__init__.py": "fa4bb541ffb1012e31431d164c85942d7e66419ef2c01b38bcb64e142969b8d7"
+    }
+  },
+  "formal_preservation": {
+    "month": 245,
+    "population": 1799,
+    "preservation": {
+      "month": true,
+      "player": true,
+      "items": true,
+      "economy": true,
+      "governments": true,
+      "countries": true,
+      "territory": true,
+      "factions": true,
+      "city_positions": true,
+      "local_life": true,
+      "npc_physical_state": true,
+      "existing_events_preserved": true
+    },
+    "policy_count": 9,
+    "model_log_entries": 9,
+    "backup": "C:\\Users\\User\\AppData\\LocalLow\\JianghuStudio\\江湖未央 Unity\\Saves\\backups\\before-llm-agency-20261027-203340.sqlite"
+  },
+  "formal_ai_acceptance": {
+    "calls": 5,
+    "successes": 4,
+    "failed": 0,
+    "rejected": 0,
+    "stale": 0,
+    "latency_ms": 46344.57259999181,
+    "prompt_tokens": 13762,
+    "completion_tokens": 1076,
+    "last_error": "",
+    "last_result": {
+      "npc_id": 66,
+      "applied": true,
+      "reason": "计划已采用；心理变化经过限幅结算"
+    },
+    "busy": true,
+    "scheduled": 12,
+    "coverage": 4,
+    "eligible": 1678,
+    "policy_active": 4,
+    "month_used": 12,
+    "plan_executions": 0,
+    "policy_actions": 0,
+    "policy_ranking_changes": 0,
+    "queued": 7,
+    "pending": 8,
+    "managed_model": true,
+    "average_ms": 11586.143149997952,
+    "config": {
+      "enabled": true,
+      "backend": "llamacpp",
+      "url": "http://127.0.0.1:11435",
+      "model": "qwen3:4b",
+      "reviews_per_month": 64,
+      "cooldown_months": 3,
+      "queue_limit": 8,
+      "timeout": 80,
+      "max_tokens": 600,
+      "config_version": 4,
+      "context_size": 8192,
+      "auto_start": true,
+      "turn_wait_seconds": 30,
+      "turn_min_decisions": 4
+    },
+    "mode": "LLM计划与生活方针"
+  },
+  "formal_paused": true,
+  "backend_module_count": 43,
+  "backend_source_hashes": {
+    "jianghu\\ai.py": "78a051ea87782c1a78341738ce24b5a50114e122cd04a2503abe2d80d166d9ef",
+    "jianghu\\atlas.py": "4314a11a01f53ca0392a64c9f5ca7b9f084b84ecf00a39ba07d8372ad2257d07",
+    "jianghu\\atlas_expansion.py": "87ac10adbc53a2c4fd761b63b56df87ef544457f048624f19143f89da29e1187",
+    "jianghu\\atlas_migration.py": "c8f548da1c80323f57a999bfdebe5caf98bf29784fdc0d12021d2a61c72d4b5c",
+    "jianghu\\careers.py": "84d97756262bf833fcd54362f4dbfa6bac024d630e331eedef9b60d2374323c1",
+    "jianghu\\city_biomes.py": "9cc647c6192e4110dbef61035298e473f73128845b511f4a14a310929d338639",
+    "jianghu\\city_gardens.py": "465dc249dca3812f348ee8273b414f302bc8953143c8cdfc5e079d76fcf794fe",
+    "jianghu\\city_landscape.py": "fbe3a70ace9a4c40d84ece63eddc6b52364d13737fa0957324f41480d2c550b9",
+    "jianghu\\city_maps.py": "a21f1f30165f1551dafc0953316325ee4dbaf0d9c3aec35f821eb02e3206bf2e",
+    "jianghu\\city_plans.py": "48cb31a3f7355449314e7c1936a6405b419dc7d8d176a774b085beb291659548",
+    "jianghu\\city_regions.py": "443590725c6742bb155869da3553fd9bb7474b3cbbae9965647275f2bc4e157a",
+    "jianghu\\combat.py": "51326f380170b3372dde644b1d0a2b2d648b6d70175d670ec3da01deac4513bc",
+    "jianghu\\combat_flow.py": "b6bea419dd699c9909ad9c3f0470b656d586d5606389a5f78c5672748316d90f",
+    "jianghu\\combat_realtime.py": "d21e7afb359671815bbd655c494a445d0fc300dc40c53398abf7d5236f6d8cbe",
+    "jianghu\\demography.py": "c57fe99c27270e72a7ca4895298d5e8671fa18e2afad67afc42b98e5587bb0a9",
+    "jianghu\\economics.py": "7a226932c94cd8ac056a3da846feb2154a533a86c97d33458e35ff3110490e2c",
+    "jianghu\\engine.py": "bcfa8b5fda541393d356a14f6ea42348dac8d40e87e977158b49631cf2c2f097",
+    "jianghu\\government.py": "7817774054eb484140a5cd4d71b45c282eff4e1584e14eca13854011d3aa9f98",
+    "jianghu\\historical_map.py": "1e08af6fe6bc9ad9d2b0e5e429d71461acfe412b9c7ead175cdc6186aeea809e",
+    "jianghu\\items.py": "95d574fc14c1925e6be4f5269786819cdd662eaa3584c36a6e4f040c0cced133",
+    "jianghu\\llm_policy.py": "2bb9824410750a8ba21eab917401188be97b1f7a3c0f7297e69425e9f8cf416a",
+    "jianghu\\local_life.py": "4e2038d2f2b76a06c0cd28cea89d106b0c477f4d9d4a75c395f6c2477f3dad91",
+    "jianghu\\martial.py": "72b1b8303b5d7bc7b901522ef914373ac59d1ca1a352288b4461b13deff822fe",
+    "jianghu\\model_service.py": "ffaa248333cb59927e353f2ffff491bc680e6da179c30abd559fe66635447782",
+    "jianghu\\npc_memory.py": "eb5bfa500b8c0b094d59d1043ddf57d910c08ea7082bc2c9ff8d56e3fa2fb701",
+    "jianghu\\npc_plans.py": "5ebfb6b009aaad87cc962a4bd3ff268eb4032b6e0f115d464402406c3b03c66d",
+    "jianghu\\organizations.py": "9dfed6f94045585c0ab9c7f9d048956b1c8388b5da9bbb9a446125a406814e09",
+    "jianghu\\politics.py": "643ac2df5b8e23f1d3c751f1bec641792333671e14e9b612e0409de027772d0e",
+    "jianghu\\population.py": "152f17945dcb7bbd9c6af5fe76e5db2f997ce3286c22f5a2a8fd103b2d1a7cca",
+    "jianghu\\protagonist.py": "6d30b9609bf80b787ec16fabea7f595842087b735d849caa51d6534e02baba36",
+    "jianghu\\rank_progression.py": "9b133e8a3932fe50df5ce1e91e155b8780cf3a35d70cbf8c55e0613680ac1e8b",
+    "jianghu\\relationships.py": "0b51546065f525967838cab3a967fbd2102903dca5b9b79864007169e0450fae",
+    "jianghu\\sect_catalog.py": "b2d3b28f18d4da90800a34cfe33ad970466c901df6b01424380c0af74a8f1ec1",
+    "jianghu\\sect_migration.py": "70e88b2259ab2b8a885c21bb60ce08206097e58c6c208f186540bb097e7dca93",
+    "jianghu\\sect_ranks.py": "c2628e718c54612ac2bed58338803afc948c566d9c79811c9a6dd00c8c040495",
+    "jianghu\\server.py": "279a345dae4e8622f139d51e9e17d05f66f1bc2d2cf52e014f7631f1396471c3",
+    "jianghu\\settlements.py": "3654534a829f9082f05b6ef6b585155c463004bfeab733ab586d6e89993fee1f",
+    "jianghu\\social.py": "e395725bf846a9896974cff8a3af8b1fa78b1ae4ecd345bd22aa9f1bc939145c",
+    "jianghu\\social_ranks.py": "5e695446ee18a326abddad2b993503db66b4df20d2b3a1ab8b413e2dd84790f9",
+    "jianghu\\society.py": "2a6b83629a3fe6a696120bc175e413f8a5aa72097fba9e86dbea55e88f341bbd",
+    "jianghu\\store.py": "b98ca0fe845953a0b14623587da2a98ffcd0bcd8cd8a438cc3823343a09f50d4",
+    "jianghu\\territory.py": "f4bac713250a0623ea308359afe697897bf4b251ea1722b761ee13c75d24ad27",
+    "jianghu\\__init__.py": "fa4bb541ffb1012e31431d164c85942d7e66419ef2c01b38bcb64e142969b8d7"
+  },
+  "bridge_sha256": "6e68de95542a3138019747c12a8fbc2eb6d5ec01929f65f486e9808e3d9597ca",
+  "unity_assembly_sha256": "1e9cbfa3657a39e6a2df70318883d7608b2dcc97a7c9d8d7db7718d2c8a3a366",
+  "unity_sources": {
+    "unity\\JianghuUnity\\Assets\\Scripts\\BattleScreen.cs": "ac93e6a49f1e7677f4386d4f89a4a3439536c3470d43832bc4f5bc6860ac89c6",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityAreas.cs": "0c3ef53821353cc83912a083201dfd76aa9793ce2d0d7a6aacf6cffdf50cd034",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityGroundSmoke.cs": "413a23979965c4e25260c6e3abf84544b8f2ea8411426c7b21257d28fc526e7b",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityLandscape.cs": "119cf0f46b796bccd2b8a49f63e536eea29f9f04dff2b386470778f1c8869556",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityLoading.cs": "bacbedb3897b37e9a814fffafd3001f05ef324882a344f8dbd8753b6cd7b0e2c",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityMap.cs": "ee7ee89f2e2c15a308d1603bf639a084a8b3ee2e7541c69be99f0f2f64bccb2e",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityMapSmoke.cs": "c89e338f03f686fcfdce0a88d5edf8d722812585eccabb854480fcf0ab5e8f1a",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityPeople.cs": "f0ebf93317cc4f27b4ffce012f1d7274f0d8d1222d3f7d36a87a34b196fa32d3",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityPeopleSmoke.cs": "70700ac95159e98acfa59784b3fed94eb7bc00da41c29d6a467fcbcc9a4ecd79",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityRiverSmoke.cs": "7055b11f512a9b9e2aa751615be91e2a3c752a4ce1b8a18980f84f116156b7c5",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityRouting.cs": "2d63e900f73bc268983a6bb63e45edd475ec7f1a794932020f616463d0aacecd",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityTerrain.cs": "f964f6e52bd7583c62a9321511953641fa12b4fb61e61e3d4add00a4da899172",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CityWalking.cs": "97dc8e4c4dc98b4330dbb99e76774e8cd4f13e7fb5a0fc564ef4ea606e66a7f7",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CombatRanges.cs": "5dd52930ea909db7547b222728f2ebdb36b6f4e473ff55c6460ac6aa99d137eb",
+    "unity\\JianghuUnity\\Assets\\Scripts\\Economy.cs": "31bcfc4ba0f437200597117c46a73ea867755d826da835a1a2e1aa931c40db56",
+    "unity\\JianghuUnity\\Assets\\Scripts\\EconomySmoke.cs": "187142c59ad8dd5ce3bd930e1f15af95b8f9f6fc5b028a0edd01ed2a4fd18dec",
+    "unity\\JianghuUnity\\Assets\\Scripts\\GameClient.cs": "33f5154f603deb14005430c3ffe8223cd779534aebb163a97a6ec252222856a4",
+    "unity\\JianghuUnity\\Assets\\Scripts\\JianghuApp.cs": "d17aa60290cb570ae92919b5534dff17ddb884917a5d1a1c0fbe1c7759d2c6fc",
+    "unity\\JianghuUnity\\Assets\\Scripts\\Json.cs": "7095efb0f241c03d8acb6411cdceccf55dc84f2d961aaa03ac1e5abac03be60d",
+    "unity\\JianghuUnity\\Assets\\Scripts\\LLMAgencySmoke.cs": "2a071ad46a8aa62ac0875a4ed76d47f084d8ada4c80dfd33470b0870540f227a",
+    "unity\\JianghuUnity\\Assets\\Scripts\\LocalLifeSmoke.cs": "cb2efcd359ded2251bc98dfb14730b66d50c4d0fac56769bac1392041b342d95",
+    "unity\\JianghuUnity\\Assets\\Scripts\\NationalRanks.cs": "4c6cf6ee3522513d10284509a8f9ff1bce6988d50ccb0bb51404b4ec5ce58231",
+    "unity\\JianghuUnity\\Assets\\Scripts\\NpcThinking.cs": "dc376b28dc3e10903d0f95b3f4a7b3de3e8dec7766efd2c3d50f0591f0081f32",
+    "unity\\JianghuUnity\\Assets\\Scripts\\NpcThinkingSmoke.cs": "4e387092274262aea8cb59abef339c1516e90393deed27be8483d4a24b7ad7d8",
+    "unity\\JianghuUnity\\Assets\\Scripts\\Panels.cs": "4b96d9c9af28174b389d4090987e5bd825548a570de1a30fbdc42b74a3f302fd",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PaperCast.cs": "a0dbc66157210dd6c767845a9df511e145b8c0dc8ba6c239ff2b905a9175660a",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PaperRenderSmoke.cs": "f5ee980b8a1e9e3052561f2a012ac48277b4475669be01c62a11aa49d81c81b7",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PaperRig.cs": "e92205e93eb08507a8e4b2af6e429f14588d9d485a390fe45842e19366cee282",
+    "unity\\JianghuUnity\\Assets\\Scripts\\RankProgress.cs": "6a702794abbffd0ee2eed97a3b688762dc87b1699020854eb8856d659cd3a029",
+    "unity\\JianghuUnity\\Assets\\Scripts\\RankProgressSmoke.cs": "a8f0df24d42b1a08bff17431704f13b98702ba47c9f28becb3c1025ae3555421",
+    "unity\\JianghuUnity\\Assets\\Scripts\\RealtimeBattleScreen.cs": "2f3dd745a47d48a100193e1fa587eab5f73730b16a38520de581f9e4be48b402",
+    "unity\\JianghuUnity\\Assets\\Scripts\\ReferenceBattleUI.cs": "3b9645c52b2005f9f1396894efa9ad4b4261549319c39e54ba6de9d4a4443411",
+    "unity\\JianghuUnity\\Assets\\Scripts\\Screens.cs": "d9df44cd150bbdf5ce0d8cf06449d71f96eb45ecf441991ed4f85a60412cc128",
+    "unity\\JianghuUnity\\Assets\\Scripts\\SectRanks.cs": "d26b806ab4119d1aa93c61a457e4c8f4bc815d966c7ce437c726cc5f0cfbb1d9",
+    "unity\\JianghuUnity\\Assets\\Scripts\\SectRankSmoke.cs": "81e073d72b1b81912e55b7f78ffd82983240740d72b17c4ac845391a0516541a",
+    "unity\\JianghuUnity\\Assets\\Scripts\\SettlementLayoutSmoke.cs": "1bbd2fc52e0a2cd302c4fda2ff448486100a23ea08eb809241df548770da115b",
+    "unity\\JianghuUnity\\Assets\\Scripts\\ShadowTheater.cs": "d56175c429d03c6dd7258fdc0aaa34498c31c638acf9ebd57db188c10242260c",
+    "unity\\JianghuUnity\\Assets\\Scripts\\SocietyPanel.cs": "dd4687db62c74bde955869555aa12a89b00cd7108a0f10114cc922fc6a9ff0cb",
+    "unity\\JianghuUnity\\Assets\\Scripts\\Theme.cs": "9dc993fb4df7ead5d012e270b45ad949384fa88b1a4732a33b42b190b6696291",
+    "unity\\JianghuUnity\\Assets\\Scripts\\UnitySmoke.cs": "17b6d808e2811fa7a0878a993dcdb3164891463e001755bbb931ab91cade831d",
+    "unity\\JianghuUnity\\Assets\\Scripts\\WorldUI.cs": "ca2be482cd4ee2614e83124ff70b66853a18bf09525cf6402c9659aeab129d69"
+  },
+  "active_build": "LLMAgency"
+}

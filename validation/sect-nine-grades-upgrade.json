@@ -1,0 +1,17 @@
+{
+  "source": "D:\\Desktop\\新游戏\\validation\\sects-save-copy\\world.sqlite",
+  "tested_copy": "D:\\Desktop\\新游戏\\validation\\sect-nine-grades-upgrade\\world.sqlite",
+  "old_title_counts": [
+    4
+  ],
+  "new_title_count": 9,
+  "sects": 14,
+  "npcs": 1173,
+  "month": 242,
+  "accounts_unchanged": true,
+  "attributes_and_memberships_unchanged": true,
+  "random_state_unchanged": true,
+  "events_unchanged": true,
+  "reload_idempotent": true,
+  "passed": true
+}
