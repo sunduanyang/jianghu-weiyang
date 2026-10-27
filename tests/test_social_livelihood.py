@@ -1,3 +1,5 @@
+from jianghu import combat_attributes as abilities
+from tests.combat_helpers import set_rating, update_actor
 """Family capacity, local accounts, shared care and informed migration."""
 from copy import deepcopy
 import json
@@ -16,7 +18,7 @@ class SocialLivelihoodTests(unittest.TestCase):
     def person(self, w, place=0, **values):
         n = w.make_npc(place=place)
         n.update(age_months=360, wealth=100., health=100.)
-        n.update(values)
+        update_actor(n, values)
         n['traits'].update(compassion=80., loyalty=80.)
         w.set_goal(n, 'belonging', initial=True)
         w.reindex()

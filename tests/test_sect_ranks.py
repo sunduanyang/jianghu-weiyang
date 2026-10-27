@@ -1,3 +1,5 @@
+from jianghu import combat_attributes as abilities
+from tests.combat_helpers import set_rating, update_actor
 """Nine-grade membership across all traditions and both actor types."""
 from copy import deepcopy
 import json
@@ -15,7 +17,7 @@ class SectRankTests(unittest.TestCase):
 
     def member(self, fid=0, contribution=0., skill=12.):
         w = self.w; n = w.make_npc(place=w.factions[fid]['place'])
-        n.update(age_months=360, health=100., faction=fid, contribution=contribution, skill=skill)
+        update_actor(n, age_months=360, health=100., faction=fid, contribution=contribution, skill=skill)
         w.set_goal(n, 'mastery', initial=True); w.reindex()
         return n
 
@@ -33,12 +35,12 @@ class SectRankTests(unittest.TestCase):
             n = self.member(f['id'])
             for grade in range(2, 10):
                 contribution, skill = sect_ranks.REQUIREMENTS[grade]
-                n.update(contribution=contribution, skill=skill)
+                update_actor(n, contribution=contribution, skill=skill)
                 rank = organizations.rank(w, n)
                 self.assertEqual((rank['grade'], rank['title']), (grade, f['ranks'][grade-1]))
                 self.assertEqual(careers.identity(w, n)['grade'], grade)
             f['leader'] = n['id']
-            n.update(contribution=0., skill=0.)
+            update_actor(n, contribution=0., skill=0.)
             self.assertEqual(organizations.rank(w, n)['grade'], 1)
             self.assertEqual(careers.identity(w, n)['grade_label'], '一品')
             f['leader'] = None
@@ -47,7 +49,7 @@ class SectRankTests(unittest.TestCase):
     def test_higher_contribution_alone_cannot_bypass_martial_gate_or_leadership(self):
         w = self.w; n = self.member(contribution=1000., skill=12.)
         self.assertEqual(organizations.rank(w, n)['grade'], 8)
-        n.update(contribution=0., skill=100.)
+        update_actor(n, contribution=0., skill=100.)
         self.assertEqual(organizations.rank(w, n)['grade'], 9)
         n.update(contribution=1000.)
         self.assertEqual(organizations.rank(w, n)['grade'], 2)
@@ -56,8 +58,8 @@ class SectRankTests(unittest.TestCase):
         w = self.w; h = w.player['protagonist']; h.update(created=True, faction=0)
         n = self.member()
         for grade in range(2, 10):
-            h['contribution'], w.player['skill'] = sect_ranks.REQUIREMENTS[grade]
-            n.update(contribution=h['contribution'], skill=w.player['skill'])
+            h['contribution'], _combat_fixture_rating = sect_ranks.REQUIREMENTS[grade]; set_rating(w.player, _combat_fixture_rating)
+            update_actor(n, contribution=h['contribution'], skill=abilities.rating(w.player))
             membership = organizations.player_membership(w)
             self.assertEqual({k: membership[k] for k in ('grade', 'grade_label', 'title')}, organizations.rank(w, n))
             self.assertEqual(social_ranks.player_identity(w)['grade'], grade)

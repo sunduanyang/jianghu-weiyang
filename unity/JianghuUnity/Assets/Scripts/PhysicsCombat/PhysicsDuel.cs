@@ -17,7 +17,7 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
     bool finished, smoke;
     bool fixtureMode;
     string result = "", notice = "拉开距离，观察对手的剑尖。", smokePath = "";
-    float elapsed, resultAt, noticeUntil, shake, slowUntil, hurtFlash;
+    float elapsed, resultAt, noticeUntil, shake, hurtFlash;
     int wins, losses, round = 1;
     public int hits, blocks, headHits, knockouts;
     public float strongestImpact;
@@ -45,14 +45,14 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
         Time.fixedDeltaTime = 1f/120;
         Physics2D.simulationMode=SimulationMode2D.FixedUpdate;
         Physics2D.gravity = new Vector2(0,-18);
-        Physics2D.velocityIterations = 30;
-        Physics2D.positionIterations = 40;
+        Physics2D.velocityIterations = 50;
+        Physics2D.positionIterations = 60;
         Physics2D.defaultContactOffset=.005f;
         Physics2D.IgnoreLayerCollision(11,9,true);
         Physics2D.IgnoreLayerCollision(11,10,false);
         Physics2D.IgnoreLayerCollision(11,11,true);
         bodyMaterial=Material("布衣",.22f,0);footMaterial=Material("鞋底",.9f,0);
-        bladeMaterial=Material("剑刃",.08f,.03f);shieldMaterial=Material("木盾",.35f,.02f);
+        bladeMaterial=Material("剑刃",.7f,.10f);shieldMaterial=Material("木盾",.7f,.10f);
         font = Resources.Load<Font>("Fonts/NotoSerifSC-Regular");
         catalog = J.Parse(Resources.Load<TextAsset>("PaperCast/index").text);
         background = PaperBackground();
@@ -91,11 +91,18 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
         if(enemy!=null){enemy.root.SetActive(false);Destroy(enemy.root);}
         contacts.Clear();
         queuedContacts.Clear();clashes.Clear();colliderIds.Clear();nextColliderId=0;
-        player = new Fighter(this,catalog,Campaign?campaign.playerSkin:"m-youth-farmer",-2.05f,1,true,Campaign?DuelWeapon.CampaignWeapon(campaign.battle["fighters"][0]["weapon"]):DuelWeapon.All[playerWeaponIndex],Campaign?campaign.battle["fighters"][0]:null);
-        enemy = new Fighter(this,catalog,Campaign?campaign.enemySkin:"f-youth-farmer",2.05f,-1,false,Campaign?DuelWeapon.CampaignWeapon(campaign.battle["fighters"][1]["weapon"]):DuelWeapon.All[enemyWeaponIndex],Campaign?campaign.battle["fighters"][1]:null);
-        finished=false; result=""; elapsed=0; sparks.Clear();floating.Clear();slowUntil=0;
+        DuelWeapon playerSpec=Campaign?DuelWeapon.CampaignWeapon(campaign.battle["fighters"][0]["weapon"]):DuelWeapon.All[playerWeaponIndex];
+        DuelWeapon enemySpec=Campaign?DuelWeapon.CampaignWeapon(campaign.battle["fighters"][1]["weapon"]):DuelWeapon.All[enemyWeaponIndex];
+        // Long points must not begin interpenetrating the opposing shaft.
+        // Restoring an existing battle still uses its authoritative body pose.
+        float playerExtent=.9f+playerSpec.reach*Mathf.Abs(Mathf.Cos(playerSpec.readyAngle*Mathf.Deg2Rad));
+        float enemyExtent=.9f+enemySpec.reach*Mathf.Abs(Mathf.Cos(enemySpec.readyAngle*Mathf.Deg2Rad));
+        float opening=Mathf.Max(2.05f,(playerExtent+enemyExtent+.4f)*.5f);
+        player = new Fighter(this,catalog,Campaign?campaign.playerSkin:"m-youth-farmer",-opening,1,true,playerSpec,Campaign?campaign.battle["fighters"][0]:null);
+        enemy = new Fighter(this,catalog,Campaign?campaign.enemySkin:"f-youth-farmer",opening,-1,false,enemySpec,Campaign?campaign.battle["fighters"][1]:null);
+        finished=false; result=""; elapsed=0; sparks.Clear();floating.Clear();
         Time.timeScale=1; paused=false; help=false; hurtFlash=0;
-        notice=player.weapon.TwoHanded?"双手持械：左键主控，右键牵引副手，两手合力运械，K 架杆。":"按住左键拖动运剑，按住右键拖动举盾；轮盘在按下处出现。"; noticeUntil=5;
+        notice="左键主手，右键副手；两键同按同时控制，松开保持 / 续势，中键收住。"; noticeUntil=7;
     }
     void Begin(bool practice) { training=practice; started=true; help=false; round=1;wins=losses=0;ResetRound(); }
     void Update() {
@@ -109,9 +116,9 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
             if(Input.GetKeyDown(KeyCode.V)) bones=!bones;
             if(Input.GetKeyDown(KeyCode.M)) muted=!muted;
         }
-        Time.timeScale=(paused||help||armory)&&started?0:Time.unscaledTime<slowUntil?.32f:1;
-        if(!Live){controls.ReleaseAll();player.ClearMouseCapture();}
-        else if(!smoke)controls.Poll(ToCanvas);
+        Time.timeScale=(paused||help||armory)&&started?0:1;
+        if(!Live){controls.ReleaseAll(true);player.ClearMouseCapture();}
+        else if(!smoke)controls.Poll(ToCanvas,player.MouseSeed(true),player.MouseSeed(false),player.MousePixels(true),player.MousePixels(false),player.MouseAxis(true),player.MouseAxis(false));
         if(!started||paused||help||armory) return;
         if(!finished) elapsed+=Time.deltaTime;
         for(int i=sparks.Count-1;i>=0;i--) { var p=sparks[i];p.life-=Time.deltaTime;p.v+=Vector2.down*8*Time.deltaTime;p.p+=p.v*Time.deltaTime;if(p.life<=0)sparks.RemoveAt(i); }
@@ -138,22 +145,30 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
         enemy.Step(started&&!finished,player);
         combatPhysics.Simulate(Time.fixedDeltaTime);
     }
-    void OnApplicationFocus(bool focus) {if(CampaignHidden)return;if(!smoke&&!focus&&player!=null){controls.ReleaseAll();player.ClearMouseCapture();if(started)paused=true;if(Campaign)campaign.command?.Invoke("checkpoint");} }
+    void OnApplicationFocus(bool focus) {if(CampaignHidden)return;if(!smoke&&!focus&&player!=null){controls.ReleaseAll(true);player.ClearMouseCapture();if(started)paused=true;if(Campaign)campaign.command?.Invoke("checkpoint");} }
     public bool Live => started&&!paused&&!help&&!finished&&!armory;
     public bool IsSmoke => smoke;
 
     public void Contact(DuelContact weapon,DuelContact other,Collision2D collision) {
         if(!Live||weapon.owner==other.owner||weapon.kind!="sword"||collision.contactCount==0)return;
-        if(collision.otherCollider!=weapon.limb.shape){rejectedHandleContacts++;return;}
+        weapon.owner.RecordWeaponResistance(weapon.limb);
+        bool guardContact=other.kind=="shield"||other.kind=="sword"||other.kind=="hilt";
+        // A harmless shaft / guard still blocks another weapon. Suppressing
+        // these contacts removes both feedback and guard effort from a bind.
+        if(collision.otherCollider!=weapon.limb.shape&&!guardContact){rejectedHandleContacts++;return;}
         var contact=collision.GetContact(0);
         Vector2 relative=weapon.limb.VelocityAt(contact.point)-other.limb.VelocityAt(contact.point);
         float speed=Mathf.Max(0,-Vector2.Dot(relative,contact.normal));
         if(speed<.01f)separatingContacts++;
         uint ownId=ColliderId(collision.otherCollider),otherId=ColliderId(collision.collider);
         ulong directed=Pair(ownId,otherId);if(!queuedContacts.Add(directed))return;
-        bool ownFirst=ownId<otherId;
+        uint guardOwn=ColliderId(weapon.limb.shape),guardOther=ColliderId(other.limb.shape);
+        bool ownFirst=guardOwn<guardOther;
+        ulong guardPair=ownFirst?Pair(guardOwn,guardOther):Pair(guardOther,guardOwn);
         float fraction=Vector2.Dot(contact.point-weapon.limb.A,(weapon.limb.B-weapon.limb.A).normalized)/weapon.limb.length;
-        contacts.Add(new HitPacket {weapon=weapon,other=other,point=contact.point,normal=contact.normal,relativeVelocity=relative,speed=speed,bladeFraction=fraction,step=physicsStep,strokeId=weapon.owner.attackId,attackActive=weapon.owner.IsAttacking,directedPair=directed,guardPair=ownFirst?directed:Pair(otherId,ownId),strokeLow=ownFirst?weapon.owner.attackId:other.owner.attackId,strokeHigh=ownFirst?other.owner.attackId:weapon.owner.attackId});
+        int ownStroke=weapon.owner.StrikeId(weapon.limb),otherStroke=other.owner.StrikeId(other.limb);
+        if(other.kind!="shield"&&other.kind!="sword"&&other.kind!="hilt")weapon.owner.TrackStrikeContact(other.owner,weapon.limb);
+        contacts.Add(new HitPacket {weapon=weapon,other=other,point=contact.point,normal=contact.normal,relativeVelocity=relative,speed=speed,bladeFraction=fraction,step=physicsStep,strokeId=ownStroke,directedPair=directed,guardPair=guardPair,strokeLow=ownFirst?ownStroke:otherStroke,strokeHigh=ownFirst?otherStroke:ownStroke});
     }
     void ResolveContacts() {
         if(contacts.Count==0){queuedContacts.Clear();return;}
@@ -165,38 +180,38 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
     }
     void ResolveHit(HitPacket hit) {
         var weapon=hit.weapon;var other=hit.other;
-        if(!Live||weapon==null||other==null||weapon.owner.health<=0)return;
+        if(!Live||weapon==null||other==null)return;
         float speed=hit.speed;Vector2 point=hit.point;
         if(hit.blocked) {
             ResolveClash(hit);
             return;
         }
         Fighter target=other.owner;
-        if(target.health<=0||elapsed<.7f)return;
+        if(target.health<=0)return;
         DuelWeapon strike=weapon.limb.strikeProfile??weapon.owner.weapon;
         if(hit.bladeFraction<strike.HitFraction){rejectedHandleContacts++;return;}
-        if(speed<1.5f||!hit.attackActive){rejectedRestContacts++;return;}
+        if(speed<DuelImpact.MinimumSpeed){rejectedRestContacts++;return;}
         if(GuardOccludes(hit)){blockedBodyContacts++;return;}
-        if(!weapon.owner.RegisterHit(target,hit.strokeId)){duplicateStrokeContacts++;return;}
+        if(!weapon.owner.RegisterHit(target,hit.strokeId,weapon.limb)){duplicateStrokeContacts++;return;}
         if(SameStepGuardContact(hit))exposedGuardHits++;
         weapon.owner.lastHit=Clock;
         bool head=other.kind=="head";
-        float effectiveMass=1/(1/weapon.limb.rb.mass+1/other.limb.rb.mass);
-        float energy=.5f*effectiveMass*speed*speed;
-        float damage=Mathf.Clamp(4+Mathf.Sqrt(energy)*4.4f,6,25)*strike.damage*weapon.owner.damageScale*(1-target.damageReduction)*(head?1.35f:other.kind=="leg"||other.kind=="foot"?.8f:1);
-        Vector2 impulse=new Vector2(weapon.owner.facing,.15f)*Mathf.Min(3.5f,damage*.11f);
+        float damage=Mathf.Min(target.health,DuelImpact.Damage(strike.mass,speed,strike.damage,weapon.owner.damageScale,target.damageReduction,other.kind));
+        // Follow the actual incoming cut, including reverse cuts and thrusts.
+        Vector2 direction=hit.relativeVelocity.normalized;
+        direction=new Vector2(direction.x,Mathf.Clamp(direction.y,-.55f,.55f)).normalized;
+        Vector2 impulse=direction*Mathf.Min(3.5f,damage*.11f);
         target.Hit(damage,impulse,point);hits++;weapon.owner.landedHits++;if(head)headHits++;
         strongestImpact=Mathf.Max(strongestImpact,speed);
         Impact(point,false,damage);
         floating.Add(new FloatingText {p=point+Vector2.up*.2f,value=(head?"要害 ":"")+Mathf.RoundToInt(damage),life=.85f,color=vermilion});
         notice=head?"命中要害 · 注意保护头部":"命中 · 趁对手失衡调整站位";noticeUntil=elapsed+1.7f;
         if(target==player)hurtFlash=.12f;
-        if(damage>=18&&!smoke)slowUntil=Time.unscaledTime+.065f;
     }
     void Impact(Vector2 p,bool block,float damage) {
         shake=Mathf.Min(4,block?1.5f:damage*.13f);
         for(int i=0;i<(block?12:8);i++)sparks.Add(new Spark {p=p,v=UnityEngine.Random.insideUnitCircle*(block?3.3f:1.6f)+Vector2.up,life=.25f+i*.018f,max=.5f,color=block?new Color(.78f,.52f,.19f):vermilion});
-        if(!muted)sound.PlayOneShot(block?blockSound:strikeSound,block?.26f:.2f);
+        if(!muted){sound.pitch=block?1.08f:Mathf.Lerp(1.1f,.8f,Mathf.Clamp01(damage/30));sound.PlayOneShot(block?blockSound:strikeSound,block?.26f:Mathf.Lerp(.12f,.30f,Mathf.Clamp01(damage/30)));}
     }
     static AudioClip Tone(bool metal) {
         int n=6615;var a=new float[n];var random=new System.Random(metal?17:42);
@@ -255,9 +270,12 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
         Label(new Rect(72,33,480,37),nearLabel,Mathf.Clamp(470/Mathf.Max(1,nearLabel.Length),16,25),ink);
         Label(new Rect(1048,33,480,37),farLabel,Mathf.Clamp(470/Mathf.Max(1,farLabel.Length),16,25),ink,TextAnchor.MiddleRight);
         Bar(new Rect(72,83,480,12),player.health/player.maxHealth,jade,false);Bar(new Rect(1048,83,480,12),enemy.health/enemy.maxHealth,vermilion,true);
-        Bar(new Rect(72,105,290,4),player.stamina/100,player.stamina<20?vermilion:new Color(.61f,.49f,.27f),false);Bar(new Rect(1238,105,290,4),enemy.stamina/100,enemy.stamina<20?vermilion:new Color(.61f,.49f,.27f),true);
-        Label(new Rect(72,114,440,24),"气血 "+Mathf.CeilToInt(player.health)+"    气力 "+Mathf.CeilToInt(player.stamina)+"  "+player.CombatState,14,ink);
-        Label(new Rect(1088,114,440,24),"气血 "+Mathf.CeilToInt(enemy.health)+"    气力 "+Mathf.CeilToInt(enemy.stamina)+"  "+enemy.CombatState,14,ink,TextAnchor.MiddleRight);
+        Bar(new Rect(72,105,290,4),player.StaminaRatio,player.StaminaRatio<.2f?vermilion:new Color(.61f,.49f,.27f),false);Bar(new Rect(1238,105,290,4),enemy.StaminaRatio,enemy.StaminaRatio<.2f?vermilion:new Color(.61f,.49f,.27f),true);
+        Label(new Rect(72,114,480,24),"气血 "+Mathf.CeilToInt(player.health)+"/"+Mathf.CeilToInt(player.maxHealth)+"    气力 "+Mathf.CeilToInt(player.stamina)+"/"+Mathf.CeilToInt(player.maxStamina)+"  "+player.CombatState,14,ink);
+        Label(new Rect(1048,114,480,24),"气血 "+Mathf.CeilToInt(enemy.health)+"/"+Mathf.CeilToInt(enemy.maxHealth)+"    气力 "+Mathf.CeilToInt(enemy.stamina)+"/"+Mathf.CeilToInt(enemy.maxStamina)+"  "+enemy.CombatState,14,ink,TextAnchor.MiddleRight);
+        Bar(new Rect(72,144,180,3),player.BalanceRatio,jade,false);Bar(new Rect(1348,144,180,3),enemy.BalanceRatio,jade,true);
+        Label(new Rect(260,136,292,18),"架势 "+Mathf.CeilToInt(player.balance)+"  疲劳 "+Mathf.RoundToInt(player.swingHeat*100)+"%",12,ink);
+        Label(new Rect(1048,136,292,18),"架势 "+Mathf.CeilToInt(enemy.balance)+"  疲劳 "+Mathf.RoundToInt(enemy.swingHeat*100)+"%",12,ink,TextAnchor.MiddleRight);
         Label(new Rect(600,30,400,40),(Campaign?"江 湖 切 磋":"纸 上 争 锋"),31,ink,TextAnchor.MiddleCenter);
         Label(new Rect(600,78,400,30),training?"自 由 练 习":"第 "+round+" 场   ·   "+((int)elapsed/60).ToString("00")+":"+((int)elapsed%60).ToString("00"),17,ink,TextAnchor.MiddleCenter);
         Line(new Vector2(72,156),new Vector2(1528,156),1,new Color(.2f,.28f,.23f,.2f));
@@ -287,7 +305,7 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
     }
     void DrawHelp() {
         Panel(new Rect(400,230,800,480));Label(new Rect(445,258,710,55),"交 手 要 诀",38,ink,TextAnchor.MiddleCenter);
-        Label(new Rect(450,335,700,245),"擂台内左键主控兵器、右键控制副手；轮盘在按下处出现。\n底盘固定在按下点，滑块随拖动变化，超出时停在边缘。\n推满伸直，松开隐藏；下次按下会在新位置生成。\n双手款：右键牵引副手，两手合力运械，K 架杆；副手可持盾或护身出拳。\nJ 变招 · L 直刺 · K 防守 · S 沉身 · V 碰撞框。\nEsc 暂停；可保存并暂离，失焦会暂停并释放轮盘。",21,ink);
+        Label(new Rect(450,335,700,245),"左键主手、右键副手；两键同按，鼠标同时驱动两手。\n切换不跳姿，松开的一手保留目标；无需拖两个摇杆。\n松开后直刺向外续伸、到最远挺住；转圈劈砍带阻力续转。\n中键收住双手续势；静态姿态保持，挥动与顶压仍耗气。\n双手兵器受固定握距约束；无盾副手可独立出拳。\nA/D 移步 · Space 进身 · J 单次变招 · L 刺 · K 守\n触屏保留双手轮盘 · S 沉身 · Esc 暂歇、保存或收招。",20,ink);
         if(Button(new Rect(570,620,460,52),"明白了 · 返回擂台",true))help=false;
     }
     void DrawResult() {

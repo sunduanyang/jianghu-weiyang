@@ -1,3 +1,5 @@
+from jianghu import combat_attributes as abilities
+from tests.combat_helpers import set_rating, update_actor
 from copy import deepcopy
 import json
 from pathlib import Path
@@ -59,7 +61,7 @@ class AtlasTests(unittest.TestCase):
 
     def adult(self, w, place):
         n = w.make_npc(place=place)
-        n.update(age_months=360, wealth=1000., health=100., skill=40., office=None)
+        update_actor(n, age_months=360, wealth=1000., health=100., skill=40., office=None)
         w.set_goal(n, w.best_goal(n), None, initial=True)
         w.reindex()
         return n
@@ -120,10 +122,10 @@ class AtlasTests(unittest.TestCase):
         self.assertIsNone(w.execute(n, {'id': 'join:2'}))  # Shaolin is elsewhere.
         self.assertIsNotNone(w.execute(n, {'id': 'join:0'}))
         event = w.execute(n, {'id': 'train:self'})
-        self.assertEqual(event['facts']['training_multiplier'], 1.25)
+        self.assertIsNone(event)
         w.residents[7].remove(n['id']); n['place'] = 6; w.reindex()
         event = w.execute(n, {'id': 'train:self'})
-        self.assertEqual(event['facts']['training_multiplier'], 1)
+        self.assertIsNone(event)
 
     def test_removed_guild_income_bonus_does_not_survive_sect_membership(self):
         w = self.world()
@@ -221,7 +223,7 @@ class AtlasTests(unittest.TestCase):
         count, before = w.store.count(), deepcopy(n)
         migrated = World(store=w.store, durable=False)
         after = migrated.npcs[n['id']]
-        for k in ('name','place','wealth','skill','faction','memories','goal'):
+        for k in ('name','place','wealth','combat_attributes','faction','memories','goal'):
             self.assertEqual(before[k], after[k], k)
         self.assertEqual(migrated.factions[1]['fund'], 347.5)
         self.assertEqual([f['name'] for f in migrated.factions[:3]], [f['name'] for f in FACTIONS[:3]])

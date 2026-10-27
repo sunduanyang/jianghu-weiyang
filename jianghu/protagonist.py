@@ -114,7 +114,7 @@ def perform(w, body, defer_end_turn=None):
         gate = next(n for n in city_maps._world_layout(w, place)['nodes'] if n['id'] == 'gate')
         w.player['name'] = name.strip()
         h.update(created=True, sex=sex, age_months=age*12, place=place, row=gate['row'], col=gate['col'],
-                 started_month=w.month, points=POINTS_PER_MONTH)
+                 birth_place=place, started_month=w.month, points=POINTS_PER_MONTH)
         record(w, 'hero_created', f"{w.player['name']}，{age}岁，自{PLACES[place]['name']}踏入江湖。",
                dict(initial_condition=True, place=place, age=age, sex=sex))
     else:

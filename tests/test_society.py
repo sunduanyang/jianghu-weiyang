@@ -1,3 +1,5 @@
+from jianghu import combat_attributes as abilities
+from tests.combat_helpers import set_rating, update_actor
 """Social consent, shared schedules, institutional accounts and unified-save upgrades."""
 from copy import deepcopy
 import json
@@ -24,8 +26,8 @@ class SocietyTests(unittest.TestCase):
 
     def adult(self, w, place=None, **values):
         n = w.make_npc(place=w.factions[0]["place"] if place is None else place)
-        n.update(age_months=360, wealth=100., skill=30., health=100.)
-        n.update(values)
+        update_actor(n, age_months=360, wealth=100., skill=30., health=100.)
+        update_actor(n, values)
         w.set_goal(n, 'belonging', initial=True)
         w.reindex()
         return n
@@ -134,21 +136,11 @@ class SocietyTests(unittest.TestCase):
         f['fund'] = 0
         self.assertIsNone(self.action(w, n, 'faction_task', 0))
 
-    def test_teaching_pays_tutor_and_treasury_and_uses_a_week_for_both(self):
-        w = self.world()
-        a = self.adult(w, faction=0, contribution=8.)
-        b = self.adult(w, faction=0, skill=60.)
-        f = w.factions[0]
-        total = a['wealth'] + b['wealth'] + f['fund']
-        w.phase = 1
-        e = self.action(w, a, 'faction_study', 0)
-        self.assertEqual(a['wealth'], 98)
-        self.assertEqual(b['wealth'], 101)
-        self.assertEqual((a['time_left'], b['time_left']), (3, 3))
-        self.assertEqual(total, a['wealth'] + b['wealth'] + f['fund'])
-        self.assertEqual(e['facts']['tutor'], b['id'])
-        self.assertFalse(social.available(w, b))
-        self.assertAlmostEqual(f['fund'], f['opening_fund'] + f['revenue'] - f['expenses'])
+    def test_retired_teaching_does_not_charge_or_reserve_time(self):
+        w=self.world(); a=self.adult(w,faction=0,contribution=8.); b=self.adult(w,faction=0,skill=60.)
+        before=deepcopy(w.export())
+        self.assertIsNone(self.action(w,a,'faction_study',0))
+        self.assertEqual(w.export(),before)
 
     def test_departure_scopes_merit_and_elects_a_living_successor(self):
         w = self.world()
@@ -181,7 +173,7 @@ class SocietyTests(unittest.TestCase):
         self.assertIn(e['id'], rank_event['causes'])
         n['contribution'] = 50
         self.assertEqual(organizations.rank(w, n)['title'], '执事')
-        n['skill'] = 45
+        set_rating(n, 45)
         self.assertEqual(organizations.rank(w, n)['title'], '长老')
 
     def test_known_hostility_toward_leader_can_motivate_departure(self):

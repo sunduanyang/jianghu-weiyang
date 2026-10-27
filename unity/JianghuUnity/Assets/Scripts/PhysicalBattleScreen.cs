@@ -78,7 +78,7 @@ public partial class JianghuApp {
     void ReturnFromPhysics(){
         bool active=Martial["battle"]["status"].S=="active";
         if(active)PhysicsArena.DeactivateCampaign();else ClosePhysicsArena();
-        battleView=false;Go(battleReturnPage);
+        battleView=false;Go(battleReturnPage);if(SelectedPerson>=0)SelectPerson(SelectedPerson);
     }
     void ClosePhysicsArena(){
         if(PhysicsArena!=null){var old=PhysicsArena;PhysicsArena=null;var scene=old.gameObject.scene;old.DeactivateCampaign();SceneManager.UnloadSceneAsync(scene);}

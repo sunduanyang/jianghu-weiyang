@@ -9,7 +9,6 @@ public sealed partial class PhysicsDuel {
         bool hasCarryPose;
         float carryAngle;
         Vector2 carryWrist;
-        public float gripTurnTorque;
         float poseFloor;
         Vector2 ReadyDirection=>new Vector2(facing*Mathf.Cos(weapon.readyAngle*Mathf.Deg2Rad),Mathf.Sin(weapon.readyAngle*Mathf.Deg2Rad));
         Vector2 InitialTwoHandWrist(string side,Vector2 waist) {
@@ -74,16 +73,14 @@ public sealed partial class PhysicsDuel {
             // Both pointers contribute a two-dimensional hand intention. The
             // authored grip spacing remains fixed on this weapon.
             if(ShieldWheel) {
-                Vector2 support=desired+axis*gripSpacing+game.controls.left.value*.42f;
+                Vector2 support=MouseOff?limbs["upperFar"].A+OffStick*MouseReach(false):desired+axis*gripSpacing+OffStick*.42f;
                 primaryIntent=desired;secondaryIntent=support;
                 Vector2 lever=support-desired;
                 axis=lever.sqrMagnitude>.0064f?lever.normalized:axis;
                 desired=(desired+support)*.5f-axis*(gripSpacing*.5f);
             } else {primaryIntent=desired;secondaryIntent=desired+axis*gripSpacing;}
-            TrackManualAttack(manual,Mathf.Atan2(axis.y,axis.x*facing)*Mathf.Rad2Deg,Vector2.Distance(desired,limbs["upperNear"].A));
             if(!hasCarryPose){carryAngle=sword.rb.rotation+90;carryWrist=limbs["handNear"].A;hasCarryPose=true;}
-            float previousCarry=carryAngle;
-            carryAngle=Mathf.MoveTowardsAngle(carryAngle,Mathf.Atan2(axis.y,axis.x)*Mathf.Rad2Deg,Time.fixedDeltaTime*360*ArmSpeed);
+            carryAngle=Mathf.LerpAngle(carryAngle,Mathf.Atan2(axis.y,axis.x)*Mathf.Rad2Deg,HandInputBlend);
             // A heavy or blocked weapon must catch up before its two wrist
             // targets advance around it. Otherwise the endpoint forces pull
             // through opposite sides of the wrist limits during a turn.
@@ -92,22 +89,19 @@ public sealed partial class PhysicsDuel {
             axis=new Vector2(Mathf.Cos(carryAngle*Mathf.Deg2Rad),Mathf.Sin(carryAngle*Mathf.Deg2Rad));
             float separation=gripSpacing+limbs["handNear"].length-limbs["handFar"].length;
             Vector2 wanted=SharedWristPose(desired,axis,separation);
-            carryWrist=Vector2.MoveTowards(carryWrist,wanted,Time.fixedDeltaTime*7*ArmSpeed);
+            carryWrist=Vector2.Lerp(carryWrist,wanted,HandInputBlend);
             Vector2 primary=SharedWristPose(carryWrist,axis,separation),secondary=primary+axis*separation;
-            float power=ArmPower,braced=shieldControl||ShieldWheel?1.12f:1;
-            float wantedSpin=Mathf.DeltaAngle(previousCarry,carryAngle)/Time.fixedDeltaTime;
-            float inertia=sword.rb.inertia+limbs["handNear"].rb.inertia+limbs["handFar"].rb.inertia;
-            float gripAngleError=Mathf.DeltaAngle(sword.rb.rotation,carryAngle-90)*Mathf.Deg2Rad;
-            gripTurnTorque=Mathf.Clamp(inertia*(gripAngleError*80+(wantedSpin-sword.rb.angularVelocity)*Mathf.Deg2Rad*18),-18,18)*power;
-            sword.rb.AddTorque(gripTurnTorque);
-            // The grip muscle reacts against both arms, rather than applying
-            // an unopposed world torque or overwriting angular velocity.
-            limbs["forearmNear"].rb.AddTorque(-gripTurnTorque*.5f);
-            limbs["forearmFar"].rb.AddTorque(-gripTurnTorque*.5f);
+            float gripError=Mathf.Max(PrimaryGripError,SupportGripError);
+            float loadYield=Mathf.Lerp(1,.15f,Mathf.InverseLerp(.025f,.07f,gripError));
+            float power=ArmPower*loadYield,braced=shieldControl||ShieldWheel?1.12f:1;
             // Keep the two targets a rigid pair. Smoothing each arm's radius
             // independently would ask a fixed weapon to change its grip span.
             DriveHand("Near",primary,220*power,ArmSpeed,true);DriveHand("Far",secondary,220*power*braced,ArmSpeed,true);
-            limbs["handNear"].joint.useMotor=false;limbs["handFar"].joint.useMotor=false;
+            // Solve the wrist muscles with the grip / contact constraints.
+            // Separate external torques fight the endpoint pull at a blocked
+            // shaft and leave a long weapon pointing above the intended line.
+            limbs["handNear"].Drive(Angle(axis),6,12,power,ArmSpeed);
+            limbs["handFar"].Drive(Angle(axis),6,12,power,ArmSpeed);
             if(shieldControl||ShieldWheel)action="双手架杆";
             if(game.Clock<guardBrokenUntil)action="双手卸力";
         }

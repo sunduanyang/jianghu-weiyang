@@ -44,7 +44,7 @@ public class UnitySmoke : MonoBehaviour {
         app.PaperSmokeGallery("idle",false);yield return Snapshot(5,"13-paper-cast-idle");app.PaperSmokeGallery("attack",true);yield return Snapshot(5,"14-paper-cast-attack-left");app.PaperSmokeStudio();yield return Snapshot(5,"15-paper-walk-bones");
         Check("legacy puppet resources removed",Resources.Load<TextAsset>("Puppets/index")==null&&Resources.Load<Texture2D>("PaperCast/reference-jade")==null);
         if(GameClient.Arg("-smokePhase")=="visuals")yield break;
-        yield return Call("/api/intervene",J.O("npc_id",adult["id"],"action","gift"));yield return Call("/api/intervene",J.O("npc_id",adult["id"],"action","talk","text","愿你在此地安顿生活。"));yield return Call("/api/intervene",J.O("npc_id",adult["id"],"action","visit"));
+        yield return Call("/api/intervene",J.O("npc_id",adult["id"],"action","gift"));yield return Call("/api/intervene",J.O("npc_id",adult["id"],"action","visit"));
         J shop=new J(),pack=new J(),battle=new J();yield return Call("/api/market",null,j=>shop=j);var buy=shop["items"].A.First(i=>i["template"].S=="herb");yield return Call("/api/items",J.O("operation","buy","item_id",buy["id"]));yield return Call("/api/items",J.O("operation","sell","item_id",buy["id"]));
         yield return Call("/api/inventory",null,j=>pack=j);var equipped=pack["items"].A.First(i=>i["equipped"].B);yield return Call("/api/items",J.O("operation","unequip","item_id",equipped["id"]));yield return Call("/api/items",J.O("operation","equip","item_id",equipped["id"]));
         var manual=pack["items"].A.FirstOrDefault(i=>i["operations"].A.Any(o=>o.S=="read"));if(manual!=null)yield return Call("/api/items",J.O("operation","read","item_id",manual["id"]));

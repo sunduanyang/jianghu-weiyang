@@ -1,0 +1,1 @@
+{"passed":true,"checks":[{"check":"/api/equipment","passed":true,"facts":{"expected":true,"error":""}},{"check":"restart preserves exact equipped instances","passed":true,"facts":null},{"check":"restart preserves effective stats","passed":true,"facts":null},{"check":"no native runtime errors","passed":true,"facts":[]}],"errors":[]}

@@ -9,11 +9,11 @@ from urllib.parse import urlparse
 
 from .engine import TRAITS, BELIEFS, DESIRES
 from . import items
-from . import careers, npc_memory, npc_plans, economics, rank_progression, local_life, llm_policy, npc_attention, deliberation
-from .model_service import ModelService
+from . import careers, npc_memory, npc_plans, economics, rank_progression, local_life, llm_policy, npc_attention, deliberation, player_social
+from .model_service import ModelService, MODEL_ID
 
 DEFAULT_CONFIG = {'enabled': False, 'backend': 'llamacpp', 'url': 'http://127.0.0.1:11435',
-                  'model': 'qwen3:4b', 'cooldown_months': 1,
+                  'model': MODEL_ID, 'cooldown_months': 1,
                   'queue_limit': 2, 'timeout': 80, 'max_tokens': 600,
                   'config_version':6, 'context_size':8192, 'auto_start':True,
                   'deep_max_tokens':1000,'assessment_tokens':700}
@@ -21,6 +21,9 @@ DEFAULT_CONFIG = {'enabled': False, 'backend': 'llamacpp', 'url': 'http://127.0.
 
 def continuous_config(config=None):
     result={**DEFAULT_CONFIG,**(config or {})}
+    if (result['backend']=='llamacpp' and result['model']=='qwen3:4b'
+            and result['url'].rstrip('/')==DEFAULT_CONFIG['url']):
+        result['model']=MODEL_ID
     for key in ('reviews_per_month','turn_wait_seconds','turn_min_decisions'):
         result.pop(key,None)
     result['config_version']=6
@@ -59,7 +62,7 @@ def context_for(world, n, thinking=None):
             'player_contact':npc_attention.player_view(world,n),
             'settlement_life':local_life.view(world,n),
             'life_policy':llm_policy.view(world,n),
-            'self': {k: deepcopy(n[k]) for k in ('name', 'age_months', 'wealth', 'health', 'skill', 'job',
+            'self': {k: deepcopy(n[k]) for k in ('name', 'age_months', 'wealth', 'health', 'combat_attributes', 'job',
                                                   'traits', 'mood', 'beliefs', 'desires', 'goal',
                                                   'pregnancy', 'illness', 'office', 'generation',
                                                   'spouse', 'children', 'family_size', 'career', 'martial')},
@@ -145,6 +148,40 @@ class LocalModel:
         self.service=service
         self.on_request=on_request
 
+    def complete(self, messages, schema, budget, stage):
+        """Shared JSON transport for the two stages of an interactive conversation."""
+        c = self.config
+        parsed = urlparse(c['url'])
+        if parsed.hostname not in ('localhost', '127.0.0.1', '::1') or parsed.scheme != 'http':
+            raise ValueError('模型只允许连接本机HTTP地址')
+        if c['backend'] == 'ollama':
+            path = '/api/chat'
+            body = dict(model=c['model'], messages=messages, stream=False, think=False, format=schema,
+                        keep_alive='15m', options=dict(temperature=.5, num_ctx=c.get('context_size',8192),
+                                                     num_predict=budget, seed=42))
+        else:
+            path = '/v1/chat/completions'
+            body = dict(model=c['model'], messages=messages, stream=False, temperature=.5, seed=42,
+                        max_tokens=budget, chat_template_kwargs=dict(enable_thinking=False),
+                        response_format=dict(type='json_schema', json_schema=dict(name='npc_conversation', strict=True, schema=schema)))
+        request = urllib.request.Request(c['url'].rstrip('/') + path, json.dumps(body, ensure_ascii=False).encode(),
+                                         {'Content-Type':'application/json'})
+        if self.on_request:
+            self.on_request(stage)
+        started = time.perf_counter()
+        with urllib.request.urlopen(request, timeout=c['timeout']) as response:
+            raw = json.load(response)
+        if c['backend'] == 'ollama':
+            content = raw['message']['content']
+            usage = dict(prompt_tokens=raw.get('prompt_eval_count',0), completion_tokens=raw.get('eval_count',0))
+        else:
+            content = raw['choices'][0]['message']['content']
+            usage = raw.get('usage',{})
+        return json.loads(content), content, usage, (time.perf_counter()-started)*1000
+
+    def interact(self, ctx):
+        return player_social.model_request(self, ctx)
+
     def request(self, ctx):
         c = self.config
         parsed = urlparse(c['url'])
@@ -161,7 +198,10 @@ class LocalModel:
         wire['self']['traits']={k:round(v,1) for k,v in wire['self']['traits'].items()}
         martial=wire['self']['martial']
         wire['self']['martial']={k:martial[k] for k in ('stamina','inner_force') if k in martial}
-        wire['self']['martial']['known_arts']=list(martial.get('arts',{}))[:8]
+        from .martial_catalog import ARTS
+        wire['self']['martial']['known_arts']=[
+            dict(name=ARTS[key]['name'],grade=ARTS[key]['grade'],school=ARTS[key]['school_name'])
+            for key in martial.get('curriculum',{}).get('known',[]) if key in ARTS][:9]
         if wire['membership']:
             wire['membership']={k:wire['membership'][k] for k in ('id','name','place','leader','focus','tradition','art') if k in wire['membership']}
         economy=wire['local_economy']
@@ -329,6 +369,7 @@ class AIManager:
         self.config = continuous_config(config)
         self.jobs, self.done = queue.PriorityQueue(maxsize=128), queue.Queue()
         self.pending = set()
+        self.dialogue_pending = set()
         self.pending_contexts={};self.priority_requests=set();self.priority_streak=0
         self.submitted_months = {}
         self.service=ModelService()
@@ -346,6 +387,24 @@ class AIManager:
         self.stats.update(deep_completed=0,current_npc=None,current_name='',current_stage='',current_depth='')
         self.focus_id=None
         self.priority_requests.clear();self.pending_contexts.clear();self.priority_streak=0
+        self.dialogue_pending.clear()
+
+    def interact(self, world, npc_id, action, text, revision, mode='request', request_id=None, option_id=None):
+        if not self.config['enabled']:
+            raise ValueError('请先在本地模型设置中启用AI，再与人物商谈')
+        if self.jobs.full():
+            raise ValueError('模型队列暂满，请稍后再试')
+        if not isinstance(text,str) or text.strip():
+            raise ValueError('自由输入已关闭，请选择既定请求或说服选项')
+        if mode=='persuade':ctx=player_social.start_persuasion(world,npc_id,request_id,option_id,revision)
+        elif mode=='options':ctx=player_social.start_options(world,npc_id,request_id,revision)
+        elif mode=='request':ctx=player_social.start(world,npc_id,action,text,revision)
+        else:raise ValueError('未知的交涉方式')
+        self.make_room_for_priority(world, npc_id)
+        self.serial += 1
+        self.dialogue_pending.add(ctx['_request_id'])
+        self.jobs.put_nowait((-1, self.serial, ctx, self.config.copy()))
+        return player_social.view(world, npc_id)
 
     def release_queued(self,world,ctx):
         i=ctx['npc_id'];self.pending.discard(i);self.pending_contexts.pop(i,None);self.submitted_months.pop(i,None)
@@ -360,7 +419,7 @@ class AIManager:
         while True:
             try:entries.append(self.jobs.get_nowait());self.jobs.task_done()
             except queue.Empty:break
-        choice=next((i for i,e in enumerate(entries) if e[2]['npc_id']==npc_id),None)
+        choice=next((i for i,e in enumerate(entries) if not e[2].get('_interaction') and e[2]['npc_id']==npc_id),None)
         if choice is None:choice=next((i for i in reversed(range(len(entries))) if entries[i][0]>0),None)
         for i,item in enumerate(entries):
             if i==choice:self.release_queued(world,item[2]);self.stats['queue_refreshed']+=1
@@ -377,6 +436,17 @@ class AIManager:
             try:item=self.jobs.get_nowait()
             except queue.Empty:break
             _,_,ctx,_=item;n=world.npcs.get(ctx['npc_id'])
+            if ctx.get('_interaction'):
+                row = player_social.request_row(world,ctx)
+                snapshot=ctx.get('_fingerprint') if ctx.get('_options_only') else (row or {}).get('fingerprint')
+                valid = bool(self.config['enabled'] and n and n['alive'] and row and player_social.is_pending(row)
+                             and snapshot==player_social.fingerprint(world,n))
+                if valid:keep.append(item)
+                else:
+                    player_social.fail(world,ctx,'处境或模型设置已改变，请重新交谈')
+                    self.dialogue_pending.discard(ctx['_request_id']);dropped+=1
+                self.jobs.task_done()
+                continue
             valid=bool(self.config['enabled'] and n and n['alive'] and ctx['month']==world.month
                        and ctx.get('situation')==dict(place=n['place'],faction=n['faction'],job=n['job'])
                        and ctx.get('_attention_signature')==npc_attention.signature(world,n))
@@ -406,8 +476,9 @@ class AIManager:
         available=min(128,self.config['queue_limit'])-len(self.pending)
         if force_id:available=min(1,available)
         if available<=0:return 0
+        conversing={r['npc_id'] for r in player_social.state(world)['requests'] if player_social.is_pending(r)}
         candidates = [n for n in world.npcs.values() if (npc_attention.eligible(world,n) or n['alive'] and n['id'] in self.priority_requests)
-                      and n['id'] not in self.pending and
+                      and n['id'] not in self.pending and n['id'] not in conversing and
                       (n['id'] in self.priority_requests or npc_attention.expedited(world,n) or
                        (world.month-n['last_review_attempt']>=1 and
                         (world.month-n['last_review']>=self.config['cooldown_months'] or
@@ -484,7 +555,8 @@ class AIManager:
                 sent[0]+=1;self.stats['calls']+=1;self.stats['current_stage']=stage
             started = time.perf_counter()
             try:
-                result, ms, usage, raw = LocalModel(config,self.service,on_request).request(ctx)
+                model = LocalModel(config,self.service,on_request)
+                result, ms, usage, raw = model.interact(ctx) if ctx.get('_interaction') else model.request(ctx)
                 if not sent[0]:self.stats['calls']+=usage.get('request_count',1)
                 self.stats['successes'] += 1
                 self.stats['latency_ms'] += ms
@@ -513,6 +585,20 @@ class AIManager:
             except queue.Empty:
                 break
             collected = True
+            if ctx.get('_interaction'):
+                self.dialogue_pending.discard(ctx['_request_id'])
+                if result is None or not self.config['enabled']:
+                    reason = '模型已关闭，请重新交谈' if not self.config['enabled'] else '本地模型未能完成回应，请重试'
+                    player_social.fail(world,ctx,reason)
+                    applied=False
+                else:
+                    applied,reason=player_social.apply(world,ctx,result)
+                if not applied:self.stats['rejected']+=1
+                self.stats['last_result']=dict(npc_id=ctx['npc_id'],applied=applied,reason=reason)
+                world.store.log_ai(dict(month=world.month,npc_id=ctx['npc_id'],task='persuasion_options' if ctx.get('_options_only') else 'player_interaction',
+                                        context=ctx,response=result,**meta,applied=applied,validation=reason))
+                changed=True
+                continue
             self.pending.discard(ctx['npc_id'])
             self.pending_contexts.pop(ctx['npc_id'],None)
             self.submitted_months.pop(ctx['npc_id'], None)
@@ -568,7 +654,7 @@ class AIManager:
                 self.stats['deep_completed']+=1
 
     def view(self):
-        return {**self.stats, 'queued': self.jobs.qsize(), 'pending': len(self.pending),
+        return {**self.stats, 'queued': self.jobs.qsize(), 'pending': len(self.pending), 'dialogue_pending':len(self.dialogue_pending),
                 'managed_model':bool(self.service.process is not None and self.service.process.poll() is None),
                 'average_ms': self.stats['latency_ms']/max(1, self.stats['successes']),
                 'config': self.config,

@@ -453,9 +453,9 @@ public partial class JianghuApp {
                 var settlement=CitySettlementArt(node["settlement_asset"].S);if(settlement!=null)GUI.DrawTexture(art,settlement,ScaleMode.ScaleToFit);
                 if(node["home_residents"].Has){
                     T("常住居民",sub);
-                    foreach(var resident in node["home_residents"].A)if(GUILayout.Button(resident["name"].S+" · "+resident["job"].S+" · 常住",chip)){SelectPerson(resident["id"].I);OpenPersonScreen();}
+                    foreach(var resident in node["home_residents"].A)if(GUILayout.Button(resident["name"].S+" · "+resident["job"].S+" · 常住",chip))TalkToPerson(resident["id"].I);
                 }
-                T("当前在场 · "+node["residents"].A.Count+"人",sub);foreach(var resident in node["residents"].A)if(GUILayout.Button(resident["name"].S+" · "+resident["job"].S,chip)){SelectPerson(resident["id"].I);OpenPersonScreen();}
+                T("当前在场 · "+node["residents"].A.Count+"人",sub);foreach(var resident in node["residents"].A)if(GUILayout.Button(resident["name"].S+" · "+resident["job"].S,chip))TalkToPerson(resident["id"].I);
             }
         }else{T("单击查看，双击前往；WASD 移步。",sub);T("金线标示最低行动力路径；绿色边框显示本月可达范围。",small);}
         GUILayout.Space(10);T("普通聚落  /  "+CitySites.Count(n=>n["kind"].S!="sect")+"处",sub);

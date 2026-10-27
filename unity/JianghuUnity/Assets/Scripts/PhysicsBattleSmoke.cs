@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 namespace Jianghu {
 // Acceptance through the shipping Unity client and its real local companion.
 // Fixtures are separate saves; no production save or model endpoint is touched.
-public sealed class PhysicsBattleSmoke:MonoBehaviour {
+public sealed partial class PhysicsBattleSmoke:MonoBehaviour {
     GameClient client;JianghuApp app;string output,phase;
     readonly List<J> checks=new List<J>();readonly List<string> errors=new List<string>();
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -28,7 +28,7 @@ public sealed class PhysicsBattleSmoke:MonoBehaviour {
         Check("companion ready",client!=null&&client.Ready&&client.World.Has);if(client==null||!client.Ready){Finish();yield break;}
         yield return Call("/api/ai/config",J.O("enabled",false));
         if(!client.World["hero"]["created"].B){yield return Call("/api/hero",client.HeroBody("create","name","物理验收","sex","男","age",24,"place",client.World["hero"]["place"]));yield return client.Refresh();}
-        if(phase=="rigs")yield return AuditRigs();else if(phase=="resume")yield return Resume();else yield return Open(phase=="fists");
+        if(phase=="weapons")yield return AuditWeapons();else if(phase=="pace")yield return AuditPace();else if(phase=="martial")yield return AuditMartial();else if(phase=="mouse")yield return AuditMouse();else if(phase=="attributes")yield return AuditAttributes();else if(phase=="kinetic")yield return AuditKinetic();else if(phase=="feel")yield return AuditFeel();else if(phase=="rigs")yield return AuditRigs();else if(phase=="resume")yield return Resume();else yield return Open(phase=="fists");
         Check("no runtime errors",errors.Count==0,new J(errors.Select(e=>new J(e)).ToList()));
         Finish();
     }
@@ -51,7 +51,7 @@ public sealed class PhysicsBattleSmoke:MonoBehaviour {
         }
         arena.enemy.testOverride=true;arena.RunCampaign(true);arena.CampaignTestPad(true,Vector2.up);
         yield return new WaitForSecondsRealtime(3.2f);arena.PauseCampaign();arena.CampaignReleasePads();
-        Check("fixed origin controls and physical drive used",arena.player.attackId>0&&arena.player.stamina<100&&arena.player.PrimaryGripError<.04f);
+        Check("fixed origin controls and physical drive used",arena.player.attackId>0&&arena.player.stamina<arena.player.maxStamina&&arena.player.PrimaryGripError<.04f);
         yield return app.SavePhysicsForSmoke("checkpoint");
         var b=app.Martial["battle"];J saved=b["frame"];
         Check("actual body snapshot persisted",saved.Has&&saved["fighters"][0]["bodies"].A.Count==16&&b["revision"].I>1);

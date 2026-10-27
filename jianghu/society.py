@@ -199,7 +199,7 @@ def score(w, n, a):
 def execute(w, n, a, facts):
     community = w.society['communities'][str(n['place'])]
     stats = w.society['monthly']
-    before = {key: n[key] for key in ('wealth', 'health', 'skill')}
+    before = {key: n[key] for key in ('wealth', 'health')}
     if a['kind'] == 'donate_relief':
         n['wealth'] = round(n['wealth'] - 4, 4)
         community['fund'] = round(community['fund'] + 4, 4)

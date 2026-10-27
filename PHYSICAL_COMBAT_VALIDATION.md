@@ -53,3 +53,19 @@
 最终成品另以独立试玩存档在正常游戏窗口人工复核：从功法页进入新版切磋，实际姓名与剑盾装备正确；继续交手后出现兵刃碰撞反馈和气血、气力变化；Esc 暂停显示已保存，保存暂离可返回城中并保留续战入口。记录见 output/physics-combat-integration-20261027/manual-ui.json。
 
 默认活动构建标记已设为 PhysicalCombat；根目录的启动Unity版.bat 启动这一已验收成品。
+
+## 2026-10-28 手感更新
+
+新的活动构建为 `BloodyFeel`。双手连续运械、按运动及顶压耗气、长兵器开局间距、格挡与受击反馈的修改及参考边界见 [BLOODY_FEEL_VALIDATION.md](BLOODY_FEEL_VALIDATION.md)，最终自动验收见 `validation/bloody-feel-20261027.json`。30 / 90 帧手感检查、十类兵器、88 组成年人物绑定、保存与续战、徒手和结算回归全部通过；最后的正常窗口鼠标／键盘复核被用户按 Esc 停止，未认定为完成。尚未做原版同机输入对照，不能称为已经验证的一比一。
+
+## 2026-10-28 输入、动能与对手 AI 更新
+
+后续成品为 `CombatKinetic`：单层输入滤波、基于真实碰撞的伤害、取消 6–25 截断、反应式双手轨迹 AI，以及 Python / Unity 共用部位与动能伤害规则。当前战斗相关 20 项 Python 用例、118 项原生检查、90 组伤害对照和 88 组人物握持检查通过；详细范围与并行属性重构的回归边界见 [COMBAT_KINETIC_VALIDATION.md](COMBAT_KINETIC_VALIDATION.md)，汇总见 `validation/combat-kinetic-20261028.json`。
+
+## 2026-10-28 鼠标主导与双手目标保持
+
+最新验收成品为 `MouseHands`：左右键分别控制主副手，两键同按同时控制；松开的手保留目标与带阻力的续势，中键收住目标惯性。38 项鼠标专项及总计 159 项原生检查、11 种兵器与握持配置、88 组人物绑定、20 项成品后端战斗测试通过。操作、暂停与重启行为及范围见 [MOUSE_HANDS_VALIDATION.md](MOUSE_HANDS_VALIDATION.md)，汇总见 `validation/mouse-hands-20261028.json`。
+
+## 2026-10-28 试玩反馈调校
+
+本轮默认验收版为 `CombatPace`。松键后迅速制动，默认基础属性升至 75，移速基准约提高 60%，同动作耗气约减半，静止回气倍率为 2.35；目标保持不再拖慢回气。旧默认属性及未结算战局按比例升级，保留姿态与进度。构建快照 432 项规则测试、成品后端 26 项相关测试及 166 项原生检查通过；完整范围、正式存档散列的外部变化与并行兵器重构边界见 [COMBAT_PACE_VALIDATION.md](COMBAT_PACE_VALIDATION.md)。

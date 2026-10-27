@@ -1,15 +1,14 @@
 import subprocess
 import socket
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from jianghu.model_service import model_command
+
 with socket.socket() as probe:
     if probe.connect_ex(('127.0.0.1', 11435)) == 0:
         raise SystemExit('Local model service already running on port 11435')
-server = next((ROOT / '.runtime' / 'llama').rglob('llama-server.exe'), None)
-model = ROOT / '.runtime' / 'Qwen3-4B-Q4_K_M.gguf'
-if not server or not model.exists():
-    raise SystemExit('Run python scripts/setup_model.py first')
-subprocess.run([str(server), '-m', str(model), '-ngl', '99', '-c', '8192',
-                '--parallel', '1', '--host', '127.0.0.1', '--port', '11435',
-                '--jinja', '--reasoning-budget', '0'], cwd=server.parent)
+command, runtime = model_command(dict(url='http://127.0.0.1:11435', context_size=8192), ROOT / '.runtime')
+subprocess.run(command, cwd=Path(command[0]).parent)

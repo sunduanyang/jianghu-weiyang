@@ -1,3 +1,4 @@
+from . import combat_attributes
 """One nine-grade ladder shared by every sect, NPC and protagonist."""
 
 VERSION = 1
@@ -21,7 +22,7 @@ def merit_grade(actor):
     progress = actor.get('rank_progress', {}).get('sect') or {}
     merit = max(0., actor['contribution'] - progress.get('penalty', 0.))
     return next(g for g, requirement in REQUIREMENTS.items() if requirement is not None
-                and merit >= requirement[0] and actor['skill'] >= requirement[1])
+                and merit >= requirement[0] and combat_attributes.rating(actor) >= requirement[1])
 
 
 def standing(faction, actor):

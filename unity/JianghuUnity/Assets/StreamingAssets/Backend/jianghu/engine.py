@@ -1,3 +1,4 @@
+from . import combat_attributes
 """Monthly, seeded social simulation. Only this module settles world consequences."""
 from collections import Counter
 from copy import deepcopy
@@ -133,7 +134,7 @@ class World:
                               facts={'age_months': n['age_months'], 'wealth': n['wealth'],
                                      'identity': n['identity'], 'faction': n['faction'],
                                      'contribution': n['contribution'], 'guardian': n['guardian'],
-                                     'skill': n['skill'], 'initial_condition': True})
+                                     'combat_rating': combat_attributes.rating(n), 'initial_condition': True})
                 self.set_goal(n, self.best_goal(n), e['id'], initial=True)
                 if self.settlements:
                     settlements.register_position(self, n, e['id'])
@@ -149,6 +150,8 @@ class World:
         if market_economy and economics.initialize(self):
             self.checkpoint()
         if rank_assessments and rank_progression.initialize(self):
+            self.checkpoint()
+        if martial.synchronize(self) or getattr(self, '_martial_migrated', False):
             self.checkpoint()
 
     def make_npc(self, parents=None, place=None):
@@ -213,6 +216,7 @@ class World:
         n['identity'] = careers.identity(self, n)
         if rank_progression.active(self):
             rank_progression.prepare(self, n['id'])
+        martial.sync_actor(self, n)
         return n
 
     def place_name(self, place):
@@ -262,7 +266,7 @@ class World:
                                             'job': other['job'],
                                             'identity': public_identity['title'],
                                             'identity_grade': public_identity['grade'],
-                                            'skill_band': int(other['skill'] // 20),
+                                            'skill_band': int(combat_attributes.rating(other) // 20),
                                             'wealth_band': '拮据' if other['wealth'] < 15 else '有余'}
 
     def link(self, a, b, affinity=0, trust=0, romance=0, label=None):
@@ -431,7 +435,7 @@ class World:
 
     def goal_options(self, n):
         keys = ['wealth', 'belonging', 'freedom']
-        if n['skill'] < 92:
+        if combat_attributes.rating(n) < 92:
             keys.append('mastery')
         if n['reputation'] < 85:
             keys.append('renown')
@@ -446,7 +450,7 @@ class World:
         if old:
             n['past_goals'].append({**old, 'ended': self.month})
             n['past_goals'] = n['past_goals'][-15:]
-        targets = {'wealth': n['wealth'] + max(400, n['wealth']*.7), 'mastery': min(95, n['skill'] + 35),
+        targets = {'wealth': n['wealth'] + max(400, n['wealth']*.7), 'mastery': min(95, combat_attributes.rating(n) + 35),
                    'belonging': 1, 'renown': min(90, n['reputation'] + 45), 'freedom': n['moves'] + 9,
                    'revenge': 1}
         n['goal'] = {'kind': key, 'title': DESIRES[key], 'since': self.month,
@@ -464,7 +468,7 @@ class World:
             self.set_goal(n, self.best_goal(n), n['last_event'])
             return
         k = g['kind']
-        value = {'wealth': n['wealth'], 'mastery': n['skill'],
+        value = {'wealth': n['wealth'], 'mastery': combat_attributes.rating(n),
                  'belonging': 1. if n['spouse'] or sum(r['affinity'] > 50 for r in n['relationships'].values()) >= 3 else 0.,
                  'renown': n['reputation'], 'freedom': n['moves'],
                  'revenge': 1. if any(m['event_id'] > (g['cause'] or 0) and '讨回' in m['fact'] for m in n['memories']) else 0.}[k]
@@ -537,7 +541,7 @@ class World:
                 add('betray', i, q['name'])
             if r['affinity'] < -25 and n['health'] > 55 and q['health'] > 25 and n['age_months'] >= 216 and q['age_months'] >= 216:
                 add('duel', i, q['name'])
-            if n['age_months'] >= 120 and q['skill'] > n['skill'] + 12 and not n['mentor'] and r['affinity'] >= 6:
+            if n['age_months'] >= 120 and combat_attributes.rating(q) > combat_attributes.rating(n) + 12 and not n['mentor'] and r['affinity'] >= 6:
                 add('mentor', i, q['name'])
             if q['mentor'] == n['id'] and q['health'] > 30:
                 add('teach', i, q['name'])
@@ -554,7 +558,7 @@ class World:
                 add('report', cause, '提交已知侵吞证据')
         if n['office'] and government.office_government(self, n)['fund'] >= 4:
             add('public_service', detail='支用公帑4银巡防或防疫')
-        if (n['faction'] is None and n['skill'] >= 12 and n['age_months'] >= 192
+        if (n['faction'] is None and combat_attributes.rating(n) >= 12 and n['age_months'] >= 192
                 and self.month >= n['faction_rejoin_after']):
             for f in self.factions:
                 if f['place'] == n['place']:
@@ -580,7 +584,7 @@ class World:
 
     def available_actions(self,n,actions,planning=False):
         return [{**a,'time_cost':social.cost(a['kind'])} for a in actions
-                if n.get('cooldowns',{}).get(a['id'],-1)<=self.month and
+                if a['kind'] not in martial.RETIRED_ACTIONS and n.get('cooldowns',{}).get(a['id'],-1)<=self.month and
                 (n['probation_until']<self.month or a['kind'] not in ('steal','extort','smear','embezzle','travel','duel','betray')) and
                 (planning or (local_life.partner_available(self,a) and social.cost(a['kind'])<=n['time_left'] and
                               (not self.phase or self.phase+social.cost(a['kind'])<=5) and
@@ -671,6 +675,8 @@ class World:
         return npc_plans.choose(self, n, actions)
 
     def execute(self, n, action):
+        if str(action.get('id','')).partition(':')[0] in martial.RETIRED_ACTIONS:
+            return None
         # Reject any caller supplied action not in the engine's CURRENT legal set.
         a = next((a for a in self.legal_actions(n) if a['id'] == action.get('id')), None)
         if a is None:
@@ -692,7 +698,7 @@ class World:
             facts['monthly_settlement'] = settlement.copy()
             if settlement.get('payer') != n['id'] and settlement.get('paid', 0) > 0:
                 people.append(settlement['payer'])
-        before = {'wealth': n['wealth'], 'health': n['health'], 'skill': n['skill']}
+        before = {'wealth': n['wealth'], 'health': n['health']}
         if k in social.KINDS:
             e=social.execute(self,n,a,facts)
             return self.finish_action(n,a,e)
@@ -921,6 +927,8 @@ class World:
                               [secret['id']], {'amount': silver})
                     return self.finish_action(n,a,secret)
             elif k == 'duel':
+                martial.sync_actor(self, n)
+                martial.sync_actor(self, q)
                 bout = combat.autoplay(combat.start(n, q, self.rng.getrandbits(63), spar=False, equipment=(combat.equipment(self, n['id']), combat.equipment(self, q['id']))))
                 facts['combat'] = bout
                 for actor, f in zip((n, q), bout['fighters']):
@@ -943,7 +951,7 @@ class World:
                 if accepted:
                     n['mentor'] = i
                     self.link(n, q, 9, 8, label='师徒')
-                    n['skill'] = clamp(n['skill'] + 1)
+                    pass  # Retired martial proficiency is no longer stored.
                     facts['transmission'] = martial.transmit(q, n)
                 else:
                     n.setdefault('cooldowns', {})[a['id']] = self.month + 24
@@ -951,8 +959,8 @@ class World:
                 facts['accepted'] = accepted
             elif k == 'teach':
                 facts['transmission'] = martial.transmit(n, q)
-                gain = min(1.5, max(.1, (n['skill']-q['skill'])*.05))
-                q['skill'] = clamp(q['skill'] + gain)
+                gain = min(1.5, max(.1, (combat_attributes.rating(n)-combat_attributes.rating(q))*.05))
+                pass  # Retired martial proficiency is no longer stored.
                 self.link(n, q, 3, 2, label='师徒')
                 n['reputation'] = clamp(n['reputation'] + .5)
                 text, kind, imp = f"{name}向弟子{q['name']}传艺，对方武学增长{gain:.2f}。", 'teaching', .45
@@ -970,10 +978,10 @@ class World:
                     q['memories'] = q['memories'][-40:]
             else:
                 raise ValueError(k)
-        slots = {'work': ['tool'], 'train': ['weapon'], 'duel': ['weapon', 'armor'], 'travel': ['armor']}.get(k, [])
+        slots = {'train': ['weapon'], 'duel': ['weapon', 'armor', 'shield'], 'travel': ['armor']}.get(k, [])
         facts['equipment_wear'] = items.wear(self, n['id'], slots, 3 if k == 'duel' else 1)
         if k == 'duel':
-            facts['opponent_equipment_wear'] = items.wear(self, q['id'], ['weapon', 'armor'], 3)
+            facts['opponent_equipment_wear'] = items.wear(self, q['id'], ['weapon', 'armor', 'shield'], 3)
         facts['actor_delta'] = {k: round(n[k]-v, 4) for k, v in before.items()}
         e = self.emit(kind, people, text, imp, parents, facts)
         if k in ('join', 'duty'):
@@ -1030,6 +1038,7 @@ class World:
         if n['choice_source']=='AI' and actual_decision:
             n['last_ai_execution']=self.month
             self.metrics['ai_executed_actions']=self.metrics.get('ai_executed_actions',0)+1
+        martial.sync_actor(self, n)
         return e
 
     def month_step(self):
@@ -1298,47 +1307,20 @@ class World:
         return e
 
     def martial_view(self):
-        known = self.player['martial']['arts']
-        return {'player': {**deepcopy(self.player), 'martial': martial.view(self.player, items.bonuses(self, 'player'))},
-                'catalog': [{**deepcopy(art), 'id': key} for key, art in martial.ARTS.items()
-                            if key not in known and not art.get('school')],
-                'battle': combat.view(self.battle)}
+        return {'player': {**deepcopy(self.player), 'martial': martial.view(self.player, combat.equipment(self, 'player'), self, True)},
+                'catalog': martial.martial_catalog.catalog(), 'battle': combat.view(self.battle)}
 
     def martial_action(self, action, art_id=None):
+        if action != 'rest':
+            raise ValueError('旧修习与装配指令已移除；新功法按身份与品阶自动掌握')
         if self.battle and self.battle['status'] == 'active':
-            raise ValueError('切磋期间无法修习或换装')
-        p = self.player
-        facts = {'action': action}
-        if action == 'equip':
-            martial.equip(p, art_id)
-        elif action == 'learn':
-            if martial.ARTS.get(art_id, {}).get('school'):
-                raise ValueError('门派传承请到驻地凭贡献请益')
-            if p['wealth'] < 12:
-                raise ValueError('研读手抄谱需要12银')
-            martial.learn(p, art_id)
-            p['wealth'] -= 12
-            economics.fee(self, economics.place_of(self, 'player'), 12)
-            facts.update(art=art_id, cost=12)
-        elif action in ('practice', 'breakthrough'):
-            if p['wealth'] < 3:
-                raise ValueError('闭关一月需要3银')
-            facts['training'] = martial.practice(p, self.rng, art_id, action == 'breakthrough', equipment=items.bonuses(self, 'player'))
-            p['wealth'] -= 3
-            economics.fee(self, economics.place_of(self, 'player'), 3)
-            facts['cost'] = 3
-            facts['equipment_wear'] = items.wear(self, 'player', ['weapon'], 2)
-            self.month_step()
-        elif action == 'rest':
-            martial.recover(p, 30)
-            p['health'] = clamp(p['health'] + 18)
-            self.month_step()
-        else:
-            raise ValueError('未知练武指令')
-        self.store.append({'month': self.month, 'date': date(self.month), 'kind': 'player_training',
-                           'people': [], 'summary': '过客' + {'equip': '调整了功法装配。', 'learn': '研读手抄武谱。',
-                           'practice': '闭关修习一月。', 'breakthrough': '闭关突破武学关隘。', 'rest': '调养一月。'}[action],
-                           'importance': .3, 'causes': [], 'facts': facts})
+            raise ValueError('切磋期间无法调养')
+        martial.recover(self.player, 30)
+        self.player['health'] = clamp(self.player['health'] + 18)
+        self.month_step()
+        self.store.append({'month': self.month, 'date': date(self.month), 'kind': 'player_rest',
+                           'people': [], 'summary': '过客调养一月。', 'importance': .3,
+                           'causes': [], 'facts': {'action': 'rest'}})
         self.checkpoint()
         return self.martial_view()
 
@@ -1350,6 +1332,8 @@ class World:
             raise ValueError('对方目前不适合切磋')
         if self.player['health'] <= 30 or self.player['martial']['stamina'] < 12:
             raise ValueError('你伤疲过重，请先调养')
+        martial.sync_actor(self, self.player, True)
+        martial.sync_actor(self, n)
         battle_id = f'{self.seed}-{self.month}-{self.store.next_id}'
         self.battle = combat.start(self.player, n, self.rng.getrandbits(63), battle_id, equipment=(combat.equipment(self, 'player'), combat.equipment(self, npc_id)))
         e = self.emit('spar_start', [npc_id], f"过客与{n['name']}约定点到为止，摆开切磋架势。", .3,
@@ -1361,15 +1345,17 @@ class World:
     def restart_legacy_battle(self):
         """Archive obsolete active bouts without running or settling old rules."""
         old = self.battle
-        if not old or old.get('status') != 'active' or old.get('settled') or old.get('ruleset') == combat.RULESET:
+        if not old or old.get('status') != 'active' or old.get('settled'):
+            return False
+        if old.get('ruleset') == combat.RULESET and all(f.get('attribute_version') == combat.combat_attributes.VERSION for f in old['fighters']):
             return False
         npc_id = old['fighters'][1]['id']
         n = self.npcs[npc_id]
-        battle_id = old['id'] + '-physics4'
+        battle_id = old['id'] + ('-attributes1' if old.get('ruleset') == combat.RULESET else '-physics4')
         replacement = combat.start(self.player, n, old['seed'], battle_id,
             spar=old.get('spar', True), equipment=(combat.equipment(self, 'player'), combat.equipment(self, npc_id)))
         event = self.emit('combat_rules_upgraded', [],
-            f"与{n['name']}未结算的旧战局归档，改用物理战斗重新开局；不结算体力、精力、装备损耗或收益。", .3,
+            f"与{n['name']}未结算的旧战局归档，按独立人物战斗属性重新开局；不结算体力、精力、装备损耗或收益。", .3,
             [old.get('cause')], {'legacy_combat':deepcopy(old), 'battle_id':battle_id,
             'from_ruleset':old.get('ruleset',1), 'to_ruleset':combat.RULESET, 'restart_without_settlement':True})
         replacement['cause'] = replacement['upgrade_event_id'] = event['id']
@@ -1390,16 +1376,9 @@ class World:
         if b['status'] == 'finished':
             n = self.npcs[b['fighters'][1]['id']]
             costs = []
-            rewards = self.player.setdefault('spar_rewards', {})
-            practiced_time = b.get('elapsed', 0) >= 3
-            practiced = practiced_time and any(row.get('damage', 0) > 0 and row['side'] == 0 for row in b['log'])
-            gain = .3 if practiced and rewards.get(str(n['id'])) != self.month else 0.
-            if gain:
-                rewards[str(n['id'])] = self.month
             for actor, f in zip((self.player, n), b['fighters']):
                 cost = round(2 + 6*(1-f['vigor']/f['vigor_max']), 4)
                 actor['health'] = max(1., actor['health']-cost)
-                actor['skill'] = clamp(actor['skill']+gain)
                 actor['martial']['stamina'] = clamp(actor['martial']['stamina']-12)
                 costs.append(cost)
             tie = self.player['ties'].setdefault(str(n['id']), {'affinity': 0., 'trust': 0.})
@@ -1410,13 +1389,14 @@ class World:
             b['settled'] = True
             e = self.emit('player_duel', [n['id']], f"过客与{n['name']}切磋，{result}，点到为止。", .7,
                           [b['cause']], {'combat': deepcopy(b), 'player_health_cost': costs[0],
-                                         'npc_health_cost': costs[1], 'skill_gain': gain, 'equipment_wear': gear_wear})
+                                         'npc_health_cost': costs[1], 'equipment_wear': gear_wear})
             b['event_id'] = e['id']
         self.battle = b
         self.checkpoint()
         return self.martial_view()
 
     def export(self):
+        martial.synchronize(self)
         return {'seed': self.seed, 'month': self.month, 'npcs': self.npcs,
                 'population_generation': self.population_generation,
                 'social_rank_version': social_ranks.VERSION,
@@ -1522,18 +1502,22 @@ class World:
         elif self.settlements:
             settlements.expand(self)
         society.initialize(self)
+        self._martial_migrated = martial.synchronize(self)
         self.restart_legacy_battle()
+        combat.upgrade_tuning(self)
         local_life.initialize(self)
         npc_attention.initialize(self)
 
     def checkpoint(self):
+        martial.synchronize(self)
         self.store.save(self.export())
+        self._martial_migrated = False
 
     def npc_summary(self, n):
         return {**{k: n[k] for k in ('id', 'name', 'sex', 'age_months', 'alive', 'place', 'job', 'wealth',
-                                  'skill', 'health', 'reputation', 'goal', 'faction', 'spouse', 'last_action',
+                                  'health', 'reputation', 'goal', 'faction', 'spouse', 'last_action',
                                   'generation', 'office', 'office_country', 'pregnancy', 'illness', 'death')},
-                'profession': n['career']['profession'], 'career_level': careers.level(n)[1],
+                'combat_rating': combat_attributes.rating(n), 'profession': n['career']['profession'], 'career_level': careers.level(n)[1],
                 'identity': careers.identity(self, n)}
 
     def summary(self):
@@ -1575,6 +1559,7 @@ class World:
                 'npcs': [self.npc_summary(n) for n in self.npcs.values()]}
 
     def npc_detail(self, npc_id):
+        from . import player_social
         n = deepcopy(self.npcs[npc_id])
         n['planning_view'] = npc_plans.view(self, self.npcs[npc_id])
         n['recalled_memories'] = npc_memory.retrieve(self, self.npcs[npc_id])
@@ -1585,13 +1570,14 @@ class World:
         n['rank_progression'] = rank_progression.view(self, npc_id)
         n['identity'] = careers.identity(self, self.npcs[npc_id])
         n['career_options'] = careers.catalog(self, self.npcs[npc_id])
-        n['martial_view'] = martial.view(n, items.bonuses(self, npc_id))
+        n['martial_view'] = martial.view(n, combat.equipment(self, npc_id), self)
         n['legal_actions'] = self.legal_actions(self.npcs[npc_id])
         n['possessions'] = items.view(self, npc_id)
         n['membership_view'] = ({**organizations.rank(self, n), 'faction': n['faction'],
                                  'contribution': n['contribution'], 'since': n['faction_since']}
                                 if n['faction'] is not None else None)
         n['player_relation'] = deepcopy(self.player['ties'].get(str(npc_id), {'affinity': 0., 'trust': 0.}))
+        n['player_social'] = player_social.view(self, npc_id)
         n['relations_view'] = [dict(other=int(i), name=self.npcs[int(i)]['name'],
                                     alive=self.npcs[int(i)]['alive'], **r)
                                 for i, r in n['relationships'].items()]
@@ -1601,6 +1587,7 @@ class World:
         f = self.factions[faction_id]
         members = [n for n in self.npcs.values() if n['alive'] and n['faction'] == f['id']]
         return {**organizations.view(self, f),
+                'martial_curriculum': martial.martial_catalog.school_view(f['key']),
                 'player_options': organizations.player_options(self, faction_id),
                 'player_membership': organizations.player_membership(self),
                 'roster': [{**self.npc_summary(n), 'rank': organizations.rank(self, n), 'contribution': n['contribution']}

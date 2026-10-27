@@ -1,3 +1,4 @@
+from . import combat_attributes
 """Seed a playable cast from geography and the two nine-grade systems.
 
 All assignments are declared opening conditions. Loading a save never calls this
@@ -45,7 +46,9 @@ def trade(w, n, job):
     p = careers.PROFESSIONS[job]
     adult = n['age_months'] >= 192
     n['job'] = job if adult else '学徒' if n['age_months'] >= 120 else '幼童'
-    n['skill'] = max(n['skill'], p.get('martial', 0)) if adult else min(n['skill'], 10.)
+    if adult:
+        base = n['combat_attributes']['base']
+        base.update({key: max(value, p.get('martial', 0)) for key, value in base.items()})
     xp = max(p['entry'], min(65., (n['age_months'] / 12 - 16) * 1.1 + w.rng.uniform(0, 8))) if adult else 0.
     profession = job if n['age_months'] >= 120 else None
     n['career'].update(profession=profession, experience={job: round(xp, 4)} if profession else {},
@@ -105,15 +108,14 @@ def school(w, f, count):
     for grade in grades:
         n = w.make_npc(place=f['place'])
         age(w, n, w.rng.randint(*AGES[grade]))
-        contribution, skill = sect_ranks.REQUIREMENTS[grade] or (110, 78)
+        contribution, required_ability = sect_ranks.REQUIREMENTS[grade] or (110, 78)
         ceiling = (contribution + 20 if grade <= 2 else sect_ranks.REQUIREMENTS[grade - 1][0])
         n.update(faction=f['id'], faction_since=w.month,
                  contribution=round(w.rng.uniform(contribution, ceiling - .1), 4),
-                 skill=w.rng.uniform(skill, min(95, skill + 12)),
+                 combat_attributes={'version': combat_attributes.VERSION, 'baseline_version': combat_attributes.TUNING['version'], 'base': dict.fromkeys(combat_attributes.KEYS,
+                     round(w.rng.uniform(required_ability, min(95, required_ability + 12)), 2))},
                  reputation=w.rng.uniform(max(0, 40 - grade * 5), max(2, 65 - grade * 6)))
         trade(w, n, '药师' if f['public_axis'] == 'sanitation' else '镖师' if grade <= 7 else '农人')
-        # Trade setup must not erase the martial prerequisites of young members.
-        n['skill'] = max(skill, n['skill'])
         if grade == 1:
             f.update(leader=n['id'], leader_since=w.month, leader_review_since=w.month)
         members.append(n)
@@ -170,11 +172,6 @@ def seed(w, total):
     for n in w.npcs.values():
         n.pop('martial', None)
         martial.initialize(n)
-        if n['faction'] is not None and n['skill'] >= 12:
-            f = w.factions[n['faction']]
-            martial.learn(n, f['art_id'])
-            art = n['martial']['arts'][f['art_id']]
-            art.update(practice=round(min(85., n['skill']), 4), realm=int(n['skill'] >= 40))
         n['identity'] = careers.identity(w, n)
     # Link knowledge only after all final identities exist.
     for n in w.npcs.values():

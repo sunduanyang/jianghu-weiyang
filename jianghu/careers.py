@@ -1,3 +1,4 @@
+from . import combat_attributes
 """Livelihoods and earned social standing; the world still settles every action.
 
 Inspired by the separation of occupation and graded identity in wuxia sandboxes.
@@ -95,7 +96,7 @@ def income(n, place=None, profession=None):
     aptitude = .85 + n['traits'][p['trait']] * .003
     gross = (p['base'] + experience(n, profession)*.09) * p['demand'][place_archetype(n['place'] if place is None else place)] * aptitude
     if profession in ('镖师', '猎户'):
-        gross += n['skill']*.035
+        gross += combat_attributes.rating(n)*.035
     return round(gross * (.45 if n['age_months'] < 192 else 1), 4)
 
 
@@ -120,8 +121,8 @@ def entry_blockers(w, n, profession):
         reasons.append(f"需{p['cost']}银置业并留4银生活费")
     if experience(n, profession) < p['entry']:
         reasons.append(f"此业熟练度须达{p['entry']}")
-    if n['skill'] < p.get('martial', 0):
-        reasons.append(f"武学须达{p['martial']}")
+    if combat_attributes.rating(n) < p.get('martial', 0):
+        reasons.append(f"战斗能力须达{p['martial']}")
     return reasons
 
 

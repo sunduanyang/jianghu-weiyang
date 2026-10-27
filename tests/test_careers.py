@@ -1,3 +1,5 @@
+from jianghu import combat_attributes as abilities
+from tests.combat_helpers import set_rating, update_actor
 from copy import deepcopy
 import json
 import unittest
@@ -32,7 +34,7 @@ class CareerTests(unittest.TestCase):
     def test_work_uses_trade_experience_and_local_demand_not_unrelated_martial_skill(self):
         n = self.person('渔人')
         first = careers.income(n)
-        n['skill'] = 100
+        set_rating(n, 100)
         self.assertEqual(first, careers.income(n))
         self.assertGreater(careers.income(n, place=3), careers.income(n, place=1))
         n['career']['experience']['渔人'] = 80
@@ -93,7 +95,7 @@ class CareerTests(unittest.TestCase):
         for update, job in [({'place': 1}, '行商'), ({'age_months': 180}, '行商'),
                             ({'office': '主簿'}, '行商'), ({'skill': 19}, '镖师')]:
             before = deepcopy(n)
-            n.update(update)
+            update_actor(n, update)
             self.assertTrue(careers.entry_blockers(self.w, n, job))
             n.clear(); n.update(before)
 
@@ -119,7 +121,7 @@ class CareerTests(unittest.TestCase):
         n['age_months'] = 180
         self.assertAlmostEqual(careers.income(n), round(adult_income*.45, 4), places=4)
         n['age_months'] = 119
-        self.assertEqual({a['kind'] for a in self.w.legal_actions(n)}, {'rest', 'train', 'play'})
+        self.assertEqual({a['kind'] for a in self.w.legal_actions(n)}, {'rest', 'play'})
 
     def test_professional_doctor_skill_changes_real_healing_and_transfers_fee(self):
         n = self.person()

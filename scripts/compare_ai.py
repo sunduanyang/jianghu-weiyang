@@ -42,7 +42,7 @@ def main(samples):
             record['error']=str(e)
         rows.append(record)
         ai.store.log_ai(record)
-        (ROOT/'reports'/'ai_comparison.json').write_text(json.dumps({'model':'Qwen3-4B-Q4_K_M','backend':'llama.cpp Vulkan','seed':42,'population':100,'prehistory_months':60,'decisions':rows},ensure_ascii=False,indent=2),encoding='utf-8')
+        (ROOT/'reports'/'ai_comparison.json').write_text(json.dumps({'model':DEFAULT_CONFIG['model'],'backend':'llama.cpp (local installation)','seed':42,'population':100,'prehistory_months':60,'decisions':rows},ensure_ascii=False,indent=2),encoding='utf-8')
     ai.checkpoint()
     # Advance one month while the accepted proposals are still current; inspect actual engine events.
     baseline.month_step();ai.month_step()
@@ -52,7 +52,7 @@ def main(samples):
         row['ai_event']=ai.store.event(ai.npcs[i]['last_action']['event_id'])
     for _ in range(11):baseline.month_step();ai.month_step()
     baseline.checkpoint();ai.checkpoint()
-    report={'model':'Qwen3-4B-Q4_K_M','backend':'llama.cpp Vulkan','seed':42,'population':100,
+    report={'model':DEFAULT_CONFIG['model'],'backend':'llama.cpp (local installation)','seed':42,'population':100,
             'source_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT/'jianghu').glob('*.py')},
             'prehistory_months':60,'followup_months':12,'decisions':rows,
             'calls':len(rows),'valid_applied':sum(bool(r.get('applied')) for r in rows),

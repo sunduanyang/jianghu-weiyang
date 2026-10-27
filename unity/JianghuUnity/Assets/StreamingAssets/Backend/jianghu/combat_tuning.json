@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "default_attribute": 75.0,
+  "movement_multiplier": 1.45,
+  "effort_multiplier": 0.6,
+  "regen_multiplier": 2.0,
+  "recovery_delay_multiplier": 0.55,
+  "fatigue_growth_multiplier": 0.7,
+  "fatigue_recovery_multiplier": 1.5
+}

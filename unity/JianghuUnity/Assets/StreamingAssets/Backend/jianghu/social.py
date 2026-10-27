@@ -1,3 +1,4 @@
+from . import combat_attributes
 """Motives, limited opportunities and morally mixed choices; no generated consequences."""
 import random
 
@@ -80,7 +81,7 @@ def actions(w, n, visible):
             continue
         if q['wealth']>=6:
             add('steal',i,q['name'])
-            if n['skill']>=15 and n['health']>45:
+            if combat_attributes.rating(n)>=15 and n['health']>45:
                 add('extort',i,q['name'])
         listeners=[j for j in w.residents[n['place']] if j not in (n['id'],i) and
                    w.npcs[j]['age_months']>=144 and str(j) in n['knowledge']]
@@ -141,7 +142,7 @@ def expose(w, kind, n, q, amount, summary, causes=None, extra=None):
 
 def execute(w, n, a, facts):
     k=a['kind'];q=w.npcs.get(a['target']);parents=[n['last_event'],n['goal']['cause']]
-    before={key:n[key] for key in ('wealth','health','skill')}
+    before={key:n[key] for key in ('wealth','health')}
     def settled():
         return {**facts,'actor_delta':{key:round(n[key]-v,4) for key,v in before.items()}}
     if k=='steal':
@@ -154,7 +155,7 @@ def execute(w, n, a, facts):
         w.emit('loss',[q['id']],f"{q['name']}发现遗失{amount:.1f}银，不知是谁所为。",.65,[e['id']],{'amount':amount})
         return e
     if k=='extort':
-        submitted=n['skill']+w.rng.uniform(-10,12)>q['skill']+w.rng.uniform(-8,15)
+        submitted=combat_attributes.rating(n)+w.rng.uniform(-10,12)>combat_attributes.rating(q)+w.rng.uniform(-8,15)
         amount=min(10,q['wealth']*.25) if submitted else 0
         n['wealth']+=amount;q['wealth']-=amount
         if not submitted:n['health']=max(0,n['health']-5)

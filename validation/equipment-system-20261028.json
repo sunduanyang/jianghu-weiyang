@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-28",
+  "slots": {
+    "weapon": "主手",
+    "shield": "副手",
+    "armor": "护甲"
+  },
+  "rules": {
+    "passed": true,
+    "tests": 67,
+    "runs": [
+      {
+        "tests": 46,
+        "seconds": 11.7,
+        "modules": [
+          "test_equipment",
+          "test_weapons",
+          "test_physical_combat",
+          "test_combat_attributes",
+          "test_physical_impact",
+          "test_combat_pace"
+        ]
+      },
+      {
+        "tests": 21,
+        "seconds": 109.851,
+        "modules": [
+          "test_items"
+        ]
+      }
+    ]
+  },
+  "unity": {
+    "passed": true,
+    "build": "unity/Build/EquipmentSystem/江湖未央.exe",
+    "build_log": "unity/equipment-system-build-2.log",
+    "phases": [
+      {
+        "phase": "native",
+        "passed": true,
+        "checks": 36,
+        "record": "validation\\equipment-system-native-20261028.json"
+      },
+      {
+        "phase": "resume",
+        "passed": true,
+        "checks": 4,
+        "record": "validation\\equipment-system-resume-20261028.json"
+      }
+    ]
+  },
+  "screenshots": [
+    {
+      "path": "validation\\screenshots\\equipment-three-slots-20261028.png",
+      "size": [
+        1463,
+        866
+      ],
+      "colors": 28268,
+      "sha256": "9a2d50d0f5f3be7337b8247f2141c730f00807a77d3c1afbd06c0ad3c938ee8b"
+    },
+    {
+      "path": "validation\\screenshots\\equipment-comparison-20261028.png",
+      "size": [
+        1463,
+        866
+      ],
+      "colors": 31885,
+      "sha256": "802fc94c5a0b06384ceed74e9cb0e816c121103eda60a4b681fd4f8a5ce367a7"
+    },
+    {
+      "path": "validation\\screenshots\\equipment-offhand-suppressed-20261028.png",
+      "size": [
+        1463,
+        866
+      ],
+      "colors": 30579,
+      "sha256": "bf3a6150e501d761041e6507650d2332fc8f03fea3d5d74888f4ee74efb31475"
+    }
+  ],
+  "source_sha256": {
+    "equipment.py": "3fcbce12523ab82367441d78592fec53afce4e5004d19e7d21ec7c5fc517da75",
+    "items.py": "bdccddf571eeb0a6a77234954f73cb65cf624e8352e6c3e716112c540f99b597",
+    "physical_combat.py": "18f906f20c5a4c257dc9e730bda037899a2318a0ee5feb4089db70ff3768a821",
+    "server.py": "c05bb4c7f6e210ffac287c83b6945f2eb8ec1c954d5858233ce767609bf03372",
+    "engine.py": "79fe53b84bd1abf52d79bf49ed0dfdc62e2731fda1effbbe9481440196ecd513",
+    "combat_attributes.py": "6101c1969c72da7bf36f473f8cb32961fe78fe903e66c04b89e4405d39f1c5f1",
+    "weapons.py": "802a5c0c40e9e4b851cd5cd12e19d3a699533a5c3efc230b0be55c05246fd1cf",
+    "weapon_catalog.json": "b4e8248b61e75acb0773f44c349027622047c10bf5d0b7778db74621bdfdd974"
+  },
+  "save_policy": "Only fresh isolated native-save and visual-save fixtures; no production save accessed",
+  "visual_preview": "Left open after human input was detected; preview uses a separate fixture save",
+  "appearance": "Armor supplies protection; clothing visuals continue to use the existing paper wardrobe"
+}

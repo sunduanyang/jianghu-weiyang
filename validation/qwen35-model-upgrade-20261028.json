@@ -1,0 +1,173 @@
+{
+  "date": "2026-10-28",
+  "model_id": "qwen3.5:4b",
+  "model_file": "Qwen3.5-4B-Q4_K_M.gguf",
+  "model_bytes": 2740937888,
+  "model_sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4",
+  "llama_release": "b11933",
+  "backend": "cuda",
+  "active_build": "PhysicalCombat",
+  "model_source_files": {
+    "ai.py": "0f59008607094e8a0ca7a301737598004da1eefec8aed1cb97889881ef9fdea6",
+    "model_service.py": "27443ee7bcb23191d752033c03933158f3f6584ed129cd83492977a8d5ca2c9e"
+  },
+  "regression": {
+    "passed": 373
+  },
+  "paper_regression": {
+    "passed": 11,
+    "included_in_full_suite": true
+  },
+  "native": {
+    "passed": true,
+    "checks": 18,
+    "checks_detail": [
+      {
+        "check": "saved enabled preference and v6 continuous mode",
+        "passed": true
+      },
+      {
+        "check": "no monthly quota or end-month wait",
+        "passed": true
+      },
+      {
+        "check": "ordinary and high-standing candidates found",
+        "passed": true
+      },
+      {
+        "check": "recent player contact takes an active model turn",
+        "passed": true
+      },
+      {
+        "check": "latest interaction replaces an in-flight obsolete snapshot",
+        "passed": true
+      },
+      {
+        "check": "recent NPC receives two actual stages and cites newest own contact",
+        "passed": true
+      },
+      {
+        "check": "deep review compares alternatives and has a fallback",
+        "passed": true
+      },
+      {
+        "check": "recent person's view has the requested identity",
+        "passed": true
+      },
+      {
+        "check": "render recent-player-deep-thought",
+        "passed": true
+      },
+      {
+        "check": "actual high standing receives deep review without inventing player contact",
+        "passed": true
+      },
+      {
+        "check": "thinking preserves paused calendar and protagonist",
+        "passed": true
+      },
+      {
+        "check": "small queue bounds GPU work",
+        "passed": true
+      },
+      {
+        "check": "accepted deep reviews counted",
+        "passed": true
+      },
+      {
+        "check": "high person's view has the requested identity",
+        "passed": true
+      },
+      {
+        "check": "render high-standing-deep-thought",
+        "passed": true
+      },
+      {
+        "check": "render priority-model-settings",
+        "passed": true
+      },
+      {
+        "check": "normal month advances once without waiting for model",
+        "passed": true
+      },
+      {
+        "check": "no Unity errors or exceptions",
+        "passed": true
+      }
+    ]
+  },
+  "comparison": {
+    "cases": [
+      {
+        "case": "ordinary",
+        "old_seconds": 11.203,
+        "new_seconds": 9.389,
+        "old_tokens": 273,
+        "new_tokens": 280
+      },
+      {
+        "case": "high-standing",
+        "old_seconds": 22.162,
+        "new_seconds": 23.156,
+        "old_tokens": 466,
+        "new_tokens": 714
+      },
+      {
+        "case": "recent-contact",
+        "old_seconds": 24.276,
+        "new_seconds": 27.437,
+        "old_tokens": 498,
+        "new_tokens": 790
+      }
+    ],
+    "contexts_sha256": "f193e7f366e5e91b139cba3a7d01875d7eacc443903dc9ff5b7ff7ee4656a831",
+    "limitation": "Three NPC contexts, one repetition per model, different output lengths; combined model/runtime upgrade, not isolated model capability or a general speed guarantee."
+  },
+  "old_requests": 5,
+  "new_requests": 5,
+  "new_all_applied": true,
+  "new_executed_actions": {
+    "6": 2,
+    "1": 0,
+    "7": 1
+  },
+  "new_audit": {
+    "cash": 156150.53141399418,
+    "cash_residual": 2.5e-05,
+    "goods_residuals": {
+      "grain": -0.0,
+      "fish": -0.0,
+      "meat": -0.0,
+      "fiber": -0.0,
+      "cloth": 0.0,
+      "herb": 0.0,
+      "medicine": 0.0,
+      "timber": -0.0,
+      "iron": 0.0,
+      "tools": -0.0,
+      "study": -0.0,
+      "leisure": -0.0,
+      "transport": 0.0
+    },
+    "negative_stock": false,
+    "negative_market_cash": false
+  },
+  "reload_equal": true,
+  "original_unity_save_sha256_unchanged": true,
+  "preferences": [
+    {
+      "scope": "root",
+      "old_model": "qwen3:4b",
+      "new_model": "qwen3.5:4b",
+      "other_preferences_preserved": true
+    },
+    {
+      "scope": "unity",
+      "old_model": "qwen3:4b",
+      "new_model": "qwen3.5:4b",
+      "other_preferences_preserved": true
+    }
+  ],
+  "evidence_folder": "output/model-upgrade-20261027",
+  "old_model_and_runtime_retained": true
+}

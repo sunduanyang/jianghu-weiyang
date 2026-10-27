@@ -88,7 +88,7 @@ def reserve_partner(w, q, a, event, role):
 def execute(w, n, a, facts):
     q = w.npcs[a['target']]
     reciprocal = w.relation(q, n['id'])
-    before = {key: n[key] for key in ('wealth', 'health', 'skill')}
+    before = {key: n[key] for key in ('wealth', 'health')}
     causes = [n['last_event'], q['last_event']]
     kind = a['kind']
     if kind == 'reconcile':

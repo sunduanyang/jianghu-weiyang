@@ -2,73 +2,65 @@ using UnityEngine;
 
 public sealed partial class PhysicsDuel {
     public sealed partial class Fighter {
-        public float AttackCost=>weapon.cost;
+        public float AttackCost=>weapon.cost*effortScale;
         float attackUntil=-10,nextCommitAt=-10,regenAt=-10;
-        bool manualWasActive,recoveringBreath;
-        float manualHeading,manualReach,stabReturn,stabAdvance;
-        public bool IsAttacking=>health>0&&game.Clock>=stunUntil&&game.Clock<attackUntil;
+        int buttonStrokeId;
+        bool recoveringBreath;
+        bool ButtonAttacking=>game.Clock<attackUntil;
+        public bool IsAttacking=>health>0&&(ButtonAttacking||mainStroke.active||offStroke.active);
         public bool Recovering=>game.Clock<regenAt;
-        public float ArmCapacity=>Mathf.Lerp(.25f,1,Mathf.Clamp01(stamina/25));
-        public float ArmSpeed=>weapon.handling*handlingScale*Mathf.Lerp(.38f,1,Mathf.Clamp01(stamina/25))*(game.Clock<stunUntil?.45f:1);
-        public float ArmPower=>strength*ArmCapacity*(game.Clock<stunUntil?.35f:1);
+        public float ArmCapacity=>Mathf.Lerp(.25f,1,Mathf.Clamp01(StaminaRatio/.25f));
+        public float ArmSpeed=>weapon.handling*handlingScale;
+        public float ArmPower=>forceScale*strength*ArmCapacity*(game.Clock<stunUntil?.35f:1);
         public float relativeSwingSpeed,swingHeat,motionStaminaSpent;
         float movingSeconds;
-        float movingMass;
         public float MeasureSwingSpeed() {
-            Vector2 point=sword.WorldPoint(weapon.Local(new Vector2(0,weapon.hitStart+(weapon.reach-weapon.hitStart)*.65f),facing));
-            float speed=(sword.rb.GetPointVelocity(point)-pelvis.rb.GetPointVelocity(point)).magnitude;movingMass=weapon.mass;
+            float speed=StrikeVelocity(sword).magnitude;
             if(!weapon.TwoHanded&&!HasShield&&shield!=null){
-                Vector2 fistPoint=shield.B;
-                float offhand=(shield.rb.GetPointVelocity(fistPoint)-pelvis.rb.GetPointVelocity(fistPoint)).magnitude;
-                if(offhand>speed){speed=offhand;movingMass=DuelWeapon.Fist.mass;}
+                speed=Mathf.Max(speed,StrikeVelocity(shield).magnitude);
             }
             return speed;
         }
         public void TickWeaponEffort(float dt) {
+            UpdateManualStrokes(dt);
             relativeSwingSpeed=MeasureSwingSpeed();
-            bool active=IsAttacking||SwordWheel||swordControl||(weapon.TwoHanded||!HasShield)&&ShieldWheel;
-            bool moving=active&&relativeSwingSpeed>2.4f&&game.Clock>=stunUntil;
+            float mainPressure=0,offPressure=0;
+            float mainRate=WeaponEffort(sword,ButtonAttacking||MainManual||weapon.TwoHanded&&shieldControl,out mainPressure);
+            float offRate=0;
+            if(!weapon.TwoHanded&&shield!=null)offRate=HasShield?ShieldEffort():WeaponEffort(shield,OffManual,out offPressure);
+            currentPressureRate=mainPressure+offPressure;
+            bool moving=mainRate+offRate>.01f&&game.Clock>=stunUntil;
             movingSeconds=moving?movingSeconds+dt:Mathf.Max(0,movingSeconds-dt*2);
-            swingHeat=Mathf.MoveTowards(swingHeat,moving&&movingSeconds>.4f?1:0,dt*(moving?.5f:1));
+            swingHeat=Mathf.MoveTowards(swingHeat,moving&&movingSeconds>.4f?1:0,dt*(moving?.5f*fatigueGrowth:fatigueRecovery));
             if(!moving)return;
-            float rate=Mathf.Min(6,(relativeSwingSpeed-2.4f)*.30f*Mathf.Sqrt(movingMass))*(1+swingHeat*2);
-            float paid=Mathf.Min(stamina,rate*dt);SpendEffort(paid,.35f);motionStaminaSpent+=paid;
+            float rate=(mainRate+offRate)*(1+swingHeat*.65f);
+            float paid=SpendEffort(rate*dt,.35f);motionStaminaSpent+=paid;
+            mainMotionSpent+=paid*mainRate/(mainRate+offRate);offMotionSpent+=paid*offRate/(mainRate+offRate);
+            pressureStaminaSpent+=paid*currentPressureRate/(mainRate+offRate);
         }
-        public string CombatState=>game.Clock<stunUntil?"卸力":game.Clock<guardBrokenUntil?"破防":stamina<AttackCost?"气竭":Recovering?"回气稍候":"";
+        public string CombatState=>game.Clock<stunUntil?"卸力":game.Clock<guardBrokenUntil?"破防":motionExhausted?"气竭":StaminaRatio<.2f?"乏力":currentPressureRate>.1f?"顶压耗气":Recovering?"回气稍候":"";
 
-        void SpendEffort(float cost,float recoveryDelay) {
-            stamina=Mathf.Max(0,stamina-cost);
-            regenAt=Mathf.Max(regenAt,game.Clock+recoveryDelay);
+        float SpendEffort(float cost,float recoveryDelay) {
+            float paid=Mathf.Min(stamina,cost*effortScale);
+            stamina=Mathf.Max(0,stamina-paid);
+            regenAt=Mathf.Max(regenAt,game.Clock+recoveryDelay*recoveryDelayScale);
+            return paid;
         }
         bool CommitAttack(float duration) {
             if(!game.Live||health<=0||game.Clock<stunUntil||game.Clock<nextCommitAt||stamina<AttackCost)return false;
-            SpendEffort(AttackCost,.8f/weapon.handling);attackUntil=game.Clock+duration;nextCommitAt=game.Clock+.28f/weapon.handling;
-            attackId++;strokeTravel=0;stabReturn=stabAdvance=0;return true;
-        }
-        public bool TryManualAttack() {
-            if(!CommitAttack(.72f/weapon.handling))return false;
-            slashAt=-10;return true;
+            SpendEffort(weapon.cost,.8f/ArmSpeed);attackUntil=game.Clock+duration;nextCommitAt=game.Clock+.28f/ArmSpeed;
+            buttonStrokeId=++attackId;return true;
         }
         public void InterruptAttack() {
             attackUntil=-10;slashAt=-10;ResetGesture();
         }
-        void ResetGesture(){manualWasActive=false;strokeTravel=stabReturn=stabAdvance=0;}
-        void TrackManualAttack(bool active,float angle,float reach) {
-            if(!active){ResetGesture();return;}
-            if(!manualWasActive)TryManualAttack();
-            else {
-                strokeTravel+=Mathf.Abs(Mathf.DeltaAngle(manualHeading,angle));
-                float extension=reach-manualReach;
-                if(extension<0){stabReturn=Mathf.Min(.35f,stabReturn-extension);stabAdvance=0;}
-                else if(stabReturn>.12f)stabAdvance+=extension;
-                if(strokeTravel>=75||stabAdvance>=.16f)TryManualAttack();
-            }
-            manualWasActive=true;manualHeading=angle;manualReach=reach;
-        }
+        void ResetGesture(){mainStroke.Clear();offStroke.Clear();currentPressureRate=0;}
         void Regenerate(float dt) {
             if(game.Clock<regenAt||game.Clock<stunUntil||IsAttacking)return;
-            float rate=shieldControl||ShieldWheel?2:SwordWheel?8:14;
-            stamina=Mathf.Min(100,stamina+dt*rate);
+            // Remembered static goals are rest. Real motion and pressure still
+            // spend effort and reset the recovery delay in TickWeaponEffort.
+            float rate=shieldControl||brace?8:14;
+            stamina=Mathf.Min(maxStamina,stamina+dt*rate*regenScale);
         }
     }
 }

@@ -1,3 +1,5 @@
+from jianghu import combat_attributes as abilities
+from tests.combat_helpers import set_rating, update_actor
 from copy import deepcopy
 from http.server import ThreadingHTTPServer
 import json
@@ -57,7 +59,7 @@ class ItemTests(unittest.TestCase):
         self.assertEqual([g['grade'] for g in market['grades']], list(range(9, 0, -1)))
         self.assertEqual(len({g['grade_color'] for g in market['grades']}), 9)
         self.assertEqual(market['grades'], items.view(w, 'player')['grades'])
-        for category in ('manual', 'food', 'wine', 'tea', 'weapon'):
+        for category in ('food', 'wine', 'tea', 'weapon'):
             rows = [i for i in market['items'] if i['category'] == category]
             self.assertEqual({i['grade'] for i in rows}, set(range(1, 10)), category)
             for row in rows:
@@ -140,12 +142,14 @@ class ItemTests(unittest.TestCase):
         self.assertIn(old['id'], w.player['inventory'])
         sword['durability'] = 1
         items.wear(w, 'player', ['weapon'], 3)
-        self.assertEqual(items.bonuses(w, 'player')['attack'], 0)
+        self.assertNotIn('attack', items.bonuses(w, 'player'))
+        self.assertEqual(items.describe(sword)['weapon_attributes']['durability'], 0)
         material = self.find(w, 'iron')['id']
         items.perform(w, 'player', 'repair', sword['id'])
         self.assertNotIn(material, w.items['objects'])
         self.assertEqual(sword['durability'], 100)
-        self.assertEqual(items.bonuses(w, 'player')['attack'], 6)
+        self.assertNotIn('attack', items.bonuses(w, 'player'))
+        self.assertEqual(items.describe(sword)['weapon_attributes']['durability'], 100)
 
     def test_consumption_cannot_repeat_and_archives_snapshot(self):
         w = self.world()
@@ -159,21 +163,10 @@ class ItemTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             items.perform(w, 'player', 'use', salve['id'])
 
-    def test_same_book_cannot_reset_learning_by_buying_another_copy(self):
-        w = self.world()
-        book = self.find(w, 'basic_manual')
-        for _ in range(3):
-            items.perform(w, 'player', 'read', book['id'])
-        self.assertAlmostEqual(w.player['skill'], 15.6)
-        other = self.find(w, 'basic_manual', 'market')
-        items.perform(w, 'player', 'buy', other['id'])
-        with self.assertRaises(ValueError):
-            items.perform(w, 'player', 'read', other['id'])
-        advanced = self.find(w, 'cloud_manual', 'market')
-        w.player['wealth'] = 1000
-        items.perform(w, 'player', 'buy', advanced['id'])
-        with self.assertRaises(ValueError):
-            items.perform(w, 'player', 'read', advanced['id'])
+    def test_retired_martial_manuals_are_not_offered(self):
+        w=self.world()
+        self.assertFalse(any(d['category']=='manual' for d in items.CATALOG.values()))
+        self.assertFalse(any(a['kind']=='read_item' for n in w.npcs.values() for a in w.legal_actions(n)))
 
     def test_gift_preserves_origin_and_cannot_duplicate(self):
         w = self.world()
@@ -188,23 +181,20 @@ class ItemTests(unittest.TestCase):
             items.perform(w, 'player', 'gift', item['id'], target=2)
         self.assert_ownership(w)
 
-    def test_capacity_checked_before_purchase_or_gift(self):
+    def test_purchase_and_gift_have_no_carrying_weight_limit(self):
         w = self.world()
-        for _ in range(38):
-            items.create(w, 'player', 'iron', '负重测试')
+        for _ in range(100):
+            items.create(w, 'player', 'iron', '大量物品测试')
+            items.create(w, 1, 'iron', '大量物品测试')
         item = self.find(w, 'salve', 'market')
-        before = deepcopy(w.export())
-        with self.assertRaises(ValueError):
-            items.perform(w, 'player', 'buy', item['id'])
-        self.assertEqual(w.export(), before)
-        w.npcs[1]['skill'] = 0
-        for _ in range(25):
-            items.create(w, 1, 'iron', '负重测试')
+        before = w.player['wealth']
+        items.perform(w, 'player', 'buy', item['id'])
+        self.assertEqual(item['owner'], 'player')
+        self.assertLess(w.player['wealth'], before)
         gift = self.find(w, 'salve')
-        before = deepcopy(w.export())
-        with self.assertRaises(ValueError):
-            items.perform(w, 'player', 'gift', gift['id'], target=1)
-        self.assertEqual(w.export(), before)
+        items.perform(w, 'player', 'gift', gift['id'], target=1)
+        self.assertEqual(gift['owner'], '1')
+        self.assert_ownership(w)
 
     def test_crafting_consumes_exact_materials_and_rejects_missing_cost(self):
         w = self.world()
@@ -281,7 +271,7 @@ class ItemTests(unittest.TestCase):
         w = self.world()
         n = w.npcs[1]
         n['wealth'], n['age_months'] = 1, 300
-        items.create(w, 1, 'basic_manual', '测试闲书')
+        items.create(w, 1, 'herb', '测试闲物')
         w.items['market']['wealth'] = 0
         self.assertFalse(any(a['kind'] == 'sell_item' for a in w.legal_actions(n)))
 
@@ -291,30 +281,28 @@ class ItemTests(unittest.TestCase):
         n['age_months'], n['health'] = 300, 100.
         state = w.intervene(1, 'challenge')
         b = state['battle']
-        self.assertEqual(b['fighters'][0]['attack'], martial.stats(w.player)['attack']+2)
-        self.assertAlmostEqual(b['fighters'][0]['outer_guard'], martial.stats(w.player)['outer_guard']+1)
+        self.assertAlmostEqual(b['fighters'][0]['damage_scale'], abilities.parameters(abilities.ratings(w.player),items.bonuses(w,'player'))['damage_scale'])
+        self.assertAlmostEqual(b['fighters'][0]['damage_reduction'], abilities.parameters(abilities.ratings(w.player),items.bonuses(w,'player'))['damage_reduction'])
         w.battle_action(b['id'], b['revision'], 'surrender')
         self.assertLess(w.player['health'], 100)
         self.assertEqual(self.find(w, 'wood_sword')['durability'], 98)
         w.month_step()
         self.assertEqual(w.player['health'], 100)
 
-    def test_equipment_changes_real_work_and_training_and_wears_out(self):
-        a, b = self.world(), self.world()
-        n, control = a.npcs[1], b.npcs[1]
-        for p in (n, control):
-            p['age_months'], p['wealth'], p['health'] = 300, 100., 100.
-        control['equipment'].pop('tool', None)
-        tool = items.create(a, 1, 'hammer', '测试器具')
-        items.perform(a, 1, 'equip', tool['id'])
-        action = {'id': 'work:self'}
-        a.execute(n, action)
-        b.execute(control, action)
-        self.assertGreater(n['wealth'], control['wealth'])
-        self.assertEqual(tool['durability'], 99)
-        sword = self.find(a, 'wood_sword', 1)
-        a.execute(n, {'id': 'train:self'})
-        self.assertEqual(sword['durability'], 99)
+    def test_tools_are_possessions_without_equipment_effects(self):
+        w = self.world()
+        n = w.npcs[1]
+        n['age_months'], n['wealth'], n['health'] = 300, 100., 100.
+        tool = items.create(w, 1, 'hammer', '测试器具')
+        self.assertNotIn('equip', items.operations(w, 1, tool))
+        before = deepcopy(w.export())
+        with self.assertRaises(ValueError):
+            items.perform(w, 1, 'equip', tool['id'])
+        self.assertEqual(w.export(), before)
+        w.execute(n, {'id': 'work:self'})
+        self.assertEqual(tool['durability'], 100)
+        self.assertEqual(items.bonuses(w, 1)['income'], 0)
+        self.assertEqual(set(items.SLOTS), {'weapon', 'shield', 'armor'})
 
     def test_long_world_has_one_owner_per_item_and_reload_continues(self):
         w = self.world(population=100)

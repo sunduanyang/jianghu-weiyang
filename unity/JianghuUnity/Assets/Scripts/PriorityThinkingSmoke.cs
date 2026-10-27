@@ -52,11 +52,11 @@ public class PriorityThinkingSmoke : MonoBehaviour {
         Check("ordinary and high-standing candidates found",ordinary.Has&&high.Has);
         if(!ordinary.Has||!high.Has)yield break;
         int person=ordinary["id"].I;J first=new J(),second=new J();
-        yield return client.Request("/api/intervene",J.O("npc_id",person,"action","talk","text","我想听听你的打算，请按自己的处境判断。"),j=>first=j);
+        yield return client.Request("/api/intervene",J.O("npc_id",person,"action","visit"),j=>first=j);
         float deadline=Time.realtimeSinceStartup+100;
         while(Time.realtimeSinceStartup<deadline&&!(client.World["ai"]["current_npc"].I==person&&client.World["ai"]["busy"].B)){yield return new WaitForSecondsRealtime(.3f);yield return client.Refresh();}
         Check("recent player contact takes an active model turn",client.World["ai"]["current_npc"].I==person&&client.World["ai"]["busy"].B);
-        yield return client.Request("/api/intervene",J.O("npc_id",person,"action","talk","text","刚才的建议先别急着答应，请先顾好自己的生计再考虑合作。"),j=>second=j);
+        yield return client.Request("/api/intervene",J.O("npc_id",person,"action","gift"),j=>second=j);
         J recent=new J();deadline=Time.realtimeSinceStartup+180;
         while(Time.realtimeSinceStartup<deadline){
             yield return new WaitForSecondsRealtime(.6f);yield return client.Refresh();
@@ -77,7 +77,8 @@ public class PriorityThinkingSmoke : MonoBehaviour {
             if(high["deep_thought"]["rounds"].I==2)break;
         }
         Check("actual high standing receives deep review without inventing player contact",high["planning_view"]["attention"]["grade"].I<=3&&high["deep_thought"]["rounds"].I==2&&high["deep_thought"]["assessment"]["player_consideration"].S=="暂无直接往来",high["deep_thought"]);
-        Check("thinking preserves paused calendar and protagonist",client.World["month"].I==month&&client.World["hero"].ToString()==hero);
+        var beforeHero=J.Parse(hero);
+        Check("thinking preserves paused calendar and protagonist",client.World["month"].I==month&&new[]{"name","created","age_months","place","row","col","points","revision"}.All(key=>client.World["hero"][key].ToString()==beforeHero[key].ToString()));
         Check("small queue bounds GPU work",client.World["ai"]["pending"].I<=cfg["queue_limit"].I);
         Check("accepted deep reviews counted",client.World["ai"]["deep_completed"].I>=2,client.World["ai"]);
         app.SelectPerson(highId);deadline=Time.realtimeSinceStartup+20;while(Time.realtimeSinceStartup<deadline&&app.Person["id"].I!=highId)yield return null;

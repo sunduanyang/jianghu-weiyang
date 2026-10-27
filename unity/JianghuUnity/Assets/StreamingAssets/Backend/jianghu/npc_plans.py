@@ -1,3 +1,4 @@
+from . import combat_attributes
 """Bounded task decomposition; only the existing engine executes consequences."""
 from copy import deepcopy
 from . import careers, sect_ranks, llm_policy, npc_attention
@@ -83,7 +84,7 @@ def career_target(w, n):
             continue
         from . import economics
         gain = (economics.expected_income(w, n, job) - economics.expected_income(w, n)) if economics.active(w) else careers.income(n, profession=job) - careers.income(n)
-        if gain < 1.5 or p.get('martial', 0) > n['skill'] + 3:
+        if gain < 1.5 or p.get('martial', 0) > combat_attributes.rating(n) + 3:
             continue
         tutor = tutor_for(w, n, job) if careers.experience(n, job) < p['entry'] else None
         if careers.experience(n, job) < p['entry'] and tutor is None:
@@ -94,16 +95,7 @@ def career_target(w, n):
 
 def begin(w, n, chosen):
     profile = role(w, n)
-    if (n['faction'] is not None and n['age_months'] >= 192
-            and n['goal']['kind'] in ('mastery', 'renown') and profile['key'] not in ('leader', 'elder')
-            and chosen['kind'] in ('train', 'faction_task', 'faction_study', 'work', 'duty')):
-        grade = sect_ranks.standing(w.factions[n['faction']], n)['grade']
-        contribution, skill = sect_ranks.REQUIREMENTS[max(2, grade - 1)]
-        contribution += n.get('rank_progress',{}).get('sect',{}).get('penalty',0.)
-        start(w, n, 'sect_training', '积累门中贡献，备资请益并精进武学',
-              ['faction_task:'+str(n['faction']), 'work:self', 'train:self', 'faction_study:'+str(n['faction'])],
-              target_contribution=max(5, contribution), target_skill=max(12, skill))
-    elif n['goal']['kind'] == 'wealth' and chosen['kind'] in ('work', 'learn_trade', 'change_job'):
+    if n['goal']['kind'] == 'wealth' and chosen['kind'] in ('work', 'learn_trade', 'change_job'):
         target = career_target(w, n)
         if target:
             job, tutor = target
@@ -155,7 +147,7 @@ def resolve(w, n, actions):
         fee = spec['cost'] + 4 + (4 if careers.experience(n, job) < spec['entry'] else 0)
         if n['wealth'] < max(8, fee):
             choice = pick('work')
-        elif n['skill'] < spec.get('martial', 0):
+        elif combat_attributes.rating(n) < spec.get('martial', 0):
             choice = pick('train')
         elif careers.experience(n, job) < spec['entry']:
             tutor = w.npcs.get(p.get('tutor'))
@@ -166,7 +158,7 @@ def resolve(w, n, actions):
             choice = by_id.get('change_job:'+job)
     elif intent == 'sect_training':
         f = w.factions[n['faction']]
-        if n['contribution'] >= p['target_contribution'] and n['skill'] >= p['target_skill'] and f['art_id'] in n['martial']['arts']:
+        if n['contribution'] >= p['target_contribution'] and combat_attributes.rating(n) >= p['target_skill'] and f['art_id'] in n['martial']['arts']:
             close(w, n, '完成', '本阶段贡献与武学目标已达到', n['last_event'])
             return None
         if n['contribution'] < p['target_contribution']:
@@ -180,7 +172,7 @@ def resolve(w, n, actions):
                 return blocked(w, n, reason)
         elif n['wealth'] < 8:
             choice = pick('work')
-        elif n['skill'] < 12:
+        elif combat_attributes.rating(n) < 12:
             choice = pick('train')
         else:
             choice = pick('faction_study') or pick('train')
@@ -257,7 +249,7 @@ def record(w, n, a, event):
     elif p.get('intent') == 'career_change' and n['career']['profession'] == p['profession']:
         close(w, n, '完成', '已置办生计并转入'+p['profession'], event['id'])
     elif (p.get('intent') == 'sect_training' and n['contribution'] >= p['target_contribution']
-          and n['skill'] >= p['target_skill'] and w.factions[n['faction']]['art_id'] in n['martial']['arts']):
+          and combat_attributes.rating(n) >= p['target_skill'] and w.factions[n['faction']]['art_id'] in n['martial']['arts']):
         close(w, n, '完成', '本阶段贡献与武学目标已达到', event['id'])
 
 
@@ -268,13 +260,13 @@ def view(w, n):
             spec = careers.PROFESSIONS[p['profession']]
             fee = spec['cost'] + 4 + (4 if careers.experience(n, p['profession']) < spec['entry'] else 0)
             p['next_description'] = ('筹足至少'+str(max(8, fee))+'银' if n['wealth'] < max(8, fee) else
-                                     '练足入行所需武学' if n['skill'] < spec.get('martial', 0) else
+                                     '练足入行所需武学' if combat_attributes.rating(n) < spec.get('martial', 0) else
                                      '向约定师傅学艺，达到入行熟练度' if careers.experience(n, p['profession']) < spec['entry'] else
                                      '检查时机并支付置业费用，正式转业')
         elif p.get('intent') == 'sect_training':
             p['next_description'] = ('办差积累贡献至'+str(p['target_contribution']) if n['contribution'] < p['target_contribution'] else
                                      '备足请益费用与生活余银' if n['wealth'] < 8 else
-                                     '练好基本功，达到武学12' if n['skill'] < 12 else '向同门请益或继续习武')
+                                     '练好基本功，达到武学12' if combat_attributes.rating(n) < 12 else '向同门请益或继续习武')
         else:
             p['next_description'] = p.get('next_action', '按约定步骤继续，执行前再核对条件')
     return dict(version=VERSION, role=role(w, n), current=p, decision=deepcopy(n.get('decision')),life_policy=llm_policy.view(w,n),

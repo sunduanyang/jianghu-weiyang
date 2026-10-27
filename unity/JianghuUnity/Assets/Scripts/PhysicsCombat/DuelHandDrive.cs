@@ -7,6 +7,9 @@ public sealed partial class PhysicsDuel {
         public FixedJoint2D primaryGrip;
         public readonly Dictionary<string,TargetJoint2D> handTargets=new Dictionary<string,TargetJoint2D>();
         public Vector2 primaryIntent,secondaryIntent;
+        // Filter the requested pose once. Fatigue limits muscles, never this
+        // input target's travel speed or a second extension / heading filter.
+        float HandInputBlend=>1-Mathf.Exp(-Time.fixedDeltaTime/.022f);
         public float PrimaryGripError=>primaryGrip==null||!primaryGrip.enabled?0:Vector2.Distance(Limb.BodyPoint(sword.rb,primaryGrip.anchor),Limb.BodyPoint(primaryGrip.connectedBody,primaryGrip.connectedAnchor));
         public float PrimaryGripAngleError=>Mathf.Abs(Mathf.DeltaAngle(sword.rb.rotation-limbs["handNear"].rb.rotation,-primaryGrip.referenceAngle));
         public float HandTargetError(string side)=>Vector2.Distance(limbs["hand"+side].A,handTargets[side].target);
@@ -42,7 +45,7 @@ public sealed partial class PhysicsDuel {
             upper.Drive(Angle(elbow-upper.A),4,8,power,speed);
             fore.Drive(Angle(tip-elbow),4,6,power,speed);
             TargetJoint2D target=handTargets[side];target.enabled=true;
-            target.target=sharedPose?wrist:Vector2.MoveTowards(target.target,wrist,Time.fixedDeltaTime*7*Mathf.Clamp(speed,.15f,1.2f));
+            target.target=sharedPose?wrist:Vector2.Lerp(target.target,wrist,HandInputBlend);
             target.maxForce=force;
         }
         void RelaxHandDrives() {

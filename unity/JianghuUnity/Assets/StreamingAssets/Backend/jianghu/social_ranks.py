@@ -1,3 +1,4 @@
+from . import combat_attributes
 """Nine social estates for people outside martial sects.
 
 Estate follows a person's actual occupation or public office. Wealth, martial
@@ -45,7 +46,7 @@ def player_identity(w):
         return None
     if is_sect_member(w, h):
         from .organizations import rank
-        standing = rank(w, dict(h,id=-1,skill=w.player['skill']))
+        standing = rank(w, dict(h,id=-1,combat_attributes=w.player['combat_attributes']))
         return {**standing, 'grade_label': GRADES[standing['grade']],
                 'title': w.factions[h['faction']]['name'] + standing['title'],
                 'class_label': None, 'system': 'sect', 'system_label': '门派品级', 'country': None}

@@ -41,7 +41,8 @@ class ProtagonistTests(unittest.TestCase):
         h = self.create(w, age=20, sex='女')
         self.assertTrue(h['created'])
         self.assertEqual((h['age_months'], h['sex'], h['points'], h['node']), (240, '女', 30, 'gate'))
-        self.assertEqual({k: w.player[k] for k in assets}, assets)
+        self.assertEqual({k: w.player[k] for k in ('wealth','inventory')}, {k: assets[k] for k in ('wealth','inventory')})
+        self.assertEqual({k: w.player['martial'][k] for k in ('stamina','arts')}, {k: assets['martial'][k] for k in ('stamina','arts')})
         self.rejected(w, 'create', name='换一个人')
 
     def test_invalid_creation_and_uncreated_movement_do_not_mutate(self):

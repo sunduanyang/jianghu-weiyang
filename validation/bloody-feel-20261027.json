@@ -1,0 +1,1756 @@
+{
+  "passed": true,
+  "scope": "automated acceptance",
+  "manual_review_complete": false,
+  "date": "2026-10-28T00:54:52.989481+08:00",
+  "build": "unity/Build/BloodyFeel/江湖未央.exe",
+  "active_build": "BloodyFeel",
+  "executable_sha256": "9806abde4a406ed68647e9505852c49f6aa72a372f4f084e2aa2821affea57a2",
+  "assembly_sha256": "5a259ded1241ddb1cf7d54edc0b9edc655c8a5493e2c7363f079da93770a6162",
+  "reference": {
+    "apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+    "method": "Read-only serialized settings inspection. No APK execution, code or art import.",
+    "verified_one_to_one": false,
+    "limitation": "Modified APK. Serialized defaults do not establish runtime logic or measured input latency.",
+    "source_physics_gravity": {
+      "x": 0.0,
+      "y": -12.5
+    },
+    "source_metal_friction": 0.7,
+    "source_metal_bounce": 0.1
+  },
+  "python_tests": {
+    "passed": true,
+    "count": 8,
+    "log": "output\\bloody-feel-20261027\\python-combat-tests.log"
+  },
+  "native_runs": {
+    "feel-30-final15": {
+      "passed": true,
+      "checks": 23,
+      "report": "output\\bloody-feel-20261027\\native-feel-30-final15\\acceptance.json"
+    },
+    "feel-90-final15": {
+      "passed": true,
+      "checks": 24,
+      "report": "output\\bloody-feel-20261027\\native-feel-90-final15\\acceptance.json"
+    },
+    "save-final15": {
+      "passed": true,
+      "checks": 14,
+      "report": "output\\bloody-feel-20261027\\native-save-final15\\acceptance.json"
+    },
+    "resume-final15": {
+      "passed": true,
+      "checks": 20,
+      "report": "output\\bloody-feel-20261027\\native-resume-final15\\acceptance.json"
+    },
+    "fists-final15": {
+      "passed": true,
+      "checks": 20,
+      "report": "output\\bloody-feel-20261027\\native-fists-final15\\acceptance.json"
+    },
+    "rigs-final15": {
+      "passed": true,
+      "checks": 4,
+      "report": "output\\bloody-feel-20261027\\native-rigs-final15\\acceptance.json"
+    }
+  },
+  "feel": {
+    "feel-30-final15": {
+      "checks": [
+        {
+          "check": "companion ready",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "/api/ai/config",
+          "passed": true,
+          "facts": {
+            "expected": true,
+            "error": ""
+          }
+        },
+        {
+          "check": "pointer origin fixed and radial value clamped",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "two mouse buttons own independent hand states",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "releasing primary preserves offhand",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "touch ownership survives crossing screen center",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "double tap hold moves without steering a hand",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "releasing double tap stops movement",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "cancelled touch cannot prime a movement double tap",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "physical hand responds within 250 ms",
+          "passed": true,
+          "facts": {
+            "seconds": 0.04166663,
+            "distance": 0.09744415,
+            "render_fps": 30
+          }
+        },
+        {
+          "check": "continuous physical swings stay armed beyond old attack window",
+          "passed": true,
+          "facts": {
+            "late_active_steps": 72,
+            "manual_strokes": 28
+          }
+        },
+        {
+          "check": "both hands spend effort independently",
+          "passed": true,
+          "facts": {
+            "primary": 17.30832,
+            "offhand": 2.40911
+          }
+        },
+        {
+          "check": "one contact per hand per sweep",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "a fresh swing id cannot saw through sustained body contact",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "released hands do not create attacks or drain motion stamina",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "body translation is not counted as a swing",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "exhaustion prevents new motion attacks and reduces force",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "interrupted held input cannot revive an old attack",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "fresh direction after hit can start a new swing",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "nine weapon classes and fists retain stable physical constraints",
+          "passed": true,
+          "facts": [
+            {
+              "weapon": "dagger",
+              "passed": true,
+              "gap": 0.001563063,
+              "limit": 0,
+              "effort": 5.941202,
+              "strokes": 28,
+              "worst": ""
+            },
+            {
+              "weapon": "sabre",
+              "passed": true,
+              "gap": 0.002199654,
+              "limit": 2.132477,
+              "effort": 10.62015,
+              "strokes": 25,
+              "worst": "forearmNear angle=64.4209 limits=-87.71158,62.28842"
+            },
+            {
+              "weapon": "sword",
+              "passed": true,
+              "gap": 0.002458311,
+              "limit": 2.198547,
+              "effort": 14.81214,
+              "strokes": 24,
+              "worst": "forearmNear angle=64.48697 limits=-87.71158,62.28842"
+            },
+            {
+              "weapon": "axe",
+              "passed": true,
+              "gap": 0.002645016,
+              "limit": 2.324783,
+              "effort": 19.68149,
+              "strokes": 23,
+              "worst": "forearmNear angle=64.6132 limits=-87.71158,62.28842"
+            },
+            {
+              "weapon": "mace",
+              "passed": true,
+              "gap": 0.002636658,
+              "limit": 2.24527,
+              "effort": 21.5799,
+              "strokes": 21,
+              "worst": "forearmNear angle=64.53369 limits=-87.71158,62.28842"
+            },
+            {
+              "weapon": "spear",
+              "passed": true,
+              "gap": 0.002443198,
+              "limit": 0,
+              "effort": 22.92927,
+              "strokes": 6,
+              "worst": ""
+            },
+            {
+              "weapon": "greatsword",
+              "passed": true,
+              "gap": 0.002205137,
+              "limit": 0,
+              "effort": 23.20651,
+              "strokes": 8,
+              "worst": ""
+            },
+            {
+              "weapon": "greataxe",
+              "passed": true,
+              "gap": 0.003042125,
+              "limit": 0.8767548,
+              "effort": 29.0698,
+              "strokes": 8,
+              "worst": "handNear angle=100.3445 limits=-50.53229,99.46771"
+            },
+            {
+              "weapon": "warhammer",
+              "passed": true,
+              "gap": 0.002791831,
+              "limit": 0.9031067,
+              "effort": 29.72964,
+              "strokes": 8,
+              "worst": "handNear angle=100.3708 limits=-50.53229,99.46771"
+            },
+            {
+              "weapon": "unarmed",
+              "passed": true,
+              "gap": 0.001667263,
+              "limit": 0,
+              "effort": 3.19453,
+              "strokes": 36,
+              "worst": ""
+            }
+          ]
+        },
+        {
+          "check": "forward reverse and stop respond through physical feet",
+          "passed": true,
+          "facts": {
+            "advance": 1.067169,
+            "retreat": 0.5707523,
+            "stop_speed": 0.01685697
+          }
+        },
+        {
+          "check": "manual sword spear and fists produce real contact damage",
+          "passed": true,
+          "facts": [
+            {
+              "weapon": "sword",
+              "hits": 15,
+              "manual_hits": 12,
+              "clashes": 31,
+              "block_contacts": 1038,
+              "pressure_effort": 10.04076,
+              "passed": true,
+              "gap": 0.02915258,
+              "limit": 3.366547,
+              "elapsed": 18.01014,
+              "player_worst": "handFar angle=-41.87624 limits=-38.5097,111.4903",
+              "enemy_worst": "handFar angle=41.51362 limits=-111.4903,38.5097",
+              "rest_contacts_rejected": 785,
+              "handle_contacts_rejected": 63,
+              "occluded_contacts": 1
+            },
+            {
+              "weapon": "spear",
+              "hits": 7,
+              "manual_hits": 4,
+              "clashes": 40,
+              "block_contacts": 1296,
+              "pressure_effort": 9.099578,
+              "passed": true,
+              "gap": 0.02466557,
+              "limit": 1.568459,
+              "elapsed": 18.02893,
+              "player_worst": "head angle=-33.56846 limits=-32,32",
+              "enemy_worst": "footFar angle=32.68385 limits=-32,32",
+              "rest_contacts_rejected": 3289,
+              "handle_contacts_rejected": 93,
+              "occluded_contacts": 1
+            },
+            {
+              "weapon": "unarmed",
+              "hits": 29,
+              "manual_hits": 27,
+              "clashes": 59,
+              "block_contacts": 1806,
+              "pressure_effort": 13.73797,
+              "passed": true,
+              "gap": 0.05726571,
+              "limit": 3.767654,
+              "elapsed": 14.40482,
+              "player_worst": "handFar angle=-42.27735 limits=-38.5097,111.4903",
+              "enemy_worst": "handNear angle=41.4732 limits=-111.4903,38.5097",
+              "rest_contacts_rejected": 5803,
+              "handle_contacts_rejected": 99,
+              "occluded_contacts": 1
+            }
+          ]
+        },
+        {
+          "check": "no runtime errors",
+          "passed": true,
+          "facts": []
+        }
+      ],
+      "weapons": [
+        {
+          "weapon": "dagger",
+          "passed": true,
+          "gap": 0.001563063,
+          "limit": 0,
+          "effort": 5.941202,
+          "strokes": 28,
+          "worst": ""
+        },
+        {
+          "weapon": "sabre",
+          "passed": true,
+          "gap": 0.002199654,
+          "limit": 2.132477,
+          "effort": 10.62015,
+          "strokes": 25,
+          "worst": "forearmNear angle=64.4209 limits=-87.71158,62.28842"
+        },
+        {
+          "weapon": "sword",
+          "passed": true,
+          "gap": 0.002458311,
+          "limit": 2.198547,
+          "effort": 14.81214,
+          "strokes": 24,
+          "worst": "forearmNear angle=64.48697 limits=-87.71158,62.28842"
+        },
+        {
+          "weapon": "axe",
+          "passed": true,
+          "gap": 0.002645016,
+          "limit": 2.324783,
+          "effort": 19.68149,
+          "strokes": 23,
+          "worst": "forearmNear angle=64.6132 limits=-87.71158,62.28842"
+        },
+        {
+          "weapon": "mace",
+          "passed": true,
+          "gap": 0.002636658,
+          "limit": 2.24527,
+          "effort": 21.5799,
+          "strokes": 21,
+          "worst": "forearmNear angle=64.53369 limits=-87.71158,62.28842"
+        },
+        {
+          "weapon": "spear",
+          "passed": true,
+          "gap": 0.002443198,
+          "limit": 0,
+          "effort": 22.92927,
+          "strokes": 6,
+          "worst": ""
+        },
+        {
+          "weapon": "greatsword",
+          "passed": true,
+          "gap": 0.002205137,
+          "limit": 0,
+          "effort": 23.20651,
+          "strokes": 8,
+          "worst": ""
+        },
+        {
+          "weapon": "greataxe",
+          "passed": true,
+          "gap": 0.003042125,
+          "limit": 0.8767548,
+          "effort": 29.0698,
+          "strokes": 8,
+          "worst": "handNear angle=100.3445 limits=-50.53229,99.46771"
+        },
+        {
+          "weapon": "warhammer",
+          "passed": true,
+          "gap": 0.002791831,
+          "limit": 0.9031067,
+          "effort": 29.72964,
+          "strokes": 8,
+          "worst": "handNear angle=100.3708 limits=-50.53229,99.46771"
+        },
+        {
+          "weapon": "unarmed",
+          "passed": true,
+          "gap": 0.001667263,
+          "limit": 0,
+          "effort": 3.19453,
+          "strokes": 36,
+          "worst": ""
+        }
+      ],
+      "duels": [
+        {
+          "weapon": "sword",
+          "hits": 15,
+          "manual_hits": 12,
+          "clashes": 31,
+          "block_contacts": 1038,
+          "pressure_effort": 10.04076,
+          "passed": true,
+          "gap": 0.02915258,
+          "limit": 3.366547,
+          "elapsed": 18.01014,
+          "player_worst": "handFar angle=-41.87624 limits=-38.5097,111.4903",
+          "enemy_worst": "handFar angle=41.51362 limits=-111.4903,38.5097",
+          "rest_contacts_rejected": 785,
+          "handle_contacts_rejected": 63,
+          "occluded_contacts": 1
+        },
+        {
+          "weapon": "spear",
+          "hits": 7,
+          "manual_hits": 4,
+          "clashes": 40,
+          "block_contacts": 1296,
+          "pressure_effort": 9.099578,
+          "passed": true,
+          "gap": 0.02466557,
+          "limit": 1.568459,
+          "elapsed": 18.02893,
+          "player_worst": "head angle=-33.56846 limits=-32,32",
+          "enemy_worst": "footFar angle=32.68385 limits=-32,32",
+          "rest_contacts_rejected": 3289,
+          "handle_contacts_rejected": 93,
+          "occluded_contacts": 1
+        },
+        {
+          "weapon": "unarmed",
+          "hits": 29,
+          "manual_hits": 27,
+          "clashes": 59,
+          "block_contacts": 1806,
+          "pressure_effort": 13.73797,
+          "passed": true,
+          "gap": 0.05726571,
+          "limit": 3.767654,
+          "elapsed": 14.40482,
+          "player_worst": "handFar angle=-42.27735 limits=-38.5097,111.4903",
+          "enemy_worst": "handNear angle=41.4732 limits=-111.4903,38.5097",
+          "rest_contacts_rejected": 5803,
+          "handle_contacts_rejected": 99,
+          "occluded_contacts": 1
+        }
+      ]
+    },
+    "feel-90-final15": {
+      "checks": [
+        {
+          "check": "companion ready",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "/api/ai/config",
+          "passed": true,
+          "facts": {
+            "expected": true,
+            "error": ""
+          }
+        },
+        {
+          "check": "/api/hero",
+          "passed": true,
+          "facts": {
+            "expected": true,
+            "error": ""
+          }
+        },
+        {
+          "check": "pointer origin fixed and radial value clamped",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "two mouse buttons own independent hand states",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "releasing primary preserves offhand",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "touch ownership survives crossing screen center",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "double tap hold moves without steering a hand",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "releasing double tap stops movement",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "cancelled touch cannot prime a movement double tap",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "physical hand responds within 250 ms",
+          "passed": true,
+          "facts": {
+            "seconds": 0.04166663,
+            "distance": 0.095045,
+            "render_fps": 90
+          }
+        },
+        {
+          "check": "continuous physical swings stay armed beyond old attack window",
+          "passed": true,
+          "facts": {
+            "late_active_steps": 215,
+            "manual_strokes": 28
+          }
+        },
+        {
+          "check": "both hands spend effort independently",
+          "passed": true,
+          "facts": {
+            "primary": 16.91822,
+            "offhand": 2.346062
+          }
+        },
+        {
+          "check": "one contact per hand per sweep",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "a fresh swing id cannot saw through sustained body contact",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "released hands do not create attacks or drain motion stamina",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "body translation is not counted as a swing",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "exhaustion prevents new motion attacks and reduces force",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "interrupted held input cannot revive an old attack",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "fresh direction after hit can start a new swing",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "nine weapon classes and fists retain stable physical constraints",
+          "passed": true,
+          "facts": [
+            {
+              "weapon": "dagger",
+              "passed": true,
+              "gap": 0.001662505,
+              "limit": 0.3131447,
+              "effort": 6.006386,
+              "strokes": 28,
+              "worst": "forearmNear angle=62.60157 limits=-87.71158,62.28842"
+            },
+            {
+              "weapon": "sabre",
+              "passed": true,
+              "gap": 0.002255006,
+              "limit": 2.117371,
+              "effort": 10.33908,
+              "strokes": 26,
+              "worst": "forearmNear angle=64.40579 limits=-87.71158,62.28842"
+            },
+            {
+              "weapon": "sword",
+              "passed": true,
+              "gap": 0.002492065,
+              "limit": 2.213188,
+              "effort": 14.50486,
+              "strokes": 25,
+              "worst": "forearmNear angle=64.50161 limits=-87.71158,62.28842"
+            },
+            {
+              "weapon": "axe",
+              "passed": true,
+              "gap": 0.002615104,
+              "limit": 2.330521,
+              "effort": 19.42304,
+              "strokes": 22,
+              "worst": "forearmNear angle=64.61894 limits=-87.71158,62.28842"
+            },
+            {
+              "weapon": "mace",
+              "passed": true,
+              "gap": 0.002632514,
+              "limit": 2.244789,
+              "effort": 21.28798,
+              "strokes": 21,
+              "worst": "forearmNear angle=64.53321 limits=-87.71158,62.28842"
+            },
+            {
+              "weapon": "spear",
+              "passed": true,
+              "gap": 0.009249171,
+              "limit": 0,
+              "effort": 22.94701,
+              "strokes": 6,
+              "worst": ""
+            },
+            {
+              "weapon": "greatsword",
+              "passed": true,
+              "gap": 0.00224531,
+              "limit": 0,
+              "effort": 23.31701,
+              "strokes": 7,
+              "worst": ""
+            },
+            {
+              "weapon": "greataxe",
+              "passed": true,
+              "gap": 0.002944218,
+              "limit": 0.9967728,
+              "effort": 29.87536,
+              "strokes": 8,
+              "worst": "handNear angle=100.4645 limits=-50.53229,99.46771"
+            },
+            {
+              "weapon": "warhammer",
+              "passed": true,
+              "gap": 0.002996832,
+              "limit": 0.8580551,
+              "effort": 30.88143,
+              "strokes": 7,
+              "worst": "handNear angle=100.3258 limits=-50.53229,99.46771"
+            },
+            {
+              "weapon": "unarmed",
+              "passed": true,
+              "gap": 0.001626126,
+              "limit": 0,
+              "effort": 3.179099,
+              "strokes": 37,
+              "worst": ""
+            }
+          ]
+        },
+        {
+          "check": "forward reverse and stop respond through physical feet",
+          "passed": true,
+          "facts": {
+            "advance": 1.028178,
+            "retreat": 0.5514269,
+            "stop_speed": 0.01537253
+          }
+        },
+        {
+          "check": "manual sword spear and fists produce real contact damage",
+          "passed": true,
+          "facts": [
+            {
+              "weapon": "sword",
+              "hits": 11,
+              "manual_hits": 11,
+              "clashes": 18,
+              "block_contacts": 1008,
+              "pressure_effort": 6.265326,
+              "passed": true,
+              "gap": 0.03304536,
+              "limit": 3.8536,
+              "elapsed": 6.801453,
+              "player_worst": "handFar angle=-42.3633 limits=-38.5097,111.4903",
+              "enemy_worst": "forearmFar angle=90.19308 limits=-62.28842,87.71158",
+              "rest_contacts_rejected": 338,
+              "handle_contacts_rejected": 28,
+              "occluded_contacts": 2
+            },
+            {
+              "weapon": "spear",
+              "hits": 5,
+              "manual_hits": 4,
+              "clashes": 28,
+              "block_contacts": 1296,
+              "pressure_effort": 8.908367,
+              "passed": true,
+              "gap": 0.01623044,
+              "limit": 1.420021,
+              "elapsed": 18.00735,
+              "player_worst": "handNear angle=71.88779 limits=-79.53223,70.46777",
+              "enemy_worst": "footFar angle=32.56323 limits=-32,32",
+              "rest_contacts_rejected": 2885,
+              "handle_contacts_rejected": 81,
+              "occluded_contacts": 2
+            },
+            {
+              "weapon": "unarmed",
+              "hits": 33,
+              "manual_hits": 28,
+              "clashes": 48,
+              "block_contacts": 1744,
+              "pressure_effort": 13.52562,
+              "passed": true,
+              "gap": 0.04812041,
+              "limit": 6.449459,
+              "elapsed": 15.6795,
+              "player_worst": "handFar angle=-44.95916 limits=-38.5097,111.4903",
+              "enemy_worst": "forearmFar angle=-66.81404 limits=-62.28842,87.71158",
+              "rest_contacts_rejected": 5447,
+              "handle_contacts_rejected": 93,
+              "occluded_contacts": 2
+            }
+          ]
+        },
+        {
+          "check": "no runtime errors",
+          "passed": true,
+          "facts": []
+        }
+      ],
+      "weapons": [
+        {
+          "weapon": "dagger",
+          "passed": true,
+          "gap": 0.001662505,
+          "limit": 0.3131447,
+          "effort": 6.006386,
+          "strokes": 28,
+          "worst": "forearmNear angle=62.60157 limits=-87.71158,62.28842"
+        },
+        {
+          "weapon": "sabre",
+          "passed": true,
+          "gap": 0.002255006,
+          "limit": 2.117371,
+          "effort": 10.33908,
+          "strokes": 26,
+          "worst": "forearmNear angle=64.40579 limits=-87.71158,62.28842"
+        },
+        {
+          "weapon": "sword",
+          "passed": true,
+          "gap": 0.002492065,
+          "limit": 2.213188,
+          "effort": 14.50486,
+          "strokes": 25,
+          "worst": "forearmNear angle=64.50161 limits=-87.71158,62.28842"
+        },
+        {
+          "weapon": "axe",
+          "passed": true,
+          "gap": 0.002615104,
+          "limit": 2.330521,
+          "effort": 19.42304,
+          "strokes": 22,
+          "worst": "forearmNear angle=64.61894 limits=-87.71158,62.28842"
+        },
+        {
+          "weapon": "mace",
+          "passed": true,
+          "gap": 0.002632514,
+          "limit": 2.244789,
+          "effort": 21.28798,
+          "strokes": 21,
+          "worst": "forearmNear angle=64.53321 limits=-87.71158,62.28842"
+        },
+        {
+          "weapon": "spear",
+          "passed": true,
+          "gap": 0.009249171,
+          "limit": 0,
+          "effort": 22.94701,
+          "strokes": 6,
+          "worst": ""
+        },
+        {
+          "weapon": "greatsword",
+          "passed": true,
+          "gap": 0.00224531,
+          "limit": 0,
+          "effort": 23.31701,
+          "strokes": 7,
+          "worst": ""
+        },
+        {
+          "weapon": "greataxe",
+          "passed": true,
+          "gap": 0.002944218,
+          "limit": 0.9967728,
+          "effort": 29.87536,
+          "strokes": 8,
+          "worst": "handNear angle=100.4645 limits=-50.53229,99.46771"
+        },
+        {
+          "weapon": "warhammer",
+          "passed": true,
+          "gap": 0.002996832,
+          "limit": 0.8580551,
+          "effort": 30.88143,
+          "strokes": 7,
+          "worst": "handNear angle=100.3258 limits=-50.53229,99.46771"
+        },
+        {
+          "weapon": "unarmed",
+          "passed": true,
+          "gap": 0.001626126,
+          "limit": 0,
+          "effort": 3.179099,
+          "strokes": 37,
+          "worst": ""
+        }
+      ],
+      "duels": [
+        {
+          "weapon": "sword",
+          "hits": 11,
+          "manual_hits": 11,
+          "clashes": 18,
+          "block_contacts": 1008,
+          "pressure_effort": 6.265326,
+          "passed": true,
+          "gap": 0.03304536,
+          "limit": 3.8536,
+          "elapsed": 6.801453,
+          "player_worst": "handFar angle=-42.3633 limits=-38.5097,111.4903",
+          "enemy_worst": "forearmFar angle=90.19308 limits=-62.28842,87.71158",
+          "rest_contacts_rejected": 338,
+          "handle_contacts_rejected": 28,
+          "occluded_contacts": 2
+        },
+        {
+          "weapon": "spear",
+          "hits": 5,
+          "manual_hits": 4,
+          "clashes": 28,
+          "block_contacts": 1296,
+          "pressure_effort": 8.908367,
+          "passed": true,
+          "gap": 0.01623044,
+          "limit": 1.420021,
+          "elapsed": 18.00735,
+          "player_worst": "handNear angle=71.88779 limits=-79.53223,70.46777",
+          "enemy_worst": "footFar angle=32.56323 limits=-32,32",
+          "rest_contacts_rejected": 2885,
+          "handle_contacts_rejected": 81,
+          "occluded_contacts": 2
+        },
+        {
+          "weapon": "unarmed",
+          "hits": 33,
+          "manual_hits": 28,
+          "clashes": 48,
+          "block_contacts": 1744,
+          "pressure_effort": 13.52562,
+          "passed": true,
+          "gap": 0.04812041,
+          "limit": 6.449459,
+          "elapsed": 15.6795,
+          "player_worst": "handFar angle=-44.95916 limits=-38.5097,111.4903",
+          "enemy_worst": "forearmFar angle=-66.81404 limits=-62.28842,87.71158",
+          "rest_contacts_rejected": 5447,
+          "handle_contacts_rejected": 93,
+          "occluded_contacts": 2
+        }
+      ]
+    }
+  },
+  "binding": [
+    {
+      "skin": "f-elder",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0002333587,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-elder",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0009019433,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-elder",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002478364,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-elder",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001379219,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-escort",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0009621104,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-escort",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0008870192,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-escort",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002440357,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-escort",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001047533,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-healer",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.001019842,
+      "max_limit": 0.282692,
+      "worst": "forearmNear angle=62.57108 limits=-87.71161,62.28839 | "
+    },
+    {
+      "skin": "f-healer",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0009695534,
+      "max_limit": 0.5497475,
+      "worst": "forearmNear angle=62.83814 limits=-87.71161,62.28839 | "
+    },
+    {
+      "skin": "f-healer",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002238912,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-healer",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001379001,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-merchant",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.001121133,
+      "max_limit": 1.13699,
+      "worst": "forearmNear angle=63.4254 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "f-merchant",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001135337,
+      "max_limit": 1.093323,
+      "worst": "forearmNear angle=63.38174 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "f-merchant",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.00261454,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-merchant",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001171986,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-middle-farmer",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0009642683,
+      "max_limit": 0.03718567,
+      "worst": "forearmNear angle=62.32559 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "f-middle-farmer",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0009220621,
+      "max_limit": 0.04399109,
+      "worst": "forearmNear angle=62.3324 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "f-middle-farmer",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002283933,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-middle-farmer",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001149835,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-scholar",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.001024287,
+      "max_limit": 1.30109,
+      "worst": "forearmNear angle=63.58952 limits=-87.71157,62.28843 | "
+    },
+    {
+      "skin": "f-scholar",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001026484,
+      "max_limit": 1.266087,
+      "worst": "forearmNear angle=63.55452 limits=-87.71157,62.28843 | "
+    },
+    {
+      "skin": "f-scholar",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.00278766,
+      "max_limit": 0.7217484,
+      "worst": "handNear angle=86.20481 limits=-64.51694,85.48306 | "
+    },
+    {
+      "skin": "f-scholar",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001213179,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-swordswoman",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0008597153,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-swordswoman",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0009226438,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-swordswoman",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002620292,
+      "max_limit": 1.124268,
+      "worst": "handNear angle=-52.71616 limits=-51.5919,98.4081 | "
+    },
+    {
+      "skin": "f-swordswoman",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0009888088,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-youth-farmer",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0008731354,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-youth-farmer",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.000858282,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-youth-farmer",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002215776,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-youth-farmer",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001014831,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-artisan",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0009597381,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-artisan",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0009281948,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-artisan",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002022854,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-artisan",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001107615,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-beggar",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.001130019,
+      "max_limit": 1.577763,
+      "worst": "forearmNear angle=63.86616 limits=-87.7116,62.2884 | "
+    },
+    {
+      "skin": "m-beggar",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001139622,
+      "max_limit": 1.534016,
+      "worst": "forearmNear angle=63.82241 limits=-87.7116,62.2884 | "
+    },
+    {
+      "skin": "m-beggar",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.00268635,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-beggar",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001343507,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-daoist",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.00273697,
+      "max_limit": 1.268375,
+      "worst": "forearmNear angle=63.55679 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "m-daoist",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002610002,
+      "max_limit": 1.386929,
+      "worst": "forearmNear angle=63.67534 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "m-daoist",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002524488,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-daoist",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001391624,
+      "max_limit": 0.06750488,
+      "worst": "forearmNear angle=62.35592 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "m-elder",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0008874588,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-elder",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0008753891,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-elder",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002342571,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-elder",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001299729,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-escort",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.001041015,
+      "max_limit": 0.7583084,
+      "worst": "forearmNear angle=63.04675 limits=-87.71156,62.28844 | "
+    },
+    {
+      "skin": "m-escort",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0009663501,
+      "max_limit": 0.7125587,
+      "worst": "forearmNear angle=63.001 limits=-87.71156,62.28844 | "
+    },
+    {
+      "skin": "m-escort",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002374911,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-escort",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.00114201,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-fisher",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0009874308,
+      "max_limit": 0.2478752,
+      "worst": "forearmNear angle=62.5363 limits=-87.71158,62.28842 | "
+    },
+    {
+      "skin": "m-fisher",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0009213591,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-fisher",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002273945,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-fisher",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001100287,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-hunter",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.001006973,
+      "max_limit": 0.9827156,
+      "worst": "forearmNear angle=63.27114 limits=-87.71157,62.28843 | "
+    },
+    {
+      "skin": "m-hunter",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001022225,
+      "max_limit": 0.8644485,
+      "worst": "forearmNear angle=63.15288 limits=-87.71157,62.28843 | "
+    },
+    {
+      "skin": "m-hunter",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002392252,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-hunter",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001209512,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-merchant",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.001244658,
+      "max_limit": 1.469887,
+      "worst": "forearmNear angle=63.75829 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "m-merchant",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001219271,
+      "max_limit": 1.449097,
+      "worst": "forearmNear angle=63.7375 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "m-merchant",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002534033,
+      "max_limit": 0.642128,
+      "worst": "handNear angle=-75.60142 limits=-74.95929,75.04071 | "
+    },
+    {
+      "skin": "m-merchant",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001340576,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-middle-farmer",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.00110718,
+      "max_limit": 1.27636,
+      "worst": "forearmNear angle=63.56478 limits=-87.71158,62.28842 | "
+    },
+    {
+      "skin": "m-middle-farmer",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001055159,
+      "max_limit": 1.229717,
+      "worst": "forearmNear angle=63.51814 limits=-87.71158,62.28842 | "
+    },
+    {
+      "skin": "m-middle-farmer",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002406426,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-middle-farmer",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001209226,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-monk",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0008228251,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-monk",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0007679965,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-monk",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001736697,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-monk",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.000846594,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-official",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.001199871,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-official",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001239807,
+      "max_limit": 0.1401443,
+      "worst": "forearmNear angle=62.42854 limits=-87.7116,62.2884 | "
+    },
+    {
+      "skin": "m-official",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.00225577,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-official",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001106638,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-performer",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.002752846,
+      "max_limit": 1.333729,
+      "worst": "forearmNear angle=63.62214 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "m-performer",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002651999,
+      "max_limit": 1.345947,
+      "worst": "forearmNear angle=63.63435 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "m-performer",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002546454,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-performer",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001321586,
+      "max_limit": 0.1980515,
+      "worst": "forearmNear angle=62.48646 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "m-scholar",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0009348664,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-scholar",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0009043373,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-scholar",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002282811,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-scholar",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001076734,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-youth-farmer",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0009297844,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-youth-farmer",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.000738312,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-youth-farmer",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001865998,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-youth-farmer",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0006528423,
+      "max_limit": 0,
+      "worst": " | "
+    }
+  ],
+  "manual_ui": {
+    "passed": null,
+    "status": "interrupted_by_user_escape",
+    "build": "unity/Build/BloodyFeel/江湖未央.exe",
+    "process_id": 4568,
+    "save_dir": "output/bloody-feel-20261027/save-manual-final2",
+    "completed": [
+      "Started the final build in a normal window with an isolated review save."
+    ],
+    "not_completed": [
+      "Final manual mouse drag and keyboard interaction checks."
+    ],
+    "note": "Computer Use reported that the user stopped it with the physical Escape key. No further Computer Use actions were issued."
+  },
+  "save_protection": {
+    "checked_files": 40,
+    "changed_files": []
+  },
+  "source_sha256": {
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelArmory.cs": "9c6e4918476e1c4294e2e7b76629ccb187d4d031755d6ae1fddaa5b594d2a8c0",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelCampaign.cs": "92c6272e82877e0068d427f4e918d3e0381e81d0ccde6279a3ea304916ddbe2b",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelClash.cs": "a76b74ed6ac41b42f2197fb05ba39cd5ebcf6c76a3d8e5e5afba468d8de6617c",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelCombat.cs": "f65f302cdef8e502160c7d1b80ab3853a6ebd917a6390210063d6e01965d0eac",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelControls.cs": "0835c6003e5461ee20e99c7a6d5c8c3e8ccc692961bf7aa22a223b4f8eb40928",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelControlsView.cs": "7d468e3eda65f43237593d0bf94b0ab3fceced56d119663c6b2b88a92dc9cf27",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelFighter.cs": "ba939d5ca0dd7b077a29203863d82a23faf3ac8cc12ff0a38b2d3823d79333be",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelFigure.cs": "0c3a0f20c71a3d6d1136a8d0a9aaaf755ab744d3cc56c52a0f03bab3598bab81",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelGuard.cs": "da7929159f9eb05304ff6c7bbf44ae78415f393f784bf75338fed9cdb445d9cc",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelHandDrive.cs": "24edaaf2149dd47e01fc29a75a5163954e03490646297ba36eb367a7e8c8ed44",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelMotion.cs": "0303ab4ed28ddfd19befbcc8971a392b399128515065fee4de67d3017d2a0681",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelPhysics.cs": "41301142d3ea15b61692344e1e3c164464ae7833157219048d2323dd7f65b4a3",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelTwoHand.cs": "9b7d8c512eab1004ce3d2f5ed29e914f4f212849c6b55417ef74d242728927b5",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelWeapons.cs": "fbd7088bca593c8de4e1ddd141c418402ed99ad10f7bb3456f0478589539fb67",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/PhysicsDuel.cs": "d8e451ffb901bd3a9da61ee70ac8d2b7a5d28458c372f4614b1ac25b663b7655",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsFeelSmoke.cs": "591827a088a610411bf0670b9ec6e72a56fb484b243162db4ae49218fe347876",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsBattleSmoke.cs": "e3d314ed58489a30615c45e8fd44a06f61cf7d2e645e5f619c8f7369c3cb3daa"
+  },
+  "limitations": [
+    "No original-game device/input latency comparison; not certified one-to-one.",
+    "Final interactive mouse/keyboard review was stopped by the user Escape key before input checks.",
+    "Pointer capture tests inject through the runtime interface; no physical multi-touch device test.",
+    "Rig acceptance isolates opposing fighters and replenishes stamina; real duels do neither.",
+    "30/90 fps response is software-injected hand movement onset, not end-to-end device/display latency.",
+    "The separate old physics demo remains unchanged."
+  ]
+}
