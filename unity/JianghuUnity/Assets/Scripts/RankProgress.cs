@@ -3,9 +3,8 @@ using UnityEngine;
 
 namespace Jianghu {
 public partial class JianghuApp {
-    bool showHeroRank;
-    public void ShowRankProgressForSmoke(){personScreen=true;dialogueOpen=false;personTab=10;personScroll=Vector2.zero;}
-    public void ShowHeroRankForSmoke(){personScreen=false;dialogueOpen=false;Page=3;battleView=false;showHeroRank=true;Client.Fetch("/api/martial",j=>Martial=j);}
+    public void ShowRankProgressForSmoke(){ViewPerson(SelectedPerson,PersonTab.Character);}
+    public void ShowHeroRankForSmoke(){ViewPerson(-1,PersonTab.Character);}
     void DrawRankProgress(J view,bool hero){
         H("品阶进退");
         if(!view["enabled"].B){T("尚未启用品阶考核。",small);return;}

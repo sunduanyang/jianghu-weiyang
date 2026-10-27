@@ -26,7 +26,7 @@ public sealed class PaperRenderSmoke : MonoBehaviour {
         Check("no runtime exceptions",errors.Count==0,new J(errors.Select(x=>new J(x)).ToList()));Finish();
     }
     IEnumerator Case(string name,string skin,string clip,bool left,bool gallery,bool capture){
-        app.PaperSmokeStage();app.Go(5);
+        app.PaperSmokeStage();app.OpenSystem(SystemTab.Puppets);
         if(gallery)app.PaperSmokeGallery(clip,left);else app.PaperSmokePose(skin,clip,left,true,.55f);
         app.ResetPaperGuiProbe();
         if(capture)yield return new WaitForSecondsRealtime(.65f);
@@ -49,7 +49,7 @@ public sealed class PaperRenderSmoke : MonoBehaviour {
         }
         Screen.SetResolution(1680,960,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.4f);
         foreach(string id in new[]{"m-youth-farmer","f-youth-farmer","m-middle-farmer","f-middle-farmer","m-elder","f-elder","m-child","f-child","m-scholar","f-scholar","m-merchant","f-merchant","m-escort","f-escort","m-fisher","m-hunter","m-artisan","f-healer","m-performer","m-daoist","m-monk","m-official","m-beggar","f-swordswoman"}){
-            app.PaperSmokeStage();app.Go(5);app.PaperSmokeComparison(id,false,false);yield return new WaitForEndOfFrame();yield return new WaitForEndOfFrame();
+            app.PaperSmokeStage();app.OpenSystem(SystemTab.Puppets);app.PaperSmokeComparison(id,false,false);yield return new WaitForEndOfFrame();yield return new WaitForEndOfFrame();
             var image=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Path.Combine(output,"comparison-"+id+".png"),image.EncodeToPNG());Destroy(image);
             File.WriteAllText(Path.Combine(output,"comparison-"+id+".json"),app.PaperReferenceViewports().ToString());
         }
@@ -57,7 +57,7 @@ public sealed class PaperRenderSmoke : MonoBehaviour {
         yield return LiveCase("daoist-walking","m-daoist","walk",true);
         string hips=Path.Combine(output,"hip-phases");Directory.CreateDirectory(hips);
         foreach(string id in new[]{"m-youth-farmer","m-middle-farmer","m-child","m-escort","f-escort","m-fisher","m-hunter","m-artisan","m-beggar"})for(int i=0;i<8;i++){
-            app.Go(5);app.PaperSmokeWalkComparison(id,i/8f);app.ResetPaperGuiProbe();
+            app.OpenSystem(SystemTab.Puppets);app.PaperSmokeWalkComparison(id,i/8f);app.ResetPaperGuiProbe();
             yield return new WaitForEndOfFrame();yield return new WaitForEndOfFrame();
             Check("hip-phase-"+id+"-"+i,app.PaperGuiProbe(out J hipFacts),hipFacts);
             var hipImage=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Path.Combine(hips,id+"-"+i+".png"),hipImage.EncodeToPNG());Destroy(hipImage);
@@ -65,7 +65,7 @@ public sealed class PaperRenderSmoke : MonoBehaviour {
         }
         string frames=Path.Combine(output,"frames");Directory.CreateDirectory(frames);
         for(int i=0;i<24;i++){
-            app.Go(5);app.PaperSmokeWalkComparison("m-youth-farmer",i/24f);
+            app.OpenSystem(SystemTab.Puppets);app.PaperSmokeWalkComparison("m-youth-farmer",i/24f);
             yield return new WaitForEndOfFrame();yield return new WaitForEndOfFrame();
             var frame=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Path.Combine(frames,i.ToString("D4")+".png"),frame.EncodeToPNG());Destroy(frame);
             if(i==0)File.WriteAllText(Path.Combine(output,"frame-viewports.json"),app.PaperReferenceViewports().ToString());
@@ -73,7 +73,7 @@ public sealed class PaperRenderSmoke : MonoBehaviour {
         yield return client.Refresh();Check("no simulation or model side effects",client.World["month"].I==month&&client.World["ai"]["calls"].N==calls,J.O("month",month,"new_model_calls",client.World["ai"]["calls"].N-calls));
     }
     IEnumerator LiveCase(string name,string skin,string clip,bool left){
-        app.PaperSmokeStage();app.Go(5);app.PaperSmokePose(skin,clip,left,true,.55f);app.PaperSmokePlay(true);app.ResetPaperGuiProbe();
+        app.PaperSmokeStage();app.OpenSystem(SystemTab.Puppets);app.PaperSmokePose(skin,clip,left,true,.55f);app.PaperSmokePlay(true);app.ResetPaperGuiProbe();
         yield return new WaitForSecondsRealtime(.8f);for(int i=0;i<4;i++)yield return new WaitForEndOfFrame();
         bool stable=app.PaperGuiProbe(out J facts);facts["skin"]=new J(skin);facts["clip"]=new J(clip);facts["left"]=new J(left);facts["playing"]=new J(true);Check(name,stable,facts);
         var image=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Path.Combine(output,name+".png"),image.EncodeToPNG());Destroy(image);

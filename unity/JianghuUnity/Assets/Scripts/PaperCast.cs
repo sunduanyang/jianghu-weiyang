@@ -127,7 +127,7 @@ public partial class JianghuApp {
                 Rect viewport=draw.PixelViewport;paperPixelOrigin=viewport.position;
                 GUI.BeginGroup(viewport);
                 try{
-                    bool theater=Page==3&&battleView&&!personScreen&&!dialogueOpen;
+                    bool theater=BattleVisible;
                     if(theater)RenderPaperFigure(new Rect(4,-2,viewport.width,viewport.height),draw.Skin,draw.Clip,draw.Phase,draw.Left,false,draw.Pose,new Color(.12f,.16f,.13f,.14f));
                     RenderPaperFigure(new Rect(0,0,viewport.width,viewport.height),draw.Skin,draw.Clip,draw.Phase,draw.Left,draw.Bones,draw.Pose,theater?new Color(1,.99f,.96f,.97f):(Color?)null);
                 }
@@ -247,13 +247,13 @@ public partial class JianghuApp {
         Rect image=new Rect(root.x-(left?texture.width-origin.x:origin.x)*unit*fit,root.y-origin.y*unit*fit,texture.width*unit*fit,texture.height*unit*fit);
         Color color=GUI.color;GUI.color=new Color(1,1,1,opacity);GUI.DrawTextureWithTexCoords(image,texture,new Rect(left?1:0,0,left?-1:1,1));GUI.color=color;
     }
-    public void PaperSmokePerson(){personScreen=true;dialogueOpen=false;}
-    public void PaperSmokeDialogue(){personScreen=false;dialogueOpen=true;dialogueText="同一身皮影，从此处相逢，也到演武场见招。";}
-    public void PaperSmokeStage(){personScreen=false;dialogueOpen=false;}
+    public void PaperSmokePerson(){ViewPerson(SelectedPerson,PersonTab.Overview);}
+    public void PaperSmokeDialogue(){TalkTo(SelectedPerson);dialogueText="同一身皮影，从此处相逢，也到演武场见招。";}
+    public void PaperSmokeStage(){GoStage(CurrentStage,false);}
     public void PaperSmokeGallery(string clip,bool left,bool bones=false){paperPreviewGallery=true;paperPreviewClip=clip;paperPreviewLeft=left;paperPreviewBones=bones;}
     public void PaperSmokeStudio(){paperPreviewGallery=false;paperPreviewClip="walk";paperPreviewLeft=false;paperPreviewBones=true;}
     public void PaperSmokePose(string skin,string clip,bool left,bool bones,float phase){paperPreviewCompare=false;paperPreviewOverlay=false;paperPreviewGallery=false;paperPreviewSkin=skin;paperPreviewClip=clip;paperPreviewLeft=left;paperPreviewBones=bones;paperPreviewAnimate=false;paperPreviewPhase=phase;}
-    public void OpenPaperDemo(){Page=5;paperPreviewSkin=GameClient.Arg("-paperSkin","m-youth-farmer");if(!PaperCast["skins"][paperPreviewSkin].Has)paperPreviewSkin="m-youth-farmer";paperPreviewBones=false;paperPreviewClip="walk";}
+    public void OpenPaperDemo(){OpenSystem(SystemTab.Puppets);paperPreviewSkin=GameClient.Arg("-paperSkin","m-youth-farmer");if(!PaperCast["skins"][paperPreviewSkin].Has)paperPreviewSkin="m-youth-farmer";paperPreviewBones=false;paperPreviewClip="walk";}
     public void PaperSmokePlay(bool playing){paperPreviewAnimate=playing;}
     public void PaperSmokeComparison(string skin,bool overlay=false,bool bones=true){PaperSmokePose(skin,"bind",false,bones,0);paperPreviewCompare=!overlay;paperPreviewOverlay=overlay;}
     public void PaperSmokeWalkComparison(string skin,float phase){PaperSmokePose(skin,"walk",false,false,phase);paperPreviewCompare=true;}

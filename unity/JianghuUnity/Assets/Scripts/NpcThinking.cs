@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Jianghu {
 public partial class JianghuApp {
-    public void ShowThinkingForSmoke(){personScreen=true;personTab=8;personScroll=Vector2.zero;}
+    public void ShowThinkingForSmoke(){ViewPerson(SelectedPerson,PersonTab.Overview);}
     void DrawThinking(){
         var view=Person["planning_view"];var current=view["current"];var decision=view["decision"];
         H("行事与打算");T(view["role"]["label"].S,sub);T("长远心愿："+Person["goal"]["title"].S);

@@ -58,7 +58,7 @@ public class LocalLifeSmoke : MonoBehaviour {
         yield return app.CityLoadForSmoke(placeId);
         Check("selected cells show real weekly positions",app.ValidateCityPeopleForSmoke(out J after),after);
         var site=app.City["settlements"].A.First(t=>t["kind"].S=="village"||t["kind"].S=="town");
-        app.CityPeopleSelectForSmoke(site["row"].I,site["col"].I);app.Page=1;
+        app.CityPeopleSelectForSmoke(site["row"].I,site["col"].I);app.GoStage(Stage.City,false);
         yield return Capture("settlement-homes-and-presence");
         int person=site["home_residents"].A.First()["id"].I;app.SelectPerson(person);
         float deadline=Time.realtimeSinceStartup+15;while((!app.Person.Has||app.Person["id"].I!=person)&&Time.realtimeSinceStartup<deadline)yield return null;

@@ -9,7 +9,7 @@ public partial class JianghuApp {
     bool conversationPolling;
 
     void UpdateSocialDialogue(){
-        if(!dialogueOpen||!Person.Has||Client.Busy||conversationPolling||Time.unscaledTime<nextConversationPoll)return;
+        if(!DialogueVisible||!Person.Has||Client.Busy||conversationPolling||Time.unscaledTime<nextConversationPoll)return;
         nextConversationPoll=Time.unscaledTime+1.2f;
         int id=SelectedPerson;conversationPolling=true;
         StartCoroutine(PollSocialPerson(id));
@@ -78,13 +78,13 @@ public partial class JianghuApp {
             string stage=W["ai"]["current_stage"].S;
             T(string.IsNullOrEmpty(stage)?"正在等候回应……":stage,small);
         }
-        if(!W["ai"]["config"]["enabled"].B)T("请在「本地模型」启用AI后交谈。",small);
+        if(!W["ai"]["config"]["enabled"].B){T("交谈需要本地模型：请在「系统 · 本地模型」启用 AI。",small);if(Btn("打开本地模型设置"))Later(()=>OpenSystem(SystemTab.Model));}
         else if(s["reason"].S!="")T(s["reason"].S,small);
         bool enabled=Paused&&W["ai"]["config"]["enabled"].B&&!s["pending"].B&&s["reason"].S=="";
         T("完成一次交谈耗1行动力；本月初次面谈占用对方1周。",small);
         GUILayout.BeginHorizontal();
         if(Btn("闲叙近况",enabled))SocialAction("talk");
-        if(Btn("切磋",Paused&&!s["pending"].B)){dialogueOpen=false;personScreen=false;Intervene("challenge");}
+        if(Btn("切磋",Paused&&!s["pending"].B))Intervene("challenge");
         GUILayout.EndHorizontal();
         var options=s["options"].A.Where(o=>o["id"].S!="talk").ToList();
         for(int i=0;i<options.Count;i+=3){
@@ -100,10 +100,10 @@ public partial class JianghuApp {
             T((favor["owed_by"].S=="player"?"曾受对方援助 ":"曾援助对方 ")+Num(favor["amount"])+"银 · 尚未回报",small);
         foreach(var intro in s["introductions"].A.Where(i=>i["by"].I==SelectedPerson).Take(2)){
             if(Btn("引荐凭据："+intro["name"].S+" · 所知去向 "+Place(intro["place"].I)["name"].S)){
-                TalkToPerson(intro["target"].I);conversationScroll=Vector2.zero;
+                int target=intro["target"].I;Later(()=>{TalkTo(target);conversationScroll=Vector2.zero;});
             }
         }
-        if(Btn("告辞"))dialogueOpen=false;
+        if(Btn("告辞"))Later(Back);
         GUILayout.EndArea();
     }
 }

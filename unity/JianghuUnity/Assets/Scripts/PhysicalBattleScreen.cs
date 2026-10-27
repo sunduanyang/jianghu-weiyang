@@ -8,13 +8,12 @@ public partial class JianghuApp {
     public PhysicsDuel PhysicsArena {get;private set;}
     public bool PhysicsBattleVisible=>PhysicsArena!=null&&!PhysicsArena.CampaignHidden;
     bool physicsSending;
-    int battleReturnPage=1;
     float nextPhysicsSave,physicsFinishedAt=-1;
     string physicsSession="",queuedPhysicsCommand="";
 
     void UpdateBattle(){
         var b=Martial["battle"];
-        bool visible=Page==3&&battleView&&!personScreen&&!dialogueOpen;
+        bool visible=BattleVisible;
         if(!visible){
             if(PhysicsArena!=null){if(b["status"].S=="finished")ClosePhysicsArena();else if(!PhysicsArena.CampaignHidden)PhysicsArena.DeactivateCampaign();}
             return;
@@ -78,22 +77,24 @@ public partial class JianghuApp {
     void ReturnFromPhysics(){
         bool active=Martial["battle"]["status"].S=="active";
         if(active)PhysicsArena.DeactivateCampaign();else ClosePhysicsArena();
-        battleView=false;Go(battleReturnPage);if(SelectedPerson>=0)SelectPerson(SelectedPerson);
+        CloseBattle();
     }
     void ClosePhysicsArena(){
         if(PhysicsArena!=null){var old=PhysicsArena;PhysicsArena=null;var scene=old.gameObject.scene;old.DeactivateCampaign();SceneManager.UnloadSceneAsync(scene);}
         Time.timeScale=1;Client.PhysicsQuitFrame=null;physicsFinishedAt=-1;
     }
     void DrawBattleScreen(){
+        Tile(new Rect(0,0,1680,960),"bg");Tex(new Rect(0,0,1680,960),"vignette");
         Rect box=new Rect(355,225,970,485);Panel(box);
         var b=Martial["battle"];
         GUI.Label(new Rect(410,267,860,65),b["status"].S=="finished"?"切磋已收招":"江湖切磋",centerTitle);
-        string message=!b.Has?"在人物档案选择一位成年、体力充足的人，约定切磋。":b["status"].S=="finished"?"此次交手已归档，结果和装备损耗见世界年谱。":"正在展开物理战场…";
+        string message=!b.Has?"在人物列表点一位成年、体力充足的人，选择「切磋」。":b["status"].S=="finished"?"此次交手已归档，结果和装备损耗见世界年谱。":"正在展开物理战场…";
         GUI.Label(new Rect(430,365,820,100),message,text);
-        if(GUI.Button(new Rect(595,520,490,55),"返回功法与闭关",selected))battleView=false;
-        if(b["event_id"].Has&&GUI.Button(new Rect(595,595,490,45),"查看此战年谱",chip)){battleView=false;OpenEvent(b["event_id"].I);}
+        if(GUI.Button(new Rect(595,520,490,55),"返回",selected))Later(CloseBattle);
+        if(b["event_id"].Has&&GUI.Button(new Rect(595,595,490,45),"查看此战年谱",chip)){int id=b["event_id"].I;Later(()=>{CloseBattle();OpenEvent(id);});}
     }
-    public void ShowBattleForSmoke(){Page=3;battleView=true;personScreen=dialogueOpen=false;}
+    // Old smokes expect a left battle to land in the city, as it does when started from there.
+    public void ShowBattleForSmoke(){if(!ViewOpen)CurrentStage=Stage.City;OpenBattle();}
     public bool BattlePausedForSmoke=>PhysicsArena==null||PhysicsArena.paused;
     public void RunBattleForSmoke(bool run){if(PhysicsArena!=null)PhysicsArena.RunCampaign(run);}
     public IEnumerator SavePhysicsForSmoke(string command){while(physicsSending)yield return null;yield return SendPhysicsCommand(command);}

@@ -11,7 +11,7 @@ public sealed partial class PhysicsBattleSmoke {
         Check("fifth-grade player knows grades five through nine",m["curriculum"]["grade"].I==5&&m["arts"].A.Select(a=>a["grade"].I).OrderBy(x=>x).SequenceEqual(new[]{5,6,7,8,9}));
         bool bonuses=m["combat"]["attributes"].A.All(a=>System.Math.Abs(a["value"].N-System.Math.Min(100,a["base"].N+a["bonus"].N))<.001);
         Check("selected passive bonuses reach displayed abilities",bonuses&&m["combat"]["attributes"].A.Any(a=>a["bonus"].N>0));
-        app.Go(3);yield return Picture("01-martial-character");
+        app.ViewPerson(-1,PersonTab.Martial);yield return Picture("01-martial-character");
         yield return Call("/api/faction/0",null,j=>Check("sect page exposes all nine arts",j["martial_curriculum"]["arts"].A.Count==9));
         yield return Call("/api/npc/1",null,j=>Check("nonmember knows exactly one native-country art",j["martial_view"]["curriculum"]["system"].S=="civil"&&j["martial_view"]["arts"].A.Count==1));
         var scores=m["combat"]["ratings"];

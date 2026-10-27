@@ -12,7 +12,7 @@ public sealed partial class PhysicsBattleSmoke {
         yield return Call("/api/martial",null,j=>app.Martial=j);
         var m=app.Martial["player"]["martial"];
         Check("ten abilities receive new grade arts without legacy skill",m["combat"]["attributes"].A.Count==10&&m["arts"].A.Count>0&&!app.Martial["player"]["skill"].Has&&app.Martial["catalog"].A.Count==14);
-        app.Go(3);yield return Picture("01-character-attributes");
+        app.ViewPerson(-1,PersonTab.Martial);yield return Picture("01-character-attributes");
         var scene=SceneManager.CreateScene("Character ability acceptance",new CreateSceneParameters(LocalPhysicsMode.Physics2D));
         var root=new GameObject("Character ability acceptance");root.SetActive(false);SceneManager.MoveGameObjectToScene(root,scene);
         var arena=root.AddComponent<PhysicsDuel>();

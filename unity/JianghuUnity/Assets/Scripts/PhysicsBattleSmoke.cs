@@ -73,7 +73,7 @@ public sealed partial class PhysicsBattleSmoke:MonoBehaviour {
         Check("restart clears pointer input",arena.paused);
         yield return Picture("03-resumed");
         yield return app.SavePhysicsForSmoke("leave");yield return new WaitForSecondsRealtime(.8f);
-        Check("temporarily leaving keeps battle unresolved",client.World["battle_active"].B&&app.Page==1&&arena.CampaignHidden);
+        Check("temporarily leaving keeps battle unresolved",client.World["battle_active"].B&&app.CurrentStage==Stage.City&&!app.ViewOpen&&arena.CampaignHidden);
         Check("unresolved battle blocks city movement",app.CityMovementReasonForSmoke.Contains("切磋")&&!app.CityWalkForSmoke(client.World["hero"]["row"].I,client.World["hero"]["col"].I));
         app.ShowBattleForSmoke();yield return WaitArena();yield return null;
         Check("returning reuses same physical rig",app.PhysicsArena==arena&&!arena.CampaignHidden&&arena.paused);

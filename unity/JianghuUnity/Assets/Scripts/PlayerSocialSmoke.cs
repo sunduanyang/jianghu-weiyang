@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Jianghu {
 public partial class JianghuApp {
-    public void OpenSocialForSmoke(){dialogueOpen=true;personScreen=false;nextConversationPoll=0;}
+    public void OpenSocialForSmoke(){TalkTo(SelectedPerson);nextConversationPoll=0;}
 }
 public class PlayerSocialSmoke : MonoBehaviour {
     JianghuApp app;

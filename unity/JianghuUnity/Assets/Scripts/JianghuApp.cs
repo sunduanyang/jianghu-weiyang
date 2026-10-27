@@ -6,10 +6,9 @@ using UnityEngine;
 namespace Jianghu {
 public partial class JianghuApp : MonoBehaviour {
     public GameClient Client;
-    public int Page;
     public J Person=new J(), City=new J(), Inventory=new J(), Market=new J(), Martial=new J(), Institution=new J(), Events=new J(), EventDetail=new J(), Logs=new J();
     public int SelectedPerson=-1, SelectedPlace=45;
-    int seenRevision=-1, lastMonth=-1, personTab, personFetchVersion;
+    int seenRevision=-1, lastMonth=-1, personFetchVersion;
     string query="", talk="", relationQuery="", relationFilter="全部", rosterSort="乡籍", countryFilter="全部势力", factionFilter="全部门派", placeFilter="全部城镇", jobFilter="百业", gradeFilter="全部品级", circuitFilter="全部州路";
     bool includeDead, showFilters;
     Vector2 rosterScroll, personScroll, mainScroll, eventScroll;
@@ -21,7 +20,6 @@ public partial class JianghuApp : MonoBehaviour {
     public J W=>Client.World;
     public J Hero=>W["hero"];
     public bool Paused=>!W["autoplay"].B && W["job"]["remaining"].I==0 && !W["battle_active"].B;
-    public static readonly string[] Pages={"山海舆图","城中行旅","行囊货栈","功法演武","天下势力","皮影衣橱","世界年谱","本地模型","存档设置"};
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void Boot(){if(FindAnyObjectByType<JianghuApp>()!=null)return;var go=new GameObject("江湖未央 · Unity");DontDestroyOnLoad(go);go.AddComponent<JianghuApp>();}
     void Awake(){Client=GetComponent<GameClient>()??gameObject.AddComponent<GameClient>();valley=Resources.Load<Texture2D>("Art/river-valley");if(GameClient.Arg("-paperDemo")=="true")OpenPaperDemo();}
@@ -30,7 +28,9 @@ public partial class JianghuApp : MonoBehaviour {
         UpdateCityWarmup();
         UpdateBattle();
         UpdateSocialDialogue();
-        if(seenRevision!=Client.Revision){seenRevision=Client.Revision;if(W["month"].I!=lastMonth){lastMonth=W["month"].I;ReloadPage();if(SelectedPerson>=0)SelectPerson(SelectedPerson);} }
+        if(seenRevision!=Client.Revision){seenRevision=Client.Revision;if(W["month"].I!=lastMonth){lastMonth=W["month"].I;ReloadView();if(SelectedPerson>=0)SelectPerson(SelectedPerson);} }
+        // The open 人物卷 or conversation always shows the person whose record is loaded.
+        int focus=FocusPersonId;if(focus>=0&&SelectedPerson!=focus)SelectPerson(focus);
         UpdateCityMovement();
     }
     static Texture2D Solid(Color c){var t=new Texture2D(1,1);t.SetPixel(0,0,c);t.Apply();return t;}
@@ -41,56 +41,60 @@ public partial class JianghuApp : MonoBehaviour {
         float scale=Mathf.Min(Screen.width/1680f,Screen.height/960f);GUI.matrix=Matrix4x4.TRS(new Vector3((Screen.width-1680*scale)/2,(Screen.height-960*scale)/2,0),Quaternion.identity,new Vector3(scale,scale,1));
         Rect screen=new Rect(0,0,1680,960);
         if(!Client.Ready){Tile(screen,"bg");Tex(screen,"vignette");Rect wait=new Rect(400,300,880,300);Panel(wait);GUILayout.BeginArea(new Rect(440,330,800,250));H("山河正在展开");T(string.IsNullOrEmpty(Client.Error)?Client.Status:Client.Error);T("首次启动会将原世界副本放入 Unity 的独立存档目录。",small);if(!string.IsNullOrEmpty(Client.Error)&&GUILayout.Button("打开日志目录"))Application.OpenURL(Client.SaveDir);GUILayout.EndArea();return;}
-        if(dialogueOpen){DrawDialogue();FlushPaperFigures();return;}
-        if(personScreen){DrawPersonScreen();FlushPaperFigures();return;}
-        if(Page==3&&battleView){DrawBattleScreen();FlushPaperFigures();return;}
-        if(!IsStagePage(Page)){
-            Rect body=BookScreen((Page==2?"行囊":Page==3?"战斗":Pages[Page])+(Page==2||Page==3?" · "+CharacterName:""));
-            if(Page==2||Page==3)DrawCharacterRail();
-            Rect area=Page==5?new Rect(200,118,1280,760):new Rect(260,118,1160,760);
-            paperDrawOrigin=area.position;GUILayout.BeginArea(area);
-            switch(Page){case 2:DrawInventory();break;case 3:DrawMartial();break;case 4:DrawInstitutions();break;case 5:DrawPuppets();break;case 6:DrawEvents();break;case 7:DrawAI();break;case 8:DrawSettings();break;}
-            GUILayout.EndArea();paperDrawOrigin=Vector2.zero;FlushPaperFigures();return;
-        }
-        // 戏: full-screen map or city, with floating panels
-        basePage=Page;
-        if(Page==0)DrawWorld(screen);else DrawCityScreen(CityViewport);
-        Tex(Page==1?CityViewport:screen,"vignette");
-        if(Page==1)DrawCityHud();
-        DrawTopBar();if(Page==0)DrawLayerRow();
-        DrawRoster();
-        if(Page==0)DrawPlaceCard();else DrawNodeCard();
-        DrawDock();DrawHeroCreation();DrawAdvance();
-        FlushPaperFigures();
+        drawingGui=true;
+        try{
+            var e=Event.current;
+            if(e.type==EventType.KeyDown&&e.keyCode==KeyCode.Escape&&HandleEscape())e.Use();
+            var top=TopView;
+            if(top==null)DrawStage(screen);
+            else switch(top.Kind){
+                case ViewKind.Person:DrawPersonScroll();break;
+                case ViewKind.Jianghu:DrawJianghuScroll();break;
+                case ViewKind.System:DrawSystemScroll();break;
+                case ViewKind.Dialogue:DrawDialogue();break;
+                case ViewKind.Battle:DrawBattleScreen();break;
+            }
+            FlushPaperFigures();
+        }finally{RunDeferred();}
     }
-    public void Go(int page){Page=page;mainScroll=Vector2.zero;ReloadPage();}
-    public void ReloadPage(){if(!Client.Ready)return;switch(Page){case 1:LoadCity(SelectedPlace);break;case 2:LoadInventory();break;case 3:Client.Fetch("/api/martial",j=>Martial=j);break;case 6:Client.Fetch("/api/events",j=>Events=j);break;case 7:Client.Fetch("/api/ai/logs",j=>Logs=j);break;}}
+    // 底层场景：天下或城中铺满全屏，四周浮着顶栏、左侧人物列表、右侧地点卡与底栏。
+    void DrawStage(Rect screen){
+        bool city=CurrentStage==Stage.City;
+        if(city)DrawCityScreen(CityViewport);else DrawWorld(screen);
+        Tex(city?CityViewport:screen,"vignette");
+        if(city)DrawCityHud();
+        DrawTopBar();if(!city)DrawLayerRow();
+        DrawRoster();
+        if(city)DrawNodeCard();else DrawPlaceCard();
+        DrawDock();DrawHeroCreation();DrawAdvance();DrawInteraction();
+    }
     public void SelectPerson(int id){
         if(SelectedPerson!=id)Person=new J();
-        if(InspectingNpc&&(personScreen||dialogueOpen||Page==2||Page==3))bookPersonId=id;
         SelectedPerson=id;RememberPerson(id);int version=++personFetchVersion;
         Client.Fetch("/api/npc/"+id,j=>{if(SelectedPerson==id&&version==personFetchVersion)Person=j;});
         if(W["ai"]["config"]["enabled"].B)StartCoroutine(Client.Request("/api/ai/focus",J.O("npc_id",id),j=>{},false));
     }
     public void HeroAction(string action,params object[] extra){Client.Act("/api/hero",Client.HeroBody(action,extra),j=>{Client.StartCoroutine(AfterHero());});}
-    System.Collections.IEnumerator AfterHero(){yield return null;yield return Client.Refresh();if(Page==1)LoadCity(Hero["place"].I);else if(Page==4&&institutionKind=="门派"&&Institution.Has)OpenInstitution(false,Institution["id"].I);}
+    System.Collections.IEnumerator AfterHero(){yield return null;yield return Client.Refresh();if(!ViewOpen&&CurrentStage==Stage.City)LoadCity(Hero["place"].I);else if(TopIs(ViewKind.Jianghu)&&CurrentJianghuTab==JianghuTab.Powers&&institutionKind=="门派"&&Institution.Has)OpenInstitution(false,Institution["id"].I);}
     void Control(string action,int months=1){Client.Act("/api/control",J.O("action",action,"months",months,"fast",fastMode));}
-    string rosterMode="人物";
+    // 左侧人物列表：此地（天下为本城镇中人，城中为所选地格之人）/ 名册（全天下，可筛选）/ 城镇（按势力列出城镇）。
+    string rosterMode="此地";
+    static readonly string[] RosterModes={"此地","名册","城镇"};
     void DrawRoster(){
         Rect lp=LeftPanel;
         if(!rosterOpen){Panel(lp);if(GUI.Button(lp,"›",linkStyle))rosterOpen=true;return;}
         Panel(lp);
         GUILayout.BeginArea(new Rect(lp.x+10,lp.y+8,lp.width-20,lp.height-14));
-        GUILayout.BeginHorizontal();foreach(string m in new[]{"人物","此地","地区"})if(GUILayout.Button(m,rosterMode==m?selected:chip))rosterMode=m;GUILayout.FlexibleSpace();if(GUILayout.Button("‹",linkStyle,GUILayout.Width(24)))rosterOpen=false;GUILayout.EndHorizontal();
-        if(rosterMode=="地区"){
+        GUILayout.BeginHorizontal();foreach(string m in RosterModes)if(GUILayout.Button(m,rosterMode==m?selected:chip))rosterMode=m;GUILayout.FlexibleSpace();if(GUILayout.Button("‹",linkStyle,GUILayout.Width(24)))rosterOpen=false;GUILayout.EndHorizontal();
+        if(rosterMode=="城镇"){
             rosterScroll=GUILayout.BeginScrollView(rosterScroll);
             foreach(var c in W["countries"].A){var towns=W["locations"].A.Where(x=>x["country"].I==c["id"].I).ToList();if(towns.Count==0)continue;
                 GUILayout.BeginHorizontal();Rect sw=GUILayoutUtility.GetRect(10,22,GUILayout.Width(10));Fill(new Rect(sw.x,sw.y+6,8,10),Hex(c["color"].S));GUILayout.Label(c["name"].S+"  "+towns.Count+"城",sub);GUILayout.EndHorizontal();
-                foreach(var t in towns)if(GUILayout.Button(t["name"].S+"   "+t["population"].S+"人",t["id"].I==SelectedPlace?rowOnStyle:rowStyle)){SelectedPlace=t["id"].I;campaignOptions=new J();mapPan=new Vector2(640-(float)t["x"].N,380-(float)t["y"].N);if(mapZoom<1.4f)mapZoom=1.4f;if(Page==1)LoadCity(SelectedPlace);}
+                foreach(var t in towns)if(GUILayout.Button(t["name"].S+"   "+t["population"].S+"人",t["id"].I==SelectedPlace?rowOnStyle:rowStyle)){SelectedPlace=t["id"].I;campaignOptions=new J();mapPan=new Vector2(640-(float)t["x"].N,380-(float)t["y"].N);if(mapZoom<1.4f)mapZoom=1.4f;if(CurrentStage==Stage.City)LoadCity(SelectedPlace);}
             }
             GUILayout.EndScrollView();GUILayout.EndArea();return;
         }
-        if(Page==1&&rosterMode=="人物"){DrawCityCellRoster();GUILayout.EndArea();return;}
+        if(CurrentStage==Stage.City&&rosterMode=="此地"){DrawCityCellRoster();GUILayout.EndArea();return;}
         GUI.SetNextControlName("RosterSearch");query=GUILayout.TextField(query,field);
         IEnumerable<J> people;
         if(rosterMode=="此地"){people=W["npcs"].A.Where(n=>n["alive"].B&&n["place"].I==SelectedPlace&&(string.IsNullOrEmpty(query)||n["name"].S.Contains(query)||n["job"].S.Contains(query)));GUILayout.Label(Place(SelectedPlace)["name"].S+" · 此地中人",small);}
@@ -100,13 +104,13 @@ public partial class JianghuApp : MonoBehaviour {
             people=W["npcs"].A.Where(n=>(includeDead||n["alive"].B)&&(string.IsNullOrEmpty(query)||n["name"].S.Contains(query)||n["job"].S.Contains(query))&&(placeFilter=="全部城镇"||Place(n["place"].I)["name"].S==placeFilter)&&(countryFilter=="全部势力"||Country(Place(n["place"].I)["country"].I)["name"].S==countryFilter)&&(factionFilter=="全部门派"||(factionFilter=="非门派人士"&&n["identity"]["system"].S=="nation")||W["factions"].A.Any(f=>f["id"].I==n["faction"].I&&n["faction"].Has&&f["name"].S==factionFilter))&&(jobFilter=="百业"||n["job"].S==jobFilter)&&(gradeFilter=="全部品级"||n["identity"]["grade_label"].S==gradeFilter)&&(circuitFilter=="全部州路"||Place(n["place"].I)["region"].S==circuitFilter));
             if(rosterSort!="乡籍")people=people.OrderByDescending(n=>rosterSort=="财富"?n["wealth"].N:rosterSort=="战斗能力"?n["combat_rating"].N:rosterSort=="年岁"?n["age_months"].N:-n["identity"]["grade"].N);
         }
-        var rows=people.ToList();GUILayout.Label(rows.Count+"人  ·  点击与其交谈",small);
+        var rows=people.ToList();GUILayout.Label(rows.Count+"人  ·  点人物可交谈、赠礼或查看",small);
         rosterScroll=GUILayout.BeginScrollView(rosterScroll);
         int first=Mathf.Max(0,(int)(rosterScroll.y/60)-2),last=Mathf.Min(rows.Count,first+16);
         GUILayout.Space(first*60);
         for(int k=first;k<last;k++){var n=rows[k];
             Rect rr=GUILayoutUtility.GetRect(200,60,GUILayout.ExpandWidth(true));
-            if(GUI.Button(rr,GUIContent.none,n["id"].I==SelectedPerson?rowOnStyle:rowStyle))TalkToPerson(n["id"].I);
+            if(GUI.Button(rr,GUIContent.none,n["id"].I==SelectedPerson?rowOnStyle:rowStyle))OpenInteraction(n["id"].I);
             Portrait(new Rect(rr.x+6,rr.y+6,38,48),n["id"].I,n["sex"].S,n["age_months"].I,!n["alive"].B);
             GUI.Label(new Rect(rr.x+52,rr.y+6,rr.width-56,24),n["name"].S+"   "+(n["age_months"].I/12)+"岁",sub);
             GUI.Label(new Rect(rr.x+52,rr.y+31,rr.width-56,22),n["identity"]["grade_label"].S+" · "+n["identity"]["title"].S+" · "+Place(n["place"].I)["name"].S,small);
@@ -114,23 +118,43 @@ public partial class JianghuApp : MonoBehaviour {
         GUILayout.Space(Mathf.Max(0,rows.Count-last)*60);
         GUILayout.EndScrollView();GUILayout.EndArea();
     }
-    void DrawPersonTab(){
-        switch(personTab){
-            case 10:DrawRankProgress(Person["rank_progression"],false);break;
-            case 9:DrawHousehold(Person["economy_view"],false);break;
-            case 8:DrawThinking();break;
-            case 0:Metric("家资",Num(Person["wealth"])+"银");Bar("体力",Person["health"].N,100);Metric("声望",Num(Person["reputation"]));T(Person["goal"]["title"].S,sub);T(Person["last_action"]["label"].S);Details("本月四周行程",Person["monthly_actions"]);Details("生活近况",J.O("illness",Person["illness"],"wound",Person["wound"],"pregnancy",Person["pregnancy"],"plan",Person["plan"]));break;
-            case 1:Details("稳定心性",Person["traits"],true);Details("当前情绪",Person["mood"],true);Details("世界信念",Person["beliefs"],true);Details("心中所欲",Person["desires"],true);Metric("压力",Num(Person["pressure"]));Metric("孤独",Num(Person["loneliness"]));Details("长远心愿",Person["goal"],true);Details("心性变化",Person["personality_changes"]);Details("记忆与理解",Person["memories"]);break;
-            case 2:DrawPersonRank();Details("各业本领",Person["career_view"],true);Details("可学营生",Person["career_options"]);Details("旧业履历",Person["career"]);break;
-            case 3:DrawPersonEquipment(Person["possessions"]);T(Person["possessions"]["items"].A.Count+"件物品");if(Btn("展开此人的行囊"))OpenCharacterPage(2);if(Btn("从我的行囊赠物"))OpenOwnInventory(SelectedPerson);break;
-            case 4:DrawSocialPerson();relationQuery=GUILayout.TextField(relationQuery);relationFilter=Cycle(relationFilter,new[]{"全部","朋友","义亲","仇怨","故人"});foreach(var r in Person["relations_view"].A.Where(r=>r["name"].S.Contains(relationQuery)&&(relationFilter=="全部"||(relationFilter=="朋友"&&r["affinity"].N>20)||(relationFilter=="义亲"&&r["sworn"].B)||(relationFilter=="仇怨"&&r["affinity"].N<0)||(relationFilter=="故人"&&!r["alive"].B)))){if(GUILayout.Button(r["name"].S+" · "+r["label"].S+"\n情分 "+Num(r["affinity"])+" / 信任 "+Num(r["trust"]),rowStyle))SwitchBookPerson(r["other"].I);}Details("与过客交情",Person["player_relation"],true);break;
-            case 5:Details("门中身份",Person["membership_view"],true);if(Person["faction"].Has&&Btn("查看所属门派"))OpenInstitution(false,Person["faction"].I);Details("离合履历",Person["membership_history"]);break;
-            case 6:DrawCombatAttributes(Person["martial_view"]["combat"],Person["health"].N,Person["martial_view"]["stamina"].N,true);DrawKnownMartial(Person["martial_view"]);break;
-            case 7:DrawEventList(Person["history"]);if(Btn("更早年谱")&&Person["history"].A.Count>0)Client.Fetch("/api/events?npc="+SelectedPerson+"&before="+Person["history"].A.Last()["id"].S,j=>Person["history"]=new J(Person["history"].A.Concat(j.A).ToList()));break;
-        }
+
+    // ---------------------------------------------------------------- 点人：交互小菜单
+    // Clicking a person on the map, in the roster or on a place card opens this menu beside the list it came from.
+    int interactWith=-1;bool interactRight;
+    Rect InteractRect=>interactRight?new Rect(PlaceCard.x-322,PlaceCard.y,310,330):new Rect(LeftPanel.xMax+12,LeftPanel.y+40,310,330);
+    void OpenInteraction(int id,bool right=false){interactWith=id;interactRight=right;advanceOpen=false;if(SelectedPerson!=id)SelectPerson(id);}
+    void DrawInteraction(){
+        if(interactWith<0)return;
+        int id=interactWith;var n=Npc(id);
+        if(!n.Has){Later(()=>interactWith=-1);return;}
+        Rect r=InteractRect;var e=Event.current;
+        bool dismiss=e.type==EventType.MouseDown&&!r.Contains(e.mousePosition);
+        Panel(r);Fill(new Rect(r.x,r.y,3,r.height),brass);
+        Portrait(new Rect(r.x+16,r.y+16,64,80),id,n["sex"].S,n["age_months"].I,!n["alive"].B);
+        GUI.Label(new Rect(r.x+92,r.y+16,r.width-136,28),n["name"].S,sub);
+        GUI.Label(new Rect(r.x+92,r.y+44,r.width-104,22),n["age_months"].I/12+"岁 · "+n["identity"]["grade_label"].S+" · "+n["job"].S,small);
+        GUI.Label(new Rect(r.x+92,r.y+66,r.width-104,22),n["identity"]["title"].S+" · "+Place(n["place"].I)["name"].S,small);
+        if(GUI.Button(new Rect(r.xMax-40,r.y+10,30,30),"×",linkStyle))dismiss=true;
+        bool alive=n["alive"].B,loaded=Person.Has&&Person["id"].I==id;
+        Action act=null;
+        GUILayout.BeginArea(new Rect(r.x+16,r.y+108,r.width-32,r.height-120));
+        if(Btn("交谈",alive))act=()=>TalkTo(id);
+        GUILayout.BeginHorizontal();
+        if(Btn("接济 4 银",alive&&loaded))act=()=>TalkTo(id,"gift");
+        if(Btn("赠送物品",alive))act=()=>OpenOwnInventory(id);
+        GUILayout.EndHorizontal();
+        if(Btn("切磋",alive&&Paused))act=()=>Intervene("challenge");
+        if(Btn("查看人物卷"))act=()=>ViewPerson(id);
+        if(!alive)T("此人已故，只能查看生平。",small);
+        else if(!Paused)T("世界推演中，暂停后才能切磋。",small);
+        GUILayout.EndArea();
+        if(act!=null)Later(()=>{interactWith=-1;act();});
+        else if(dismiss)Later(()=>{if(interactWith==id)interactWith=-1;});
     }
-    void Intervene(string action){if(action=="challenge")battleReturnPage=Page;Client.Act("/api/intervene",J.O("action",action,"npc_id",SelectedPerson,"text",talk),j=>{if(action=="challenge"){Martial=j;Page=3;battleView=true;personScreen=false;dialogueOpen=false;}else{Client.Status=j["reply"].S;dialogueText=j["reply"].S;if(action=="talk")talk="";SelectPerson(SelectedPerson);}});}
-    public void OpenEvent(int id){personScreen=false;dialogueOpen=false;Page=6;Client.Fetch("/api/event/"+id,j=>EventDetail=j);}
+    void Intervene(string action){Client.Act("/api/intervene",J.O("action",action,"npc_id",SelectedPerson,"text",talk),j=>{if(action=="challenge"){Martial=j;OpenBattle();}else{Client.Status=j["reply"].S;dialogueText=j["reply"].S;if(action=="talk")talk="";SelectPerson(SelectedPerson);}});}
+    // 年谱条目一律在江湖卷·年谱中展开。
+    public void OpenEvent(int id){EventDetail=new J();OpenJianghu(JianghuTab.Chronicle);Client.Fetch("/api/event/"+id,j=>EventDetail=j);}
     void DrawEventList(J list){foreach(var e in list.A){if(GUILayout.Button(e["date"].S+"  "+e["summary"].S,rowStyle))OpenEvent(e["id"].I);}}
     public J Place(int id)=>W["places"].A.FirstOrDefault(p=>p["id"].I==id)??new J();
     public J Country(int id)=>W["countries"].A.FirstOrDefault(p=>p["id"].I==id)??new J();

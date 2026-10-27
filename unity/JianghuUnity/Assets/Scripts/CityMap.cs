@@ -66,7 +66,7 @@ public partial class JianghuApp {
     bool CityLocal=>Hero["created"].B&&City["place"].I==Hero["place"].I;
 
     string CityMovementBlockReason=>!Hero["created"].B?"请先创建主角":!CityLocal?"远方地图预览，请先返回主角所在城镇":W["battle_active"].B?"切磋尚未结束，收招后才能在城中行走":W["autoplay"].B||W["job"]["remaining"].I>0?"世界正在推演，请先暂停再行走":Hero["points"].I<=0?"本月行动力已用尽，请结束本月":"";
-    bool CityMovementAllowed=>Page==1&&City.Has&&CityMovementBlockReason.Length==0&&!personScreen&&!dialogueOpen&&!advanceOpen;
+    bool CityMovementAllowed=>CurrentStage==Stage.City&&!ViewOpen&&City.Has&&CityMovementBlockReason.Length==0&&!advanceOpen;
     void UpdateCityMovement(){
         if(!CityMovementAllowed||cityLoading){StopCityWalk();cityHeldDirection=Vector2Int.zero;cityNextStepAt=0;return;}
         if(cityWalkSmokeInput)return;
@@ -97,7 +97,7 @@ public partial class JianghuApp {
         SelectCityCell(target);
         BeginCityWalk(target,keyboard);return true;
     }
-    void ResumeCityBattle(){personScreen=dialogueOpen=false;Go(3);battleView=true;}
+    void ResumeCityBattle(){OpenBattle();}
     System.Collections.IEnumerator EndCityBattle(){
         if(cityBattleEnding||Client.Busy)yield break;
         cityBattleEnding=true;
@@ -107,7 +107,7 @@ public partial class JianghuApp {
             Martial=current;var battle=current["battle"];
             if(battle["status"].S=="active")yield return Client.Action("/api/battle",J.O("battle_id",battle["id"],"revision",battle["revision"],"action","surrender"),j=>Martial=j);
             else yield return Client.Refresh();
-            if(!W["battle_active"].B){Client.Status="已收招，可用 WASD 或双击地格行走";if(Page==1)LoadCity(Hero["place"].I);}
+            if(!W["battle_active"].B){Client.Status="已收招，可用 WASD 或双击地格行走";if(CurrentStage==Stage.City)LoadCity(Hero["place"].I);}
         }finally{cityBattleEnding=false;}
     }
     static string CityColumn(int col){string label="";for(int value=col+1;value>0;value=(value-1)/26)label=(char)('A'+(value-1)%26)+label;return label;}
@@ -441,11 +441,11 @@ public partial class JianghuApp {
             else if(Btn("以此为游览起点",path.Count>0&&!CityBlocked(t))){originRow=chosenRow;originCol=chosenCol;cityPathKey="";EnsureCityRoutes();}
             if(local&&!Paused)T("先暂停世界推演或收招，再安排行旅。",small);
             string kind=node["kind"].S;
-            if((CityHasService(node,"market")||CityHasService(node,"workshop"))&&Btn("打开过客货栈 ›")){inventoryMode="货栈";Go(2);}
-            if((CityHasService(node,"training")||CityHasService(node,"temple")||CityHasService(node,"faction"))&&Btn("功法与闭关 ›"))Go(3);
+            if((CityHasService(node,"market")||CityHasService(node,"workshop"))&&Btn("打开过客货栈 ›"))Later(()=>OpenMarket("货栈"));
+            if((CityHasService(node,"training")||CityHasService(node,"temple")||CityHasService(node,"faction"))&&Btn("武学与调养 ›"))Later(()=>ViewPerson(-1,PersonTab.Martial));
             if(CityHasService(node,"government")&&Btn("查看所属官府 ›"))OpenInstitution(true,City["country"].I);
             if(node["faction"].Has&&Btn("查看门派 · 入门与传艺 ›"))OpenInstitution(false,node["faction"].I);
-            if((CityHasService(node,"gate")||CityHasService(node,"dock"))&&Btn("返回大地图 ›"))Go(0);
+            if((CityHasService(node,"gate")||CityHasService(node,"dock"))&&Btn("返回大地图 ›"))Later(()=>GoStage(Stage.World));
             if(node.Has){
                 // The same anchored texture doubles as a legible facility portrait.
                 Rect art=GUILayoutUtility.GetRect(100,112,GUILayout.ExpandWidth(true));
@@ -453,9 +453,9 @@ public partial class JianghuApp {
                 var settlement=CitySettlementArt(node["settlement_asset"].S);if(settlement!=null)GUI.DrawTexture(art,settlement,ScaleMode.ScaleToFit);
                 if(node["home_residents"].Has){
                     T("常住居民",sub);
-                    foreach(var resident in node["home_residents"].A)if(GUILayout.Button(resident["name"].S+" · "+resident["job"].S+" · 常住",chip))TalkToPerson(resident["id"].I);
+                    foreach(var resident in node["home_residents"].A)if(GUILayout.Button(resident["name"].S+" · "+resident["job"].S+" · 常住",chip))OpenInteraction(resident["id"].I,true);
                 }
-                T("当前在场 · "+node["residents"].A.Count+"人",sub);foreach(var resident in node["residents"].A)if(GUILayout.Button(resident["name"].S+" · "+resident["job"].S,chip))TalkToPerson(resident["id"].I);
+                T("当前在场 · "+node["residents"].A.Count+"人",sub);foreach(var resident in node["residents"].A)if(GUILayout.Button(resident["name"].S+" · "+resident["job"].S,chip))OpenInteraction(resident["id"].I,true);
             }
         }else{T("单击查看，双击前往；WASD 移步。",sub);T("金线标示最低行动力路径；绿色边框显示本月可达范围。",small);}
         GUILayout.Space(10);T("普通聚落  /  "+CitySites.Count(n=>n["kind"].S!="sect")+"处",sub);

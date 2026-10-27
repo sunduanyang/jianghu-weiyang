@@ -71,7 +71,7 @@ public partial class JianghuApp {
             }
         }finally{
             cityStepAnimating=false;cityWalking=false;cityWalkKeyboard=false;Client.Busy=false;
-            if(string.IsNullOrEmpty(Client.Error)&&Page==1&&CityLocal)
+            if(string.IsNullOrEmpty(Client.Error)&&CurrentStage==Stage.City&&CityLocal)
                 Client.Status=arrived?"已抵达 "+CityCoordinate(new Vector2Int(Hero["row"].I,Hero["col"].I)):cityWalkCancelled?"已停止行走":"行走已中止";
             // Reconcile the rest of the world once, after walking. A newer hero
             // reply supersedes this snapshot if another walk starts meanwhile.

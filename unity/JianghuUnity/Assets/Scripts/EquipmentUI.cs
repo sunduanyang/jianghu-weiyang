@@ -25,7 +25,7 @@ public partial class JianghuApp {
         equipmentListScroll=equipmentDetailScroll=Vector2.zero;
     }
     public void OpenEquipmentForSmoke(string slot="weapon",string item=""){
-        Go(2);inventoryMode="装备";equipmentSlot=slot;equipmentSelected=item;
+        ViewPerson(-1,PersonTab.Bag);inventoryMode="装备";equipmentSlot=slot;equipmentSelected=item;
         equipmentListScroll=equipmentDetailScroll=Vector2.zero;
     }
     void DrawEquipment(){
@@ -68,7 +68,7 @@ public partial class JianghuApp {
         }
         if(candidates.Count==0)T("行囊中暂无此类装备，可前往货栈购置。",small);
         GUILayout.EndScrollView();
-        if(Btn("前往货栈")){inventoryMode="货栈";itemCategory=equipmentSlot=="weapon"?"武器":equipmentSlot=="shield"?"盾牌":"护甲";selectedItem="";itemQuery="";itemGrade=0;}
+        if(Btn("前往货栈")){string category=equipmentSlot=="weapon"?"武器":equipmentSlot=="shield"?"盾牌":"护甲";Later(()=>{OpenMarket("货栈");itemCategory=category;selectedItem="";itemQuery="";itemGrade=0;});}
         GUILayout.EndVertical();GUILayout.Space(10);
 
         GUILayout.BeginVertical(GUILayout.Width(468));

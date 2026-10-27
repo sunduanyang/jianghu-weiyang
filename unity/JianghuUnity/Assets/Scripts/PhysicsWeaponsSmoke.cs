@@ -9,7 +9,8 @@ using UnityEngine.SceneManagement;
 namespace Jianghu {
 public partial class JianghuApp {
     public void WeaponDetailsForSmoke(string mode,string item){
-        Go(2);inventoryMode=mode;selectedItem=item;itemCategory="武器";itemQuery="";itemGrade=0;
+        if(mode=="货栈")OpenMarket(mode);else{ViewPerson(-1,PersonTab.Bag);inventoryMode=mode;}
+        selectedItem=item;itemCategory="武器";itemQuery="";itemGrade=0;
     }
 }
 public sealed partial class PhysicsBattleSmoke {
