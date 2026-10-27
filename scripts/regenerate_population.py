@@ -16,6 +16,7 @@ sys.path.insert(0, str(ROOT))
 from jianghu import items, population, city_maps, settlements
 from jianghu.engine import World
 from jianghu.store import Store
+from jianghu import martial
 
 
 def retain_player(w, previous, source):
@@ -30,14 +31,17 @@ def retain_player(w, previous, source):
     h = old['protagonist']
     h.update(records=[], revision=h['revision'] + 1)
     w.player = old
+    martial.initialize(w.player, player=True)
     w.battle = None
     remap = {}
     for old_item in old_items:
+        if old_item['template'] in items.RETIRED_MANUALS:
+            continue
         item = items.create(w, 'player', old_item['template'], '重生世界时保留的主角原有物品')
         remap[str(old_item['id'])] = item['id']
         item.update(durability=old_item['durability'], created_month=old_item['created_month'],
                     previous_world=dict(source=str(source), item=old_item))
-    w.player['equipment'] = {slot: remap[str(key)] for slot, key in equipment.items()}
+    w.player['equipment'] = {slot: remap[str(key)] for slot, key in equipment.items() if str(key) in remap}
     h['place'] = settlements.canonical(w, h['place'])
     city = city_maps.world_layout(w, h['place'])
     if not (0 <= h['row'] < city['size'] and 0 <= h['col'] < city['size']

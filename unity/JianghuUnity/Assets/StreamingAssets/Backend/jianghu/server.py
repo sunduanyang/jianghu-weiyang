@@ -10,7 +10,7 @@ from urllib.parse import parse_qs, urlparse
 from .ai import AIManager, DEFAULT_CONFIG, continuous_config
 from .engine import World
 from .store import Store
-from . import items, territory, city_maps, government, protagonist, economics, rank_progression, llm_policy, npc_attention
+from . import items, equipment, territory, city_maps, government, protagonist, economics, rank_progression, llm_policy, npc_attention, player_social
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -29,6 +29,7 @@ class Game:
         self.ai = AIManager(config)
         self.world = World(seed, population, Store(path), compact=True, population_profile=True, market_economy=True,rank_assessments=True)
         self.ai.restore_stats(self.world.store)
+        if player_social.recover(self.world):self.world.checkpoint()
         self.job = {'remaining': 0, 'total': 0, 'completed': 0, 'fast': True, 'label': '已暂停', 'error': ''}
         self.next_step = 0
         self.autoplay = False
@@ -201,6 +202,8 @@ def handler_for(game):
                             data = [json.loads(r[0]) for r in rows]
                         elif path == '/api/inventory':
                             data = items.view(game.world, 'player')
+                        elif path == '/api/equipment':
+                            data = equipment.view(game.world, 'player')
                         elif path == '/api/market':
                             data = items.market_view(game.world)
                         elif path == '/api/economy':
@@ -235,17 +238,34 @@ def handler_for(game):
                             raise ValueError('请先暂停世界推演，再安排行程')
                         data = protagonist.perform(game.world, body,game.defer_hero_turn if game.ai.config['enabled'] else None)
                     elif self.path == '/api/intervene':
+                        if body.get('action')=='talk' or body.get('text',''):
+                            raise ValueError('自由交谈已关闭，请在人物页选择请求或说服选项')
                         if body['action'] == 'challenge' and (game.autoplay or game.job['remaining']):
                             raise ValueError('请先暂停江湖，再进行切磋')
                         data = game.world.intervene(int(body['npc_id']), body['action'], body.get('text', ''))
                         game.ai.schedule(game.world, int(body['npc_id']))
-                    elif self.path == '/api/items':
+                    elif self.path == '/api/social':
+                        if game.autoplay or game.job['remaining']:
+                            raise ValueError('请先暂停江湖，再当面商谈')
+                        mode=body.get('mode','request')
+                        fields={'npc_id','revision','mode'}|({'action','text'} if mode=='request' else {'request_id','option_id'} if mode=='persuade' else {'request_id'} if mode=='options' else set())
+                        if set(body)-fields:raise ValueError('交涉只接受既定请求和选项编号，不能提交自定义台词或指令')
+                        data = game.ai.interact(game.world,int(body['npc_id']),body.get('action','talk'),
+                                                body.get('text',''),body.get('revision'),mode,
+                                                body.get('request_id'),body.get('option_id'))
+                    elif self.path in ('/api/items', '/api/equipment'):
+                        if self.path == '/api/equipment' and (
+                                set(body) - {'operation', 'item_id'}
+                                or body.get('operation') not in ('equip', 'unequip', 'repair')):
+                            raise ValueError('装备操作只接受装备、卸下或修补及物品编号')
                         if game.world.battle and game.world.battle['status'] == 'active':
                             raise ValueError('请先结束切磋，再整理或使用物品')
                         data = items.perform(game.world, 'player', body['operation'], body.get('item_id'),
                                              body.get('target'), body.get('recipe'))
                         if body['operation']=='gift':game.ai.schedule(game.world,int(body['target']))
                         game.world.checkpoint()
+                        if self.path == '/api/equipment':
+                            data = {**equipment.view(game.world, 'player'), 'last_event': data['id']}
                     elif self.path == '/api/economy':
                         if game.autoplay or game.job['remaining']:
                             raise ValueError('请先暂停世界推演，再安排行程')
@@ -256,7 +276,7 @@ def handler_for(game):
                         data = rank_progression.player_action(game.world,body)
                     elif self.path == '/api/martial':
                         if game.autoplay or game.job['remaining']:
-                            raise ValueError('请先暂停江湖，再闭关练武')
+                            raise ValueError('请先暂停江湖，再调养')
                         data = game.world.martial_action(body.get('action'), body.get('art'))
                     elif self.path == '/api/campaign':
                         if game.autoplay or game.job['remaining'] or (game.world.battle and game.world.battle['status'] == 'active'):
@@ -283,7 +303,7 @@ def handler_for(game):
                     elif self.path == '/api/new':
                         if game.world.battle and game.world.battle['status'] == 'active':
                             raise ValueError('请先结束当前切磋')
-                        if game.ai.pending:
+                        if game.ai.pending or game.ai.dialogue_pending:
                             raise ValueError('请等待当前推理完成后开新江湖')
                         population = int(body.get('population', 1800))
                         years = int(body.get('prehistory', 0))

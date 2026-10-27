@@ -1,3 +1,4 @@
+from . import combat_attributes
 """Recorded assessments, social mobility and accountable appointments.
 
 Queries never perform assessments. Existing standings are registered as present
@@ -25,7 +26,7 @@ def person(w, who):
     if who != 'player':
         return w.npcs[int(who)]
     h = body(w, who)
-    return dict(h, id=-1, name=w.player['name'], skill=w.player['skill'], wealth=w.player['wealth'],
+    return dict(h, id=-1, name=w.player['name'], combat_attributes=w.player['combat_attributes'], wealth=w.player['wealth'],
                 reputation=w.player['reputation'], health=w.player['health'], alive=True,
                 last_event=h['records'][-1] if h['records'] else None,
                 office=None, job=h.get('job') or '游民', career=h.get('career', {'profession':h.get('job'),'experience':{}}))
@@ -156,7 +157,7 @@ def sect_conditions(w,who):
     tenure=max(0,w.month-(n.get('faction_since') if n.get('faction_since') is not None else s['registered']))
     min_tenure=12 if target<=3 else 6 if target<=5 else 0
     requirements=[dict(label='有效贡献',current=max(0.,n['contribution']-s['penalty']),required=contribution),
-                  dict(label='武学',current=n['skill'],required=skill),
+                  dict(label='战斗能力',current=combat_attributes.rating(n),required=skill),
                   dict(label='声望',current=n['reputation'],required=required_reputation),
                   dict(label='近半年履职月数',current=len(months(p,'service',w.month,6)),required=required_service),
                   dict(label='入门月数',current=tenure,required=min_tenure),
@@ -192,7 +193,7 @@ def review_sect(w,who):
         if neglect:s['reason']='主持近半年履职不足，持续失职将重新推举'
         return
     contribution,skill=sect_ranks.REQUIREMENTS[current]
-    inadequate=max(0.,n['contribution']-s['penalty'])<contribution*.8 or n['skill']<skill*.85
+    inadequate=max(0.,n['contribution']-s['penalty'])<contribution*.8 or combat_attributes.rating(n)<skill*.85
     neglect=current<=4 and w.month-s['registered']>=6 and len(months(p,'service',w.month,6))<2
     failing=(inadequate or neglect) and w.month>=s['cooldown_until']
     s['deficient']=s['deficient']+1 if failing else 0
@@ -314,7 +315,7 @@ def review_civil(w,who):
 def leader_eligible(w,n):
     if not active(w):return True
     p=n.get('rank_progress',{});s=p.get('sect',{})
-    return (n['age_months']>=252 and n['skill']>=45 and n['contribution']-s.get('penalty',0)>=35
+    return (n['age_months']>=252 and combat_attributes.rating(n)>=45 and n['contribution']-s.get('penalty',0)>=35
             and n['reputation']>=20 and w.month>=s.get('censure_until',-1)
             and s.get('leader_deficient',0)<3 and sect_ranks.standing(w.factions[n['faction']],n)['grade']<=3)
 
@@ -344,11 +345,11 @@ def courts(w):
                     if rank['grade']!=2:continue
                 else:
                     if not 3<=rank['grade']<=5 or len(months(p,'public',w.month,24))<6:continue
-                    if slot=='general' and n['skill']<45:continue
+                    if slot=='general' and combat_attributes.rating(n)<45:continue
                     if slot=='minister' and careers.experience(n)<30:continue
                 eligible.append(n)
             if not eligible:continue
-            chosen=max(eligible,key=lambda n:(n['reputation']+n['skill']*.2,-n['id']))
+            chosen=max(eligible,key=lambda n:(n['reputation']+combat_attributes.rating(n)*.2,-n['id']))
             for other,i in list(court['holders'].items()):
                 if i==chosen['id']:court['holders'].pop(other)
             previous=deepcopy(chosen.get('social_status'))

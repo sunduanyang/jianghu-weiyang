@@ -1,0 +1,18 @@
+{
+  "wood_sword": {"profile": "sword", "mass": 0.45, "handling": 1.08, "cost": 7, "damage": 0.80, "pressure": 0.80},
+  "iron_practice_sword": {"profile": "sword", "mass": 0.78, "handling": 0.94, "cost": 10, "damage": 0.92, "pressure": 1.04},
+  "iron_sword": {"profile": "sword", "mass": 0.70, "handling": 1.00, "cost": 9, "damage": 1.00, "pressure": 1.00},
+  "steel_blade": {"profile": "sabre", "mass": 0.65, "handling": 1.04, "cost": 8, "damage": 1.05, "pressure": 1.06},
+  "autumn_sword": {"profile": "sword", "mass": 0.68, "handling": 1.04, "cost": 8.8, "damage": 1.12, "pressure": 1.02},
+  "frost_blade": {"profile": "sabre", "mass": 0.62, "handling": 1.06, "cost": 7.8, "damage": 1.13, "pressure": 1.08},
+  "cloud_sword": {"profile": "sword", "mass": 0.60, "handling": 1.12, "cost": 7.5, "damage": 1.22, "pressure": 1.00},
+  "ancient_blade": {"profile": "sabre", "mass": 0.68, "handling": 1.02, "cost": 9, "damage": 1.30, "pressure": 1.15},
+  "tianheng_sword": {"profile": "sword", "mass": 0.66, "handling": 1.14, "cost": 7.5, "damage": 1.40, "pressure": 1.08},
+  "iron_dagger": {"profile": "dagger", "mass": 0.28, "handling": 1.18, "cost": 5, "damage": 0.72, "pressure": 0.75},
+  "hand_axe": {"profile": "axe", "mass": 1.05, "handling": 0.82, "cost": 12, "damage": 1.20, "pressure": 1.30},
+  "spiked_mace": {"profile": "mace", "mass": 1.30, "handling": 0.72, "cost": 14, "damage": 1.15, "pressure": 1.45},
+  "long_spear": {"profile": "spear", "mass": 1.00, "handling": 0.86, "cost": 11, "damage": 1.02, "pressure": 0.95},
+  "great_sword": {"profile": "greatsword", "mass": 1.45, "handling": 0.78, "cost": 13, "damage": 1.18, "pressure": 1.20},
+  "great_axe": {"profile": "greataxe", "mass": 2.15, "handling": 0.62, "cost": 17, "damage": 1.40, "pressure": 1.55},
+  "war_hammer": {"profile": "warhammer", "mass": 2.35, "handling": 0.58, "cost": 18, "damage": 1.42, "pressure": 1.65}
+}

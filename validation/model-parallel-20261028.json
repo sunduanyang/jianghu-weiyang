@@ -1,0 +1,247 @@
+{
+  "date": "2026-10-28",
+  "model_id": "qwen3.5:4b",
+  "model_sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4",
+  "llama_release": "b11933",
+  "backend": "cuda",
+  "gpu": "RTX 4060 Laptop 8GB",
+  "unique_contexts": 6,
+  "rounds": 6,
+  "accepted_proposals": 36,
+  "measured_http_requests": 60,
+  "warmup_requests_excluded": 12,
+  "per_slot_context": 8192,
+  "context_sha256": "472abb745a31993bb7ec5d63a64f1e1aed8a16c495089e49e422a092eff47311",
+  "paired_reference": [
+    {
+      "parallel": 1,
+      "arms": [
+        "01-single",
+        "06-quiet-single"
+      ],
+      "accepted": 12,
+      "jobs": 12,
+      "mean_batch_seconds": 126.0908883000011,
+      "valid_decisions_per_minute": 2.855083383531028,
+      "mean_service_seconds": 21.013010366666396,
+      "mean_queue_to_finish_seconds": 69.37710487499984,
+      "completion_tokens": 5812
+    },
+    {
+      "parallel": 2,
+      "arms": [
+        "02-dual",
+        "05-quiet-dual"
+      ],
+      "accepted": 12,
+      "jobs": 12,
+      "mean_batch_seconds": 94.50640879999992,
+      "valid_decisions_per_minute": 3.8092654727982884,
+      "mean_service_seconds": 30.258032316665776,
+      "mean_queue_to_finish_seconds": 58.564847575001,
+      "completion_tokens": 6344
+    }
+  ],
+  "paired_reference_ratios": {
+    "batch_time_reduction_percent": 25.048978499424933,
+    "throughput_increase_percent": 33.42046312101661,
+    "per_job_service_time_increase_percent": 43.99665630330174
+  },
+  "comparison_pairs": [
+    [
+      "01-single",
+      "02-dual"
+    ],
+    [
+      "06-quiet-single",
+      "05-quiet-dual"
+    ]
+  ],
+  "pair_selection_note": "Round 04 coincided with two other Unity clients starting and slower decoding with identical token counts. Round 03 remains supplementary. An additional reverse-order pair 05/06 was collected; other Unity clients also appeared during this pair, so it is observational rather than an idle-system control.",
+  "background_app_census": {
+    "samples": 31,
+    "samples_with_other_game_or_editor": 28
+  },
+  "peak_whole_gpu_mib": 6652.0,
+  "formal_parallel_setting_still_one": true,
+  "active_build_at_end": "BloodyFeel",
+  "formal_game_code_not_modified_by_experiment": true,
+  "production_saves_not_opened_for_writing": true,
+  "no_oom_or_request_failures": true,
+  "limitations": [
+    "Other applications were not closed or controlled; GPU load changed, so no fixed speedup is guaranteed.",
+    "Six NPC contexts were repeated, not 36 independent NPCs. Validation means engine-accepted proposals, not a long-term decision-quality rating.",
+    "Generated output lengths varied between runs; both settings used identical inputs, seed, sampling and token budgets.",
+    "Model loading, warmup, validation and SQLite writes are outside timed inference.",
+    "The worker pool bypasses the production single-worker AIManager. Game FPS and live scheduling behavior were not measured.",
+    "GPU memory samples describe whole-device usage, including other applications."
+  ],
+  "round_summaries": [
+    {
+      "arm": "01-single",
+      "parallel": 1,
+      "jobs": 6,
+      "accepted": 6,
+      "elapsed_seconds": 121.78956610000023,
+      "valid_decisions_per_minute": 2.955918241012596,
+      "mean_service_seconds": 20.296000399999077,
+      "mean_queue_to_finish_seconds": 65.69309869999658,
+      "completion_tokens": 2906,
+      "prompt_tokens": 47595,
+      "observed_max_processing_slots": 1,
+      "peak_total_gpu_mib": 6020.0,
+      "baseline_gpu": {
+        "memory_mib": 2875.0,
+        "utilization_percent": 43.0,
+        "temperature_c": 47.0,
+        "power_w": 10.57
+      }
+    },
+    {
+      "arm": "02-dual",
+      "parallel": 2,
+      "jobs": 6,
+      "accepted": 6,
+      "elapsed_seconds": 91.47394769999664,
+      "valid_decisions_per_minute": 3.9355467764513374,
+      "mean_service_seconds": 29.082451600000542,
+      "mean_queue_to_finish_seconds": 56.110516633332736,
+      "completion_tokens": 3280,
+      "prompt_tokens": 47540,
+      "observed_max_processing_slots": 2,
+      "peak_total_gpu_mib": 6652.0,
+      "baseline_gpu": {
+        "memory_mib": 2854.0,
+        "utilization_percent": 18.0,
+        "temperature_c": 55.0,
+        "power_w": 10.52
+      }
+    },
+    {
+      "arm": "03-dual",
+      "parallel": 2,
+      "jobs": 6,
+      "accepted": 6,
+      "elapsed_seconds": 82.461418400002,
+      "valid_decisions_per_minute": 4.365677998087786,
+      "mean_service_seconds": 27.21422456666672,
+      "mean_queue_to_finish_seconds": 53.73408253333643,
+      "completion_tokens": 2909,
+      "prompt_tokens": 47455,
+      "observed_max_processing_slots": 2,
+      "peak_total_gpu_mib": 6280.0,
+      "baseline_gpu": {
+        "memory_mib": 2856.0,
+        "utilization_percent": 36.0,
+        "temperature_c": 58.0,
+        "power_w": 12.05
+      }
+    },
+    {
+      "arm": "04-single",
+      "parallel": 1,
+      "jobs": 6,
+      "accepted": 6,
+      "elapsed_seconds": 159.79857230000198,
+      "valid_decisions_per_minute": 2.252836147522925,
+      "mean_service_seconds": 26.63093781666612,
+      "mean_queue_to_finish_seconds": 85.65464923333032,
+      "completion_tokens": 2906,
+      "prompt_tokens": 47595,
+      "observed_max_processing_slots": 1,
+      "peak_total_gpu_mib": 6691.0,
+      "baseline_gpu": {
+        "memory_mib": 2841.0,
+        "utilization_percent": 31.0,
+        "temperature_c": 58.0,
+        "power_w": 10.47
+      }
+    },
+    {
+      "arm": "05-quiet-dual",
+      "parallel": 2,
+      "jobs": 6,
+      "accepted": 6,
+      "elapsed_seconds": 97.53886990000319,
+      "valid_decisions_per_minute": 3.69083628269501,
+      "mean_service_seconds": 31.43361303333101,
+      "mean_queue_to_finish_seconds": 61.01917851666925,
+      "completion_tokens": 3064,
+      "prompt_tokens": 47442,
+      "observed_max_processing_slots": 2,
+      "peak_total_gpu_mib": 6601.0,
+      "baseline_gpu": {
+        "memory_mib": 2765.0,
+        "utilization_percent": 19.0,
+        "temperature_c": 55.0,
+        "power_w": 10.88
+      }
+    },
+    {
+      "arm": "06-quiet-single",
+      "parallel": 1,
+      "jobs": 6,
+      "accepted": 6,
+      "elapsed_seconds": 130.39221050000197,
+      "valid_decisions_per_minute": 2.760901119933039,
+      "mean_service_seconds": 21.730020333333716,
+      "mean_queue_to_finish_seconds": 73.06111105000309,
+      "completion_tokens": 2906,
+      "prompt_tokens": 47595,
+      "observed_max_processing_slots": 1,
+      "peak_total_gpu_mib": 6516.0,
+      "baseline_gpu": {
+        "memory_mib": 3175.0,
+        "utilization_percent": 30.0,
+        "temperature_c": 61.0,
+        "power_w": 18.78
+      }
+    }
+  ],
+  "evidence_folder": "output/model-parallel-20261028",
+  "reproduction_script": "scripts/benchmark_model_parallel.py",
+  "resource_comparison": {
+    "paired_reference": [
+      {
+        "parallel": 1,
+        "arms": [
+          "01-single",
+          "06-quiet-single"
+        ],
+        "samples": 508,
+        "gpu_utilization_mean_percent": 74.3267716535433,
+        "gpu_utilization_peak_percent": 100.0,
+        "vram_mean_mib": 6151.834645669292,
+        "vram_peak_mib": 6516.0,
+        "gpu_power_mean_w": 38.95757874015748,
+        "gpu_power_peak_w": 60.47,
+        "gpu_temperature_mean_c": 63.01574803149607,
+        "gpu_temperature_peak_c": 73.0
+      },
+      {
+        "parallel": 2,
+        "arms": [
+          "02-dual",
+          "05-quiet-dual"
+        ],
+        "samples": 385,
+        "gpu_utilization_mean_percent": 70.17662337662338,
+        "gpu_utilization_peak_percent": 100.0,
+        "vram_mean_mib": 6424.916883116883,
+        "vram_peak_mib": 6652.0,
+        "gpu_power_mean_w": 40.44846753246753,
+        "gpu_power_peak_w": 82.57,
+        "gpu_temperature_mean_c": 63.34025974025974,
+        "gpu_temperature_peak_c": 68.0
+      }
+    ],
+    "sampling_interval_ms": 500,
+    "scope": "Whole GPU, includes other applications; averages are weighted by sampled time. No isolated causal claim about the model.",
+    "not_measured": [
+      "CPU utilization",
+      "System RAM usage",
+      "Game FPS",
+      "Whole-system power"
+    ]
+  }
+}

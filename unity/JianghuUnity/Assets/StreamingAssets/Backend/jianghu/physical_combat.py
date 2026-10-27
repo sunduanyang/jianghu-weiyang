@@ -4,10 +4,11 @@ import json
 import math
 from pathlib import Path
 import random
-from . import martial
+from . import martial, combat_attributes, weapons
 
 RULESET, ENGINE, MAX_SECONDS = 4, 'unity-physics2d-v09', 180
-PROFILES = json.loads(Path(__file__).with_name('physical_profiles.json').read_text(encoding='utf-8'))
+PROFILES = weapons.PROFILES
+IMPACT = json.loads(Path(__file__).with_name('physical_impact.json').read_text(encoding='utf-8'))
 BODY_KEYS = {'pelvis','torso','head','upperFar','upperNear','forearmFar','forearmNear','handFar','handNear',
              'thighFar','thighNear','shinFar','shinNear','footFar','footNear','sword','shield'}
 
@@ -18,33 +19,33 @@ def equipment(w, owner):
     item_id = actor['equipment'].get('weapon')
     item = items.get(w, owner, item_id) if item_id else None
     spec = items.spec(item) if item and item['durability'] > 0 else None
-    profile = (spec or {}).get('physical_profile')
-    if profile is None:
-        profile = ('sabre' if '刀' in spec['name'] else 'sword') if spec else 'unarmed'
-    profile = profile if profile in PROFILES else 'sword'
+    weapon = weapons.profile(item) if spec else {**PROFILES['unarmed'], 'id': 'unarmed'}
+    profile = weapon['id']
     shield_id = actor['equipment'].get('shield')
     shield = items.get(w, owner, shield_id) if shield_id else None
     has_shield = bool(shield and shield['durability'] > 0 and not PROFILES[profile]['support_grip'])
-    if shield and not has_shield and shield['durability'] > 0:
-        for key in ('attack', 'defense'):
-            gear[key] -= items.spec(shield).get(key, 0)
     return {**gear, 'weapon_profile':profile, 'weapon_name':spec['name'] if spec else '徒手',
-            'weapon_item':item_id if spec else None, 'shield':has_shield}
+            'weapon_item':item_id if spec else None, 'weapon':weapon, 'shield':has_shield}
 
 def fighter(actor, key, gear=None):
     gear = gear or {}
-    stats = martial.stats(actor, gear)
     profile = gear.get('weapon_profile', 'unarmed')
-    weapon = {**PROFILES[profile], 'id':profile, 'name':gear.get('weapon_name', PROFILES[profile]['name'])}
-    trained = [actor['martial']['arts'][a] for a in actor['martial']['loadout']['attacks']]
-    practice = sum(e['realm']+e['practice']/100 for e in trained)/max(1,len(trained))
+    weapon = {**gear.get('weapon', PROFILES[profile]), 'id':profile,
+              'name':gear.get('weapon_name', PROFILES[profile]['name'])}
     hero = actor.get('protagonist', {})
-    return {**stats, 'id':key, 'name':str(hero.get('name') or actor.get('name') or '无名客'),
-            'vigor_max':stats['vigor'], 'stamina':min(100.,actor['martial']['stamina']),
+    abilities = combat_attributes.view(actor, gear)
+    params = abilities['parameters']
+    vigor = round(params['max_health'] * max(.25, actor['health']/100), 4)
+    return {'id':key, 'name':str(hero.get('name') or actor.get('name') or '无名客'),
+            'vigor':vigor, 'vigor_max':vigor,
+            'stamina':params['stamina_max']*min(100.,actor['martial']['stamina'])/100,
+            'stamina_max':params['stamina_max'], 'balance_max':params['balance_max'],
+            'attribute_version':combat_attributes.VERSION, 'combat_ratings':abilities['ratings'],
+            'tuning_version':combat_attributes.TUNING['version'], 'weapon_version':weapons.VERSION,
+            'combat_parameters':params, 'physique':abilities['physique'],
             'weapon':weapon, 'shield':bool(gear.get('shield')), 'weapon_item':gear.get('weapon_item'),
-            'damage_scale':round(min(2.2,.78+stats['attack']*.012+practice*.045),4),
-            'handling_scale':round(min(1.20,.94+stats['agility']*.004),4),
-            'damage_reduction':round(min(.45,stats['outer_guard']*.018),4),
+            'damage_scale':params['damage_scale'], 'handling_scale':params['handling_scale'],
+            'damage_reduction':params['damage_reduction'],
             'hits':0, 'damage_dealt':0., 'motion_spent':0., 'attack_count':0,
             'outer_wounds':0., 'inner_wounds':0.}
 
@@ -53,6 +54,44 @@ def start(a,b,seed,battle_id='',spar=True,equipment=None):
     return dict(id=battle_id,seed=seed,ruleset=RULESET,engine=ENGINE,revision=1,status='active',spar=spar,
         fighters=[fighter(a,a.get('id','player'),gears[0]),fighter(b,b['id'],gears[1])],elapsed=0.,frame=None,
         log=[],summary=[{},{}],winner=None,reason='',settled=False,simulation='unity',hits=0,clashes=0)
+
+def upgrade_tuning(w):
+    """Retune an unfinished saved bout without replaying it or healing wounds."""
+    b = w.battle
+    if not b or b.get('status') != 'active' or b.get('settled') or b.get('ruleset') != RULESET:
+        return False
+    changed = False
+    for side, old in enumerate(b['fighters']):
+        if (old.get('tuning_version', 1) >= combat_attributes.TUNING['version']
+                and old.get('weapon_version', 0) >= weapons.VERSION):
+            continue
+        owner = 'player' if side == 0 else old['id']
+        actor = w.player if side == 0 else w.npcs[owner]
+        current = fighter(actor, old['id'], equipment(w, owner))
+        health_ratio = current['vigor_max']/max(.001, old['vigor_max'])
+        stamina_ratio = current['stamina_max']/max(.001, old.get('stamina_max',100.))
+        balance_ratio = current['balance_max']/max(.001, old.get('balance_max',100.))
+        old['vigor'] = round(old['vigor']*health_ratio,4)
+        old['stamina'] = round(old['stamina']*stamina_ratio,4)
+        old['outer_wounds'] = round(old.get('outer_wounds',0)*health_ratio,4)
+        for key in ('vigor_max','stamina_max','balance_max','attribute_version','tuning_version',
+                    'weapon_version','weapon','weapon_item','shield',
+                    'combat_ratings','combat_parameters','damage_scale','handling_scale','damage_reduction'):
+            old[key] = current[key]
+        if b.get('frame'):
+            packet = b['frame']['fighters'][side]
+            packet['health'] = round(packet['health']*health_ratio,4)
+            packet['stamina'] = round(packet['stamina']*stamina_ratio,4)
+            packet['balance'] = round(packet['balance']*balance_ratio,4)
+        changed = True
+    if changed:
+        for side,f in enumerate(b['fighters']):
+            other = b['fighters'][1-side]
+            f['damage_dealt'] = round(other['vigor_max']-other['vigor'],4)
+            if len(b.get('summary',[])) > side and b['summary'][side]:
+                b['summary'][side]['damage'] = f['damage_dealt']
+    return changed
+
 
 def number(value,lo,hi,label):
     if isinstance(value,bool) or not isinstance(value,(int,float)) or not math.isfinite(value) or not lo<=value<=hi:
@@ -72,8 +111,11 @@ def validate_frame(battle,frame):
     packets=frame.get('fighters')
     if not isinstance(packets,list) or len(packets)!=2:raise ValueError('缺少双方物理状态')
     for old,p in zip(battle['fighters'],packets):
-        clean=fields(p,[('health',0,old['vigor']+.001),('stamina',0,100),('balance',0,100),('strength',0,1.2),
+        clean=fields(p,[('health',0,old['vigor']+.001),('stamina',0,old.get('stamina_max',100)),('balance',0,old.get('balance_max',100)),('strength',0,1.2),
             ('heat',0,1),('motion_spent',old['motion_spent'],100000),('attack_count',old['attack_count'],10000),('landed_hits',old['hits'],10000)])
+        for key, hi in [('stun_left',10),('injury_left',10),('guard_break_left',10),('regen_left',10),('motion_exhausted',1),('swing_seconds',MAX_SECONDS+5)]:
+            if key in p:
+                clean[key]=number(p[key],0,hi,key)
         bodies=p.get('bodies')
         if not isinstance(bodies,list) or not 16<=len(bodies)<=17:raise ValueError('骨架部件数量不匹配')
         keys=[x.get('key') for x in bodies if isinstance(x,dict)]
@@ -119,33 +161,53 @@ def submit(b,action,frame=None):
 
 def view(battle):return deepcopy(battle) if battle else None
 
+def impact_damage(mass, speed, weapon_damage=1., attack_scale=1., reduction=0., zone='body'):
+    """Shared kinetic law; Unity reads the very same physical_impact.json."""
+    if speed < IMPACT['minimum_closing_speed'] or mass <= 0:
+        return 0.
+    energy = .5 * mass * speed * speed
+    return (IMPACT['energy_scale'] * energy ** IMPACT['energy_exponent'] * weapon_damage
+            * attack_scale * (1 - max(0., min(1., reduction)))
+            * IMPACT['zone_multipliers'].get(zone, 1.))
+
+
 def autoplay(b):
     """Seeded range/energy/stamina approximation, not a Unity ragdoll simulation."""
     rng=random.Random(b['seed']);fs=b['fighters'];b['simulation']='offscreen-weapon-dynamics'
     clocks=[rng.uniform(.1,.6),rng.uniform(.1,.6)];stamina=[f['stamina'] for f in fs]
+    fatigue=[0.,0.]
+    neutral=combat_attributes.parameters(dict.fromkeys(combat_attributes.KEYS,50.))
+    params=[f.get('combat_parameters',neutral) for f in fs]
     distance=max(f['weapon']['distance'] for f in fs)+.2
     for step in range(1,1201):
-        now=step*.05;desired=sum(f['weapon']['distance'] for f in fs)/2
+        now=step*.05;desired=sum(f['weapon']['distance']*p['movement_scale'] for f,p in zip(fs,params))/sum(p['movement_scale'] for p in params)
         distance+=max(-.08,min(.08,desired-distance))
         for side in (0,1):
             f,other=fs[side],fs[1-side]
+            p,op=params[side],params[1-side]
             if min(f['vigor'],other['vigor'])<=0:break
             w=f['weapon'];h=w['handling']*f['handling_scale']
-            if now<clocks[side] or stamina[side]<w['cost']:
-                stamina[side]=min(100.,stamina[side]+.05*15);continue
-            stamina[side]-=w['cost'];f['attack_count']+=1
+            if now<clocks[side] or stamina[side]<w['cost']*p['effort_scale']:
+                stamina[side]=min(f.get('stamina_max',100.),stamina[side]+.05*15*p['regen_scale'])
+                fatigue[side]=max(0.,fatigue[side]-.05*p['fatigue_recovery']);continue
+            stamina[side]-=w['cost']*p['effort_scale'];f['attack_count']+=1
             inertia=max(.008,w['mass']*(w['reach']+w['tail'])**2/12)
-            spin=min(6.5*h,math.sqrt(2*18*.8/inertia))
-            speed=spin*(.35+w['reach']*.7)*(.45+.55*min(1,stamina[side]/25))
-            effort=min(stamina[side],max(0,speed-2.4)*.3*math.sqrt(w['mass'])*.35)
-            stamina[side]-=effort;f['motion_spent']+=effort;clocks[side]=now+.94/h+rng.uniform(.12,.4)
+            spin=min(6.5*h,math.sqrt(2*18*.8*p['force_scale']/inertia))
+            speed=spin*(.35+w['reach']*.7)*(.45+.55*min(1,stamina[side]/(f.get('stamina_max',100)*.25)))
+            fatigue[side]=min(1.,fatigue[side]+.15*p['fatigue_growth'])
+            effort=min(stamina[side],max(0,speed-2.4)*.3*math.sqrt(w['mass'])*.35*p['effort_scale']*(1+fatigue[side]*.65))
+            stamina[side]-=effort;f['motion_spent']+=effort;clocks[side]=now+.94/h+rng.uniform(.12,.4)*p['recovery_delay_scale']
             if abs(distance-w['distance'])>=.8 or rng.random()<(.40 if other['shield'] else .24):
-                b['clashes']+=1;stamina[1-side]=max(0.,stamina[1-side]-min(8,speed*.4*w['pressure']));continue
-            mass=1/(1/w['mass']+1/.8)
-            damage=max(2,min(25,4+math.sqrt(.5*mass*speed*speed)*4.4))*w['damage']*f['damage_scale']*(1-other['damage_reduction'])
+                b['clashes']+=1;stamina[1-side]=max(0.,stamina[1-side]-min(8,speed*.4*w['pressure'])*op['effort_scale']/op['stability_scale']);continue
+            zones=IMPACT['offscreen_hit_zones']
+            zone=rng.choices([z['zone'] for z in zones],weights=[z['weight'] for z in zones],k=1)[0]
+            raw_damage=impact_damage(w['mass'],speed,w['damage'],f['damage_scale'],other['damage_reduction'],zone)
+            damage=raw_damage
             damage=round(min(other['vigor'],damage),4);other['vigor']=max(0.,round(other['vigor']-damage,4))
+            clocks[1-side]=max(clocks[1-side],now+(.12+damage*.006)*op['stun_scale'])
             f['hits']+=1;f['damage_dealt']+=damage;other['outer_wounds']+=damage;b['hits']+=1
-            b['log'].append(dict(side=side,damage=damage,time=round(now,2),text=f['name']+'兵器接触造成伤势'))
+            b['log'].append(dict(side=side,damage=damage,time=round(now,2),zone=zone,speed=speed,
+                weapon_mass=w['mass'],raw_damage=raw_damage,text=f['name']+'兵器接触造成伤势'))
         if min(f['vigor'] for f in fs)<=0:break
     ratios=[f['vigor']/f['vigor_max'] for f in fs]
     b.update(status='finished',elapsed=round(now,2),winner=None if abs(ratios[0]-ratios[1])<.04 else int(ratios[1]>ratios[0]),reason='离屏交手收招')

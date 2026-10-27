@@ -1,0 +1,97 @@
+{
+  "date": "2026-10-28",
+  "passed": true,
+  "build": "unity/Build/CharacterContextFinal/江湖未央.exe",
+  "build_log": "unity/character-context-final-build.log",
+  "isolated_save": "output/character-context-20261028/native-save/world.sqlite",
+  "check_count": 18,
+  "checks": [
+    {
+      "check": "isolated world ready",
+      "passed": true
+    },
+    {
+      "check": "roster opens selected person's conversation",
+      "passed": true
+    },
+    {
+      "check": "portrait opens same person's profile",
+      "passed": true
+    },
+    {
+      "check": "inventory belongs to selected NPC",
+      "passed": true
+    },
+    {
+      "check": "NPC inventory contains no player instances",
+      "passed": true
+    },
+    {
+      "check": "combat tab displays NPC's actual abilities",
+      "passed": true
+    },
+    {
+      "check": "switching NPC keeps combat tab and changes data",
+      "passed": true
+    },
+    {
+      "check": "switching NPC changes inventory owner",
+      "passed": true
+    },
+    {
+      "check": "related person links update book owner",
+      "passed": true
+    },
+    {
+      "check": "closing book returns to original conversation",
+      "passed": true
+    },
+    {
+      "check": "gifting explicitly opens player's inventory",
+      "passed": true
+    },
+    {
+      "check": "own profile keeps player context",
+      "passed": true
+    },
+    {
+      "check": "own combat keeps player context",
+      "passed": true
+    },
+    {
+      "check": "gifting book returns to original conversation",
+      "passed": true
+    },
+    {
+      "check": "late response cannot replace newly selected NPC",
+      "passed": true
+    },
+    {
+      "check": "browsing preserves month money and actions",
+      "passed": true
+    },
+    {
+      "check": "browsing preserves both NPC possessions",
+      "passed": true
+    },
+    {
+      "check": "no native exceptions",
+      "passed": true
+    }
+  ],
+  "native_errors": [],
+  "screenshots": {
+    "dialogue": "validation/screenshots/character-navigation-dialogue-20261028.png",
+    "profile": "validation/screenshots/character-navigation-profile-20261028.png",
+    "inventory": "validation/screenshots/character-navigation-inventory-20261028.png",
+    "combat": "validation/screenshots/character-navigation-combat-20261028.png"
+  },
+  "actual_window_clicks": [
+    "left roster Shen Zhiqiu opens her conversation",
+    "right character image opens Shen Zhiqiu profile",
+    "bottom inventory shows Shen Zhiqiu possessions and 123 silver",
+    "bottom combat shows Shen Zhiqiu abilities"
+  ],
+  "scope": "Native character navigation and data ownership; no AI conversation request or full physical combat regression.",
+  "screenshot_source": "Visible first build acceptance and actual clicks; final hidden build reran all 18 data/navigation checks. The final changes concern async selection and post-battle refresh, with the same visual layout."
+}

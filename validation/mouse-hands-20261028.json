@@ -1,0 +1,658 @@
+{
+  "passed": true,
+  "scope": "automated mouse hand control and physical combat acceptance",
+  "date": "2026-10-28T02:15:39.273567+08:00",
+  "build": "unity/Build/MouseHands/江湖未央.exe",
+  "active_build": "MouseHands",
+  "assembly_sha256": "029f15411ac4c2b8f2716e0c9c4de9ed7858ed721cff9c176055186f25fdcb36",
+  "controls": {
+    "left_button": "main hand",
+    "right_button": "off hand",
+    "both_buttons": "move both independent remembered targets with the same cursor delta",
+    "middle_button": "freeze both targets; physical momentum remains constrained by joints",
+    "released": "hold target and coast with radial/angular drag"
+  },
+  "python_tests": {
+    "count": 20,
+    "passed": true,
+    "scope": "the shipped backend: physical combat, impact law and combat attributes",
+    "log": "output/mouse-hands-20261028/python-shipped.log"
+  },
+  "native_runs": {
+    "mouse": {
+      "passed": true,
+      "checks": 38,
+      "report": "output/mouse-hands-20261028/native-mouse-2/acceptance.json"
+    },
+    "feel30": {
+      "passed": true,
+      "checks": 24,
+      "report": "output/mouse-hands-20261028/native-feel30-2/acceptance.json"
+    },
+    "feel90": {
+      "passed": true,
+      "checks": 24,
+      "report": "output/mouse-hands-20261028/native-feel90-2/acceptance.json"
+    },
+    "rigs": {
+      "passed": true,
+      "checks": 5,
+      "report": "output/mouse-hands-20261028/native-rigs-2/acceptance.json"
+    },
+    "kinetic": {
+      "passed": true,
+      "checks": 14,
+      "report": "output/mouse-hands-20261028/native-kinetic-2/acceptance.json"
+    },
+    "save": {
+      "passed": true,
+      "checks": 14,
+      "report": "output/mouse-hands-20261028/native-save-2/acceptance.json"
+    },
+    "resume": {
+      "passed": true,
+      "checks": 20,
+      "report": "output/mouse-hands-20261028/native-resume-2/acceptance.json"
+    },
+    "fists": {
+      "passed": true,
+      "checks": 20,
+      "report": "output/mouse-hands-20261028/native-fists-2/acceptance.json"
+    }
+  },
+  "native_checks": 159,
+  "mouse_checks": [
+    {
+      "check": "companion ready",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "/api/ai/config",
+      "passed": true,
+      "facts": {
+        "expected": true,
+        "error": ""
+      }
+    },
+    {
+      "check": "mouse directly extends only the selected hand",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "adding the other button picks up its target without a jump",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "both held buttons move both independent targets",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "releasing the old button cannot steal or cancel the new hand",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "releasing one button leaves the other hand under mouse control",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "a released straight thrust reaches full extension and holds",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "a released circular cut continues rotating with resistance",
+      "passed": true,
+      "facts": {
+        "initial_speed": 899.8757,
+        "after_one_second": 415.1914,
+        "coast_degrees": 627.5821
+      }
+    },
+    {
+      "check": "coasting eventually settles without retracting the target",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "passive motion agrees across render rates",
+      "passed": true,
+      "facts": {
+        "target_error": 0.002281014
+      }
+    },
+    {
+      "check": "braking or pausing preserves pose and clears pointer inertia",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "mouse no longer captures a floating joystick",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "picking up the mouse preserves offhand orientation dagger",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "mouse handoff and real constraints dagger",
+      "passed": true,
+      "facts": {
+        "weapon": "dagger",
+        "shield": false,
+        "passed": true,
+        "both_hands_controlled": true,
+        "gap": 0.00223938,
+        "limit": 0,
+        "main_effort": 5.16136,
+        "off_effort": 2.787361,
+        "coast_degrees": 314.1138,
+        "coast_after_switch": 132.0491,
+        "primary_grip": 0,
+        "support_grip": 0
+      }
+    },
+    {
+      "check": "picking up the mouse preserves offhand orientation sabre",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "mouse handoff and real constraints sabre",
+      "passed": true,
+      "facts": {
+        "weapon": "sabre",
+        "shield": false,
+        "passed": true,
+        "both_hands_controlled": true,
+        "gap": 0.002614556,
+        "limit": 0,
+        "main_effort": 10.98875,
+        "off_effort": 2.808305,
+        "coast_degrees": 307.2296,
+        "coast_after_switch": 132.941,
+        "primary_grip": 2.665601e-07,
+        "support_grip": 0
+      }
+    },
+    {
+      "check": "picking up the mouse preserves offhand orientation sword",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "mouse handoff and real constraints sword",
+      "passed": true,
+      "facts": {
+        "weapon": "sword",
+        "shield": false,
+        "passed": true,
+        "both_hands_controlled": true,
+        "gap": 0.003037089,
+        "limit": 0,
+        "main_effort": 17.02152,
+        "off_effort": 2.784239,
+        "coast_degrees": 303.0565,
+        "coast_after_switch": 132.3899,
+        "primary_grip": 2.384186e-07,
+        "support_grip": 0
+      }
+    },
+    {
+      "check": "picking up the mouse preserves offhand orientation axe",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "mouse handoff and real constraints axe",
+      "passed": true,
+      "facts": {
+        "weapon": "axe",
+        "shield": false,
+        "passed": true,
+        "both_hands_controlled": true,
+        "gap": 0.003374999,
+        "limit": 0.4515915,
+        "main_effort": 20.71848,
+        "off_effort": 2.86067,
+        "coast_degrees": 296.4864,
+        "coast_after_switch": 131.4994,
+        "primary_grip": 2.384186e-07,
+        "support_grip": 0
+      }
+    },
+    {
+      "check": "picking up the mouse preserves offhand orientation mace",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "mouse handoff and real constraints mace",
+      "passed": true,
+      "facts": {
+        "weapon": "mace",
+        "shield": false,
+        "passed": true,
+        "both_hands_controlled": true,
+        "gap": 0.003651129,
+        "limit": 0.4921417,
+        "main_effort": 24.57832,
+        "off_effort": 2.824383,
+        "coast_degrees": 292.5868,
+        "coast_after_switch": 130.9572,
+        "primary_grip": 1.192093e-07,
+        "support_grip": 0
+      }
+    },
+    {
+      "check": "picking up the mouse preserves offhand orientation spear",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "mouse handoff and real constraints spear",
+      "passed": true,
+      "facts": {
+        "weapon": "spear",
+        "shield": false,
+        "passed": true,
+        "both_hands_controlled": true,
+        "gap": 0.02382066,
+        "limit": 3.504044,
+        "main_effort": 39.47346,
+        "off_effort": 0,
+        "coast_degrees": 297.3395,
+        "coast_after_switch": 131.6167,
+        "primary_grip": 8.987464e-05,
+        "support_grip": 7.584419e-05
+      }
+    },
+    {
+      "check": "picking up the mouse preserves offhand orientation greatsword",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "mouse handoff and real constraints greatsword",
+      "passed": true,
+      "facts": {
+        "weapon": "greatsword",
+        "shield": false,
+        "passed": true,
+        "both_hands_controlled": true,
+        "gap": 0.003105085,
+        "limit": 1.715324,
+        "main_effort": 46.33909,
+        "off_effort": 0,
+        "coast_degrees": 290.3087,
+        "coast_after_switch": 128.9341,
+        "primary_grip": 8.427382e-05,
+        "support_grip": 4.127689e-05
+      }
+    },
+    {
+      "check": "picking up the mouse preserves offhand orientation greataxe",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "mouse handoff and real constraints greataxe",
+      "passed": true,
+      "facts": {
+        "weapon": "greataxe",
+        "shield": false,
+        "passed": true,
+        "both_hands_controlled": true,
+        "gap": 0.03985751,
+        "limit": 4.529053,
+        "main_effort": 30.09916,
+        "off_effort": 0,
+        "coast_degrees": 282.0303,
+        "coast_after_switch": 127.7521,
+        "primary_grip": 2.443529e-05,
+        "support_grip": 3.996623e-06
+      }
+    },
+    {
+      "check": "picking up the mouse preserves offhand orientation warhammer",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "mouse handoff and real constraints warhammer",
+      "passed": true,
+      "facts": {
+        "weapon": "warhammer",
+        "shield": false,
+        "passed": true,
+        "both_hands_controlled": true,
+        "gap": 0.004012244,
+        "limit": 3.373352,
+        "main_effort": 60.05218,
+        "off_effort": 0,
+        "coast_degrees": 280.0099,
+        "coast_after_switch": 127.4529,
+        "primary_grip": 2.901589e-05,
+        "support_grip": 1.729316e-05
+      }
+    },
+    {
+      "check": "picking up the mouse preserves offhand orientation unarmed",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "mouse handoff and real constraints unarmed",
+      "passed": true,
+      "facts": {
+        "weapon": "unarmed",
+        "shield": false,
+        "passed": true,
+        "both_hands_controlled": true,
+        "gap": 0.002227646,
+        "limit": 0,
+        "main_effort": 2.420631,
+        "off_effort": 2.852027,
+        "coast_degrees": 321.1824,
+        "coast_after_switch": 132.9104,
+        "primary_grip": 1.192093e-07,
+        "support_grip": 0
+      }
+    },
+    {
+      "check": "picking up the mouse preserves offhand orientation sword",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "mouse handoff and real constraints sword",
+      "passed": true,
+      "facts": {
+        "weapon": "sword",
+        "shield": true,
+        "passed": true,
+        "both_hands_controlled": true,
+        "gap": 0.00301225,
+        "limit": 1.610546,
+        "main_effort": 17.69336,
+        "off_effort": 4.180835,
+        "coast_degrees": 302.829,
+        "coast_after_switch": 130.6172,
+        "primary_grip": 0,
+        "support_grip": 0
+      }
+    },
+    {
+      "check": "campaign pause retains the remembered target with no live input",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "new round clears previous hand targets",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "no runtime errors",
+      "passed": true,
+      "facts": []
+    }
+  ],
+  "mouse_weapon_cases": [
+    {
+      "weapon": "dagger",
+      "shield": false,
+      "passed": true,
+      "both_hands_controlled": true,
+      "gap": 0.00223938,
+      "limit": 0,
+      "main_effort": 5.16136,
+      "off_effort": 2.787361,
+      "coast_degrees": 314.1138,
+      "coast_after_switch": 132.0491,
+      "primary_grip": 0,
+      "support_grip": 0
+    },
+    {
+      "weapon": "sabre",
+      "shield": false,
+      "passed": true,
+      "both_hands_controlled": true,
+      "gap": 0.002614556,
+      "limit": 0,
+      "main_effort": 10.98875,
+      "off_effort": 2.808305,
+      "coast_degrees": 307.2296,
+      "coast_after_switch": 132.941,
+      "primary_grip": 2.665601e-07,
+      "support_grip": 0
+    },
+    {
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "both_hands_controlled": true,
+      "gap": 0.003037089,
+      "limit": 0,
+      "main_effort": 17.02152,
+      "off_effort": 2.784239,
+      "coast_degrees": 303.0565,
+      "coast_after_switch": 132.3899,
+      "primary_grip": 2.384186e-07,
+      "support_grip": 0
+    },
+    {
+      "weapon": "axe",
+      "shield": false,
+      "passed": true,
+      "both_hands_controlled": true,
+      "gap": 0.003374999,
+      "limit": 0.4515915,
+      "main_effort": 20.71848,
+      "off_effort": 2.86067,
+      "coast_degrees": 296.4864,
+      "coast_after_switch": 131.4994,
+      "primary_grip": 2.384186e-07,
+      "support_grip": 0
+    },
+    {
+      "weapon": "mace",
+      "shield": false,
+      "passed": true,
+      "both_hands_controlled": true,
+      "gap": 0.003651129,
+      "limit": 0.4921417,
+      "main_effort": 24.57832,
+      "off_effort": 2.824383,
+      "coast_degrees": 292.5868,
+      "coast_after_switch": 130.9572,
+      "primary_grip": 1.192093e-07,
+      "support_grip": 0
+    },
+    {
+      "weapon": "spear",
+      "shield": false,
+      "passed": true,
+      "both_hands_controlled": true,
+      "gap": 0.02382066,
+      "limit": 3.504044,
+      "main_effort": 39.47346,
+      "off_effort": 0,
+      "coast_degrees": 297.3395,
+      "coast_after_switch": 131.6167,
+      "primary_grip": 8.987464e-05,
+      "support_grip": 7.584419e-05
+    },
+    {
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "both_hands_controlled": true,
+      "gap": 0.003105085,
+      "limit": 1.715324,
+      "main_effort": 46.33909,
+      "off_effort": 0,
+      "coast_degrees": 290.3087,
+      "coast_after_switch": 128.9341,
+      "primary_grip": 8.427382e-05,
+      "support_grip": 4.127689e-05
+    },
+    {
+      "weapon": "greataxe",
+      "shield": false,
+      "passed": true,
+      "both_hands_controlled": true,
+      "gap": 0.03985751,
+      "limit": 4.529053,
+      "main_effort": 30.09916,
+      "off_effort": 0,
+      "coast_degrees": 282.0303,
+      "coast_after_switch": 127.7521,
+      "primary_grip": 2.443529e-05,
+      "support_grip": 3.996623e-06
+    },
+    {
+      "weapon": "warhammer",
+      "shield": false,
+      "passed": true,
+      "both_hands_controlled": true,
+      "gap": 0.004012244,
+      "limit": 3.373352,
+      "main_effort": 60.05218,
+      "off_effort": 0,
+      "coast_degrees": 280.0099,
+      "coast_after_switch": 127.4529,
+      "primary_grip": 2.901589e-05,
+      "support_grip": 1.729316e-05
+    },
+    {
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "both_hands_controlled": true,
+      "gap": 0.002227646,
+      "limit": 0,
+      "main_effort": 2.420631,
+      "off_effort": 2.852027,
+      "coast_degrees": 321.1824,
+      "coast_after_switch": 132.9104,
+      "primary_grip": 1.192093e-07,
+      "support_grip": 0
+    },
+    {
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "both_hands_controlled": true,
+      "gap": 0.00301225,
+      "limit": 1.610546,
+      "main_effort": 17.69336,
+      "off_effort": 4.180835,
+      "coast_degrees": 302.829,
+      "coast_after_switch": 130.6172,
+      "primary_grip": 0,
+      "support_grip": 0
+    }
+  ],
+  "rig_cases": 88,
+  "damage_parity_vectors": 90,
+  "save_protection": {
+    "checked_files": 42,
+    "changed_files": []
+  },
+  "build_source_sha256": {
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsBattleSmoke.cs": "3ec8b84be119d933b3149b5c63e11275c6296f6217e485e95552ae4dcb41a37c",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsFeelSmoke.cs": "35188d206c1218801ba1192208d467399b47a9678589931234689a66436ece4e",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsMouseSmoke.cs": "cc50fff29ca5040f9721b734bc4bd2fc860de1b58fd87adec88aba135755b808",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelAI.cs": "edc2a18c7659532a3d4f16d4742d5aa1d526acd8860aa9497cfd43527e96ae39",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelArmory.cs": "9c6e4918476e1c4294e2e7b76629ccb187d4d031755d6ae1fddaa5b594d2a8c0",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelAttributeProbe.cs": "0416bf4205858fa98cdf644c70e202ac736f937bfa08b02ed80634984330f795",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelAttributes.cs": "f2f35a81259ba4ffb64e057f8a692f65cd4eee261dcb3bef1b91d8f9a8d3d432",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelCampaign.cs": "75c8b2713b6bd35086c7695acefc7cbba5d4054a6818f3b36f5b859e1f84d967",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelClash.cs": "367186696ed5e0869edf4341b3b0b03a9cf44ebd99fac2d02176fe900dbd3f3d",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelCombat.cs": "23186e9005024300576c9aec9a636d2fecb082ff962d7264758afcde75b71bd5",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelControls.cs": "af327975a0e3dc90087a5b7852c39505d6d018d4d993e08732c36ec7eec38a93",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelControlsView.cs": "0b1d2937ebfddd7e4e25c532176e6b9a46661e1792f5ec6ed8a0bb40d7ffea45",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelFighter.cs": "c5fff87225a12fb6abc54d9919c8e02a49598f6ab98fac758ef2c18f79a3fcd4",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelFigure.cs": "0c3a0f20c71a3d6d1136a8d0a9aaaf755ab744d3cc56c52a0f03bab3598bab81",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelGuard.cs": "da7929159f9eb05304ff6c7bbf44ae78415f393f784bf75338fed9cdb445d9cc",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelHandDrive.cs": "f7d83d7fe646ee25537bfdf235e7c949d4fcc568878370c41d470ca1ee2614b6",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelImpact.cs": "9985b1fb32dce8be43c1ee9e8d9b334296f70070a098775d501fba666d3bc641",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelImpactProbe.cs": "1c8f707b0018f579b348008457f69576d9b35a178937924037011a0cac1ed182",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelMotion.cs": "e10ab1eaa9a143407834c1a4b80b665977d327ef5336408dc8e738ffb93b6935",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelMouseHands.cs": "ff7cf1fa16d412f7fcd051bc25d839b4b323dc9ac07e2041370a700bf65c1283",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelMouseInput.cs": "488917a2b7cbf5b13059e7c21638e49b166a41ae829bc01f28c9d1abb6689f49",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelPhysics.cs": "b59c499f3444826ff9f87f1baabca46a0512f1750e2879d0b6bdc8c0d5c278e1",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelTwoHand.cs": "6c437250e54b3d6e76df8c669f089fccdccac90cbc28f64ee7146ecbdb44c4f4",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelWeapons.cs": "fbd7088bca593c8de4e1ddd141c418402ed99ad10f7bb3456f0478589539fb67",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\PhysicsDuel.cs": "79e5552e37b45aa1c7438dbf744a0d640cd9571b49f642f5558c1b550e5326fb"
+  },
+  "backend_sha256": {
+    "ai.py": "7b68696b084d0755b2bb99338291d248802049709b7dd2d6b50398e22912c006",
+    "atlas.py": "4314a11a01f53ca0392a64c9f5ca7b9f084b84ecf00a39ba07d8372ad2257d07",
+    "atlas_expansion.py": "87ac10adbc53a2c4fd761b63b56df87ef544457f048624f19143f89da29e1187",
+    "atlas_migration.py": "9dc0ea287e126e744eec238032deb9bf2e8a4ef08cd0c549bdb19370c6e26ce3",
+    "careers.py": "6f0d92b37f920c2fca2aa5ac15c583273bbdd9fdd0277a4152bbe0e07e759bee",
+    "city_biomes.py": "e18c85d257a2f57ca7479f6583ae6f54ad5e7eeebd93d884e63154f892fbf4a5",
+    "city_gardens.py": "a7eba474fd565e0903c6dd5ee86be3bc46a0616fc7c2ab99c4740c36599116d0",
+    "city_landscape.py": "eba71abf749186401dc482790cf72c924532df1c753c5b3394aba70d13c48856",
+    "city_maps.py": "a21f1f30165f1551dafc0953316325ee4dbaf0d9c3aec35f821eb02e3206bf2e",
+    "city_plans.py": "dea027cb7f1b4f8e35e90601f418b71061ecdfa5916b0593bcec9ea49b27f69a",
+    "city_regions.py": "3e4b293017dbc7a5515159da2142b221cbaa0b6e9f6a81eb50efd12acb05388c",
+    "combat_attributes.py": "c0bce5327bdf9aa76f9a7aecabb647d39f04eee05072d879bbdcdcefe3c3e65d",
+    "deliberation.py": "2c9c5aba8f99315e75737cc3a7635e8c8856a150d627c9aa8f341012c6f67c2c",
+    "demography.py": "9bd093c20e36edc9623c6564a973a7fc20317afb17633a203f7d4e25907b950b",
+    "economics.py": "2302bbf71e15b1654ccad8d28c1be8bfab4f3d7c04a5a58119b8ce8cd0a00482",
+    "engine.py": "ad95f7d2ae5edae014290e6492cf499a8b979719accb863e5403f69839729066",
+    "government.py": "f1610cf94feba690cc657bfdc8d9cc4fadbab9b8723bd1bd3b802821e2f68fa5",
+    "historical_map.py": "e9597df4dcf81f18ebd2df9a688535085277a44c0577c05ed189e5eb631bbbf1",
+    "items.py": "33af6ecfe1597df2b26c260c044380416a7fe41c031e9cdbc25586cc88c0bd75",
+    "llm_policy.py": "f740a84f9ed2c5b04ace7decefcd2322bf80ffd33e572906e73013c19f4275c9",
+    "local_life.py": "bb0ca281d2a478cd736ba50dfac5122cdcae2902dbf441b43daf1d551aec620b",
+    "martial.py": "4783d233c5a3202637cf99a1de19ea59b50ec6fc0ae3d9d894fe13fdbe16898d",
+    "model_service.py": "20ff54581c6199cb62b6558d901ce7f37c305a013ce84874cdc04c90462459ce",
+    "npc_attention.py": "cd02828691da5b165ccca0f93c55283a635fa712fa8587c24acd4eb63f14ca0c",
+    "npc_memory.py": "00813dea4277c90e1bd87a8574d94e61e1b7d21ca4b89a301967211a5fe8f275",
+    "npc_plans.py": "7e0995c43b879075e87d73c7d94af770bf40bb1b84de3c01e973903b726996e4",
+    "organizations.py": "c5d92393cf3fe1ac1b5162e7397415ad3f5d574f834d818fb0baecf8f149dfee",
+    "physical_combat.py": "eb159fec4e4bcc3164f2655fb449d8d832cd0adb65999e91b0ef89c46f50aa80",
+    "physical_impact.json": "1652f9c739a98a7085fda16afe664d11659c632a5a22df208630da32463ed8db",
+    "physical_profiles.json": "526ecea1edd825119fe9ff580ba9d1692af416620a06bd181475fff66ea04351",
+    "politics.py": "2dccf22001a8d4e739ad4fcc85d2a9f60f19570a3e247706ec3815386a4c1af9",
+    "population.py": "dde0ae0441597a1a4a3a4e7ecdc2774c2ee0866767a8cf1b227149668f2f4944",
+    "protagonist.py": "6d30b9609bf80b787ec16fabea7f595842087b735d849caa51d6534e02baba36",
+    "rank_progression.py": "c98dd6e23754968909211d11e430430a4780c8b222ab6a7c2fa5240dc767908a",
+    "relationships.py": "51ea3ed99db40e036ce6dff28ff4e653dc8a800703a5df16cfbac2bbf215761e",
+    "sect_catalog.py": "b2d3b28f18d4da90800a34cfe33ad970466c901df6b01424380c0af74a8f1ec1",
+    "sect_migration.py": "9175d849dc570fb1ac81626f94eabb364e04ddf5fa1e5ddf90b65ecb74648947",
+    "sect_ranks.py": "b282250a16efe3338231b192a6893073e914bc3fe19a1ddf59efbd2693dd406b",
+    "server.py": "73ff874da5fb8507b2d5218d0f0b6d19f150d2306e610a7781e85fb4ab72cdfb",
+    "settlements.py": "a774e62968e7b2cf710ec1b0dac395b9d64ec852e6b73da5bca3b56ab3d0217f",
+    "social.py": "75a4ad5bba9e259ccda14df966e50b06a54a974ee1412ae7b3a0fd9928775827",
+    "social_ranks.py": "27c832720855a935a8fd44dd203e7d0dfd3aa9d45423ab757006476e29cd54fd",
+    "society.py": "1f5fead13ca0ca3d92519e264a94d2f2f0d9a9401d8fcc4a07502d6b2a6f7058",
+    "store.py": "5706be87ae751613b576bcbb0bfdcfd1836d7f31bc4c65ea46868990a1412d8a",
+    "territory.py": "10da68a6c5cbecf66a749198fe46147af0ed135531f2b0827d74510aa6b119f5",
+    "__init__.py": "a9f783cd6f7dcc7080f4db131da12f237df900900d790d4017a9c8772a7a7ce2"
+  },
+  "concurrent_source_changes_outside_combat": [
+    "unity\\JianghuUnity\\Assets\\Scripts\\Panels.cs",
+    "jianghu\\ai.py",
+    "jianghu\\engine.py",
+    "jianghu\\player_social.py"
+  ],
+  "limitations": [
+    "Automated input injection does not establish physical-device input latency or a manual feel rating.",
+    "Mouse physics scenarios use isolated player/enemy collisions to stress handoff and grips; the feel duels keep real opposing contacts.",
+    "The 88 skin checks isolate opposing collisions and refill stamina; they verify rig stability.",
+    "Restart rebuilds static hand goals from the authoritative body pose; it does not restore pointer capture or target coasting.",
+    "Concurrent old martial-system and social compatibility work continues outside this input change; no current full Python suite claim."
+  ]
+}

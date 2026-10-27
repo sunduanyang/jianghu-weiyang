@@ -1,3 +1,5 @@
+from jianghu import combat_attributes as abilities
+from tests.combat_helpers import set_rating, update_actor
 """Opening cast invariants and isolation from existing worlds."""
 from copy import deepcopy
 import json
@@ -63,7 +65,7 @@ class PopulationTests(unittest.TestCase):
                 self.assertFalse(n.get('social_status'))
             else:
                 profession = n['career']['profession']
-                self.assertGreaterEqual(n['skill'], careers.PROFESSIONS[profession].get('martial', 0))
+                self.assertGreaterEqual(abilities.rating(n), careers.PROFESSIONS[profession].get('martial', 0))
                 self.assertGreaterEqual(careers.experience(n), careers.PROFESSIONS[profession]['entry'])
                 self.assertGreater(careers.income(n), 0)
             if n['faction'] is None and n.get('social_status') and n['identity']['grade'] <= 2:
@@ -121,7 +123,7 @@ class PopulationTests(unittest.TestCase):
             old.player.update(name='行舟', wealth=630., health=71.2568, ties={'1': {'affinity': 16}}, spar_rewards={'1': 0})
             previous = deepcopy(old.export())
             mapping = retain_player(new, previous, 'archived.sqlite')
-            for key in ('name', 'wealth', 'skill', 'health', 'reputation', 'martial', 'read_books'):
+            for key in ('name', 'wealth', 'combat_attributes', 'health', 'reputation', 'martial', 'read_books'):
                 self.assertEqual(new.player[key], previous['player'][key])
             self.assertEqual(new.player['ties'], {})
             self.assertEqual(new.player['spar_rewards'], {})

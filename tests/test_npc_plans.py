@@ -1,3 +1,5 @@
+from jianghu import combat_attributes as abilities
+from tests.combat_helpers import set_rating, update_actor
 """Consequences, commitment, personal knowledge and save continuity."""
 from copy import deepcopy
 import io
@@ -18,8 +20,8 @@ class NPCPlanningTests(unittest.TestCase):
 
     def person(self, job='短工', **values):
         w = self.w; n = w.make_npc(place=0)
-        n.update(age_months=360, wealth=30., health=100., skill=20., job=job)
-        n.update(values)
+        update_actor(n, age_months=360, wealth=30., health=100., skill=20., job=job)
+        update_actor(n, values)
         n['career'].update(profession=job, experience={job: 20.}, last_change=-24)
         w.set_goal(n, 'wealth', initial=True); w.reindex()
         n['identity'] = careers.identity(w, n)
@@ -125,21 +127,11 @@ class NPCPlanningTests(unittest.TestCase):
         w.month_step(); restored.month_step()
         self.assertEqual(w.npcs, restored.npcs); self.assertEqual(w.rng.getstate(), restored.rng.getstate())
 
-    def test_role_guidance_requires_rank_and_respects_student_refusal_and_both_time_budgets(self):
-        w = self.w; n = self.person(faction=0, contribution=40., skill=60., place=w.factions[0]['place'])
-        q = self.person(faction=0, contribution=0., skill=15., place=n['place'])
-        w.reindex(); before = (n['wealth'], q['wealth'], w.factions[0]['fund'])
-        w.relation(q, n['id'])['affinity'] = -80
-        e = w.execute(n, {'id': f'faction_guide:{q["id"]}'})
-        self.assertFalse(e['facts']['accepted']); self.assertEqual(q['skill'], 15.)
-        self.assertEqual(n['time_left'], 3); self.assertEqual(q['time_left'], 3)
-        self.assertEqual((n['wealth'], q['wealth'], w.factions[0]['fund']), before)
-        self.assertFalse(any(a['kind'] == 'faction_guide' for a in w.legal_actions(q)))
-        self.renew_week(); w.relation(q, n['id'])['affinity'] = 0
-        e = w.execute(n, {'id': f'faction_guide:{q["id"]}'})
-        self.assertTrue(e['facts']['accepted']); self.assertGreater(q['skill'], 15.)
-        self.assertEqual(n['contribution'], 41.)
-        self.assertFalse(any(a['kind'] == 'faction_guide' for a in w.legal_actions(n)))
+    def test_retired_guidance_cannot_change_abilities_or_time_budgets(self):
+        n=self.person(faction=0,contribution=40.,skill=70.);q=self.person(faction=0,skill=15.)
+        before=deepcopy(self.w.export())
+        self.assertIsNone(self.w.execute(n,{'id':f'faction_guide:{q["id"]}'}))
+        self.assertEqual(self.w.export(),before)
 
     def test_relevant_old_personal_memory_is_recalled_beyond_working_memory(self):
         n = self.person(); other = self.person(); w = self.w

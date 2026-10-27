@@ -1,3 +1,4 @@
+from . import combat_attributes
 """Local organizations: scoped merit, paid duties, teaching and accountable funds."""
 from . import martial, relationships, sect_ranks, npc_plans
 from .atlas import PLACES
@@ -46,25 +47,25 @@ def candidates(w, n, planning=False):
     add('leave_faction', f['name'])
     if f['place'] != n['place'] or n['age_months'] < 192:
         return options
-    if rank(w, n)['grade'] <= 4 and n['health'] > 45 and n['skill'] >= 25:
+    if rank(w, n)['grade'] <= 4 and n['health'] > 45 and combat_attributes.rating(n) >= 25:
         students = [w.npcs[i] for i in w.residents.get(n['place'], []) if i != n['id']
                     and w.npcs[i]['faction'] == f['id'] and w.npcs[i]['age_months'] >= 120
-                    and w.npcs[i]['health'] > 30 and n['skill'] >= w.npcs[i]['skill'] + 8
+                    and w.npcs[i]['health'] > 30 and combat_attributes.rating(n) >= combat_attributes.rating(w.npcs[i]) + 8
                     and n['relationships'].get(str(i), {}).get('affinity', 0) >= -25
                     and relationships.partner_available(w, w.npcs[i], planning)]
-        for q in sorted(students, key=lambda q: (q['skill'], q['id']))[:2]:
+        for q in sorted(students, key=lambda q: (combat_attributes.rating(q), q['id']))[:2]:
             options.append(dict(id=f'faction_guide:{q["id"]}', kind='faction_guide', target=q['id'],
                                 label='同门授业 · 指点'+q['name']+'（双方各一周）'))
     if n['health'] > 45 and f['fund'] >= 3:
         duty = f['duty']
         add('faction_task', f'{duty}，两周 / 酬银3 / 贡献2')
-    if n['wealth'] >= 6 and n['contribution'] >= 5 and n['health'] > 30 and n['skill'] >= 12:
+    if n['wealth'] >= 6 and n['contribution'] >= 5 and n['health'] > 30 and combat_attributes.rating(n) >= 12:
         tutors = [w.npcs[i] for i in w.residents.get(n['place'], []) if i != n['id']
                   and w.npcs[i]['faction'] == f['id'] and w.npcs[i]['age_months'] >= 192
-                  and w.npcs[i]['health'] > 30 and w.npcs[i]['skill'] > n['skill'] + 8
+                  and w.npcs[i]['health'] > 30 and combat_attributes.rating(w.npcs[i]) > combat_attributes.rating(n) + 8
                   and relationships.partner_available(w, w.npcs[i], planning)]
         if tutors:
-            tutor = max(tutors, key=lambda q: (q['skill'], -q['id']))
+            tutor = max(tutors, key=lambda q: (combat_attributes.rating(q), -q['id']))
             add('faction_study', f"向{tutor['name']}请益，2银 / 一周", tutor=tutor['id'])
         elif f['art_id'] not in n['martial']['arts']:
             add('faction_study', f"研习{f['art']}，2银 / 一周", tutor=None)
@@ -88,7 +89,7 @@ def score(w, n, a):
 
 def execute(w, n, a, facts):
     f = w.factions[n['faction']]
-    before = {k: n[k] for k in ('wealth', 'health', 'skill')}
+    before = {k: n[k] for k in ('wealth', 'health')}
     prior_rank = rank(w, n)
     people, causes = [n['id']], [n['last_event'], f['last_event']]
     kind = a['kind']
@@ -117,8 +118,8 @@ def execute(w, n, a, facts):
             q['wealth'] += 1
         f['fund'] += 1 if q else 2
         f['revenue'] += 1 if q else 2
-        gain = min(1.5, (q['skill'] - n['skill']) * .06) if q else .5
-        n['skill'] = min(100, n['skill'] + gain)
+        gain = min(1.5, (combat_attributes.rating(q) - combat_attributes.rating(n)) * .06) if q else .5
+        pass  # Retired martial proficiency is no longer stored.
         if q:
             w.link(n, q, 3, 3)
         if f['art_id'] not in n['martial']['arts']:
@@ -136,14 +137,14 @@ def execute(w, n, a, facts):
         people.append(q['id']); causes.append(q['last_event'])
         reciprocal = w.relation(q, n['id'])
         accepted = reciprocal['affinity'] >= -25 and reciprocal['trust'] >= -25 and q['mood']['anger'] < 65
-        gain = min(1., (n['skill'] - q['skill']) * .025) if accepted else 0.
+        gain = min(1., (combat_attributes.rating(n) - combat_attributes.rating(q)) * .025) if accepted else 0.
         transmission = None
         if accepted:
-            q['skill'] = min(100., q['skill'] + gain)
+            pass  # Retired martial proficiency is no longer stored.
             n['contribution'] += 1
             n['health'] -= .5
             w.link(n, q, 3, 2)
-            if f['art_id'] in n['martial']['arts'] and f['art_id'] not in q['martial']['arts'] and q['skill'] >= 12:
+            if f['art_id'] in n['martial']['arts'] and f['art_id'] not in q['martial']['arts'] and combat_attributes.rating(q) >= 12:
                 martial.learn(q, f['art_id'])
                 transmission = f['art_id']
         facts.update(student=q['id'], accepted=accepted, skill_gain=gain, transmission=transmission,
@@ -216,7 +217,7 @@ def elect(w, f, annual=False):
             record(f,e)
             if old==-1:rank_progression.emit(w,'player','rank_change',f"{w.player['name']}因持续失职失去{f['name']}主持之位，按原有门中资历重新分品。",dict(system='sect',faction=f['id'],reason='主持资格中止'),[e['id']])
         return
-    merit = lambda n: max(0.,n['contribution']-n.get('rank_progress',{}).get('sect',{}).get('penalty',0.)) + n['reputation'] * .3 + n['skill'] * .15
+    merit = lambda n: max(0.,n['contribution']-n.get('rank_progress',{}).get('sect',{}).get('penalty',0.)) + n['reputation'] * .3 + combat_attributes.rating(n) * .15
     leader = max(members, key=lambda n: (merit(n), -n['id']))
     if valid and (w.month - f['leader_review_since'] < 72
                   and merit(leader) < merit(current) + 15):
@@ -285,7 +286,7 @@ def player_membership(w):
     if h.get('faction') is None:
         return None
     f = w.factions[h['faction']]
-    standing = rank(w, dict(h,id=-1,skill=w.player['skill']))
+    standing = rank(w, dict(h,id=-1,combat_attributes=w.player['combat_attributes']))
     return dict(faction=f['id'], key=f['key'], name=f['name'], **standing,
                 contribution=h['contribution'], since=h['faction_since'])
 
@@ -303,6 +304,8 @@ def player_options(w, faction_id):
          ('leave', '辞别'+f['name'], 2)] if h['faction'] == faction_id else [])
     result = []
     for action, label, points in choices:
+        if action == 'study':
+            continue
         reason = '请先创建主角' if not h['created'] else '请先走入这座门派驻地' if not at_seat else ''
         if not reason and h['points'] < points:
             reason = '本月行动力不足'
@@ -310,7 +313,7 @@ def player_options(w, faction_id):
             reason = '本月已办理此事'
         if not reason and action == 'join':
             reason = ('一年后方可另择门派' if w.month < h.get('faction_rejoin_after', -1) else
-                      '武学须达到12' if w.player['skill'] < 12 else '')
+                      '战斗能力须达到12' if combat_attributes.rating(w.player) < 12 else '')
         if not reason and action == 'task':
             reason = '门派库银不足' if f['fund'] < 3 else '请先养伤' if w.player['health'] <= 45 else ''
         if not reason and action == 'donate' and w.player['wealth'] < 4:
@@ -318,7 +321,7 @@ def player_options(w, faction_id):
         if not reason and action == 'study':
             entry = w.player['martial']['arts'].get(f['art_id'])
             reason = ('门中贡献须达到5' if h['contribution'] < 5 else
-                      '武学须达到12' if w.player['skill'] < 12 else
+                      '战斗能力须达到12' if combat_attributes.rating(w.player) < 12 else
                       '银两不足' if w.player['wealth'] < 2 else
                       '此功法已臻化境' if entry and entry['realm'] >= 3 else
                       '请先调养' if w.player['health'] <= 30 or w.player['martial']['stamina'] < 12 else '')

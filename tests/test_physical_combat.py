@@ -1,3 +1,5 @@
+from jianghu import combat_attributes as abilities
+from tests.combat_helpers import set_rating, update_actor
 from copy import deepcopy
 import math
 from pathlib import Path
@@ -22,7 +24,7 @@ class PhysicalCombatTests(unittest.TestCase):
             w.player['equipment']['weapon']=item['id']
             f=combat.fighter(w.player,'player',combat.equipment(w,'player'))
             profiles.add(f['weapon']['id'])
-            self.assertEqual(f['weapon']['mass'],combat.PROFILES[f['weapon']['id']]['mass'])
+            self.assertEqual(f['weapon']['mass'],items.describe(item)['weapon_attributes']['mass'])
         self.assertEqual(profiles,set(combat.PROFILES)-{'unarmed'})
         item['durability']=0
         self.assertEqual(combat.equipment(w,'player')['weapon_profile'],'unarmed')
@@ -34,7 +36,7 @@ class PhysicalCombatTests(unittest.TestCase):
         item=items.create(w,'player','long_spear','fixture');w.player['equipment']['weapon']=item['id']
         gear=combat.equipment(w,'player')
         self.assertFalse(gear['shield']);self.assertEqual(w.player['equipment']['shield'],shield['id'])
-        self.assertEqual(gear['defense'],items.bonuses(w,'player')['defense']-2)
+        self.assertEqual(gear['defense'],items.bonuses(w,'player')['defense'])
 
     def test_rejected_frame_and_retired_commands_are_atomic(self):
         w=self.world();w.start_battle(1);b=w.battle
@@ -42,7 +44,7 @@ class PhysicalCombatTests(unittest.TestCase):
             before=deepcopy(w.export())
             with self.assertRaises(ValueError):w.battle_action(b['id'],b['revision'],action)
             self.assertEqual(w.export(),before)
-        for field,value in (('health',math.nan),('stamina',101),('health',b['fighters'][0]['vigor']+1)):
+        for field,value in (('health',math.nan),('stamina',b['fighters'][0]['stamina_max']+1),('health',b['fighters'][0]['vigor']+1)):
             packet=frame(b);packet['fighters'][0][field]=value;before=deepcopy(w.export())
             with self.assertRaises(ValueError):w.battle_action(b['id'],b['revision'],'checkpoint',packet)
             self.assertEqual(w.export(),before)
@@ -62,9 +64,9 @@ class PhysicalCombatTests(unittest.TestCase):
         self.assertEqual(restored.battle['frame'],packet)
         revision=b['revision'];finish=frame(b,8);finish['fighters'][1]['health']=0
         finish['fighters'][0]['landed_hits']=6;finish['fighters'][0]['attack_count']=6;finish['hits']=6
-        skill=w.player['skill'];result=w.battle_action(b['id'],revision,'complete',finish)
+        skill=abilities.rating(w.player);result=w.battle_action(b['id'],revision,'complete',finish)
         self.assertTrue(result['battle']['settled']);self.assertEqual(result['battle']['winner'],0)
-        self.assertGreater(w.player['skill'],skill)
+        self.assertEqual(abilities.rating(w.player),skill)
         after=deepcopy(w.export());count=w.store.count()
         w.battle_action(b['id'],revision,'complete',finish)
         self.assertEqual(w.export(),after);self.assertEqual(w.store.count(),count)

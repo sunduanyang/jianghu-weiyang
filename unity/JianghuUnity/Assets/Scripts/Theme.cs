@@ -20,7 +20,7 @@ public partial class JianghuApp {
     GUIStyle tab, tabOn, rowStyle, rowOnStyle, linkStyle, linkOnStyle, sealSmall, mapLabel, mapLabelOn, mapHalo, mapHaloBold, caption, mapTitle,
         centerTitle, centerSmall, bigNumber, titleBrush, medalGlyph, medalLabel, tagStyle, tagOnStyle, dialogueStyle, valueStyle, labelRight, resGlyph, resValue, moonLabel, globeOn, globeOff;
     static readonly int[] BookTabs={-1,2,3,4,6,5,7,8};
-    static readonly string[] BookTabNames={"人物","行囊","功法","势力","年谱","皮影","模型","存档"};
+    static readonly string[] BookTabNames={"人物","行囊","战斗","势力","年谱","皮影","模型","存档"};
     bool rosterOpen=true, advanceOpen, personScreen, dialogueOpen;
     int basePage;
     readonly Color vermilion=new Color(.56f,.17f,.13f), muted=new Color(.60f,.63f,.58f), paperText=new Color(.97f,.93f,.85f),
@@ -186,7 +186,7 @@ public partial class JianghuApp {
         Resource(ref x,"银",Num(p["wealth"]),"银两");
         Resource(ref x,"力",Hero["created"].B?Hero["points"].S+" / "+Hero["max_points"].S:"—","行动力");
         Resource(ref x,"望",Num(p["reputation"]),"声望");
-        Resource(ref x,"武",Num(p["skill"]),"武学");
+        Resource(ref x,"体魄",Num(p["combat_attributes"]["base"]["constitution"]),"体魄");
         Resource(ref x,"体",Num(p["health"]),"体力");
         GUI.Label(new Rect(640,4,400,30),W["date"].S,centerTitle);
         GUI.Label(new Rect(640,32,400,20),W["battle_active"].B?"切磋进行中":W["autoplay"].B?"自行演化":W["job"]["remaining"].I>0?"推演中 · 余"+W["job"]["remaining"].S+"月":W["ai"]["busy"].B?"江湖已暂停 · 后台思考中":"江湖已暂停",centerSmall);
@@ -219,9 +219,9 @@ public partial class JianghuApp {
         if(GUI.Button(moon,GUIContent.none,GUIStyle.none)&&!Client.Busy&&!W["battle_active"].B){if(hero){if(Paused)HeroAction("end_turn");}else Control("advance",1);}
         // function medallions
         float y=900;
-        if(Medal(new Vector2(500,y),60,"人","人物",personScreen))OpenPersonScreen();
-        if(Medal(new Vector2(585,y),60,"囊","行囊",Page==2))Go(2);
-        if(Medal(new Vector2(670,y),60,"武","功法",Page==3))Go(3);
+        if(Medal(new Vector2(500,y),60,"人","人物",personScreen))OpenCharacterPage(-1);
+        if(Medal(new Vector2(585,y),60,"囊","行囊",Page==2))OpenCharacterPage(2);
+        if(Medal(new Vector2(670,y),60,"武","战斗",Page==3))OpenCharacterPage(3);
         if(Medal(new Vector2(1010,y),60,"势","势力",Page==4))Go(4);
         if(Medal(new Vector2(1095,y),60,"谱","年谱",Page==6))Go(6);
         if(Medal(new Vector2(1180,y),60,"影","皮影",Page==5))Go(5);
@@ -267,12 +267,12 @@ public partial class JianghuApp {
         Fill(new Rect(40,890,1600,1),hairline);
         GUILayout.BeginArea(new Rect(40,896,1600,52));GUILayout.BeginHorizontal();GUILayout.FlexibleSpace();
         for(int i=0;i<BookTabs.Length;i++){int target=BookTabs[i];bool on=target<0?personScreen:!personScreen&&Page==target;
-            if(GUILayout.Button(BookTabNames[i],on?tabOn:tab,GUILayout.Height(46),GUILayout.MinWidth(118))){if(target<0)OpenPersonScreen();else{personScreen=false;Go(target);}}}
+            if(GUILayout.Button(BookTabNames[i],on?tabOn:tab,GUILayout.Height(46),GUILayout.MinWidth(118))){if(target<0||target==2||target==3)OpenCharacterPage(target);else{personScreen=false;Go(target);}}}
         GUILayout.FlexibleSpace();GUILayout.EndHorizontal();GUILayout.EndArea();
         return new Rect(60,112,1560,770);
     }
-    void CloseBook(){personScreen=false;dialogueOpen=false;if(!IsStagePage(Page))Go(basePage);}
-    void OpenPersonScreen(){if(SelectedPerson<0&&W["npcs"].A.Count>0)SelectPerson(W["npcs"].A[0]["id"].I);personScreen=true;dialogueOpen=false;}
+    void CloseBook(){personScreen=false;dialogueOpen=false;if(!IsStagePage(Page))Go(basePage);if(dialogueReturnPerson>=0){int id=dialogueReturnPerson;dialogueReturnPerson=-1;SwitchBookPerson(id);OpenDialogue(null);}}
+    void OpenPersonScreen(){if(SelectedPerson>=0)bookPersonId=SelectedPerson;OpenCharacterPage(-1);}
 
 }
 }

@@ -27,7 +27,7 @@ public sealed partial class PhysicsDuel {
     readonly List<GameObject> fixtures=new List<GameObject>();
 
     void RememberPhysicsSettings(){priorFixedStep=Time.fixedDeltaTime;priorTimeScale=Time.timeScale;priorTargetFps=Application.targetFrameRate;priorGravity=Physics2D.gravity;priorVelocityIterations=Physics2D.velocityIterations;priorPositionIterations=Physics2D.positionIterations;priorContactOffset=Physics2D.defaultContactOffset;}
-    public void PauseCampaign(){paused=true;Time.timeScale=0;controls.ReleaseAll();player.ClearMouseCapture();enemy.ClearMouseCapture();}
+    public void PauseCampaign(){paused=true;Time.timeScale=0;controls.ReleaseAll(true);player.ClearMouseCapture();enemy.ClearMouseCapture();}
     public void ActivateCampaign(){CampaignHidden=false;Application.targetFrameRate=90;PauseCampaign();}
     public void DeactivateCampaign(){PauseCampaign();CampaignHidden=true;Application.targetFrameRate=priorTargetFps;Time.timeScale=1;}
     void CampaignCommand(string command){PauseCampaign();campaign.command?.Invoke(command);}
@@ -81,15 +81,23 @@ public sealed partial class PhysicsDuel {
                 "vx",p.Value.rb.linearVelocity.x,"vy",p.Value.rb.linearVelocity.y,"spin",p.Value.rb.angularVelocity)).ToList();
             var plants=J.O();foreach(var p in feet){var f=p.Value;plants[p.Key]=J.O("state",(int)f.state,"phase",f.phase,"anchor_x",f.anchor.x,"anchor_y",f.anchor.y,"from_x",f.from.x,"from_y",f.from.y,"target_x",f.target.x,"target_y",f.target.y);}
             return J.O("health",health,"stamina",stamina,"balance",balance,"strength",strength,"heat",swingHeat,"motion_spent",motionStaminaSpent,
-                "attack_count",attackId,"landed_hits",landedHits,"bodies",new J(bodies),"feet",plants);
+                "attack_count",attackId,"landed_hits",landedHits,"bodies",new J(bodies),"feet",plants,
+                "stun_left",Mathf.Max(0,stunUntil-game.Clock),"injury_left",Mathf.Max(0,injuredUntil-game.Clock),
+                "guard_break_left",Mathf.Max(0,guardBrokenUntil-game.Clock),"regen_left",Mathf.Max(0,regenAt-game.Clock),
+                "motion_exhausted",motionExhausted?1:0,"swing_seconds",movingSeconds);
         }
         public void RestorePhysicalState(J state){
             foreach(var p in state["bodies"].A){var rb=limbs[p["key"].S].rb;rb.position=new Vector2((float)p["x"].N,(float)p["y"].N);rb.rotation=(float)p["angle"].N;rb.linearVelocity=new Vector2((float)p["vx"].N,(float)p["vy"].N);rb.angularVelocity=(float)p["spin"].N;}
             health=(float)state["health"].N;stamina=(float)state["stamina"].N;balance=(float)state["balance"].N;strength=(float)state["strength"].N;
             swingHeat=(float)state["heat"].N;motionStaminaSpent=(float)state["motion_spent"].N;attackId=state["attack_count"].I;landedHits=state["landed_hits"].I;
             foreach(var p in feet){var f=p.Value;var s=state["feet"][p.Key];f.state=(FootPlant.Phase)s["state"].I;f.phase=(float)s["phase"].N;f.anchor=new Vector2((float)s["anchor_x"].N,(float)s["anchor_y"].N);f.from=new Vector2((float)s["from_x"].N,(float)s["from_y"].N);f.target=new Vector2((float)s["target_x"].N,(float)s["target_y"].N);f.goal=f.state==FootPlant.Phase.Planted?f.anchor:Joint("ankle"+p.Key);f.support.target=f.anchor;}
-            hasCarryPose=false;hasTwoHandPose=false;InterruptAttack();regenAt=game.Clock+.35f;
+            hasCarryPose=false;hasTwoHandPose=false;InterruptAttack();
+            stunUntil=game.Clock+Ability(state,"stun_left",0);injuredUntil=game.Clock+Ability(state,"injury_left",0);
+            guardBrokenUntil=game.Clock+Ability(state,"guard_break_left",0);regenAt=game.Clock+Ability(state,"regen_left",.35f*recoveryDelayScale);
+            motionExhausted=state["motion_exhausted"].Has?state["motion_exhausted"].I==1:StaminaRatio<=.005f;
+            movingSeconds=Ability(state,"swing_seconds",0);
             foreach(var side in new[]{"Near","Far"})handTargets[side].target=limbs["hand"+side].A;
+            RestoreMousePose();
             if(health<=0)RelaxHandDrives();foreach(var limb in limbs.Values)limb.SampleVelocity();
         }
     }

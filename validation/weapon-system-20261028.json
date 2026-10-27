@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-28",
+  "weapon_templates": 16,
+  "attributes": [
+    "mass",
+    "handling",
+    "cost",
+    "damage",
+    "pressure",
+    "durability"
+  ],
+  "rules": {
+    "passed": true,
+    "tests": 55,
+    "seconds": 147.322,
+    "command": "python -X utf8 -m unittest tests.test_weapons tests.test_items tests.test_physical_combat tests.test_combat_attributes tests.test_physical_impact tests.test_combat_pace -q"
+  },
+  "unity": {
+    "build": "unity/Build/WeaponSystem/江湖未央.exe",
+    "build_log": "unity/weapon-system-build-2.log",
+    "passed": true,
+    "checks": 102,
+    "record": "validation/weapon-system-native-20261028.json"
+  },
+  "screenshots": [
+    {
+      "path": "validation\\screenshots\\weapon-inventory-20261028.png",
+      "size": [
+        1463,
+        866
+      ],
+      "colors": 36612,
+      "sha256": "770bbaf6eedb4de1cff238d68547b183d1bf9f43208974b0aa690caee6a1a758"
+    },
+    {
+      "path": "validation\\screenshots\\weapon-market-20261028.png",
+      "size": [
+        1463,
+        866
+      ],
+      "colors": 38106,
+      "sha256": "7ccf88b30370c8afbcb047d4374763f822b808bc0db18828d25a149f166fad94"
+    }
+  ],
+  "source_sha256": {
+    "items.py": "89861192bf5b953992ff79b20d842c4e5aa0683e23a54a639fb3a1e6a0c83a6f",
+    "weapons.py": "802a5c0c40e9e4b851cd5cd12e19d3a699533a5c3efc230b0be55c05246fd1cf",
+    "weapon_catalog.json": "b4e8248b61e75acb0773f44c349027622047c10bf5d0b7778db74621bdfdd974",
+    "physical_combat.py": "92259c4a04661af50bb056c6d4cad08886c25425481d5cf1a3389d4e52603045",
+    "combat_attributes.py": "6101c1969c72da7bf36f473f8cb32961fe78fe903e66c04b89e4405d39f1c5f1"
+  },
+  "save_policy": "Fresh isolated test saves only; no original user save read or written",
+  "limitation": "First-pass weapon tuning; long-term matchup balance not certified"
+}

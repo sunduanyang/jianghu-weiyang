@@ -41,7 +41,7 @@ def run(folder):
             print(json.dumps({k: row[k] for k in ('npc_id', 'applied', 'validation', 'latency_ms')}, ensure_ascii=False), flush=True)
         w.month_step(); w.checkpoint()
         executed = {n['id']: sum(a['source'] == 'AI' for a in n['monthly_actions']) for n in actors}
-        report = dict(model='Qwen3-4B-Q4_K_M', endpoint=DEFAULT_CONFIG['url'], real_requests=len(results),
+        report = dict(model=DEFAULT_CONFIG['model'], endpoint=DEFAULT_CONFIG['url'], real_requests=len(results),
                       all_applied=all(r['applied'] for r in results), decisions=results, actual_executions=executed,
                       executed_actions=sum(executed.values()), player_configuration_changed=False)
         (folder / 'real-model.json').write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')

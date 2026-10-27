@@ -1,0 +1,1191 @@
+{
+  "passed": true,
+  "scope": "automated acceptance",
+  "date": "2026-10-28T01:55:29.548540+08:00",
+  "build": "unity/Build/CombatKinetic/江湖未央.exe",
+  "active_build": "CombatKinetic",
+  "assembly_sha256": "8740310e7068f9106b9492eb8609076d39884f90812bb060e1b27814313e7704",
+  "python_tests": {
+    "passed": true,
+    "count": 20,
+    "scope": "physical combat, impact law, combat attributes",
+    "log": "output\\combat-claude-20261028\\python-current.log"
+  },
+  "earlier_full_regression": {
+    "passed": true,
+    "count": 377,
+    "snapshot": "before the concurrent removal of the old martial system",
+    "log": "output\\combat-claude-20261028\\python-all.log",
+    "claims_current_full_suite": false
+  },
+  "current_full_regression": {
+    "status": "superseded by concurrent changes to old martial tests; stopped and replaced by the 20 relevant current tests",
+    "log": "output\\combat-claude-20261028\\python-current-all.log",
+    "passed": null
+  },
+  "impact_parity": {
+    "vectors": 90,
+    "max_relative_error": 4.0952101846035115e-07,
+    "json_sha256": "1652f9c739a98a7085fda16afe664d11659c632a5a22df208630da32463ed8db",
+    "passed": true
+  },
+  "native_runs": {
+    "kinetic": {
+      "passed": true,
+      "checks": 14,
+      "report": "output\\combat-claude-20261028\\native-kinetic-6\\acceptance.json"
+    },
+    "feel30": {
+      "passed": true,
+      "checks": 23,
+      "report": "output\\combat-claude-20261028\\native-feel30-6\\acceptance.json"
+    },
+    "feel90": {
+      "passed": true,
+      "checks": 23,
+      "report": "output\\combat-claude-20261028\\native-feel90-6\\acceptance.json"
+    },
+    "rigs": {
+      "passed": true,
+      "checks": 4,
+      "report": "output\\combat-claude-20261028\\native-rigs-6\\acceptance.json"
+    },
+    "save": {
+      "passed": true,
+      "checks": 14,
+      "report": "output\\combat-claude-20261028\\native-save-6\\acceptance.json"
+    },
+    "resume": {
+      "passed": true,
+      "checks": 20,
+      "report": "output\\combat-claude-20261028\\native-resume-6\\acceptance.json"
+    },
+    "fists": {
+      "passed": true,
+      "checks": 20,
+      "report": "output\\combat-claude-20261028\\native-fists-6\\acceptance.json"
+    }
+  },
+  "contact_probes": [
+    {
+      "weapon": "dagger",
+      "speed": 6,
+      "zone": "body",
+      "damage": 7.382996,
+      "expected": 7.382994,
+      "first_hits": 1,
+      "second_hits": 1,
+      "stamina": 0,
+      "attack_active": false
+    },
+    {
+      "weapon": "warhammer",
+      "speed": 6,
+      "zone": "body",
+      "damage": 67.36023,
+      "expected": 67.36021,
+      "first_hits": 1,
+      "second_hits": 1,
+      "stamina": 0,
+      "attack_active": false
+    }
+  ],
+  "kinetic_checks": [
+    {
+      "check": "companion ready",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "/api/ai/config",
+      "passed": true,
+      "facts": {
+        "expected": true,
+        "error": ""
+      }
+    },
+    {
+      "check": "heavy kinetic impacts exceed old cap and glances have no six point floor",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "zero stamina inactive dagger still damages through actual contact",
+      "passed": true,
+      "facts": {
+        "weapon": "dagger",
+        "speed": 6,
+        "zone": "body",
+        "damage": 7.382996,
+        "expected": 7.382994,
+        "first_hits": 1,
+        "second_hits": 1,
+        "stamina": 0,
+        "attack_active": false
+      }
+    },
+    {
+      "check": "actual collision damage equals uncapped kinetic law",
+      "passed": true,
+      "facts": {
+        "weapon": "dagger",
+        "speed": 6,
+        "zone": "body",
+        "damage": 7.382996,
+        "expected": 7.382994,
+        "first_hits": 1,
+        "second_hits": 1,
+        "stamina": 0,
+        "attack_active": false
+      }
+    },
+    {
+      "check": "persistent pressure hits once and separation rearms without a gesture",
+      "passed": true,
+      "facts": {
+        "weapon": "dagger",
+        "speed": 6,
+        "zone": "body",
+        "damage": 7.382996,
+        "expected": 7.382994,
+        "first_hits": 1,
+        "second_hits": 1,
+        "stamina": 0,
+        "attack_active": false
+      }
+    },
+    {
+      "check": "zero stamina inactive warhammer still damages through actual contact",
+      "passed": true,
+      "facts": {
+        "weapon": "warhammer",
+        "speed": 6,
+        "zone": "body",
+        "damage": 67.36023,
+        "expected": 67.36021,
+        "first_hits": 1,
+        "second_hits": 1,
+        "stamina": 0,
+        "attack_active": false
+      }
+    },
+    {
+      "check": "actual collision damage equals uncapped kinetic law",
+      "passed": true,
+      "facts": {
+        "weapon": "warhammer",
+        "speed": 6,
+        "zone": "body",
+        "damage": 67.36023,
+        "expected": 67.36021,
+        "first_hits": 1,
+        "second_hits": 1,
+        "stamina": 0,
+        "attack_active": false
+      }
+    },
+    {
+      "check": "persistent pressure hits once and separation rearms without a gesture",
+      "passed": true,
+      "facts": {
+        "weapon": "warhammer",
+        "speed": 6,
+        "zone": "body",
+        "damage": 67.36023,
+        "expected": 67.36021,
+        "first_hits": 1,
+        "second_hits": 1,
+        "stamina": 0,
+        "attack_active": false
+      }
+    },
+    {
+      "check": "input target follows equally when tired; only force weakens",
+      "passed": true,
+      "facts": {
+        "healthy_x": 0.5465289,
+        "healthy_y": 0.3597043,
+        "tired_x": 0.5487688,
+        "tired_y": 0.3633196
+      }
+    },
+    {
+      "check": "AI holds an equipped shield in front of the body",
+      "passed": true,
+      "facts": {
+        "forward_distance": 0.7266693
+      }
+    },
+    {
+      "check": "AI drives manual trajectories and observes openings without preset Swing",
+      "passed": true,
+      "facts": {
+        "attacks": 2,
+        "decisions": 40,
+        "retargets": 8,
+        "target_zone": "body",
+        "hits": 0,
+        "gap": 0.03268862,
+        "limit": 3.304981
+      }
+    },
+    {
+      "check": "reactive AI constraints remain bounded",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "check": "no runtime errors",
+      "passed": true,
+      "facts": []
+    }
+  ],
+  "duels": {
+    "feel30": [
+      {
+        "weapon": "sword",
+        "hits": 6,
+        "manual_hits": 3,
+        "clashes": 1,
+        "block_contacts": 46,
+        "pressure_effort": 0.06580146,
+        "passed": true,
+        "gap": 0.004246995,
+        "limit": 2.096977,
+        "elapsed": 2.267151,
+        "player_worst": "forearmNear angle=64.3854 limits=-87.71158,62.28842",
+        "enemy_worst": "forearmNear angle=88.96069 limits=-62.28842,87.71158",
+        "rest_contacts_rejected": 86,
+        "handle_contacts_rejected": 2,
+        "occluded_contacts": 0
+      },
+      {
+        "weapon": "spear",
+        "hits": 12,
+        "manual_hits": 3,
+        "clashes": 9,
+        "block_contacts": 272,
+        "pressure_effort": 4.760834,
+        "passed": true,
+        "gap": 0.01791134,
+        "limit": 2.121548,
+        "elapsed": 18.00917,
+        "player_worst": "head angle=-34.12155 limits=-32,32",
+        "enemy_worst": "footNear angle=32.64563 limits=-32,32",
+        "rest_contacts_rejected": 4219,
+        "handle_contacts_rejected": 28,
+        "occluded_contacts": 0
+      },
+      {
+        "weapon": "unarmed",
+        "hits": 65,
+        "manual_hits": 32,
+        "clashes": 30,
+        "block_contacts": 630,
+        "pressure_effort": 13.54497,
+        "passed": true,
+        "gap": 0.05885589,
+        "limit": 3.49609,
+        "elapsed": 18.01227,
+        "player_worst": "handNear angle=-41.96805 limits=-38.5097,111.4903",
+        "enemy_worst": "handNear angle=42.00579 limits=-111.4903,38.5097",
+        "rest_contacts_rejected": 6825,
+        "handle_contacts_rejected": 31,
+        "occluded_contacts": 2
+      }
+    ],
+    "feel90": [
+      {
+        "weapon": "sword",
+        "hits": 12,
+        "manual_hits": 7,
+        "clashes": 12,
+        "block_contacts": 282,
+        "pressure_effort": 2.673642,
+        "passed": true,
+        "gap": 0.08441425,
+        "limit": 3.510609,
+        "elapsed": 5.359478,
+        "player_worst": "handFar angle=-42.02031 limits=-38.5097,111.4903",
+        "enemy_worst": "handNear angle=40.93818 limits=-111.4903,38.5097",
+        "rest_contacts_rejected": 200,
+        "handle_contacts_rejected": 7,
+        "occluded_contacts": 0
+      },
+      {
+        "weapon": "spear",
+        "hits": 19,
+        "manual_hits": 5,
+        "clashes": 20,
+        "block_contacts": 796,
+        "pressure_effort": 5.627923,
+        "passed": true,
+        "gap": 0.0152601,
+        "limit": 1.148712,
+        "elapsed": 17.57477,
+        "player_worst": "handNear angle=71.28669 limits=-79.53223,70.46777",
+        "enemy_worst": "footNear angle=33.14871 limits=-32,32",
+        "rest_contacts_rejected": 4257,
+        "handle_contacts_rejected": 26,
+        "occluded_contacts": 0
+      },
+      {
+        "weapon": "unarmed",
+        "hits": 61,
+        "manual_hits": 33,
+        "clashes": 41,
+        "block_contacts": 1186,
+        "pressure_effort": 11.55036,
+        "passed": true,
+        "gap": 0.05889365,
+        "limit": 3.641502,
+        "elapsed": 14.92136,
+        "player_worst": "handFar angle=-41.96819 limits=-38.5097,111.4903",
+        "enemy_worst": "handFar angle=-115.1318 limits=-111.4903,38.5097",
+        "rest_contacts_rejected": 6160,
+        "handle_contacts_rejected": 42,
+        "occluded_contacts": 0
+      }
+    ]
+  },
+  "binding": [
+    {
+      "skin": "f-elder",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.000361233,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-elder",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0008775665,
+      "max_limit": 0.9155884,
+      "worst": "forearmNear angle=63.20401 limits=-87.71158,62.28842 | "
+    },
+    {
+      "skin": "f-elder",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002911093,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-elder",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001184485,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-escort",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0009289246,
+      "max_limit": 0.02572632,
+      "worst": "forearmNear angle=62.31413 limits=-87.7116,62.2884 | "
+    },
+    {
+      "skin": "f-escort",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0008525527,
+      "max_limit": 0.3301964,
+      "worst": "forearmNear angle=62.6186 limits=-87.7116,62.2884 | "
+    },
+    {
+      "skin": "f-escort",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.003010511,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-escort",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0007686291,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-healer",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0009655121,
+      "max_limit": 0.5281982,
+      "worst": "forearmNear angle=62.81659 limits=-87.71161,62.28839 | "
+    },
+    {
+      "skin": "f-healer",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0008643786,
+      "max_limit": 0.9315071,
+      "worst": "forearmNear angle=63.2199 limits=-87.71161,62.28839 | "
+    },
+    {
+      "skin": "f-healer",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002960959,
+      "max_limit": 0.4833527,
+      "worst": "handNear angle=-63.98542 limits=-63.50207,86.49792 | "
+    },
+    {
+      "skin": "f-healer",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001491468,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-merchant",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0009936165,
+      "max_limit": 0.8791962,
+      "worst": "forearmNear angle=63.16761 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "f-merchant",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.00100128,
+      "max_limit": 0.894783,
+      "worst": "forearmNear angle=63.1832 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "f-merchant",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.003152966,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-merchant",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001039867,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-middle-farmer",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0009057154,
+      "max_limit": 0.9203224,
+      "worst": "forearmNear angle=63.20873 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "f-middle-farmer",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0008818855,
+      "max_limit": 0.9097366,
+      "worst": "forearmNear angle=63.19814 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "f-middle-farmer",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.00288911,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-middle-farmer",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001119078,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-scholar",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.001049716,
+      "max_limit": 1.408508,
+      "worst": "forearmNear angle=63.69694 limits=-87.71157,62.28843 | "
+    },
+    {
+      "skin": "f-scholar",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001030022,
+      "max_limit": 1.455452,
+      "worst": "forearmNear angle=63.74388 limits=-87.71157,62.28843 | "
+    },
+    {
+      "skin": "f-scholar",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002670804,
+      "max_limit": 0.8550262,
+      "worst": "handNear angle=86.33809 limits=-64.51694,85.48306 | "
+    },
+    {
+      "skin": "f-scholar",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001080281,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-swordswoman",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0009153736,
+      "max_limit": 0.1895409,
+      "worst": "forearmNear angle=62.47795 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "f-swordswoman",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.000928688,
+      "max_limit": 0.6711655,
+      "worst": "forearmNear angle=62.95957 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "f-swordswoman",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.00267161,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-swordswoman",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0009073323,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-youth-farmer",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0008268124,
+      "max_limit": 0.1093254,
+      "worst": "forearmNear angle=62.39775 limits=-87.71158,62.28842 | "
+    },
+    {
+      "skin": "f-youth-farmer",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0008189448,
+      "max_limit": 0.1423988,
+      "worst": "forearmNear angle=62.43082 limits=-87.71158,62.28842 | "
+    },
+    {
+      "skin": "f-youth-farmer",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.003102125,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "f-youth-farmer",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0007037062,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-artisan",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0008773096,
+      "max_limit": 0.7089806,
+      "worst": "forearmNear angle=62.9974 limits=-87.71158,62.28842 | "
+    },
+    {
+      "skin": "m-artisan",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0008513656,
+      "max_limit": 0.693428,
+      "worst": "forearmNear angle=62.98185 limits=-87.71158,62.28842 | "
+    },
+    {
+      "skin": "m-artisan",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002576708,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-artisan",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0009248291,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-beggar",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.001129179,
+      "max_limit": 1.409672,
+      "worst": "forearmNear angle=63.69807 limits=-87.7116,62.2884 | "
+    },
+    {
+      "skin": "m-beggar",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001137027,
+      "max_limit": 1.396027,
+      "worst": "forearmNear angle=63.68443 limits=-87.7116,62.2884 | "
+    },
+    {
+      "skin": "m-beggar",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002642676,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-beggar",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001294877,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-daoist",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.002939935,
+      "max_limit": 1.34053,
+      "worst": "forearmNear angle=63.62894 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "m-daoist",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.00273675,
+      "max_limit": 1.367455,
+      "worst": "forearmNear angle=63.65587 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "m-daoist",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002901075,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-daoist",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0008663445,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-elder",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0008614016,
+      "max_limit": 0.3185921,
+      "worst": "forearmNear angle=62.60702 limits=-87.71158,62.28843 | "
+    },
+    {
+      "skin": "m-elder",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0008737021,
+      "max_limit": 0.4295616,
+      "worst": "forearmNear angle=62.71799 limits=-87.71158,62.28843 | "
+    },
+    {
+      "skin": "m-elder",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002699928,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-elder",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001122583,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-escort",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.00093927,
+      "max_limit": 0.7766953,
+      "worst": "forearmNear angle=63.06513 limits=-87.71156,62.28844 | "
+    },
+    {
+      "skin": "m-escort",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0009131308,
+      "max_limit": 0.8207893,
+      "worst": "forearmNear angle=63.10923 limits=-87.71156,62.28844 | "
+    },
+    {
+      "skin": "m-escort",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002933042,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-escort",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001004557,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-fisher",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0009186578,
+      "max_limit": 0.6292114,
+      "worst": "forearmNear angle=62.91763 limits=-87.71158,62.28842 | "
+    },
+    {
+      "skin": "m-fisher",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0008732381,
+      "max_limit": 0.4194145,
+      "worst": "forearmNear angle=62.70784 limits=-87.71158,62.28842 | "
+    },
+    {
+      "skin": "m-fisher",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.003022496,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-fisher",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0008601675,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-hunter",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0009653618,
+      "max_limit": 1.08667,
+      "worst": "forearmNear angle=63.3751 limits=-87.71157,62.28843 | "
+    },
+    {
+      "skin": "m-hunter",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0009828486,
+      "max_limit": 1.058407,
+      "worst": "forearmNear angle=63.34684 limits=-87.71157,62.28843 | "
+    },
+    {
+      "skin": "m-hunter",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002843956,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-hunter",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.00107017,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-merchant",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.001329599,
+      "max_limit": 1.514351,
+      "worst": "forearmNear angle=63.80276 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "m-merchant",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001613903,
+      "max_limit": 1.487312,
+      "worst": "forearmNear angle=63.77572 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "m-merchant",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002829498,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-merchant",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001355495,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-middle-farmer",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.001076972,
+      "max_limit": 1.453403,
+      "worst": "forearmNear angle=63.74183 limits=-87.71158,62.28842 | "
+    },
+    {
+      "skin": "m-middle-farmer",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001123222,
+      "max_limit": 1.483902,
+      "worst": "forearmNear angle=63.77232 limits=-87.71158,62.28842 | "
+    },
+    {
+      "skin": "m-middle-farmer",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002796585,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-middle-farmer",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001083642,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-monk",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0007390442,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-monk",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0007340307,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-monk",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002522285,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-monk",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0008327332,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-official",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.00182498,
+      "max_limit": 0.9099617,
+      "worst": "forearmNear angle=63.19836 limits=-87.7116,62.2884 | "
+    },
+    {
+      "skin": "m-official",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.001779875,
+      "max_limit": 0.946682,
+      "worst": "forearmNear angle=63.23508 limits=-87.7116,62.2884 | "
+    },
+    {
+      "skin": "m-official",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002883421,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-official",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0006531557,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-performer",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.002585957,
+      "max_limit": 1.268143,
+      "worst": "forearmNear angle=63.55655 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "m-performer",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002635558,
+      "max_limit": 1.287495,
+      "worst": "forearmNear angle=63.5759 limits=-87.71159,62.28841 | "
+    },
+    {
+      "skin": "m-performer",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.00308365,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-performer",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0009964419,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-scholar",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.000898822,
+      "max_limit": 0.6398926,
+      "worst": "forearmNear angle=62.92832 limits=-87.71157,62.28843 | "
+    },
+    {
+      "skin": "m-scholar",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.000868177,
+      "max_limit": 0.7806358,
+      "worst": "forearmNear angle=63.06907 limits=-87.71157,62.28843 | "
+    },
+    {
+      "skin": "m-scholar",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.00315001,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-scholar",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0009448214,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-youth-farmer",
+      "weapon": "sword",
+      "shield": true,
+      "passed": true,
+      "max_gap": 0.0008770472,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-youth-farmer",
+      "weapon": "sword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0008341297,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-youth-farmer",
+      "weapon": "greatsword",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.002858138,
+      "max_limit": 0,
+      "worst": " | "
+    },
+    {
+      "skin": "m-youth-farmer",
+      "weapon": "unarmed",
+      "shield": false,
+      "passed": true,
+      "max_gap": 0.0003234223,
+      "max_limit": 0,
+      "worst": " | "
+    }
+  ],
+  "save_protection": {
+    "checked_files": 42,
+    "changed_files": []
+  },
+  "build_source_sha256": {
+    "unity/JianghuUnity/Assets/Scripts/PhysicsBattleSmoke.cs": "aed6165d376b0b1a989a9cd827d6512adf11df4207b02581a40d656420a416a8",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsFeelSmoke.cs": "feac82f1f02423258e787e9362e7f8eee4332fa524dfb20fc56634c1adec6295",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsKineticSmoke.cs": "3c0e7f30616f91b36adf5fcfb159349353a6bee2610a86fe9505459fccd8f5be",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelAI.cs": "edc2a18c7659532a3d4f16d4742d5aa1d526acd8860aa9497cfd43527e96ae39",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelArmory.cs": "9c6e4918476e1c4294e2e7b76629ccb187d4d031755d6ae1fddaa5b594d2a8c0",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelAttributeProbe.cs": "0416bf4205858fa98cdf644c70e202ac736f937bfa08b02ed80634984330f795",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelAttributes.cs": "f2f35a81259ba4ffb64e057f8a692f65cd4eee261dcb3bef1b91d8f9a8d3d432",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelCampaign.cs": "d2eab59b811864208fe3879dfa78da49cf7cf1a02a71e748e2896d525e0822bf",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelClash.cs": "367186696ed5e0869edf4341b3b0b03a9cf44ebd99fac2d02176fe900dbd3f3d",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelCombat.cs": "23186e9005024300576c9aec9a636d2fecb082ff962d7264758afcde75b71bd5",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelControls.cs": "0835c6003e5461ee20e99c7a6d5c8c3e8ccc692961bf7aa22a223b4f8eb40928",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelControlsView.cs": "7d468e3eda65f43237593d0bf94b0ab3fceced56d119663c6b2b88a92dc9cf27",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelFighter.cs": "b64287cb59dd78b33d7630c11558889f8c41417d861791e7c8de82f5f0ad7cc3",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelFigure.cs": "0c3a0f20c71a3d6d1136a8d0a9aaaf755ab744d3cc56c52a0f03bab3598bab81",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelGuard.cs": "da7929159f9eb05304ff6c7bbf44ae78415f393f784bf75338fed9cdb445d9cc",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelHandDrive.cs": "f7d83d7fe646ee25537bfdf235e7c949d4fcc568878370c41d470ca1ee2614b6",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelImpact.cs": "9985b1fb32dce8be43c1ee9e8d9b334296f70070a098775d501fba666d3bc641",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelImpactProbe.cs": "1c8f707b0018f579b348008457f69576d9b35a178937924037011a0cac1ed182",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelMotion.cs": "e10ab1eaa9a143407834c1a4b80b665977d327ef5336408dc8e738ffb93b6935",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelPhysics.cs": "b59c499f3444826ff9f87f1baabca46a0512f1750e2879d0b6bdc8c0d5c278e1",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelTwoHand.cs": "3eccfabe3d838f5eada06ff6dec59b221edb43919617522caa75dc65ac2e31ce",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelWeapons.cs": "fbd7088bca593c8de4e1ddd141c418402ed99ad10f7bb3456f0478589539fb67",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/PhysicsDuel.cs": "6e4d7013c8f0da36ee82c20385b53c3024fb90de1df4048ce7f9d52213b6befb",
+    "jianghu/physical_combat.py": "eb159fec4e4bcc3164f2655fb449d8d832cd0adb65999e91b0ef89c46f50aa80",
+    "jianghu/physical_impact.json": "1652f9c739a98a7085fda16afe664d11659c632a5a22df208630da32463ed8db"
+  },
+  "concurrent_working_tree_changes": [
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsBattleSmoke.cs",
+    "unity\\JianghuUnity\\Assets\\Scripts\\Screens.cs",
+    "jianghu\\combat_attributes.py",
+    "jianghu\\engine.py",
+    "jianghu\\martial.py",
+    "jianghu\\npc_plans.py"
+  ],
+  "limitations": [
+    "Offscreen motion and hit zones remain a seeded approximation; only the damage law is shared.",
+    "Native input and contact fixtures do not establish end-to-end physical device latency or original-game parity.",
+    "Rig range checks isolate opposing collisions and refill stamina; real duel checks do neither.",
+    "Hidden native windows are not manual graphics or physical touch-device acceptance.",
+    "The old martial system is being removed in a concurrent task. Current full-suite compatibility is not claimed; the final native release is pinned to its captured build source."
+  ]
+}

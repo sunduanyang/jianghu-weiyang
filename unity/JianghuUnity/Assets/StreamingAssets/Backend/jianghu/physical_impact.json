@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "minimum_closing_speed": 1.5,
+  "energy_scale": 3.2,
+  "energy_exponent": 0.72,
+  "zone_multipliers": {"body": 1.0, "head": 1.35, "arm": 1.0, "hand": 1.0, "leg": 0.8, "foot": 0.8},
+  "offscreen_hit_zones": [
+    {"zone": "head", "weight": 0.18},
+    {"zone": "body", "weight": 0.48},
+    {"zone": "arm", "weight": 0.18},
+    {"zone": "leg", "weight": 0.13},
+    {"zone": "foot", "weight": 0.03}
+  ]
+}

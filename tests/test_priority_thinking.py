@@ -1,3 +1,5 @@
+from jianghu import combat_attributes as abilities
+from tests.combat_helpers import set_rating, update_actor
 from copy import deepcopy
 import io
 import json
@@ -84,7 +86,7 @@ class PriorityThinkingTests(unittest.TestCase):
         w=self.world(3);n=w.npcs[1];n['wealth']=1e9
         self.assertEqual(npc_attention.profile(w,n)['level'],'standard')
         n['social_status']=dict(title='国主');self.assertEqual(npc_attention.grade(w,n),1)
-        n['social_status']=None;n['faction']=0;n['skill']=100;n['contribution']=999
+        n['social_status']=None;n['faction']=0;set_rating(n, 100);n['contribution']=999
         n['rank_progress']=dict(sect=dict(faction=0,grade=9,penalty=0.))
         self.assertEqual(npc_attention.grade(w,n),9)
         n['rank_progress']['sect']['grade']=3;self.assertEqual(npc_attention.profile(w,n)['level'],'deep')

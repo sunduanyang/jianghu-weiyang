@@ -1,3 +1,4 @@
+from . import combat_attributes
 """Separate territorial governments with real people, balanced treasuries and evidence-based cases."""
 from .demography import infect
 from . import social
@@ -76,7 +77,7 @@ def appoint(w, g=None):
             continue
         def merit(n):
             return n['reputation'] + n['contribution']*.15 + n['traits']['loyalty']*.25 + (
-                n['skill']*.5 if office == '捕头' else n['traits']['compassion']*.2 if office == '县令' else n['traits']['caution']*.2)
+                combat_attributes.rating(n)*.5 if office == '捕头' else n['traits']['compassion']*.2 if office == '县令' else n['traits']['caution']*.2)
         chosen = max(candidates, key=lambda n: (merit(n), -n['id']))
         old = current['id'] if current else g.get('departed', {}).pop(office, None)
         if current:

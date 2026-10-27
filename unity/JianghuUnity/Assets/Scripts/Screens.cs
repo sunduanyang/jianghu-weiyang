@@ -19,18 +19,10 @@ public partial class JianghuApp {
 
     // ---------------------------------------------------------------- 人物
     void DrawPersonScreen(){
-        BookScreen("人物");
-        if(!Person.Has){GUI.Label(new Rect(600,400,480,40),"择一人，观其一生",centerTitle);return;}
+        if(!InspectingNpc){DrawOwnPersonScreen();return;}
+        BookScreen("人物 · "+CharacterName);DrawCharacterRail();
+        if(!CharacterReady){GUI.Label(new Rect(600,400,480,40),"正在载入人物…",centerTitle);return;}
         var p=Person;
-        // recent people (left column)
-        GUI.Label(new Rect(60,114,180,22),"近日查阅 "+recentPeople.Count,caption);
-        for(int i=0;i<recentPeople.Count;i++){
-            var n=Npc(recentPeople[i]);if(!n.Has)continue;Rect c=new Rect(60,140+i*104,180,96);
-            bool on=recentPeople[i]==SelectedPerson;Frame(c,on?"btn_on":"card",8);
-            Portrait(new Rect(c.x+6,c.y+6,66,84),n["id"].I,n["sex"].S,n["age_months"].I);
-            GUI.Label(new Rect(c.x+80,c.y+12,96,24),n["name"].S,sub);GUI.Label(new Rect(c.x+80,c.y+40,96,40),n["identity"]["title"].S,small);
-            if(GUI.Button(c,GUIContent.none,GUIStyle.none))SelectPerson(n["id"].I);
-        }
         // name block and portrait ring
         GUI.Label(new Rect(270,122,250,34),p["name"].S,new GUIStyle(heading){fontSize=26,alignment=TextAnchor.MiddleRight});
         GUI.Label(new Rect(270,160,250,22),p["identity"]["grade_label"].S+" · "+p["identity"]["title"].S,labelRight);
@@ -40,9 +32,9 @@ public partial class JianghuApp {
         Portrait(new Rect(ring.x+21,ring.y+21,258,258),p["id"].I,p["sex"].S,p["age_months"].I,!p["alive"].B);Tex(ring,"ring_portrait");
         // interaction
         GUILayout.BeginArea(new Rect(470,432,440,90));GUILayout.BeginHorizontal();GUILayout.FlexibleSpace();
-        if(Btn("拜访",p["alive"].B))OpenDialogue("visit");if(Btn("赠银10",p["alive"].B))OpenDialogue("gift");if(Btn("切磋",Paused&&p["alive"].B))Intervene("challenge");if(Btn("交谈",p["alive"].B))OpenDialogue(null);
+        if(Btn("拜访",p["alive"].B))OpenDialogue("visit");if(Btn("接济4银",p["alive"].B))OpenDialogue("gift");if(Btn("切磋",Paused&&p["alive"].B))Intervene("challenge");if(Btn("交谈",p["alive"].B))OpenDialogue(null);
         GUILayout.FlexibleSpace();GUILayout.EndHorizontal();
-        GUILayout.BeginHorizontal();GUILayout.FlexibleSpace();if(Btn("请其反思",W["ai"]["config"]["enabled"].B))Client.Act("/api/ai/review",J.O("npc_id",SelectedPerson));if(Btn("从行囊赠物")){giftTarget=SelectedPerson;personScreen=false;Go(2);}GUILayout.FlexibleSpace();GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();GUILayout.FlexibleSpace();if(Btn("请其反思",W["ai"]["config"]["enabled"].B))Client.Act("/api/ai/review",J.O("npc_id",SelectedPerson));if(Btn("从我的行囊赠物"))OpenOwnInventory(SelectedPerson);GUILayout.FlexibleSpace();GUILayout.EndHorizontal();
         GUILayout.EndArea();
         // fact table
         var place=Place(p["place"].I);string faction=p["faction"].Has?W["factions"].A.FirstOrDefault(f=>f["id"].I==p["faction"].I)?["name"].S??"—":"—";
@@ -65,26 +57,33 @@ public partial class JianghuApp {
         // detail tabs (right)
         Rect side=new Rect(1240,112,380,770);Panel(side);
         GUILayout.BeginArea(new Rect(side.x+12,side.y+12,side.width-24,side.height-24));
-        personTab=GUILayout.SelectionGrid(personTab,new[]{"此刻","心性","身份","物品","关系","门中","武学","年谱","打算","家计","升降"},4,chip);
+        personTab=GUILayout.SelectionGrid(personTab,new[]{"此刻","心性","身份","物品","关系","门中","战斗","年谱","打算","家计","升降"},4,chip);
         personScroll=GUILayout.BeginScrollView(personScroll);DrawPersonTab();GUILayout.EndScrollView();
         GUILayout.EndArea();
     }
 
     // ---------------------------------------------------------------- 对话
     void OpenDialogue(string action){
-        dialogueOpen=true;var p=Person;
-        dialogueText="（"+p["name"].S+"抬眼看了看你。）";
-        if(action!=null)Intervene(action);
+        if(SelectedPerson<0)return;
+        bookPersonId=SelectedPerson;personScreen=false;dialogueOpen=true;talk="";conversationScroll=new Vector2(0,float.MaxValue);nextConversationPoll=0;
+        if(action=="visit")SocialAction("talk");
+        else if(action=="gift")SocialAction("help");
     }
     void DrawDialogue(){
         Tile(new Rect(0,0,1680,960),"bg");
         if(valley!=null){var old=GUI.color;GUI.color=new Color(.30f,.32f,.30f,1);GUI.DrawTexture(new Rect(0,0,1680,960),valley,ScaleMode.ScaleAndCrop);GUI.color=old;}
         Tex(new Rect(0,0,1680,960),"vignette");
+        if(!CharacterReady){
+            GUI.Label(new Rect(470,360,740,70),"正在走近 "+CharacterName+"…",centerTitle);
+            if(GUI.Button(new Rect(740,480,200,44),"返回",skin.button))dialogueOpen=false;
+            return;
+        }
         var p=Person;
         // hero (left) and NPC (right)
         Rect hl=new Rect(70,250,360,456),hr=new Rect(1250,250,360,456);
-        DrawPaperPerson(hl,PaperPerson(-1,"男",216),true,"bind");
+        DrawPaperPerson(hl,PaperPerson(-1,Hero["sex"].S,Hero["age_months"].I),true,"bind");
         DrawPaperPerson(hr,p,false,"bind",true);
+        if(GUI.Button(hr,new GUIContent("","查看"+p["name"].S+"的人物资料"),GUIStyle.none))OpenPersonScreen();
         Rect plateL=new Rect(40,716,420,150),plateR=new Rect(1220,716,420,150);Panel(plateL);Panel(plateR);
         GUI.Label(new Rect(plateL.x,plateL.y+10,plateL.width,28),Hero["created"].B?Hero["name"].S:"过客",new GUIStyle(sub){alignment=TextAnchor.MiddleCenter});
         GUI.Label(new Rect(plateL.x+20,plateL.y+46,plateL.width-40,22),"银两 "+Num(W["player"]["wealth"])+" · 声望 "+Num(W["player"]["reputation"]),centerSmall);
@@ -93,24 +92,15 @@ public partial class JianghuApp {
         GUI.Label(new Rect(plateR.x+20,plateR.y+46,plateR.width-40,22),p["identity"]["title"].S+" · 心情 "+MoodWord(p),centerSmall);
         var rel=p["player_relation"];
         if(rel.Has){float aff=(float)rel["affinity"].N;GUI.Label(new Rect(plateR.x+20,plateR.y+80,plateR.width-40,20),"交情 "+Num(rel["affinity"]),centerSmall);Rect bar=new Rect(plateR.x+40,plateR.y+108,plateR.width-80,6);Fill(bar,new Color(.10f,.12f,.12f));Fill(new Rect(bar.x,bar.y,bar.width*Mathf.Clamp01((aff+100)/200f),bar.height),aff>=0?brass:vermilion);}
-        // centre: scene banner, speech, numbered options
-        Rect box=new Rect(510,150,660,760);Frame(box,"panel_solid",24);
-        Rect banner=new Rect(box.x+14,box.y+14,box.width-28,210);
-        if(valley!=null){var old=GUI.color;GUI.color=new Color(.78f,.74f,.66f,1);GUI.DrawTexture(banner,valley,ScaleMode.ScaleAndCrop);GUI.color=old;}Outline(banner,hairline);
-        Rect speech=new Rect(box.x+30,banner.yMax+16,box.width-60,170);Frame(speech,"card",8);
-        GUI.Label(new Rect(speech.x+20,speech.y+10,speech.width-40,speech.height-20),"“"+dialogueText+"”",dialogueStyle);
-        GUILayout.BeginArea(new Rect(box.x+20,speech.yMax+16,box.width-40,box.yMax-speech.yMax-30));
-        if(DialogueOption("1","（拜访叙旧……）",p["alive"].B))Intervene("visit");
-        if(DialogueOption("2","（赠银十两……）",p["alive"].B))Intervene("gift");
-        if(DialogueOption("3","（切磋武艺……）",Paused&&p["alive"].B)){dialogueOpen=false;personScreen=false;Intervene("challenge");}
-        GUILayout.BeginHorizontal();GUILayout.Label("[4]",new GUIStyle(text){alignment=TextAnchor.MiddleCenter},GUILayout.Width(56),GUILayout.Height(40));talk=GUILayout.TextField(talk,GUILayout.Height(36));if(Btn("说",talk.Length>0))Intervene("talk");GUILayout.EndHorizontal();
-        if(DialogueOption("ESC","（暂无要事……）",true))dialogueOpen=false;
-        GUILayout.EndArea();
-        var e=Event.current;if(e.type==EventType.KeyDown&&GUIUtility.keyboardControl==0){
-            if(e.keyCode==KeyCode.Alpha1){Intervene("visit");e.Use();}else if(e.keyCode==KeyCode.Alpha2){Intervene("gift");e.Use();}
-            else if(e.keyCode==KeyCode.Escape){dialogueOpen=false;e.Use();}
-        }
+        if(GUI.Button(new Rect(plateR.x+20,plateR.y+119,120,28),"查看人物",linkStyle))OpenPersonScreen();
+        if(GUI.Button(new Rect(plateR.x+150,plateR.y+119,120,28),"此人行囊",linkStyle))OpenCharacterPage(2);
+        if(GUI.Button(new Rect(plateR.x+280,plateR.y+119,120,28),"此人战斗",linkStyle))OpenCharacterPage(3);
+        Rect box=new Rect(470,100,740,810);Frame(box,"panel_solid",24);
+        DrawSocialConversation(new Rect(box.x+28,box.y+20,box.width-56,box.height-40));
+        var e=Event.current;
+        if(e.type==EventType.KeyDown&&e.keyCode==KeyCode.Escape){dialogueOpen=false;e.Use();}
     }
+
     bool DialogueOption(string key,string label,bool enabled){
         GUILayout.BeginHorizontal();bool prev=GUI.enabled;GUI.enabled=prev&&enabled&&!Client.Busy;
         GUILayout.Label("["+key+"]",new GUIStyle(text){alignment=TextAnchor.MiddleCenter},GUILayout.Width(56),GUILayout.Height(40));

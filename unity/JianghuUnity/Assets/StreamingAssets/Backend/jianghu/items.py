@@ -1,3 +1,4 @@
+from . import combat_attributes, weapons, equipment
 """Personal possessions: finite instances, engine-priced transfers and event provenance."""
 from copy import deepcopy
 import math
@@ -11,93 +12,93 @@ GRADE_COLOR_NAMES = {9: '灰', 8: '白', 7: '绿', 6: '蓝', 5: '青',
                      4: '紫', 3: '金', 2: '橙', 1: '红'}
 GRADE_NAMES = {grade: name+'品' for grade, name in zip(range(9, 0, -1), '九八七六五四三二一')}
 CATEGORIES = {'manual': '书籍', 'food': '食品', 'wine': '酒', 'tea': '茶',
-              'weapon': '武器', 'shield': '盾牌', 'armor': '衣甲', 'accessory': '佩饰', 'tool': '器具',
+              'weapon': '武器', 'shield': '盾牌', 'armor': '护甲', 'accessory': '佩饰', 'tool': '器具',
               'medicine': '丹药', 'material': '材料'}
-SLOTS = {'weapon': '兵刃', 'shield': '副手盾牌', 'armor': '衣甲', 'accessory': '佩饰', 'tool': '器具'}
+SLOTS = {'weapon': '主手', 'shield': '副手', 'armor': '护甲'}
 CONSUMABLES = ('food', 'wine', 'tea', 'medicine')
 
 
-def template(name, category, grade, price, weight, description, **kwargs):
-    return dict(name=name, category=category, grade=grade, price=price, weight=weight,
+def template(name, category, grade, price, description, **kwargs):
+    return dict(name=name, category=category, grade=grade, price=price,
                 description=description, **kwargs)
 
 
 CATALOG = {
-    'wood_sword': template('枣木剑', 'weapon', 9, 12, 1.2, '以枣木削成，轻巧趁手，适宜初学。', attack=2, training=.08),
-    'iron_sword': template('青锋剑', 'weapon', 7, 48, 2.4, '百炼青锋，剑身平直，行走江湖的可靠兵刃。', attack=6, training=.15),
-    'steel_blade': template('雁翎刀', 'weapon', 6, 86, 3.2, '刀背厚重，刀尖微翘，出手沉稳。', attack=9, training=.2),
-    'cloud_sword': template('流云剑', 'weapon', 3, 320, 1.8, '锻纹如流云，轻而不浮，非寻常匠作。', attack=15, training=.3),
-    'ancient_blade': template('照夜古刀', 'weapon', 2, 720, 2.6, '寒光映夜，刀铭已不可辨，锋芒历岁未减。', attack=20, training=.4),
-    'cloth': template('粗布衣', 'armor', 9, 10, 1.1, '洗得发白的布衣，能挡些风尘。', defense=1),
-    'leather': template('熟皮护衣', 'armor', 7, 42, 3.5, '熟皮缝制，护住要害，适合行脚。', defense=4),
-    'silk_robe': template('云纹锦袍', 'armor', 5, 110, 1.6, '锦绣藏锋，内衬柔韧丝绵。', defense=7),
-    'jade': template('平安玉扣', 'accessory', 8, 24, .1, '小小一枚青玉，寄寓岁岁平安。', recovery=1),
-    'gourd': template('药葫芦', 'accessory', 6, 64, .4, '以药草熏养的葫芦，佩在身边助人调息。', recovery=2),
-    'hoe': template('铁头锄', 'tool', 9, 14, 2., '农家常用的锄具，勤作可增收。', income=1.5),
-    'hammer': template('锻铁锤', 'tool', 8, 22, 2.5, '木柄铁锤，既可锻打，也可修整工件。', income=2),
-    'abacus': template('乌木算盘', 'tool', 7, 38, .8, '算清一笔一笔的往来，买卖才有余地。', income=2.5),
-    'herb_basket': template('采药篓', 'tool', 8, 20, .7, '竹篾细密，可妥善收存山间药草。', income=2),
-    'salve': template('金疮药', 'medicine', 9, 6, .1, '外敷伤处，恢复体力并缩短外伤。', heal=18, wound=2),
-    'pill': template('养心丸', 'medicine', 7, 18, .1, '缓和病势，调养元气；不能代替长期诊治。', heal=12, illness=12),
-    'ration': template('麦饼', 'food', 9, 3, .3, '朴素耐放的行粮，食用恢复少许体力。', heal=6),
-    'wine': template('桂花酿', 'wine', 8, 8, .5, '清甜微辛，歇脚时饮一盏，可舒缓心绪。', heal=8, joy=4),
-    'basic_manual': template('吐纳入门', 'manual', 9, 20, .3, '从呼吸起落入手，循序习得基本功。', learning=1.2, requirement=0, pages=3),
-    'sword_manual': template('青溪剑谱', 'manual', 7, 58, .4, '记录青溪一脉剑式，需些武学根基。', learning=2., requirement=12, pages=4),
-    'cloud_manual': template('栖云心法', 'manual', 4, 180, .4, '凝神守一，气息绵长；根基不足者难以领会。', learning=3., requirement=30, pages=5),
-    'taixu_manual': template('太虚真解', 'manual', 1, 1200, .5, '字句深奥，须有深厚根基，方能窥见其意。', learning=4.5, requirement=70, pages=6),
-    'herb': template('止血草', 'material', 9, 4, .2, '山间常见药草，可制金疮药。'),
-    'iron': template('生铁', 'material', 9, 5, .8, '未经精炼的铁料，可用于修补兵刃与衣甲。'),
-    'timber': template('硬木料', 'material', 9, 4, .6, '纹理紧实的木料，可用于修补佩饰与器具。'),
+    'wood_sword': template('枣木剑', 'weapon', 9, 12, '以枣木削成，轻巧趁手，适宜初学。'),
+    'iron_sword': template('青锋剑', 'weapon', 7, 48, '百炼青锋，剑身平直，行走江湖的可靠兵刃。'),
+    'steel_blade': template('雁翎刀', 'weapon', 6, 86, '刀背厚重，刀尖微翘，出手沉稳。'),
+    'cloud_sword': template('流云剑', 'weapon', 3, 320, '锻纹如流云，轻而不浮，非寻常匠作。'),
+    'ancient_blade': template('照夜古刀', 'weapon', 2, 720, '寒光映夜，刀铭已不可辨，锋芒历岁未减。'),
+    'cloth': template('粗布衣', 'armor', 9, 10, '洗得发白的布衣，能挡些风尘。', defense=1),
+    'leather': template('熟皮护衣', 'armor', 7, 42, '熟皮缝制，护住要害，适合行脚。', defense=4),
+    'silk_robe': template('云纹锦袍', 'armor', 5, 110, '锦绣藏锋，内衬柔韧丝绵。', defense=7),
+    'jade': template('平安玉扣', 'accessory', 8, 24, '小小一枚青玉，寄寓岁岁平安。'),
+    'gourd': template('药葫芦', 'accessory', 6, 64, '以药草熏养的葫芦，佩在身边助人调息。'),
+    'hoe': template('铁头锄', 'tool', 9, 14, '农家常用的锄具，可供交易与赠送。'),
+    'hammer': template('锻铁锤', 'tool', 8, 22, '木柄铁锤，是匠人熟悉的日常器具。'),
+    'abacus': template('乌木算盘', 'tool', 7, 38, '算清一笔一笔的往来，买卖才有余地。'),
+    'herb_basket': template('采药篓', 'tool', 8, 20, '竹篾细密，可妥善收存山间药草。'),
+    'salve': template('金疮药', 'medicine', 9, 6, '外敷伤处，恢复体力并缩短外伤。', heal=18, wound=2),
+    'pill': template('养心丸', 'medicine', 7, 18, '缓和病势，调养元气；不能代替长期诊治。', heal=12, illness=12),
+    'ration': template('麦饼', 'food', 9, 3, '朴素耐放的行粮，食用恢复少许体力。', heal=6),
+    'wine': template('桂花酿', 'wine', 8, 8, '清甜微辛，歇脚时饮一盏，可舒缓心绪。', heal=8, joy=4),
+    'basic_manual': template('吐纳入门', 'manual', 9, 20, '从呼吸起落入手，循序习得基本功。', learning=1.2, requirement=0, pages=3),
+    'sword_manual': template('青溪剑谱', 'manual', 7, 58, '记录青溪一脉剑式，需些武学根基。', learning=2., requirement=12, pages=4),
+    'cloud_manual': template('栖云心法', 'manual', 4, 180, '凝神守一，气息绵长；根基不足者难以领会。', learning=3., requirement=30, pages=5),
+    'taixu_manual': template('太虚真解', 'manual', 1, 1200, '字句深奥，须有深厚根基，方能窥见其意。', learning=4.5, requirement=70, pages=6),
+    'herb': template('止血草', 'material', 9, 4, '山间常见药草，可制金疮药。'),
+    'iron': template('生铁', 'material', 9, 5, '未经精炼的铁料，可用于修补兵刃与衣甲。'),
+    'timber': template('硬木料', 'material', 9, 4, '纹理紧实的木料，可用于修补佩饰与器具。'),
 }
 # Physical weapon profiles feed the native arena; item identities stay stable.
 PHYSICAL_TEMPLATES = {
-    'iron_dagger': template('铁匕首', 'weapon', 9, 18, .6, '短刃近身，轻快省力。', attack=2, physical_profile='dagger'),
-    'hand_axe': template('单手战斧', 'weapon', 8, 32, 2.8, '斧头着力，柄部无伤。', attack=4, physical_profile='axe'),
-    'spiked_mace': template('钉头铁锤', 'weapon', 7, 56, 3.4, '锤头重击，压盾有力。', attack=6, physical_profile='mace'),
-    'long_spear': template('白蜡长枪', 'weapon', 8, 36, 2.6, '双手持杆，仅枪头造成伤害。', attack=4, physical_profile='spear'),
-    'great_sword': template('双手重剑', 'weapon', 6, 90, 3.8, '双手握持，无法同时举盾。', attack=8, physical_profile='greatsword'),
-    'great_axe': template('双手战斧', 'weapon', 6, 94, 5.6, '双手分担重斧，收势较慢。', attack=9, physical_profile='greataxe'),
-    'war_hammer': template('双手战锤', 'weapon', 6, 98, 6.1, '双手抡击，冲击沉重。', attack=10, physical_profile='warhammer'),
-    'wood_shield': template('藤木盾', 'shield', 9, 16, 1.1, '单手兵器可配盾；双手兵器占用副手。', defense=2),
+    'iron_dagger': template('铁匕首', 'weapon', 9, 18, '短刃近身，轻快省力。'),
+    'hand_axe': template('单手战斧', 'weapon', 8, 32, '斧头着力，柄部无伤。'),
+    'spiked_mace': template('钉头铁锤', 'weapon', 7, 56, '锤头重击，压盾有力。'),
+    'long_spear': template('白蜡长枪', 'weapon', 8, 36, '双手持杆，仅枪头造成伤害。'),
+    'great_sword': template('双手重剑', 'weapon', 6, 90, '双手握持，无法同时举盾。'),
+    'great_axe': template('双手战斧', 'weapon', 6, 94, '双手分担重斧，收势较慢。'),
+    'war_hammer': template('双手战锤', 'weapon', 6, 98, '双手抡击，冲击沉重。'),
+    'wood_shield': template('藤木盾', 'shield', 9, 16, '单手兵器可配盾；双手兵器占用副手。', defense=2),
 }
 CATALOG.update(PHYSICAL_TEMPLATES)
-# Keep old template IDs and their effects stable; add the missing grades around them.
+# Keep template identities stable so existing possessions remain addressable.
 ORIGINAL_TEMPLATES = frozenset(CATALOG)
 CATALOG.update({
-    'iron_practice_sword': template('铁胎练剑', 'weapon', 8, 26, 2.6, '剑刃未开，铁胎扎实，适宜习练架势。', attack=4, training=.11),
-    'autumn_sword': template('秋水剑', 'weapon', 5, 140, 2.2, '淬火匀净，剑光似秋水，收发自如。', attack=11, training=.24),
-    'frost_blade': template('霜华刀', 'weapon', 4, 220, 2.8, '叠锻霜纹隐现，兼有韧性与锋锐。', attack=13, training=.27),
-    'tianheng_sword': template('天衡剑', 'weapon', 1, 1500, 2.1, '名匠穷年淬成，剑脊如衡，出锋若星。', attack=25, training=.5),
-    'scallion_pancake': template('葱香炊饼', 'food', 8, 6, .3, '面香裹葱，外酥内软，是旅店常备的点心。', heal=9),
-    'mushroom_noodles': template('山菌汤面', 'food', 7, 12, .4, '山菌熬汤，细面滑口，暖胃解乏。', heal=12),
-    'lotus_rice': template('荷叶蒸饭', 'food', 6, 22, .4, '新米与时蔬包入荷叶，蒸得清香。', heal=16),
-    'river_shrimp': template('清炒河虾', 'food', 5, 40, .3, '细火急炒，虾肉鲜嫩，佐以时令青蔬。', heal=20),
-    'silver_fish': template('银丝鱼脍', 'food', 4, 72, .3, '鲜鱼细切，姜醋相和，刀工十分讲究。', heal=25),
-    'golden_crab': template('金膏蒸蟹', 'food', 3, 128, .4, '秋蟹膏满，清蒸留鲜，是席间珍味。', heal=31),
-    'mountain_stew': template('山海珍羹', 'food', 2, 240, .4, '山珍海味慢煨成羹，汤色清润，滋养甚厚。', heal=38),
-    'nine_treasure_feast': template('九珍玉食', 'food', 1, 480, .5, '九味珍材各得其宜，汇成一席玲珑滋味。', heal=48),
-    'village_wine': template('村酿浊酒', 'wine', 9, 4, .5, '村家新酿，酒色微浊，饮来温和。', heal=5, joy=2),
-    'green_plum_wine': template('青梅酒', 'wine', 7, 16, .5, '青梅入酒，酸甜相济，略解行路烦忧。', heal=10, joy=5),
-    'bamboo_wine': template('竹叶青酿', 'wine', 6, 30, .5, '竹叶浸酿，色泽青润，回味悠长。', heal=12, joy=6),
-    'pear_blossom_wine': template('梨花白', 'wine', 5, 55, .5, '酒色澄澈，香如春日梨花，入口绵柔。', heal=15, joy=7),
-    'song_lao_wine': template('松醪春', 'wine', 4, 96, .5, '松香与谷香交融，封坛经年方启。', heal=18, joy=8),
-    'jade_dew_wine': template('玉壶清露', 'wine', 3, 168, .4, '清泉酿成，以玉色瓷壶封存，香气清冽。', heal=22, joy=9),
-    'zixia_wine': template('紫霞陈酿', 'wine', 2, 300, .4, '陈香层叠，开坛如霞，少许便觉醇厚。', heal=27, joy=10),
-    'taibai_wine': template('太白遗酿', 'wine', 1, 600, .4, '名酿古法续传，酒香沉静，百味融于一盏。', heal=34, joy=12),
-    'coarse_tea': template('山野粗茶', 'tea', 9, 3, .1, '山间粗叶焙成，虽朴素，亦能解渴醒神。', heal=4, joy=1),
-    'roasted_tea': template('炒青茶', 'tea', 8, 7, .1, '铁锅炒青，茶汤明亮，香味平和。', heal=6, joy=2),
-    'pine_tea': template('松溪春茗', 'tea', 7, 14, .1, '溪畔春芽，轻焙留香，饮后精神一振。', heal=8, joy=3),
-    'cloud_tea': template('云岭毛尖', 'tea', 6, 26, .1, '云岭细芽，锋毫匀整，滋味清鲜。', heal=11, joy=4),
-    'lotus_tea': template('莲心雪芽', 'tea', 5, 48, .1, '嫩芽如雪，回甘带莲心清意。', heal=14, joy=5),
-    'silver_needle_tea': template('白毫银针', 'tea', 4, 85, .1, '芽头肥壮，白毫如银，茶香温润。', heal=18, joy=6),
-    'dragon_tea': template('龙团胜雪', 'tea', 3, 150, .1, '细碾团茶，点汤如雪，工序繁复。', heal=22, joy=8),
-    'purple_bud_tea': template('紫笋贡茗', 'tea', 2, 280, .1, '紫芽初展时采制，香凝不散，甘醇入喉。', heal=27, joy=10),
-    'taihe_tea': template('太和清露', 'tea', 1, 700, .1, '清露初采，慢焙成香。啜饮一盏，澄心静气。', heal=32, joy=12),
-    'stance_manual': template('桩功浅说', 'manual', 8, 34, .3, '从立身扎根讲起，附有清楚的行功图。', learning=1.6, requirement=5, pages=3),
-    'steps_manual': template('归雁步图', 'manual', 6, 90, .3, '步随身转，进退有节，须先练稳下盘。', learning=2.3, requirement=18, pages=4),
-    'river_manual': template('沧浪劲论', 'manual', 5, 128, .4, '论劲如潮，层层相续，宜以已有根基印证。', learning=2.6, requirement=24, pages=5),
-    'moon_manual': template('照月剑经', 'manual', 3, 320, .4, '以静照动，借月喻剑，收录名家心悟。', learning=3.5, requirement=42, pages=5),
-    'liangyi_manual': template('两仪玄章', 'manual', 2, 640, .5, '阴阳相济，动静互根，字字关乎深厚内功。', learning=4., requirement=55, pages=6),
+    'iron_practice_sword': template('铁胎练剑', 'weapon', 8, 26, '剑刃未开，铁胎扎实，适宜习练架势。'),
+    'autumn_sword': template('秋水剑', 'weapon', 5, 140, '淬火匀净，剑光似秋水，收发自如。'),
+    'frost_blade': template('霜华刀', 'weapon', 4, 220, '叠锻霜纹隐现，兼有韧性与锋锐。'),
+    'tianheng_sword': template('天衡剑', 'weapon', 1, 1500, '名匠穷年淬成，剑脊如衡，出锋若星。'),
+    'scallion_pancake': template('葱香炊饼', 'food', 8, 6, '面香裹葱，外酥内软，是旅店常备的点心。', heal=9),
+    'mushroom_noodles': template('山菌汤面', 'food', 7, 12, '山菌熬汤，细面滑口，暖胃解乏。', heal=12),
+    'lotus_rice': template('荷叶蒸饭', 'food', 6, 22, '新米与时蔬包入荷叶，蒸得清香。', heal=16),
+    'river_shrimp': template('清炒河虾', 'food', 5, 40, '细火急炒，虾肉鲜嫩，佐以时令青蔬。', heal=20),
+    'silver_fish': template('银丝鱼脍', 'food', 4, 72, '鲜鱼细切，姜醋相和，刀工十分讲究。', heal=25),
+    'golden_crab': template('金膏蒸蟹', 'food', 3, 128, '秋蟹膏满，清蒸留鲜，是席间珍味。', heal=31),
+    'mountain_stew': template('山海珍羹', 'food', 2, 240, '山珍海味慢煨成羹，汤色清润，滋养甚厚。', heal=38),
+    'nine_treasure_feast': template('九珍玉食', 'food', 1, 480, '九味珍材各得其宜，汇成一席玲珑滋味。', heal=48),
+    'village_wine': template('村酿浊酒', 'wine', 9, 4, '村家新酿，酒色微浊，饮来温和。', heal=5, joy=2),
+    'green_plum_wine': template('青梅酒', 'wine', 7, 16, '青梅入酒，酸甜相济，略解行路烦忧。', heal=10, joy=5),
+    'bamboo_wine': template('竹叶青酿', 'wine', 6, 30, '竹叶浸酿，色泽青润，回味悠长。', heal=12, joy=6),
+    'pear_blossom_wine': template('梨花白', 'wine', 5, 55, '酒色澄澈，香如春日梨花，入口绵柔。', heal=15, joy=7),
+    'song_lao_wine': template('松醪春', 'wine', 4, 96, '松香与谷香交融，封坛经年方启。', heal=18, joy=8),
+    'jade_dew_wine': template('玉壶清露', 'wine', 3, 168, '清泉酿成，以玉色瓷壶封存，香气清冽。', heal=22, joy=9),
+    'zixia_wine': template('紫霞陈酿', 'wine', 2, 300, '陈香层叠，开坛如霞，少许便觉醇厚。', heal=27, joy=10),
+    'taibai_wine': template('太白遗酿', 'wine', 1, 600, '名酿古法续传，酒香沉静，百味融于一盏。', heal=34, joy=12),
+    'coarse_tea': template('山野粗茶', 'tea', 9, 3, '山间粗叶焙成，虽朴素，亦能解渴醒神。', heal=4, joy=1),
+    'roasted_tea': template('炒青茶', 'tea', 8, 7, '铁锅炒青，茶汤明亮，香味平和。', heal=6, joy=2),
+    'pine_tea': template('松溪春茗', 'tea', 7, 14, '溪畔春芽，轻焙留香，饮后精神一振。', heal=8, joy=3),
+    'cloud_tea': template('云岭毛尖', 'tea', 6, 26, '云岭细芽，锋毫匀整，滋味清鲜。', heal=11, joy=4),
+    'lotus_tea': template('莲心雪芽', 'tea', 5, 48, '嫩芽如雪，回甘带莲心清意。', heal=14, joy=5),
+    'silver_needle_tea': template('白毫银针', 'tea', 4, 85, '芽头肥壮，白毫如银，茶香温润。', heal=18, joy=6),
+    'dragon_tea': template('龙团胜雪', 'tea', 3, 150, '细碾团茶，点汤如雪，工序繁复。', heal=22, joy=8),
+    'purple_bud_tea': template('紫笋贡茗', 'tea', 2, 280, '紫芽初展时采制，香凝不散，甘醇入喉。', heal=27, joy=10),
+    'taihe_tea': template('太和清露', 'tea', 1, 700, '清露初采，慢焙成香。啜饮一盏，澄心静气。', heal=32, joy=12),
+    'stance_manual': template('桩功浅说', 'manual', 8, 34, '从立身扎根讲起，附有清楚的行功图。', learning=1.6, requirement=5, pages=3),
+    'steps_manual': template('归雁步图', 'manual', 6, 90, '步随身转，进退有节，须先练稳下盘。', learning=2.3, requirement=18, pages=4),
+    'river_manual': template('沧浪劲论', 'manual', 5, 128, '论劲如潮，层层相续，宜以已有根基印证。', learning=2.6, requirement=24, pages=5),
+    'moon_manual': template('照月剑经', 'manual', 3, 320, '以静照动，借月喻剑，收录名家心悟。', learning=3.5, requirement=42, pages=5),
+    'liangyi_manual': template('两仪玄章', 'manual', 2, 640, '阴阳相济，动静互根，字字关乎深厚内功。', learning=4., requirement=55, pages=6),
 })
 RECIPES = {'salve': {'herb': 2}, 'pill': {'herb': 3}}
 
@@ -109,6 +110,20 @@ def grade_info(grade):
 
 def grade_legend():
     return [{'grade': grade, **grade_info(grade)} for grade in GRADES]
+
+
+# Old martial manuals are removed together with their retired learning system.
+RETIRED_MANUALS = {key for key, value in CATALOG.items() if value['category'] == 'manual'}
+for _retired in RETIRED_MANUALS:
+    del CATALOG[_retired]
+
+
+def retire_manuals(w):
+    for item in list(w.items['objects'].values()):
+        if item['template'] in RETIRED_MANUALS:
+            remove(w, item)
+    for n in [w.player, *w.npcs.values()]:
+        n['read_books'] = {}
 
 
 def actor(w, owner):
@@ -123,6 +138,8 @@ def prepare(n):
     n.setdefault('inventory', [])
     n.setdefault('equipment', {})
     n.setdefault('read_books', {})
+    n.pop('weight', None)
+    n.pop('capacity', None)
 
 
 def objects(w, owner):
@@ -138,20 +155,6 @@ def get(w, owner, item_id):
 
 def spec(item):
     return CATALOG[item['template']]
-
-
-def weight(w, owner):
-    return round(sum(spec(i)['weight'] for i in objects(w, owner)), 2)
-
-
-def capacity(w, owner):
-    n = actor(w, owner)
-    return 30 if str(owner) == 'player' else 18 + n['skill'] * .12
-
-
-def can_receive(w, owner, template_id):
-    if str(owner) not in ('market', 'government') and weight(w, owner) + CATALOG[template_id]['weight'] > capacity(w, owner) + .0001:
-        raise ValueError('行囊负重不足，请先出售或赠出一些物品')
 
 
 def create(w, owner, template_id, source, event_id=None):
@@ -184,11 +187,17 @@ def initialize(w, legacy=False):
     """One-time registration; never invent possessions for an already deceased NPC."""
     prepare(w.player)
     w.player.setdefault('mood', {'joy': 15.})
-    for key, value in {'health': 100., 'skill': 12., 'alive': True}.items():
+    for key, value in {'health': 100., 'alive': True}.items():
         w.player.setdefault(key, value)
     for n in w.npcs.values():
         prepare(n)
     if getattr(w, 'items', None):
+        retire_manuals(w)
+        for item in w.items['objects'].values():
+            for retired in ('attack', 'weight', 'capacity'):
+                item.pop(retired, None)
+        for owner in ['player', *w.npcs]:
+            equipment.normalize(w, owner)
         if w.items.get('version', 1) < 2:
             # Explicit one-time stock registration, never monthly replenishment.
             known = {i['template'] for i in w.items['objects'].values()} | ORIGINAL_TEMPLATES
@@ -216,7 +225,7 @@ def initialize(w, legacy=False):
     for template_id, d in CATALOG.items():
         for _ in range(4 if d['grade'] >= 7 else 1):
             create(w, 'market', template_id, '货栈开张存货')
-    for template_id in ('wood_sword', 'cloth', 'jade', 'salve', 'salve', 'ration', 'basic_manual', 'herb', 'herb', 'iron'):
+    for template_id in ('wood_sword', 'cloth', 'jade', 'salve', 'salve', 'ration', 'herb', 'herb', 'iron'):
         create(w, 'player', template_id, '过客随身旧物' if not legacy else '物品登记时的过客行装')
     for item in objects(w, 'player'):
         if spec(item)['category'] in SLOTS:
@@ -244,19 +253,15 @@ def initialize(w, legacy=False):
 
 
 def bonuses(w, owner):
-    result = dict(attack=0., defense=0., income=0., training=0., recovery=0.)
-    for item_id in actor(w, owner)['equipment'].values():
-        item = get(w, owner, item_id)
-        if item['durability'] <= 0:
-            continue
-        for key in result:
-            result[key] += spec(item).get(key, 0)
-    return result
+    return equipment.bonuses(w, owner)
 
 
 def wear(w, owner, slots, amount=1):
     changes = []
+    active = {entry['slot'] for entry in equipment.resolve(w, owner) if entry['active']}
     for slot in slots:
+        if slot not in active:
+            continue
         item_id = actor(w, owner)['equipment'].get(slot)
         if item_id:
             item = get(w, owner, item_id)
@@ -294,12 +299,16 @@ def operations(w, owner, item):
             (d.get('wound') and n.get('wound')) or (d.get('illness') and n.get('illness')) or
             (d.get('joy') and n.get('mood') and n['mood']['joy'] < 30)):
         result.append('use')
-    if d['category'] == 'manual' and n['skill'] >= d['requirement'] and n['skill'] < 100 and item['durability'] > 0:
-        if n['read_books'].get(item['template'], 0) < d['pages']:
-            result.append('read')
     if not equipped:
         result += ['sell', 'gift']
     return result
+
+
+def describe(item):
+    data = {**deepcopy(item), **spec(item)}
+    if data['category'] == 'weapon':
+        data['weapon_attributes'] = weapons.attributes(item)
+    return data
 
 
 def view(w, owner):
@@ -307,25 +316,28 @@ def view(w, owner):
     result = []
     for item in objects(w, owner):
         d = spec(item)
-        result.append({**deepcopy(item), **d, **grade_info(d['grade']),
+        result.append({**describe(item), **grade_info(d['grade']),
                        'category_label': CATEGORIES[d['category']], 'equipped': item['id'] in n['equipment'].values(),
                        'buy_price': buy_price(item), 'sell_price': sell_price(item), 'repair_price': repair_price(item),
                        'read_progress': n['read_books'].get(item['template'], 0),
                        'operations': operations(w, owner, item) if n.get('alive', True) else []})
     return {'owner': str(owner), 'name': n['name'], 'wealth': n.get('wealth', 0), 'health': n.get('health'),
             'skill': n.get('skill'), 'joy': n.get('mood', {}).get('joy'),
-            'items': result, 'equipment': n['equipment'].copy(), 'weight': weight(w, owner),
-            'capacity': round(capacity(w, owner), 1), 'bonuses': bonuses(w, owner), 'categories': CATEGORIES,
+            'items': result, 'equipment': n['equipment'].copy(),
+            'equipment_state': equipment.snapshot(w, owner),
+            'weapon_attribute_catalog': weapons.attribute_catalog(),
+            'bonuses': bonuses(w, owner), 'categories': CATEGORIES,
             'slots': SLOTS, 'grades': grade_legend(), 'alive': n.get('alive', True)}
 
 
 def market_view(w):
     # Individual instances remain addressable even when the UI groups identical stock.
     return {'name': '五地货栈', 'wealth': w.items['market']['wealth'],
-            'items': [{**deepcopy(i), **spec(i), 'buy_price': buy_price(i),
+            'items': [{**describe(i), 'buy_price': buy_price(i),
                        **grade_info(spec(i)['grade']), 'category_label': CATEGORIES[spec(i)['category']]}
                       for i in objects(w, 'market')],
             'grades': grade_legend(), 'categories': CATEGORIES,
+            'weapon_attribute_catalog': weapons.attribute_catalog(),
             'recipes': [{'template': k, **CATALOG[k], **grade_info(CATALOG[k]['grade']),
                          'ingredients': {CATALOG[t]['name']: q for t, q in v.items()}}
                         for k, v in RECIPES.items()]}
@@ -343,7 +355,7 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
         raise ValueError('未知物品操作')
     item = None
     consumed = []
-    actor_before = {k: n[k] for k in ('wealth', 'health', 'skill')}
+    actor_before = {k: n[k] for k in ('wealth', 'health')}
     facts = {'owner': owner, 'operation': operation}
     if action:
         facts.update(action=action['id'], actor=n['id'], decision_source=n['choice_source'], time_cost=action['time_cost'])
@@ -364,9 +376,6 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
             consumed += found
         if n['wealth'] < 2:
             raise ValueError('制药需要2银工费')
-        after_weight = weight(w, owner)-sum(spec(i)['weight'] for i in consumed)+CATALOG[recipe]['weight']
-        if after_weight > capacity(w, owner):
-            raise ValueError('行囊负重不足')
     else:
         item = get(w, 'market' if operation == 'buy' else owner, item_id)
         d = spec(item)
@@ -378,7 +387,6 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
         cost = buy_price(item)
         if n['wealth'] < cost:
             raise ValueError('银两不足')
-        can_receive(w, owner, item['template'])
         n['wealth'] -= cost
         w.items['market']['wealth'] += cost
         transfer(w, item, owner)
@@ -417,12 +425,12 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
         remove(w, item)
     elif operation == 'read':
         progress = n['read_books'].get(item['template'], 0)+1
-        before = n['skill']
+        before = combat_attributes.rating(n)
         n['read_books'][item['template']] = progress
-        n['skill'] = min(100, n['skill']+d['learning'])
+        pass  # Retired martial proficiency is no longer stored.
         item['durability'] = max(0, item['durability']-5)
-        text = f"{n['name']}研读{d['name']}至第{progress}篇，武学增长{n['skill']-before:.2f}。"
-        facts.update(skill_gain=n['skill']-before, progress=progress, total=d['pages'])
+        text = f"{n['name']}研读{d['name']}至第{progress}篇，武学增长{combat_attributes.rating(n)-before:.2f}。"
+        facts.update(skill_gain=combat_attributes.rating(n)-before, progress=progress, total=d['pages'])
     elif operation == 'repair':
         cost = repair_price(item)
         material = 'iron' if d['category'] in ('weapon', 'armor') else 'timber'
@@ -443,7 +451,6 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
             raise ValueError('请选择赠送对象') from None
         if not recipient['alive'] or str(target) == owner:
             raise ValueError('只能赠予另一位在世人物')
-        can_receive(w, recipient['id'], item['template'])
         if owner != 'player' and recipient['place'] != n['place']:
             raise ValueError('双方不在同一地点')
         transfer(w, item, recipient['id'])
@@ -508,11 +515,8 @@ def candidates(w, n):
     # A small visible market shortlist; scarcity is checked again when executed.
     if n['wealth'] >= 18 and len(n['inventory']) < 9:
         wanted = 'salve' if n['health'] < 80 and not any(spec(i)['category'] == 'medicine' for i in objects(w, n['id'])) else None
-        if not wanted and n['goal']['kind'] == 'mastery' and n['wealth'] > 45:
-            if n['read_books'].get('basic_manual', 0) < 3 and not any(i['template'] == 'basic_manual' for i in objects(w, n['id'])):
-                wanted = 'basic_manual'
         found = next((i for i in objects(w, 'market') if i['template'] == wanted and buy_price(i) <= n['wealth']-10), None)
-        if found and weight(w, n['id'])+spec(found)['weight'] <= capacity(w, n['id']):
+        if found:
             result.append({'id': f"buy_item:{found['id']}", 'kind': 'buy_item', 'target': found['id'],
                            'label': f"购置 · {spec(found)['name']}", 'item_score': 30 if wanted == 'salve' else 17})
     return result
@@ -523,7 +527,7 @@ def produce(w, n, event):
     if (w.month+n['id']) % 6 or len(n['inventory']) >= 9 or n['wealth'] < 2:
         return
     template_id = {'农人': 'ration', '药师': 'herb', '匠人': 'iron'}.get(n['job'])
-    if not template_id or weight(w, n['id'])+CATALOG[template_id]['weight'] > capacity(w, n['id']):
+    if not template_id:
         return
     from . import economics
     materials = {}
@@ -554,12 +558,11 @@ def inherit(w, deceased, heirs, event):
     possessions = list(objects(w, deceased['id']))
     for index, item in enumerate(possessions):
         destination = heirs[index % len(heirs)]['id'] if heirs else 'government'
-        # Inheritance may exceed capacity; no possession is silently destroyed.
         transfer(w, item, destination)
         e = w.emit('item_inherit', [int(destination)] if heirs else [],
                    f"{spec(item)['name']}作为{deceased['name']}的遗物，"
                    + (f"由{actor(w, destination)['name']}承继。" if heirs else '交县衙遗物库保管。'), .45,
                    [event['id'], item.get('last_event')],
                    {'deceased': deceased['id'], 'recipient': str(destination), 'item_id': item['id'],
-                    'item': deepcopy(item), 'over_capacity_allowed': True})
+                    'item': deepcopy(item)})
         item['last_event'] = e['id']

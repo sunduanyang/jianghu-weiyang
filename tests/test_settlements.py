@@ -76,7 +76,7 @@ class SettlementTests(unittest.TestCase):
         self.assertEqual(w.month,before['month'])
         self.assertEqual(w.store.db.execute('SELECT * FROM events WHERE id<=? ORDER BY id',(events[-1][0],)).fetchall(),events)
         for i,n in before['npcs'].items():
-            for key in ('name','wealth','skill','age_months','traits','relationships','memories','parents','children','inventory','equipment'):
+            for key in ('name','wealth','combat_attributes','age_months','traits','relationships','memories','parents','children','inventory','equipment'):
                 self.assertEqual(w.npcs[i][key],n[key])
         self.assertTrue(all(n['place'] in settlements.HUBS for n in w.npcs.values() if n['alive']))
         for h in settlements.HUBS:

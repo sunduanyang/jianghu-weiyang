@@ -49,7 +49,7 @@ public sealed partial class PhysicsDuel {
                 joint.useMotor=true;
                 // Unity's positive 2D hinge speed rotates its owning body
                 // clockwise. This sign is checked by DuelBuild.Calibrate.
-                float speedLimit=360*Mathf.Clamp(speedScale,.15f,1.2f);
+                float speedLimit=360*Mathf.Clamp(speedScale,.15f,1.6f);
                 float speed=Mathf.Clamp(parentSpeed-servoError*frequency*3.5f,-speedLimit,speedLimit);
                 if(joint.useLimits) {
                     speed=Mathf.Clamp(speed,-Mathf.Max(0,joint.jointAngle-joint.limits.min-1)*.75f/Time.fixedDeltaTime,Mathf.Max(0,joint.limits.max-joint.jointAngle-1)*.75f/Time.fixedDeltaTime);
@@ -85,11 +85,11 @@ public sealed partial class PhysicsDuel {
             state=Phase.Swing;phase=0;from=physical;target=new Vector2(next.x,soleHeight);support.enabled=false;activeStep=true;stepStarted=PhysicsDuel.Instance.Clock;airSeconds=0;
         }
         public void Release(){support.enabled=false;}
-        public void Update(float dt,Vector2 physical,float verticalSpeed,float force,float strength) {
+        public void Update(float dt,Vector2 physical,float verticalSpeed,float force,float strength,float movementScale=1) {
             if(activeStep&&!grounded)airSeconds+=dt;
             if(strength<.52f&&state!=Phase.Swing){activeStep=false;state=Phase.Landing;target=goal=new Vector2(physical.x,soleHeight);support.enabled=false;return;}
             if(state==Phase.Swing) {
-                phase=Mathf.Min(1,phase+dt/.24f);
+                phase=Mathf.Min(1,phase+dt*movementScale/.24f);
                 float t=phase*phase*(3-2*phase);
                 goal=Vector2.Lerp(from,target,t)+Vector2.up*(Mathf.Sin(phase*Mathf.PI)*.16f);
                 if(phase>=1)state=Phase.Landing;
@@ -122,7 +122,6 @@ public sealed partial class PhysicsDuel {
         public Vector2 point,normal,relativeVelocity;
         public float speed,bladeFraction;
         public int step,strokeId,strokeLow,strokeHigh;
-        public bool attackActive;
         public ulong directedPair,guardPair;
         public bool blocked => other.kind=="shield"||other.kind=="sword"||other.kind=="hilt";
     }

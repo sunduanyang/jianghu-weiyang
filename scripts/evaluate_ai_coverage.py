@@ -10,7 +10,7 @@ import time
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from jianghu.engine import World
 from jianghu.store import Store
-from jianghu.ai import AIManager
+from jianghu.ai import AIManager, DEFAULT_CONFIG
 
 
 def run(args):
@@ -53,7 +53,7 @@ def run(args):
                     'mean_request_ms':ai.stats['latency_ms']/max(1,ai.stats['successes']),
                     'requests':requests}
             results.append(result)
-            (folder/'ai-coverage.json').write_text(json.dumps({'model':'Qwen3-4B-Q4_K_M','seed':42,'population':100,
+            (folder/'ai-coverage.json').write_text(json.dumps({'model':DEFAULT_CONFIG['model'],'seed':42,'population':100,
                 'prehistory_months':24,'arms':results,'limitations':'Small cohort, same new engine in both arms; coverage and action influence, not a blinded quality rating.',
                 'source_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT/'jianghu').glob('*.py')}},ensure_ascii=False,indent=2),encoding='utf-8')
             print(label,'RESULT',json.dumps({k:result[k] for k in ('calls','unique_reviewed','unique_executed','executed_ai_actions','changed_reference','wall_seconds')},ensure_ascii=False),flush=True)

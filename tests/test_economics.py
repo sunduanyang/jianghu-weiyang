@@ -161,6 +161,7 @@ class EconomyTests(unittest.TestCase):
 
     def test_save_roundtrip_retains_all_economic_balances(self):
         e.work(self.w,self.n);e.close_month(self.w)
+        self.w.checkpoint()  # Synchronize grade entitlements at the regular save boundary.
         before=deepcopy(self.w.export());store=Store();store.save(before)
         loaded=World(store=store,durable=False,market_economy=True);self.addCleanup(store.close)
         self.assertEqual(before,loaded.export());self.balanced()

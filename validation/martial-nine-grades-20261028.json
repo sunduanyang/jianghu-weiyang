@@ -1,0 +1,134 @@
+{
+  "date": "2026-10-28",
+  "schools": 14,
+  "arts": 126,
+  "countries": 12,
+  "rules": "Current sect grade through ninth grade; one same-grade art from a fixed native-country lineage for nonmembers.",
+  "curriculum_tests": 12,
+  "school_grade_combinations": 126,
+  "country_grade_combinations": 108,
+  "full_initial_run": {
+    "passed": false,
+    "tests": 419,
+    "failures": [
+      "test_economics.EconomyTests.test_save_roundtrip_retains_all_economic_balances",
+      "test_protagonist.ProtagonistTests.test_create_uses_existing_player_assets_and_only_happens_once"
+    ],
+    "errors": [],
+    "seconds": 540.47
+  },
+  "final_recheck": {
+    "passed": true,
+    "tests": 55,
+    "log": "output\\martial-nine-grades-20261028\\rules-final-recheck.txt"
+  },
+  "final_integration": {
+    "passed": true,
+    "tests": 100,
+    "failures": [],
+    "errors": [],
+    "seconds": 31.52
+  },
+  "final_social_dependency_check": {
+    "passed": true,
+    "tests": 17
+  },
+  "initial_failures_resolved_by": [
+    "test_economics.EconomyTests.test_save_roundtrip_retains_all_economic_balances",
+    "test_protagonist.ProtagonistTests.test_create_uses_existing_player_assets_and_only_happens_once"
+  ],
+  "native": {
+    "martial": {
+      "passed": true,
+      "checks": 17,
+      "report": "output\\martial-nine-grades-20261028\\release\\native-martial\\acceptance.json"
+    },
+    "save": {
+      "passed": true,
+      "checks": 13,
+      "report": "output\\martial-nine-grades-20261028\\release\\native-save\\acceptance.json"
+    },
+    "resume": {
+      "passed": true,
+      "checks": 20,
+      "report": "output\\martial-nine-grades-20261028\\release\\native-resume\\acceptance.json"
+    }
+  },
+  "native_check_count": 50,
+  "build": "SectMartial",
+  "editor": "6000.6.7f1",
+  "graphics": "Direct3D11",
+  "executable_sha256": "9806abde4a406ed68647e9505852c49f6aa72a372f4f084e2aa2821affea57a2",
+  "assembly_sha256": "b499642cecdd7b633d22f50e5baa95487f5e921e5f95b4a173cf427b553fda7e",
+  "backend_sha256": {
+    "ai.py": "1a2c6bae024419a23117f4f7b7c791859bdcb2c293b408278ea8c96cef1f5475",
+    "atlas.py": "4314a11a01f53ca0392a64c9f5ca7b9f084b84ecf00a39ba07d8372ad2257d07",
+    "atlas_expansion.py": "87ac10adbc53a2c4fd761b63b56df87ef544457f048624f19143f89da29e1187",
+    "atlas_migration.py": "9dc0ea287e126e744eec238032deb9bf2e8a4ef08cd0c549bdb19370c6e26ce3",
+    "careers.py": "6f0d92b37f920c2fca2aa5ac15c583273bbdd9fdd0277a4152bbe0e07e759bee",
+    "city_biomes.py": "e18c85d257a2f57ca7479f6583ae6f54ad5e7eeebd93d884e63154f892fbf4a5",
+    "city_gardens.py": "a7eba474fd565e0903c6dd5ee86be3bc46a0616fc7c2ab99c4740c36599116d0",
+    "city_landscape.py": "eba71abf749186401dc482790cf72c924532df1c753c5b3394aba70d13c48856",
+    "city_maps.py": "a21f1f30165f1551dafc0953316325ee4dbaf0d9c3aec35f821eb02e3206bf2e",
+    "city_plans.py": "dea027cb7f1b4f8e35e90601f418b71061ecdfa5916b0593bcec9ea49b27f69a",
+    "city_regions.py": "3e4b293017dbc7a5515159da2142b221cbaa0b6e9f6a81eb50efd12acb05388c",
+    "combat_attributes.py": "6101c1969c72da7bf36f473f8cb32961fe78fe903e66c04b89e4405d39f1c5f1",
+    "combat_tuning.json": "217f77c5598c21090175676e1f808b57cd5a6613feb42a7e75cce186dee32a4e",
+    "deliberation.py": "2c9c5aba8f99315e75737cc3a7635e8c8856a150d627c9aa8f341012c6f67c2c",
+    "demography.py": "9bd093c20e36edc9623c6564a973a7fc20317afb17633a203f7d4e25907b950b",
+    "economics.py": "2302bbf71e15b1654ccad8d28c1be8bfab4f3d7c04a5a58119b8ce8cd0a00482",
+    "engine.py": "9fef63c8633d05543343df780f3c50ec008dd94ecc3fa7fc38b508f340b6c77d",
+    "government.py": "f1610cf94feba690cc657bfdc8d9cc4fadbab9b8723bd1bd3b802821e2f68fa5",
+    "historical_map.py": "e9597df4dcf81f18ebd2df9a688535085277a44c0577c05ed189e5eb631bbbf1",
+    "items.py": "89861192bf5b953992ff79b20d842c4e5aa0683e23a54a639fb3a1e6a0c83a6f",
+    "llm_policy.py": "f740a84f9ed2c5b04ace7decefcd2322bf80ffd33e572906e73013c19f4275c9",
+    "local_life.py": "bb0ca281d2a478cd736ba50dfac5122cdcae2902dbf441b43daf1d551aec620b",
+    "martial.py": "584b691643823fdbfe034fa1b992e69b3e7e145b9d1a9dea79b9d42da80199f3",
+    "martial_catalog.py": "c5dbd71bc1d8fea5e9be8b11d7fe26d885730972300c74567ca08d17f44857ac",
+    "model_service.py": "20ff54581c6199cb62b6558d901ce7f37c305a013ce84874cdc04c90462459ce",
+    "npc_attention.py": "e753db0e08cba3f3e28695403ae2e50b0b172757b5ab8ec5da364fc13ecf286e",
+    "npc_memory.py": "00813dea4277c90e1bd87a8574d94e61e1b7d21ca4b89a301967211a5fe8f275",
+    "npc_plans.py": "7e0995c43b879075e87d73c7d94af770bf40bb1b84de3c01e973903b726996e4",
+    "organizations.py": "c5d92393cf3fe1ac1b5162e7397415ad3f5d574f834d818fb0baecf8f149dfee",
+    "physical_combat.py": "92259c4a04661af50bb056c6d4cad08886c25425481d5cf1a3389d4e52603045",
+    "physical_impact.json": "1652f9c739a98a7085fda16afe664d11659c632a5a22df208630da32463ed8db",
+    "physical_profiles.json": "526ecea1edd825119fe9ff580ba9d1692af416620a06bd181475fff66ea04351",
+    "player_social.py": "e4621d272731d5d163a7fd987bbc7e8389d739a09161e24ebc90dfe5a395289e",
+    "politics.py": "2dccf22001a8d4e739ad4fcc85d2a9f60f19570a3e247706ec3815386a4c1af9",
+    "population.py": "1a95273a98fb8c47e759a76470a42e5e0ffc16b2d9b425ba00bd0403e40a7288",
+    "protagonist.py": "f00aa4e143d976891cb5521bf732f50b62cc539884f68341cf2559ebc652154d",
+    "rank_progression.py": "c98dd6e23754968909211d11e430430a4780c8b222ab6a7c2fa5240dc767908a",
+    "relationships.py": "51ea3ed99db40e036ce6dff28ff4e653dc8a800703a5df16cfbac2bbf215761e",
+    "sect_catalog.py": "b2d3b28f18d4da90800a34cfe33ad970466c901df6b01424380c0af74a8f1ec1",
+    "sect_migration.py": "9175d849dc570fb1ac81626f94eabb364e04ddf5fa1e5ddf90b65ecb74648947",
+    "sect_ranks.py": "b282250a16efe3338231b192a6893073e914bc3fe19a1ddf59efbd2693dd406b",
+    "server.py": "efb70f818a5735739bcf73cedfce84c63610d3aee372173a7d037944b7eb8eb1",
+    "settlements.py": "a774e62968e7b2cf710ec1b0dac395b9d64ec852e6b73da5bca3b56ab3d0217f",
+    "social.py": "75a4ad5bba9e259ccda14df966e50b06a54a974ee1412ae7b3a0fd9928775827",
+    "social_ranks.py": "27c832720855a935a8fd44dd203e7d0dfd3aa9d45423ab757006476e29cd54fd",
+    "society.py": "1f5fead13ca0ca3d92519e264a94d2f2f0d9a9401d8fcc4a07502d6b2a6f7058",
+    "store.py": "5706be87ae751613b576bcbb0bfdcfd1836d7f31bc4c65ea46868990a1412d8a",
+    "territory.py": "10da68a6c5cbecf66a749198fe46147af0ed135531f2b0827d74510aa6b119f5",
+    "weapons.py": "802a5c0c40e9e4b851cd5cd12e19d3a699533a5c3efc230b0be55c05246fd1cf",
+    "weapon_catalog.json": "b4e8248b61e75acb0773f44c349027622047c10bf5d0b7778db74621bdfdd974",
+    "__init__.py": "a9f783cd6f7dcc7080f4db131da12f237df900900d790d4017a9c8772a7a7ce2"
+  },
+  "source_sha256": {
+    "jianghu\\martial_catalog.py": "c5dbd71bc1d8fea5e9be8b11d7fe26d885730972300c74567ca08d17f44857ac",
+    "jianghu\\martial.py": "584b691643823fdbfe034fa1b992e69b3e7e145b9d1a9dea79b9d42da80199f3",
+    "jianghu\\combat_attributes.py": "6101c1969c72da7bf36f473f8cb32961fe78fe903e66c04b89e4405d39f1c5f1",
+    "jianghu\\engine.py": "9fef63c8633d05543343df780f3c50ec008dd94ecc3fa7fc38b508f340b6c77d",
+    "unity\\JianghuUnity\\Assets\\Scripts\\RankMartialUI.cs": "9568de2ac824f679fc38b712d5dbb8fa9a99bc9fcc1e3c5814c94a7d13034834",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CombatAttributesUI.cs": "8848087698e28ff1041acc527775791c93460002656b250e41b5138864e44ac8",
+    "unity\\JianghuUnity\\Assets\\Scripts\\Panels.cs": "e19730d260e090d55db65a58ac59cd31da842cb3c242ce10ca0fccc00bf3b525",
+    "unity\\JianghuUnity\\Assets\\Scripts\\JianghuApp.cs": "4e9d26399d4ced917abc64e0cbf9ec1bbdb858ad14d408dd595fb3f3e3e52f42"
+  },
+  "working_tree_backend_drift": [
+    "player_social.py"
+  ],
+  "limitations": [
+    "Hidden-window captures are not manual visual approval.",
+    "The passive bonus budgets have not been balanced through extended player testing."
+  ],
+  "save_policy": "All tests and native runs used isolated output saves; production/original saves were not test inputs."
+}

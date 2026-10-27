@@ -1,3 +1,5 @@
+from jianghu import combat_attributes as abilities
+from tests.combat_helpers import set_rating, update_actor
 from copy import deepcopy
 import unittest
 
@@ -13,8 +15,8 @@ class RankProgressionTests(unittest.TestCase):
 
     def actor(self,job='农人',faction=None,**values):
         w=self.w;n=w.make_npc(place=w.factions[0]['place'])
-        n.update(age_months=360,wealth=500.,health=100.,reputation=50.,job=job,faction=faction,skill=20.,contribution=0.,faction_since=0)
-        n.update(values);n['career'].update(profession=job,experience={job:50.},last_change=-24)
+        update_actor(n, age_months=360,wealth=500.,health=100.,reputation=50.,job=job,faction=faction,skill=20.,contribution=0.,faction_since=0)
+        update_actor(n, values);n['career'].update(profession=job,experience={job:50.},last_change=-24)
         w.set_goal(n,'renown',initial=True);n['identity']=careers.identity(w,n);w.reindex()
         return n
 
@@ -41,14 +43,14 @@ class RankProgressionTests(unittest.TestCase):
         self.assertEqual(r.prepare(self.w,n['id'])['activity'],{})
 
     def test_meeting_thresholds_does_not_instantly_change_confirmed_grade(self):
-        n=self.actor(faction=0);self.enable();n.update(contribution=1000.,skill=100.)
+        n=self.actor(faction=0);self.enable();update_actor(n, contribution=1000.,skill=100.)
         self.assertEqual(sect_ranks.merit_grade(n),2)
         self.assertEqual(organizations.rank(self.w,n)['grade'],9)
         self.tick(n,True);self.assertEqual(organizations.rank(self.w,n)['grade'],9)
         self.tick(n,True);self.assertEqual(organizations.rank(self.w,n)['grade'],8)
 
     def test_each_review_is_once_per_month_and_never_skips_multiple_grades(self):
-        n=self.actor(faction=0);self.enable();n.update(contribution=1000.,skill=100.)
+        n=self.actor(faction=0);self.enable();update_actor(n, contribution=1000.,skill=100.)
         self.tick(n,True)
         before=deepcopy(self.w.export())
         for _ in range(20):r.monthly(self.w);r.view(self.w,n['id'])
@@ -57,22 +59,21 @@ class RankProgressionTests(unittest.TestCase):
         self.assertEqual(n['rank_progress']['sect']['qualified'],0)
 
     def test_donations_alone_cannot_replace_actual_service(self):
-        n=self.actor(faction=0);self.enable();n.update(contribution=100.,skill=100.)
+        n=self.actor(faction=0);self.enable();update_actor(n, contribution=100.,skill=100.)
         for _ in range(6):self.tick()
         self.assertEqual(organizations.rank(self.w,n)['grade'],9)
         self.assertFalse(r.sect_conditions(self.w,n['id'])['qualified'])
 
-    def test_real_teaching_counts_for_teacher_service_when_student_is_same_sect(self):
+    def test_retired_teaching_cannot_count_as_service(self):
         teacher=self.actor(faction=0,contribution=35.,skill=45.)
         student=self.actor(faction=0,skill=16.);student['mentor']=teacher['id'];self.w.link(teacher,student,40,40)
-        self.enable();event=self.w.execute(teacher,dict(id=f'teach:{student["id"]}'))
-        self.assertIsNotNone(event)
-        self.assertEqual(r.months(teacher['rank_progress'],'service',self.w.month,6),[self.w.month])
-        self.assertEqual(r.months(student['rank_progress'],'service',self.w.month,6),[])
+        self.enable();before=deepcopy(self.w.export())
+        self.assertIsNone(self.w.execute(teacher,dict(id=f'teach:{student["id"]}')))
+        self.assertEqual(self.w.export(),before)
 
     def test_continuous_shortfall_demotes_after_three_months_with_hysteresis(self):
         n=self.actor(faction=0,contribution=24.,skill=35.);self.enable()
-        n['skill']=20.
+        set_rating(n, 20.)
         self.tick();self.tick();self.assertEqual(organizations.rank(self.w,n)['grade'],4)
         self.tick();self.assertEqual(organizations.rank(self.w,n)['grade'],5)
         changes=[e for e in self.w.store.history(n['id']) if e['kind']=='rank_change']
@@ -80,10 +81,10 @@ class RankProgressionTests(unittest.TestCase):
         self.assertNotIn('升为',changes[0]['summary'])
 
     def test_small_temporary_threshold_dip_and_illness_do_not_demote(self):
-        n=self.actor(faction=0,contribution=24.,skill=35.);self.enable();n['skill']=34.
+        n=self.actor(faction=0,contribution=24.,skill=35.);self.enable();set_rating(n, 34.)
         for _ in range(3):self.tick()
         self.assertEqual(organizations.rank(self.w,n)['grade'],4)
-        n['skill']=10.;n['illness']={'remaining':6,'severity':1.}
+        set_rating(n, 10.);n['illness']={'remaining':6,'severity':1.}
         for _ in range(6):self.tick()
         self.assertEqual(organizations.rank(self.w,n)['grade'],4)
 
@@ -150,8 +151,8 @@ class RankProgressionTests(unittest.TestCase):
 
     def test_player_and_npc_sect_use_same_assessment_and_stale_actions_reject(self):
         h=self.w.player['protagonist'];h.update(created=True,faction=0,faction_since=0)
-        self.w.player['skill']=20.;n=self.actor(faction=0);self.enable()
-        n.update(contribution=10.,skill=20.);h['contribution']=10.
+        set_rating(self.w.player, 20.);n=self.actor(faction=0);self.enable()
+        update_actor(n, contribution=10.,skill=20.);h['contribution']=10.
         for _ in range(2):
             self.w.month+=1
             self.w.emit('faction_task',[n['id']],'履职',.4,facts={'actor':n['id']})
@@ -164,7 +165,7 @@ class RankProgressionTests(unittest.TestCase):
         self.assertEqual(self.w.export(),before)
 
     def test_save_reload_does_not_repeat_assessments_or_lose_pending_months(self):
-        n=self.actor(faction=0);self.enable();n.update(contribution=20.,skill=30.);self.tick(n,True)
+        n=self.actor(faction=0);self.enable();update_actor(n, contribution=20.,skill=30.);self.tick(n,True)
         self.w.checkpoint();before=deepcopy(self.w.export())
         loaded=World(store=self.w.store,durable=False,compact=True,rank_assessments=True)
         self.assertEqual(loaded.export(),before);r.monthly(loaded);self.assertEqual(loaded.export(),before)
@@ -218,7 +219,7 @@ class RankProgressionTests(unittest.TestCase):
     def test_player_can_be_formally_elected_and_treasury_aid_handles_player_leadership(self):
         n=self.actor(faction=0,wealth=2.)
         h=self.w.player['protagonist'];h.update(created=True,faction=0,faction_since=0,age_months=360,contribution=100.)
-        self.w.player.update(skill=75.,reputation=60.);self.enable()
+        update_actor(self.w.player, skill=75.,reputation=60.);self.enable()
         self.assertEqual(organizations.player_membership(self.w)['grade'],2)
         organizations.elect(self.w,self.w.factions[0])
         self.assertEqual(self.w.factions[0]['leader'],-1)
@@ -238,7 +239,7 @@ class RankProgressionTests(unittest.TestCase):
     def test_player_leadership_does_not_block_qualified_npc_replacement(self):
         n=self.actor(faction=0,contribution=70.,skill=65.)
         h=self.w.player['protagonist'];h.update(created=True,faction=0,faction_since=0,age_months=360,contribution=100.)
-        self.w.player.update(skill=75.,reputation=60.);self.enable();organizations.elect(self.w,self.w.factions[0])
+        update_actor(self.w.player, skill=75.,reputation=60.);self.enable();organizations.elect(self.w,self.w.factions[0])
         h['rank_progress']['sect']['leader_deficient']=3
         organizations.monthly(self.w)
         self.assertEqual(self.w.factions[0]['leader'],n['id'])

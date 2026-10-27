@@ -3,9 +3,9 @@ from copy import deepcopy
 import time
 from . import social_ranks,sect_ranks
 
-CONTACT_KINDS=('player_talk','player_gift','player_visit','player_duel','spar_start','item_gift')
+CONTACT_KINDS=('player_talk','player_gift','player_visit','player_duel','spar_start','item_gift','player_social_request')
 LABELS={'player_talk':'交谈','player_gift':'赠银','player_visit':'拜访','player_duel':'切磋',
-        'spar_start':'约定切磋','item_gift':'赠物'}
+        'spar_start':'约定切磋','item_gift':'赠物','player_social_request':'当面商谈'}
 
 
 def targets(event):

@@ -68,7 +68,7 @@ def main():
                     body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', '0'))))
                     source = Path(body['path']).resolve(strict=True)
                     with game.lock:
-                        if game.ai.pending or game.autoplay or game.job['remaining']:
+                        if game.ai.pending or game.ai.dialogue_pending or game.autoplay or game.job['remaining']:
                             raise ValueError('请先暂停推演并等待模型结束')
                         target = args.save_dir / 'data' / f'imported-{time.time_ns()}.sqlite'
                         with sqlite3.connect(source.as_uri() + '?mode=ro', uri=True) as src:
@@ -86,6 +86,8 @@ def main():
                         game.world.checkpoint()
                         game.world.store.close()
                         game.world = replacement
+                        from jianghu import player_social
+                        player_social.recover(game.world)
                         game.path = target
                         game.ai.reset_stats()
                         game.ai.restore_stats(game.world.store)

@@ -1,3 +1,5 @@
+from jianghu import combat_attributes as abilities
+from tests.combat_helpers import set_rating, update_actor
 """Regressions at the boundary between settlement control and social systems."""
 from copy import deepcopy
 import json
@@ -24,7 +26,7 @@ class MergedSystemsTests(unittest.TestCase):
     def adult(self, place=None, **values):
         w = self.w
         n = w.make_npc(place=self.target if place is None else place)
-        n.update(age_months=360,wealth=100.,health=100.,skill=30.,office=None,**values)
+        update_actor(n, age_months=360,wealth=100.,health=100.,skill=30.,office=None,**values)
         w.set_goal(n,w.best_goal(n),None,initial=True)
         w.reindex()
         return n
@@ -68,19 +70,13 @@ class MergedSystemsTests(unittest.TestCase):
         self.assertEqual(w.city_positions[str(n['id'])]['node'],f"faction_{f['id']}")
         self.assertAlmostEqual(f['fund'],f['opening_fund']+f['revenue']-f['expenses'])
 
-    def test_shared_study_records_both_participants_in_the_local_school(self):
-        w = self.w
-        a,b = self.adult(),self.adult()
-        b['skill'] = 70
-        f = next(f for f in w.factions if f['place']==self.target)
+    def test_retired_shared_study_does_not_reserve_either_participant(self):
+        w=self.w; a,b=self.adult(),self.adult()
+        f=next(f for f in w.factions if f['place']==self.target)
         for n in (a,b):n.update(faction=f['id'],contribution=8.)
-        w.phase = 1
-        event = w.execute(a,{'id':f"faction_study:{f['id']}"})
-        self.assertIsNotNone(event)
-        self.assertEqual((a['time_left'],b['time_left']),(3,3))
-        for n in (a,b):
-            pos = w.city_positions[str(n['id'])]
-            self.assertEqual((pos['node'],pos['event_id']),(f"faction_{f['id']}",event['id']))
+        before=deepcopy(w.export())
+        self.assertIsNone(w.execute(a,{'id':f'faction_study:{f["id"]}'}))
+        self.assertEqual(w.export(),before)
 
     def test_crossing_after_conquest_counts_new_country_and_skips_domestic_tolls(self):
         w = self.w

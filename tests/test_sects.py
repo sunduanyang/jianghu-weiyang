@@ -1,3 +1,5 @@
+from jianghu import combat_attributes as abilities
+from tests.combat_helpers import set_rating, update_actor
 """Approved roster, additive map seats, save identity and player transactions."""
 from copy import deepcopy
 import json
@@ -103,8 +105,8 @@ class SectTests(unittest.TestCase):
             self.hero_action(w, 'sect_task')
         self.assertEqual(w.export(), before)
         total = w.player['wealth']+f['fund']
-        self.hero_action(w, 'sect_study')
-        self.assertIn(f['art_id'], w.player['martial']['arts'])
+        with self.assertRaises(ValueError):self.hero_action(w, 'sect_study')
+        self.assertEqual(w.player['martial']['arts'],{})
         self.assertEqual(w.player['wealth']+f['fund'], total)
         self.assertAlmostEqual(f['fund'], f['opening_fund']+f['revenue']-f['expenses'])
         self.hero_action(w, 'sect_leave')
@@ -119,7 +121,7 @@ class SectTests(unittest.TestCase):
         w = self.world()
         for fid in (12, 13):
             f = w.factions[fid]; n = w.make_npc(place=f['place'])
-            n.update(age_months=360, health=100., skill=30., faction=fid)
+            update_actor(n, age_months=360, health=100., skill=30., faction=fid)
             w.set_goal(n, 'belonging', initial=True); w.reindex()
             before = w.governments[f['country']]['sanitation']
             e = w.execute(n, dict(id=f'faction_task:{fid}'))
@@ -131,7 +133,7 @@ class SectTests(unittest.TestCase):
     def test_school_transmission_cannot_be_bought_through_public_catalog(self):
         w = self.world(); before = deepcopy(w.export())
         self.assertFalse(any(a.get('school') for a in w.martial_view()['catalog']))
-        with self.assertRaisesRegex(ValueError, '驻地'):
+        with self.assertRaisesRegex(ValueError, '已移除'):
             w.martial_action('learn', w.factions[0]['art_id'])
         self.assertEqual(w.export(), before)
 

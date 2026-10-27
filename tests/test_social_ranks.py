@@ -1,3 +1,5 @@
+from jianghu import combat_attributes as abilities
+from tests.combat_helpers import set_rating, update_actor
 from copy import deepcopy
 import json
 import unittest
@@ -16,7 +18,7 @@ class SocialRankTests(unittest.TestCase):
         n.update(age_months=360, job=job, wealth=100., health=100., reputation=0., faction=None)
         n['career'].update(profession=job if job in careers.PROFESSIONS else '农人',
                            experience={job: 0}, last_change=-24)
-        n.update(values)
+        update_actor(n, values)
         n['identity'] = careers.identity(self.w, n)
         self.w.set_goal(n, 'wealth', initial=True)
         self.w.reindex()
@@ -41,7 +43,7 @@ class SocialRankTests(unittest.TestCase):
         student = self.person()
         self.w.link(n, student, 50, 50)
         student['mentor'] = n['id']
-        n.update(wealth=100000., reputation=100., skill=100.)
+        update_actor(n, wealth=100000., reputation=100., skill=100.)
         n['career']['experience']['农人'] = 100
         self.assertEqual(careers.identity(self.w, n)['grade'], 8)
         n['reputation'] = -100
@@ -112,7 +114,7 @@ class SocialRankTests(unittest.TestCase):
         identity = social_ranks.player_identity(self.w)
         self.assertEqual(identity['system'], 'sect')
         self.assertEqual(identity['grade'], organizations.rank(self.w, {'id': -1, 'faction': 0,
-            'contribution': h['contribution'], 'skill': self.w.player['skill']})['grade'])
+            'contribution': h['contribution'], 'combat_attributes': self.w.player['combat_attributes']})['grade'])
 
     def test_real_job_change_updates_estate_and_has_an_event_cause(self):
         n = self.person()

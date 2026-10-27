@@ -1,3 +1,4 @@
+from jianghu import combat_attributes as abilities
 from tests.physical_helpers import frame
 from copy import deepcopy
 from http.server import ThreadingHTTPServer
@@ -31,19 +32,13 @@ class MartialTests(unittest.TestCase):
     def adult(self, w):
         return next(n for n in w.npcs.values() if n['age_months'] >= 216)
 
-    def test_practice_stops_at_gate_and_breakthrough_changes_combat_stats(self):
+    def test_legacy_cultivation_is_cleared_without_ability_conversion(self):
         a = actor()
-        a['martial']['arts']['breath'] = {'practice': 39., 'realm': 0}
-        martial.practice(a, random.Random(1), 'breath')
-        self.assertEqual(a['martial']['arts']['breath']['practice'], 40)
-        before = deepcopy(a)
-        with self.assertRaises(ValueError):
-            martial.practice(a, random.Random(1), 'breath')
-        self.assertEqual(a, before)
-        qi = martial.stats(a)['qi']
-        martial.practice(a, random.Random(1), 'breath', breakthrough=True)
-        self.assertEqual(a['martial']['arts']['breath']['realm'], 1)
-        self.assertGreater(martial.stats(a)['qi'], qi)
+        a['skill']=99; a['martial']['arts']={'breath':{'realm':3,'practice':100}}
+        martial.initialize(a)
+        self.assertNotIn('skill',a)
+        self.assertEqual(a['martial']['arts'],{})
+        self.assertEqual(abilities.base_ratings(a),dict.fromkeys(abilities.KEYS,abilities.DEFAULT_ATTRIBUTE))
 
     def test_failed_learning_and_practice_do_not_spend_money_time_or_rng(self):
         w = self.world()
@@ -58,62 +53,31 @@ class MartialTests(unittest.TestCase):
             w.martial_action('practice', 'breath')
         self.assertEqual(w.export(), before)
 
-    def test_player_practice_advances_real_world_and_persists_training_evidence(self):
-        w = self.world()
-        before = w.player['wealth']
-        w.martial_action('practice', 'breath')
-        self.assertEqual(w.month, 1)
-        self.assertEqual(w.player['wealth'], before-3)
-        self.assertTrue(all(n['last_action'] for n in w.npcs.values() if n['alive']))
-        e = w.store.history(limit=1)[0]
-        self.assertEqual(e['kind'], 'player_training')
-        self.assertEqual(e['facts']['training']['art'], 'breath')
+    def test_rest_still_advances_the_real_world(self):
+        w=self.world(); before=w.month
+        w.martial_action('rest')
+        self.assertEqual(w.month,before+1)
+        self.assertEqual(w.store.history(limit=1)[0]['kind'],'player_rest')
 
-    def test_loadout_requires_known_arts_and_keeps_an_attack(self):
-        a = actor()
-        before = deepcopy(a)
-        with self.assertRaises(ValueError):
-            martial.equip(a, 'stone_force')
-        self.assertEqual(a, before)
-        martial.equip(a, 'river_sword')
-        martial.equip(a, 'wave_palm')
-        with self.assertRaises(ValueError):
-            martial.equip(a, 'bridge_fist')
-        self.assertEqual(a['martial']['loadout']['attacks'], ['bridge_fist'])
+    def test_retired_loadout_cannot_be_recreated(self):
+        a=actor(); before=deepcopy(a)
+        with self.assertRaises(ValueError):martial.equip(a,'bridge_fist')
+        self.assertEqual(a,before)
 
-    def test_transmission_is_a_real_new_known_technique(self):
-        w = self.world()
-        teacher, pupil = w.npcs[1], w.npcs[2]
-        teacher['skill'] = 70
-        pupil['skill'] = 20
-        teacher['age_months'] = pupil['age_months'] = 240
-        teacher['martial']['arts']['wave_palm'] = {'practice': 50., 'realm': 1}
-        pupil['martial']['arts'].pop('wave_palm', None)
-        pupil['mentor'] = teacher['id']
-        pupil['place'] = teacher['place']
-        w.link(teacher, pupil, 20, 20)
-        w.reindex()
-        e = w.execute(teacher, {'id': f"teach:{pupil['id']}"})
-        self.assertIsNotNone(e)
-        self.assertIn('wave_palm', pupil['martial']['arts'])
-        self.assertTrue(e['facts']['transmission']['learned'])
+    def test_retired_transmission_cannot_mutate_people(self):
+        w=self.world(); teacher,pupil=w.npcs[1],w.npcs[2]
+        before=deepcopy(w.export())
+        self.assertIsNone(w.execute(teacher,{'id':f'teach:{pupil["id"]}'}))
+        self.assertEqual(w.export(),before)
 
-    def test_old_save_migration_preserves_skill_rng_and_history(self):
-        w = self.world()
-        old = deepcopy(w.export())
-        old.pop('battle')
-        for n in old['npcs'].values():
-            n.pop('martial')
-        for key in ('martial', 'health', 'skill'):
-            old['player'].pop(key)
-        skills = {i: n['skill'] for i, n in old['npcs'].items()}
-        count = w.store.count()
+    def test_old_save_clears_martial_data_without_rng_or_history_changes(self):
+        w=self.world(); old=deepcopy(w.export()); count=w.store.count()
+        for a in [old['player'],*old['npcs'].values()]:
+            a['skill']=99;a['martial']={'stamina':80,'arts':{'breath':{'realm':3,'practice':100}}}
         w.restore(old)
-        self.assertEqual({i: n['skill'] for i, n in w.npcs.items()}, skills)
-        self.assertEqual(w.rng.getstate(), old['random_state'])
-        self.assertEqual(w.store.count(), count)
-        self.assertIsNone(w.battle)
-        self.assertEqual(w.player['wealth'], old['player']['wealth'])
+        self.assertTrue(all('skill' not in a and not a['martial']['arts'] for a in [w.player,*w.npcs.values()]))
+        self.assertEqual(w.rng.getstate(),old['random_state'])
+        self.assertEqual(w.store.count(),count)
 
     def test_active_battle_reload_is_identical_and_stale_inputs_are_atomic(self):
         a = self.world()
@@ -144,9 +108,9 @@ class MartialTests(unittest.TestCase):
         w = self.world()
         target = self.adult(w)
         w.start_battle(target['id'])
-        skill = w.player['skill']
+        skill = abilities.ratings(w.player)
         w.battle_action(w.battle['id'], 1, 'surrender')
-        self.assertEqual(w.player['skill'], skill)
+        self.assertEqual(abilities.ratings(w.player), skill)
         before = deepcopy(w.export())
         with self.assertRaises(ValueError):
             w.battle_action(w.battle['id'], 0, 'surrender')
@@ -217,7 +181,9 @@ class MartialHTTPTests(unittest.TestCase):
             return json.load(response)
 
     def test_http_practice_battle_and_resume_routes(self):
-        self.request('/api/martial', {'action':'practice', 'art':'breath'})
+        with self.assertRaises(urllib.error.HTTPError):
+            self.request('/api/martial', {'action':'practice', 'art':'breath'})
+        self.request('/api/martial', {'action':'rest'})
         self.assertEqual(self.request('/api/state')['month'], 1)
         target = next(n for n in self.game.world.npcs.values() if n['age_months'] >= 216)
         state = self.request('/api/intervene', {'action':'challenge', 'npc_id':target['id']})
