@@ -33,7 +33,7 @@ class ModelUpgradeTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder);self.installation(root)
             command,_=model_command(dict(url='http://127.0.0.1:11435',context_size=8192),root)
-            self.assertEqual(command[command.index('-m')+1],str(root/MODEL_FILE))
+            self.assertEqual(Path(command[command.index('-m')+1]).resolve(),(root/MODEL_FILE).resolve())
             self.assertEqual(command[command.index('--alias')+1],MODEL_ID)
             self.assertEqual(command[command.index('--device')+1],'CUDA0')
             self.assertEqual(json.loads(command[command.index('--chat-template-kwargs')+1]),dict(enable_thinking=False))
