@@ -70,6 +70,8 @@ public partial class JianghuApp {
     void UpdateCityMovement(){
         if(!CityMovementAllowed||cityLoading){StopCityWalk();cityHeldDirection=Vector2Int.zero;cityNextStepAt=0;return;}
         if(cityWalkSmokeInput)return;
+        // WASD steps tile by tile, which only the 地格 view shows; the atlas and scroll walk by destination.
+        if(CityModeShown!=CityMode.Tiles&&!cityWalkKeyboard){cityHeldDirection=Vector2Int.zero;cityNextStepAt=0;return;}
         if(!Application.isFocused||GUI.GetNameOfFocusedControl()=="RosterSearch"){
             cityHeldDirection=Vector2Int.zero;cityNextStepAt=0;return;
         }
@@ -215,7 +217,7 @@ public partial class JianghuApp {
         if(cityLoading&&!string.IsNullOrEmpty(Client.Error))cityLoading=false;
         if(!City.Has){GUI.Label(new Rect(480,400,720,50),"正在展开城中街巷…",centerTitle);return;}
         EnsureCityRoutes();
-        DrawCityBoard(CityViewport);
+        if(CityModeShown==CityMode.Tiles)DrawCityBoard(CityViewport);else DrawCityAtlasStage();
     }
     void DrawCityHud(){
         if(!City.Has)return;
@@ -226,7 +228,7 @@ public partial class JianghuApp {
         Line(new Vector2(header.center.x+170,83),new Vector2(header.center.x+280,83),new Color(.7f,.6f,.36f,.4f));
         var plan=City["settlement_layout"];
         GUI.Label(new Rect(header.center.x-365,97,730,17),City["country_name"].S+" / "+City["theme_label"].S+" / "+City["population"].S+"人在世"+(plan.Has?" / "+plan["label"].S+" · 普通聚落"+plan["ordinary_count"].S+"处 · 门派"+plan["sect_count"].S+"处":" / "+City["tier_label"].S),cityTiny);
-        DrawCityToolbar();DrawCityOverview();DrawCityDestination();DrawCityMovementNotice();
+        DrawCityToolbar();if(CityModeShown==CityMode.Tiles){DrawCityOverview();DrawCityDestination();}DrawCityMovementNotice();
         if(cityLoading)GUI.Label(new Rect(620,370,430,44),"正在展开新图…",centerTitle);
     }
     // Toolbar as a single brushed ink stroke with plain text commands, not a row of editor buttons.
@@ -239,6 +241,8 @@ public partial class JianghuApp {
         Rect r=CityToolbarRect;float left=r.x;
         var strip=UI("strip");if(strip!=null)GUI.DrawTexture(r,strip,ScaleMode.StretchToFill);else Fill(r,new Color(.055f,.095f,.087f,.88f));
         GUI.enabled=!cityLoading;float y=r.y+2;
+        left+=DrawCityModeTabs(r.x+14,y);
+        if(CityModeShown!=CityMode.Tiles){DrawCityAtlasTools(left+14,y,r);GUI.enabled=true;return;}
         if(CityTool(new Rect(left+14,y,30,28),"－"))CityZoom(cityZoom/1.2f,new Vector2(CityViewport.width/2,CityViewport.height/2));
         GUI.Label(new Rect(left+44,y+5,50,20),Mathf.RoundToInt(cityZoom*100)+"%",centerSmall);
         if(CityTool(new Rect(left+94,y,30,28),"＋"))CityZoom(cityZoom*1.2f,new Vector2(CityViewport.width/2,CityViewport.height/2));
@@ -412,6 +416,7 @@ public partial class JianghuApp {
         else GUI.Label(new Rect(r.xMax-128,r.y+20,116,25),hint,centerSmall);
     }
     void DrawNodeCard(){
+        if(City.Has&&CityModeShown!=CityMode.Tiles){DrawCityAtlasCard();return;}
         Rect c=PlaceCard;Panel(c);GUILayout.BeginArea(new Rect(c.x+12,c.y+10,c.width-24,c.height-18));
         if(!City.Has||cityLoading||City["place"].I!=SelectedPlace){GUILayout.Label("正在展开城中街巷…",small);GUILayout.EndArea();return;}
         GUILayout.Label(City["name"].S+" · 城中",heading);GUILayout.Label(City["country_name"].S+" · "+City["population"].S+"人在世",small);

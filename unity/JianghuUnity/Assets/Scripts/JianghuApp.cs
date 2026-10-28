@@ -95,7 +95,7 @@ public partial class JianghuApp : MonoBehaviour {
             }
             GUILayout.EndScrollView();GUILayout.EndArea();return;
         }
-        if(CurrentStage==Stage.City&&rosterMode=="此地"){DrawCityCellRoster();GUILayout.EndArea();return;}
+        if(CurrentStage==Stage.City&&rosterMode=="此地"){if(CityModeShown==CityMode.Tiles)DrawCityCellRoster();else DrawCityPlaceRoster();GUILayout.EndArea();return;}
         T("按姓名或营生查找",small);
         GUI.SetNextControlName("RosterSearch");string priorQuery=query;query=GUILayout.TextField(query,field);if(priorQuery!=query)rosterScroll=Vector2.zero;
         IEnumerable<J> people;
