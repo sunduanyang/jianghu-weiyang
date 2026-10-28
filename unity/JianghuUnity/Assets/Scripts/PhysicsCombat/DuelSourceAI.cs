@@ -103,7 +103,9 @@ public sealed partial class PhysicsDuel {
         aiMain=sourceRightActive?Vector2.one:Vector2.zero;aiOff=sourceLeftActive?Vector2.one:Vector2.zero;
         shieldControl=sourceLeftActive;move=game.Clock<aiMoveUntil?aiMoveDirection:0;
         aiSourceParentNear=aiRight.parent;aiSourceParentFar=aiLeft.parent;
-        aiSourceAggression=(int)aiAggression;
+        // Preserve a restored/in-flight motion's valid level until the new
+        // scheduler has actually rolled its first aggression value.
+        if(aiStarted)aiSourceAggression=Mathf.Clamp((int)aiAggression,1,5);
     }
     bool TrySourceAITarget(string side,out Vector2 parent,out Vector2 nub) {
         parent=Vector2.zero;nub=Vector2.zero;
