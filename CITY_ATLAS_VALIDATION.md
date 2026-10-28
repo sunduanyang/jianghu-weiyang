@@ -110,3 +110,20 @@ PR 原始提交的环境没有 Unity 编辑器和 C# 编译器，因此当时没
 - 缩到 442 像素宽，保留各张之间的大小比例；建筑底边对齐长卷街线（第 309 行）；舟埠按岸线对齐，水面在街线以下。
 
 游戏优先读取 `Scroll/Art/`，删掉某张就回到 `bake_scroll.py` 程序画的版本。效果预览（PIL 近似，非实机截图）：`validation/screenshots/city-scroll-painted-preview.png`。原图约 30MB，没有放进仓库。
+
+## 手绘设施本机整合验收（2026-10-28）
+
+从 Claude 的 `claude/city-atlas-scroll` 分支整合 `13623d7`，包含16种设施贴图、来源记录与导入器更新。合并时保留此前的原生验收记录及默认视图时序修复，并清理素材说明末尾的空行。
+
+本机成品以当前项目的外貌组合、物理战斗和试玩代码快照构建，再加入这些新素材。独立检出的本地文件清单与哈希位于 `output/painted-scroll-integration-20261028/local-overlay.json`；原目录里的其他本地修改继续保留，未计入这次素材合并提交。
+
+- 16张 PNG 的442×338尺寸、RGBA透明通道、Unity `.meta` 齐备性与不透明区域品红残留检查通过。
+- Unity 6000.6.7f1 / Direct3D 11 构建成功，成品附带 Python；构建日志为 `unity/painted-scroll-integrated-build.log`。
+- `-cityAtlasSmokeDir`：53项通过；已复核临安府长卷和少林寺的实际渲染，建筑使用手绘贴图。
+- `-appearanceSmoke`：40项通过；覆盖人物外貌、调色透明度、关节、头像／立像及实际切磋，确认新素材与现有外貌组合兼容。
+- 当前本地功能快照的全量 `python -B -m unittest discover -s tests -v`：468项通过，耗时323.790秒；`git diff --check` 通过。
+- `python -B unity/import_scroll_art.py --help` 通过；本次使用已导入贴图，没有重新生成图片。
+
+所有原生验收使用独立测试存档，未使用正式存档或调用真实模型。完整输出在本机 `output/painted-scroll-integration-20261028/`。默认成品为 `unity/Build/PaintedScrollIntegrated/江湖未央.exe`，由 `unity/Build/active-build.txt` 选择。
+
+![手绘设施与现有人物外貌的 Unity 实机画面](validation/screenshots/city-scroll-painted-native-20261028.png)
