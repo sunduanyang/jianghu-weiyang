@@ -95,4 +95,4 @@ PR 原始提交的环境没有 Unity 编辑器和 C# 编译器，因此当时没
 
 已检查原生舆图与长卷截图。完整结果、截图和独立测试存档位于本机 `output/pr8-integrated-20261028/`，最终构建日志为 `unity/pr8-integrated-final-build.log`。本次没有使用正式存档或调用真实模型；自动验收未穷举新视图中的每条远行路线与所有鼠标拖动交互。
 
-验证后的成品位于 `unity/Build/PR8Integrated/江湖未央.exe`，本机默认启动版本由 `unity/Build/active-build.txt` 选择为 `PR8Integrated`。源码合入本地 `main`；此次未向 GitHub 推送或关闭远程 PR。
+验证后的成品位于 `unity/Build/PR8Integrated/江湖未央.exe`，本机默认启动版本由 `unity/Build/active-build.txt` 选择为 `PR8Integrated`。源码统一以默认分支 `main` 为准。
