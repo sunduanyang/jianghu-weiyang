@@ -52,6 +52,13 @@ def suitor(w, n):
     return max(rows, key=lambda row: row[:2])[2] if rows else None
 
 
+def settled_family(w, n):
+    """A spouse at home or a small child keeps a person from setting out on a long journey."""
+    spouse = w.npcs.get(n['spouse'])
+    young = any(w.npcs[i]['alive'] and w.npcs[i]['age_months'] < 72 for i in n['children'] if i in w.npcs)
+    return young or bool(spouse and spouse['alive'] and spouse['place'] == n['place'])
+
+
 def known_arts(w, n):
     return set((martial.resolve(w, n) or {}).get('known', []))
 
@@ -101,7 +108,7 @@ def propose(w, n):
         if q:
             return 'study', f"拜访{q['name']}求学武艺", dict(target=q['id'], target_name=q['name'],
                                                         start_learned=learned, rebuffs=0)
-    elif k == 'freedom' and n['wealth'] >= JOURNEY_SAVINGS and not n['pregnancy']:
+    elif k == 'freedom' and n['wealth'] >= JOURNEY_SAVINGS and not n['pregnancy'] and not settled_family(w, n):
         return 'journey', '出门远游，见识未曾到过的地方', dict(
             target=None, start_visited=len(set(n.get('visited_places', [n['place']]))))
     elif k == 'renown':

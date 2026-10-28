@@ -125,6 +125,17 @@ class UndertakingTests(unittest.TestCase):
         self.assertIsNone(n['plan'])
         self.assertEqual(n['planning_history'][-1]['reason'], f'已游历{undertakings.JOURNEY_PLACES}处新地方')
 
+    def test_a_spouse_at_home_or_a_small_child_keeps_people_from_long_journeys(self):
+        n, q = self.adult('女', wealth=120.), self.adult('男')
+        self.goal(n, 'freedom')
+        n['spouse'], q['spouse'] = q['id'], n['id']
+        self.assertIsNone(undertakings.propose(self.w, n))
+        n['spouse'] = q['spouse'] = None
+        child = self.adult('男', age_months=30); n['children'].append(child['id'])
+        self.assertIsNone(undertakings.propose(self.w, n))
+        child['age_months'] = 200
+        self.assertEqual(undertakings.propose(self.w, n)[0], 'journey')
+
     def test_standing_counts_real_good_deeds(self):
         n, q = self.adult(), self.adult('男', wealth=5.)
         self.goal(n, 'renown'); p = self.begin(n)
