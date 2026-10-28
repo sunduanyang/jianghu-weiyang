@@ -25,7 +25,7 @@ public sealed partial class PhysicsDuel {
             int seed=game.Campaign?game.campaign.battle["seed"].I:42;
             foreach(char c in weapon.id)seed=unchecked(seed*31+c);
             aiRandom=new System.Random(seed^(human?7919:104729));
-            if(Reference){InitializeSourceAI();return;}
+            if(Reference){aiSourceAggression=1;InitializeSourceAI();return;}
             // CharacterEnemyAI.cik truncates a float Range(1,5).
             aiSourceAggression=Mathf.Clamp((int)AIRandom(1,5),1,5);
             aiDecisionAt=game.Clock+AIRandom(.08f,.22f);AITransition(AIPhase.Guard,.15f);
