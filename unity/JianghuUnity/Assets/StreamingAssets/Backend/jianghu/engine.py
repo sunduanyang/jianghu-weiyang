@@ -7,12 +7,12 @@ import random
 import time
 
 from .store import Store
-from . import demography, government, items
+from . import demography, government, items, appearance
 from . import social
 from . import politics, territory
 from .atlas import PLACES, FACTIONS, COUNTRIES, ROUTES, NEIGHBORS, MAP_VERSION, ERA
 from . import careers, social_ranks
-from . import martial, physical_combat as combat
+from . import martial, martial_manuals, physical_combat as combat, player_interactions, player_social
 from . import city_maps, relationships, organizations, protagonist, settlements, society
 from . import npc_plans, npc_memory, economics, rank_progression, local_life, llm_policy, npc_attention
 
@@ -153,6 +153,8 @@ class World:
             self.checkpoint()
         if martial.synchronize(self) or getattr(self, '_martial_migrated', False):
             self.checkpoint()
+        if protagonist.prepare_npc_turn(self):
+            self.checkpoint()
 
     def make_npc(self, parents=None, place=None):
         i = len(self.npcs) + 1
@@ -201,6 +203,7 @@ class World:
                                         + self.rng.uniform(-16, 16))
             n['initial_traits'] = n['traits'].copy()
         self.npcs[i] = n
+        appearance.prepare(self, n, inherit=bool(parents))
         demography.initialize(self, n)
         social.initialize(self, n)
         society.prepare(self, n)
@@ -523,10 +526,12 @@ class World:
         visible = own_rank[:6] + visible_new[:2]
         for i in visible:
             q = self.npcs[i]
+            actions += martial_manuals.candidates(self, n, q)
             r = n['relationships'].get(str(i), {'affinity': 0, 'trust': 0, 'romance': 0})
             if q['age_months'] >= 120:
                 add('befriend', i, q['name'])
             if (n['age_months'] >= 216 and q['age_months'] >= 216 and not n['spouse'] and not q['spouse']
+                    and not n.get('player_spouse') and not q.get('player_spouse')
                     and not self.close_kin(n, q) and demography.attracted(n, q)):
                 if r['affinity'] >= 12:
                     add('court', i, q['name'])
@@ -610,6 +615,7 @@ class World:
                  'trade': 20, 'betray': t['ambition']*.25-t['loyalty']*.36-t['compassion']*.2
                  + (30 if t['loyalty'] < 38 and t['ambition'] > 55 else 0),
                  'duel': t['ambition']*.2-t['caution']*.16,
+                 'seek_teacher': 28+(20 if g == 'mastery' else 0),
                  'mentor': 18, 'teach': t['loyalty']*.18 + t['compassion']*.1,
                  'join': 18+n['beliefs']['tradition']*4,
                  'duty': 12+t['loyalty']*.1, 'travel': (100-t['caution'])*.08,
@@ -655,9 +661,9 @@ class World:
             score -= t['loyalty']*.22
         if k == 'travel' and (n['pregnancy'] or any(self.npcs[i]['alive'] and self.npcs[i]['age_months'] < 72 for i in n['children'])):
             score -= 18
-        if k == 'befriend' and not n['spouse'] and 216 <= n['age_months'] <= 480:
+        if k == 'befriend' and not n['spouse'] and not n.get('player_spouse') and 216 <= n['age_months'] <= 480:
             q = self.npcs[a['target']]
-            if not q['spouse'] and demography.attracted(n, q) and demography.attracted(q, n) and not self.close_kin(n, q):
+            if not q['spouse'] and not q.get('player_spouse') and demography.attracted(n, q) and demography.attracted(q, n) and not self.close_kin(n, q):
                 score += 18
         if k == 'court' and not n['spouse']:
             score += 20
@@ -683,6 +689,9 @@ class World:
             self.metrics['invalid_actions'] += 1
             return None
         k, i = a['kind'], a['target']
+        if k == 'seek_teacher':
+            e = martial_manuals.request(self, n['id'], i, a['art'], action=a)
+            return self.finish_action(n, a, e)
         if k.endswith('_item'):
             e = items.perform(self, n['id'], k.removesuffix('_item'), i, action=a)
             return self.finish_action(n,a,e)
@@ -855,7 +864,8 @@ class World:
                 text = f"{name}与{q['name']}叙谈，因往来增进交情。"
             elif k == 'court':
                 # The other person has independent disposition; acceptance is settled here.
-                accepted = (self.relation(q, n['id'])['affinity'] > 8 and
+                accepted = (not n.get('player_spouse') and not q.get('player_spouse') and
+                            self.relation(q, n['id'])['affinity'] > 8 and
                             demography.attracted(q, n) and
                             self.rng.random() < .55 + q['traits']['sociability']/240)
                 if accepted:
@@ -868,7 +878,8 @@ class World:
                 facts['accepted'] = accepted
             elif k == 'propose':
                 reciprocal = self.relation(q, n['id'])
-                accepted = reciprocal['romance'] >= 40 and reciprocal['trust'] >= 8 and demography.attracted(q, n)
+                accepted = (not n.get('player_spouse') and not q.get('player_spouse') and
+                            reciprocal['romance'] >= 40 and reciprocal['trust'] >= 8 and demography.attracted(q, n))
                 if accepted:
                     n['spouse'], q['spouse'] = i, n['id']
                     self.link(n, q, 12, 10, 10, '夫妻')
@@ -1045,13 +1056,16 @@ class World:
         if self.battle and self.battle['status'] == 'active':
             raise ValueError('切磋尚未结束，请先收招或认输')
         started = time.perf_counter()
+        player_first = self.player['protagonist']['created']
+        if player_first:
+            protagonist.prepare_npc_turn(self)
         self.month += 1
         self.reindex()
         if economics.active(self):
             economics.begin_month(self)
         for n in self.npcs.values():
             n['drift_month'] = {}
-            social.reset_month(self,n)
+            social.reset_month(self,n,keep_activity=player_first)
         demography.households(self)
         local_life.reconcile(self)
         territory.monthly(self)
@@ -1141,6 +1155,8 @@ class World:
         martial.recover(self.player)
         self.player['health'] = clamp(self.player['health']+6+items.bonuses(self, 'player')['recovery'])
         protagonist.on_month(self)
+        if player_first:
+            protagonist.prepare_npc_turn(self)
         if self.durable:
             self.checkpoint()
         else:
@@ -1196,6 +1212,11 @@ class World:
             if h['mentor'] == n['id']:
                 h['mentor'] = None
         n['spouse'] = None
+        if n.get('player_spouse'):
+            n['player_spouse'] = False
+            self.player['protagonist']['spouse'] = None
+            relation = self.player['ties'].get(str(n['id']), {})
+            relation.update(married=False, widowed=True)
         for q in self.npcs.values():
             if q['mentor'] == n['id']:
                 q['mentor'] = None
@@ -1261,9 +1282,17 @@ class World:
         if not n or not n['alive']:
             raise ValueError('人物不在世或不存在')
         if action == 'challenge':
+            h = self.player['protagonist']
+            if h['created']:
+                return player_interactions.perform(self, dict(npc_id=npc_id, action='spar',
+                    revision=h['revision'], month=self.month))['martial']
             return self.start_battle(npc_id)
         if self.battle and self.battle['status'] == 'active':
             raise ValueError('请先结束切磋，再与人物往来')
+        h = self.player['protagonist']
+        if h['created']:
+            blocked = player_social.blocker(self, n)
+            if blocked:raise ValueError(blocked)
         tie = self.player['ties'].setdefault(str(npc_id), {'affinity': 0., 'trust': 0.})
         cause = n['last_event']
         if action == 'gift':
@@ -1285,8 +1314,6 @@ class World:
                           [cause], {'utterance': text, 'untrusted_player_text': True},
                           '来者的话是一种意见；往后的取舍仍须依自己的处境。')
         elif action == 'visit':
-            if tie.get('visit_month') == self.month:
-                raise ValueError('本月已与此人叙谈，下月再来')
             accepted = n['mood']['anger'] < 75 and n['health'] > 25
             tie['visit_month'] = self.month
             if accepted:
@@ -1294,7 +1321,7 @@ class World:
                 tie['trust'] = clamp(tie['trust'] + 2, -100, 100)
                 n['loneliness'] = max(0, n['loneliness'] - 12)
             e = self.emit('player_visit', [npc_id], f"过客拜访{n['name']}，" + ('二人闲叙近况，疏解孤独。' if accepted else '对方身心疲惫，婉谢来访。'),
-                          .45, [cause, tie.get('last_event')], {'accepted': accepted, 'monthly_limit': True})
+                          .45, [cause, tie.get('last_event')], {'accepted': accepted, 'npc_time_cost': 0})
         elif action == 'earn':
             raise ValueError('请使用行脚收入接口')
         else:
@@ -1303,6 +1330,8 @@ class World:
         tie['last_event'], tie['last_contact'] = e['id'], self.month
         if action == 'gift':
             rank_progression.on_event(self,e,who='player')
+        if h['created']:
+            h['points'] -= 1;h['revision'] += 1;h['records'].append(e['id'])
         self.checkpoint()
         return e
 
@@ -1328,10 +1357,8 @@ class World:
         if self.battle and self.battle['status'] == 'active':
             raise ValueError('已有切磋正在进行')
         n = self.npcs.get(npc_id)
-        if not n or not n['alive'] or n['health'] <= 30 or n['age_months'] < 216:
+        if not n or not n['alive'] or n['age_months'] < 216:
             raise ValueError('对方目前不适合切磋')
-        if self.player['health'] <= 30 or self.player['martial']['stamina'] < 12:
-            raise ValueError('你伤疲过重，请先调养')
         martial.sync_actor(self, self.player, True)
         martial.sync_actor(self, n)
         battle_id = f'{self.seed}-{self.month}-{self.store.next_id}'
@@ -1375,22 +1402,33 @@ class World:
         combat.submit(b, action, frame)
         if b['status'] == 'finished':
             n = self.npcs[b['fighters'][1]['id']]
-            costs = []
-            for actor, f in zip((self.player, n), b['fighters']):
-                cost = round(2 + 6*(1-f['vigor']/f['vigor_max']), 4)
-                actor['health'] = max(1., actor['health']-cost)
-                actor['martial']['stamina'] = clamp(actor['martial']['stamina']-12)
-                costs.append(cost)
+            costs = [0., 0.]
+            if b.get('spar', True):
+                b['resource_policy'] = 'per-bout-v1'
+            else:
+                for side, (actor, f) in enumerate(zip((self.player, n), b['fighters'])):
+                    cost = round(2 + 6*(1-f['vigor']/f['vigor_max']), 4)
+                    actor['health'] = max(1., actor['health']-cost)
+                    actor['martial']['stamina'] = clamp(actor['martial']['stamina']-12)
+                    costs[side] = cost
             tie = self.player['ties'].setdefault(str(n['id']), {'affinity': 0., 'trust': 0.})
-            tie['affinity'] = clamp(tie['affinity']+2, -100, 100)
+            if b.get('spar', True):
+                tie['affinity'] = clamp(tie['affinity']+2, -100, 100)
             result = '双方平手' if b['winner'] is None else b['fighters'][b['winner']]['name']+'胜出'
             gear_wear = {'player': items.wear(self, 'player', ['weapon', 'armor', 'shield'], 2),
                          'npc': items.wear(self, n['id'], ['weapon', 'armor', 'shield'], 2)}
             b['settled'] = True
-            e = self.emit('player_duel', [n['id']], f"过客与{n['name']}切磋，{result}，点到为止。", .7,
+            hostile = player_interactions.settle_hostile(self, b, n)
+            e = self.emit(hostile['kind'] if hostile else 'player_duel', [n['id']],
+                          hostile['summary'] if hostile else f"过客与{n['name']}切磋，{result}，点到为止。", .7,
                           [b['cause']], {'combat': deepcopy(b), 'player_health_cost': costs[0],
-                                         'npc_health_cost': costs[1], 'equipment_wear': gear_wear})
+                                         'npc_health_cost': costs[1], 'equipment_wear': gear_wear,
+                                         'loot': hostile['loot'] if hostile else 0})
             b['event_id'] = e['id']
+            if hostile:
+                self.player['protagonist']['records'].append(e['id'])
+                tie.update(last_event=e['id'], last_contact=self.month)
+                tie['encounter_records'] = (tie.get('encounter_records', [])+[e['id']])[-24:]
         self.battle = b
         self.checkpoint()
         return self.martial_view()
@@ -1424,6 +1462,8 @@ class World:
         self.local_life = deepcopy(state.get('local_life'))
         self.npc_attention = deepcopy(state.get('npc_attention'))
         self.npcs = {int(i): n for i, n in state['npcs'].items()}
+        for n in self.npcs.values():
+            appearance.prepare(self, n)
         self.rank_system = deepcopy(state.get('rank_system'))
         for n in self.npcs.values():
             if n.get('ai_pending'):
@@ -1509,6 +1549,10 @@ class World:
         npc_attention.initialize(self)
 
     def checkpoint(self):
+        for n in self.npcs.values():
+            appearance.prepare(self, n)
+        if self.player['protagonist']['created']:
+            appearance.prepare(self, self.player['protagonist'], player=True)
         martial.synchronize(self)
         self.store.save(self.export())
         self._martial_migrated = False
@@ -1518,7 +1562,8 @@ class World:
                                   'health', 'reputation', 'goal', 'faction', 'spouse', 'last_action',
                                   'generation', 'office', 'office_country', 'pregnancy', 'illness', 'death')},
                 'combat_rating': combat_attributes.rating(n), 'profession': n['career']['profession'], 'career_level': careers.level(n)[1],
-                'identity': careers.identity(self, n)}
+                'identity': careers.identity(self, n), 'appearance': n['appearance'],
+                'appearance_view': appearance.view(n)}
 
     def summary(self):
         living = [n for n in self.npcs.values() if n['alive']]
@@ -1561,6 +1606,7 @@ class World:
     def npc_detail(self, npc_id):
         from . import player_social
         n = deepcopy(self.npcs[npc_id])
+        n['appearance_view'] = appearance.view(n)
         n['planning_view'] = npc_plans.view(self, self.npcs[npc_id])
         n['recalled_memories'] = npc_memory.retrieve(self, self.npcs[npc_id])
         n['career_view'] = careers.view(self, self.npcs[npc_id])
@@ -1573,6 +1619,7 @@ class World:
         n['martial_view'] = martial.view(n, combat.equipment(self, npc_id), self)
         n['legal_actions'] = self.legal_actions(self.npcs[npc_id])
         n['possessions'] = items.view(self, npc_id)
+        n['manual_offers'] = martial_manuals.offers(self, self.npcs[npc_id])
         n['membership_view'] = ({**organizations.rank(self, n), 'faction': n['faction'],
                                  'contribution': n['contribution'], 'since': n['faction_since']}
                                 if n['faction'] is not None else None)

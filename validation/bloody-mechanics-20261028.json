@@ -1,0 +1,111 @@
+{
+  "date": "2026-10-28",
+  "apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "build": "unity/Build/BloodyMechanicsVerified/江湖未央.exe",
+  "build_log": "output/bloody-mechanics-20261028/build-body-contact.log",
+  "changes": [
+    "Timed stamina-paid kick trigger, fixed damage and physical knockback",
+    "Persistent kick payment and receiver cooldown with legacy snapshot upgrade",
+    "Reference shield contacts reach real damage processing",
+    "APK hand/foot driver shapes and empty source collision layer restored",
+    "60 Hz input with 4 unarmed / 16 armed contact substeps",
+    "Active-joint diagnostic excludes detached disabled hinges"
+  ],
+  "native": [
+    {
+      "phase": "reference-mechanics",
+      "build": "BloodyMechanicsVerified",
+      "passed": true,
+      "checks": 50,
+      "report": "output/bloody-mechanics-20261028/verified-client/reference-mechanics/acceptance.json"
+    },
+    {
+      "phase": "reference-stress",
+      "build": "BloodyMechanicsRelease",
+      "passed": true,
+      "checks": 24,
+      "report": "output/bloody-mechanics-20261028/calibrated-stress/reference-stress/acceptance.json"
+    },
+    {
+      "phase": "resume",
+      "build": "BloodyMechanicsRelease",
+      "passed": true,
+      "checks": 21,
+      "report": "output/bloody-mechanics-20261028/calibrated-main/resume/acceptance.json"
+    },
+    {
+      "phase": "reference",
+      "build": "BloodyMechanicsRelease",
+      "passed": true,
+      "checks": 47,
+      "report": "output/bloody-mechanics-20261028/calibrated-regression/reference/acceptance.json"
+    },
+    {
+      "phase": "binds",
+      "build": "BloodyMechanicsVerified",
+      "passed": true,
+      "checks": 22,
+      "report": "output/bloody-mechanics-20261028/verified-body-contact/binds/acceptance.json"
+    },
+    {
+      "phase": "kinetic",
+      "build": "BloodyMechanicsRelease",
+      "passed": true,
+      "checks": 15,
+      "report": "output/bloody-mechanics-20261028/calibrated-legacy/kinetic/acceptance.json"
+    }
+  ],
+  "native_primary_checks": 179,
+  "native_all_passed": true,
+  "supplementary_cold_client": {
+    "checks": 13,
+    "passed": true,
+    "report": "output/bloody-mechanics-20261028/verified-client/city-resume/acceptance.json"
+  },
+  "backend": {
+    "command": "python -m pytest tests/test_physical_reference.py tests/test_physical_combat.py tests/test_combat_pace.py tests/test_combat_attributes.py -q",
+    "passed": 38,
+    "subtests_passed": 48
+  },
+  "solver_stress": {
+    "cases": 10,
+    "warmup_seconds": 1,
+    "max_duration_seconds": 180,
+    "ends_at_knockout": true,
+    "maximum_active_joint_error_degrees": 7.457487,
+    "maximum_joint_gap_m": 0.006578366,
+    "simulated_seconds": 1196.04954,
+    "wall_seconds": 264.194222,
+    "report": "output/bloody-mechanics-20261028/calibrated-stress/reference-stress/solver-measurements.json"
+  },
+  "withdrawal": {
+    "attempted": 20,
+    "real_contact_cases": 17,
+    "non_contact_cases": 3,
+    "categories": 8,
+    "max_release_seconds": 0.5,
+    "max_joint_gap_m": 0.0123583,
+    "initial_interpenetration_cases": 0,
+    "report": "output/bloody-mechanics-20261028/verified-body-contact/binds/contact-release-cases.json"
+  },
+  "build_equivalence": {
+    "gameplay_il_unchanged": true,
+    "changed_method": "Jianghu.J PhysicsDuel::ProbeReferenceBind(System.Boolean,System.Single,System.Boolean)",
+    "reason": "Final build changes only the smoke-only bind probe; earlier gameplay regressions remain applicable.",
+    "report": "output/bloody-mechanics-20261028/assembly-method-differences.json"
+  },
+  "source_manifest": "output/bloody-mechanics-20261028/source-manifest.json",
+  "evidence": "output/bloody-mechanics-20261028/evidence/mechanics-evidence.json",
+  "ui_check": {
+    "earlier_window_and_space_kick_verified": true,
+    "final_window_check": "stopped by user physical Escape; no further UI input issued"
+  },
+  "parity": "not proven one-to-one",
+  "remaining": [
+    "Original AI animation input bundles and runtime equipment overrides",
+    "Frame-aligned source input / body / weapon trajectories",
+    "Full puncture, bleeding and execution state machines",
+    "All equipment geometry, inertia, armor mappings and special weapons"
+  ],
+  "isolation": "Native runs use independent saves; reference sandbox has no backend or save."
+}

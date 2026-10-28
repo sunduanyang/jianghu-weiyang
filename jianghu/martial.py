@@ -11,7 +11,7 @@ ARTS = {}
 REALMS = []
 GATES = []
 KIND_NAMES = {}
-RETIRED_ACTIONS = frozenset(('train','mentor','teach','faction_study','faction_guide','read_item'))
+RETIRED_ACTIONS = frozenset(('train','mentor','teach','faction_task','faction_study','faction_guide','read_item'))
 
 
 def bounded(value, lo=0, hi=100):
@@ -27,13 +27,17 @@ def initialize(actor, player=False):
         actor['plan'] = None
     energy = actor.get('martial', {}).get('stamina', 100.)
     curriculum = actor.get('martial', {}).get('curriculum')
-    actor['martial'] = {'stamina': bounded(energy), 'arts': {}}
+    learned = actor.get('martial', {}).get('learned', [])
+    requests = actor.get('martial', {}).get('requests', {})
+    actor['martial'] = {'stamina': bounded(energy), 'arts': {},
+                        'learned': sorted({key for key in learned if key in martial_catalog.ARTS}),
+                        'requests': requests}
     if isinstance(curriculum, dict) and curriculum.get('version') == martial_catalog.VERSION:
         actor['martial']['curriculum'] = curriculum
 
 
 def retired(*args, **kwargs):
-    raise ValueError('旧修习与装配指令已移除；新功法按身份与品阶自动掌握')
+    raise ValueError('旧修习与装配指令已移除；新功法可按身份传承或使用对应秘籍学会')
 
 
 learn = equip = practice = auto_practice = transmit = retired
@@ -70,6 +74,7 @@ def resolve(w, actor, player=False):
     school = w.factions[faction]['key'] if member else civil
     known = [key for key in martial_catalog.SCHOOL_ARTS.get(school, [])
              if martial_catalog.ARTS[key]['grade'] >= grade] if member else ([f'{school}_g{grade}'] if school else [])
+    known += [key for key in actor['martial'].get('learned', []) if key not in known and key in martial_catalog.ARTS]
     return dict(version=martial_catalog.VERSION, origin_place=origin, origin_country=country,
                 civil_school=civil, system='sect' if member else 'civil', school=school,
                 grade=grade, known=known)
@@ -101,6 +106,8 @@ def view(actor, equipment=None, world=None, player=False):
         effective = {**actor, 'martial': {**actor['martial'], 'curriculum': resolve(world, actor, player) or {}}}
     c = effective['martial'].get('curriculum', {})
     arts = [deepcopy(martial_catalog.ARTS[key]) for key in c.get('known', []) if key in martial_catalog.ARTS]
+    for art in arts:
+        art['source'] = '秘籍习得' if art['id'] in actor['martial'].get('learned', []) else '身份传承'
     info = deepcopy(c)
     if world is not None and c:
         from .atlas import PLACES

@@ -6,6 +6,11 @@ using UnityEngine;
 public sealed partial class PhysicsDuel {
     public sealed partial class Fighter {
         public void Draw(bool debug) {
+            if(TryDrawCharacterModules(debug))return;
+            if(TryDrawModularPuppet(debug))return;
+            if(TryDrawLacePuppet(debug))return;
+            if(skin["appearance_id"].Has){DrawSegmentAppearance(debug);return;}
+            if(Reference){DrawReference(debug);return;}
             game.Circle(ScreenPoint(new Vector2(Hip.x,.01f)),new Vector2(145,16),new Color(.1f,.17f,.14f,.12f));
             Vector2[] trace=trail.ToArray();for(int i=1;i<trace.Length;i++)game.Line(ScreenPoint(trace[i-1]),ScreenPoint(trace[i]),3,new Color(.6f,.31f,.16f,.025f*i));
             if(shield!=null&&HasShield)DrawWeapon(shield,true);
@@ -80,7 +85,7 @@ public sealed partial class PhysicsDuel {
             } else bind.m00=breadth;
             GUI.matrix=old*Matrix4x4.Translate(anchor)*Matrix4x4.Rotate(Quaternion.Euler(0,0,angle))*bind*Matrix4x4.Translate(-anchor);
             GUI.color=game.Clock<hitTint?new Color(1,.62f,.52f):Color.white;
-            GUI.DrawTextureWithTexCoords(new Rect(anchor.x-pivot.x*fit,anchor.y-pivot.y*fit,size.x*fit,size.y*fit),atlas,uv,true);
+            GUI.DrawTextureWithTexCoords(new Rect(anchor.x-pivot.x*fit,anchor.y-pivot.y*fit,size.x*fit,size.y*fit),PaperAppearanceArt.PartAtlas(skin,part,atlas),uv,true);
             GUI.color=oldColor;GUI.matrix=old;
         }
         void DrawWeapon(Limb l,bool isShield) {

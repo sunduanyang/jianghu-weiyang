@@ -158,8 +158,7 @@ public partial class JianghuApp {
         GUI.color=old;bool hit=GUI.Button(new Rect(r.x,r.y,r.width,r.height+22),GUIContent.none,GUIStyle.none);return hit&&enabled&&!Client.Busy;
     }
     bool OverUI(Vector2 m){
-        if(ViewOpen||choiceOpen)return true;
-        if(interactWith>=0&&InteractRect.Contains(m))return true;
+        if(ViewOpen||choiceOpen||WorldTravelOpen)return true;
         if(TopBar.Contains(m)||LeftPanel.Contains(m)||PlaceCard.Contains(m))return true;
         if(CurrentStage==Stage.City&&CityOverviewRect.Contains(m))return true;
         if(m.y>Dock.y+40||new Rect(740,812,200,150).Contains(m)||new Rect(1520,780,160,180).Contains(m)||new Rect(0,712,300,248).Contains(m))return true;
@@ -213,7 +212,7 @@ public partial class JianghuApp {
         bool hero=Hero["created"].B;
         GUI.Label(new Rect(moon.x,moon.y+30,moon.width,60),hero?Hero["points"].S:"推",bigNumber);
         GUI.Label(new Rect(moon.x,moon.y+86,moon.width,24),hero?"结束本月":"推演一月",moonLabel);
-        string monthHint=W["battle_active"].B?"请先结束切磋":!Paused?"请先暂停世界推演":hero?"结束本月并恢复下月行动力":"推进世界一个月";
+        string monthHint=W["battle_active"].B?"请先结束切磋":!Paused?"请先暂停世界推演":hero?"你先行动；互动只耗你的行动力，结束本月后NPC独立行动":"推进世界一个月";
         bool previous=GUI.enabled;GUI.enabled=previous&&!Client.Busy&&!W["battle_active"].B&&(!hero||Paused);
         if(GUI.Button(moon,new GUIContent("",monthHint),GUIStyle.none)){if(hero)HeroAction("end_turn");else Control("advance",1);}GUI.enabled=previous;
         // 世界推演 folds into the month dial: a small toggle beside it opens the popup above.

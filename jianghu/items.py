@@ -1,4 +1,4 @@
-from . import combat_attributes, weapons, equipment
+from . import combat_attributes, weapons, equipment, martial, martial_catalog
 """Personal possessions: finite instances, engine-priced transfers and event provenance."""
 from copy import deepcopy
 import math
@@ -11,7 +11,7 @@ GRADE_COLORS = {9: '#8C918C', 8: '#E8E5DA', 7: '#78A85B', 6: '#568FC4',
 GRADE_COLOR_NAMES = {9: '灰', 8: '白', 7: '绿', 6: '蓝', 5: '青',
                      4: '紫', 3: '金', 2: '橙', 1: '红'}
 GRADE_NAMES = {grade: name+'品' for grade, name in zip(range(9, 0, -1), '九八七六五四三二一')}
-CATEGORIES = {'manual': '书籍', 'food': '食品', 'wine': '酒', 'tea': '茶',
+CATEGORIES = {'manual': '武功秘籍', 'food': '食品', 'wine': '酒', 'tea': '茶',
               'weapon': '武器', 'shield': '盾牌', 'armor': '护甲', 'accessory': '佩饰', 'tool': '器具',
               'medicine': '丹药', 'material': '材料'}
 SLOTS = {'weapon': '主手', 'shield': '副手', 'armor': '护甲'}
@@ -117,6 +117,35 @@ RETIRED_MANUALS = {key for key, value in CATALOG.items() if value['category'] ==
 for _retired in RETIRED_MANUALS:
     del CATALOG[_retired]
 
+# New manuals reference the current nine-grade arts, never the retired skill system.
+MANUAL_TEMPLATES = {}
+for _art_id, _art in martial_catalog.ARTS.items():
+    _key = 'martial_manual_' + _art_id
+    MANUAL_TEMPLATES[_art_id] = _key
+    CATALOG[_key] = template('《'+_art['name']+'》秘籍', 'manual', _art['grade'],
+        {9:20, 8:34, 7:58, 6:90, 5:128, 4:180, 3:320, 2:640, 1:1200}[_art['grade']],
+        f"{_art['school_name']}的{_art['kind']}秘籍。使用后学会{_art['name']}，消耗一本；"
+        f"永久保留所学，不受身份变动影响。{_art['description']}。", art=_art_id)
+
+
+def knows(w, owner, art_id):
+    n = actor(w, owner)
+    curriculum = martial.resolve(w, n, str(owner) == 'player') or {}
+    return art_id in curriculum.get('known', [])
+
+
+def register_manuals(w):
+    if w.items.get('manual_catalog') == 1:
+        return False
+    added = [create(w, 'market', key, '武功秘籍启用时登记的货栈存货')
+             for key in MANUAL_TEMPLATES.values()]
+    w.items['manual_catalog'] = 1
+    e = w.emit('item_catalog', [], f'货栈登记武功秘籍{len(added)}册。', .25,
+               facts={'initial_condition': True, 'manual_catalog': 1, 'items': [i['id'] for i in added]})
+    for item in added:
+        item['origin_event'] = item['last_event'] = e['id']
+    return True
+
 
 def retire_manuals(w):
     for item in list(w.items['objects'].values()):
@@ -193,6 +222,7 @@ def initialize(w, legacy=False):
         prepare(n)
     if getattr(w, 'items', None):
         retire_manuals(w)
+        manuals_added = register_manuals(w)
         for item in w.items['objects'].values():
             for retired in ('attack', 'weight', 'capacity'):
                 item.pop(retired, None)
@@ -217,8 +247,8 @@ def initialize(w, legacy=False):
                 facts={'initial_condition':True, 'physical_catalog':1, 'items':[i['id'] for i in added]})
             for item in added: item['origin_event'] = item['last_event'] = e['id']
             return True
-        return False
-    w.items = {'version': 2, 'physical_catalog': 1, 'next_id': 1, 'objects': {},
+        return manuals_added
+    w.items = {'version': 2, 'physical_catalog': 1, 'manual_catalog': 1, 'next_id': 1, 'objects': {},
                'market': {'name': '五地货栈', 'wealth': 800.}, 'government': {'name': '县衙遗物库'}}
     prepare(w.items['market'])
     prepare(w.items['government'])
@@ -287,6 +317,9 @@ def repair_price(item):
 def operations(w, owner, item):
     n, d = actor(w, owner), spec(item)
     result = []
+    if (d.get('art') and item['durability'] > 0 and
+            (str(owner) != 'player' or n['protagonist']['created']) and not knows(w, owner, d['art'])):
+        result.append('use')
     equipped = item['id'] in n['equipment'].values()
     if d['category'] in SLOTS:
         if equipped:
@@ -320,6 +353,7 @@ def view(w, owner):
                        'category_label': CATEGORIES[d['category']], 'equipped': item['id'] in n['equipment'].values(),
                        'buy_price': buy_price(item), 'sell_price': sell_price(item), 'repair_price': repair_price(item),
                        'read_progress': n['read_books'].get(item['template'], 0),
+                       'art_known': knows(w, owner, d['art']) if d.get('art') and str(owner) not in ('market', 'government') else False,
                        'operations': operations(w, owner, item) if n.get('alive', True) else []})
     return {'owner': str(owner), 'name': n['name'], 'wealth': n.get('wealth', 0), 'health': n.get('health'),
             'skill': n.get('skill'), 'joy': n.get('mood', {}).get('joy'),
@@ -409,6 +443,14 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
         else:
             n['equipment'].pop(slot, None)
         text = f"{n['name']}{'装备' if operation == 'equip' else '卸下'}{d['name']}。"
+    elif operation == 'use' and d.get('art'):
+        art_id = d['art']
+        n['martial'].setdefault('learned', []).append(art_id)
+        n['martial']['learned'].sort()
+        martial.sync_actor(w, n, owner == 'player')
+        facts.update(art=art_id, learned=True, consumed=item['id'])
+        text = f"{n['name']}使用{d['name']}，学会{martial_catalog.ARTS[art_id]['name']}，秘籍已消耗一册。"
+        remove(w, item)
     elif operation == 'use':
         before = n['health']
         joy_before = n.get('mood', {}).get('joy', 0)
@@ -423,14 +465,6 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
         facts.update(health_gain=round(n['health']-before, 4), joy_gain=joy_gain, consumed=item['id'])
         text = f"{n['name']}使用{d['name']}，恢复{n['health']-before:g}体力" + (f'，喜悦增加{joy_gain:g}' if joy_gain else '') + '。'
         remove(w, item)
-    elif operation == 'read':
-        progress = n['read_books'].get(item['template'], 0)+1
-        before = combat_attributes.rating(n)
-        n['read_books'][item['template']] = progress
-        pass  # Retired martial proficiency is no longer stored.
-        item['durability'] = max(0, item['durability']-5)
-        text = f"{n['name']}研读{d['name']}至第{progress}篇，武学增长{combat_attributes.rating(n)-before:.2f}。"
-        facts.update(skill_gain=combat_attributes.rating(n)-before, progress=progress, total=d['pages'])
     elif operation == 'repair':
         cost = repair_price(item)
         material = 'iron' if d['category'] in ('weapon', 'armor') else 'timber'
@@ -492,7 +526,9 @@ def candidates(w, n):
         d = spec(item)
         ops = operations(w, n['id'], item)
         choices = []
-        if 'use' in ops and n['health'] < (85 if d['category'] == 'medicine' else 75):
+        if 'use' in ops and d.get('art'):
+            choices.append(('use_item', 60+(15 if (n.get('goal') or {}).get('kind') == 'mastery' else 0)))
+        elif 'use' in ops and n['health'] < (85 if d['category'] == 'medicine' else 75):
             choices.append(('use_item', 38+(100-n['health'])*.7))
         if 'equip' in ops:
             old_id = n['equipment'].get(d['category'])

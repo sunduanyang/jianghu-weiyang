@@ -1,0 +1,186 @@
+{
+  "schema": 1,
+  "complete_port": false,
+  "runtime_parity_verified": false,
+  "scope": "Recovered numeric motion, attack direction/time selection and staged physical death integrated into formal spar/rob/assault; full original rig, AI, impalement and equipment migration remain incomplete.",
+  "source_apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "extraction_audit": "output\\bloody-full-port-20261028\\extraction-audit.json",
+  "extraction": {
+    "native_functions": 1274,
+    "control_flow_warning_functions": 243,
+    "all_semantically_reviewed": false,
+    "bundles": 18,
+    "clips": 7
+  },
+  "default_build": "AvatarHoverFix",
+  "default_was_replaced": false,
+  "executable": "D:\\Desktop\\新新游戏\\unity\\Build\\AvatarHoverFix\\江湖未央.exe",
+  "executable_sha256": "9806abde4a406ed68647e9505852c49f6aa72a372f4f084e2aa2821affea57a2",
+  "assembly_sha256": "672497e665c324b559c4b83aeb98d1ef24448d9924f52101f5a31743b2498606",
+  "tests": {
+    "native_primary_checks": 290,
+    "native_phases": [
+      {
+        "phase": "source-program",
+        "passed": true,
+        "checks": 40
+      },
+      {
+        "phase": "source-program-resume",
+        "passed": true,
+        "checks": 8
+      },
+      {
+        "phase": "reference-port",
+        "passed": true,
+        "checks": 25
+      },
+      {
+        "phase": "reference-port-resume",
+        "passed": true,
+        "checks": 8
+      },
+      {
+        "phase": "reference-mechanics",
+        "passed": true,
+        "checks": 49
+      },
+      {
+        "phase": "injury",
+        "passed": true,
+        "checks": 73
+      },
+      {
+        "phase": "injury-resume",
+        "passed": true,
+        "checks": 9
+      },
+      {
+        "phase": "reference-stress",
+        "passed": true,
+        "checks": 24
+      }
+    ],
+    "formal_checks": 54,
+    "formal_modes": [
+      "spar",
+      "rob",
+      "assault"
+    ],
+    "formal_demo_argument": false,
+    "default_repeat_checks": 48,
+    "python_unique_tests": 83
+  },
+  "stability": {
+    "production_combinations": 10,
+    "max_joint_gap": 0.004318966,
+    "max_limit_error": 5.622173,
+    "acceptance_limits": {
+      "gap": 0.15,
+      "angle": 8
+    },
+    "input_hz": 60,
+    "unarmed_substeps": 8,
+    "armed_substeps": 16
+  },
+  "equivalence": {
+    "stability_to_release_methods": 473,
+    "difference_is_test_only_entry": true,
+    "release_to_default_methods": 473,
+    "release_to_default_equal": true,
+    "tested_backend_py_files": 52,
+    "default_backend_equals_tested": true,
+    "updated_physical_reference_equals_working_source": true
+  },
+  "concurrent_unpublished_work": {
+    "working_source_differs_from_tested_build": [
+      "city_maps.py",
+      "martial.py",
+      "npc_plans.py",
+      "organizations.py",
+      "player_interactions.py",
+      "protagonist.py",
+      "rank_progression.py",
+      "social.py"
+    ],
+    "action": "Preserved other in-progress source changes; did not copy them into the validated shipping build."
+  },
+  "code_sha256": {
+    "DuelAI.cs": "f4e34a0964cd49e26aa6b9ba06e609d5fe48897cd230b6dcab42f1ae7567bb6e",
+    "DuelReference.cs": "e9e29f123a4e0ab09f51391ab4ec61d412190105d2def760b48724cb2f87a037",
+    "DuelReferenceKick.cs": "ea6f83fcebd18e901eed1481bf20216837897658b811567512ff38e66093d8de",
+    "DuelReferenceRules.cs": "e8ae8d2ae92afa9290bb3b30061653165fd9c106679c58a89a8657f1df98a2a5",
+    "DuelReferenceState.cs": "676e19604856532b814e50a00f6adb46c4fb282fed12725aabc17e2cf07e1bfb",
+    "DuelSourceMotion.cs": "8107b0279be8d78e4c13e22d13613bf8f04d27fe2364667d5a26eb8b4292cdc7",
+    "DuelSourceDeath.cs": "a7c0be7304d94d45e47915579433b55fdde3478b3de89809a036d8001c9fa703",
+    "DuelCampaign.cs": "00b2ea2797e9e3f5e6066356899ce50c4fcfa98083e131b45d543a888b6b1e62"
+  },
+  "motion_data_sha256": "a0b0d960616169166c519d7041dee3b9dffdf186dc48b528c7c77592306b0969",
+  "tested_backend_sha256": {
+    "ai.py": "167aed4914e34bb881c1c5ac07e31ee698e089c6863ffcd5bf0c12928248c8be",
+    "appearance.py": "b59ad89faab2a4f220b97b4b7868382cd0025125158d067fc4d94a6c4d3f1ce6",
+    "atlas.py": "1a3b569c200e041a8d8a379ba3a4fb2bc5e697d6f658d9ce5037fac654cab74d",
+    "atlas_expansion.py": "43d059c4f2a16e5aecc784ecbc20c77ec83230d3ced1f1221e89c46a950e2f69",
+    "atlas_migration.py": "c8f548da1c80323f57a999bfdebe5caf98bf29784fdc0d12021d2a61c72d4b5c",
+    "careers.py": "df4619d895a86cab4dbe5e61dba2d0f2961eddefbe0c7e4add99dffe754f639a",
+    "city_biomes.py": "9cc647c6192e4110dbef61035298e473f73128845b511f4a14a310929d338639",
+    "city_gardens.py": "465dc249dca3812f348ee8273b414f302bc8953143c8cdfc5e079d76fcf794fe",
+    "city_landscape.py": "fbe3a70ace9a4c40d84ece63eddc6b52364d13737fa0957324f41480d2c550b9",
+    "city_maps.py": "2a0ac8a9b06de9d8e6f90a8e6c0dcabedef859263ff89b2dfe81ba4a0d5df1ab",
+    "city_plans.py": "48cb31a3f7355449314e7c1936a6405b419dc7d8d176a774b085beb291659548",
+    "city_regions.py": "443590725c6742bb155869da3553fd9bb7474b3cbbae9965647275f2bc4e157a",
+    "combat_attributes.py": "93922786908a5b74d1c1af0e1613c2cd30771a6f0b3ec88173102f6421454558",
+    "deliberation.py": "4ce4a9195556e79a074caaeecdcd0131ca48d17f49138eebf1f41eca18656935",
+    "demography.py": "c57fe99c27270e72a7ca4895298d5e8671fa18e2afad67afc42b98e5587bb0a9",
+    "economics.py": "7a226932c94cd8ac056a3da846feb2154a533a86c97d33458e35ff3110490e2c",
+    "engine.py": "08cb008d1ff95ccb83750a518da2495d966c5198cd0ec8a9738a2671aff80fa0",
+    "equipment.py": "3fcbce12523ab82367441d78592fec53afce4e5004d19e7d21ec7c5fc517da75",
+    "government.py": "5b49632a4110f9bff09a28d26d38de502bb1998ff57ac80e32db77e244b48bde",
+    "historical_map.py": "1e08af6fe6bc9ad9d2b0e5e429d71461acfe412b9c7ead175cdc6186aeea809e",
+    "items.py": "c744833124478fd0c7130f71a6f020fd13ee557f823360beef640237b5c2d4db",
+    "llm_policy.py": "2bb9824410750a8ba21eab917401188be97b1f7a3c0f7297e69425e9f8cf416a",
+    "local_life.py": "1f52285a706dd1f046bbc802611b0f8bd74f1db934e32089b0ecdcffd51ad875",
+    "martial.py": "0494b1aaecfb3756da792db8115db72a7fd5e950bd347867b839c8ea7fb6e84b",
+    "martial_catalog.py": "c5dbd71bc1d8fea5e9be8b11d7fe26d885730972300c74567ca08d17f44857ac",
+    "martial_manuals.py": "108d6c249bf95e74248138247a76a7d73f549ded2427e957a5467ad0c6f8c491",
+    "model_service.py": "27443ee7bcb23191d752033c03933158f3f6584ed129cd83492977a8d5ca2c9e",
+    "npc_attention.py": "de32ec2c54887b1af76887a10500194bc7f5944cbbe450d235aba1401ac82f91",
+    "npc_memory.py": "eb5bfa500b8c0b094d59d1043ddf57d910c08ea7082bc2c9ff8d56e3fa2fb701",
+    "npc_plans.py": "241361a4284d580690cd45759e81435e8c95f46c4be021993ae0e087cd0d6a91",
+    "organizations.py": "33c208ac0c32a0b402103f4c106ccd6ffb6770f7d552fb7cbb4d0f310f8f8f4d",
+    "physical_combat.py": "dce26d88949dbd1e4ae5ad6d124332d5deea8a135c6cdb4e9e3441139ce023b0",
+    "physical_reference.py": "58a02433bf7d1fbfa541db757be9bef7ae388c70a5995f8a212070a06bf64022",
+    "player_interactions.py": "1c55e8e64e758bcac221ba022d672d1746490797e4ec8d16dc0df6fbada89538",
+    "player_social.py": "9b906fc9687597359ad6125c1f037839b84a00f76b565a1a2a5579b8d294a528",
+    "politics.py": "643ac2df5b8e23f1d3c751f1bec641792333671e14e9b612e0409de027772d0e",
+    "population.py": "2635e075963c8926964e7854e1a5929a13dc80b7262b03ba5ebaecb8383e36b6",
+    "protagonist.py": "f8162c9572d68e9f217f453791dadc78972b9609ab0456303fcd35ba4ed93030",
+    "rank_progression.py": "2a7398b4162dbe1018d6a6775ea98badb545b1c9b8f9a88f1cefaba6e9f2cd77",
+    "relationships.py": "b0a85d724afc7c71e3b0d28309eac9c036da554e4d19d7346a8400d83ec685c5",
+    "sect_catalog.py": "e98d0cf449f29524832c0e34102a2ad685cf73b9d3e36988d205e4755ad522a5",
+    "sect_migration.py": "70e88b2259ab2b8a885c21bb60ce08206097e58c6c208f186540bb097e7dca93",
+    "sect_ranks.py": "2dae287b61520c1699ce8aa7d423d64673ef16dfaafd13aaa67c8e14eafcea9e",
+    "server.py": "cebdf6ebd75f43ad7652213d79921b40a4d7ea8e7f439e9552d8c4c80cb0ba90",
+    "settlements.py": "3654534a829f9082f05b6ef6b585155c463004bfeab733ab586d6e89993fee1f",
+    "social.py": "449371fe7f36eaf98d092d64fb3eb4ddc28f39af96c2643d9ae32f2bcad76197",
+    "social_ranks.py": "d732f47e8d65506a25b96fec70730394ba3000ce6e7fb1843f0a52e99fb990f5",
+    "society.py": "d2fc8db06bf89c6e21a09103e38a698fb7c63543089989288ec187ce8bc6a49f",
+    "store.py": "b98ca0fe845953a0b14623587da2a98ffcd0bcd8cd8a438cc3823343a09f50d4",
+    "territory.py": "f4bac713250a0623ea308359afe697897bf4b251ea1722b761ee13c75d24ad27",
+    "weapons.py": "802a5c0c40e9e4b851cd5cd12e19d3a699533a5c3efc230b0be55c05246fd1cf",
+    "__init__.py": "fa4bb541ffb1012e31431d164c85942d7e66419ef2c01b38bcb64e142969b8d7"
+  },
+  "failed_attempts_not_counted": [
+    "native-v1 source checkpoint fixture lacked AI driving",
+    "native-v2 source motion lost on pause/cold restart",
+    "formal-native hidden window produced no rendered screenshots",
+    "final-native unarmed head overshoot 8.533749 degrees at 4 substeps",
+    "stable-formal-native wall-clock windup assertion skipped by frame hitch"
+  ],
+  "evidence": {
+    "native": "output/bloody-full-port-20261028/stable-native",
+    "formal": "output/bloody-full-port-20261028/default-formal-native",
+    "default_replay": "output/bloody-full-port-20261028/default-native",
+    "python_log": "output/bloody-full-port-20261028/python-tests.log"
+  }
+}

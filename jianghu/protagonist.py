@@ -1,12 +1,35 @@
 """Player-owned travel and monthly turns, sharing the existing player and save."""
 from copy import deepcopy
+import heapq
 import math
 
 from .atlas import PLACES, ROUTES
-from . import city_maps
+from . import city_maps, appearance
 
 POINTS_PER_MONTH = 30
 HOME = next(p['id'] for p in PLACES if p['name'] == '临安府')
+
+
+def prepare_npc_turn(w):
+    """Prepare independent NPC budgets and release obsolete player bookings."""
+    from . import social
+    h = w.player['protagonist']
+    if not h['created'] or h.get('npc_budget_month') == w.month and h.get('interaction_time_policy') == 2:
+        return False
+    new_turn = h.get('npc_budget_month') != w.month
+    for n in w.npcs.values():
+        prior = n.get('monthly_actions', [])
+        if new_turn:
+            if prior:n['previous_month_actions'] = deepcopy(prior)
+            social.reset_activity(w, n)
+        else:
+            booked = [a for a in prior if a.get('kind') == 'player_social' or a.get('id') == 'manual_teaching:player']
+            released = sum(a.get('time_cost',1) for a in booked if a.get('month') == w.month)
+            n['monthly_actions'] = [a for a in prior if a not in booked]
+            n['time_left'] = min(social.activity_capacity(w,n),n['time_left']+released)
+    h['npc_budget_month'] = w.month
+    h['interaction_time_policy'] = 2
+    return True
 
 
 def initialize(w):
@@ -16,6 +39,8 @@ def initialize(w):
         organizations.prepare(h)
         h.setdefault('faction', None)
         h.setdefault('contribution', 0.)
+        if h['created']:
+            appearance.prepare(w, h, player=True)
         return
     gate = next(n for n in city_maps._world_layout(w, HOME)['nodes'] if n['id'] == 'gate')
     w.player['protagonist'] = dict(created=False, sex='男', age_months=216, place=HOME,
@@ -32,24 +57,87 @@ def on_month(w):
         h['revision'] += 1
 
 
+def route_cost(route):
+    return (8 + math.ceil(route['km']/120) + (4 if route['sea'] else 0), 0)
+
+
+def travel_reason(w, points):
+    h = w.player['protagonist']
+    return ('请先创建主角' if not h['created'] else
+            '请先结束切磋，再安排行程' if w.battle and w.battle['status'] == 'active' else
+            '精力不足，点击过月' if h['points'] < points else '')
+
+
 def connections(w):
     h = w.player['protagonist']
-    city = city_maps._world_layout(w, h['place'])
-    at_exit = any(n['kind'] in ('gate', 'dock') and (n['row'], n['col']) == (h['row'], h['col'])
-                  for n in city['nodes'])
     result = []
     for r in w.routes:
         if h['place'] not in (r['a'], r['b']):
             continue
         target = r['b'] if r['a'] == h['place'] else r['a']
-        points = 8 + math.ceil(r['km']/120) + (4 if r['sea'] else 0)
-        silver = round(1 + r['km']/250 + (1.5 if r['sea'] else 0), 2)
-        reason = ('请先创建主角' if not h['created'] else
-                  '请先走到城门或舟埠' if not at_exit else
-                  '本月行动力不足，请结束本月' if h['points'] < points else
-                  '盘缠不足' if w.player['wealth'] < silver else '')
+        points, silver = route_cost(r)
+        reason = travel_reason(w, points)
         result.append(dict(place=target, name=PLACES[target]['name'], km=r['km'], sea=r['sea'],
                            points=points, silver=silver, enabled=not reason, reason=reason))
+    return result
+
+
+def travel_plan(w, target):
+    """Quote real routes and the whole legs affordable this month; travel is free."""
+    target = integer(target, '目的地')
+    if target not in {p['id'] for p in w.active_places}:
+        raise ValueError('请选择有效区域')
+    h = w.player['protagonist']
+    origin = h['place']
+    result = dict(origin=origin, place=target, name=PLACES[target]['name'],
+                  month=w.month, revision=h['revision'], points=0, silver=0,
+                  path=[origin], stops=[PLACES[origin]['name']], legs=[], enabled=False, reason='',
+                  travel_legs=[], travel_points=0, travel_place=origin, can_finish=False, needs_month=False)
+    if target == origin:
+        result['reason'] = '已在此区域'
+        return result
+    graph = {}
+    for route in w.routes:
+        for a, b in ((route['a'], route['b']), (route['b'], route['a'])):
+            graph.setdefault(a, []).append((b, route))
+    costs, previous, queue = {origin: 0}, {}, [(0, origin)]
+    while queue:
+        points, at = heapq.heappop(queue)
+        if costs[at] != points:
+            continue
+        if at == target:
+            break
+        for destination, route in graph.get(at, []):
+            leg_points, leg_silver = route_cost(route)
+            cost = points+leg_points
+            if destination in costs and costs[destination] <= cost:
+                continue
+            costs[destination] = cost
+            previous[destination] = (at, dict(origin=at, place=destination, name=PLACES[destination]['name'],
+                                             points=leg_points, silver=leg_silver, km=route['km'], sea=route['sea']))
+            heapq.heappush(queue, (cost, destination))
+    if target not in costs:
+        result['reason'] = '没有通往此区域的驿道或航路'
+        return result
+    path, legs, at = [target], [], target
+    while at != origin:
+        at, leg = previous[at]
+        path.append(at)
+        legs.append(leg)
+    path.reverse()
+    legs.reverse()
+    affordable, remaining = [], h['points']
+    for leg in legs:
+        if remaining < leg['points']:
+            break
+        affordable.append(leg)
+        remaining -= leg['points']
+    reason = travel_reason(w, legs[0]['points'])
+    result.update(points=costs[target], path=path, stops=[PLACES[p]['name'] for p in path],
+                  legs=legs, enabled=not reason, reason=reason, travel_legs=affordable,
+                  travel_points=h['points']-remaining,
+                  travel_place=affordable[-1]['place'] if affordable else origin,
+                  can_finish=len(affordable)==len(legs), needs_month=h['points'] < legs[0]['points'])
     return result
 
 
@@ -58,6 +146,7 @@ def view(w):
     from . import rank_progression
     from .social_ranks import player_identity
     h = deepcopy(w.player['protagonist'])
+    h['appearance_view'] = appearance.view(h)
     h['rank_progression'] = rank_progression.view(w,'player')
     city = city_maps._world_layout(w, h['place'])
     node = next((n for n in city['nodes'] if (n['row'], n['col']) == (h['row'], h['col'])), None)
@@ -115,28 +204,35 @@ def perform(w, body, defer_end_turn=None):
         w.player['name'] = name.strip()
         h.update(created=True, sex=sex, age_months=age*12, place=place, row=gate['row'], col=gate['col'],
                  birth_place=place, started_month=w.month, points=POINTS_PER_MONTH)
+        appearance.prepare(w, h, player=True)
+        prepare_npc_turn(w)
         record(w, 'hero_created', f"{w.player['name']}，{age}岁，自{PLACES[place]['name']}踏入江湖。",
                dict(initial_condition=True, place=place, age=age, sex=sex))
     else:
         if not h['created']:
             raise ValueError('请先创建主角')
-        if action == 'travel':
+        if action in ('travel', 'travel_route'):
             target = integer(body.get('place'), '目的地')
-            route = next((r for r in connections(w) if r['place'] == target), None)
-            if route is None:
-                raise ValueError('只能沿相邻驿道或航路逐段远行')
-            if not route['enabled']:
-                raise ValueError(route['reason'])
-            gate = next(n for n in city_maps._world_layout(w, target)['nodes'] if n['id'] == 'gate')
-            origin = h['place']
-            w.player['wealth'] = round(w.player['wealth']-route['silver'], 4)
-            from . import economics
-            economics.fee(w, origin, route['silver'])
-            h.update(place=target, row=gate['row'], col=gate['col'], points=h['points']-route['points'])
-            record(w, 'hero_travel', f"{w.player['name']}由{PLACES[origin]['name']}"
-                   f"{'乘舟' if route['sea'] else '沿驿道'}抵达{route['name']}，"
-                   f"消耗{route['points']}行动力、{route['silver']}银。",
-                   dict(origin=origin, destination=target, **route))
+            if action == 'travel':
+                route = next((r for r in connections(w) if r['place'] == target), None)
+                if route is None:
+                    raise ValueError('只能沿相邻驿道或航路逐段远行')
+                if not route['enabled']:
+                    raise ValueError(route['reason'])
+                legs = [route]
+            else:
+                plan = travel_plan(w, target)
+                if not plan['enabled']:
+                    raise ValueError(plan['reason'])
+                legs = plan['travel_legs']
+            gates = [next(n for n in city_maps._world_layout(w, leg['place'])['nodes'] if n['id'] == 'gate')
+                     for leg in legs]
+            for leg, gate in zip(legs, gates):
+                origin = h['place']
+                h.update(place=leg['place'], row=gate['row'], col=gate['col'], points=h['points']-leg['points'])
+                record(w, 'hero_travel', f"{w.player['name']}由{PLACES[origin]['name']}"
+                       f"{'乘舟' if leg['sea'] else '沿驿道'}抵达{leg['name']}，消耗{leg['points']}行动力。",
+                       dict(leg, origin=origin, destination=leg['place'], target=target, path=[origin, leg['place']]))
         elif action == 'walk':
             place = integer(body.get('place'), '地点')
             row, col = integer(body.get('row'), '行坐标'), integer(body.get('col'), '列坐标')
@@ -165,14 +261,16 @@ def perform(w, body, defer_end_turn=None):
             if defer_end_turn is not None:return defer_end_turn()
             record(w, 'hero_end_turn', f"{w.player['name']}结束本月行程，江湖推移一月。",
                    dict(unused_points=h['points'], next_month=w.month+1))
-            # The existing monthly simulation also refreshes the protagonist exactly once.
+            # Player interactions never spend NPC time; NPCs then run their
+            # independent schedule before control returns to the player.
             w.month_step()
             w.checkpoint()
             return view(w)
         else:
             raise ValueError('未知主角指令')
     h['revision'] += 1
-    if action == 'walk':
+    prepared = prepare_npc_turn(w)
+    if action == 'walk' and not prepared:
         w.store.save_player(w.player, w.month)
     else:
         w.checkpoint()

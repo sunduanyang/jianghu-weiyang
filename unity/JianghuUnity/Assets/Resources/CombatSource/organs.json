@@ -1,0 +1,663 @@
+{
+  "version": 1,
+  "source_apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "rigs": {
+    "00af04d95140a4b44ac8453d91c032ea": {
+      "organs": [
+        {
+          "key": "Guts",
+          "id": 948,
+          "transform": 488,
+          "linked": "belly",
+          "body": "torso",
+          "rigidbody": 562,
+          "collider": {
+            "id": 667,
+            "type": "CapsuleCollider2D",
+            "data": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 86
+              },
+              "m_Enabled": 1,
+              "m_Density": 1.0,
+              "m_Material": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "m_IncludeLayers": {
+                "m_Bits": 0
+              },
+              "m_ExcludeLayers": {
+                "m_Bits": 0
+              },
+              "m_LayerOverridePriority": 0,
+              "m_ForceSendLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ForceReceiveLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ContactCaptureLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_CallbackLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_IsTrigger": true,
+              "m_UsedByEffector": false,
+              "m_CompositeOperation": 0,
+              "m_CompositeOrder": 0,
+              "m_Offset": {
+                "x": 0.0,
+                "y": -0.006642997730523348
+              },
+              "m_Size": {
+                "x": 0.25,
+                "y": 0.269745409488678
+              },
+              "m_Direction": 0
+            }
+          },
+          "linked_transform": 529,
+          "local_matrix": [
+            1.0703541040420532,
+            0.0,
+            0.0,
+            1.0667377710342407,
+            -0.0052999998442828655,
+            -0.03579999879002571
+          ],
+          "masks": [
+            398,
+            331,
+            514
+          ]
+        },
+        {
+          "key": "Brain",
+          "id": 992,
+          "transform": 428,
+          "linked": "head",
+          "body": "head",
+          "rigidbody": 559,
+          "collider": {
+            "id": 678,
+            "type": "CapsuleCollider2D",
+            "data": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 59
+              },
+              "m_Enabled": 1,
+              "m_Density": 1.0,
+              "m_Material": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "m_IncludeLayers": {
+                "m_Bits": 0
+              },
+              "m_ExcludeLayers": {
+                "m_Bits": 0
+              },
+              "m_LayerOverridePriority": 0,
+              "m_ForceSendLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ForceReceiveLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ContactCaptureLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_CallbackLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_IsTrigger": true,
+              "m_UsedByEffector": false,
+              "m_CompositeOperation": 0,
+              "m_CompositeOrder": 0,
+              "m_Offset": {
+                "x": 0.0,
+                "y": 0.011678017675876617
+              },
+              "m_Size": {
+                "x": 0.15000000596046448,
+                "y": 0.2331034243106842
+              },
+              "m_Direction": 0
+            }
+          },
+          "linked_transform": 466,
+          "local_matrix": [
+            0.6914403438568115,
+            0.0,
+            0.0,
+            0.9134864807128906,
+            -0.04690000042319298,
+            0.08799999952316284
+          ],
+          "masks": [
+            375,
+            309,
+            503
+          ]
+        },
+        {
+          "key": "Ribcage",
+          "id": 1015,
+          "transform": 472,
+          "linked": "torso",
+          "body": "torso",
+          "rigidbody": 562,
+          "collider": {
+            "id": 675,
+            "type": "CapsuleCollider2D",
+            "data": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 117
+              },
+              "m_Enabled": 1,
+              "m_Density": 1.0,
+              "m_Material": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "m_IncludeLayers": {
+                "m_Bits": 0
+              },
+              "m_ExcludeLayers": {
+                "m_Bits": 0
+              },
+              "m_LayerOverridePriority": 0,
+              "m_ForceSendLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ForceReceiveLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ContactCaptureLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_CallbackLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_IsTrigger": true,
+              "m_UsedByEffector": false,
+              "m_CompositeOperation": 0,
+              "m_CompositeOrder": 0,
+              "m_Offset": {
+                "x": 0.0,
+                "y": 0.003773605218157172
+              },
+              "m_Size": {
+                "x": 0.25,
+                "y": 0.2489122450351715
+              },
+              "m_Direction": 0
+            }
+          },
+          "linked_transform": 501,
+          "local_matrix": [
+            1.0158709287643433,
+            0.0,
+            0.0,
+            1.2371389865875244,
+            -0.01119999960064888,
+            0.026499999687075615
+          ],
+          "masks": [
+            413,
+            373,
+            497
+          ]
+        }
+      ],
+      "settings": {
+        "impaleDamageThreshold": 2.0,
+        "impaleDurationBase": 1.0,
+        "impaleDurationPerDamage": 0.10000000149011612
+      }
+    },
+    "c0b154b0ebaf72f4fa139b4e3cf363e9": {
+      "organs": [
+        {
+          "key": "Ribcage",
+          "id": 959,
+          "transform": 512,
+          "linked": "torso",
+          "body": "torso",
+          "rigidbody": 559,
+          "collider": {
+            "id": 683,
+            "type": "CapsuleCollider2D",
+            "data": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 73
+              },
+              "m_Enabled": 1,
+              "m_Density": 1.0,
+              "m_Material": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "m_IncludeLayers": {
+                "m_Bits": 0
+              },
+              "m_ExcludeLayers": {
+                "m_Bits": 0
+              },
+              "m_LayerOverridePriority": 0,
+              "m_ForceSendLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ForceReceiveLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ContactCaptureLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_CallbackLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_IsTrigger": true,
+              "m_UsedByEffector": false,
+              "m_CompositeOperation": 0,
+              "m_CompositeOrder": 0,
+              "m_Offset": {
+                "x": 0.0,
+                "y": 0.003773605218157172
+              },
+              "m_Size": {
+                "x": 0.25,
+                "y": 0.2489122450351715
+              },
+              "m_Direction": 0
+            }
+          },
+          "linked_transform": 422,
+          "local_matrix": [
+            1.0158709287643433,
+            0.0,
+            0.0,
+            1.2371389865875244,
+            -0.01119999960064888,
+            0.026499999687075615
+          ],
+          "masks": [
+            486,
+            281,
+            413
+          ]
+        },
+        {
+          "key": "Guts",
+          "id": 1021,
+          "transform": 439,
+          "linked": "belly",
+          "body": "torso",
+          "rigidbody": 559,
+          "collider": {
+            "id": 673,
+            "type": "CapsuleCollider2D",
+            "data": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 10
+              },
+              "m_Enabled": 1,
+              "m_Density": 1.0,
+              "m_Material": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "m_IncludeLayers": {
+                "m_Bits": 0
+              },
+              "m_ExcludeLayers": {
+                "m_Bits": 0
+              },
+              "m_LayerOverridePriority": 0,
+              "m_ForceSendLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ForceReceiveLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ContactCaptureLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_CallbackLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_IsTrigger": true,
+              "m_UsedByEffector": false,
+              "m_CompositeOperation": 0,
+              "m_CompositeOrder": 0,
+              "m_Offset": {
+                "x": 0.0,
+                "y": -0.006642997730523348
+              },
+              "m_Size": {
+                "x": 0.25,
+                "y": 0.269745409488678
+              },
+              "m_Direction": 0
+            }
+          },
+          "linked_transform": 449,
+          "local_matrix": [
+            1.0703541040420532,
+            0.0,
+            0.0,
+            1.0667377710342407,
+            -0.0052999998442828655,
+            -0.03579999879002571
+          ],
+          "masks": [
+            323,
+            387,
+            458
+          ]
+        },
+        {
+          "key": "Brain",
+          "id": 1034,
+          "transform": 468,
+          "linked": "head",
+          "body": "head",
+          "rigidbody": 562,
+          "collider": {
+            "id": 675,
+            "type": "CapsuleCollider2D",
+            "data": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 115
+              },
+              "m_Enabled": 1,
+              "m_Density": 1.0,
+              "m_Material": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "m_IncludeLayers": {
+                "m_Bits": 0
+              },
+              "m_ExcludeLayers": {
+                "m_Bits": 0
+              },
+              "m_LayerOverridePriority": 0,
+              "m_ForceSendLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ForceReceiveLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ContactCaptureLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_CallbackLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_IsTrigger": true,
+              "m_UsedByEffector": false,
+              "m_CompositeOperation": 0,
+              "m_CompositeOrder": 0,
+              "m_Offset": {
+                "x": 0.0,
+                "y": 0.011678017675876617
+              },
+              "m_Size": {
+                "x": 0.15000000596046448,
+                "y": 0.2331034243106842
+              },
+              "m_Direction": 0
+            }
+          },
+          "linked_transform": 514,
+          "local_matrix": [
+            0.6914403438568115,
+            0.0,
+            0.0,
+            0.9134864807128906,
+            -0.04690000042319298,
+            0.08799999952316284
+          ],
+          "masks": [
+            327,
+            391,
+            424
+          ]
+        }
+      ],
+      "settings": {
+        "impaleDamageThreshold": 2.0,
+        "impaleDurationBase": 1.0,
+        "impaleDurationPerDamage": 0.10000000149011612
+      }
+    },
+    "cdb759d5a1a317c4bbe2b091130bde38": {
+      "organs": [
+        {
+          "key": "Ribcage",
+          "id": 950,
+          "transform": 509,
+          "linked": "torso",
+          "body": "torso",
+          "rigidbody": 553,
+          "collider": {
+            "id": 680,
+            "type": "CapsuleCollider2D",
+            "data": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 70
+              },
+              "m_Enabled": 1,
+              "m_Density": 1.0,
+              "m_Material": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "m_IncludeLayers": {
+                "m_Bits": 0
+              },
+              "m_ExcludeLayers": {
+                "m_Bits": 0
+              },
+              "m_LayerOverridePriority": 0,
+              "m_ForceSendLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ForceReceiveLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ContactCaptureLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_CallbackLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_IsTrigger": true,
+              "m_UsedByEffector": false,
+              "m_CompositeOperation": 0,
+              "m_CompositeOrder": 0,
+              "m_Offset": {
+                "x": 0.0,
+                "y": 0.003773605218157172
+              },
+              "m_Size": {
+                "x": 0.25,
+                "y": 0.2489122450351715
+              },
+              "m_Direction": 0
+            }
+          },
+          "linked_transform": 417,
+          "local_matrix": [
+            1.0158709287643433,
+            0.0,
+            0.0,
+            1.2371389865875244,
+            -0.01119999960064888,
+            0.026499999687075615
+          ],
+          "masks": [
+            483,
+            278,
+            408
+          ]
+        },
+        {
+          "key": "Guts",
+          "id": 1013,
+          "transform": 434,
+          "linked": "belly",
+          "body": "torso",
+          "rigidbody": 553,
+          "collider": {
+            "id": 670,
+            "type": "CapsuleCollider2D",
+            "data": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 10
+              },
+              "m_Enabled": 1,
+              "m_Density": 1.0,
+              "m_Material": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "m_IncludeLayers": {
+                "m_Bits": 0
+              },
+              "m_ExcludeLayers": {
+                "m_Bits": 0
+              },
+              "m_LayerOverridePriority": 0,
+              "m_ForceSendLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ForceReceiveLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ContactCaptureLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_CallbackLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_IsTrigger": true,
+              "m_UsedByEffector": false,
+              "m_CompositeOperation": 0,
+              "m_CompositeOrder": 0,
+              "m_Offset": {
+                "x": 0.0,
+                "y": -0.006642997730523348
+              },
+              "m_Size": {
+                "x": 0.25,
+                "y": 0.269745409488678
+              },
+              "m_Direction": 0
+            }
+          },
+          "linked_transform": 445,
+          "local_matrix": [
+            1.0703541040420532,
+            0.0,
+            0.0,
+            1.0667377710342407,
+            -0.0052999998442828655,
+            -0.03579999879002571
+          ],
+          "masks": [
+            319,
+            382,
+            454
+          ]
+        },
+        {
+          "key": "Brain",
+          "id": 1026,
+          "transform": 464,
+          "linked": "head",
+          "body": "head",
+          "rigidbody": 556,
+          "collider": {
+            "id": 672,
+            "type": "CapsuleCollider2D",
+            "data": {
+              "m_GameObject": {
+                "m_FileID": 0,
+                "m_PathID": 110
+              },
+              "m_Enabled": 1,
+              "m_Density": 1.0,
+              "m_Material": {
+                "m_FileID": 0,
+                "m_PathID": 0
+              },
+              "m_IncludeLayers": {
+                "m_Bits": 0
+              },
+              "m_ExcludeLayers": {
+                "m_Bits": 0
+              },
+              "m_LayerOverridePriority": 0,
+              "m_ForceSendLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ForceReceiveLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_ContactCaptureLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_CallbackLayers": {
+                "m_Bits": 4294967295
+              },
+              "m_IsTrigger": true,
+              "m_UsedByEffector": false,
+              "m_CompositeOperation": 0,
+              "m_CompositeOrder": 0,
+              "m_Offset": {
+                "x": 0.0,
+                "y": 0.011678017675876617
+              },
+              "m_Size": {
+                "x": 0.15000000596046448,
+                "y": 0.2331034243106842
+              },
+              "m_Direction": 0
+            }
+          },
+          "linked_transform": 511,
+          "local_matrix": [
+            0.6914403438568115,
+            0.0,
+            0.0,
+            0.9134864807128906,
+            -0.04690000042319298,
+            0.08799999952316284
+          ],
+          "masks": [
+            323,
+            386,
+            419
+          ]
+        }
+      ],
+      "settings": {
+        "impaleDamageThreshold": 2.0,
+        "impaleDurationBase": 1.0,
+        "impaleDurationPerDamage": 0.10000000149011612
+      }
+    }
+  }
+}

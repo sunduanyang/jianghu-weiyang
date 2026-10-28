@@ -56,7 +56,7 @@ class MergedSystemsTests(unittest.TestCase):
         self.assertIn(event['id'],[e['id'] for e in japan['events']])
         self.assertTrue(any(f['name']=='鞍马寺' for f in korea['factions']))
 
-    def test_faction_duties_improve_captor_and_record_interior_venue(self):
+    def test_removed_faction_duties_do_not_change_captor_security(self):
         w = self.w
         n = self.adult()
         f = next(f for f in w.factions if f['place']==self.target)
@@ -64,10 +64,9 @@ class MergedSystemsTests(unittest.TestCase):
         self.capture()
         before = [g['security'] for g in w.governments]
         event = w.execute(n,{'id':f"faction_task:{f['id']}"})
-        self.assertEqual(event['facts']['country'],10)
-        self.assertGreater(w.governments[10]['security'],before[10])
+        self.assertIsNone(event)
+        self.assertEqual(w.governments[10]['security'],before[10])
         self.assertEqual(w.governments[11]['security'],before[11])
-        self.assertEqual(w.city_positions[str(n['id'])]['node'],f"faction_{f['id']}")
         self.assertAlmostEqual(f['fund'],f['opening_fund']+f['revenue']-f['expenses'])
 
     def test_retired_shared_study_does_not_reserve_either_participant(self):
@@ -98,7 +97,7 @@ class MergedSystemsTests(unittest.TestCase):
         self.capture()
         f = next(f for f in w.factions if f['place']==self.target)
         a['faction'] = f['id']
-        w.execute(a,{'id':f"faction_task:{f['id']}"})
+        w.execute(a,{'id':f"duty:{f['id']}"})
         w.intervene(b['id'],'visit')
         w.checkpoint()
         store = Store();self.addCleanup(store.close)

@@ -1,0 +1,236 @@
+{
+  "schema": 1,
+  "adapter": "jianghu-source-equipment-v1",
+  "apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "source_observations": {
+    "damage_formula": "weighted_speed * (1 + D / 15) * .25 * 2.15",
+    "special_D": 0.1,
+    "special_formula": "weighted_speed * .25 / 2.5",
+    "mass_va": "0x363e0d8",
+    "armor_defense_va": "0x3428820",
+    "armor_material_va": "0x341a75c",
+    "armor_materials": {
+      "Nothing": 0,
+      "Cloth": 1,
+      "Leather": 2,
+      "Wood": 3,
+      "Mail": 4,
+      "PlateThin": 5,
+      "PlateThick": 6,
+      "Brigandin": 7
+    }
+  },
+  "adaptation": {
+    "damage": "effective_D = 16 * game_damage_coefficient - 15; base D=1; negative values intentionally preserve ratios",
+    "mass": "source category masses multiplied by game mass / profile base mass",
+    "armor": "one campaign armor slot maps to one covered layer, not three duplicated layers",
+    "unarmed": "game fallback only, D=.1; APK has no equivalent unarmed item",
+    "shield": "existing wood_shield maps to ordinary source shield D=1, WoodBlunt"
+  },
+  "profiles": {
+    "unarmed": {
+      "base_mass": 0.12,
+      "base_damage": 0.56
+    },
+    "dagger": {
+      "base_mass": 0.28,
+      "base_damage": 0.72
+    },
+    "sabre": {
+      "base_mass": 0.52,
+      "base_damage": 0.93
+    },
+    "sword": {
+      "base_mass": 0.7,
+      "base_damage": 1
+    },
+    "axe": {
+      "base_mass": 1.05,
+      "base_damage": 1.2
+    },
+    "mace": {
+      "base_mass": 1.3,
+      "base_damage": 1.15
+    },
+    "spear": {
+      "base_mass": 1,
+      "base_damage": 1.02
+    },
+    "greatsword": {
+      "base_mass": 1.45,
+      "base_damage": 1.18
+    },
+    "greataxe": {
+      "base_mass": 2.15,
+      "base_damage": 1.4
+    },
+    "warhammer": {
+      "base_mass": 2.35,
+      "base_damage": 1.42
+    }
+  },
+  "weapons": {
+    "wood_sword": {
+      "profile": "sword",
+      "head": "WoodBlunt",
+      "handle": "WoodHandle",
+      "damage_coefficient": 0.8,
+      "effective_source_D": -2.2,
+      "mass_scale": 0.64285714
+    },
+    "iron_practice_sword": {
+      "profile": "sword",
+      "head": "MetalBlunt",
+      "handle": "MetalHandle",
+      "damage_coefficient": 0.92,
+      "effective_source_D": -0.28,
+      "mass_scale": 1.11428571
+    },
+    "iron_sword": {
+      "profile": "sword",
+      "head": "MetalBlade",
+      "handle": "MetalHandle",
+      "damage_coefficient": 1.0,
+      "effective_source_D": 1.0,
+      "mass_scale": 1.0
+    },
+    "steel_blade": {
+      "profile": "sabre",
+      "head": "MetalBlade",
+      "handle": "MetalHandle",
+      "damage_coefficient": 1.05,
+      "effective_source_D": 1.8,
+      "mass_scale": 1.25
+    },
+    "autumn_sword": {
+      "profile": "sword",
+      "head": "MetalBlade",
+      "handle": "MetalHandle",
+      "damage_coefficient": 1.12,
+      "effective_source_D": 2.92,
+      "mass_scale": 0.97142857
+    },
+    "frost_blade": {
+      "profile": "sabre",
+      "head": "MetalBlade",
+      "handle": "MetalHandle",
+      "damage_coefficient": 1.13,
+      "effective_source_D": 3.08,
+      "mass_scale": 1.19230769
+    },
+    "cloud_sword": {
+      "profile": "sword",
+      "head": "MetalBlade",
+      "handle": "MetalHandle",
+      "damage_coefficient": 1.22,
+      "effective_source_D": 4.52,
+      "mass_scale": 0.85714286
+    },
+    "ancient_blade": {
+      "profile": "sabre",
+      "head": "MetalBlade",
+      "handle": "MetalHandle",
+      "damage_coefficient": 1.3,
+      "effective_source_D": 5.8,
+      "mass_scale": 1.30769231
+    },
+    "tianheng_sword": {
+      "profile": "sword",
+      "head": "MetalBlade",
+      "handle": "MetalHandle",
+      "damage_coefficient": 1.4,
+      "effective_source_D": 7.4,
+      "mass_scale": 0.94285714
+    },
+    "iron_dagger": {
+      "profile": "dagger",
+      "head": "MetalBlade",
+      "handle": "MetalHandle",
+      "damage_coefficient": 0.72,
+      "effective_source_D": -3.48,
+      "mass_scale": 1.0
+    },
+    "hand_axe": {
+      "profile": "axe",
+      "head": "MetalBlade",
+      "handle": "WoodHandle",
+      "damage_coefficient": 1.2,
+      "effective_source_D": 4.2,
+      "mass_scale": 1.0
+    },
+    "spiked_mace": {
+      "profile": "mace",
+      "head": "MetalBlunt",
+      "handle": "WoodHandle",
+      "damage_coefficient": 1.15,
+      "effective_source_D": 3.4,
+      "mass_scale": 1.0
+    },
+    "long_spear": {
+      "profile": "spear",
+      "head": "MetalSpike",
+      "handle": "WoodHandle",
+      "damage_coefficient": 1.02,
+      "effective_source_D": 1.32,
+      "mass_scale": 1.0
+    },
+    "great_sword": {
+      "profile": "greatsword",
+      "head": "MetalBlade",
+      "handle": "MetalHandle",
+      "damage_coefficient": 1.18,
+      "effective_source_D": 3.88,
+      "mass_scale": 1.0
+    },
+    "great_axe": {
+      "profile": "greataxe",
+      "head": "MetalBlade",
+      "handle": "WoodHandle",
+      "damage_coefficient": 1.4,
+      "effective_source_D": 7.4,
+      "mass_scale": 1.0
+    },
+    "war_hammer": {
+      "profile": "warhammer",
+      "head": "MetalBlunt",
+      "handle": "WoodHandle",
+      "damage_coefficient": 1.42,
+      "effective_source_D": 7.72,
+      "mass_scale": 1.0
+    }
+  },
+  "armor": {
+    "cloth": {
+      "material": 1,
+      "defense": 1,
+      "coverage": [
+        "torso",
+        "belly",
+        "pelvis",
+        "upper",
+        "forearm"
+      ]
+    },
+    "leather": {
+      "material": 2,
+      "defense": 4,
+      "coverage": [
+        "torso",
+        "belly",
+        "pelvis"
+      ]
+    },
+    "silk_robe": {
+      "material": 1,
+      "defense": 7,
+      "coverage": [
+        "torso",
+        "belly",
+        "pelvis",
+        "upper",
+        "forearm",
+        "thigh"
+      ]
+    }
+  }
+}

@@ -74,7 +74,7 @@ class ProtagonistTests(unittest.TestCase):
         self.assertGreaterEqual(r['points'], 13)
         self.assertEqual(self.act(w, 'travel', place=sea['b'])['place'], sea['b'])
 
-    def test_travel_rejects_non_neighbors_insufficient_points_and_money(self):
+    def test_travel_rejects_non_neighbors_and_insufficient_points_but_needs_no_money(self):
         w = self.world()
         h = self.create(w)
         adjacent = {r['place'] for r in h['connections']}
@@ -83,9 +83,10 @@ class ProtagonistTests(unittest.TestCase):
         self.rejected(w, 'travel', place=h['connections'][0]['place'])
         w.player['protagonist']['points'] = 30
         w.player['wealth'] = 0
-        self.rejected(w, 'travel', place=h['connections'][0]['place'])
+        self.act(w, 'travel', place=h['connections'][0]['place'])
+        self.assertEqual(w.player['wealth'], 0)
 
-    def test_walk_follows_terrain_path_and_requires_exit_for_travel(self):
+    def test_walk_follows_terrain_path_and_travel_can_leave_from_market(self):
         w = self.world()
         h = self.create(w)
         city = city_maps.layout(w.seed, h['place'])
@@ -95,12 +96,15 @@ class ProtagonistTests(unittest.TestCase):
         self.assertEqual((w.month, result['node'], result['points']), (0, target['settlement_id'], 30-cost))
         self.assertEqual(result['journal'][0]['facts']['path'], [list(p) for p in path])
         self.assertTrue(all(city['rows'][r][c] not in '~^#' for r,c in path))
-        self.rejected(w, 'travel', place=h['connections'][0]['place'])
         self.act(w, 'end_turn')
-        self.act(w, 'walk', place=h['place'], row=h['row'], col=h['col'])
-        self.assertEqual(protagonist.view(w)['node'], 'gate')
-        self.act(w, 'end_turn')
-        self.act(w, 'travel', place=h['connections'][0]['place'])
+        self.assertEqual((protagonist.view(w)['row'], protagonist.view(w)['col']), (target['row'], target['col']))
+        route = protagonist.view(w)['connections'][0]
+        self.assertTrue(route['enabled'])
+        silver = w.player['wealth']
+        result = self.act(w, 'travel', place=route['place'])
+        self.assertEqual((w.month, result['place'], result['points'], result['node']),
+                         (1, route['place'], 30-route['points'], 'gate'))
+        self.assertAlmostEqual(w.player['wealth'], silver-route['silver'])
 
     def test_walk_rejects_barriers_remote_maps_bounds_and_fractional_coordinates(self):
         w = self.world()
@@ -254,6 +258,12 @@ class ProtagonistHTTPTests(unittest.TestCase):
                 self.assertEqual(error.exception.code,404)
             self.assertFalse(request('/api/state')['hero']['created'])
             h=act('create',name='测试行者')
+            before = deepcopy(game.world.export())
+            quote=request('/api/hero/travel?place='+str(h['connections'][0]['place']))
+            self.assertTrue(quote['enabled'])
+            self.assertEqual(game.world.export(), before)
+            with self.assertRaises(urllib.error.HTTPError):
+                request('/api/hero/travel?place=-1')
             h=act('travel',place=h['connections'][0]['place'])
             self.assertLess(h['points'],30)
             h=act('end_turn')

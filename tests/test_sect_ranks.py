@@ -79,26 +79,28 @@ class SectRankTests(unittest.TestCase):
         self.assertEqual(w.export(), before); self.assertEqual(w.store.count(), events)
 
     def test_duty_promotion_records_actual_before_after_grades(self):
-        w = self.w; n = self.member(contribution=10., skill=25.)
+        w = self.w; n = self.member(contribution=10.5, skill=25.)
         before = organizations.rank(w, n)
-        e = w.execute(n, dict(id='faction_task:0'))
+        e = w.execute(n, dict(id='duty:0'))
         self.assertEqual(before['grade'], 6)
         self.assertEqual(organizations.rank(w, n)['grade'], 5)
         change = next(e for e in w.store.history(n['id']) if e['kind']=='faction_rank')
         self.assertEqual((change['facts']['before']['grade'], change['facts']['after']['grade']), (6, 5))
         self.assertIn(e['id'], change['causes'])
 
-    def test_join_starts_at_ninth_and_player_rank_updates_after_task(self):
+    def test_join_starts_at_ninth_and_player_merit_updates_after_donation(self):
         w = self.w; h = w.player['protagonist']; f = w.factions[0]
         from jianghu import city_maps
         seat = next(s for s in city_maps.world_layout(w, f['place'])['settlements'] if s.get('faction')==0)
         h.update(created=True, started_month=0, place=f['place'], row=seat['row'], col=seat['col'])
         def perform(action):
             return protagonist.perform(w, dict(action=action, faction=0, revision=h['revision'], month=w.month))
-        perform('sect_join')
+        from jianghu import player_interactions
+        recruiter = self.member(contribution=35., skill=45.)
+        player_interactions.perform(w, dict(action='join_sect', npc_id=recruiter['id'], revision=h['revision'], month=w.month))
         self.assertEqual(organizations.player_membership(w)['grade'], 9)
         self.assertIn('九品记名弟子', w.store.event(h['records'][-1])['summary'])
-        perform('sect_task')
+        perform('sect_donate')
         self.assertEqual(organizations.player_membership(w)['grade'], 8)
 
     def test_legacy_four_rank_metadata_is_replaced_without_spending_or_new_history(self):

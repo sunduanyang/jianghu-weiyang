@@ -15,8 +15,8 @@ def role(w, n):
         grade = sect_ranks.standing(w.factions[n['faction']], n)['grade']
         key, label, duties = (('leader', '主持门务', ['faction_guide', 'duty', 'donate_relief']) if grade == 1 else
                               ('elder', '传艺护持', ['faction_guide', 'teach', 'duty']) if grade <= 4 else
-                              ('steward', '办差修业', ['faction_task', 'faction_study']) if grade <= 6 else
-                              ('disciple', '入门求学', ['faction_task', 'faction_study', 'train']))
+                              ('steward', '门中修业', ['seek_teacher', 'work']) if grade <= 6 else
+                              ('disciple', '入门求学', ['seek_teacher', 'work']))
         return dict(key=key, label=label, duties=duties)
     if n.get('social_status'):
         return dict(key='notable', label=n['social_status']['title']+'乡里责任',
@@ -157,25 +157,8 @@ def resolve(w, n, actions):
         else:
             choice = by_id.get('change_job:'+job)
     elif intent == 'sect_training':
-        f = w.factions[n['faction']]
-        if n['contribution'] >= p['target_contribution'] and combat_attributes.rating(n) >= p['target_skill'] and f['art_id'] in n['martial']['arts']:
-            close(w, n, '完成', '本阶段贡献与武学目标已达到', n['last_event'])
-            return None
-        if n['contribution'] < p['target_contribution']:
-            choice = pick('faction_task')
-            if choice is None and f['fund'] < 3 and n['wealth'] >= 12:
-                choice = pick('duty')
-            if choice is None:
-                reason = ('本月门中差事已办，等待下月继续' if n['action_counts'].get('faction_task', 0) else
-                          '门中库银不足以支付差事酬银' if f['fund'] < 3 else
-                          '剩余时段不足两周，等待下次差事机会')
-                return blocked(w, n, reason)
-        elif n['wealth'] < 8:
-            choice = pick('work')
-        elif combat_attributes.rating(n) < 12:
-            choice = pick('train')
-        else:
-            choice = pick('faction_study') or pick('train')
+        close(w, n, '中断', '旧门中修业与差事已移除')
+        return None
     else:
         if not p['steps']:
             close(w, n, '完成', '已完成安排的行动', n['last_event'])

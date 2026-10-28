@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-28",
+  "build": "unity\\Build\\BattleSaveFixed\\江湖未央.exe",
+  "entry": "启动Unity版.bat",
+  "active_build": "BattleSaveFixed",
+  "previous_active_build": "PaintedScrollIntegrated",
+  "problem": "Finite offstage body coordinates were rejected by arena-sized save validation, preventing checkpoints and victory settlement.",
+  "fix": {
+    "reference_position_limit": 20000,
+    "basis": "100 m/s maximum translation for at most 185 seconds, plus arena margin",
+    "preserve_exact_state": true,
+    "legacy_limits_unchanged": true,
+    "finite_velocity_health_and_version_checks_retained": true,
+    "field_errors_identify_body": true
+  },
+  "before_fix_reproduction": {
+    "old_build": "PaintedScrollIntegrated",
+    "same_real_physics_frame_rejected": true,
+    "error": "物理战局数据不合法：x",
+    "snapshot": "native-save/thrown-weapon-frame.json"
+  },
+  "native": {
+    "checkpoint": {
+      "passed": true,
+      "checks": 11,
+      "source": "output\\battle-save-bounds-20261028\\final-save\\acceptance.json"
+    },
+    "restart_and_settlement": {
+      "passed": true,
+      "checks": 15,
+      "source": "output\\battle-save-bounds-20261028\\final-resume\\acceptance.json"
+    }
+  },
+  "backend_tests": {
+    "passed": 18,
+    "subtests_passed": 30,
+    "files": [
+      "tests/test_physical_reference.py",
+      "tests/test_physical_combat.py"
+    ]
+  },
+  "packaged_source_sha256": {
+    "physical_combat.py": "bc7da26eca42791f31f8028dede2f4e03dff00abfcf1a8501f361604fb3b19c6",
+    "physical_reference.py": "c49ff8cbdfb0973717247741b6277b8ed5336da499f2a0631ec4c56f7f1ec2da"
+  },
+  "production_save": {
+    "mode": "read_only",
+    "battle_id": "20261027-251-57459",
+    "status": "active",
+    "elapsed": 8.691201,
+    "revision": 3,
+    "settled": false,
+    "existing_checkpoint_accepted": true,
+    "victory_frame_available": false,
+    "save_modified": false
+  },
+  "limitations": [
+    "The previous failed victory frame was not persisted; the user can continue from the last valid checkpoint.",
+    "Native damage and launch velocity are scripted persistence fixtures, not an original-game input comparison."
+  ],
+  "diagnostic_attempts": [
+    {
+      "folder": "native-save",
+      "result": "Checkpoint succeeded; initial harness compared JSON field order rather than semantic values."
+    },
+    {
+      "folder": "native-verified-resume",
+      "result": "Settlement succeeded; initial harness checked world controls before asynchronous scene teardown completed."
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+{
+  "passed": true,
+  "date": "2026-10-28",
+  "build": "CharacterInteraction",
+  "character_navigation": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated world ready",
+        "passed": true
+      },
+      {
+        "check": "clicking a portrait opens that person's full interaction screen",
+        "passed": true
+      },
+      {
+        "check": "interaction has the six requested categories",
+        "passed": true
+      },
+      {
+        "check": "all six categories switch without changing the person",
+        "passed": true
+      },
+      {
+        "check": "returning from a profile preserves interaction person and category",
+        "passed": true
+      },
+      {
+        "check": "opening another portrait replaces the interaction and resets to talk",
+        "passed": true
+      },
+      {
+        "check": "farewell returns from the interaction to its map",
+        "passed": true
+      },
+      {
+        "check": "interaction blocks city movement",
+        "passed": true
+      },
+      {
+        "check": "farewell preserves the city stage",
+        "passed": true
+      },
+      {
+        "check": "talking opens selected person's conversation",
+        "passed": true
+      },
+      {
+        "check": "portrait opens same person's scroll above the conversation",
+        "passed": true
+      },
+      {
+        "check": "inventory belongs to selected NPC",
+        "passed": true
+      },
+      {
+        "check": "NPC inventory contains no player instances",
+        "passed": true
+      },
+      {
+        "check": "martial tab displays NPC's actual abilities",
+        "passed": true
+      },
+      {
+        "check": "switching NPC keeps martial tab and changes data",
+        "passed": true
+      },
+      {
+        "check": "switching NPC changes inventory owner",
+        "passed": true
+      },
+      {
+        "check": "related person links update scroll owner",
+        "passed": true
+      },
+      {
+        "check": "closing scroll returns to original conversation",
+        "passed": true
+      },
+      {
+        "check": "gifting explicitly opens player's inventory",
+        "passed": true
+      },
+      {
+        "check": "own scroll keeps player context",
+        "passed": true
+      },
+      {
+        "check": "own martial keeps player context",
+        "passed": true
+      },
+      {
+        "check": "cross links open above the scroll",
+        "passed": true
+      },
+      {
+        "check": "navigation stack never repeats a view kind",
+        "passed": true
+      },
+      {
+        "check": "back returns to the conversation it came from",
+        "passed": true
+      },
+      {
+        "check": "back from the last view returns to the map",
+        "passed": true
+      },
+      {
+        "check": "gifting scroll returns to original conversation",
+        "passed": true
+      },
+      {
+        "check": "late response cannot replace newly selected NPC",
+        "passed": true
+      },
+      {
+        "check": "browsing preserves month money and actions",
+        "passed": true
+      },
+      {
+        "check": "browsing preserves both NPC possessions",
+        "passed": true
+      },
+      {
+        "check": "leaving to the map closes every view",
+        "passed": true
+      },
+      {
+        "check": "no native exceptions",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "ui_navigation": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated world ready",
+        "passed": true
+      },
+      {
+        "check": "test world includes real event records",
+        "passed": true
+      },
+      {
+        "check": "links load the requested real record",
+        "passed": true
+      },
+      {
+        "check": "event person link opens that profile above the event",
+        "passed": true
+      },
+      {
+        "check": "back restores the event detail and tab",
+        "passed": true
+      },
+      {
+        "check": "profile links load real faction detail",
+        "passed": true
+      },
+      {
+        "check": "faction back restores character and section",
+        "passed": true
+      },
+      {
+        "check": "NPC martial tab loads the complete shared catalog",
+        "passed": true
+      },
+      {
+        "check": "gift view explicitly owns player items",
+        "passed": true
+      },
+      {
+        "check": "system back restores the real event detail",
+        "passed": true
+      },
+      {
+        "check": "nested browsing restores inventory owner and filters",
+        "passed": true
+      },
+      {
+        "check": "late event response cannot overwrite the restored view",
+        "passed": true
+      },
+      {
+        "check": "explicit map return clears every view",
+        "passed": true
+      },
+      {
+        "check": "all browsing preserves world month money and actions",
+        "passed": true
+      },
+      {
+        "check": "browsing preserves full hero state",
+        "passed": true
+      },
+      {
+        "check": "browsing preserves NPC inventory and combat state",
+        "passed": true
+      },
+      {
+        "check": "no native UI exceptions",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "manual_checks": [
+    "Left roster portrait opens full interaction screen",
+    "Mouse click selects the 比武 category",
+    "F6 selects the 互动 category",
+    "Esc returns to the original world map"
+  ],
+  "screenshots": [
+    "validation/screenshots/character-interaction-20261028.png",
+    "validation/screenshots/character-interaction-small-20261028.png"
+  ]
+}

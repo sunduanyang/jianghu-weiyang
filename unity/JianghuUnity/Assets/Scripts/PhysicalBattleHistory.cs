@@ -10,7 +10,7 @@ public partial class JianghuApp {
             T(f["name"].S+" · "+f["weapon"]["name"].S,sub);
             T("剩余气血 "+Num(f["vigor"])+" / "+Num(f["vigor_max"])+" · 命中 "+summary["hits"].S+" 次 · 造成伤害 "+Num(summary["damage"]),small);
         }
-        T("体力、精力与装备损耗已记录。",small);return true;
+        T(battle["resource_policy"].S=="per-bout-v1"?"本场伤势、气力与疲劳不带入下场。":"交手结果已归档。",small);return true;
     }
 }
 }

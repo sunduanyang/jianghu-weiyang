@@ -8,14 +8,14 @@ namespace Jianghu {
 //   全屏视图  人物卷、江湖卷、系统、对话、切磋，从哪里打开就叠在哪里之上，关闭即回到原处。
 // 所有跳转都经过 Show / Back / GoStage；Esc 与卷轴右上角的关闭都等于 Back。
 public enum Stage { World, City }
-public enum ViewKind { Person, Jianghu, System, Dialogue, Battle }
+public enum ViewKind { Person, Jianghu, System, Dialogue, Battle, Interaction }
 public enum PersonTab { Overview, Character, Martial, Bag, Ties, Life }
 public enum JianghuTab { Powers, Market, Chronicle }
 public enum SystemTab { Saves, Model, Puppets }
 
 public sealed class UiView {
     public ViewKind Kind;
-    public int Tab;        // PersonTab / JianghuTab / SystemTab
+    public int Tab;        // PersonTab / JianghuTab / SystemTab / interaction category
     public int Person=-1;  // 人物卷所看之人或对话对象；-1 为主角
     internal JianghuApp.ViewState State;
 }
@@ -39,7 +39,7 @@ public partial class JianghuApp {
     public JianghuTab CurrentJianghuTab=>TopIs(ViewKind.Jianghu)?(JianghuTab)TopView.Tab:JianghuTab.Powers;
     public SystemTab CurrentSystemTab=>TopIs(ViewKind.System)?(SystemTab)TopView.Tab:SystemTab.Saves;
     // 正在看谁：人物卷的主人或对话对象；-1 为主角（或当前不在看人）。
-    public int FocusPersonId=>views.Count>0&&(TopView.Kind==ViewKind.Person||TopView.Kind==ViewKind.Dialogue)?TopView.Person:-1;
+    public int FocusPersonId=>views.Count>0&&(TopView.Kind==ViewKind.Person||TopView.Kind==ViewKind.Dialogue||TopView.Kind==ViewKind.Interaction)?TopView.Person:-1;
 
     // Run a state change after this OnGUI pass, so the layout pass and the event pass draw the same controls.
     void Later(Action action){deferred+=action;}
@@ -74,7 +74,7 @@ public partial class JianghuApp {
         InvalidateViewRequests();
         mainScroll=personScroll=itemScroll=detailScroll=eventScroll=Vector2.zero;
         var top=TopView;
-        if(top!=null&&(top.Kind==ViewKind.Person||top.Kind==ViewKind.Dialogue)&&top.Person>=0&&SelectedPerson!=top.Person)SelectPerson(top.Person);
+        if(top!=null&&(top.Kind==ViewKind.Person||top.Kind==ViewKind.Dialogue||top.Kind==ViewKind.Interaction)&&top.Person>=0&&SelectedPerson!=top.Person)SelectPerson(top.Person);
         if(top!=null&&top.Kind==ViewKind.Dialogue){talk="";conversationScroll=new Vector2(0,float.MaxValue);nextConversationPoll=0;}
         if(restore&&top?.State!=null)RestoreViewState(top.State);
         ReloadView();
@@ -85,7 +85,7 @@ public partial class JianghuApp {
         CloseChoices();InvalidateViewRequests();TopView.Tab=tab;mainScroll=personScroll=itemScroll=detailScroll=eventScroll=Vector2.zero;
         ReloadView();
     }
-    void CloseTransient(){interactWith=-1;advanceOpen=false;CloseChoices();}
+    void CloseTransient(){advanceOpen=false;CloseChoices();CloseWorldTravel();}
 
     // 人物卷：id 为 -1 时看主角。不给 tab 时沿用已打开人物卷的标签。
     public void ViewPerson(int id,PersonTab? tab=null){
@@ -105,8 +105,8 @@ public partial class JianghuApp {
     public void OpenMarket(string mode){marketMode=mode;OpenJianghu(JianghuTab.Market);}
     public void TalkTo(int id,string action=null){
         if(id<0)return;
-        Show(new UiView{Kind=ViewKind.Dialogue,Person=id});
-        if(action=="gift")SocialAction("help");
+        if(DeferWhileDrawing(()=>TalkTo(id,action)))return;
+        OpenInteraction(id);ChooseInteraction(action=="gift"?"social:help":"social:talk");
     }
     public void OpenBattle()=>Show(new UiView{Kind=ViewKind.Battle});
     void CloseBattle(){
@@ -123,6 +123,9 @@ public partial class JianghuApp {
         var top=TopView;
         if(top==null){if(CurrentStage==Stage.City)LoadCity(SelectedPlace);return;}
         switch(top.Kind){
+            case ViewKind.Interaction:
+                LoadInteraction();
+                break;
             case ViewKind.Person:
                 var tab=(PersonTab)top.Tab;
                 if(tab==PersonTab.Martial)LoadMartialView();
@@ -149,8 +152,10 @@ public partial class JianghuApp {
     // Esc closes the innermost thing: a popup, then the top view; on the bare map it opens 系统.
     bool HandleEscape(){
         if(GUIUtility.hotControl!=0)return false;
+        if(WorldTravelOpen){Later(CloseWorldTravel);return true;}
         if(choiceOpen){Later(CloseChoices);return true;}
-        if(interactWith>=0||advanceOpen||creatingHero&&!Hero["created"].B){Later(()=>{interactWith=-1;advanceOpen=false;creatingHero=false;});return true;}
+        if(TopIs(ViewKind.Interaction)&&interactionChoice.Length>0){Later(()=>interactionChoice="");return true;}
+        if(advanceOpen||creatingHero&&!Hero["created"].B){Later(()=>{advanceOpen=false;creatingHero=false;});return true;}
         if(ViewOpen){Later(Back);return true;}
         if(CurrentStage==Stage.City&&cityWalking)return false;   // UpdateCityMovement stops the walk
         Later(()=>OpenSystem(SystemTab.Saves));return true;

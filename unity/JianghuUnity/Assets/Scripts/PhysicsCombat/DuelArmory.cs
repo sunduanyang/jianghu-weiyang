@@ -26,11 +26,13 @@ public sealed partial class PhysicsDuel {
             Vector2 origin=new Vector2(r.x+16,r.y+54-w.tail*scale);
             WeaponArt(w,p=>origin+new Vector2(p.x,-p.y)*scale,scale);
             Label(new Rect(r.x+34,r.y+4,122,29),w.name+(i==selected?"·选":""),17,color);
-            Label(new Rect(r.x+34,r.y+32,122,27),(w.TwoHanded?"双手":"单手")+" · 起手 "+w.cost,13,ink);
+            Label(new Rect(r.x+34,r.y+32,122,27),(w.TwoHanded?"双手":"单手")+(ReferenceCombat?" · 物理挥动":" · 起手 "+w.cost),13,ink);
             if(GUI.Button(r,"",button))selected=i;
         }
         var chosen=DuelWeapon.All[selected];
         Label(new Rect(x,589,500,28),chosen.description,17,color,TextAnchor.MiddleCenter);
-        Label(new Rect(x,620,500,25),chosen.GripLabel+"    重量 "+chosen.mass.ToString("0.00")+"    挥速 ×"+chosen.handling.ToString("0.00")+"    起手气力 "+chosen.cost,14,ink,TextAnchor.MiddleCenter);
+        Vector3 itemPhysics=Fighter.ReferenceItemPhysics(chosen);
+        string detail=ReferenceCombat?chosen.GripLabel+"    本体 "+itemPhysics.x.ToString("0.##")+" / 配重 "+itemPhysics.y.ToString("0.##")+"    耗气随实际挥动计算":chosen.GripLabel+"    重量 "+chosen.mass.ToString("0.00")+"    挥速 ×"+chosen.handling.ToString("0.00")+"    起手气力 "+chosen.cost;
+        Label(new Rect(x,620,500,25),detail,14,ink,TextAnchor.MiddleCenter);
     }
 }

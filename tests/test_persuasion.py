@@ -77,7 +77,8 @@ class PersuasionTests(unittest.TestCase):
         self.assertNotIn('persuasion_options',child);self.assertEqual(w.player['wealth'],money)
         self.assertFalse(player_social.view(w,1)['requests'][0]['can_persuade'])
         with self.assertRaises(ValueError):self.persuade(w,row,'defiant')
-        with self.assertRaises(ValueError):player_social.start(w,1,'ask_aid','',player_social.state(w)['revision'])
+        again=player_social.start(w,1,'ask_aid','',player_social.state(w)['revision'])
+        self.assertNotEqual(again['_request_id'],ctx['_request_id'])
 
     def test_failed_request_retries_only_the_previously_selected_option(self):
         w=self.world();row=self.refused(w);ctx=self.persuade(w,row)

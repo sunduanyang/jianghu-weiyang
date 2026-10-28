@@ -6,7 +6,7 @@ using UnityEngine;
 public sealed partial class PhysicsDuel {
     // Controlled contact fixture, available only to an isolated native test.
     // Actual contacts use the shipping collector, resolver and duplicate cache.
-    public J ProbeImpact(DuelWeapon profile,float speed,string zone){
+    public J ProbeImpact(DuelWeapon profile,float speed,string zone,bool shieldStrike=false){
         if(!IsSmoke)throw new InvalidOperationException("Impact probes require acceptance mode");
         ResetRound();RunCampaign(true);fixtureMode=true;elapsed=1;
         foreach(var fighter in new[]{player,enemy}){
@@ -21,11 +21,11 @@ public sealed partial class PhysicsDuel {
         var rb=moving.AddComponent<Rigidbody2D>();rb.gravityScale=0;rb.mass=profile.mass;rb.collisionDetectionMode=CollisionDetectionMode2D.Continuous;
         var shape=moving.AddComponent<CircleCollider2D>();shape.radius=.05f;
         var weapon=new Limb {key="probe",rb=rb,shape=shape,length=.1f,strikeProfile=profile};
-        var delivery=moving.AddComponent<DuelContact>();delivery.owner=player;delivery.limb=weapon;delivery.kind="sword";
+        var delivery=moving.AddComponent<DuelContact>();delivery.owner=player;delivery.limb=weapon;delivery.kind=shieldStrike?"shield":"sword";
         var wall=new GameObject("kinetic receiver");SceneParent(wall);wall.transform.position=new Vector3(0,4);
         var receiver=wall.AddComponent<Rigidbody2D>();receiver.bodyType=RigidbodyType2D.Kinematic;
         var box=wall.AddComponent<BoxCollider2D>();box.size=new Vector2(.1f,.8f);
-        var body=new Limb {key="receiver",rb=receiver,shape=box,length=.8f};
+        var body=new Limb {key=ReferenceCombat?(zone=="head"?"head":"torso"):"receiver",rb=receiver,shape=box,length=.8f};
         var target=wall.AddComponent<DuelContact>();target.owner=enemy;target.limb=body;target.kind=zone;
         Physics2D.SyncTransforms();
         for(int step=0;step<40;step++){
@@ -40,7 +40,8 @@ public sealed partial class PhysicsDuel {
             rb.linearVelocity=Vector2.right*speed;weapon.SampleVelocity();body.SampleVelocity();
             Clock+=Time.fixedDeltaTime;physicsStep++;combatPhysics.Simulate(Time.fixedDeltaTime);ResolveContacts();
         }
-        J result=J.O("weapon",profile.id,"speed",speed,"zone",zone,"damage",first,"expected",DuelImpact.Damage(profile.mass,speed,profile.damage),
+        float expected=ReferenceCombat?(speed<=(shieldStrike?20:15)?0:Fighter.ReferenceDamage(profile.id,profile.TwoHanded,Vector2.right*speed,shieldStrike?1:profile.damage,0,false,shieldStrike)*(zone=="head"?.75f:.35f)):DuelImpact.Damage(profile.mass,speed,profile.damage);
+        J result=J.O("weapon",profile.id,"speed",speed,"zone",zone,"damage",first,"expected",expected,
             "first_hits",firstHits,"second_hits",hits-before-firstHits,"stamina",player.stamina,"attack_active",player.IsAttacking);
         moving.SetActive(false);wall.SetActive(false);Destroy(moving);Destroy(wall);fixtureMode=false;
         return result;

@@ -12,6 +12,8 @@ unity/JianghuUnity/Logs/
 unity/JianghuUnity/obj/
 unity/JianghuUnity/UserSettings/
 unity/Build/
+unity/BloodyBastardsRecovery/
+/Build/BloodyBastardsRecovery/
 unity/validation/
 unity/api-fixtures.json
 unity/*.log

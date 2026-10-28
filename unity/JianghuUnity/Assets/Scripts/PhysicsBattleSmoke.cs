@@ -28,7 +28,19 @@ public sealed partial class PhysicsBattleSmoke:MonoBehaviour {
         Check("companion ready",client!=null&&client.Ready&&client.World.Has);if(client==null||!client.Ready){Finish();yield break;}
         yield return Call("/api/ai/config",J.O("enabled",false));
         if(!client.World["hero"]["created"].B){yield return Call("/api/hero",client.HeroBody("create","name","物理验收","sex","男","age",24,"place",client.World["hero"]["place"]));yield return client.Refresh();}
-        if(phase=="weapons")yield return AuditWeapons();else if(phase=="pace")yield return AuditPace();else if(phase=="martial")yield return AuditMartial();else if(phase=="mouse")yield return AuditMouse();else if(phase=="attributes")yield return AuditAttributes();else if(phase=="kinetic")yield return AuditKinetic();else if(phase=="feel")yield return AuditFeel();else if(phase=="rigs")yield return AuditRigs();else if(phase=="city-resume")yield return Resume(false);else if(phase=="resume")yield return Resume();else yield return Open(phase=="fists");
+        if(phase=="injury"||phase=="injury-resume"){
+            yield return AuditInjury(phase=="injury-resume");
+            Check("no runtime errors",errors.Count==0,new J(errors.Select(e=>new J(e)).ToList()));Finish();yield break;
+        }
+        if(phase=="reference-port"||phase=="reference-port-resume"){
+            yield return AuditReferencePort(phase=="reference-port-resume");
+            Check("no runtime errors",errors.Count==0,new J(errors.Select(e=>new J(e)).ToList()));Finish();yield break;
+        }
+        if(phase=="source-program"||phase=="source-program-resume"){
+            yield return AuditSourceProgram(phase=="source-program-resume");
+            Check("no runtime errors",errors.Count==0,new J(errors.Select(e=>new J(e)).ToList()));Finish();yield break;
+        }
+        if(phase=="reference-stress")yield return AuditReferenceStress();else if(phase=="reference-mechanics")yield return AuditReferenceMechanics();else if(phase=="round-reset")yield return AuditRoundReset();else if(phase=="save-bounds"||phase=="save-bounds-resume")yield return AuditSaveBounds(phase=="save-bounds-resume");else if(phase=="binds")yield return AuditBinds();else if(phase=="reference")yield return AuditReference();else if(phase=="weapons")yield return AuditWeapons();else if(phase=="pace")yield return AuditPace();else if(phase=="martial")yield return AuditMartial();else if(phase=="mouse")yield return AuditMouse();else if(phase=="attributes")yield return AuditAttributes();else if(phase=="kinetic")yield return AuditKinetic();else if(phase=="feel")yield return AuditFeel();else if(phase=="rigs")yield return AuditRigs();else if(phase=="city-resume")yield return Resume(false);else if(phase=="resume")yield return Resume();else yield return Open(phase=="fists");
         Check("no runtime errors",errors.Count==0,new J(errors.Select(e=>new J(e)).ToList()));
         Finish();
     }
@@ -71,6 +83,14 @@ public sealed partial class PhysicsBattleSmoke:MonoBehaviour {
         var arena=app.PhysicsArena;var actual=arena.CaptureCampaign();File.WriteAllText(Path.Combine(output,"actual-restored-frame.json"),actual.ToString());float poseError=0;
         for(int side=0;side<2;side++)foreach(var body in expected["fighters"][side]["bodies"].A){var restored=actual["fighters"][side]["bodies"].A.First(x=>x["key"].S==body["key"].S);poseError=Mathf.Max(poseError,Mathf.Abs((float)(restored["x"].N-body["x"].N)),Mathf.Abs((float)(restored["y"].N-body["y"].N)),Mathf.Abs(Mathf.DeltaAngle((float)restored["angle"].N,(float)body["angle"].N)));}
         Check("restart restores physical pose and session",app.Martial["battle"]["id"].S==session["id"].S&&poseError<.003f,J.O("maximum_pose_error",poseError));
+        if(arena.player.Reference){
+            float auxiliaryError=0;
+            for(int side=0;side<2;side++)foreach(string collection in new[]{"bodies","weights"})foreach(var body in expected["fighters"][side]["reference"][collection].A){
+                var restored=actual["fighters"][side]["reference"][collection].A.First(x=>x["key"].S==body["key"].S);
+                foreach(string value in new[]{"x","y","angle","vx","vy","spin"})auxiliaryError=Mathf.Max(auxiliaryError,Mathf.Abs((float)(restored[value].N-body[value].N)));
+            }
+            Check("restart restores COM and counterweight motion",auxiliaryError<.003f,J.O("maximum_auxiliary_error",auxiliaryError));
+        }
         Check("restart preserves health and stamina",Mathf.Abs(arena.player.health-(float)expected["fighters"][0]["health"].N)<.001f&&Mathf.Abs(arena.player.stamina-(float)expected["fighters"][0]["stamina"].N)<.001f);
         Check("restart clears pointer input",arena.paused);
         yield return Picture("03-resumed");
@@ -88,7 +108,7 @@ public sealed partial class PhysicsBattleSmoke:MonoBehaviour {
         float until=Time.realtimeSinceStartup+maxSeconds,maxGap=0,maxLimit=0;
         while(Time.realtimeSinceStartup<until&&!arena.CampaignFinished){maxGap=Mathf.Max(maxGap,arena.player.MaxJointGap(),arena.enemy.MaxJointGap());maxLimit=Mathf.Max(maxLimit,arena.player.MaxLimitError(),arena.enemy.MaxLimitError());yield return new WaitForSecondsRealtime(.1f);}
         Check("real contacts produce damage",arena.hits>0&&(arena.player.health<arena.player.maxHealth||arena.enemy.health<arena.enemy.maxHealth),J.O("hits",arena.hits,"elapsed",arena.CampaignElapsed));
-        Check("physical constraints remain bounded",maxGap<.15f&&maxLimit<8,J.O("gap",maxGap,"limit_degrees",maxLimit));
+        Check("physical constraints remain bounded",maxGap<.15f&&maxLimit<8,J.O("gap",maxGap,"limit_degrees",maxLimit,"player_worst_limit",arena.player.worstLimitJoint,"enemy_worst_limit",arena.enemy.worstLimitJoint));
         yield return Picture("04-physical-combat");
         if(!arena.CampaignFinished){yield return app.SavePhysicsForSmoke("surrender");}else{
             until=Time.realtimeSinceStartup+15;while(!app.Martial["battle"]["settled"].B&&Time.realtimeSinceStartup<until)yield return null;

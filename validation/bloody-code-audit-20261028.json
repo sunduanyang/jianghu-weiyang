@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "kind": "static-code-audit-not-gameplay-acceptance",
+  "generated_at": "2026-10-28T11:41:40.140572+00:00",
+  "source_root": "D:\\Desktop\\新新游戏",
+  "apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "native_sha256": "206a35f64a68f0000263c7a868fe17337c9d278209a661d47e5d28dd427fc13a",
+  "active_build_marker": "InteractionAPOnly",
+  "scope": {
+    "types": 150,
+    "methods": 1275,
+    "instructions": 68879,
+    "groups": {
+      "ai": 157,
+      "feedback": 203,
+      "equipment": 253,
+      "injury": 148,
+      "special": 48,
+      "motion": 83,
+      "input": 86,
+      "rounds": 193,
+      "network": 104
+    },
+    "review_depth": {
+      "inventory-only": 1179,
+      "call-and-field-summary-reviewed": 54,
+      "control-flow-reviewed": 42
+    }
+  },
+  "method_index": "validation/bloody-code-methods-20261028.json",
+  "values_local_only": "output\\bloody-code-audit-20261028\\decoded-values.json",
+  "source_sha256": {
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelAI.cs": "e463f3f6e6322414e29e20cb853d5db34755dd11bfb9ecc7e9ffa7d0b3a02642",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelAppearance.cs": "483e2d29e3fad9792e96a1d018b2beae2a741b6c0825bee12f0d33beeeaec51d",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelArmory.cs": "026789d73b721653d2ad1a9ec247fb716a5f7c83ed04c9380203a8bc411a48a4",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelAttributeProbe.cs": "0416bf4205858fa98cdf644c70e202ac736f937bfa08b02ed80634984330f795",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelAttributes.cs": "8675529aa5861300eec89f5ea02423dd13e694a62d1eb424e08ee0c47030e63b",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelBindProbe.cs": "bd3cef3c562a98419600889eed9f674d18bc5c1840f4e56b4c3c6556b4800dfb",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelCampaign.cs": "cfe523466a18e83699e020c4c05ae79c39f35ba96ac999644e178e2fa476394e",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelCharacterArt.cs": "6b2b9b30e5e36af8e7d1bbe6e3ce2aa574ee83ec852e934acfa3311bc67b8c96",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelClash.cs": "367186696ed5e0869edf4341b3b0b03a9cf44ebd99fac2d02176fe900dbd3f3d",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelCombat.cs": "d81d81093aeaee75ce086d8d0004066dfc13fd5505b1a31dbaba5f0e55880454",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelControls.cs": "8c149ab25333356ce3afe613fc2ec0bf47c750d6f0fb8dc56b3e9bf281ac54ce",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelControlsView.cs": "18beebb46c1b6c58cfcd827273aafe91aa312fe8be672e7fe47a2aafe7667d7a",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelFighter.cs": "cb133bf9dcaf6eccf47fdf38d593c6bc8b3f800f385fea8a0bd8b8332d93bddc",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelFigure.cs": "5453aa93f407e17366bd24748dab82ce00f46f439f20a1ffc42eac47224e3a60",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelGuard.cs": "da7929159f9eb05304ff6c7bbf44ae78415f393f784bf75338fed9cdb445d9cc",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelHandDrive.cs": "f165a1b5f770fd1507b9b5bd5bcde65bf1dba51c5385a89931ce08eac1cc7c0c",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelImpact.cs": "9985b1fb32dce8be43c1ee9e8d9b334296f70070a098775d501fba666d3bc641",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelImpactProbe.cs": "8eca2db79ca1a894ae05617cbcc7786e84cbbf1b9c30de6bff380619d9b143f7",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelInjuryProbe.cs": "2f952743497a9d25f531b685e043dda8524280884f7ff3d7c390fe61ef9aee1f",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelLacePuppet.cs": "9c00f7843d4370ab6194066fd1d91f1bfc1385063e0b257afbfc2251e65b78fa",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelModularPose.cs": "adab724d6ad8cd35dc27a794497c26575f1bf92b31de7c52ce7cf361e1dc7267",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelModularPuppet.cs": "99127825255250b07639b40f06dfb12442e49481e562f7b75422fd971a2807a0",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelMotion.cs": "e10ab1eaa9a143407834c1a4b80b665977d327ef5336408dc8e738ffb93b6935",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelMouseHands.cs": "2d603f75511ba526c3e196e74f7a2db75fe9ce3d0b6bf8347d68ef7882b48743",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelMouseInput.cs": "69823b7a410ad15b66923bf090d120710a60c6298fe39396183d8ed4acca365d",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelPaceProbe.cs": "37d4671b3b4ca6a8cdfb40a12d456daa44ca1f4911dc8933c15a6c7c76b4d8eb",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelPhysics.cs": "b59c499f3444826ff9f87f1baabca46a0512f1750e2879d0b6bdc8c0d5c278e1",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelReference.cs": "0b11b1ab5d929706f0641c99290d6f2e1991a519f992ce96f10381b6b162f8fb",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelReferenceKick.cs": "178c4021af34c94a7af7bfc6e68f1aa307c909e966a866df3605a8aa5334e78a",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelReferenceMechanicsProbe.cs": "cbed945fc99345b7cae09be08ec3c45deda5ecb89bde766dccb2b0a8e8a9a207",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelTuning.cs": "c83c6c3b57ee4be098d236af55411b2e5fc86b5568c230cc75eab2bc6e98a125",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelTwoHand.cs": "6c437250e54b3d6e76df8c669f089fccdccac90cbc28f64ee7146ecbdb44c4f4",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelWeapons.cs": "7cff6789de1705c7c7ee871748965426c260163ae4da5c528c40b0514ebddd78",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/PhysicsDuel.cs": "3e45f05e2ad26327d85d546d3fffd8669a330d3ef794cd584dc8965f5d7748a9",
+    "jianghu/engine.py": "08cb008d1ff95ccb83750a518da2495d966c5198cd0ec8a9738a2671aff80fa0",
+    "jianghu/physical_combat.py": "dce26d88949dbd1e4ae5ad6d124332d5deea8a135c6cdb4e9e3441139ce023b0",
+    "jianghu/physical_reference.py": "45c1f38f9c8dcf46f32e08a2fb1a0807a38346eb62344f41eea399363b99736b",
+    "jianghu/combat_attributes.py": "93922786908a5b74d1c1af0e1613c2cd30771a6f0b3ec88173102f6421454558",
+    "jianghu/weapon_catalog.json": "b4e8248b61e75acb0773f44c349027622047c10bf5d0b7778db74621bdfdd974",
+    "jianghu/weapons.py": "802a5c0c40e9e4b851cd5cd12e19d3a699533a5c3efc230b0be55c05246fd1cf",
+    "unity/JianghuUnity/Assets/Scripts/PhysicalBattleScreen.cs": "ef5848cec0c3fafc98ef5210b8f82f17c23f946cf51ae9ad49c026b0bc74d2a6"
+  },
+  "arithmetic_examples": {
+    "same_contact_wood_sword_damage_0_8_to_iron_sword_1": {
+      "display_stat_ratio": 1.25,
+      "raw_reference_formula_ratio": 1.0126582278481013
+    },
+    "metal_handle_before_clamp": {
+      "source_multiplier": 0.4,
+      "ours_multiplier": 0.2
+    },
+    "shield_stat_1_at_weighted_speed_30_unarmored": {
+      "source_local_damage": 8.6,
+      "ours_local_damage": 1.5
+    },
+    "max_stamina_140_wake": {
+      "source": 10,
+      "ours": 14
+    },
+    "head_support_max_health_140_full": {
+      "source": 60.0,
+      "ours": 50.0
+    }
+  },
+  "claims_complete_semantic_review": false,
+  "claims_one_to_one": false,
+  "game_code_changed_by_this_audit": false,
+  "finding_ids": [
+    "A01",
+    "A02",
+    "A03",
+    "A04",
+    "A05",
+    "A06",
+    "A07",
+    "A08",
+    "A09",
+    "A10",
+    "A11",
+    "A12",
+    "A13",
+    "A14",
+    "A15",
+    "A16",
+    "A17",
+    "A18",
+    "A19",
+    "A20"
+  ],
+  "findings_report": "BLOODY_COMBAT_CODE_AUDIT.md",
+  "limits": [
+    "Inventory scope is explicit, not proof that all combat dependencies were found.",
+    "Inventory-only entries have not been semantically reviewed.",
+    "Candidate counterpart files do not certify method-level equivalence.",
+    "Modified APK static data is not a measurement of official live runtime.",
+    "No new Unity battle or original-game trajectory comparison was run."
+  ]
+}

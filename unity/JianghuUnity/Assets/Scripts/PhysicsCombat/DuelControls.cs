@@ -4,6 +4,8 @@ using UnityEngine;
 // Touch retains independent floating pads. Mouse shares one movement delta
 // between the held buttons and remembers both targets through DuelMouseHands.
 public sealed class DuelControls {
+    public bool reference;
+    readonly Vector2[] referenceOrigin=new Vector2[2];
     public sealed class Pad {
         public Vector2 center {get;private set;}
         public const float Radius=90,Deadzone=.08f;
@@ -33,14 +35,14 @@ public sealed class DuelControls {
         if(control==0||control==1&&left.captured||control==2&&right.captured)return false;
         // On touch, a short tap followed by a held tap on the same side moves
         // the feet. A drag / a second simultaneous finger remains hand input.
-        if(id>=0&&control<3&&control==tapSide&&now-tapAt<=.28f&&(p-tapPoint).sqrMagnitude<3600){control=control==1?6:7;tapAt=-10;}
+        if(id>=0&&control<3&&control==tapSide&&now-tapAt<=(reference?.35f:.28f)&&(p-tapPoint).sqrMagnitude<3600){control=control==1?6:7;tapAt=-10;}
         owners[id]=control;
         pressTimes[id]=now;
         if(control<3)(control==1?left:right).Capture(p);
         if(control==4)DashPressed=true;
         return true;
     }
-    public void Move(int id,Vector2 p){if(owners.TryGetValue(id,out int owner)&&owner<3){Pad pad=owner==1?left:right;pad.Move(p);if((p-pad.center).sqrMagnitude>324)dragged.Add(id);}}
+    public void Move(int id,Vector2 p){if(owners.TryGetValue(id,out int owner)&&owner<3){Pad pad=owner==1?left:right;pad.Move(p);if(reference)pad.value=Vector2.ClampMagnitude(new Vector2(p.x-pad.center.x,pad.center.y-p.y)/Pad.Radius,1);if((p-pad.center).sqrMagnitude>324)dragged.Add(id);}}
     public void End(int id,float at=-1,bool allowTap=true){if(!owners.TryGetValue(id,out int owner))return;owners.Remove(id);if(owner<3){Pad pad=owner==1?left:right;float now=at<0?Time.unscaledTime:at;if(allowTap&&id>=0&&!dragged.Contains(id)&&now-pressTimes[id]<.18f){tapAt=now;tapPoint=pad.center;tapSide=owner;}pad.captured=false;pad.value=Vector2.zero;}pressTimes.Remove(id);dragged.Remove(id);}
     public void ReleaseAll(bool keepMouseTargets=false){owners.Clear();pressTimes.Clear();dragged.Clear();tapAt=-10;left.captured=right.captured=false;left.value=right.value=Vector2.zero;DashPressed=false;if(keepMouseTargets)mouse.Freeze();else mouse.Clear();}
     public void PressMouse(bool primary,Vector2 point,Vector2 mainSeed,Vector2 offSeed,float at,float mainAxis,float offAxis){if(Arena(point))mouse.Press(primary,point,mainSeed,offSeed,at,mainAxis,offAxis);}
@@ -61,6 +63,17 @@ public sealed class DuelControls {
             var vanished=new List<int>();foreach(int id in owners.Keys)if(id>=0)vanished.Add(id);foreach(int id in vanished)End(id,-1,false);
             Vector2 p=canvas(Input.mousePosition);
             float now=Time.unscaledTime;
+            if(reference){
+                for(int b=0;b<2;b++){
+                    int id=-1-b;var pad=b==0?right:left;
+                    if(Input.GetMouseButtonDown(b)){
+                        if(HitTest(p))Begin(id,p);else if(Arena(p)){referenceOrigin[b]=p;pad.Capture(p);}
+                    }
+                    if(!Input.GetMouseButton(b)){End(id);pad.captured=false;pad.value=Vector2.zero;}
+                    else if(pad.captured)pad.value=Vector2.ClampMagnitude(new Vector2(p.x-referenceOrigin[b].x,referenceOrigin[b].y-p.y)/155f,1);
+                }
+                return;
+            }
             for(int button=0;button<2;button++){
                 int id=-1-button;
                 if(Input.GetMouseButtonDown(button)){

@@ -1,0 +1,144 @@
+{
+  "pass": true,
+  "neck_layer": 35,
+  "collar_layer": 40,
+  "native": {
+    "pass": true,
+    "checks": [
+      {
+        "check": "workshop starts in a stable standing pose",
+        "pass": true,
+        "facts": {}
+      },
+      {
+        "check": "real physics rig without backend or save",
+        "pass": true,
+        "facts": {
+          "bodies": 29
+        }
+      },
+      {
+        "check": "actual weighted meshes",
+        "pass": true,
+        "facts": {
+          "vertices": 419,
+          "mixed_weight_vertices": 156,
+          "weight_error": 0,
+          "max_hem_deformation_world": 0.01075485,
+          "finite": true,
+          "mesh_renderers": 18,
+          "shared_uv_template": true
+        }
+      },
+      {
+        "check": "27 facial combinations produce distinct live renders",
+        "pass": true,
+        "facts": {
+          "distinct": 27
+        }
+      },
+      {
+        "check": "appearance changes preserve frozen physical state",
+        "pass": true,
+        "facts": {}
+      },
+      {
+        "check": "outfit changes keep UV and topology",
+        "pass": true,
+        "facts": {}
+      },
+      {
+        "check": "live character render has transparent background",
+        "pass": true,
+        "facts": {
+          "transparent_pixels": 946748,
+          "opaque_pixels": 72841
+        }
+      },
+      {
+        "check": "60-second walking preview has bounded motion and a planted foot",
+        "pass": true,
+        "facts": {
+          "preview_seconds": 60,
+          "sample_rate": 120,
+          "max_bone_degrees_per_second": 65.68359,
+          "max_joint_gap": 4.915125e-07,
+          "max_torso_lean_degrees": 0,
+          "both_feet_airborne_samples": 0,
+          "same_character_root": true
+        }
+      },
+      {
+        "check": "walking preview deforms weighted garment meshes",
+        "pass": true,
+        "facts": {
+          "vertices": 419,
+          "mixed_weight_vertices": 156,
+          "weight_error": 0,
+          "max_hem_deformation_world": 0.03036389,
+          "finite": true,
+          "mesh_renderers": 18,
+          "shared_uv_template": true
+        }
+      },
+      {
+        "check": "pausing a preview freezes the pose",
+        "pass": true,
+        "facts": {}
+      },
+      {
+        "check": "60-second arm preview stays upright without spins",
+        "pass": true,
+        "facts": {
+          "preview_seconds": 60,
+          "sample_rate": 120,
+          "max_bone_degrees_per_second": 79.0155,
+          "max_joint_gap": 4.915125e-07,
+          "max_torso_lean_degrees": 0,
+          "both_feet_airborne_samples": 0,
+          "same_character_root": true
+        }
+      },
+      {
+        "check": "physical arena starts paused and rejects preview posing",
+        "pass": true,
+        "facts": {}
+      },
+      {
+        "check": "returning from combat rebuilds a clean standing preview",
+        "pass": true,
+        "facts": {}
+      },
+      {
+        "check": "both facing directions remain valid",
+        "pass": true,
+        "facts": {
+          "left": {
+            "vertices": 419,
+            "mixed_weight_vertices": 156,
+            "weight_error": 0,
+            "max_hem_deformation_world": 0.01075485,
+            "finite": true,
+            "mesh_renderers": 18,
+            "shared_uv_template": true
+          },
+          "right": {
+            "vertices": 419,
+            "mixed_weight_vertices": 156,
+            "weight_error": 0,
+            "max_hem_deformation_world": 0.01075476,
+            "finite": true,
+            "mesh_renderers": 18,
+            "shared_uv_template": true
+          }
+        }
+      },
+      {
+        "check": "no runtime errors",
+        "pass": true,
+        "facts": []
+      }
+    ],
+    "errors": []
+  }
+}

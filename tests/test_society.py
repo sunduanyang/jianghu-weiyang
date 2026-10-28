@@ -114,18 +114,13 @@ class SocietyTests(unittest.TestCase):
         self.assertEqual(a['time_left'], 4)
         self.assertEqual(w.relation(a, b['id'])['sworn'], False)
 
-    def test_faction_task_reward_is_real_and_cannot_be_forged_or_repeated(self):
+    def test_removed_faction_tasks_cannot_pay_rewards_or_be_forged(self):
         w = self.world()
         n = self.adult(w, faction=0)
         f = w.factions[0]
-        total = f['fund'] + n['wealth']
-        e = self.action(w, n, 'faction_task', 0)
-        self.assertEqual(n['contribution'], 2)
-        self.assertEqual(n['time_left'], 2)
-        self.assertEqual(total, f['fund'] + n['wealth'])
-        self.assertAlmostEqual(f['fund'], f['opening_fund'] + f['revenue'] - f['expenses'])
-        self.assertEqual(e['facts']['reward'], 3)
+        before = deepcopy(w.export())
         self.assertIsNone(self.action(w, n, 'faction_task', 0))
+        self.assertEqual(w.export(), before)
         w.month += 1
         social.reset_month(w, n)
         n['place'] = 0
@@ -164,10 +159,10 @@ class SocietyTests(unittest.TestCase):
 
     def test_progression_requires_both_merit_and_skill_and_has_a_cause(self):
         w = self.world()
-        n = self.adult(w, faction=0, contribution=10., skill=25.)
+        n = self.adult(w, faction=0, contribution=10.5, skill=25.)
         other = self.adult(w, faction=0, contribution=50.)
         w.factions[0]['leader'] = other['id']
-        e = self.action(w, n, 'faction_task', 0)
+        e = self.action(w, n, 'duty', 0)
         self.assertEqual(organizations.rank(w, n)['title'], '执事')
         rank_event = next(x for x in w.store.history(n['id']) if x['kind'] == 'faction_rank')
         self.assertIn(e['id'], rank_event['causes'])
@@ -242,13 +237,13 @@ class SocietyTests(unittest.TestCase):
         self.assertEqual(w.countries[a]['border_activity'], {})
         self.assertEqual(w.countries[a]['last_year_borders'][str(b)]['crossings'], 8)
 
-    def test_player_visits_have_a_saved_monthly_limit_and_bounded_ties(self):
+    def test_player_visits_repeat_and_ties_remain_bounded(self):
         w = self.world()
         n = self.adult(w)
         w.intervene(n['id'], 'visit')
         self.assertEqual(w.npc_detail(n['id'])['player_relation']['trust'], 2)
-        with self.assertRaisesRegex(ValueError, '本月已'):
-            w.intervene(n['id'], 'visit')
+        w.intervene(n['id'], 'visit')
+        self.assertEqual(w.npc_detail(n['id'])['player_relation']['trust'],4)
         tie = w.player['ties'][str(n['id'])]
         tie['affinity'] = tie['trust'] = 99
         w.intervene(n['id'], 'gift')
@@ -292,7 +287,7 @@ class SocietyTests(unittest.TestCase):
         a, b = self.adult(w, faction=0, contribution=8.), self.adult(w, faction=0, skill=55.)
         w.link(a, b, 60, 40)
         self.action(w, a, 'swear', b['id'])
-        self.action(w, a, 'faction_task', 0)
+        self.action(w, a, 'duty', 0)
         w.intervene(a['id'], 'visit')
         w.checkpoint()
         copied = Store()
@@ -343,18 +338,15 @@ class SocietyHTTPTests(unittest.TestCase):
                 self.request(path)
             self.assertEqual(caught.exception.code, 400)
 
-    def test_visit_is_persisted_and_repetition_is_rejected_through_http(self):
+    def test_visit_is_persisted_and_can_repeat_through_http(self):
         n = self.world.npcs[1]
         n['health'], n['mood']['anger'] = 100, 0
         self.request('/api/intervene', {'npc_id': 1, 'action': 'visit'})
         detail = self.request('/api/npc/1')
         self.assertEqual(detail['player_relation']['affinity'], 4)
         self.assertEqual(self.world.store.load()['player']['ties']['1']['visit_month'], self.world.month)
-        before = deepcopy(self.world.export())
-        with self.assertRaises(urllib.error.HTTPError) as caught:
-            self.request('/api/intervene', {'npc_id': 1, 'action': 'visit'})
-        self.assertEqual(caught.exception.code, 400)
-        self.assertEqual(self.world.export(), before)
+        self.request('/api/intervene', {'npc_id': 1, 'action': 'visit'})
+        self.assertEqual(self.request('/api/npc/1')['player_relation']['affinity'],8)
 
 
 if __name__ == '__main__':

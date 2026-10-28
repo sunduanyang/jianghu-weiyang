@@ -32,6 +32,9 @@ public partial class JianghuApp {
     List<MapPolygon> mapLand;
     float mapZoom=1;Vector2 mapPan;bool dragging;Vector2 dragMouse,mapPressMouse;
     int mapPressedPlace=-1;
+    int mapLastClickPlace=-1;float mapLastClickAt=-10;Vector2 mapLastClickPosition;
+    readonly List<KeyValuePair<Rect,int>> worldMapTargets=new List<KeyValuePair<Rect,int>>();
+    Vector2 worldMapOffset;float worldMapScale;
     int chosenRow=-1,chosenCol=-1,originRow=-1,originCol=-1;
     string cityKind="全部聚落";
     void InitMap(){
@@ -128,10 +131,13 @@ public partial class JianghuApp {
         GUILayout.EndScrollView();GUILayout.EndArea();
     }
     void DrawTravel(){
+        bool needsMonth=false;
         foreach(var connection in Hero["connections"].A){if(connection["place"].I!=SelectedPlace&&CurrentStage==Stage.World)continue;
-            T("前往"+connection["name"].S+" · "+connection["points"].S+"行动力 / "+Num(connection["silver"])+"银"+(connection["sea"].B?" · 航路":" · 驿道"),small);
+            T("前往"+connection["name"].S+" · "+connection["points"].S+"精力"+(connection["sea"].B?" · 航路":" · 驿道"),small);
             if(Btn(connection["enabled"].B?"沿路远行 →":connection["reason"].S,Paused&&connection["enabled"].B))HeroAction("travel","place",connection["place"]);
+            needsMonth|=connection["reason"].S=="精力不足，点击过月";
         }
+        if(needsMonth&&Btn("过月",Paused))HeroAction("end_turn");
     }
     Vector2 MapPoint(J p,Rect r)=>new Vector2((float)p["x"].N,(float)p["y"].N);
     // Full-screen silk-scroll atlas under lamplight: painted base, territory washes tinted by the current
@@ -139,6 +145,7 @@ public partial class JianghuApp {
     void DrawMap(Rect r){
         GUI.BeginGroup(r);Rect local=new Rect(0,0,r.width,r.height);Tile(local,"bg");
         float k=Mathf.Max(r.width/1280f,r.height/760f)*mapZoom;Vector2 center=new Vector2(r.width/2,r.height/2);Vector2 offset=center-new Vector2(640,380)*k+mapPan*k;
+        worldMapTargets.Clear();worldMapOffset=offset;worldMapScale=k;
         Func<float,float,Vector2> pos=(x,y)=>new Vector2(x*k+offset.x,y*k+offset.y);
         var mapRect=new Rect(offset.x,offset.y,1280*k,760*k);var prev=GUI.color;
         Vector2 pointer=Event.current.mousePosition;
@@ -182,7 +189,8 @@ public partial class JianghuApp {
             if(p["active"].B)continue;Vector2 q=pos((float)p["x"].N,(float)p["y"].N);
             Rect sr=new Rect(q.x-siteSize/2,q.y-siteSize/2,siteSize,siteSize);var t=SiteMark(p["kind"].S);if(t!=null)GUI.DrawTexture(sr,t);
             if(mapZoom>=1.6f)HaloLabel(new Rect(sr.xMax+2,q.y-8,100,16),p["name"].S,siteLabel,siteHalo);
-            if(!overSites&&GUI.Button(sr,GUIContent.none,GUIStyle.none))SelectMapPlace(p["hub"].I);
+            worldMapTargets.Add(new KeyValuePair<Rect,int>(sr,p["hub"].I));
+            if(!overSites&&sr.Contains(pointer))hoveredPlace=p["hub"].I;
         }
         bool overUI=OverUI(Event.current.mousePosition);
         var placedLabels=new List<Rect>();
@@ -202,7 +210,8 @@ public partial class JianghuApp {
             Fill(new Rect(labelRect.x+3,labelRect.y-4,labelRect.width-6,4),OwnerColor(p["country"].I,.95f));   // owner colour as a tab on top
             if(chosen||p["id"].I==hoveredPlace)Outline(new Rect(labelRect.x-2,labelRect.y-2,labelRect.width+4,labelRect.height+4),brass,2);
             GUI.Label(labelRect,vertical,textStyle);
-            if(!overUI){bool hit=GUI.Button(labelRect,GUIContent.none,GUIStyle.none);hit|=GUI.Button(markRect,GUIContent.none,GUIStyle.none);if(hit)SelectMapPlace(p["id"].I);}
+            worldMapTargets.Add(new KeyValuePair<Rect,int>(labelRect,p["id"].I));worldMapTargets.Add(new KeyValuePair<Rect,int>(markRect,p["id"].I));
+            if(!overUI&&(labelRect.Contains(pointer)||markRect.Contains(pointer)))hoveredPlace=p["id"].I;
         }
         if(Hero["created"].B){
             var p=Place(Hero["place"].I);Vector2 q=pos((float)p["x"].N,(float)p["y"].N);
@@ -210,25 +219,37 @@ public partial class JianghuApp {
             HaloLabel(new Rect(q.x+14,q.y-44,150,20),Hero["name"].S,mapLabelOn,mapHaloBold);
         }
         if(compassMark!=null)GUI.DrawTexture(new Rect(1330,72,76,76),compassMark);
-        Event ev=Event.current;
-        if(!Application.isFocused){dragging=false;mapPressedPlace=-1;}
+        HandleWorldMapPointer(Event.current,local,overUI||creatingHero,WorldMapPlaceAt(pointer),k,Application.isFocused);
+        GUI.EndGroup();
+    }
+    // Regions, town seals and name slips share one click/drag recognizer.
+    int WorldMapPlaceAt(Vector2 pointer){
+        for(int i=worldMapTargets.Count-1;i>=0;i--)if(worldMapTargets[i].Key.Contains(pointer))return worldMapTargets[i].Value;
+        return MapRegionAt((pointer-worldMapOffset)/worldMapScale);
+    }
+    void HandleWorldMapPointer(Event ev,Rect local,bool overUI,int hit,float k,bool focused){
+        if(!focused){dragging=false;mapPressedPlace=-1;mapLastClickPlace=-1;}
         if(local.Contains(ev.mousePosition)&&!overUI){
-            if(ev.type==EventType.ScrollWheel){mapPressedPlace=-1;float old=mapZoom;mapZoom=Mathf.Clamp(mapZoom*(ev.delta.y>0?.85f:1.18f),1f,5);Vector2 mouse=ev.mousePosition-center;mapPan+=mouse*(1/(k*(mapZoom/old))-1/k);ev.Use();}
-            if(ev.type==EventType.MouseDown&&ev.button==0&&Application.isFocused){dragging=true;dragMouse=mapPressMouse=ev.mousePosition;mapPressedPlace=MapRegionAt((ev.mousePosition-offset)/k);}
+            if(ev.type==EventType.ScrollWheel){mapPressedPlace=-1;mapLastClickPlace=-1;float old=mapZoom;mapZoom=Mathf.Clamp(mapZoom*(ev.delta.y>0?.85f:1.18f),1f,5);Vector2 mouse=ev.mousePosition-local.center;mapPan+=mouse*(1/(k*(mapZoom/old))-1/k);ev.Use();}
+            if(ev.type==EventType.MouseDown&&ev.button==0&&focused){dragging=true;dragMouse=mapPressMouse=ev.mousePosition;mapPressedPlace=hit;ev.Use();}
         }
         if(ev.type==EventType.MouseDrag&&dragging){
             // Once the pointer leaves the click tolerance, returning to the start is still a drag.
-            if((ev.mousePosition-mapPressMouse).sqrMagnitude>36)mapPressedPlace=-1;
+            if((ev.mousePosition-mapPressMouse).sqrMagnitude>36){mapPressedPlace=-1;mapLastClickPlace=-1;}
             mapPan+=(ev.mousePosition-dragMouse)/k;dragMouse=ev.mousePosition;ev.Use();
         }
         if(ev.rawType==EventType.MouseUp&&ev.button==0){
             if(ev.type==EventType.MouseUp&&dragging&&mapPressedPlace>=0&&local.Contains(ev.mousePosition)&&!overUI&&
-                (ev.mousePosition-mapPressMouse).sqrMagnitude<=36&&MapRegionAt((ev.mousePosition-offset)/k)==mapPressedPlace){
-                SelectMapPlace(mapPressedPlace);ev.Use();
+                (ev.mousePosition-mapPressMouse).sqrMagnitude<=36&&hit==mapPressedPlace){
+                WorldMapClick(mapPressedPlace,ev.mousePosition,Time.realtimeSinceStartup);ev.Use();
             }
             dragging=false;mapPressedPlace=-1;
         }
-        GUI.EndGroup();
+    }
+    void WorldMapClick(int place,Vector2 pointer,float at){
+        bool twice=mapLastClickPlace==place&&at-mapLastClickAt<=.4f&&(pointer-mapLastClickPosition).sqrMagnitude<=36;
+        SelectMapPlace(place);mapLastClickPlace=twice?-1:place;mapLastClickAt=at;mapLastClickPosition=pointer;
+        if(twice)ActivateWorldMapPlace(place);
     }
     void DashedLine(Vector2 a,Vector2 b,Color c,float width,float dash,float gap){if(Event.current.type!=EventType.Repaint)return;float length=Vector2.Distance(a,b);if(length<1)return;Vector2 dir=(b-a)/length;for(float s=0;s<length;s+=dash+gap)Line(a+dir*s,a+dir*Mathf.Min(length,s+dash),c,width);}
     void DrawVectorPath(string path,Func<float,float,Vector2> pos,Color color,float width){var tokens=System.Text.RegularExpressions.Regex.Matches(path,@"[MLZmlz]|-?\d+(?:\.\d+)?");Vector2 last=Vector2.zero,start=Vector2.zero;bool move=true;for(int i=0;i<tokens.Count;i++){string t=tokens[i].Value;if(t=="M"||t=="m"){move=true;continue;}if(t=="L"||t=="l")continue;if(t=="Z"||t=="z"){Line(last,start,color,width);continue;}if(i+1>=tokens.Count)break;float x=float.Parse(t,System.Globalization.CultureInfo.InvariantCulture),y=float.Parse(tokens[++i].Value,System.Globalization.CultureInfo.InvariantCulture);var next=pos(x,y);if(move){start=next;move=false;}else Line(last,next,color,width);last=next;}}

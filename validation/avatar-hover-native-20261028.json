@@ -1,0 +1,20 @@
+{
+  "pass": true,
+  "validation_type": "manual native pointer verification through computer-use",
+  "build": "unity/Build/AvatarHoverFix/江湖未央.exe",
+  "build_log": "output/tooltip-fix-20261028/avatar-build.log",
+  "player_log": "output/tooltip-fix-20261028/avatar-copy-player.log",
+  "isolated_save": "tmp/avatar-hover-20261028/save/world.sqlite",
+  "save_preparation": "SQLite online backup of the active save; model calls disabled in the copy",
+  "checks": [
+    {"check": "Unity Windows build succeeds", "pass": true},
+    {"check": "moving the pointer onto the long-scroll gate portrait shows its name and 镖师 role without clicking", "pass": true},
+    {"check": "moving just outside the portrait clears both its floating hint and name below the portrait", "pass": true},
+    {"check": "moving back onto the same portrait restores the hint", "pass": true},
+    {"check": "moving into the hint's former position clears the hint instead of keeping it alive", "pass": true},
+    {"check": "no Unity exceptions or errors in the interactive verification log", "pass": true},
+    {"check": "default launcher selects AvatarHoverFix", "pass": true},
+    {"check": "git diff --check for the three modified UI files", "pass": true}
+  ],
+  "notes": "Verified actual pointer movement with zero-distance wheel input, without clicking the portrait. UI reads used an isolated copy; the original save was not written by validation. Existing unrelated source changes were retained."
+}

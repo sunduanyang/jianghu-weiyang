@@ -84,25 +84,29 @@ class SectTests(unittest.TestCase):
         h = w.player['protagonist']
         return protagonist.perform(w, dict(action=action, faction=faction, revision=h['revision'], month=w.month))
 
-    def test_player_must_enter_seat_then_can_join_serve_learn_and_leave(self):
+    def test_player_joins_through_elder_then_can_donate_and_leave_at_seat(self):
         w = self.world(); h = w.player['protagonist']; f = w.factions[0]
         h.update(created=True, started_month=0)
         before = deepcopy(w.export())
-        with self.assertRaisesRegex(ValueError, '走入'):
+        with self.assertRaises(ValueError):
             self.hero_action(w, 'sect_join')
         self.assertEqual(w.export(), before)
         city = city_maps.world_layout(w, f['place']); seat = next(s for s in city['settlements'] if s['kind'] == 'sect')
         h.update(place=f['place'], row=seat['row'], col=seat['col'])
-        self.hero_action(w, 'sect_join')
+        from jianghu import player_interactions
+        elder = w.make_npc(place=f['place'])
+        update_actor(elder, age_months=360, health=100., faction=0, contribution=35., skill=45.)
+        w.reindex()
+        player_interactions.perform(w, dict(action='join_sect', npc_id=elder['id'], revision=h['revision'], month=w.month))
         self.assertEqual(h['faction'], 0)
         for _ in range(3):
             w.month += 1; h['points'] = 30
             total = w.player['wealth']+f['fund']
-            self.hero_action(w, 'sect_task')
+            self.hero_action(w, 'sect_donate')
             self.assertEqual(w.player['wealth']+f['fund'], total)
         before = deepcopy(w.export())
         with self.assertRaisesRegex(ValueError, '本月已'):
-            self.hero_action(w, 'sect_task')
+            self.hero_action(w, 'sect_donate')
         self.assertEqual(w.export(), before)
         total = w.player['wealth']+f['fund']
         with self.assertRaises(ValueError):self.hero_action(w, 'sect_study')
@@ -113,11 +117,11 @@ class SectTests(unittest.TestCase):
         self.assertIsNone(h['faction'])
         self.assertEqual(h['membership_history'][-1]['name'], '武当派')
         with self.assertRaisesRegex(ValueError, '一年后'):
-            self.hero_action(w, 'sect_join')
+            player_interactions.perform(w, dict(action='join_sect', npc_id=elder['id'], revision=h['revision'], month=w.month))
         w.checkpoint(); again = World(store=w.store, compact=True, durable=False)
         self.assertEqual(again.player, w.player)
 
-    def test_religious_duties_improve_health_and_keep_local_titles(self):
+    def test_removed_religious_duties_do_not_change_health_and_keep_local_titles(self):
         w = self.world()
         for fid in (12, 13):
             f = w.factions[fid]; n = w.make_npc(place=f['place'])
@@ -125,8 +129,8 @@ class SectTests(unittest.TestCase):
             w.set_goal(n, 'belonging', initial=True); w.reindex()
             before = w.governments[f['country']]['sanitation']
             e = w.execute(n, dict(id=f'faction_task:{fid}'))
-            self.assertEqual(e['facts']['public_axis'], 'sanitation')
-            self.assertGreater(w.governments[f['country']]['sanitation'], before)
+            self.assertIsNone(e)
+            self.assertEqual(w.governments[f['country']]['sanitation'], before)
             f['leader'] = n['id']
             self.assertEqual(organizations.rank(w, n)['title'], f['ranks'][0])
 

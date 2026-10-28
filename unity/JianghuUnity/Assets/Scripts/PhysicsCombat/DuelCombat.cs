@@ -7,7 +7,7 @@ public sealed partial class PhysicsDuel {
         int buttonStrokeId;
         bool recoveringBreath;
         bool ButtonAttacking=>game.Clock<attackUntil;
-        public bool IsAttacking=>health>0&&(ButtonAttacking||mainStroke.active||offStroke.active);
+        public bool IsAttacking=>health>0&&(Reference?ReferenceArmsActive:ButtonAttacking||mainStroke.active||offStroke.active);
         public bool Recovering=>game.Clock<regenAt;
         public float ArmCapacity=>Mathf.Lerp(.25f,1,Mathf.Clamp01(StaminaRatio/.25f));
         public float ArmSpeed=>weapon.handling*handlingScale;
@@ -38,7 +38,7 @@ public sealed partial class PhysicsDuel {
             mainMotionSpent+=paid*mainRate/(mainRate+offRate);offMotionSpent+=paid*offRate/(mainRate+offRate);
             pressureStaminaSpent+=paid*currentPressureRate/(mainRate+offRate);
         }
-        public string CombatState=>game.Clock<stunUntil?"卸力":game.Clock<guardBrokenUntil?"破防":motionExhausted?"气竭":StaminaRatio<.2f?"乏力":currentPressureRate>.1f?"顶压耗气":Recovering?"回气稍候":"";
+        public string CombatState=>Reference?(PassedOut?"力竭倒地":ReferenceDowned?"腿伤倒地":game.Clock<recoveryUntil?"起身":StaminaRatio<.2f?"乏力":""):game.Clock<stunUntil?"卸力":game.Clock<guardBrokenUntil?"破防":motionExhausted?"气竭":StaminaRatio<.2f?"乏力":currentPressureRate>.1f?"顶压耗气":Recovering?"回气稍候":"";
 
         float SpendEffort(float cost,float recoveryDelay) {
             float paid=Mathf.Min(stamina,cost*effortScale);

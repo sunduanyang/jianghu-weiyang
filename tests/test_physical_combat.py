@@ -72,6 +72,59 @@ class PhysicalCombatTests(unittest.TestCase):
         self.assertEqual(w.export(),after);self.assertEqual(w.store.count(),count)
         self.assertEqual(w.battle['summary'][0]['hits'],6)
 
+    def test_sparring_starts_full_with_depleted_world_resources(self):
+        w=self.world()
+        w.player['health']=12;w.player['martial']['stamina']=0
+        w.npcs[1]['health']=8;w.npcs[1]['martial']['stamina']=0
+        w.start_battle(1)
+        self.assertEqual(w.battle['resource_policy'],'per-bout-v1')
+        for f in w.battle['fighters']:
+            self.assertAlmostEqual(f['vigor'],f['combat_parameters']['max_health'],places=4)
+            self.assertEqual(f['stamina'],f['stamina_max'])
+            self.assertEqual((f['outer_wounds'],f['inner_wounds'],f['motion_spent']),(0,0,0))
+        self.assertEqual((w.player['health'],w.player['martial']['stamina']),(12,0))
+        self.assertEqual((w.npcs[1]['health'],w.npcs[1]['martial']['stamina']),(8,0))
+
+    def test_consecutive_bouts_do_not_carry_injuries_or_resource_costs(self):
+        w=self.world();w.player['martial']['stamina']=4
+        before=[(a['health'],a['martial']['stamina']) for a in (w.player,w.npcs[1])]
+        for i in range(5):
+            w.start_battle(1);b=w.battle
+            self.assertIsNone(b['frame'])
+            for f in b['fighters']:
+                self.assertEqual(f['vigor'],f['vigor_max'])
+                self.assertEqual(f['stamina'],f['stamina_max'])
+                self.assertEqual(f['outer_wounds'],0)
+            p=frame(b,5)
+            p['fighters'][0].update(health=1,stamina=0,motion_spent=10,attack_count=1,landed_hits=1)
+            p['fighters'][1].update(health=0,stamina=0,attack_count=1,landed_hits=1)
+            p['hits']=2
+            r=p['fighters'][0]['reference']
+            r['parts']['handNear']=dict(health=0,severed=True)
+            r.update(exhausted_left=2,wake_pending=True)
+            action='complete' if i%2==0 else 'surrender'
+            w.battle_action(b['id'],b['revision'],action,p)
+            self.assertTrue(w.battle['settled'])
+            self.assertEqual([(a['health'],a['martial']['stamina']) for a in (w.player,w.npcs[1])],before)
+            facts=w.store.event(w.battle['event_id'])['facts']
+            self.assertEqual((facts['player_health_cost'],facts['npc_health_cost']),(0,0))
+            state=deepcopy(w.export());w.restore(state)
+
+    def test_non_sparring_world_fights_still_use_actor_condition(self):
+        w=self.world();a,b=w.npcs[1],w.npcs[2]
+        a['health']=50;a['martial']['stamina']=10
+        bout=combat.start(a,b,42,spar=False)
+        f=bout['fighters'][0]
+        self.assertAlmostEqual(f['vigor'],f['combat_parameters']['max_health']*.5,places=4)
+        self.assertAlmostEqual(f['stamina'],f['stamina_max']*.1)
+        self.assertEqual(bout['resource_policy'],'world')
+
+    def test_sparring_still_requires_a_living_adult(self):
+        for field,value in [('alive',False),('age_months',100)]:
+            w=self.world();w.npcs[1][field]=value
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                w.start_battle(1)
+
     def test_old_active_rules_migrate_without_settlement_or_random_drift(self):
         for version in (1,2,3):
             w=self.world();w.start_battle(1);old=deepcopy(w.battle);old['ruleset']=version

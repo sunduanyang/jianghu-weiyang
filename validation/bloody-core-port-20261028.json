@@ -1,0 +1,144 @@
+{
+  "date": "2026-10-28",
+  "generated_at": "2026-10-28T12:38:18.364701+00:00",
+  "scope": "Recovered control flow used by formal spar, rob, assault",
+  "default_build": "PersonScrollClean",
+  "validation_build": "CombatCorePort",
+  "default_retained_to_preserve_other_integrated_features": true,
+  "apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "native_sha256": "206a35f64a68f0000263c7a868fe17337c9d278209a661d47e5d28dd427fc13a",
+  "core_state_version": 1,
+  "native": [
+    {
+      "name": "core-native-v2",
+      "build": "CombatCorePort",
+      "checks": 25,
+      "passed": true,
+      "report": "output/bloody-core-port-20261028/core-native-v2/acceptance.json"
+    },
+    {
+      "name": "core-resume",
+      "build": "CombatCorePort",
+      "checks": 8,
+      "passed": true,
+      "report": "output/bloody-core-port-20261028/core-resume/acceptance.json"
+    },
+    {
+      "name": "release-formal-native",
+      "build": "PersonScrollClean",
+      "checks": 51,
+      "passed": true,
+      "report": "output/bloody-core-port-20261028/release-formal-native/acceptance.json"
+    },
+    {
+      "name": "injury-native",
+      "build": "CombatCorePort",
+      "checks": 73,
+      "passed": true,
+      "report": "output/bloody-core-port-20261028/injury-native/acceptance.json"
+    },
+    {
+      "name": "injury-resume",
+      "build": "IntegratedConversation",
+      "checks": 9,
+      "passed": true,
+      "report": "output/bloody-core-port-20261028/injury-resume/acceptance.json"
+    },
+    {
+      "name": "mechanics-native",
+      "build": "IntegratedConversation",
+      "checks": 49,
+      "passed": true,
+      "report": "output/bloody-core-port-20261028/mechanics-native/acceptance.json"
+    },
+    {
+      "name": "stress-native",
+      "build": "CombatCorePort",
+      "checks": 23,
+      "passed": true,
+      "report": "output/bloody-core-port-20261028/stress-native/acceptance.json"
+    }
+  ],
+  "native_checks": 238,
+  "native_passed": true,
+  "additional_formal_runs": [
+    {
+      "build": "CombatCorePort",
+      "checks": 51,
+      "report": "output/bloody-core-port-20261028/formal-native/acceptance.json",
+      "passed": true
+    },
+    {
+      "build": "IntegratedConversation",
+      "checks": 51,
+      "report": "output/bloody-core-port-20261028/default-formal-native/acceptance.json",
+      "passed": true
+    }
+  ],
+  "backend_tests": {
+    "tests": 104,
+    "passed": true,
+    "commands": [
+      "python -m unittest tests.test_reference_core_state tests.test_physical_reference tests.test_physical_combat tests.test_physical_impact tests.test_combat_attributes tests.test_player_interactions -q",
+      "python -m unittest tests.test_interaction_ap_only tests.test_player_social tests.test_items -q"
+    ]
+  },
+  "solver": {
+    "combinations": 10,
+    "max_active_limit_degrees": 6.200241,
+    "max_joint_gap_metres": 0.004431294,
+    "simulation_seconds": 1115.45877,
+    "wall_seconds": 173.581288,
+    "zero_hit_cases": [
+      "greatsword"
+    ],
+    "limit": "Stability only; zero-hit cases do not certify attack or damage parity"
+  },
+  "default_combat_il": {
+    "methods": 444,
+    "equal": true,
+    "report": "output/bloody-core-port-20261028/release-combat-il.json"
+  },
+  "default_backend_matches_source": {
+    "physical_reference.py": true,
+    "physical_combat.py": true,
+    "weapons.py": true
+  },
+  "source_sha256": {
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelReference.cs": "2a0a788e907445efe153b4f8bbc3d24ec20c4d15130e3118f96f11d3574fae76",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelReferenceKick.cs": "c7f752e8a073d260141d66cdaa112a7f01d483b8d245f1066f068f84bef8aa34",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelReferenceMechanicsProbe.cs": "cbed945fc99345b7cae09be08ec3c45deda5ecb89bde766dccb2b0a8e8a9a207",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelReferencePortProbe.cs": "4d1185edeb09a431a88296d2d085397a243462cc0b432cccca355802238b6537",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelReferenceRules.cs": "c15c76006ae620551132ff30b93ecd2ed0c67b191c888639415b417c7d1f6f64",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelReferenceState.cs": "afbc7e100a92ad3e842712587b8b34cec155cc343b47fe1315d3f5f8bb3622e9",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelImpactProbe.cs": "375de1dfdaf40e364009a05536bdef8bd4720df8e1a9f078790ce1e7f91a1402",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsReferencePortSmoke.cs": "14c8b69df6684ffad71e551a0c5e7efeeef60693217adcc4d89b616fb3cc0133",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsBattleSmoke.cs": "e307867e9b83bee3cc0c145ead1aef8c7e523b09b8f3c583a6fb01d4bbd05ee1",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsInjurySmoke.cs": "d573e45938e44c28417dfce299de7110d15b8c0848bbfcfe1a02aa531ae7fc51",
+    "unity/JianghuUnity/Assets/Scripts/InteractionGameplaySmoke.cs": "57c9e8f58928b5bf7df8a6396568495797c9be2bf64b5e057550e9c7a29a1875",
+    "jianghu/physical_reference.py": "76e0f27181de4aa550d62101c562d4d3aa7586e0022691dd5b0730e5e9590419",
+    "tests/test_reference_core_state.py": "cef9a71dc7b267854772f9a0a04068eebf616ac7886dbc7700b47b94d9d606eb"
+  },
+  "build_log": "output/bloody-core-port-20261028/build3.log",
+  "prior_failed_checks": [
+    {
+      "report": "output/bloody-core-port-20261028/core-native/acceptance.json",
+      "cause": "Scripted test damage lacked hit counters; backend correctly rejected it. Fixture corrected without relaxing backend checks."
+    },
+    {
+      "report": "output/bloody-core-port-20261028/build.log",
+      "cause": "CS0136 test-local variable name collision, corrected before successful build."
+    }
+  ],
+  "save_policy": "Only newly generated isolated acceptance saves under output; no real save edited",
+  "remaining": [
+    "AI and animation bundles",
+    "Precise body geometry and kick/gait poses",
+    "Internal-organ impalement execution",
+    "Full staged death lifecycle",
+    "RPG attribute/equipment/stat mapping and offscreen rules",
+    "Network and presentation parity"
+  ],
+  "claims_one_to_one": false,
+  "report": "BLOODY_CORE_PORT_VALIDATION.md"
+}

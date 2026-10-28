@@ -62,15 +62,15 @@ public partial class JianghuApp {
             OpenOwnInventory(id);yield return new WaitForSecondsRealtime(.7f);
             check("gift view explicitly owns player items",!InspectingNpc&&giftTarget==id&&CharacterInventory["owner"].S=="player");
             if(Inventory["items"].A.Count>0&&Events.A.Count>0){
-                J item=Inventory["items"][0];selectedItem=item["id"].S;itemQuery=item["name"].S;itemCategory=item["category_label"].S;itemGrade=item["grade"].I;itemScroll=new Vector2(0,24);
+                J item=Inventory["items"][0];selectedItem=item["id"].S;itemQuery=item["name"].S;itemCategory=item["category_label"].S;itemScroll=new Vector2(0,24);
                 EventDetail=new J();OpenEvent(Events[0]["id"].I);yield return new WaitForSecondsRealtime(.4f);
                 OpenSystem(SystemTab.Model);yield return new WaitForSecondsRealtime(.3f);Back();
                 check("system back restores the real event detail",TopIs(ViewKind.Jianghu)&&EventDetail["id"].I==Events[0]["id"].I);
                 Back();
-                check("nested browsing restores inventory owner and filters",TopIs(ViewKind.Person)&&CurrentPersonTab==PersonTab.Bag&&!InspectingNpc&&selectedItem==item["id"].S&&itemQuery==item["name"].S&&itemCategory==item["category_label"].S&&itemGrade==item["grade"].I&&giftTarget==id);
+                check("nested browsing restores inventory owner and filters",TopIs(ViewKind.Person)&&CurrentPersonTab==PersonTab.Bag&&!InspectingNpc&&selectedItem==item["id"].S&&itemQuery==item["name"].S&&itemCategory==item["category_label"].S&&giftTarget==id);
                 OpenEvent(Events[0]["id"].I);Back();yield return new WaitForSecondsRealtime(.4f);
                 check("late event response cannot overwrite the restored view",!EventDetail.Has&&TopIs(ViewKind.Person));
-                itemQuery="";itemCategory="全部";itemGrade=0;itemScroll=Vector2.zero;
+                itemQuery="";itemCategory="全部";itemScroll=Vector2.zero;
             }
             yield return CharacterPicture(output,"07-inventory");
             OpenSystem(SystemTab.Model);aiTab=0;yield return CharacterPicture(output,"08-model-overview");
@@ -86,7 +86,7 @@ public partial class JianghuApp {
                 yield return CharacterPicture(output,"14-city-map");
                 choiceKey="city-modal-test";
                 check("open choice prevents keyboard city movement",!CityMovementAllowed);CloseChoices();
-                OpenInteraction(id);check("person menu prevents keyboard city movement",!CityMovementAllowed);CloseTransient();
+                OpenInteraction(id);check("person interaction prevents keyboard city movement",!CityMovementAllowed);Back();
                 OpenMarket("货栈");yield return new WaitForSecondsRealtime(.6f);
                 check("city trading uses player inventory",TopIs(ViewKind.Jianghu)&&CurrentJianghuTab==JianghuTab.Market&&Inventory["owner"].S=="player");
                 ReturnToStage();check("city scroll returns to city map",CurrentStage==Stage.City&&!ViewOpen);

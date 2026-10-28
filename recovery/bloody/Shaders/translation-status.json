@@ -1,0 +1,212 @@
+[
+  {
+    "shader": "BB/ArmorItemPreview",
+    "passes": 1,
+    "programs": 1,
+    "source": "output/bloody-full-port-20261028/shader-programs/BB_ArmorItemPreview",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "BB/HandItemPreview",
+    "passes": 1,
+    "programs": 1,
+    "source": "output/bloody-full-port-20261028/shader-programs/BB_HandItemPreview",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Custom/SimpleRain",
+    "passes": 1,
+    "programs": 1,
+    "source": "output/bloody-full-port-20261028/shader-programs/Custom_SimpleRain",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Shader Graphs/BloodOnTheGround",
+    "passes": 3,
+    "programs": 18,
+    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_BloodOnTheGround",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Shader Graphs/BuildingSprite",
+    "passes": 3,
+    "programs": 18,
+    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_BuildingSprite",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Shader Graphs/Character",
+    "passes": 3,
+    "programs": 18,
+    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_Character",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Shader Graphs/Character_TopL1",
+    "passes": 3,
+    "programs": 18,
+    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_Character_TopL1",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Shader Graphs/HandItem",
+    "passes": 3,
+    "programs": 18,
+    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_HandItem",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Shader Graphs/ItemPreview",
+    "passes": 4,
+    "programs": 4,
+    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_ItemPreview",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Shader Graphs/ItemPreview_TopL1",
+    "passes": 4,
+    "programs": 4,
+    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_ItemPreview_TopL1",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Shader Graphs/MovingClouds",
+    "passes": 2,
+    "programs": 2,
+    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_MovingClouds",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Shader Graphs/SimpleClouds",
+    "passes": 3,
+    "programs": 18,
+    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_SimpleClouds",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Shader Graphs/SimpleSpriteLit",
+    "passes": 3,
+    "programs": 18,
+    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_SimpleSpriteLit",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Shader Graphs/SimpleSpriteUnlit",
+    "passes": 2,
+    "programs": 2,
+    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_SimpleSpriteUnlit",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Shader Graphs/Vegetation",
+    "passes": 3,
+    "programs": 18,
+    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_Vegetation",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  }
+]

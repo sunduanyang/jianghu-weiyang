@@ -8,16 +8,17 @@ public sealed partial class PhysicsDuel {
         if(Live){DrawMouseTarget(true,"主手",vermilion);DrawMouseTarget(false,player.HasShield?"盾手":"副手",jade);}
         if(Live&&controls.left.captured)DrawPad(controls.left,two||!player.HasShield?"副手":"盾",jade);
         if(Live&&controls.right.captured)DrawPad(controls.right,two?"主手":"剑",vermilion);
-        Label(new Rect(320,777,960,32),"左键主手 · 右键副手 · 两键同按同时控制 · 松开保持 / 续势 · 中键收住",17,ink,TextAnchor.MiddleCenter);
+        Label(new Rect(320,777,960,32),ReferenceCombat?"按住左键拖动主手 · 按住右键拖动副手 · 两手独立 · 松开手臂回收":"左键主手 · 右键副手 · 两键同按同时控制 · 松开保持 / 续势 · 中键收住",17,ink,TextAnchor.MiddleCenter);
         Fill(new Rect(395,825,810,79),new Color(.2f,.27f,.23f,.055f));
         DrawMoveButton(controls.back,"←",controls.MoveAxis<0);
-        DrawMoveButton(controls.dash,"进身",false);
+        DrawMoveButton(controls.dash,ReferenceCombat?"踢击":"进身",false);
         DrawMoveButton(controls.forward,"→",controls.MoveAxis>0);
-        Label(new Rect(406,837,198,56),"A / D 移步\nSpace 进身",15,ink,TextAnchor.MiddleCenter);
-        Label(new Rect(996,837,198,56),two?"J 变招 · K 架杆\nV 碰撞框 · H 帮助":"J 变招 · K 防守\nV 碰撞框 · H 帮助",15,ink,TextAnchor.MiddleCenter);
+        Label(new Rect(406,837,198,56),ReferenceCombat?"A / D 移步\nSpace 踢击":"A / D 移步\nSpace 进身",15,ink,TextAnchor.MiddleCenter);
+        Label(new Rect(996,837,198,56),ReferenceCombat?"S 沉身\nV 碰撞框 · H 帮助":two?"J 变招 · K 架杆\nV 碰撞框 · H 帮助":"J 变招 · K 防守\nV 碰撞框 · H 帮助",15,ink,TextAnchor.MiddleCenter);
         Label(new Rect(395,908,810,24),"触屏：左右半屏各控一手 · 双击该侧并按住移步    Esc 暂歇",14,new Color(.30f,.36f,.30f),TextAnchor.MiddleCenter);
     }
     void DrawMouseTarget(bool primary,string name,Color color){
+        if(ReferenceCombat)return;
         var hand=controls.mouse.Hand(primary);if(!hand.hasTarget)return;
         Vector2 shoulder=player.limbs[primary?"upperNear":"upperFar"].A;
         Vector2 point=ScreenPoint(shoulder+hand.value*player.MouseReach(primary));

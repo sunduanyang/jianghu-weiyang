@@ -14,7 +14,7 @@ public sealed partial class PhysicsDuel {
         readonly Color elbowTone;
         public GameObject root;
         public J skin,rig;
-        public Texture2D atlas;
+        public Texture atlas;
         public float scale,facing,health=120,stamina=100,stunUntil,hitTint,lastHit=-10,lastClash=-10;
         public Limb torso,pelvis,head,sword,shield;
         public readonly Dictionary<string,Limb> limbs=new Dictionary<string,Limb>();
@@ -49,11 +49,13 @@ public sealed partial class PhysicsDuel {
             if(fighterSpec!=null){displayName=fighterSpec["name"].S;maxHealth=(float)fighterSpec["vigor_max"].N;health=(float)fighterSpec["vigor"].N;stamina=(float)fighterSpec["stamina"].N;damageScale=(float)fighterSpec["damage_scale"].N;damageReduction=(float)fighterSpec["damage_reduction"].N;handlingScale=(float)fighterSpec["handling_scale"].N;HasShield=fighterSpec["shield"].B;}
             LoadAttributes(fighterSpec);
             if(weapon.TwoHanded)heading=weapon.readyAngle;
-            elbowTone=id.StartsWith("m-")?new Color(.86f,.73f,.55f):new Color(.92f,.80f,.62f);
-            rig=catalog["rig"];skin=catalog["skins"][id];atlas=Resources.Load<Texture2D>("PaperCast/"+id);
+            if(!ModularTrial&&!LaceTrial&&!PaperAppearanceArt.IsLook(id))id=CharacterLook.ForPerson(id,J.O("sex",id.StartsWith("f-")?"女":"男","age_months",28*12));
+            rig=catalog["rig"];skin=PaperAppearanceArt.Skin(catalog,id);atlas=Resources.Load<Texture2D>("PaperCast/"+(skin["body_id"].Has?skin["body_id"].S:id));
+            elbowTone=PaperAppearanceArt.SkinTone(skin,id.StartsWith("m-")?new Color(.86f,.73f,.55f):new Color(.92f,.80f,.62f));
             scale=heightScale*3.5f/((float)skin["ground"].N+(float)skin["lengths"]["spine"].N+(float)skin["parts"]["head-neck"]["height"].N);
             parts=skin["parts"].D.Values.Where(p=>!p["hidden"].B).OrderBy(p=>p["layer"].N).ToList();
             root=new GameObject(human?"玩家 · physical skeleton":"对手 · physical skeleton");root.transform.SetParent(game.transform);
+            if(game.ReferenceCombat){BuildReference(x);return;}
             waistHeight=(float)skin["ground"].N*scale;
             Vector2 waist=new Vector2(x,waistHeight);
             Vector2 neck=waist+Local(skin["bind_joints"]["neck"]);
@@ -153,9 +155,9 @@ public sealed partial class PhysicsDuel {
             aiDriving=false;
             move=Mathf.Clamp(game.controls.MoveAxis+(Input.GetKey(KeyCode.D)||Input.GetKey(KeyCode.RightArrow)?1:0)-(Input.GetKey(KeyCode.A)||Input.GetKey(KeyCode.LeftArrow)?1:0),-1,1);
             swordControl=false;shieldControl=Input.GetKey(KeyCode.K);brace=Input.GetKey(KeyCode.S)||Input.GetKey(KeyCode.DownArrow);
-            if(Input.GetKeyDown(KeyCode.J)){game.controls.mouse.Forget(true);Swing();}
-            if(Input.GetKeyDown(KeyCode.L)){game.controls.mouse.Forget(true);Swing(1);}
-            if(Input.GetKeyDown(KeyCode.Space)||game.controls.DashPressed)Dash();
+            if(!Reference&&Input.GetKeyDown(KeyCode.J)){game.controls.mouse.Forget(true);Swing();}
+            if(!Reference&&Input.GetKeyDown(KeyCode.L)){game.controls.mouse.Forget(true);Swing(1);}
+            if(Input.GetKeyDown(KeyCode.Space)&&!ModularTrial||game.controls.DashPressed)Dash();
         }
         VictimContact ContactHistory(Fighter victim,Limb item){var victims=item==shield&&!HasShield?offhandVictims:hitVictims;if(!victims.TryGetValue(victim,out var history)){history=new VictimContact();victims[victim]=history;}return history;}
         public void TrackStrikeContact(Fighter victim,Limb item){var history=ContactHistory(victim,item);if(game.Clock-history.touched>.08f)history.separated=true;history.touched=game.Clock;}
@@ -168,7 +170,7 @@ public sealed partial class PhysicsDuel {
             return false;
         }
         public void ClearMouseCapture(){ResetGesture();aiDriving=false;aiMain=aiOff=Vector2.zero;swordControl=shieldControl=false;}
-        public bool Dash(){if(stamina<18*effortScale||health<=0||game.Clock<stunUntil||!game.Live||game.Clock-lastDash<.6f/movementScale)return false;SpendEffort(18,.8f);lastDash=game.Clock;pelvis.rb.AddForce(new Vector2(facing*8*movementScale,0),ForceMode2D.Impulse);return true;}
+        public bool Dash(){if(Reference)return KickReference();if(stamina<18*effortScale||health<=0||game.Clock<stunUntil||!game.Live||game.Clock-lastDash<.6f/movementScale)return false;SpendEffort(18,.8f);lastDash=game.Clock;pelvis.rb.AddForce(new Vector2(facing*8*movementScale,0),ForceMode2D.Impulse);return true;}
         public void Hit(float damage,Vector2 impulse,Vector2 contact) {
             InterruptAttack();regenAt=Mathf.Max(regenAt,game.Clock+.85f*recoveryDelayScale);
             health=Mathf.Max(0,health-damage);balance=Mathf.Max(0,balance-damage*1.7f*balanceLossScale);
@@ -176,6 +178,7 @@ public sealed partial class PhysicsDuel {
             pelvis.rb.AddForce(impulse*.40f,ForceMode2D.Impulse);torso.rb.AddForceAtPosition(impulse*.60f,contact,ForceMode2D.Impulse);
         }
         public void Step(bool active,Fighter target) {
+            if(Reference){StepReference(active,target);return;}
             if(health<=0){action="倒地";RelaxHandDrives();foreach(var l in limbs.Values)if(l.joint!=null)l.joint.useMotor=false;foreach(var foot in feet.Values)foot.Release();Sample();return;}
             if(!active){move=0;swordControl=shieldControl=false;}
             float dt=Time.fixedDeltaTime;
@@ -331,7 +334,8 @@ public sealed partial class PhysicsDuel {
             float along=(upper*upper-lower*lower+len*len)/(2*len),bend=Mathf.Sqrt(Mathf.Max(0,upper*upper-along*along));
             knee=a+axis*along+new Vector2(-axis.y,axis.x)*bend*pole;tip=a+axis*len;
         }
-        public float MaxJointGap(){float gap=0;foreach(var j in root.GetComponentsInChildren<AnchoredJoint2D>())if(j.enabled)gap=Mathf.Max(gap,Vector2.Distance(Limb.BodyPoint(j.GetComponent<Rigidbody2D>(),j.anchor),Limb.BodyPoint(j.connectedBody,j.connectedAnchor)));return gap;}
-        public float MaxLimitError(){float e=0;foreach(var j in root.GetComponentsInChildren<HingeJoint2D>())if(j.useLimits){float v=Mathf.Max(j.limits.min-j.jointAngle,j.jointAngle-j.limits.max);e=Mathf.Max(e,v);if(v>worstLimit){worstLimit=v;worstJoint=j.name+" angle="+j.jointAngle+" limits="+j.limits.min+","+j.limits.max;}}return e;}
+        public float MaxJointGap(){float gap=0;foreach(var j in root.GetComponentsInChildren<AnchoredJoint2D>())if(j.enabled){float value=Vector2.Distance(Limb.BodyPoint(j.GetComponent<Rigidbody2D>(),j.anchor),Limb.BodyPoint(j.connectedBody,j.connectedAnchor));if(value>gap){gap=value;worstJoint=j.name;}}return gap;}
+        public string worstLimitJoint="";
+        public float MaxLimitError(){float e=0;foreach(var j in root.GetComponentsInChildren<HingeJoint2D>())if(j.enabled&&j.useLimits){float v=Mathf.Max(j.limits.min-j.jointAngle,j.jointAngle-j.limits.max);e=Mathf.Max(e,v);if(v>worstLimit){worstLimit=v;worstLimitJoint=j.name+" angle="+j.jointAngle+" limits="+j.limits.min+","+j.limits.max;}}return e;}
     }
 }

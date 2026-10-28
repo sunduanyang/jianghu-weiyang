@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-28",
+  "scope": "Normal game battle modes: spar, rob, assault",
+  "build": "unity/Build/CombatIntegrated/江湖未央.exe",
+  "previous_default": "CharacterInteractionPlayable",
+  "current_default": "CombatIntegrated",
+  "normal_entry": "启动Unity版.bat",
+  "shared_demo_launcher": "unity/launch-reference-combat.ps1 delegates to unity/launch-game.ps1 with -referenceCombat 1",
+  "native": [
+    {
+      "name": "formal_interaction",
+      "checks": 48,
+      "passed": true,
+      "report": "output/formal-combat-20261028/interaction-visible/acceptance.json"
+    },
+    {
+      "name": "combat_mechanics",
+      "checks": 50,
+      "passed": true,
+      "report": "output/formal-combat-20261028/physical-native/reference-mechanics/acceptance.json"
+    },
+    {
+      "name": "cold_resume_and_full_fight",
+      "checks": 21,
+      "passed": true,
+      "report": "output/formal-combat-20261028/physical-native/resume/acceptance.json"
+    }
+  ],
+  "backend": {
+    "tests": 56,
+    "subtests": 48,
+    "passed": true
+  },
+  "build_log": "output/formal-combat-20261028/build.log",
+  "physics_source_hashes": {
+    "DuelReference.cs": "020f2379141322704c6c38899fba8320b027334fffa46894340be137cc35a8af",
+    "DuelReferenceKick.cs": "5f986cffc9516aa5a8b94dc3262ccc1aaeb3bf00f36beb3bd58e531afc7de178",
+    "PhysicsDuel.cs": "ce899fc966144dfd20d65ebf8bb7c7d617ed7da21b8f15131b73578a811dcac3",
+    "DuelFighter.cs": "0c23d6749673695504b58d65b78a965b0d0910fbb5f80e63b4a5d09f19903bbc",
+    "DuelCombat.cs": "e65c6cb7199c21c1ecb45991d11665fe1d304c3ebeabf1b94a74d81c9fac314d",
+    "DuelAI.cs": "e463f3f6e6322414e29e20cb853d5db34755dd11bfb9ecc7e9ffa7d0b3a02642",
+    "DuelControls.cs": "8c149ab25333356ce3afe613fc2ec0bf47c750d6f0fb8dc56b3e9bf281ac54ce",
+    "DuelWeapons.cs": "7cff6789de1705c7c7ee871748965426c260163ae4da5c528c40b0514ebddd78",
+    "DuelCampaign.cs": "cfe523466a18e83699e020c4c05ae79c39f35ba96ac999644e178e2fa476394e"
+  },
+  "physics_snapshot_matches_current": true,
+  "source_snapshot": "output/formal-combat-20261028/BuildProject",
+  "save_policy": "Original save directory retained; native acceptance uses separate saves; live save checked read-only.",
+  "hidden_render_attempt": {
+    "passed": false,
+    "reason": "Hidden window did not render screenshots",
+    "report": "output/formal-combat-20261028/interaction-native/acceptance.json"
+  },
+  "visible_render_rerun": {
+    "passed": true,
+    "screenshots": 9,
+    "report": "output/formal-combat-20261028/interaction-visible/acceptance.json"
+  },
+  "parity": "Mechanics integration verified; no new claim of frame-by-frame original-game parity.",
+  "launcher_routes": "output/formal-combat-20261028/launcher-routes.json",
+  "normal_and_demo_use_same_binary": true
+}

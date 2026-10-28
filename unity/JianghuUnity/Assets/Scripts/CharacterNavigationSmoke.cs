@@ -32,12 +32,34 @@ public partial class JianghuApp {
             yield return Client.Request("/api/inventory",null,j=>Inventory=j);
             yield return Client.Request("/api/martial",null,j=>Martial=j);
             OpenInteraction(a);
-            check("clicking a person opens the interaction menu",interactWith==a&&!ViewOpen&&SelectedPerson==a);
+            yield return WaitForCharacter(a);
+            check("clicking a portrait opens that person's full interaction screen",TopIs(ViewKind.Interaction)&&FocusPersonId==a&&SelectedPerson==a&&TopView.Tab==0);
+            check("interaction has the six requested categories",string.Join("/",InteractionCategories)=="交谈/比武/修习/亲近/敌对/互动");
+            yield return CharacterPicture(output,"00-interaction-talk");
+            bool categories=true;
+            for(int category=0;category<InteractionCategories.Length;category++){
+                SetTab(category);yield return null;
+                categories&=TopIs(ViewKind.Interaction)&&TopView.Tab==category&&FocusPersonId==a;
+                yield return CharacterPicture(output,"00-interaction-category-"+category);
+            }
+            check("all six categories switch without changing the person",categories);
+            ViewPerson(a,PersonTab.Bag);yield return WaitForCharacter(a);Back();
+            check("returning from a profile preserves interaction person and category",TopIs(ViewKind.Interaction)&&FocusPersonId==a&&TopView.Tab==5);
+            Screen.SetResolution(1280,800,FullScreenMode.Windowed);
+            yield return CharacterPicture(output,"00-interaction-small");
+            Screen.SetResolution(1680,960,FullScreenMode.Windowed);
+            OpenInteraction(b);yield return WaitForCharacter(b);
+            check("opening another portrait replaces the interaction and resets to talk",TopIs(ViewKind.Interaction)&&FocusPersonId==b&&Person["id"].I==b&&TopView.Tab==0&&views.Count==1);
+            Back();check("farewell returns from the interaction to its map",!ViewOpen);
+            GoStage(Stage.City,false);OpenInteraction(a);yield return WaitForCharacter(a);
+            check("interaction blocks city movement",!CityMovementAllowed);
+            Back();check("farewell preserves the city stage",!ViewOpen&&CurrentStage==Stage.City);
+            GoStage(Stage.World,false);
             TalkTo(a);yield return WaitForCharacter(a);
-            check("talking opens selected person's conversation",DialogueVisible&&interactWith<0&&SelectedPerson==a&&Person["id"].I==a);
+            check("talking opens selected person's integrated conversation",TopIs(ViewKind.Interaction)&&InteractionConversationOpen&&SelectedPerson==a&&Person["id"].I==a);
             yield return CharacterPicture(output,"01-dialogue");
             ViewPerson(a,PersonTab.Overview);
-            check("portrait opens same person's scroll above the conversation",TopIs(ViewKind.Person)&&FocusPersonId==a&&views.Count==2&&views[0].Kind==ViewKind.Dialogue);
+            check("portrait opens same person's scroll above the conversation",TopIs(ViewKind.Person)&&FocusPersonId==a&&views.Count==2&&views[0].Kind==ViewKind.Interaction);
             yield return CharacterPicture(output,"02-profile");
             inventoryMode="行囊";SetTab((int)PersonTab.Bag);
             check("inventory belongs to selected NPC",CurrentPersonTab==PersonTab.Bag&&CharacterInventory["owner"].S==a.ToString()&&CharacterInventory.ToString()==initialA["possessions"].ToString());
@@ -56,7 +78,7 @@ public partial class JianghuApp {
             check("related person links update scroll owner",FocusPersonId==a&&CharacterInventory["owner"].S==a.ToString());
             SwitchSubject(b);yield return WaitForCharacter(b);
             Back();yield return WaitForCharacter(a);
-            check("closing scroll returns to original conversation",DialogueVisible&&views.Count==1&&SelectedPerson==a&&FocusPersonId==a);
+            check("closing scroll returns to original conversation",TopIs(ViewKind.Interaction)&&InteractionConversationOpen&&views.Count==1&&SelectedPerson==a&&FocusPersonId==a);
             ViewPerson(a);OpenOwnInventory(a);
             check("gifting explicitly opens player's inventory",!InspectingNpc&&CurrentPersonTab==PersonTab.Bag&&CharacterInventory["owner"].S=="player"&&giftTarget==a);
             yield return CharacterPicture(output,"07-own-gift-inventory");
@@ -69,10 +91,10 @@ public partial class JianghuApp {
             ViewPerson(b);TalkTo(b);ViewPerson(a);
             check("navigation stack never repeats a view kind",views.Select(v=>v.Kind).Distinct().Count()==views.Count&&views.Count==2);
             Back();yield return WaitForCharacter(b);
-            check("back returns to the conversation it came from",DialogueVisible&&FocusPersonId==b);
+            check("back returns to the conversation it came from",TopIs(ViewKind.Interaction)&&InteractionConversationOpen&&FocusPersonId==b);
             Back();check("back from the last view returns to the map",!ViewOpen);
             GoStage(CurrentStage,false);TalkTo(a);ViewPerson(-1,PersonTab.Bag);Back();yield return WaitForCharacter(a);
-            check("gifting scroll returns to original conversation",DialogueVisible&&FocusPersonId==a);
+            check("gifting scroll returns to original conversation",TopIs(ViewKind.Interaction)&&InteractionConversationOpen&&FocusPersonId==a);
             TalkTo(a);TalkTo(b);yield return WaitForCharacter(b);
             yield return new WaitForSecondsRealtime(.7f);
             check("late response cannot replace newly selected NPC",SelectedPerson==b&&Person["id"].I==b&&FocusPersonId==b);
@@ -96,8 +118,16 @@ public partial class JianghuApp {
         yield return null;
     }
     IEnumerator CharacterPicture(string output,string name){
-        yield return new WaitForSecondsRealtime(.25f);yield return new WaitForEndOfFrame();
-        ScreenCapture.CaptureScreenshot(Path.Combine(output,name+".png"));yield return new WaitForSecondsRealtime(.25f);
+        for(int attempt=0;attempt<4;attempt++){
+            yield return new WaitForSecondsRealtime(.3f);yield return new WaitForEndOfFrame();
+            var frame=ScreenCapture.CaptureScreenshotAsTexture();if(frame==null)continue;
+            var colors=new HashSet<int>();var pixels=frame.GetPixels32();
+            for(int i=0;i<pixels.Length;i+=101){var color=pixels[i];colors.Add((color.r<<16)|(color.g<<8)|color.b);}
+            bool rendered=colors.Count>64;
+            if(rendered)File.WriteAllBytes(Path.Combine(output,name+".png"),frame.EncodeToPNG());
+            Destroy(frame);if(rendered)yield break;
+        }
+        Debug.LogError("No rendered UI frame captured: "+name);
     }
 }
 public class CharacterNavigationSmokeRunner : MonoBehaviour {

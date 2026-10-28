@@ -6,6 +6,7 @@ using Jianghu;
 // both the visible silhouette and the real damaging collider.
 public sealed class DuelWeapon {
     public readonly string id,name,description,rangeLabel;
+    public readonly string sourceTemplate;
     public readonly float reach,tail,mass,cost,handling,damage,pressure,distance,hitStart;
     public readonly float supportGrip,readyAngle;
     public bool TwoHanded=>supportGrip>0;
@@ -19,12 +20,13 @@ public sealed class DuelWeapon {
         foreach(var candidate in All)if(candidate.id==data["id"].S)basis=candidate;
         return new DuelWeapon(basis.id,data["name"].S,basis.description,basis.rangeLabel,basis.reach,basis.tail,
             (float)data["mass"].N,(float)data["cost"].N,(float)data["handling"].N,(float)data["damage"].N,
-            (float)data["pressure"].N,(float)data["distance"].N,basis.hitStart,basis.head,basis.supportGrip,basis.readyAngle);
+            (float)data["pressure"].N,(float)data["distance"].N,basis.hitStart,basis.head,basis.supportGrip,basis.readyAngle,DuelSourceEquipment.TemplateId(data));
     }
     public Vector2 Local(Vector2 p,float facing)=>new Vector2(p.x*facing,p.y+tail-Length/2);
-    DuelWeapon(string id,string name,string description,string rangeLabel,float reach,float tail,float mass,float cost,float handling,float damage,float pressure,float distance,float hitStart,Vector2[] head,float supportGrip=0,float readyAngle=75) {
+    DuelWeapon(string id,string name,string description,string rangeLabel,float reach,float tail,float mass,float cost,float handling,float damage,float pressure,float distance,float hitStart,Vector2[] head,float supportGrip=0,float readyAngle=75,string sourceTemplate="") {
         this.id=id;this.name=name;this.description=description;this.rangeLabel=rangeLabel;this.reach=reach;this.tail=tail;this.mass=mass;this.cost=cost;this.handling=handling;this.damage=damage;this.pressure=pressure;this.distance=distance;this.hitStart=hitStart;this.head=head;
         this.supportGrip=supportGrip;this.readyAngle=readyAngle;
+        this.sourceTemplate=sourceTemplate;
     }
     static Vector2[] Points(params float[] coordinates){var p=new Vector2[coordinates.Length/2];for(int i=0;i<p.Length;i++)p[i]=new Vector2(coordinates[i*2],coordinates[i*2+1]);return p;}
     static Vector2[] MaceHead(){var p=new Vector2[16];for(int i=0;i<p.Length;i++){float a=i*Mathf.PI/8,r=i%2==0?.18f:.125f;p[i]=new Vector2(Mathf.Cos(a)*r,.72f+Mathf.Sin(a)*r);}return p;}
@@ -57,19 +59,23 @@ public sealed partial class PhysicsDuel {
             primaryGrip.connectedAnchor=Limb.BodyLocalPoint(limbs["handNear"].rb,grip);
             primaryGrip.frequency=0;primaryGrip.enableCollision=false;
             if(weapon.head==null) {
-                var box=ReplaceBox(sword,new Vector2(.065f,1.03f),new Vector2(0,.145f));box.sharedMaterial=game.bladeMaterial;
+                var box=ReplaceBox(sword,new Vector2(.065f,1.03f),new Vector2(0,.145f));box.sharedMaterial=game.bladeMaterial;if(Reference)box.edgeRadius=.008f;
             } else {
                 RemoveShape(sword);var shape=sword.Frame.gameObject.AddComponent<PolygonCollider2D>();
                 var points=new Vector2[weapon.head.Length];for(int i=0;i<points.Length;i++)points[i]=weapon.Local(weapon.head[i],facing);
                 shape.points=points;shape.sharedMaterial=game.bladeMaterial;sword.shape=shape;colliders.Add(shape);
             }
             var shaft=sword.Frame.gameObject.AddComponent<BoxCollider2D>();
-            float safeEnd=weapon.hitStart-.025f;
+            // The old separate blade / shaft shapes left a 2.5 cm seam. A
+            // fast opposing edge could enter that pocket and hook on withdrawal.
+            float safeEnd=weapon.hitStart+(Reference?.02f:-.025f);
             shaft.size=new Vector2(weapon.id=="spear"?.045f:.075f,safeEnd+weapon.tail);
-            shaft.offset=weapon.Local(new Vector2(0,(safeEnd-weapon.tail)/2),1);shaft.sharedMaterial=game.bladeMaterial;colliders.Add(shaft);
+            shaft.offset=weapon.Local(new Vector2(0,(safeEnd-weapon.tail)/2),1);shaft.sharedMaterial=Reference?game.referenceHandleMaterial:game.bladeMaterial;colliders.Add(shaft);
+            if(Reference)shaft.edgeRadius=.008f;
             if(weapon.id=="sword"||weapon.id=="dagger"||weapon.id=="sabre"||weapon.id=="greatsword") {
                 var hilt=sword.Frame.gameObject.AddComponent<BoxCollider2D>();hilt.size=new Vector2(weapon.id=="dagger"?.17f:.24f,.045f);
-                hilt.offset=weapon.Local(new Vector2(0,weapon.id=="greatsword"?.40f:.10f),1);hilt.sharedMaterial=game.bladeMaterial;colliders.Add(hilt);
+                hilt.offset=weapon.Local(new Vector2(0,weapon.id=="greatsword"?.40f:.10f),1);hilt.sharedMaterial=Reference?game.referenceHandleMaterial:game.bladeMaterial;colliders.Add(hilt);
+                if(Reference)hilt.edgeRadius=.01f;
             }
         }
         Limb EquipFist(string key,Limb hand,out FixedJoint2D gripJoint){
