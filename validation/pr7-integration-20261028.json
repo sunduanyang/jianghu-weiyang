@@ -1,0 +1,474 @@
+{
+  "date": "2026-10-28",
+  "pull_request": "https://github.com/sunduanyang/jianghu-weiyang/pull/7",
+  "claude_head": "994d0ffb44aa89ca8d4f1916bed43a58ec7f9371",
+  "local_snapshot": "9ff3ace",
+  "unity": "6000.6.7f1",
+  "graphics": "Direct3D11",
+  "bundled_python": "3.12.4",
+  "build": "unity/Build/PR7Integrated/江湖未央.exe",
+  "source_sha256": {
+    "unity/JianghuUnity/Assets/Scripts/CharacterContext.cs": "b1773e8f51987e29e1c2366f27b79875f57ec32d453d02a0f406256fdd8d4b2b",
+    "unity/JianghuUnity/Assets/Scripts/CharacterNavigationSmoke.cs": "f30ba7250e61a794fccbc338b1e9b751327b7d7242a4a262d074f7d6092c9622",
+    "unity/JianghuUnity/Assets/Scripts/CityAreas.cs": "0c3ef53821353cc83912a083201dfd76aa9793ce2d0d7a6aacf6cffdf50cd034",
+    "unity/JianghuUnity/Assets/Scripts/CityGroundSmoke.cs": "413a23979965c4e25260c6e3abf84544b8f2ea8411426c7b21257d28fc526e7b",
+    "unity/JianghuUnity/Assets/Scripts/CityLandscape.cs": "119cf0f46b796bccd2b8a49f63e536eea29f9f04dff2b386470778f1c8869556",
+    "unity/JianghuUnity/Assets/Scripts/CityLoading.cs": "e79c828de74f7159f28d19153222d57a307c0f5c4e4d6926ef9ce1a30926b324",
+    "unity/JianghuUnity/Assets/Scripts/CityMap.cs": "b642a8d6fe1f02fd956fa6cca31b9bbf98c57290fee11cc499ac313bb33afe63",
+    "unity/JianghuUnity/Assets/Scripts/CityMapSmoke.cs": "dcbdf190fb4c885553c764bd2cf57cfd38a159d42a1ddcb67299ef4fae5b284c",
+    "unity/JianghuUnity/Assets/Scripts/CityPeople.cs": "d35e46e071f0b690a9de26ed0175170aa12f37e8233dea65c9d92de252161c0f",
+    "unity/JianghuUnity/Assets/Scripts/CityPeopleSmoke.cs": "af5c473e1f13e3c032f1228ae5d6a040996f5dd37de27810691bc0f897923014",
+    "unity/JianghuUnity/Assets/Scripts/CityRiverSmoke.cs": "9ca9766123ac1069a1ff612d11267466b0864dab0e4513a171c41a863bfdf5f2",
+    "unity/JianghuUnity/Assets/Scripts/CityRouting.cs": "2d63e900f73bc268983a6bb63e45edd475ec7f1a794932020f616463d0aacecd",
+    "unity/JianghuUnity/Assets/Scripts/CityTerrain.cs": "4ae8e591466f28c80b47b9c3088216f9c9cda03498528a38de35d7b249a492f1",
+    "unity/JianghuUnity/Assets/Scripts/CityWalking.cs": "fe0841fcda99adbf3ab1ad1bafda12ae5e768d9e39acbd4f2cc765e0055be1aa",
+    "unity/JianghuUnity/Assets/Scripts/CombatAttributesUI.cs": "251412b3a2ab72faf9fe3222dcdd50a866be92804d69b9055379b732e553241d",
+    "unity/JianghuUnity/Assets/Scripts/ContinuousThinkingSmoke.cs": "99224cac3b13d960f71efbbed5a88da9a310472aa4d246c8f679c9f3d6ba8fc4",
+    "unity/JianghuUnity/Assets/Scripts/Economy.cs": "1ba1f2ec8c8f813fb9ebe03ca57b5477df069e529cfe2b919a68a60d8b119314",
+    "unity/JianghuUnity/Assets/Scripts/EconomySmoke.cs": "187142c59ad8dd5ce3bd930e1f15af95b8f9f6fc5b028a0edd01ed2a4fd18dec",
+    "unity/JianghuUnity/Assets/Scripts/EquipmentSmoke.cs": "1d5f1cdcabaa35b065c27bd86fc23e9d9bf5e255d567171a4b70749ef9ce4554",
+    "unity/JianghuUnity/Assets/Scripts/EquipmentUI.cs": "a010e2c6b2cd2f0fadc4aaae9d491549ad9925530498383803f7beb6089ca51c",
+    "unity/JianghuUnity/Assets/Scripts/GameClient.cs": "334d8ecdb29835fd95157cbfa62fc50f2d6d60ab42652127076b4cac553c3b16",
+    "unity/JianghuUnity/Assets/Scripts/JianghuApp.cs": "be02071125cb74f47179e4bd193fc4fd5cf5bfbfd92b5b1795f463dee56fa7ca",
+    "unity/JianghuUnity/Assets/Scripts/Json.cs": "7095efb0f241c03d8acb6411cdceccf55dc84f2d961aaa03ac1e5abac03be60d",
+    "unity/JianghuUnity/Assets/Scripts/LLMAgencySmoke.cs": "9a36b89559077e5ab6437e06ba49581f5852e1e825cc13b58c27ebafb4511875",
+    "unity/JianghuUnity/Assets/Scripts/LocalLifeSmoke.cs": "7dec8363d615f6e3bcc2dcb6d789e50b86a5a89ed5e3356015a52804b9429e72",
+    "unity/JianghuUnity/Assets/Scripts/NationalRanks.cs": "ee7cdcebc40ad8b3aab1398745cde706d2390c6e0f4ac9fcac61e2d4e3517800",
+    "unity/JianghuUnity/Assets/Scripts/NpcThinking.cs": "0e3f0afc90a65312ae35dd0cd166a84a8f726368408f555204fb3f9ce5bd774a",
+    "unity/JianghuUnity/Assets/Scripts/NpcThinkingSmoke.cs": "4e387092274262aea8cb59abef339c1516e90393deed27be8483d4a24b7ad7d8",
+    "unity/JianghuUnity/Assets/Scripts/Panels.cs": "681439594dd79f43c61069456564e33358dee6c1ba215eeb1cafbca6d06ddd6a",
+    "unity/JianghuUnity/Assets/Scripts/PaperCast.cs": "a4874e1233be5b81a9e58246db910d93610d22f349726486afcda629c6c0d757",
+    "unity/JianghuUnity/Assets/Scripts/PaperRenderSmoke.cs": "6d931d13221ddddb9de5abda923f3e370e04340bae0f73d154bea41e5a704b9e",
+    "unity/JianghuUnity/Assets/Scripts/PaperRig.cs": "29f5142df7fda05fdd054afb004dd2a7ccf0d71efa9095e53f87431832055bbf",
+    "unity/JianghuUnity/Assets/Scripts/PersuasionSmoke.cs": "d9e8c53ea7fca3fe0418e35f126af7e10e1322ad0d06156acf222b22005db304",
+    "unity/JianghuUnity/Assets/Scripts/PhysicalBattleHistory.cs": "abfcc40a1b71f5eaa7c5829bbca36423f365f5b5deae1ab280467f754b03a8d4",
+    "unity/JianghuUnity/Assets/Scripts/PhysicalBattleScreen.cs": "2e4b6b61a2585c9d6faca454070b2e131ce1207af47b71e17dec11ec7f799453",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsAttributesSmoke.cs": "e4ce2e7a0bd543f06982da5cb249e694dc9e970a361a4e5a600eedad09be383f",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsBattleSmoke.cs": "2fd029a2a608cde21b2f8bd2e4330a3076927d9264ea2de924ebb823997d5bf5",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsFeelSmoke.cs": "35188d206c1218801ba1192208d467399b47a9678589931234689a66436ece4e",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsKineticSmoke.cs": "3c0e7f30616f91b36adf5fcfb159349353a6bee2610a86fe9505459fccd8f5be",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsMartialSmoke.cs": "aadd950fd83724c7915df140b89a933339519d359bb442876052f81d7af1f2a3",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsMouseSmoke.cs": "df3be21cc4aac21094678da9243680f1257afe39c9d417fe4924e473957cec87",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsPaceSmoke.cs": "760143bad5fe247d7400e24cc58eb896858b103f63a8147c9f66eb9df3b04a98",
+    "unity/JianghuUnity/Assets/Scripts/PhysicsWeaponsSmoke.cs": "36a56443362b764e9f24a66a29aee5f3f6df9cd8af191d79468886216fb82b8f",
+    "unity/JianghuUnity/Assets/Scripts/PlayerSocialSmoke.cs": "f1f2512c9f627b43ee7eb6074a9cb2578273dd7591cee5e87ac9f52476b78e05",
+    "unity/JianghuUnity/Assets/Scripts/PlayerSocialUI.cs": "165eda874ffde2180a150e4f1974ed70705fd2ef7ffa2db5ec6c739a190f016a",
+    "unity/JianghuUnity/Assets/Scripts/PriorityThinkingSmoke.cs": "eaaae8dae746ea229637436cac73502fce9ee227a4ee992db674cbe5244c9c14",
+    "unity/JianghuUnity/Assets/Scripts/RankMartialUI.cs": "9568de2ac824f679fc38b712d5dbb8fa9a99bc9fcc1e3c5814c94a7d13034834",
+    "unity/JianghuUnity/Assets/Scripts/RankProgress.cs": "11c0f2fd579cb941ff52793098d98b24544453317c22d11497b43bb6a6ea9ea0",
+    "unity/JianghuUnity/Assets/Scripts/RankProgressSmoke.cs": "a8f0df24d42b1a08bff17431704f13b98702ba47c9f28becb3c1025ae3555421",
+    "unity/JianghuUnity/Assets/Scripts/Screens.cs": "5ac677395086274446296879bc425a7af7be0a9ae5f4f39674e041cb7d290f7f",
+    "unity/JianghuUnity/Assets/Scripts/SectRanks.cs": "d26b806ab4119d1aa93c61a457e4c8f4bc815d966c7ce437c726cc5f0cfbb1d9",
+    "unity/JianghuUnity/Assets/Scripts/SectRankSmoke.cs": "81e073d72b1b81912e55b7f78ffd82983240740d72b17c4ac845391a0516541a",
+    "unity/JianghuUnity/Assets/Scripts/SettlementLayoutSmoke.cs": "5a73587795e4033a8e6251f8c5b227d4fd487f2ad224c6257fe3c3c3610cbf27",
+    "unity/JianghuUnity/Assets/Scripts/SocietyPanel.cs": "75a35a701c577c59b6cb6b048983f5a996bd4acbf6334e00cf677b83807c1808",
+    "unity/JianghuUnity/Assets/Scripts/Theme.cs": "8a9fcba5a7d3feaa0cecbff92aa9c2096810646feaac9184a1a6d5d63e6b4457",
+    "unity/JianghuUnity/Assets/Scripts/UiNav.cs": "c0ae989add57adff1a9ff7661275f97f0aa151ec044954fc6dc39f02a342d39b",
+    "unity/JianghuUnity/Assets/Scripts/UINavigation.cs": "bbf336e71033754ab3ec3a2d2c8847d5e00f613c1ba5ca29072e641bbfdcf6af",
+    "unity/JianghuUnity/Assets/Scripts/UINavigationSmoke.cs": "a31f4bfae6ef2ef29de78034b8ada7e314fa48a7b5ea1d38dc04267dd20f6aa2",
+    "unity/JianghuUnity/Assets/Scripts/UnitySmoke.cs": "a42c87e61d44329fb974ad128949e55d37f615e9732572aba23b5c3c2239d8f0",
+    "unity/JianghuUnity/Assets/Scripts/WorldUI.cs": "f6e32f32cbb9bf50555e9265e8a08e5f1400e515e37a9d4af77db1333c4d3398"
+  },
+  "native": {
+    "navigation": {
+      "passed": true,
+      "checks": [
+        {
+          "check": "isolated world ready",
+          "passed": true
+        },
+        {
+          "check": "test world includes real event records",
+          "passed": true
+        },
+        {
+          "check": "links load the requested real record",
+          "passed": true
+        },
+        {
+          "check": "event person link opens that profile above the event",
+          "passed": true
+        },
+        {
+          "check": "back restores the event detail and tab",
+          "passed": true
+        },
+        {
+          "check": "profile links load real faction detail",
+          "passed": true
+        },
+        {
+          "check": "faction back restores character and section",
+          "passed": true
+        },
+        {
+          "check": "NPC martial tab loads the complete shared catalog",
+          "passed": true
+        },
+        {
+          "check": "gift view explicitly owns player items",
+          "passed": true
+        },
+        {
+          "check": "system back restores the real event detail",
+          "passed": true
+        },
+        {
+          "check": "nested browsing restores inventory owner and filters",
+          "passed": true
+        },
+        {
+          "check": "late event response cannot overwrite the restored view",
+          "passed": true
+        },
+        {
+          "check": "explicit map return clears every view",
+          "passed": true
+        },
+        {
+          "check": "open choice prevents keyboard city movement",
+          "passed": true
+        },
+        {
+          "check": "person menu prevents keyboard city movement",
+          "passed": true
+        },
+        {
+          "check": "city trading uses player inventory",
+          "passed": true
+        },
+        {
+          "check": "city scroll returns to city map",
+          "passed": true
+        },
+        {
+          "check": "all browsing preserves world month money and actions",
+          "passed": true
+        },
+        {
+          "check": "browsing preserves full hero state",
+          "passed": true
+        },
+        {
+          "check": "browsing preserves NPC inventory and combat state",
+          "passed": true
+        },
+        {
+          "check": "no native UI exceptions",
+          "passed": true
+        }
+      ],
+      "errors": []
+    },
+    "character": {
+      "passed": true,
+      "checks": [
+        {
+          "check": "isolated world ready",
+          "passed": true
+        },
+        {
+          "check": "clicking a person opens the interaction menu",
+          "passed": true
+        },
+        {
+          "check": "talking opens selected person's conversation",
+          "passed": true
+        },
+        {
+          "check": "portrait opens same person's scroll above the conversation",
+          "passed": true
+        },
+        {
+          "check": "inventory belongs to selected NPC",
+          "passed": true
+        },
+        {
+          "check": "NPC inventory contains no player instances",
+          "passed": true
+        },
+        {
+          "check": "martial tab displays NPC's actual abilities",
+          "passed": true
+        },
+        {
+          "check": "switching NPC keeps martial tab and changes data",
+          "passed": true
+        },
+        {
+          "check": "switching NPC changes inventory owner",
+          "passed": true
+        },
+        {
+          "check": "related person links update scroll owner",
+          "passed": true
+        },
+        {
+          "check": "closing scroll returns to original conversation",
+          "passed": true
+        },
+        {
+          "check": "gifting explicitly opens player's inventory",
+          "passed": true
+        },
+        {
+          "check": "own scroll keeps player context",
+          "passed": true
+        },
+        {
+          "check": "own martial keeps player context",
+          "passed": true
+        },
+        {
+          "check": "cross links open above the scroll",
+          "passed": true
+        },
+        {
+          "check": "navigation stack never repeats a view kind",
+          "passed": true
+        },
+        {
+          "check": "back returns to the conversation it came from",
+          "passed": true
+        },
+        {
+          "check": "back from the last view returns to the map",
+          "passed": true
+        },
+        {
+          "check": "gifting scroll returns to original conversation",
+          "passed": true
+        },
+        {
+          "check": "late response cannot replace newly selected NPC",
+          "passed": true
+        },
+        {
+          "check": "browsing preserves month money and actions",
+          "passed": true
+        },
+        {
+          "check": "browsing preserves both NPC possessions",
+          "passed": true
+        },
+        {
+          "check": "leaving to the map closes every view",
+          "passed": true
+        },
+        {
+          "check": "no native exceptions",
+          "passed": true
+        }
+      ],
+      "errors": []
+    },
+    "physics-checkpoint": {
+      "passed": true,
+      "phase": "save",
+      "checks": [
+        {
+          "check": "companion ready",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "/api/ai/config",
+          "passed": true,
+          "facts": {
+            "expected": true,
+            "error": ""
+          }
+        },
+        {
+          "check": "/api/intervene",
+          "passed": true,
+          "facts": {
+            "expected": true,
+            "error": ""
+          }
+        },
+        {
+          "check": "native arena instantiated",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "physical session is sole active ruleset",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "battle starts paused",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "equipment reaches actual rigidbody",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "stats reach physical fighter",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "no training shield conjured",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "fixed origin controls and physical drive used",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "actual body snapshot persisted",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "checkpoint preserves world time",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "no runtime errors",
+          "passed": true,
+          "facts": []
+        }
+      ],
+      "errors": []
+    },
+    "physics-resume": {
+      "passed": true,
+      "phase": "resume",
+      "checks": [
+        {
+          "check": "companion ready",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "/api/ai/config",
+          "passed": true,
+          "facts": {
+            "expected": true,
+            "error": ""
+          }
+        },
+        {
+          "check": "cold restart has no preloaded martial data",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "native arena instantiated",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "restart restores physical pose and session",
+          "passed": true,
+          "facts": {
+            "maximum_pose_error": 0
+          }
+        },
+        {
+          "check": "restart preserves health and stamina",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "restart clears pointer input",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "temporarily leaving keeps battle unresolved",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "unresolved battle blocks city movement",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "native arena instantiated",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "returning reuses same physical rig",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "real contacts produce damage",
+          "passed": true,
+          "facts": {
+            "hits": 9,
+            "elapsed": 10.41076
+          }
+        },
+        {
+          "check": "physical constraints remain bounded",
+          "passed": true,
+          "facts": {
+            "gap": 0.1024171,
+            "limit_degrees": 3.651283
+          }
+        },
+        {
+          "check": "one world settlement completed",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "battle costs no month or map action points",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "/api/battle",
+          "passed": true,
+          "facts": {
+            "expected": true,
+            "error": ""
+          }
+        },
+        {
+          "check": "replayed result cannot charge twice",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "back in world with controls restored",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "actual city walking works after settlement",
+          "passed": true,
+          "facts": null
+        },
+        {
+          "check": "no runtime errors",
+          "passed": true,
+          "facts": []
+        }
+      ],
+      "errors": []
+    }
+  },
+  "native_checks": 78,
+  "production_save_used": false,
+  "real_model_called": false,
+  "python_tests": {
+    "command": "python -B -m unittest discover -s tests -v",
+    "passed": true,
+    "tests": 453,
+    "seconds": 325.848
+  }
+}

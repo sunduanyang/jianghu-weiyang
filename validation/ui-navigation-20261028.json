@@ -1,0 +1,192 @@
+{
+  "date": "2026-10-28",
+  "build": "unity/Build/UIOrganizedFinal/江湖未央.exe",
+  "build_log": "unity/ui-organized-final-build.log",
+  "assembly_sha256": "0a83516761dacae029dce48b3d65296554d2cd40ffd0c864df0df95f651b16e1",
+  "native_suites": {
+    "flow": {
+      "passed": true,
+      "checks": [
+        {
+          "check": "isolated world ready",
+          "passed": true
+        },
+        {
+          "check": "test world includes real event records",
+          "passed": true
+        },
+        {
+          "check": "profile links load the requested real record",
+          "passed": true
+        },
+        {
+          "check": "event person link visibly opens that profile",
+          "passed": true
+        },
+        {
+          "check": "back restores record rather than losing it",
+          "passed": true
+        },
+        {
+          "check": "back restores original profile and section",
+          "passed": true
+        },
+        {
+          "check": "profile links load real faction detail",
+          "passed": true
+        },
+        {
+          "check": "faction back restores inspected character",
+          "passed": true
+        },
+        {
+          "check": "gift view explicitly owns player items",
+          "passed": true
+        },
+        {
+          "check": "nested record browsing restores inventory owner and filters",
+          "passed": true
+        },
+        {
+          "check": "explicit map return clears contextual back targets",
+          "passed": true
+        },
+        {
+          "check": "open choice prevents keyboard city movement",
+          "passed": true
+        },
+        {
+          "check": "city trading is owned by player",
+          "passed": true
+        },
+        {
+          "check": "city book returns to city map",
+          "passed": true
+        },
+        {
+          "check": "all browsing preserves world month money and actions",
+          "passed": true
+        },
+        {
+          "check": "browsing preserves full hero state",
+          "passed": true
+        },
+        {
+          "check": "browsing preserves NPC inventory and combat state",
+          "passed": true
+        },
+        {
+          "check": "no native UI exceptions",
+          "passed": true
+        }
+      ],
+      "errors": []
+    },
+    "character": {
+      "passed": true,
+      "checks": [
+        {
+          "check": "isolated world ready",
+          "passed": true
+        },
+        {
+          "check": "roster opens selected person's conversation",
+          "passed": true
+        },
+        {
+          "check": "portrait opens same person's profile",
+          "passed": true
+        },
+        {
+          "check": "inventory belongs to selected NPC",
+          "passed": true
+        },
+        {
+          "check": "NPC inventory contains no player instances",
+          "passed": true
+        },
+        {
+          "check": "combat tab displays NPC's actual abilities",
+          "passed": true
+        },
+        {
+          "check": "switching NPC keeps combat tab and changes data",
+          "passed": true
+        },
+        {
+          "check": "switching NPC changes inventory owner",
+          "passed": true
+        },
+        {
+          "check": "related person links update book owner",
+          "passed": true
+        },
+        {
+          "check": "closing book returns to original conversation",
+          "passed": true
+        },
+        {
+          "check": "gifting explicitly opens player's inventory",
+          "passed": true
+        },
+        {
+          "check": "own profile keeps player context",
+          "passed": true
+        },
+        {
+          "check": "own combat keeps player context",
+          "passed": true
+        },
+        {
+          "check": "gifting book returns to original conversation",
+          "passed": true
+        },
+        {
+          "check": "late response cannot replace newly selected NPC",
+          "passed": true
+        },
+        {
+          "check": "browsing preserves month money and actions",
+          "passed": true
+        },
+        {
+          "check": "browsing preserves both NPC possessions",
+          "passed": true
+        },
+        {
+          "check": "no native exceptions",
+          "passed": true
+        }
+      ],
+      "errors": []
+    }
+  },
+  "native_checks": 36,
+  "python_tests": {
+    "test_protagonist.py": {
+      "passed": true,
+      "count": 15
+    },
+    "test_simulation.py": {
+      "passed": true,
+      "count": 16
+    }
+  },
+  "screenshots": {
+    "directory": "output\\ui-organized-20261028",
+    "count": 24,
+    "all_nonblank": true
+  },
+  "manual_checks": [
+    "Dropdown directly updates roster",
+    "Esc closes only the open dropdown",
+    "Chinese keyword search finds matching options",
+    "Selecting an empty town shows a recovery action",
+    "Clear filters restores all four fixture NPCs"
+  ],
+  "scope": "Unity UI only; rules and save format unchanged; all runtime checks used isolated save directories",
+  "limitations": [
+    "No real model call",
+    "No full physics combat replay or long-run economic balance evaluation"
+  ]
+}

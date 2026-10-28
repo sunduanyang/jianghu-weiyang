@@ -66,7 +66,7 @@ public partial class JianghuApp {
     bool CityLocal=>Hero["created"].B&&City["place"].I==Hero["place"].I;
 
     string CityMovementBlockReason=>!Hero["created"].B?"请先创建主角":!CityLocal?"远方地图预览，请先返回主角所在城镇":W["battle_active"].B?"切磋尚未结束，收招后才能在城中行走":W["autoplay"].B||W["job"]["remaining"].I>0?"世界正在推演，请先暂停再行走":Hero["points"].I<=0?"本月行动力已用尽，请结束本月":"";
-    bool CityMovementAllowed=>CurrentStage==Stage.City&&!ViewOpen&&City.Has&&CityMovementBlockReason.Length==0&&!advanceOpen;
+    bool CityMovementAllowed=>CurrentStage==Stage.City&&!ViewOpen&&City.Has&&CityMovementBlockReason.Length==0&&!advanceOpen&&!choiceOpen&&interactWith<0;
     void UpdateCityMovement(){
         if(!CityMovementAllowed||cityLoading){StopCityWalk();cityHeldDirection=Vector2Int.zero;cityNextStepAt=0;return;}
         if(cityWalkSmokeInput)return;
@@ -97,7 +97,7 @@ public partial class JianghuApp {
         SelectCityCell(target);
         BeginCityWalk(target,keyboard);return true;
     }
-    void ResumeCityBattle(){OpenBattle();}
+    internal void ResumeCityBattle(){OpenBattle();}
     System.Collections.IEnumerator EndCityBattle(){
         if(cityBattleEnding||Client.Busy)yield break;
         cityBattleEnding=true;

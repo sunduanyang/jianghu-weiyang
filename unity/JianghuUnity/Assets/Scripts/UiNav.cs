@@ -17,6 +17,7 @@ public sealed class UiView {
     public ViewKind Kind;
     public int Tab;        // PersonTab / JianghuTab / SystemTab
     public int Person=-1;  // 人物卷所看之人或对话对象；-1 为主角
+    internal JianghuApp.ViewState State;
 }
 
 public partial class JianghuApp {
@@ -51,6 +52,7 @@ public partial class JianghuApp {
     // already open further down is unwound to and replaced, so the stack never cycles (at most one per kind).
     void Show(UiView view){
         if(DeferWhileDrawing(()=>Show(view)))return;
+        SaveViewState();
         CloseTransient();
         int at=views.FindIndex(v=>v.Kind==view.Kind);
         if(at>=0)views.RemoveRange(at,views.Count-at);
@@ -61,33 +63,36 @@ public partial class JianghuApp {
         if(DeferWhileDrawing(Back))return;
         if(views.Count==0)return;
         if(TopIs(ViewKind.Battle)){CloseBattle();return;}
-        views.RemoveAt(views.Count-1);OnViewChanged();
+        views.RemoveAt(views.Count-1);OnViewChanged(true);
     }
     public void GoStage(Stage stage,bool reload=true){
         if(DeferWhileDrawing(()=>GoStage(stage,reload)))return;
-        views.Clear();CloseTransient();CurrentStage=stage;mainScroll=Vector2.zero;
+        views.Clear();CloseTransient();InvalidateViewRequests();CurrentStage=stage;mainScroll=Vector2.zero;
         if(reload)ReloadView();
     }
-    void OnViewChanged(){
+    void OnViewChanged(bool restore=false){
+        InvalidateViewRequests();
         mainScroll=personScroll=itemScroll=detailScroll=eventScroll=Vector2.zero;
         var top=TopView;
         if(top!=null&&(top.Kind==ViewKind.Person||top.Kind==ViewKind.Dialogue)&&top.Person>=0&&SelectedPerson!=top.Person)SelectPerson(top.Person);
         if(top!=null&&top.Kind==ViewKind.Dialogue){talk="";conversationScroll=new Vector2(0,float.MaxValue);nextConversationPoll=0;}
+        if(restore&&top?.State!=null)RestoreViewState(top.State);
         ReloadView();
     }
     void SetTab(int tab){
         if(DeferWhileDrawing(()=>SetTab(tab)))return;
         if(views.Count==0)return;
-        TopView.Tab=tab;mainScroll=personScroll=itemScroll=detailScroll=eventScroll=Vector2.zero;
+        CloseChoices();InvalidateViewRequests();TopView.Tab=tab;mainScroll=personScroll=itemScroll=detailScroll=eventScroll=Vector2.zero;
         ReloadView();
     }
-    void CloseTransient(){interactWith=-1;advanceOpen=false;}
+    void CloseTransient(){interactWith=-1;advanceOpen=false;CloseChoices();}
 
     // 人物卷：id 为 -1 时看主角。不给 tab 时沿用已打开人物卷的标签。
     public void ViewPerson(int id,PersonTab? tab=null){
+        if(DeferWhileDrawing(()=>ViewPerson(id,tab)))return;
         var keep=TopIs(ViewKind.Person)?(PersonTab)TopView.Tab:PersonTab.Overview;
-        ResetItemFilters(id);
         Show(new UiView{Kind=ViewKind.Person,Person=id,Tab=(int)(tab??keep)});
+        ResetItemFilters(id);
     }
     // Switch whose 人物卷 is open, keeping the tab.
     void SwitchSubject(int id){
@@ -108,7 +113,7 @@ public partial class JianghuApp {
         if(DeferWhileDrawing(CloseBattle))return;
         int at=views.FindIndex(v=>v.Kind==ViewKind.Battle);
         if(at<0)return;
-        views.RemoveRange(at,views.Count-at);OnViewChanged();
+        views.RemoveRange(at,views.Count-at);OnViewChanged(true);
         if(SelectedPerson>=0)SelectPerson(SelectedPerson);
     }
 
@@ -119,11 +124,16 @@ public partial class JianghuApp {
         if(top==null){if(CurrentStage==Stage.City)LoadCity(SelectedPlace);return;}
         switch(top.Kind){
             case ViewKind.Person:
-                if(top.Person>=0)break;
                 var tab=(PersonTab)top.Tab;
+                if(tab==PersonTab.Martial)LoadMartialView();
+                if(top.Person>=0)break;
                 if(tab==PersonTab.Bag)LoadInventory();
-                else if(tab==PersonTab.Martial)Client.Fetch("/api/martial",j=>Martial=j);
                 else if(tab==PersonTab.Ties)LoadEconomy();
+                break;
+            case ViewKind.Battle:
+                // A cold start has no cached Martial data. The city resume entry must load
+                // the saved session itself instead of requiring a visit to the martial tab.
+                if(PhysicsArena==null)LoadMartialView();
                 break;
             case ViewKind.Jianghu:
                 var j2=(JianghuTab)top.Tab;
@@ -139,6 +149,7 @@ public partial class JianghuApp {
     // Esc closes the innermost thing: a popup, then the top view; on the bare map it opens 系统.
     bool HandleEscape(){
         if(GUIUtility.hotControl!=0)return false;
+        if(choiceOpen){Later(CloseChoices);return true;}
         if(interactWith>=0||advanceOpen||creatingHero&&!Hero["created"].B){Later(()=>{interactWith=-1;advanceOpen=false;creatingHero=false;});return true;}
         if(ViewOpen){Later(Back);return true;}
         if(CurrentStage==Stage.City&&cityWalking)return false;   // UpdateCityMovement stops the walk

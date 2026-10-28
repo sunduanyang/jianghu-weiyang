@@ -25,7 +25,7 @@ public partial class JianghuApp {
     static readonly Vector2[] HaloOffsets={new Vector2(-1,0),new Vector2(1,0),new Vector2(0,-1),new Vector2(0,1),new Vector2(-1,-1),new Vector2(1,1),new Vector2(-1,1),new Vector2(1,-1)};
 
     // fixed layout of the 戏 screen (virtual 1680×960)
-    static readonly Rect TopBar=new Rect(0,0,1680,58), Dock=new Rect(0,806,1680,154), PlaceCard=new Rect(1420,254,252,540), LayerRow=new Rect(755,62,170,34), AdvancePopup=new Rect(685,566,310,200);
+    static readonly Rect TopBar=new Rect(0,0,1680,58), Dock=new Rect(0,806,1680,154), PlaceCard=new Rect(1420,254,252,540), LayerRow=new Rect(680,66,320,34), AdvancePopup=new Rect(685,518,384,278);
     Rect LeftPanel=>rosterOpen?new Rect(8,70,262,640):new Rect(8,70,26,120);
 
     Texture2D UI(string name){if(!uiTextures.TryGetValue(name,out var t)){t=Resources.Load<Texture2D>("UI/Art/"+name);if(t==null)t=Resources.Load<Texture2D>("UI/"+name);uiTextures[name]=t;}return t;}
@@ -158,7 +158,7 @@ public partial class JianghuApp {
         GUI.color=old;bool hit=GUI.Button(new Rect(r.x,r.y,r.width,r.height+22),GUIContent.none,GUIStyle.none);return hit&&enabled&&!Client.Busy;
     }
     bool OverUI(Vector2 m){
-        if(ViewOpen)return true;
+        if(ViewOpen||choiceOpen)return true;
         if(interactWith>=0&&InteractRect.Contains(m))return true;
         if(TopBar.Contains(m)||LeftPanel.Contains(m)||PlaceCard.Contains(m))return true;
         if(CurrentStage==Stage.City&&CityOverviewRect.Contains(m))return true;
@@ -205,18 +205,23 @@ public partial class JianghuApp {
         // hero (left)
         Rect hp=new Rect(4,712,200,240);
         if(Hero["created"].B){DrawPaperBust(hp,Hero,true);GUI.Label(new Rect(208,880,200,24),Hero["name"].S,sub);GUI.Label(new Rect(208,904,260,20),Hero["place_name"].S+" · "+Hero["position_name"].S,caption);
-            if(GUI.Button(new Rect(208,926,90,24),"定位主角",linkStyle)){SelectedPlace=Hero["place"].I;mapZoom=1.6f;mapPan=new Vector2(640-(float)Place(SelectedPlace)["x"].N,380-(float)Place(SelectedPlace)["y"].N);if(CurrentStage!=Stage.World)Later(()=>GoStage(Stage.World));}}
+            if(GUI.Button(new Rect(208,926,90,24),"定位主角",linkStyle)){SelectedPlace=Hero["place"].I;if(CurrentStage==Stage.City)LoadCity(SelectedPlace);else{mapZoom=1.6f;mapPan=new Vector2(640-(float)Place(SelectedPlace)["x"].N,380-(float)Place(SelectedPlace)["y"].N);}}
+            if(GUI.Button(new Rect(308,926,110,24),"我的资料",linkStyle))Later(()=>ViewPerson(-1,PersonTab.Overview));}
         else{DrawPaperBust(hp,J.O("sex",heroSex,"age_months",int.TryParse(heroAge,out int ha)?ha*12:216),true);GUI.Label(new Rect(208,880,240,24),"尚未立主角",sub);if(GUI.Button(new Rect(208,906,110,30),"创建主角",selected))creatingHero=!creatingHero;}
         // month dial (centre)
         Rect moon=new Rect(765,812,150,150);Tex(moon,"moon");
         bool hero=Hero["created"].B;
         GUI.Label(new Rect(moon.x,moon.y+30,moon.width,60),hero?Hero["points"].S:"推",bigNumber);
         GUI.Label(new Rect(moon.x,moon.y+86,moon.width,24),hero?"结束本月":"推演一月",moonLabel);
-        if(GUI.Button(moon,GUIContent.none,GUIStyle.none)&&!Client.Busy&&!W["battle_active"].B){if(hero){if(Paused)HeroAction("end_turn");}else Control("advance",1);}
+        string monthHint=W["battle_active"].B?"请先结束切磋":!Paused?"请先暂停世界推演":hero?"结束本月并恢复下月行动力":"推进世界一个月";
+        bool previous=GUI.enabled;GUI.enabled=previous&&!Client.Busy&&!W["battle_active"].B&&(!hero||Paused);
+        if(GUI.Button(moon,new GUIContent("",monthHint),GUIStyle.none)){if(hero)HeroAction("end_turn");else Control("advance",1);}GUI.enabled=previous;
         // 世界推演 folds into the month dial: a small toggle beside it opens the popup above.
         if(GUI.Button(new Rect(918,904,78,26),advanceOpen?"推演 ▼":"推演 ▲",advanceOpen?linkOnStyle:linkStyle))advanceOpen=!advanceOpen;
         // function medallions: 我的（人物卷各标签）left of the dial, 天下的（江湖卷各标签）right of it
         float y=900;
+        GUI.Label(new Rect(450,845,270,24),"人物卷 · 我的",centerSmall);
+        GUI.Label(new Rect(1010,845,270,24),"江湖卷",centerSmall);
         if(Medal(new Vector2(500,y),60,"人","人物"))Later(()=>ViewPerson(-1,PersonTab.Overview));
         if(Medal(new Vector2(585,y),60,"囊","行囊"))Later(()=>ViewPerson(-1,PersonTab.Bag));
         if(Medal(new Vector2(670,y),60,"武","武学"))Later(()=>ViewPerson(-1,PersonTab.Martial));
@@ -231,8 +236,8 @@ public partial class JianghuApp {
         if(GUI.Button(new Rect(g.x,g.y,g.width,g.height/2),GUIContent.none,GUIStyle.none)&&CurrentStage!=Stage.World)Later(()=>GoStage(Stage.World));
         if(GUI.Button(new Rect(g.x,g.center.y,g.width,g.height/2),GUIContent.none,GUIStyle.none)&&CurrentStage!=Stage.City)Later(()=>GoStage(Stage.City));
         // status toast above the dial
-        string status=!string.IsNullOrEmpty(Client.Error)?"提示："+Client.Error:Client.Busy?"正在结算，请稍候…":Client.Status;
-        if(!string.IsNullOrEmpty(status)){float w=Mathf.Min(760,small.CalcSize(new GUIContent(status)).x+30);Rect sr=new Rect(840-w/2,776,w,24);GUI.Label(sr,status,tagStyle);}
+        string status=UiStatus;
+        if(!string.IsNullOrEmpty(status)){float w=Mathf.Min(760,small.CalcSize(new GUIContent(status)).x+30);Rect sr=new Rect(840-w/2,776,w,24);GUI.Label(sr,new GUIContent(status,status),tagStyle);}
     }
     void DrawHeroCreation(){
         if(Hero["created"].B||!creatingHero)return;
@@ -247,10 +252,13 @@ public partial class JianghuApp {
     void DrawAdvance(){
         if(!advanceOpen)return;Panel(AdvancePopup);
         GUILayout.BeginArea(new Rect(AdvancePopup.x+14,AdvancePopup.y+10,AdvancePopup.width-28,AdvancePopup.height-18));
-        GUILayout.Label("世界推演",sub);bool calm=!W["battle_active"].B;
+        GUILayout.BeginHorizontal();GUILayout.Label("世界推演",sub);GUILayout.FlexibleSpace();if(GUILayout.Button("关闭",chip,GUILayout.Width(58)))advanceOpen=false;GUILayout.EndHorizontal();bool calm=!W["battle_active"].B;
+        T("快进会推进整个世界；主角行动请用「结束本月」。",small);
+        T("推进时长",small);
         GUILayout.BeginHorizontal();if(Btn("一月",calm))Control("advance",1);if(Btn("一年",calm))Control("advance",12);if(Btn("十年",calm))Control("advance",120);if(Btn("五十年",calm))Control("advance",600);GUILayout.EndHorizontal();
         GUILayout.BeginHorizontal();if(Btn("自行演化",calm))Control("auto");if(Btn("暂停"))Control("pause");if(Btn("保存"))Client.Act("/api/save",J.O());GUILayout.EndHorizontal();
         fastMode=GUILayout.Toggle(fastMode,"规则快进（跳过模型调用）");
+        T(W["battle_active"].B?"切磋进行中，请先收招。":W["autoplay"].B?"正在自行演化，可随时暂停。":W["job"]["remaining"].I>0?"正在推演，剩余 "+W["job"]["remaining"].S+" 月。":"当前世界已暂停。",small);
         GUILayout.EndArea();
     }
 
@@ -258,9 +266,12 @@ public partial class JianghuApp {
     // Full-screen scroll chrome: big faint title and a close mark (same as Esc: back to where it was opened).
     void BookScreen(string heading){
         Tile(new Rect(0,0,1680,960),"bg");Tex(new Rect(0,0,1680,960),"vignette");
-        GUI.Label(new Rect(40,10,900,90),heading,titleBrush);Fill(new Rect(40,96,360,1),new Color(.79f,.64f,.35f,.35f));
-        Rect close=new Rect(1606,22,50,50);var old=GUI.color;if(close.Contains(Event.current.mousePosition))GUI.color=new Color(1,.86f,.6f);Tex(close,"close");GUI.color=old;
-        if(GUI.Button(close,GUIContent.none,GUIStyle.none))Later(Back);
+        GUI.Label(new Rect(60,18,710,42),heading,title);
+        GUI.Label(new Rect(60,69,710,23),StageName+"  /  "+(TopIs(ViewKind.Person)?"人物卷":TopIs(ViewKind.Jianghu)?"江湖卷":"系统"),small);
+        GUI.Label(new Rect(790,23,500,30),TopIs(ViewKind.Person)?(InspectingNpc?"正在查看他人 · ":"我的人物 · ")+CharacterName:"",sub);
+        if(GUI.Button(new Rect(1310,20,166,36),new GUIContent("‹ "+BookBackLabel,"Esc 返回"),chip))Later(Back);
+        if(GUI.Button(new Rect(1490,20,150,36),"返回地图",chip))Later(ReturnToStage);
+        DrawBookStatus();Fill(new Rect(40,101,1600,1),hairline);
         Fill(new Rect(40,890,1600,1),hairline);
     }
     // The scroll's own tabs along the bottom. Returns the tab clicked this event, or -1.

@@ -226,6 +226,9 @@ public partial class JianghuApp {
         if(GUI.Button(new Rect(plateR.x+150,plateR.y+119,120,28),"此人行囊",linkStyle))Later(()=>ViewPerson(id,PersonTab.Bag));
         if(GUI.Button(new Rect(plateR.x+280,plateR.y+119,120,28),"此人武学",linkStyle))Later(()=>ViewPerson(id,PersonTab.Martial));
         Rect box=new Rect(470,100,740,810);Frame(box,"panel_solid",24);
+        if(GUI.Button(new Rect(52,36,192,38),"‹ "+BookBackLabel,chip))Later(Back);
+        GUI.Label(new Rect(470,43,740,32),"人物交谈  /  "+CharacterName,centerTitle);
+        GUI.Label(new Rect(54,884,382,38),new GUIContent(UiStatus,UiStatus),small);
         DrawSocialConversation(new Rect(box.x+28,box.y+20,box.width-56,box.height-40));
     }
 

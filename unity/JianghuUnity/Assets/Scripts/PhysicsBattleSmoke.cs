@@ -28,7 +28,7 @@ public sealed partial class PhysicsBattleSmoke:MonoBehaviour {
         Check("companion ready",client!=null&&client.Ready&&client.World.Has);if(client==null||!client.Ready){Finish();yield break;}
         yield return Call("/api/ai/config",J.O("enabled",false));
         if(!client.World["hero"]["created"].B){yield return Call("/api/hero",client.HeroBody("create","name","物理验收","sex","男","age",24,"place",client.World["hero"]["place"]));yield return client.Refresh();}
-        if(phase=="weapons")yield return AuditWeapons();else if(phase=="pace")yield return AuditPace();else if(phase=="martial")yield return AuditMartial();else if(phase=="mouse")yield return AuditMouse();else if(phase=="attributes")yield return AuditAttributes();else if(phase=="kinetic")yield return AuditKinetic();else if(phase=="feel")yield return AuditFeel();else if(phase=="rigs")yield return AuditRigs();else if(phase=="resume")yield return Resume();else yield return Open(phase=="fists");
+        if(phase=="weapons")yield return AuditWeapons();else if(phase=="pace")yield return AuditPace();else if(phase=="martial")yield return AuditMartial();else if(phase=="mouse")yield return AuditMouse();else if(phase=="attributes")yield return AuditAttributes();else if(phase=="kinetic")yield return AuditKinetic();else if(phase=="feel")yield return AuditFeel();else if(phase=="rigs")yield return AuditRigs();else if(phase=="city-resume")yield return Resume(false);else if(phase=="resume")yield return Resume();else yield return Open(phase=="fists");
         Check("no runtime errors",errors.Count==0,new J(errors.Select(e=>new J(e)).ToList()));
         Finish();
     }
@@ -60,10 +60,12 @@ public sealed partial class PhysicsBattleSmoke:MonoBehaviour {
         File.WriteAllText(Path.Combine(client.SaveDir,"expected-physical-session.json"),J.O("id",b["id"],"month",month).ToString());
         yield return Picture("02-saved-pose");
     }
-    IEnumerator Resume(){
+    IEnumerator Resume(bool finishCombat=true){
         J expected=J.Parse(File.ReadAllText(Path.Combine(client.SaveDir,"expected-physical-frame.json")));
         J session=J.Parse(File.ReadAllText(Path.Combine(client.SaveDir,"expected-physical-session.json")));
-        yield return Call("/api/martial",null,j=>app.Martial=j);app.ShowBattleForSmoke();yield return WaitArena();if(app.PhysicsArena==null)yield break;
+        Check("cold restart has no preloaded martial data",!app.Martial.Has&&app.PhysicsArena==null);
+        app.SelectedPlace=client.World["hero"]["place"].I;app.GoStage(Stage.City);app.ResumeCityBattle();
+        yield return WaitArena();if(app.PhysicsArena==null)yield break;
         expected=app.Martial["battle"]["frame"];
         File.WriteAllText(Path.Combine(output,"authoritative-restored-frame.json"),expected.ToString());
         var arena=app.PhysicsArena;var actual=arena.CaptureCampaign();File.WriteAllText(Path.Combine(output,"actual-restored-frame.json"),actual.ToString());float poseError=0;
@@ -75,9 +77,10 @@ public sealed partial class PhysicsBattleSmoke:MonoBehaviour {
         yield return app.SavePhysicsForSmoke("leave");yield return new WaitForSecondsRealtime(.8f);
         Check("temporarily leaving keeps battle unresolved",client.World["battle_active"].B&&app.CurrentStage==Stage.City&&!app.ViewOpen&&arena.CampaignHidden);
         Check("unresolved battle blocks city movement",app.CityMovementReasonForSmoke.Contains("切磋")&&!app.CityWalkForSmoke(client.World["hero"]["row"].I,client.World["hero"]["col"].I));
-        app.ShowBattleForSmoke();yield return WaitArena();yield return null;
+        app.ResumeCityBattle();yield return WaitArena();yield return null;
         Check("returning reuses same physical rig",app.PhysicsArena==arena&&!arena.CampaignHidden&&arena.paused);
-        yield return CombatToFinish(185);
+        if(finishCombat)yield return CombatToFinish(185);
+        else yield return app.SavePhysicsForSmoke("leave");
     }
     IEnumerator CombatToFinish(float maxSeconds){
         var arena=app.PhysicsArena;int month=client.World["month"].I,points=client.World["hero"]["points"].I;
