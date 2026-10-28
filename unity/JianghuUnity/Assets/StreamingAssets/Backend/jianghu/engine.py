@@ -11,7 +11,7 @@ from . import demography, government, items, appearance
 from . import social
 from . import politics, territory
 from .atlas import PLACES, FACTIONS, COUNTRIES, ROUTES, NEIGHBORS, MAP_VERSION, ERA
-from . import careers, social_ranks, undertakings
+from . import careers, social_ranks, undertakings, fame
 from . import martial, martial_manuals, physical_combat as combat, player_interactions, player_social
 from . import city_maps, relationships, organizations, protagonist, settlements, society, temperament, goals
 from . import npc_plans, npc_memory, economics, rank_progression, local_life, llm_policy, npc_attention
@@ -701,11 +701,12 @@ class World:
     def choose(self, n, actions):
         return npc_plans.choose(self, n, actions)
 
-    def execute(self, n, action):
+    def execute(self, n, action, legal=None):
         if str(action.get('id','')).partition(':')[0] in martial.RETIRED_ACTIONS:
             return None
-        # Reject any caller supplied action not in the engine's CURRENT legal set.
-        a = next((a for a in self.legal_actions(n) if a['id'] == action.get('id')), None)
+        # Reject any caller supplied action not in the engine's CURRENT legal set. The month loop
+        # passes the set it has just computed for this decision; every other caller is re-checked.
+        a = next((a for a in (legal if legal is not None else self.legal_actions(n)) if a['id'] == action.get('id')), None)
         if a is None:
             self.metrics['invalid_actions'] += 1
             return None
@@ -1145,8 +1146,9 @@ class World:
                     continue
                 actions=self.legal_actions(n)
                 if actions:
-                    self.execute(n,self.choose(n,actions))
+                    self.execute(n,self.choose(n,actions),legal=actions)
         self.phase=0
+        fame.monthly(self)
         if economics.active(self):
             economics.close_month(self)
             for n in list(self.npcs.values()):
@@ -1634,6 +1636,7 @@ class World:
         n['temperament_view'] = temperament.view(self.npcs[npc_id])
         n['goal_view'] = goals.view(self, self.npcs[npc_id])
         n['planning_view'] = npc_plans.view(self, self.npcs[npc_id])
+        n['fame_view'] = fame.view(self, self.npcs[npc_id])
         n['recalled_memories'] = npc_memory.retrieve(self, self.npcs[npc_id])
         n['career_view'] = careers.view(self, self.npcs[npc_id])
         n['social_view'] = society.person_view(self, self.npcs[npc_id])

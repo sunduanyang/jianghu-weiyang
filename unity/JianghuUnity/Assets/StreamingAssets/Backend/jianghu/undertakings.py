@@ -10,7 +10,7 @@ which one to take, at most one step per month, and waits (rather than forcing
 anything) when the step is not currently possible. Choosing never consumes the
 world RNG beyond what normal decisions already do.
 """
-from . import demography, items, martial
+from . import demography, items, martial, martial_manuals
 
 KINDS = {'courtship': '求偶成家', 'grudge': '了结旧怨', 'study': '求师学艺',
          'journey': '远游见闻', 'standing': '积德扬名'}
@@ -104,7 +104,8 @@ def propose(w, n):
         learned = len(n['martial'].get('learned', []))
         if unlearned_manual(w, n):
             return 'study', '研习行囊中的秘籍', dict(target=None, start_learned=learned, rebuffs=0)
-        q = teacher(w, n)
+        # A new teacher is sought only once the pupil may ask for an art again.
+        q = teacher(w, n) if martial_manuals.window_open(w, n) else None
         if q:
             return 'study', f"拜访{q['name']}求学武艺", dict(target=q['id'], target_name=q['name'],
                                                         start_learned=learned, rebuffs=0)

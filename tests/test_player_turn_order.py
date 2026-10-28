@@ -45,9 +45,9 @@ class PlayerFirstTurnTests(unittest.TestCase):
         self.act('praise');self.act('teach',art=art)
         self.assertEqual(n['monthly_actions'],[]);self.assertEqual(n['time_left'],4)
         weeks=[];execute=w.execute
-        def run(actor,action):
+        def run(actor,action,legal=None):
             if actor['id']==1:weeks.append(w.phase)
-            return execute(actor,action)
+            return execute(actor,action,legal=legal)
         with patch.object(w,'choose',side_effect=lambda actor,actions:next(a for a in actions if a['kind']=='rest')),patch.object(w,'execute',side_effect=run):
             self.end()
         self.assertEqual(weeks,[1,2,3,4])

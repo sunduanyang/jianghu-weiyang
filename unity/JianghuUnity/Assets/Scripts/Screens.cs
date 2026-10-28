@@ -113,7 +113,15 @@ public partial class JianghuApp {
         DrawRankProgress(Person["rank_progression"],false);
         Details("各业本领",Person["career_view"],true);Details("可学营生",Person["career_options"]);Details("旧业履历",Person["career"]);
         DrawTemperamentDetail(Person["temperament_view"],Person["goal_view"].Has?Person["goal_view"]:Person["goal"]);
+        DrawFame(Person["fame_view"]);
         Details("记忆与理解",Person["memories"]);
+    }
+    // 名声所及：声望是所作所为，各城镇知道多少不同。
+    void DrawFame(J fv){
+        if(!fv.Has)return;
+        H("名声所及");T("声望 "+fv["reputation"].N.ToString("0.#"),sub);
+        foreach(var town in fv["towns"].A)T(town["name"].S+" · 知晓"+(town["known"].N*100).ToString("0")+"% · 当地所见声望 "+town["local"].N.ToString("0.#"),small);
+        T(fv["description"].S,small);
     }
     // 品性卡：处世立场一行，五根双向轴，再以一句话写出突出之处与心境。
     void DrawTemperamentCard(Rect tr,J tv){

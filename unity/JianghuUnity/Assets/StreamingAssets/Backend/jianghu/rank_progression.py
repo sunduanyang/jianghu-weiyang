@@ -1,4 +1,4 @@
-from . import combat_attributes
+from . import combat_attributes, fame
 """Recorded assessments, social mobility and accountable appointments.
 
 Queries never perform assessments. Existing standings are registered as present
@@ -223,7 +223,7 @@ def options(w,who):
     rows=[]
     for action,title,cost,conditions in [
         ('establish_trade','行商',12.,[('真实售货月数',len(months(p,'trade',w.month)),3),('累计售货',p['turnover'],12.)]),
-        ('recognize_notable','乡绅',60.,[('声望',n['reputation'],30.),('乡里公益月数',len(months(p,'public',w.month)),6),('定居月数',w.month-p['local_since'],12)]),
+        ('recognize_notable','乡绅',60.,[('本地声望',fame.local_of(w,who),30.),('乡里公益月数',len(months(p,'public',w.month)),6),('定居月数',w.month-p['local_since'],12)]),
         ('establish_business','豪商',120.,[('商旅熟练度',careers.experience(n) if who!='player' else len(months(p,'trade',w.month))*4,45.),
                                        ('实际经营月数',len(months(p,'profit' if who!='player' else 'trade',w.month,18)),12),('声望',n['reputation'],30.),('累计营业收入',p['turnover'],120.)])]:
         if action=='establish_trade' and (who!='player' or current['grade']<=6):continue
