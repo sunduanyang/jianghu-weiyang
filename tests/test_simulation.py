@@ -30,12 +30,22 @@ class SimulationTests(unittest.TestCase):
             a.month_step();b.month_step()
         self.assertEqual(a.npcs,b.npcs)
         self.assertEqual(a.rng.getstate(),b.rng.getstate())
+        # A pursuit only changes for a real reason: it was fulfilled, a grudge was put down,
+        # or a crime against this person turned them toward revenge.
         for i,n in a.npcs.items():
-            if i not in first or n['goal']['kind']==first[i]:continue
+            if i not in first or not n['past_goals']:continue
             cause=a.store.event(n['goal']['cause'])
-            self.assertIn(cause['kind'],social.CRIMES)
-            self.assertEqual(cause['facts']['victim'],i)
-            self.assertGreaterEqual(n['past_goals'][0]['ended']-n['past_goals'][0]['since'],24)
+            past=n['past_goals'][-1];held=past['ended']-past['since']
+            if cause['kind']=='goal_complete':
+                self.assertEqual(cause['people'],[i])
+                self.assertGreaterEqual(held,0 if past['kind']=='revenge' else 12)
+            elif cause['kind']=='grudge_released':
+                self.assertEqual(past['kind'],'revenge');self.assertGreaterEqual(held,6)
+            else:
+                self.assertEqual(n['goal']['kind'],'revenge')
+                self.assertIn(cause['kind'],social.CRIMES)
+                self.assertEqual(cause['facts']['victim'],i)
+                self.assertGreaterEqual(held,12)
 
     def test_save_reload_continues_same_world(self):
         with tempfile.TemporaryDirectory() as d:

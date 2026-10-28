@@ -112,7 +112,7 @@ public partial class JianghuApp {
         DrawPersonRank();
         DrawRankProgress(Person["rank_progression"],false);
         Details("各业本领",Person["career_view"],true);Details("可学营生",Person["career_options"]);Details("旧业履历",Person["career"]);
-        DrawTemperamentDetail(Person["temperament_view"],Person["goal"]);
+        DrawTemperamentDetail(Person["temperament_view"],Person["goal_view"].Has?Person["goal_view"]:Person["goal"]);
         Details("记忆与理解",Person["memories"]);
     }
     // 品性卡：处世立场一行，五根双向轴，再以一句话写出突出之处与心境。
@@ -143,7 +143,7 @@ public partial class JianghuApp {
         }
         Metric("世界观",tv["outlook_words"].A.Count>0?string.Join("、",tv["outlook_words"].A.Select(w=>w.S)):"看法平常");
         Metric("近来心境",tv["mood"].S);
-        if(goal.Has){Metric("长远心愿",goal["title"].S+" · 进展 "+Mathf.RoundToInt((float)goal["progress"].N*100)+"%");}
+        if(goal.Has){Metric("长远心愿",goal["title"].S+" · 进展 "+Mathf.RoundToInt((float)goal["progress"].N*100)+"%");if(goal["note"].Has)T(goal["note"].S,small);}
         var changes=tv["changes"].A;
         if(changes.Count>0){
             T("心性变化",sub);

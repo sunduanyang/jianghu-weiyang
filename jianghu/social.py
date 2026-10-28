@@ -98,6 +98,22 @@ def actions(w, n, visible):
     return result
 
 
+PREDATORY = ('steal', 'extort', 'smear', 'betray')
+
+
+def deterrence(w, n, q):
+    """What a would-be offender stands to face: the victim's people and their own ties."""
+    if not q:
+        return 0.
+    kin = [w.npcs[i] for i in q['parents'] + q['children'] + ([q['spouse']] if q['spouse'] else [])
+           if i in w.npcs and w.npcs[i]['alive'] and w.npcs[i]['place'] == q['place'] and w.npcs[i]['age_months'] >= 192]
+    risk = min(12, 4*len(kin)) + (6 if q['faction'] is not None else 0) + (8 if q.get('office') else 0)
+    own = [i for i in n['children'] + ([n['spouse']] if n['spouse'] else []) if i in w.npcs and w.npcs[i]['alive']]
+    stake = (5 if n['faction'] is not None else 0) + (4 if own else 0)
+    infamy = .7 if n['reputation'] < -20 else 1.
+    return round((risk + stake) * (1.3 - n['traits']['boldness']/100) * infamy, 4)
+
+
 def adjustment(w, n, a):
     t=n['traits']; k=a['kind']; q=w.npcs.get(a['target'])
     repeats=n['action_counts'].get(k,0)
@@ -134,14 +150,24 @@ def adjustment(w, n, a):
         value+=(100-t['integrity'])*.45+(100-t['kindness'])*.4-t['integrity']*.22-(100-t['boldness'])*.12
     elif k=='play':
         value+=18
+    if k in PREDATORY:
+        value-=deterrence(w,n,q)
     return value
 
 
 def expose(w, kind, n, q, amount, summary, causes=None, extra=None):
     w.link(n,q,-35,-35)
     n['reputation']=max(-100,n['reputation']-5)
+    # Word spreads to the victim's own people nearby; they think less of the offender.
+    kin={i for i in q['parents']+q['children']+[q['spouse']] if i is not None}
+    near={int(i) for i,r in q['relationships'].items() if r.get('affinity',0)>=20}|kin
+    circle=sorted((w.npcs[i] for i in near if i in w.npcs and i!=n['id'] and w.npcs[i]['alive'] and w.npcs[i]['place']==q['place']),
+                  key=lambda p:(p['id'] not in kin,-q['relationships'].get(str(p['id']),{}).get('affinity',0),p['id']))[:6]
     e=w.emit(kind,[n['id'],q['id']],summary,.88,causes,
-             {'offender':n['id'],'victim':q['id'],'transfer':amount,**(extra or {})})
+             {'offender':n['id'],'victim':q['id'],'transfer':amount,'witnessed_by':[p['id'] for p in circle],**(extra or {})})
+    for p in circle:
+        r=w.relation(p,n['id']);r['affinity']=max(-100,r['affinity']-8);r['trust']=max(-100,r['trust']-6)
+        w.know(p,n)
     q['grievance_cause']=e['id']
     return e
 

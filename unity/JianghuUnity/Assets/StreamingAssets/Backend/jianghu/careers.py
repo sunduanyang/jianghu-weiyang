@@ -154,13 +154,47 @@ def actions(w, n, planning=False):
     return options
 
 
+def note_income(n, earned):
+    """Remember what work has actually paid lately (per working week), not one lucky or idle week."""
+    c = n['career']
+    c['income_ema'] = round(earned if c.get('income_ema') is None else .7*c['income_ema'] + .3*earned, 4)
+
+
+def entrants(w, n, job, months=6):
+    """Neighbours who have just switched into this trade: the market they leave behind is thinner."""
+    return sum(1 for i in w.residents.get(n['place'], []) if i != n['id'] and w.npcs[i]['alive']
+               and w.npcs[i]['career']['profession'] == job and w.npcs[i]['career'].get('source') == '自主转业'
+               and w.month - w.npcs[i]['career'].get('last_change', -999) < months)
+
+
+def switch_gain(w, n, job):
+    """Expected gain from switching trades, as one person would judge it.
+
+    The current trade is valued by what it has really paid lately as well as today's
+    market, so a single bad week does not empty a trade; the new trade is discounted
+    for neighbours who have just crowded into it.
+    """
+    from . import economics
+    if not economics.active(w):
+        return income(n, profession=job) - income(n)
+    today = economics.expected_income(w, n)
+    remembered = n['career'].get('income_ema')
+    current = today if remembered is None else max(today, .6*remembered + .4*today)
+    return economics.expected_income(w, n, job) / (1 + .2*entrants(w, n, job)) - current
+
+
+def review_month(w, n):
+    """People reconsider their trade on their own rhythm, not all in the same month."""
+    return (n['id'] + w.month) % 3 == 0
+
+
 def score(w, n, a):
     if a['kind'] == 'change_job':
         job = a['target']
-        from . import economics
-        difference = (economics.expected_income(w, n, job)-economics.expected_income(w, n)) if economics.active(w) else income(n, profession=job)-income(n)
-        # Switching costs and a two-year commitment discourage wandering between jobs.
-        return 4 + difference*4 + (7 if n['goal']['kind'] == 'wealth' else 0) - PROFESSIONS[job]['cost']*.35
+        difference = switch_gain(w, n, job)
+        # Switching costs, attachment to one's craft and a two-year commitment discourage wandering.
+        return (4 + difference*4 + (7 if n['goal']['kind'] == 'wealth' else 0) - PROFESSIONS[job]['cost']*.35
+                - experience(n)*.06 - (0 if review_month(w, n) else 25))
     job = a['profession']
     return (6 + n['traits']['ambition']*.08 + (10 if n['career']['profession'] == job else 0)
             + (6 if n['goal']['kind'] == 'wealth' else 0))
