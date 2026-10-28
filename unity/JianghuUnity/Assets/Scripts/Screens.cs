@@ -57,7 +57,9 @@ public partial class JianghuApp {
         // detail tabs (right)
         Rect side=new Rect(1240,112,380,770);Panel(side);
         GUILayout.BeginArea(new Rect(side.x+12,side.y+12,side.width-24,side.height-24));
-        personTab=GUILayout.SelectionGrid(personTab,new[]{"此刻","心性","身份","物品","关系","门中","战斗","年谱","打算","家计","升降"},4,chip);
+        T("详细资料",sub);
+        int nextTab=GUILayout.SelectionGrid(personTab,new[]{"近况","心性","身份营生","随身物品","人际关系","门派","战斗能力","个人年谱","行动打算","家计","品阶升降"},3,chip);
+        if(nextTab!=personTab){personTab=nextTab;personScroll=Vector2.zero;}
         personScroll=GUILayout.BeginScrollView(personScroll);DrawPersonTab();GUILayout.EndScrollView();
         GUILayout.EndArea();
     }
@@ -96,6 +98,9 @@ public partial class JianghuApp {
         if(GUI.Button(new Rect(plateR.x+150,plateR.y+119,120,28),"此人行囊",linkStyle))OpenCharacterPage(2);
         if(GUI.Button(new Rect(plateR.x+280,plateR.y+119,120,28),"此人战斗",linkStyle))OpenCharacterPage(3);
         Rect box=new Rect(470,100,740,810);Frame(box,"panel_solid",24);
+        if(GUI.Button(new Rect(52,36,192,38),"‹ 返回"+StageName,chip))dialogueOpen=false;
+        GUI.Label(new Rect(470,43,740,32),"人物交谈  /  "+CharacterName,centerTitle);
+        GUI.Label(new Rect(54,884,382,38),new GUIContent(UiStatus,UiStatus),small);
         DrawSocialConversation(new Rect(box.x+28,box.y+20,box.width-56,box.height-40));
         var e=Event.current;
         if(e.type==EventType.KeyDown&&e.keyCode==KeyCode.Escape){dialogueOpen=false;e.Use();}

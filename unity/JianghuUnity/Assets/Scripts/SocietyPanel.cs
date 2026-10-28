@@ -30,7 +30,7 @@ public partial class JianghuApp {
         foreach (var key in new[] {"last_support_event", "last_care_event"})
             if (s[key].Has && Btn(key == "last_support_event" ? "查看最近扶助前因" : "查看最近照护前因")) OpenEvent(s[key].I);
         if (s["migration"].Has) T("困顿中考虑依此前见闻前往" + Place(s["migration"]["destination"].I)["name"].S + "投亲；行路仍需盘缠与两周。", small);
-        if (Btn("查看所在地乡里")) { personScreen = false; dialogueOpen = false; Page = 4; institutionKind = "乡里"; communityPlace = Person["place"].I; }
+        if (Btn("查看所在地乡里")) { RememberBookLocation();personScreen = false; dialogueOpen = false; Go(4); institutionKind = "乡里"; communityPlace = Person["place"].I; }
         GUILayout.Space(8);
     }
 

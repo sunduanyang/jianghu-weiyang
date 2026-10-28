@@ -90,7 +90,7 @@ public partial class JianghuApp {
         GUI.Label(new Rect(410,267,860,65),b["status"].S=="finished"?"切磋已收招":"江湖切磋",centerTitle);
         string message=!b.Has?"在人物档案选择一位成年、体力充足的人，约定切磋。":b["status"].S=="finished"?"此次交手已归档，结果和装备损耗见世界年谱。":"正在展开物理战场…";
         GUI.Label(new Rect(430,365,820,100),message,text);
-        if(GUI.Button(new Rect(595,520,490,55),"返回功法与闭关",selected))battleView=false;
+        if(GUI.Button(new Rect(595,520,490,55),"返回战斗与武学",selected))battleView=false;
         if(b["event_id"].Has&&GUI.Button(new Rect(595,595,490,45),"查看此战年谱",chip)){battleView=false;OpenEvent(b["event_id"].I);}
     }
     public void ShowBattleForSmoke(){Page=3;battleView=true;personScreen=dialogueOpen=false;}

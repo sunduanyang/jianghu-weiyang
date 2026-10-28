@@ -30,7 +30,7 @@ public partial class JianghuApp {
         GUILayout.BeginHorizontal();T("在籍名册",sub);if(Btn("全部品级"))nationalGrade=0;nationalQuery=GUILayout.TextField(nationalQuery);GUILayout.EndHorizontal();
         var people=ranks["roster"].A.Where(n=>(nationalGrade==0||n["grade"].I==nationalGrade)&&n["name"].S.Contains(nationalQuery)).ToList();
         T((nationalGrade==0?"全部":"一二三四五六七八九"[nationalGrade-1]+"品")+" · "+people.Count+"人",small);
-        foreach(var n in people)if(GUILayout.Button(n["grade_label"].S+" · "+n["name"].S+" · "+n["title"].S,rowStyle)){SelectPerson(n["id"].I);OpenPersonScreen();}
+        foreach(var n in people)if(GUILayout.Button(n["grade_label"].S+" · "+n["name"].S+" · "+n["title"].S,rowStyle))OpenLinkedPerson(n["id"].I);
         if(people.Count==0)T("此品暂无符合条件的人物。",small);
     }
 

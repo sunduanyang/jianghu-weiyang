@@ -34,12 +34,13 @@ public partial class JianghuApp {
         giftTarget=target;SwitchBookPerson(-1);inventoryMode="行囊";OpenCharacterPage(2);
     }
     void DrawCharacterRail(){
-        GUI.Label(new Rect(60,112,180,24),"正在查看 · "+CharacterName,caption);
+        GUI.Label(new Rect(60,112,180,24),"查看对象",sub);
         DrawCharacterChoice(new Rect(60,144,180,84),-1,Hero,Hero["created"].B?Hero["name"].S:"过客","我的人物");
         var ids=recentPeople.ToArray();
+        GUI.Label(new Rect(60,232,180,20),"近期查看的人物",caption);
         for(int i=0;i<ids.Length;i++){
             var n=Npc(ids[i]);if(!n.Has)continue;
-            DrawCharacterChoice(new Rect(60,238+i*100,180,92),ids[i],n,n["name"].S,n["identity"]["title"].S);
+            DrawCharacterChoice(new Rect(60,258+i*100,180,92),ids[i],n,n["name"].S,n["identity"]["title"].S);
         }
     }
     void DrawCharacterChoice(Rect r,int id,J actor,string name,string detail){

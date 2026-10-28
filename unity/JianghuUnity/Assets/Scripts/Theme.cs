@@ -20,7 +20,7 @@ public partial class JianghuApp {
     GUIStyle tab, tabOn, rowStyle, rowOnStyle, linkStyle, linkOnStyle, sealSmall, mapLabel, mapLabelOn, mapHalo, mapHaloBold, caption, mapTitle,
         centerTitle, centerSmall, bigNumber, titleBrush, medalGlyph, medalLabel, tagStyle, tagOnStyle, dialogueStyle, valueStyle, labelRight, resGlyph, resValue, moonLabel, globeOn, globeOff;
     static readonly int[] BookTabs={-1,2,3,4,6,5,7,8};
-    static readonly string[] BookTabNames={"人物","行囊","战斗","势力","年谱","皮影","模型","存档"};
+    static readonly string[] BookTabNames={"资料","行囊","战斗","势力","年谱","皮影","模型","存档"};
     bool rosterOpen=true, advanceOpen, personScreen, dialogueOpen;
     int basePage;
     readonly Color vermilion=new Color(.56f,.17f,.13f), muted=new Color(.60f,.63f,.58f), paperText=new Color(.97f,.93f,.85f),
@@ -28,7 +28,7 @@ public partial class JianghuApp {
     static readonly Vector2[] HaloOffsets={new Vector2(-1,0),new Vector2(1,0),new Vector2(0,-1),new Vector2(0,1),new Vector2(-1,-1),new Vector2(1,1),new Vector2(-1,1),new Vector2(1,-1)};
 
     // fixed layout of the 戏 screen (virtual 1680×960)
-    static readonly Rect TopBar=new Rect(0,0,1680,58), Dock=new Rect(0,806,1680,154), PlaceCard=new Rect(1420,254,252,540), LayerRow=new Rect(755,62,170,34), AdvancePopup=new Rect(1056,598,310,200);
+    static readonly Rect TopBar=new Rect(0,0,1680,58), Dock=new Rect(0,806,1680,154), PlaceCard=new Rect(1420,254,252,540), LayerRow=new Rect(680,66,320,34), AdvancePopup=new Rect(1018,518,384,278);
     Rect LeftPanel=>rosterOpen?new Rect(8,70,262,640):new Rect(8,70,26,120);
 
     static bool IsStagePage(int page)=>page==0||page==1;
@@ -162,6 +162,7 @@ public partial class JianghuApp {
         GUI.color=old;bool hit=GUI.Button(new Rect(r.x,r.y,r.width,r.height+22),GUIContent.none,GUIStyle.none);return hit&&enabled&&!Client.Busy;
     }
     bool OverUI(Vector2 m){
+        if(choiceOpen)return true;
         if(personScreen||dialogueOpen||!IsStagePage(Page))return true;
         if(TopBar.Contains(m)||LeftPanel.Contains(m)||PlaceCard.Contains(m))return true;
         if(Page==1&&CityOverviewRect.Contains(m))return true;
@@ -209,16 +210,25 @@ public partial class JianghuApp {
         // hero (left)
         Rect hp=new Rect(4,712,200,240);
         if(Hero["created"].B){DrawPaperBust(hp,Hero,true);GUI.Label(new Rect(208,880,200,24),Hero["name"].S,sub);GUI.Label(new Rect(208,904,260,20),Hero["place_name"].S+" · "+Hero["position_name"].S,caption);
-            if(GUI.Button(new Rect(208,926,90,24),"定位主角",linkStyle)){SelectedPlace=Hero["place"].I;mapZoom=1.6f;mapPan=new Vector2(640-(float)Place(SelectedPlace)["x"].N,380-(float)Place(SelectedPlace)["y"].N);if(Page!=0)Go(0);}}
+            if(GUI.Button(new Rect(208,926,90,24),"定位主角",linkStyle)){SelectedPlace=Hero["place"].I;if(Page==1)LoadCity(SelectedPlace);else{mapZoom=1.6f;mapPan=new Vector2(640-(float)Place(SelectedPlace)["x"].N,380-(float)Place(SelectedPlace)["y"].N);}}
+            if(GUI.Button(new Rect(308,926,110,24),"我的资料",linkStyle)){SwitchBookPerson(-1);OpenCharacterPage(-1);}}
         else{DrawPaperBust(hp,J.O("sex",heroSex,"age_months",int.TryParse(heroAge,out int ha)?ha*12:216),true);GUI.Label(new Rect(208,880,240,24),"尚未立主角",sub);if(GUI.Button(new Rect(208,906,110,30),"创建主角",selected))creatingHero=!creatingHero;}
         // month dial (centre)
         Rect moon=new Rect(765,812,150,150);Tex(moon,"moon");
         bool hero=Hero["created"].B;
         GUI.Label(new Rect(moon.x,moon.y+30,moon.width,60),hero?Hero["points"].S:"推",bigNumber);
         GUI.Label(new Rect(moon.x,moon.y+86,moon.width,24),hero?"结束本月":"推演一月",moonLabel);
-        if(GUI.Button(moon,GUIContent.none,GUIStyle.none)&&!Client.Busy&&!W["battle_active"].B){if(hero){if(Paused)HeroAction("end_turn");}else Control("advance",1);}
+        string monthHint=W["battle_active"].B?"请先结束切磋":!Paused?"请先暂停世界推演":hero?"结束本月并恢复下月行动力":"推进世界一个月";
+        bool previous=GUI.enabled;GUI.enabled=previous&&!Client.Busy&&!W["battle_active"].B&&(!hero||Paused);
+        if(GUI.Button(moon,new GUIContent("",monthHint),GUIStyle.none)){if(hero)HeroAction("end_turn");else Control("advance",1);}GUI.enabled=previous;
         // function medallions
         float y=900;
+        Fill(new Rect(450,845,270,24),new Color(.04f,.065f,.06f,.88f));
+        Fill(new Rect(968,845,165,24),new Color(.04f,.065f,.06f,.88f));
+        Fill(new Rect(1140,845,165,24),new Color(.04f,.065f,.06f,.88f));
+        GUI.Label(new Rect(450,845,270,24),"人物 · "+CharacterName,centerSmall);
+        GUI.Label(new Rect(968,845,165,24),"世界记录",centerSmall);
+        GUI.Label(new Rect(1140,845,165,24),"外观与推演",centerSmall);
         if(Medal(new Vector2(500,y),60,"人","人物",personScreen))OpenCharacterPage(-1);
         if(Medal(new Vector2(585,y),60,"囊","行囊",Page==2))OpenCharacterPage(2);
         if(Medal(new Vector2(670,y),60,"武","战斗",Page==3))OpenCharacterPage(3);
@@ -232,10 +242,10 @@ public partial class JianghuApp {
         GUI.Label(new Rect(g.x,g.y+26,g.width,40),"天下",Page==0?globeOn:globeOff);
         GUI.Label(new Rect(g.x,g.y+78,g.width,40),"城中",Page==1?globeOn:globeOff);
         if(GUI.Button(new Rect(g.x,g.y,g.width,g.height/2),GUIContent.none,GUIStyle.none)&&Page!=0)Go(0);
-        if(GUI.Button(new Rect(g.x,g.center.y,g.width,g.height/2),GUIContent.none,GUIStyle.none)&&Page!=1){if(Hero["created"].B&&SelectedPlace!=Hero["place"].I&&Page==1)SelectedPlace=Hero["place"].I;Go(1);}
+        if(GUI.Button(new Rect(g.x,g.center.y,g.width,g.height/2),GUIContent.none,GUIStyle.none)&&Page!=1)Go(1);
         // status toast above the dial
-        string status=!string.IsNullOrEmpty(Client.Error)?"提示："+Client.Error:Client.Busy?"正在结算，请稍候…":Client.Status;
-        if(!string.IsNullOrEmpty(status)){float w=Mathf.Min(760,small.CalcSize(new GUIContent(status)).x+30);Rect sr=new Rect(840-w/2,776,w,24);GUI.Label(sr,status,tagStyle);}
+        string status=UiStatus;
+        if(!string.IsNullOrEmpty(status)){float w=Mathf.Min(760,small.CalcSize(new GUIContent(status)).x+30);Rect sr=new Rect(840-w/2,776,w,24);GUI.Label(sr,new GUIContent(status,status),tagStyle);}
     }
     void DrawHeroCreation(){
         if(Hero["created"].B||!creatingHero)return;
@@ -250,10 +260,13 @@ public partial class JianghuApp {
     void DrawAdvance(){
         if(!advanceOpen)return;Panel(AdvancePopup);
         GUILayout.BeginArea(new Rect(AdvancePopup.x+14,AdvancePopup.y+10,AdvancePopup.width-28,AdvancePopup.height-18));
-        GUILayout.Label("世界推演",sub);bool calm=!W["battle_active"].B;
+        GUILayout.BeginHorizontal();GUILayout.Label("世界推演",sub);GUILayout.FlexibleSpace();if(GUILayout.Button("关闭",chip,GUILayout.Width(58)))advanceOpen=false;GUILayout.EndHorizontal();bool calm=!W["battle_active"].B;
+        T("快进会推进整个世界；主角行动请用「结束本月」。",small);
+        T("推进时长",small);
         GUILayout.BeginHorizontal();if(Btn("一月",calm))Control("advance",1);if(Btn("一年",calm))Control("advance",12);if(Btn("十年",calm))Control("advance",120);if(Btn("五十年",calm))Control("advance",600);GUILayout.EndHorizontal();
         GUILayout.BeginHorizontal();if(Btn("自行演化",calm))Control("auto");if(Btn("暂停"))Control("pause");if(Btn("保存"))Client.Act("/api/save",J.O());GUILayout.EndHorizontal();
         fastMode=GUILayout.Toggle(fastMode,"规则快进（跳过模型调用）");
+        T(W["battle_active"].B?"切磋进行中，请先收招。":W["autoplay"].B?"正在自行演化，可随时暂停。":W["job"]["remaining"].I>0?"正在推演，剩余 "+W["job"]["remaining"].S+" 月。":"当前世界已暂停。",small);
         GUILayout.EndArea();
     }
 
@@ -261,17 +274,21 @@ public partial class JianghuApp {
     // Full-screen page: big faint title, close mark, bottom tab strip. Returns the content rect.
     Rect BookScreen(string heading){
         Tile(new Rect(0,0,1680,960),"bg");Tex(new Rect(0,0,1680,960),"vignette");
-        GUI.Label(new Rect(40,10,600,90),heading,titleBrush);Fill(new Rect(40,96,360,1),new Color(.79f,.64f,.35f,.35f));
-        Rect close=new Rect(1606,22,50,50);var old=GUI.color;if(close.Contains(Event.current.mousePosition))GUI.color=new Color(1,.86f,.6f);Tex(close,"close");GUI.color=old;
-        if(GUI.Button(close,GUIContent.none,GUIStyle.none)||(Event.current.type==EventType.KeyDown&&Event.current.keyCode==KeyCode.Escape&&!dialogueOpen))CloseBook();
+        GUI.Label(new Rect(60,18,710,42),heading,title);
+        GUI.Label(new Rect(60,69,710,23),StageName+"  /  "+(personScreen?"人物资料":Pages[Page]),small);
+        GUI.Label(new Rect(790,23,500,30),(personScreen||Page==2||Page==3)?(InspectingNpc?"正在查看他人 · ":"我的人物 · ")+CharacterName:Page==4?"世界 / 政权、门派与乡里":Page==6?"世界 / 事件与前因后果":"工具 / "+Pages[Page],sub);
+        if(GUI.Button(new Rect(1310,20,166,36),new GUIContent("‹ "+BookBackLabel,"Esc 返回"),chip))CloseBook();
+        if(GUI.Button(new Rect(1490,20,150,36),"返回地图",chip))ReturnToStage();
+        DrawBookStatus();Fill(new Rect(40,101,1600,1),hairline);
         Fill(new Rect(40,890,1600,1),hairline);
         GUILayout.BeginArea(new Rect(40,896,1600,52));GUILayout.BeginHorizontal();GUILayout.FlexibleSpace();
         for(int i=0;i<BookTabs.Length;i++){int target=BookTabs[i];bool on=target<0?personScreen:!personScreen&&Page==target;
-            if(GUILayout.Button(BookTabNames[i],on?tabOn:tab,GUILayout.Height(46),GUILayout.MinWidth(118))){if(target<0||target==2||target==3)OpenCharacterPage(target);else{personScreen=false;Go(target);}}}
+            if(i==0||i==3||i==5){if(i>0)GUILayout.Space(32);GUILayout.Label(i==0?"人物":i==3?"世界":"工具",caption,GUILayout.Width(40),GUILayout.Height(46));}
+            if(GUILayout.Button(BookTabNames[i],on?tabOn:tab,GUILayout.Height(46),GUILayout.Width(112)))NavigateBookTab(target);}
         GUILayout.FlexibleSpace();GUILayout.EndHorizontal();GUILayout.EndArea();
         return new Rect(60,112,1560,770);
     }
-    void CloseBook(){personScreen=false;dialogueOpen=false;if(!IsStagePage(Page))Go(basePage);if(dialogueReturnPerson>=0){int id=dialogueReturnPerson;dialogueReturnPerson=-1;SwitchBookPerson(id);OpenDialogue(null);}}
+    void CloseBook(){CloseChoices();if(RestoreBookLocation())return;int id=dialogueReturnPerson;dialogueReturnPerson=-1;personScreen=false;dialogueOpen=false;if(!IsStagePage(Page))Go(basePage);if(id>=0){SwitchBookPerson(id);OpenDialogue(null);}}
     void OpenPersonScreen(){if(SelectedPerson>=0)bookPersonId=SelectedPerson;OpenCharacterPage(-1);}
 
 }

@@ -116,8 +116,9 @@ public partial class JianghuApp {
         GUILayout.BeginArea(new Rect(c.x+12,c.y+10,c.width-24,c.height-18));
         GUILayout.Label(p["name"].S,heading);
         GUILayout.Label(Country(p["country"].I)["name"].S+" · "+p["region"].S,small);
+        T(Hero["created"].B?(Hero["place"].I==SelectedPlace?"主角所在城镇":"远方城镇 · 查看地图不消耗行动力"):"查看城镇地图，或在此创建主角。",small);
         Metric("居民",p["population"].S+"人");Metric("守备",Num(p["guard"]));Metric("安定",Num(p["stability"]));
-        GUILayout.BeginHorizontal();if(Btn("进入城中"))Go(1);if(Btn("所属官府"))OpenInstitution(true,p["country"].I);GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();if(Btn("查看城中"))Go(1);if(Btn("所属官府"))OpenInstitution(true,p["country"].I);GUILayout.EndHorizontal();
         if(GUILayout.Button("此地中人 ›",linkStyle)){rosterMode="此地";rosterOpen=true;}
         mainScroll=GUILayout.BeginScrollView(mainScroll);
         DrawTravel();

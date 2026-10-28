@@ -66,7 +66,7 @@ public partial class JianghuApp {
     bool CityLocal=>Hero["created"].B&&City["place"].I==Hero["place"].I;
 
     string CityMovementBlockReason=>!Hero["created"].B?"请先创建主角":!CityLocal?"远方地图预览，请先返回主角所在城镇":W["battle_active"].B?"切磋尚未结束，收招后才能在城中行走":W["autoplay"].B||W["job"]["remaining"].I>0?"世界正在推演，请先暂停再行走":Hero["points"].I<=0?"本月行动力已用尽，请结束本月":"";
-    bool CityMovementAllowed=>Page==1&&City.Has&&CityMovementBlockReason.Length==0&&!personScreen&&!dialogueOpen&&!advanceOpen;
+    bool CityMovementAllowed=>Page==1&&City.Has&&CityMovementBlockReason.Length==0&&!personScreen&&!dialogueOpen&&!advanceOpen&&!choiceOpen;
     void UpdateCityMovement(){
         if(!CityMovementAllowed||cityLoading){StopCityWalk();cityHeldDirection=Vector2Int.zero;cityNextStepAt=0;return;}
         if(cityWalkSmokeInput)return;
@@ -441,8 +441,8 @@ public partial class JianghuApp {
             else if(Btn("以此为游览起点",path.Count>0&&!CityBlocked(t))){originRow=chosenRow;originCol=chosenCol;cityPathKey="";EnsureCityRoutes();}
             if(local&&!Paused)T("先暂停世界推演或收招，再安排行旅。",small);
             string kind=node["kind"].S;
-            if((CityHasService(node,"market")||CityHasService(node,"workshop"))&&Btn("打开过客货栈 ›")){inventoryMode="货栈";Go(2);}
-            if((CityHasService(node,"training")||CityHasService(node,"temple")||CityHasService(node,"faction"))&&Btn("功法与闭关 ›"))Go(3);
+            if((CityHasService(node,"market")||CityHasService(node,"workshop"))&&Btn("交易货栈 ›")){SwitchBookPerson(-1);inventoryMode="货栈";OpenCharacterPage(2);}
+            if((CityHasService(node,"training")||CityHasService(node,"temple")||CityHasService(node,"faction"))&&Btn("我的战斗与武学 ›")){SwitchBookPerson(-1);OpenCharacterPage(3);}
             if(CityHasService(node,"government")&&Btn("查看所属官府 ›"))OpenInstitution(true,City["country"].I);
             if(node["faction"].Has&&Btn("查看门派 · 入门与传艺 ›"))OpenInstitution(false,node["faction"].I);
             if((CityHasService(node,"gate")||CityHasService(node,"dock"))&&Btn("返回大地图 ›"))Go(0);
