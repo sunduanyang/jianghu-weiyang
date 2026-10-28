@@ -76,7 +76,8 @@ def tutor_for(w, n, profession):
 
 def career_target(w, n):
     if (n['age_months'] < 192 or n['office'] or n['faction'] is not None or n.get('social_status')
-            or w.month - n['career']['last_change'] < 24):
+            or w.month - n['career']['last_change'] < 24 or n['career'].get('income_ema') is None
+            or not careers.review_month(w, n)):
         return None
     options = []
     for job, p in careers.PROFESSIONS.items():

@@ -180,7 +180,13 @@ def switch_gain(w, n, job):
     today = economics.expected_income(w, n)
     remembered = n['career'].get('income_ema')
     current = today if remembered is None else max(today, .6*remembered + .4*today)
-    return economics.expected_income(w, n, job) / (1 + .2*entrants(w, n, job)) - current
+    # A trade is judged by what neighbours in it actually earn, when there are any to watch.
+    peers = sorted(w.npcs[i]['career']['income_ema'] for i in w.residents.get(n['place'], [])
+                   if i != n['id'] and w.npcs[i]['alive'] and w.npcs[i]['career']['profession'] == job
+                   and w.npcs[i]['career'].get('income_ema') is not None)
+    # With no one to watch, an untried trade is only a guess and is discounted.
+    prospect = peers[len(peers)//2] if len(peers) >= 2 else economics.expected_income(w, n, job) * .6
+    return prospect / (1 + .2*entrants(w, n, job)) - current
 
 
 def review_month(w, n):
@@ -191,10 +197,16 @@ def review_month(w, n):
 def score(w, n, a):
     if a['kind'] == 'change_job':
         job = a['target']
+        settled = n['career'].get('income_ema') is not None
+        if not settled or not review_month(w, n):
+            # Off one's own rhythm, or before knowing what one's trade pays: not now.
+            return -40 - PROFESSIONS[job]['cost']*.35
         difference = switch_gain(w, n, job)
         # Switching costs, attachment to one's craft and a two-year commitment discourage wandering.
-        return (4 + difference*4 + (7 if n['goal']['kind'] == 'wealth' else 0) - PROFESSIONS[job]['cost']*.35
-                - experience(n)*.06 - (0 if review_month(w, n) else 25))
+        # Switching only appeals when the new trade really looks better; a wish for wealth
+        # sharpens a real gain but does not invent one.
+        eager = min(8., difference*2) if n['goal']['kind'] == 'wealth' and difference > 0 else 0.
+        return difference*5 + eager - 6 - PROFESSIONS[job]['cost']*.35 - experience(n)*.06
     job = a['profession']
     return (6 + n['traits']['ambition']*.08 + (10 if n['career']['profession'] == job else 0)
             + (6 if n['goal']['kind'] == 'wealth' else 0))

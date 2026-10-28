@@ -58,8 +58,9 @@ def trade(w, n, job):
 
 def job_weights(place):
     p = PLACES[place]
-    weights = {'农人': 34, '行商': 12, '药师': 6, '匠人': 13, '镖师': 6,
-               '渔人': 5, '猎户': 5, '书生': 6, '艺人': 6, '短工': 7}
+    # Shares follow what households actually need each month (food first, few services).
+    weights = {'农人': 40, '行商': 9, '药师': 3, '匠人': 13, '镖师': 3,
+               '渔人': 5, '猎户': 5, '书生': 4, '艺人': 4, '短工': 6}
     if p['kind'] in ('port', 'island'):
         weights.update(渔人=32, 行商=22, 农人=18, 猎户=1)
     elif p['country'] in (2, 5, 9):
@@ -101,6 +102,27 @@ def civil(w, place, job=None, years=None, title=None):
     return n
 
 
+# How members of each tradition earn a living: temple fields, herb gardens, escorts,
+# street trades. Drawn from a stream keyed by seed and person; the world RNG is untouched.
+SECT_TRADES = {
+    '佛门': {'农人': 5, '药师': 1, '匠人': 2, '镖师': 1},
+    '道门': {'农人': 4, '药师': 1, '书生': 1, '镖师': 1},
+    '帮会': {'短工': 3, '艺人': 2, '行商': 2, '镖师': 1},
+    '剑派': {'镖师': 2, '猎户': 2, '农人': 2},
+    '武人集团': {'镖师': 4, '匠人': 2, '农人': 2},
+    '部族武帐': {'猎户': 3, '镖师': 2, '农人': 2},
+    '祖灵信仰': {'药师': 1, '农人': 3, '猎户': 2},
+    '萨满信仰': {'药师': 1, '猎户': 3, '农人': 2},
+}
+
+
+def sect_trade(w, f, n):
+    import hashlib, random
+    weights = SECT_TRADES.get(f['tradition'], {'农人': 2, '镖师': 1})
+    digest = hashlib.sha256(f"{w.seed}:{n['id']}:sect-trade-v1".encode()).digest()
+    return random.Random(int.from_bytes(digest[:8], 'big')).choices(list(weights), list(weights.values()))[0]
+
+
 def school(w, f, count):
     if count >= 9:
         counts = apportion(count, GRADE_WEIGHTS, [1] * 9)
@@ -118,7 +140,7 @@ def school(w, f, count):
                  combat_attributes={'version': combat_attributes.VERSION, 'baseline_version': combat_attributes.TUNING['version'], 'base': dict.fromkeys(combat_attributes.KEYS,
                      round(w.rng.uniform(required_ability, min(95, required_ability + 12)), 2))},
                  reputation=w.rng.uniform(max(0, 40 - grade * 5), max(2, 65 - grade * 6)))
-        trade(w, n, '药师' if f['public_axis'] == 'sanitation' else '镖师' if grade <= 7 else '农人')
+        trade(w, n, sect_trade(w, f, n))
         temperament.assign(w, n, n['career']['profession'], f['tradition'])
         if grade == 1:
             f.update(leader=n['id'], leader_since=w.month, leader_review_since=w.month)
