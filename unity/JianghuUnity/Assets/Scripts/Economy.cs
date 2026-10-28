@@ -11,8 +11,8 @@ public partial class JianghuApp {
         int requestedPlace=economyPlace;Economy=new J();
         Client.Fetch("/api/economy?place="+requestedPlace,j=>{if(requestedPlace==economyPlace)Economy=j;});
     }
-    public void ShowEconomyForSmoke(){personScreen=false;dialogueOpen=false;Page=2;inventoryMode="市井供需";LoadInventory();}
-    public void ShowHouseholdForSmoke(){personTab=9;personScreen=true;dialogueOpen=false;}
+    public void ShowEconomyForSmoke(){OpenMarket("市井供需");}
+    public void ShowHouseholdForSmoke(){ViewPerson(SelectedPerson,PersonTab.Ties);}
     void MarketAction(string operation,string good){
         Client.Act("/api/economy",Client.HeroBody("market","operation",operation,"good",good,"amount",tradeAmount,"place",economyPlace),j=>{Economy=j["market"];LoadInventory();});
     }

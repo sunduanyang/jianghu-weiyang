@@ -65,5 +65,5 @@ public class LLMAgencySmoke : MonoBehaviour {
     }
     void Finish(){bool pass=errors.Count==0&&checks.All(c=>c["pass"].B);File.WriteAllText(Path.Combine(output,"acceptance.json"),J.O("unity",Application.unityVersion,"checks",new J(checks),"errors",new J(errors.Select(e=>new J(e)).ToList()),"passed",pass).ToString());Application.Quit(pass?0:1);}
 }
-public partial class JianghuApp {public void ShowLLMSettingsForSmoke(){personScreen=false;dialogueOpen=false;Page=7;aiEditing=false;}}
+public partial class JianghuApp {public void ShowLLMSettingsForSmoke(){OpenSystem(SystemTab.Model);aiEditing=false;}}
 }

@@ -37,7 +37,7 @@ public class CityMapSmoke : MonoBehaviour {
         double calls=client.World["ai"]["calls"].N;int month=client.World["month"].I;
         var examples=new Dictionary<int,int>();
         if(client.World["battle_active"].B){
-            var before=client.World["hero"];app.SelectedPlace=before["place"].I;app.Go(1);yield return new WaitForSecondsRealtime(1);
+            var before=client.World["hero"];app.SelectedPlace=before["place"].I;app.GoStage(Stage.City);yield return new WaitForSecondsRealtime(1);
             yield return Capture("00-unfinished-battle-movement-notice");
             Check("unfinished battle explains the movement lock",app.CityMovementReasonForSmoke.Contains("切磋"));
             Check("blocked input preserves the hero",!app.CityWalkForSmoke(before["row"].I-1,before["col"].I)&&client.World["hero"]["revision"].I==before["revision"].I);
@@ -53,7 +53,7 @@ public class CityMapSmoke : MonoBehaviour {
         Check("fast city lines clip before GUI rotation",app.ValidateCityLineClipping());
         Check("painted map assets are bundled",app.ValidateCityArt(out J artFacts),artFacts);
         if(GameClient.Arg("-riverSmokeOnly")=="true"){
-            app.Page=1;app.CitySmokeView(false);app.CityBeginRiverPixelFixture();yield return Capture("10-river-pixel-regression");app.CityEndRiverPixelFixture();
+            app.GoStage(Stage.City,false);app.CitySmokeView(false);app.CityBeginRiverPixelFixture();yield return Capture("10-river-pixel-regression");app.CityEndRiverPixelFixture();
             int riverPlace=client.World["locations"].A.First(p=>p["name"].S=="克鲁伦河营地")["id"].I;
             yield return app.CityLoadForSmoke(riverPlace);app.CitySmokeRiverFocus();yield return Capture("11-kherlen-river-bank");yield break;
         }
@@ -70,7 +70,7 @@ public class CityMapSmoke : MonoBehaviour {
         }
         Check("browsing preserves month",client.World["month"].I==month);
         if(!client.World["hero"]["created"].B){yield return Call("/api/hero",client.HeroBody("create","name","山河行客","sex","男","age",20,"place",45));yield return client.Refresh();}
-        int home=client.World["hero"]["place"].I;app.SelectedPlace=home;app.Go(1);yield return new WaitForSecondsRealtime(1);
+        int home=client.World["hero"]["place"].I;app.SelectedPlace=home;app.GoStage(Stage.City);yield return new WaitForSecondsRealtime(1);
         yield return app.CityLoadForSmoke(home);
         foreach(var size in new[]{new Vector2Int(1280,800),new Vector2Int(1920,1080),new Vector2Int(1680,960)}){
             Screen.SetResolution(size.x,size.y,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.6f);
@@ -111,7 +111,7 @@ public class CityMapSmoke : MonoBehaviour {
         Check("exactly fourteen approved sects",client.World["factions"].A.Count==14);
         foreach(string key in new[]{"shaolin","haidong","heishui"}){
             var sect=client.World["factions"].A.First(f=>f["key"].S==key);
-            yield return app.CityLoadForSmoke(sect["place"].I);app.Page=1;app.CitySmokeView(false);
+            yield return app.CityLoadForSmoke(sect["place"].I);app.GoStage(Stage.City,false);app.CitySmokeView(false);
             Check("independent nine-cell seat: "+key,app.City["settlements"].A.Count(s=>s["kind"].S=="sect"&&s["faction"].I==sect["id"].I&&s["footprint"]["size"].I==3)==1);
             yield return Capture("12-sect-seat-"+key);
             app.Institution=new J();app.OpenInstitution(false,sect["id"].I);float deadline=Time.realtimeSinceStartup+15;
@@ -119,14 +119,14 @@ public class CityMapSmoke : MonoBehaviour {
             Check("sect detail and player options: "+key,app.Institution["key"].S==key&&app.Institution["player_options"].A.Count>0);
             yield return Capture("13-sect-detail-"+key);
         }
-        app.Page=1;app.LoadCity(home);yield return new WaitForSecondsRealtime(.4f);app.CitySmokeView(false);
+        app.GoStage(Stage.City,false);app.LoadCity(home);yield return new WaitForSecondsRealtime(.4f);app.CitySmokeView(false);
         Check("no model calls",client.World["ai"]["calls"].N==calls);
     }
     IEnumerator WalkFlow(){
         if(client.World["battle_active"].B)yield return app.CityEndBattleForSmoke();
         if(!client.World["hero"]["created"].B){yield return Call("/api/hero",client.HeroBody("create","name","行路试客","sex","男","age",20,"place",45));yield return client.Refresh();}
         if(client.World["hero"]["points"].I<25){yield return Call("/api/hero",client.HeroBody("end_turn"));yield return client.Refresh();}
-        int place=client.World["hero"]["place"].I;app.Go(1);yield return app.CityLoadForSmoke(place);
+        int place=client.World["hero"]["place"].I;app.GoStage(Stage.City);yield return app.CityLoadForSmoke(place);
         while(!app.CityWarmupCompleteForSmoke)yield return null;
         Screen.SetResolution(1680,960,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.6f);
         Screen.SetResolution(1280,800,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.6f);
@@ -199,13 +199,13 @@ public class CityMapSmoke : MonoBehaviour {
         Check("unaffordable destination leaves the hero in place",tooFar.x>=0&&!app.CityWalkForSmoke(tooFar.x,tooFar.y)&&client.World["hero"]["revision"].I==revision);
         var back=app.CityPath(target.x,target.y,origin.x,origin.y,out int backCost);
         var shortTarget=back[2];var shortPath=app.CityPath(target.x,target.y,shortTarget.x,shortTarget.y,out int shortCost);
-        Check("page-exit fixture starts",app.CityWalkForSmoke(shortTarget.x,shortTarget.y));app.Go(0);
+        Check("page-exit fixture starts",app.CityWalkForSmoke(shortTarget.x,shortTarget.y));app.GoStage(Stage.World);
         deadline=Time.realtimeSinceStartup+15;
         while(app.CityWalkingForSmoke&&Time.realtimeSinceStartup<deadline)yield return null;
         var exited=new Vector2Int(client.World["hero"]["row"].I,client.World["hero"]["col"].I);
         yield return new WaitForSecondsRealtime(.3f);
         Check("leaving the city cancels all remaining steps",!app.CityWalkingForSmoke&&exited==shortPath[1]&&client.World["hero"]["revision"].I==revision+1);
-        app.Go(1);yield return app.CityLoadForSmoke(place);yield return new WaitForSecondsRealtime(.5f);
+        app.GoStage(Stage.City);yield return app.CityLoadForSmoke(place);yield return new WaitForSecondsRealtime(.5f);
         var keyboardStart=client.World["hero"];var keyboardFrom=new Vector2Int(keyboardStart["row"].I,keyboardStart["col"].I);
         Vector2Int keyboardDirection=Vector2Int.zero;
         foreach(var direction in new[]{Vector2Int.up,Vector2Int.down,Vector2Int.left,Vector2Int.right}){

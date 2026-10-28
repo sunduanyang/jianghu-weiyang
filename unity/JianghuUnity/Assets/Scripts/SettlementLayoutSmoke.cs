@@ -52,7 +52,7 @@ public class SettlementLayoutSmoke : MonoBehaviour {
         Check("49 regions remain",client.World["locations"].A.Count==49);
         Check("ordinary settlements reduced to 111; 14 sects retained",ordinaryTotal==111&&sectTotal==14,J.O("ordinary",ordinaryTotal,"sects",sectTotal));
         Check("all living people visible once",people.Count==client.World["population"].I);
-        Screen.SetResolution(1280,800,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.3f);Screen.SetResolution(1680,960,FullScreenMode.Windowed);app.Page=1;
+        Screen.SetResolution(1280,800,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.3f);Screen.SetResolution(1680,960,FullScreenMode.Windowed);app.GoStage(Stage.City,false);
         foreach(var tier in new[]{"prosperous","general","sparse"}){
             if(tier=="general")app.SettlementFilterForSmoke("村落");
             yield return app.CityLoadForSmoke(examples[tier]);

@@ -43,7 +43,7 @@ public class CityPeopleSmoke : MonoBehaviour {
     IEnumerator Run(){
         int month=client.World["month"].I;double calls=client.World["ai"]["calls"].N;string events=client.World["events"].S,hero=client.World["hero"].ToString();
         Screen.SetResolution(1680,960,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.3f);
-        app.Page=1;
+        app.GoStage(Stage.City,false);
         var places=client.World["locations"].A.OrderByDescending(p=>p["population"].I).Take(2).ToList();
         foreach(var place in places){
             yield return app.CityLoadForSmoke(place["id"].I);
@@ -54,7 +54,7 @@ public class CityPeopleSmoke : MonoBehaviour {
             app.CityPeopleHideRosterForSmoke();
             app.CityPeopleSelectForSmoke(row,col);var populated=app.CityPeopleSelectionForSmoke();
             Check("selection displays populated cell",populated["people"].A.Count>0,populated);
-            Check("selecting a cell opens left people tab and clears old search",populated["roster_open"].B&&populated["roster_mode"].S=="人物"&&populated["query"].S==""&&populated["scroll_y"].N==0,populated);
+            Check("selecting a cell opens left people tab and clears old search",populated["roster_open"].B&&populated["roster_mode"].S=="此地"&&populated["query"].S==""&&populated["scroll_y"].N==0,populated);
             foreach(var size in new[]{new Vector2Int(1280,800),new Vector2Int(1920,1080)}){
                 Screen.SetResolution(size.x,size.y,FullScreenMode.Windowed);
                 yield return Capture("populated-"+place["id"].S+"-"+size.x+"x"+size.y);
@@ -77,7 +77,7 @@ public class CityPeopleSmoke : MonoBehaviour {
     void Finish(){bool pass=checks.All(c=>c["pass"].B);File.WriteAllText(Path.Combine(output,"city-people.json"),J.O("pass",pass,"checks",new J(checks),"save_dir",client==null?"":client.SaveDir).ToString());Application.Quit(pass?0:1);}
 }
 public partial class JianghuApp {
-    public void CityPeopleHideRosterForSmoke(){rosterOpen=false;rosterMode="地区";query="previous search";rosterScroll.y=800;}
+    public void CityPeopleHideRosterForSmoke(){rosterOpen=false;rosterMode="城镇";query="previous search";rosterScroll.y=800;}
     public void CityPeopleScrollForSmoke(){rosterScroll.y=Mathf.Max(0,CityPeopleAt(new Vector2Int(chosenRow,chosenCol)).Count*60-400);}
     public void CityPeopleSelectForSmoke(int row,int col){SelectCityCell(new Vector2Int(row,col));CityFocus(new Vector2Int(row,col));}
     public J CityPeopleSelectionForSmoke()=>J.O("row",chosenRow,"col",chosenCol,"people",new J(CityPeopleAt(new Vector2Int(chosenRow,chosenCol)).Select(p=>p["id"]).ToList()),"scroll_y",rosterScroll.y,"roster_open",rosterOpen,"roster_mode",rosterMode,"query",query);

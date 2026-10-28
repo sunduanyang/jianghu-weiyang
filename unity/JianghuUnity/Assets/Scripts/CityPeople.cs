@@ -27,7 +27,7 @@ public partial class JianghuApp {
     void SelectCityCell(Vector2Int at){
         if(chosenRow!=at.x||chosenCol!=at.y){rosterScroll=Vector2.zero;mainScroll=Vector2.zero;query="";}
         chosenRow=at.x;chosenCol=at.y;
-        if(CityInside(at)){rosterMode="人物";rosterOpen=true;}
+        if(CityInside(at)){rosterMode="此地";rosterOpen=true;}
     }
     void DrawCityCellRoster(){
         if(cityLoading||!City.Has||City["place"].I!=SelectedPlace){T("正在展开城中街巷…",small);return;}
@@ -40,7 +40,7 @@ public partial class JianghuApp {
         GUI.SetNextControlName("RosterSearch");string nextQuery=GUILayout.TextField(query,field);
         if(nextQuery!=query){query=nextQuery;rosterScroll=Vector2.zero;}
         var rows=people.Where(p=>string.IsNullOrEmpty(query)||p["name"].S.Contains(query)||p["job"].S.Contains(query)).ToList();
-        T(rows.Count+"人 · 点击与其交谈",small);
+        T(rows.Count+"人 · 点人物可交谈、赠礼或查看",small);
         if(rows.Count==0){T("没有符合搜索的人物",small);return;}
         const float rowHeight=60;
         rosterScroll=GUILayout.BeginScrollView(rosterScroll);
@@ -51,7 +51,7 @@ public partial class JianghuApp {
         for(int i=first;i<last;i++){
             var resident=rows[i];int id=resident["id"].I;
             Rect row=new Rect(content.x,content.y+i*rowHeight,content.width,rowHeight);
-            if(GUI.Button(row,GUIContent.none,id==SelectedPerson?rowOnStyle:rowStyle))TalkToPerson(id);
+            if(GUI.Button(row,GUIContent.none,id==SelectedPerson?rowOnStyle:rowStyle))OpenInteraction(id);
             float left=row.x+8;
             bool hasPerson=cityPersonViews.TryGetValue(id,out var person);
             if(hasPerson){Portrait(new Rect(row.x+6,row.y+6,38,48),id,person["sex"].S,person["age_months"].I);left=row.x+52;}

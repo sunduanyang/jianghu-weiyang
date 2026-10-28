@@ -8,11 +8,12 @@
 | --- | --- |
 | icon_person.png | 底栏「人物」 |
 | icon_bag.png | 底栏「行囊」 |
-| icon_martial.png | 底栏「功法」、顶栏「武学」 |
+| icon_martial.png | 底栏「武学」 |
 | icon_faction.png | 底栏「势力」 |
+| icon_market.png | 底栏「市井」 |
 | icon_chronicle.png | 底栏「年谱」 |
-| icon_puppet.png | 底栏「皮影」 |
-| icon_advance.png | 底栏「推演」 |
+| icon_puppet.png | 暂未使用（皮影衣橱已移入系统菜单） |
+| icon_advance.png | 暂未使用（推演已并入月轮旁的按钮） |
 | icon_silver.png | 顶栏「银两」 |
 | icon_action.png | 顶栏「行动力」 |
 | icon_fame.png | 顶栏「声望」 |
