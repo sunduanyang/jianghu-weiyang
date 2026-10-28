@@ -113,6 +113,10 @@ def resolve(w, n, how, event_id):
     if g and g['kind'] == 'revenge' and not g.get('resolved'):
         g['resolved'] = dict(how=how, text=RESOLUTIONS[how], event_id=event_id, month=w.month)
         n['desires']['revenge'] = round(max(0., n['desires']['revenge'] - 35), 4)
+        plan = n.get('plan') or {}
+        if plan.get('intent') == 'grudge':
+            from . import npc_plans
+            npc_plans.close(w, n, '完成', RESOLUTIONS[how], event_id)
 
 
 def on_event(w, e):

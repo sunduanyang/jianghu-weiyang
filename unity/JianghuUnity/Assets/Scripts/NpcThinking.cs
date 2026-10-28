@@ -24,6 +24,10 @@ public partial class JianghuApp {
         }
         if(current.Has){
             T(current["title"].Has?current["title"].S:current["reason"].S,sub);
+            if(current["undertaking"].Has){
+                T("长期筹划 · "+current["undertaking"].S+" · 每月推进一步，条件不足时等待",small);
+                if(current["target_name"].Has&&current["target"].Has&&Btn("查看对象 · "+current["target_name"].S))ViewPerson(current["target"].I,PersonTab.Overview);
+            }
             Metric("进展",current["status"].S);T("接下来："+current["next_description"].S);
             if(current["blocker"].S.Length>0)T("眼前阻碍："+current["blocker"].S,small);
             foreach(var step in current["completed"].A.TakeLast(3)){

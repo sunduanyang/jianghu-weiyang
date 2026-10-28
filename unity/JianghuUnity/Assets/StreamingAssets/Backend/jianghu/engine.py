@@ -11,7 +11,7 @@ from . import demography, government, items, appearance
 from . import social
 from . import politics, territory
 from .atlas import PLACES, FACTIONS, COUNTRIES, ROUTES, NEIGHBORS, MAP_VERSION, ERA
-from . import careers, social_ranks
+from . import careers, social_ranks, undertakings
 from . import martial, martial_manuals, physical_combat as combat, player_interactions, player_social
 from . import city_maps, relationships, organizations, protagonist, settlements, society, temperament, goals
 from . import npc_plans, npc_memory, economics, rank_progression, local_life, llm_policy, npc_attention
@@ -490,6 +490,8 @@ class World:
                           {'goal': k, 'target': g['target'], 'actual': round(value, 2), 'start': g.get('start'),
                            'resolution': settled['how'] if settled else None, 'against': g.get('against')})
             self.metrics['goals_completed'] += 1
+            if (n.get('plan') or {}).get('intent') in undertakings.KINDS:
+                npc_plans.close(self, n, '完成', '心愿已经达成', e['id'])
             n['desires'][k] = clamp(n['desires'][k] - (40 if k == 'revenge' else 14))
             self.set_goal(n, self.best_goal(n, exclude=('revenge',) if k == 'revenge' else ()), e['id'])
         elif goals.letting_go(n) and self.month - g['since'] >= 6:
@@ -538,6 +540,11 @@ class World:
         # Leave room for new acquaintances as old generations die and young people grow up.
         visible_new = [i for i in known if i in strangers]
         visible = own_rank[:6] + visible_new[:2]
+        # The person a long undertaking is about stays in view while both are in town.
+        focus = undertakings.focus(n)
+        if focus is not None and focus not in visible and focus in self.npcs and self.npcs[focus]['alive'] \
+                and self.npcs[focus]['place'] == n['place']:
+            visible.append(focus)
         for i in visible:
             q = self.npcs[i]
             actions += martial_manuals.candidates(self, n, q)
