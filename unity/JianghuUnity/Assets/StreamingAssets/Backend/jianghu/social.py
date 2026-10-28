@@ -223,14 +223,14 @@ def execute(w, n, a, facts):
     if k=='care':
         n['wealth']-=2;q['health']=min(100,q['health']+5)
         from . import economics
-        economics.fee(w, n['place'], 2)
+        economics.fee(w, n['place'], 2, 'medicine')
         w.link(n,q,3,2)
         return w.emit('care',[n['id'],q['id']],f"{n['name']}花2银照料{q['name']}，对方恢复5体力。",.4,parents,
                       {**settled(),'cost':2,'health_gain':5})
     if k=='leisure':
         n['wealth']-=2;n['health']=min(100,n['health']+3)
         from . import economics
-        economics.fee(w, n['place'], 2)
+        economics.fee(w, n['place'], 2, 'leisure')
         n['pressure']=max(0,n['pressure']-8);n['mood']['joy']=min(100,n['mood']['joy']+8)
         text=f"{n['name']}花2银在茶肆听曲消遣，暂缓心中压力。"
     elif k=='meditate':

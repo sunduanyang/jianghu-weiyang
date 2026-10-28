@@ -33,6 +33,18 @@ def rank(w, n):
     return sect_ranks.standing(w.factions[n['faction']], n)
 
 
+def float_needed(w, f):
+    """Silver a sect keeps in hand before paying stipends and relief out of its treasury."""
+    cache = getattr(w, '_sect_members', None)
+    if not cache or cache[0] != (w.month, len(w.npcs)):
+        counts = {}
+        for n in w.npcs.values():
+            if n['alive'] and n['faction'] is not None:
+                counts[n['faction']] = counts.get(n['faction'], 0) + 1
+        cache = w._sect_members = ((w.month, len(w.npcs)), counts)
+    return 60. + 4. * cache[1].get(f['id'], 0)
+
+
 def record(f, e):
     f['last_event'] = e['id']
     f['records'] = (f['records'] + [e['id']])[-24:]
@@ -107,10 +119,15 @@ def execute(w, n, a, facts):
         gain = 1. if at_seat else .5
         n['contribution'] += gain
         n['reputation'] = min(100., n['reputation'] + .3)
-        facts.update(accepted=True, contribution=gain, at_seat=at_seat, duty=f['duty'])
+        # A sect with silver to spare pays a small stipend for duty, from its real treasury.
+        stipend = 1. if f['fund'] - 1. >= float_needed(w, f) else 0.
+        if stipend:
+            f['fund'] = round(f['fund'] - stipend, 4); f['expenses'] = round(f['expenses'] + stipend, 4)
+            n['wealth'] = round(n['wealth'] + stipend, 4)
+        facts.update(accepted=True, contribution=gain, at_seat=at_seat, duty=f['duty'], stipend=stipend)
         f['tasks_completed'] += 1
-        text = (f"{n['name']}在{f['seat_name']}{f['duty']}，记门中贡献{gain:g}。" if at_seat else
-                f"{n['name']}在外为{f['name']}传讯护持，记门中贡献{gain:g}。")
+        text = (f"{n['name']}在{f['seat_name']}{f['duty']}，记门中贡献{gain:g}" if at_seat else
+                f"{n['name']}在外为{f['name']}传讯护持，记门中贡献{gain:g}") + (f"，领津贴{stipend:g}银。" if stipend else "。")
     elif kind == 'faction_study':
         q = w.npcs[a['tutor']] if a.get('tutor') else None
         if q:
@@ -245,7 +262,27 @@ def monthly(w):
     from . import sect_life
     for f in w.factions:
         elect(w, f)
+    if w.month % 3 == 0:
+        for f in w.factions:
+            relieve(w, f, 6., 15.)
     sect_life.monthly(w)
+
+
+def relieve(w, f, amount, below):
+    """Quarterly relief for struggling members while the treasury is above its working float."""
+    reserve = float_needed(w, f)
+    needy = sorted((n for n in w.npcs.values() if n['alive'] and n['faction'] == f['id'] and n['wealth'] < below),
+                   key=lambda n: (n['wealth'], n['id']))
+    for n in needy:
+        if f['fund'] - amount < reserve:
+            break
+        f['fund'] = round(f['fund'] - amount, 4); f['expenses'] = round(f['expenses'] + amount, 4)
+        n['wealth'] = round(n['wealth'] + amount, 4)
+        people = list(dict.fromkeys([n['id']] + ([f['leader']] if f['leader'] and f['leader'] > 0 else [])))
+        e = w.emit('faction_aid', people, f"{f['name']}以库中余银{amount:g}两接济门人{n['name']}。", .55,
+                   [n['last_event'], f['last_event']], {'faction': f['id'], 'receiver': n['id'], 'silver': amount,
+                                                       'reserve': round(reserve, 4), 'quarterly': True})
+        record(f, e)
 
 
 def annual(w):

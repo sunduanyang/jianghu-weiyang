@@ -802,7 +802,7 @@ class World:
             self.residents[i].append(n['id'])
             people += demography.follow_guardian(self, n, old)
             n['wealth'] -= a['cost']
-            economics.fee(self, old, a['fare'])
+            economics.fee(self, old, a['fare'], 'transport')
             destination_government = self.governments[a['destination_country']]
             destination_government['fund'] += a['toll']
             destination_government['revenue'] += a['toll']
@@ -844,7 +844,7 @@ class World:
         elif k == 'public_service':
             g = government.office_government(self, n)
             g['fund'] -= 4
-            economics.fee(self, n['place'], 4)
+            economics.fee(self, n['place'], 4, 'transport')
             g['expenses'] += 4
             g['security'] = min(.95, g['security']+.015)
             g['sanitation'] = min(.95, g['sanitation']+.01)

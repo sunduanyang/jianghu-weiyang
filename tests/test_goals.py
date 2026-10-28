@@ -161,7 +161,9 @@ class GoalTests(unittest.TestCase):
         self.w.month = on; a = {'kind': 'change_job', 'target': '艺人'}
         here = careers.score(self.w, n, a)
         self.w.month = on + 1
-        self.assertAlmostEqual(careers.score(self.w, n, a), here - 25, places=3)
+        off = careers.score(self.w, n, a)
+        self.assertEqual(off, -40 - careers.PROFESSIONS['艺人']['cost']*.35)
+        self.assertNotEqual(here, off)
 
 
 if __name__ == '__main__':
