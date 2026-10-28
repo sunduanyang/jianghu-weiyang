@@ -82,9 +82,8 @@ def career_target(w, n):
     for job, p in careers.PROFESSIONS.items():
         if job == n['career']['profession'] or careers.place_archetype(n['place']) not in p['places']:
             continue
-        from . import economics
-        gain = (economics.expected_income(w, n, job) - economics.expected_income(w, n)) if economics.active(w) else careers.income(n, profession=job) - careers.income(n)
-        if gain < 1.5 or p.get('martial', 0) > combat_attributes.rating(n) + 3:
+        gain = careers.switch_gain(w, n, job)
+        if gain < 1.5 or p.get('martial', 0) > combat_attributes.rating(n):
             continue
         tutor = tutor_for(w, n, job) if careers.experience(n, job) < p['entry'] else None
         if careers.experience(n, job) < p['entry'] and tutor is None:
@@ -148,7 +147,9 @@ def resolve(w, n, actions):
         if n['wealth'] < max(8, fee):
             choice = pick('work')
         elif combat_attributes.rating(n) < spec.get('martial', 0):
-            choice = pick('train')
+            # Practice is retired, so an unmet martial entry bar cannot be trained away.
+            close(w, n, '中断', '战斗能力不足以入行'+job)
+            return None
         elif careers.experience(n, job) < spec['entry']:
             tutor = w.npcs.get(p.get('tutor'))
             if not tutor or not tutor['alive'] or tutor['place'] != n['place'] or tutor['career']['profession'] != job:
@@ -199,7 +200,13 @@ def choose(w, n, actions):
         if n['plan'].get('policy_origin'):
             n['decision'].update(policy_influence=True,policy_title=n['plan']['policy_origin']['title'])
         return chosen
-    scored = [(w.score(n, a) + w.rng.uniform(-9, 9), a) for a in actions]
+    # One impulse per KIND of deed per decision: a long list of possible victims must
+    # not multiply the temptation to steal, while each kind keeps its best target.
+    impulse = {}
+    for a in actions:
+        if a['kind'] not in impulse:
+            impulse[a['kind']] = w.rng.uniform(-9, 9)
+    scored = [(w.score(n, a) + impulse[a['kind']], a) for a in actions]
     chosen = max(scored, key=lambda row: row[0])[1]
     baseline=max(scored,key=lambda row:row[0]-llm_policy.adjustment(w,n,row[1]))[1]
     policy=llm_policy.current(w,n) if llm_policy.participates(w,n,actions) else None

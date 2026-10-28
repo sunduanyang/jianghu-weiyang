@@ -13,7 +13,7 @@ from . import politics, territory
 from .atlas import PLACES, FACTIONS, COUNTRIES, ROUTES, NEIGHBORS, MAP_VERSION, ERA
 from . import careers, social_ranks
 from . import martial, martial_manuals, physical_combat as combat, player_interactions, player_social
-from . import city_maps, relationships, organizations, protagonist, settlements, society, temperament
+from . import city_maps, relationships, organizations, protagonist, settlements, society, temperament, goals
 from . import npc_plans, npc_memory, economics, rank_progression, local_life, llm_policy, npc_attention
 
 TRAITS = dict(temperament.NAMES)
@@ -323,6 +323,7 @@ class World:
             for i in people:
                 careers.sync_identity(self, self.npcs[i], event['id'])
         rank_progression.on_event(self, event)
+        goals.on_event(self, event)
         npc_attention.record(self,event)
         return event
 
@@ -437,8 +438,8 @@ class World:
             n['mood']['joy'] = clamp(n['mood']['joy'] - e['importance'] * 20, -100, 100)
         return text, [c for c in changes if c]
 
-    def best_goal(self, n):
-        options = self.goal_options(n)
+    def best_goal(self, n, exclude=()):
+        options = [k for k in self.goal_options(n) if k not in exclude] or ['wealth']
         return max(options, key=lambda k: n['desires'][k] + self.rng.uniform(-8, 8))
 
     def goal_options(self, n):
@@ -458,16 +459,15 @@ class World:
         if old:
             n['past_goals'].append({**old, 'ended': self.month})
             n['past_goals'] = n['past_goals'][-15:]
-        targets = {'wealth': n['wealth'] + max(400, n['wealth']*.7), 'mastery': min(95, combat_attributes.rating(n) + 35),
-                   'belonging': 1, 'renown': min(90, n['reputation'] + 45), 'freedom': n['moves'] + 9,
-                   'revenge': 1}
         n['goal'] = {'kind': key, 'title': DESIRES[key], 'since': self.month,
-                     'horizon_years': self.rng.randint(5, 20), 'target': targets[key],
-                     'cause': cause, 'progress': 0., 'status': '追求中', 'minimum_months': 48}
+                     'horizon_years': self.rng.randint(5, 20), 'target': 1.,
+                     'cause': cause, 'progress': 0., 'status': '追求中', 'minimum_months': goals.MINIMUM_MONTHS}
+        goals.prepare(self, n, n['goal'], cause)
         n['last_goal_change'] = self.month
         if not initial:
-            self.emit('goal_change', [n['id']], f"{n['name']}将人生重心转向「{DESIRES[key]}」。", .6,
-                      [cause], {'previous': old['kind'] if old else None, 'goal': key})
+            self.emit('goal_change', [n['id']], f"{n['name']}将人生重心转向「{n['goal']['title']}」。", .6,
+                      [cause], {'previous': old['kind'] if old else None, 'goal': key,
+                                'against': n['goal'].get('against'), 'target': n['goal']['target']})
         n['plan'] = None
 
     def update_goal(self, n):
@@ -475,21 +475,30 @@ class World:
         if not g:
             self.set_goal(n, self.best_goal(n), n['last_event'])
             return
+        goals.upgrade(self, n)
+        goals.monthly(self, n)
         k = g['kind']
-        value = {'wealth': n['wealth'], 'mastery': combat_attributes.rating(n),
-                 'belonging': 1. if n['spouse'] or sum(r['affinity'] > 50 for r in n['relationships'].values()) >= 3 else 0.,
-                 'renown': n['reputation'], 'freedom': n['moves'],
-                 'revenge': 1. if any(m['event_id'] > (g['cause'] or 0) and '讨回' in m['fact'] for m in n['memories']) else 0.}[k]
-        g['progress'] = clamp(value / max(.1, g['target']), 0, 1)
-        if g['progress'] >= 1 and self.month - g['since'] >= g.get('minimum_months', 48):
+        value = goals.value(self, n, g)
+        g['progress'] = round(goals.progress(self, n, g), 4)
+        if g['progress'] >= 1 and self.month - g['since'] >= g.get('minimum_months', goals.MINIMUM_MONTHS):
             g['status'] = '已达成'
-            e = self.emit('goal_complete', [n['id']], f"{n['name']}经过{(self.month-g['since'])/12:.1f}年追求，"
-                          f"达成人生目标「{g['title']}」。", .85, [g['cause'], n['last_event']],
-                          {'goal': k, 'target': g['target'], 'actual': round(value, 2)})
+            settled = g.get('resolved')
+            text = (f"{n['name']}{settled['text']}，「{g['title']}」的心愿了结。" if settled else
+                    f"{n['name']}经过{(self.month-g['since'])/12:.1f}年追求，达成人生目标「{g['title']}」。")
+            e = self.emit('goal_complete', [n['id']], text, .85,
+                          [g['cause'], settled['event_id'] if settled else None, n['last_event']],
+                          {'goal': k, 'target': g['target'], 'actual': round(value, 2), 'start': g.get('start'),
+                           'resolution': settled['how'] if settled else None, 'against': g.get('against')})
             self.metrics['goals_completed'] += 1
-            n['desires'][k] = clamp(n['desires'][k] - 14)
-            self.set_goal(n, self.best_goal(n), e['id'])
-        elif (self.month - n['last_goal_change'] >= 24 and
+            n['desires'][k] = clamp(n['desires'][k] - (40 if k == 'revenge' else 14))
+            self.set_goal(n, self.best_goal(n, exclude=('revenge',) if k == 'revenge' else ()), e['id'])
+        elif goals.letting_go(n) and self.month - g['since'] >= 6:
+            e = self.emit('grudge_released', [n['id']] + ([g['against']] if g.get('against') in self.npcs else []),
+                          f"{n['name']}日久心淡，放下了与{g.get('against_name') or '旧人'}的旧怨。", .6,
+                          [g['cause'], n['last_event']], {'against': g.get('against'), 'revenge_desire': n['desires']['revenge']})
+            self.metrics['grudges_released'] = self.metrics.get('grudges_released', 0) + 1
+            self.set_goal(n, self.best_goal(n, exclude=('revenge',)), e['id'])
+        elif (self.month - n['last_goal_change'] >= 12 and n['desires']['revenge'] >= 55 and
               n['desires']['revenge'] > n['desires'][k] + 8 and
               'revenge' in self.goal_options(n) and k != 'revenge'):
             self.set_goal(n, 'revenge', n.get('grievance_cause') or n['last_event'])
@@ -742,6 +751,7 @@ class World:
                 n['wealth'] += earn
                 tax = government.tax(self, n, earn) if n['age_months'] >= 192 else 0
             practice = careers.gain(n, n['career']['profession'], .4)
+            careers.note_income(n, earn)
             facts.update({'career_practice': practice, 'gross_income': earn, 'tax': tax,
                           'tax_country': territory.owner(self, n['place'])})
             n['health'] = clamp(n['health'] - self.rng.uniform(.5, 2))
@@ -1615,6 +1625,7 @@ class World:
         n = deepcopy(self.npcs[npc_id])
         n['appearance_view'] = appearance.view(n)
         n['temperament_view'] = temperament.view(self.npcs[npc_id])
+        n['goal_view'] = goals.view(self, self.npcs[npc_id])
         n['planning_view'] = npc_plans.view(self, self.npcs[npc_id])
         n['recalled_memories'] = npc_memory.retrieve(self, self.npcs[npc_id])
         n['career_view'] = careers.view(self, self.npcs[npc_id])
