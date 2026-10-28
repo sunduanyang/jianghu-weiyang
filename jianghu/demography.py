@@ -2,7 +2,26 @@
 import math
 
 DEATH_CAUSES = {'old_age': '衰老', 'illness': '疾病', 'injury': '伤重',
-                'accident': '意外', 'starvation': '饥饿', 'disaster': '灾害', 'childbirth': '难产'}
+                'accident': '意外', 'starvation': '饥饿', 'disaster': '灾害', 'childbirth': '难产',
+                'sudden_illness': '急病', 'infancy': '幼年夭折'}
+# Background annual mortality by age (years), before health, hunger and sanitation.
+# A moderate pre-modern schedule: harsh first years, a long adult plateau, steep old age.
+MORTALITY = ((1, .15), (5, .03), (15, .005), (40, .009), (50, .015), (60, .03),
+             (70, .06), (80, .12), (200, .24))
+
+
+def annual_mortality(age):
+    return next(rate for limit, rate in MORTALITY if age < limit)
+
+
+def monthly_hazard(w, n):
+    """Chance of a background death this month, from age, frailty, hunger and the town's sanitation."""
+    age = n['age_months'] / 12
+    base = 1 - (1 - annual_mortality(age)) ** (1/12)
+    frailty = 1 + max(0., 60 - n['health']) / 30
+    hunger = 1 + .5 * min(4, n.get('starvation_months', 0))
+    sanitation = 1.3 - .6 * w.local_government(n)['sanitation']
+    return min(.5, base * frailty * hunger * sanitation)
 
 
 def initialize(w, n):
@@ -106,7 +125,8 @@ def pregnancies(w):
             readiness = (mother['traits']['integrity']+father['traits']['integrity']+100)/200
             money = min(1., (mother['wealth']+father['wealth']+w.local_government(mother)['fund']*.02)/50)
             intent = 1.6 if max(mother['family_intent_until'], father['family_intent_until']) >= w.month else 1.
-            if w.rng.random() < .065 * readiness * money * intent:
+            # About one birth every six years for a settled couple, sooner when planned.
+            if w.rng.random() < .018 * readiness * money * intent:
                 event = w.emit('pregnancy', [mother['id'], father['id']],
                                f"{mother['name']}有孕，与{father['name']}开始安排抚养和家计。", .85,
                                [w.relation(mother, father['id'])['last_event']],
@@ -180,8 +200,8 @@ def health_step(w, n):
     if n['health'] <= 0:
         w.die(n, 'illness' if n['illness'] else 'injury',
               n['illness']['event_id'] if n['illness'] else n['last_event'])
-    elif age >= 50 and w.rng.random() < min(.5, .00035 * math.exp((age-50)/10)):
-        w.die(n, 'old_age', n['last_event'])
+    elif w.rng.random() < monthly_hazard(w, n):
+        w.die(n, 'infancy' if age < 5 else 'sudden_illness' if age < 55 else 'old_age', n['last_event'])
 
 
 def accident(w, n, event):
