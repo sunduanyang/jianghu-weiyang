@@ -29,7 +29,7 @@ public partial class JianghuApp {
     Texture2D cityAtlasWash;string cityAtlasWashKey="";
     readonly Dictionary<string,Texture2D> scrollArt=new Dictionary<string,Texture2D>();
     readonly Dictionary<string,Rect> cityAtlasHits=new Dictionary<string,Rect>();
-    GUIStyle inkLabel,inkBold,inkSmall,atlasTitle,atlasHalo,atlasNote,atlasLegend,inkBoldOn,inkSmallOn;
+    GUIStyle inkLabel,inkBold,inkSmall,atlasTitle,atlasHalo,atlasNote,atlasLegend,inkBoldOn,inkSmallOn,atlasTitleVertical,atlasSeal;
     static readonly Color AtlasInkColor=new Color(.17f,.13f,.10f),AtlasRoad=new Color(.62f,.40f,.20f,.85f),AtlasPost=new Color(.60f,.16f,.10f,.92f),AtlasSea=new Color(.18f,.38f,.44f,.92f),AtlasGold=new Color(.86f,.60f,.18f);
 
     Texture2D ScrollArt(string name){if(!scrollArt.TryGetValue(name,out var t)){t=Resources.Load<Texture2D>("Scroll/"+name);scrollArt[name]=t;}return t;}
@@ -40,6 +40,8 @@ public partial class JianghuApp {
         inkSmall=new GUIStyle(inkLabel){fontSize=11};TextColor(inkSmall,new Color(.33f,.26f,.19f));
         atlasTitle=new GUIStyle(inkBold){fontSize=24,alignment=TextAnchor.UpperLeft};TextColor(atlasTitle,AtlasInkColor);
         atlasHalo=new GUIStyle(inkLabel);TextColor(atlasHalo,new Color(.92f,.86f,.70f,.85f));
+        atlasTitleVertical=new GUIStyle(atlasTitle){fontSize=22,alignment=TextAnchor.UpperCenter};
+        atlasSeal=new GUIStyle(inkBold){fontSize=13};TextColor(atlasSeal,paperText);
         atlasNote=new GUIStyle(inkSmall){wordWrap=true,alignment=TextAnchor.UpperLeft,fontSize=12};
         atlasLegend=new GUIStyle(inkSmall){alignment=TextAnchor.MiddleLeft};
         inkBoldOn=new GUIStyle(inkBold);TextColor(inkBoldOn,paperText);
@@ -109,29 +111,36 @@ public partial class JianghuApp {
         if(cityAtlasWash!=null&&cityAtlasWashKey==key)return;
         int n=City["size"].I;var rows=City["rows"].A.Select(r=>r.S).ToArray();
         if(n<=0||rows.Length!=n||rows.Any(r=>r.Length<n))return;
-        var water=new float[n,n];var field=new float[n,n];var grove=new float[n,n];var rough=new float[n,n];
-        for(int r=0;r<n;r++)for(int c=0;c<n;c++){char t=rows[r][c];water[r,c]=t=='~'||t=='s'||t=='='?1:0;field[r,c]=t==','?1:0;grove[r,c]=t=='t'?1:0;rough[r,c]=t=='^'||t=='#'?1:0;}
-        field=AtlasSoften(field,n);grove=AtlasSoften(grove,n);rough=AtlasSoften(rough,n);
+        var water=new float[n,n];var field=new float[n,n];var rough=new float[n,n];
+        for(int r=0;r<n;r++)for(int c=0;c<n;c++){char t=rows[r][c];water[r,c]=t=='~'||t=='s'||t=='='?1:0;field[r,c]=t==','?1:0;rough[r,c]=t=='#'?1:0;}
+        field=AtlasSoften(field,n);rough=AtlasSoften(rough,n);
         const int px=16;int size=n*px;
         if(cityAtlasWash==null||cityAtlasWash.width!=size){if(cityAtlasWash!=null)Destroy(cityAtlasWash);cityAtlasWash=new Texture2D(size,size,TextureFormat.RGBA32,false){wrapMode=TextureWrapMode.Clamp,filterMode=FilterMode.Bilinear};}
         var pixels=new Color32[size*size];
-        Color sea=new Color(.60f,.68f,.62f),wave=new Color(.25f,.40f,.44f),shore=new Color(.17f,.14f,.11f),farm=new Color(.72f,.60f,.36f),wood=new Color(.40f,.52f,.36f),stone=new Color(.52f,.48f,.38f);
+        // Colours follow the world atlas: 石青 water, ochre ink, aged-silk pigment pooling at the shore.
+        Color sea=new Color(.65f,.71f,.60f),wave=new Color(.20f,.32f,.31f),shore=new Color(.17f,.14f,.11f),pool=new Color(.67f,.59f,.44f),farm=new Color(.60f,.46f,.24f),stone=new Color(.50f,.38f,.22f);
         for(int y=0;y<size;y++)for(int x=0;x<size;x++){
             float r=(y+.5f)/px-.5f,c=(x+.5f)/px-.5f;
-            float w=AtlasSample(water,n,r,c),f=AtlasSample(field,n,r,c),g=AtlasSample(grove,n,r,c),h=AtlasSample(rough,n,r,c);
+            float w=AtlasSample(water,n,r,c),f=AtlasSample(field,n,r,c),h=AtlasSample(rough,n,r,c);
+            int hash=((x*73856093)^(y*19349663))&0x7fffffff;
             Color o=new Color(0,0,0,0);
             void Over(Color col,float a){if(a<=0)return;float na=a+o.a*(1-a);if(na<=0)return;o=new Color((col.r*a+o.r*o.a*(1-a))/na,(col.g*a+o.g*o.a*(1-a))/na,(col.b*a+o.b*o.a*(1-a))/na,na);}
-            Over(farm,Mathf.SmoothStep(0,1,(f-.35f)/.4f)*.20f*((y%6==0)?1.6f:1f));
-            Over(wood,Mathf.SmoothStep(0,1,(g-.35f)/.4f)*.16f);
-            Over(stone,Mathf.SmoothStep(0,1,(h-.35f)/.4f)*.22f);
-            float inside=Mathf.SmoothStep(0,1,(w-.44f)/.12f);
+            // 田: fields as a faint ruled hatch, the way plots are drawn on county maps
+            float fm=Mathf.SmoothStep(0,1,(f-.4f)/.35f);
+            if(fm>0){Over(farm,fm*.06f);if(x%6==0||y%6==0)Over(farm,fm*.22f);}
+            // rough ground: a scatter of ink stipple, as deserts are on the atlas
+            float hm=Mathf.SmoothStep(0,1,(h-.4f)/.35f);if(hm>0&&hash%29==0)Over(stone,hm*.55f);
+            // pigment pools just inside the land edge
+            if(w>.25f&&w<.5f)Over(pool,(w-.25f)/.25f*.22f);
+            float inside=Mathf.SmoothStep(0,1,(w-.46f)/.08f);
             if(inside>0){
-                Over(sea,inside*.82f);
-                // 鱼鳞水纹: rows of upward arcs, every other row offset by half a scale
-                int row=y/7;float lx=(x+(row%2)*6)%12-6,ly=y%7-7;float d=Mathf.Sqrt(lx*lx+ly*ly);
-                if(w>.62f&&Mathf.Abs(d-6)<.75f)Over(wave,.38f*inside);
+                Over(sea,inside*.92f);
+                // 鱼鳞水纹: rows of upward arcs, every other row offset by half a scale; a quiet band hugs the shore
+                int row=y/5;float lx=(x+(row%2)*6)%12-6,ly=y%5-6;float d=Mathf.Sqrt(lx*lx+ly*ly);
+                float deep=Mathf.Clamp01((w-.68f)/.12f);
+                if(deep>0&&Mathf.Abs(d-6)<.8f)Over(wave,.42f*deep);
             }
-            float band=1-Mathf.Abs(w-.5f)/.06f;if(band>0)Over(shore,Mathf.Clamp01(band)*.78f);
+            float band=1-Mathf.Abs(w-.5f)/.045f;if(band>0)Over(shore,Mathf.Clamp01(band)*.92f);
             pixels[(size-1-y)*size+x]=o;
         }
         cityAtlasWash.SetPixels32(pixels);cityAtlasWash.Apply(false);cityAtlasWashKey=key;
@@ -202,15 +211,20 @@ public partial class JianghuApp {
         var e=Event.current;bool repaint=e.type==EventType.Repaint;
         SilkSheet(sheet);
         // title cartouche, compass and legend sit in the margins beside the square map
-        GUI.Label(new Rect(sheet.x+22,sheet.y+16,300,32),City["name"].S+"舆图",atlasTitle);
-        GUI.Label(new Rect(sheet.x+24,sheet.y+50,map.x-sheet.x-40,60),City["note"].S,atlasNote);
+        DrawAtlasCartouche(new Rect(sheet.x+26,sheet.y+18,52,0),City["name"].S+"舆图");
+        GUI.Label(new Rect(sheet.x+92,sheet.y+20,map.x-sheet.x-122,70),City["note"].S,atlasNote);
         if(compassMark!=null)GUI.DrawTexture(new Rect(sheet.xMax-92,sheet.y+14,72,72),compassMark);
         DrawAtlasLegend(new Rect(sheet.xMax-150,sheet.y+96,130,66));
         if(repaint){
-            Fill(map,new Color(.80f,.72f,.54f,.16f));
             if(cityAtlasWash!=null)GUI.DrawTexture(map,cityAtlasWash,ScaleMode.StretchToFill);
-            Outline(map,new Color(.17f,.13f,.10f,.55f),1);
+            // 计里画方: a faint ruled grid, one square to five 格
+            int n=Mathf.Max(1,City["size"].I);
+            for(int k=5;k<n;k+=5){float v=k*unit;CityLine(new Vector2(map.x+v,map.y),new Vector2(map.x+v,map.yMax),new Color(.43f,.31f,.17f,.11f),1);CityLine(new Vector2(map.x,map.y+v),new Vector2(map.xMax,map.y+v),new Color(.43f,.31f,.17f,.11f),1);}
             DrawAtlasRelief(map,unit);
+            var aging=ScrollArt("aging");if(aging!=null)GUI.DrawTexture(sheet,aging,ScaleMode.StretchToFill);
+            // ruled frame: a heavy outer line and a thin inner one, as on the atlas
+            Outline(new Rect(map.x-7,map.y-7,map.width+14,map.height+14),new Color(.17f,.13f,.10f,.86f),3);
+            Outline(map,new Color(.17f,.13f,.10f,.66f),1);
         }
         cityAtlasHits.Clear();
         var gate=CityGateNode;Vector2 gatePoint=gate.Has?AtlasPoint(map,unit,gate["row"].I,gate["col"].I):map.center;
@@ -244,14 +258,15 @@ public partial class JianghuApp {
             if(path.Count>1){var pts=AtlasPath(path,map,unit);int cost=CityWalkCost(target.Value);Color c=cost<=Hero["points"].I?AtlasGold:new Color(.80f,.30f,.18f);AtlasPolyline(pts,new Color(.15f,.10f,.06f,.55f),5);AtlasDashed(pts,c,2.6f,6,4);}
         }else if(cityWalking&&cityWalkRoute.Count>1){var pts=AtlasPath(cityWalkRoute.Skip(Math.Max(0,cityWalkIndex-1)).ToList(),map,unit);AtlasDashed(pts,AtlasGold,2.8f,6,4);}
         // nodes
-        if(gate.Has)DrawAtlasNode("gate",gatePoint,44,"node_gate",gate["name"].S,"出入口",false);
+        if(gate.Has)DrawAtlasNode("gate",gatePoint,22,null,gate["name"].S,"出入口",false);
         if(dock.Has&&dock["row"].I==gate["row"].I&&dock["col"].I==gate["col"].I){}   // a landing at the gate shares its mark
-        else if(dock.Has&&!CitySettlementsList.Any(s=>SiteContains(s,new Vector2Int(dock["row"].I,dock["col"].I))))DrawAtlasNode("dock",dockPoint,38,"node_boat",dock["name"].S,"舟埠",false);
+        else if(dock.Has&&!CitySettlementsList.Any(s=>SiteContains(s,new Vector2Int(dock["row"].I,dock["col"].I))))DrawAtlasNode("dock",dockPoint,24,SiteMark("port"),dock["name"].S,"舟埠",false);
         foreach(var site in CitySettlementsList.OrderBy(s=>s["row"].I)){
             var c=SiteCenter(site);var p=AtlasPoint(map,unit,c.x,c.y);string kind=site["kind"].S;
-            float size=kind=="city"?70:kind=="sect"?64:kind=="town"?56:46;
-            string art=kind=="city"?"node_city":kind=="sect"?"node_sect":kind=="town"?"node_town":"node_village";
-            DrawAtlasNode("s:"+site["id"].S,p,size,art,site["name"].S,site["glyph"].S+" · 在场"+site["residents"].A.Count,true);
+            // 府城 a vermilion double square, 镇 a ruled square, 村 a ruled circle, 山门 a peak with a gate
+            float size=kind=="city"?30:kind=="sect"?32:kind=="town"?22:18;
+            Texture2D mark=kind=="city"?capitalMark:kind=="town"?cityMark:kind=="sect"?SiteMark("mountain"):SiteMark("city");
+            DrawAtlasNode("s:"+site["id"].S,p,size,mark,site["name"].S,site["glyph"].S+" · 在场"+site["residents"].A.Count,true);
         }
         foreach(var exit in exits)DrawAtlasExit(exit,exitPoints[exit["place"].I]);
         if(CityLocal)DrawAtlasHero(AtlasPoint(map,unit,HeroTileFloat.x,HeroTileFloat.y));
@@ -263,17 +278,28 @@ public partial class JianghuApp {
         if(key.StartsWith("s:")){var s=CitySettlement(key.Substring(2));if(s.Has)return SiteTarget(s);}
         return null;
     }
+    static int AtlasCount(List<J> rows,int n,int r,int c,char t){int count=0;for(int dr=-1;dr<=1;dr++)for(int dc=-1;dc<=1;dc++){int rr=r+dr,cc=c+dc;if(rr>=0&&cc>=0&&rr<n&&cc<rows[rr].S.Length&&rows[rr].S[cc]==t)count++;}return count;}
+    // The title written top to bottom in a ruled cartouche with a vermilion seal, as Song maps title themselves.
+    void DrawAtlasCartouche(Rect at,string title){
+        var fit=atlasTitle.CalcSize(new GUIContent(Vertical(title)));
+        Rect box=new Rect(at.x,at.y,Mathf.Max(at.width,fit.x+18),fit.y+40);
+        Fill(box,new Color(.93f,.87f,.71f,.92f));Outline(box,new Color(.17f,.13f,.10f,.86f),2);Outline(new Rect(box.x+4,box.y+4,box.width-8,box.height-8),new Color(.17f,.13f,.10f,.45f),1);
+        GUI.Label(new Rect(box.x,box.y+8,box.width,fit.y),Vertical(title),atlasTitleVertical);
+        Rect sealBox=new Rect(box.center.x-11,box.yMax-30,22,22);Fill(sealBox,new Color(.62f,.18f,.13f,.92f));GUI.Label(sealBox,"图",atlasSeal);
+    }
     void DrawAtlasRelief(Rect map,float unit){
         int n=City["size"].I;var rows=City["rows"].A;
-        // peaks for mountains and rough ground; a sparse scatter of pines through the groves
+        // 青绿 peaks for mountains (small ranges where the ground is solid mountain), lower peaks on
+        // rough ground, and Song-map groves of little ink trees; drawn row by row so nearer ones overlap.
         for(int r=0;r<n;r++){string row=rows[r].S;for(int c=0;c<n&&c<row.Length;c++){
             char t=row[c];int hash=((r*73856093)^(c*19349663))&0x7fffffff;
-            if((t=='^'||t=='#')&&((r+c*2)%3==0)){
-                float s=unit*(t=='^'?2.0f:1.5f)*(0.85f+(hash&7)*.04f);var p=AtlasPoint(map,unit,r,c);
-                AtlasTexture(new Rect(p.x-s*.6f,p.y-s*.8f,s*1.2f,s),"peak",t=='#'?new Color(1,1,1,.75f):(Color?)null);
-            }else if(t=='t'&&(hash>>4)%7==0){
-                float s=unit*1.1f;var p=AtlasPoint(map,unit,r,c)+new Vector2(((hash>>8)%9-4)*unit*.08f,((hash>>12)%9-4)*unit*.06f);
-                AtlasTexture(new Rect(p.x-s/2,p.y-s*.8f,s,s),"pine",new Color(1,1,1,.8f));
+            var p=AtlasPoint(map,unit,r,c)+new Vector2(((hash>>8)%7-3)*unit*.10f,((hash>>12)%5-2)*unit*.08f);
+            if(t=='^'||t=='#'){
+                bool dense=t=='^'&&AtlasCount(rows,n,r,c,'^')>=7;
+                if(dense&&(r%3==0)&&(c%4==(r/3)%4)){float s=unit*3.6f;AtlasTexture(new Rect(p.x-s*.78f,p.y-s*.72f,s*1.56f,s),"range_"+(hash%3));}
+                else if(!dense&&(t=='^'?(r+c*2)%3==0:(hash>>3)%4==0)){float s=unit*(t=='^'?2.3f:1.7f)*(.86f+(hash&7)*.04f);AtlasTexture(new Rect(p.x-s*.6f,p.y-s*.75f,s*1.2f,s),"peak_"+(hash%6),t=='#'?new Color(1,1,1,.7f):(Color?)null);}
+            }else if(t=='t'&&(hash>>4)%6==0){
+                float s=unit*1.7f;AtlasTexture(new Rect(p.x-s/2,p.y-s*.7f,s,s*.78f),"grove_"+(hash%3),new Color(1,1,1,.9f));
             }
         }}
     }
@@ -284,17 +310,19 @@ public partial class JianghuApp {
         for(float d=0;d<34;d+=10)CityLine(new Vector2(x+d,y),new Vector2(x+Mathf.Min(34,d+6),y),AtlasPost,2.2f);GUI.Label(new Rect(x+42,y-9,90,18),"驿道 · 远行",atlasLegend);y+=22;
         for(float d=0;d<34;d+=15)CityLine(new Vector2(x+d,y),new Vector2(x+Mathf.Min(34,d+9),y),AtlasSea,2.2f);GUI.Label(new Rect(x+42,y-9,90,18),"航路 · 舟埠",atlasLegend);
     }
-    void DrawAtlasNode(string key,Vector2 p,float size,string art,string name,string caption,bool slip){
+    // Mark (or, with no texture, a ruled 门 box for the gate), a vertical name slip and a caption.
+    void DrawAtlasNode(string key,Vector2 p,float size,Texture2D art,string name,string caption,bool slip){
         bool picked=cityAtlasPick==key,hovered=cityAtlasHover==key;
         Rect mark=new Rect(p.x-size/2,p.y-size/2,size,size);
         if(picked||hovered){var ring=ringMark;if(ring!=null){var old=GUI.color;GUI.color=picked?Color.white:new Color(1,1,1,.55f);float s=size*1.35f;GUI.DrawTexture(new Rect(p.x-s/2,p.y-s/2,s,s),ring);GUI.color=old;}}
-        AtlasTexture(mark,art);
-        Rect hit=mark;
+        if(art!=null)GUI.DrawTexture(mark,art,ScaleMode.ScaleToFit);
+        else{Fill(mark,new Color(.91f,.85f,.69f,.96f));Outline(mark,new Color(.17f,.13f,.10f,.9f),2);GUI.Label(mark,"门",inkBold);}
+        Rect hit=new Rect(mark.x-8,mark.y-8,mark.width+16,mark.height+16);
         if(slip){
             var style=picked?slipCapStyle:slipStyle;var textStyle=picked?slipTextCap:slipTextBold;
             string vertical=Vertical(name);var fit=textStyle.CalcSize(new GUIContent(vertical));float h=fit.y+6,w=Mathf.Max(24,fit.x+8);Rect s=new Rect(mark.xMax+2,p.y-h/2-4,w,h);
             if(Event.current.type==EventType.Repaint&&style!=null)style.Draw(s,false,false,false,false);
-            GUI.Label(s,vertical,textStyle);hit=Rect.MinMaxRect(mark.x,Mathf.Min(mark.y,s.y),s.xMax,Mathf.Max(mark.yMax,s.yMax));
+            GUI.Label(s,vertical,textStyle);hit=Rect.MinMaxRect(hit.x,Mathf.Min(hit.y,s.y),s.xMax,Mathf.Max(hit.yMax,s.yMax));
         }else HaloLabel(new Rect(p.x-60,mark.yMax-2,120,18),name,inkBold,atlasHalo);
         HaloLabel(new Rect(p.x-60,slip?mark.yMax+1:mark.yMax+15,120,16),caption,inkSmall,atlasHalo);
         cityAtlasHits[key]=hit;

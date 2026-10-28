@@ -445,55 +445,15 @@ def bake_mist():
 
 
 def bake_glyphs():
-    """Small pictograms for the 舆图: peaks, trees and the five kinds of node."""
+    """Pictograms: the scroll's foreground pine, and the post pavilion and boat that mark roads out of a region."""
     def glyph(name, w, h, fn):
         s = Sprite(w, h)
         fn(s, w, h)
         save(s.final(), OUT / name)
 
-    def peak(s, w, h):
-        s.poly(catmull([(2, h - 2), (w * .3, h * .45), (w * .5, 3), (w * .72, h * .5), (w - 2, h - 2)], 8), (100, 138, 124), width=1.2)
-        s.line([(w * .5, 6), (w * .44, h * .6)], INK, .8, 120)
-        s.line([(w * .56, h * .3), (w * .6, h * .7)], INK, .6, 90)
-    glyph('peak.png', 48, 40, peak)
-
     def pine(s, w, h):
         tree(s, w / 2, h - 2, .62, 'pine', 11)
     glyph('pine.png', 32, 32, pine)
-
-    def node_city(s, w, h):
-        s.rect(8, 16, w - 8, h - 6, WALL, width=2)
-        for x in range(8, w - 8, 8):
-            s.rect(x, 11, x + 5, 16, WALL, width=1)
-        s.rect(w / 2 - 6, h - 20, w / 2 + 6, h - 6, (60, 44, 34), width=1)
-        eave_roof(s, w / 2, 16, 34, 10)
-        s.rect(18, 28, w - 18, h - 24, None, width=1)
-    glyph('node_city.png', 72, 72, node_city)
-
-    def node_town(s, w, h):
-        hall(s, 22, h - 8, 26, 16, pillars=False, rise=9, lift=3)
-        hall(s, 44, h - 14, 30, 18, pillars=False, rise=10, lift=3)
-        hall(s, 34, h - 2, 26, 14, pillars=False, rise=8, lift=3)
-    glyph('node_town.png', 64, 64, node_town)
-
-    def node_village(s, w, h):
-        s.rect(14, h - 22, 38, h - 6, (214, 196, 156), width=1.2)
-        s.poly([(8, h - 22), (26, h - 40), (44, h - 22)], (176, 150, 92), width=1.2)
-        tree(s, 46, h - 6, .5, 'round', 12)
-    glyph('node_village.png', 56, 56, node_village)
-
-    def node_sect(s, w, h):
-        s.poly(catmull([(2, h - 6), (w * .3, h * .4), (w * .5, 4), (w * .74, h * .44), (w - 2, h - 6)], 8), SHILV, width=1.4)
-        for x in (24, 32, 40, 48):
-            s.line([(x, h - 4), (x, h - 24)], PILLAR, 2, 240)
-        s.rect(20, h - 28, 52, h - 22, (60, 50, 40), width=1)
-    glyph('node_sect.png', 72, 64, node_sect)
-
-    def node_gate(s, w, h):
-        s.rect(4, h - 22, w - 4, h - 4, (206, 190, 150), width=1.4)
-        s.poly(catmull([(w / 2 - 7, h - 4), (w / 2 - 7, h - 13), (w / 2, h - 17), (w / 2 + 7, h - 13), (w / 2 + 7, h - 4)], 5), (60, 44, 34), width=1)
-        hall(s, w / 2, h - 22, 28, 12, rise=9, lift=3, pillars=False, door=False)
-    glyph('node_gate.png', 48, 48, node_gate)
 
     def node_exit(s, w, h):                       # 驿亭: the post pavilion where a road leaves the region
         for x in (12, 36):
@@ -506,6 +466,101 @@ def bake_glyphs():
         s.line([(26, h - 12), (26, h - 44)], INK, 1.6, 240)
         s.poly([(27, h - 42), (42, h - 36), (40, h - 16), (27, h - 18)], (214, 196, 150), width=1)
     glyph('node_boat.png', 48, 48, node_boat)
+
+
+# ---------------------------------------------------------------- 舆图 stamps in the atlas manner
+# The region map follows the same conventions as the world atlas (bake_ui.bake_atlas): 青绿 peaks
+# whose tops are mineral blue-green fading to ochre at the foot, ink-dot groves, and aged silk.
+PEAK_TOP, PEAK_MID, PEAK_BASE = np.array([66, 112, 118.]), np.array([116, 146, 110.]), np.array([216, 198, 152.])
+
+
+def qinglv_peak(size, seed, fade=1.0, k=3):
+    """One 青绿 peak, drawn at k× and reduced; returns an RGBA image whose foot sits on the bottom edge."""
+    r = np.random.default_rng(seed)
+    size *= k
+    w = size * r.uniform(.95, 1.35)
+    h = size * r.uniform(1.15, 1.65)
+    lean = r.uniform(-.25, .25) * w
+    iw, ih = int(2 * w + 6 * k), int(h + 6 * k)
+    bl, br = (3 * k, h + 3 * k), (2 * w + 3 * k, h + 3 * k)
+    top = (w + 3 * k + lean, 3 * k)
+    s1 = (w * r.uniform(.4, .6) + 3 * k, h * r.uniform(.42, .6) + 3 * k)
+    s2 = (w * r.uniform(1.4, 1.65) + 3 * k, h * r.uniform(.38, .55) + 3 * k)
+    ridge = catmull([bl, s1, top, s2, br], 8)
+    mask = Image.new('L', (iw, ih), 0)
+    ImageDraw.Draw(mask).polygon(ridge, fill=255)
+    t = (np.arange(ih) / max(ih - 1, 1))[:, None]
+    col = np.where(t < .45, PEAK_TOP * (1 - t / .45) + PEAK_MID * (t / .45), PEAK_MID * (1 - (t - .45) / .55) + PEAK_BASE * ((t - .45) / .55))
+    col = np.broadcast_to(col[:, None, :], (ih, iw, 3)).copy()
+    xs = (np.arange(iw) / iw)[None, :, None]
+    col *= (1 - .14 / (1 + np.exp(-(xs - top[0] / iw) * 28)))       # shadow side, blended across the crest
+    col *= (1 + (noise((ih, iw), 4 * k, seed + 7) - .5) * .10)[..., None]
+    a = np.array(mask, float) * (.96 * fade) * np.clip(1.55 - t, 0, 1)
+    img = from_array(col, a)
+    d = ImageDraw.Draw(img)
+    d.line(ridge[:-1], fill=rgba(INK, int(205 * fade)), width=2 * k, joint='curve')
+    for _ in range(r.integers(1, 3)):                              # 皴 strokes
+        sx = top[0] + r.uniform(-.35, .35) * w
+        d.line([(sx, top[1] + h * .2), (sx + r.uniform(-.1, .1) * w, top[1] + h * r.uniform(.45, .7))], fill=rgba(INK, int(95 * fade)), width=k)
+    return img.resize((max(1, iw // k), max(1, ih // k)), Image.LANCZOS)
+
+
+def stamp(parts, w, h):
+    """Compose peaks left-to-right, back-to-front, with their feet on a common base line."""
+    img = Image.new('RGBA', (w, h), (0, 0, 0, 0))
+    for peak, x, foot in parts:
+        img.alpha_composite(peak, (int(x - peak.width / 2), int(foot - peak.height)))
+    return img
+
+
+def ink_grove(seed, w=44, h=34):
+    """Song-map grove: three to five little trees, each a trunk stroke under a cone of ink dots."""
+    s = Sprite(w, h)
+    rng = np.random.default_rng(seed)
+    for i in range(rng.integers(3, 6)):
+        x, base = rng.uniform(7, w - 7), rng.uniform(h * .6, h - 3)
+        th = rng.uniform(9, 14)
+        s.line([(x, base), (x, base - th)], INK, .9, 210)
+        for j in range(5):
+            yy = base - th * (.45 + j * .13)
+            ww = (4.2 - j * .7)
+            s.line([(x - ww, yy + 1.5), (x, yy - .5), (x + ww, yy + 1.5)], (52, 74, 58), 1.0, 220)
+    return s.final(seed)
+
+
+def bake_map_stamps():
+    for i in range(6):                                             # single peaks
+        save(stamp([(qinglv_peak(17 + (i % 3) * 3, 3100 + i), 36, 58)], 72, 60), OUT / f'peak_{i}.png')
+    for i in range(3):                                             # small ranges for dense mountain ground
+        rng = np.random.default_rng(3200 + i)
+        parts = [(qinglv_peak(rng.uniform(13, 17), 3210 + i * 10 + j, .9 if j % 2 else 1.0), 22 + j * 30 + rng.uniform(-4, 4), 70 - (j % 2) * 4) for j in range(3)]
+        parts.sort(key=lambda p: p[2])
+        save(stamp(parts, 112, 72), OUT / f'range_{i}.png')
+    for i in range(3):
+        save(ink_grove(3300 + i), OUT / f'grove_{i}.png')
+
+
+def bake_aging():
+    """Foxing, tide marks, fold creases and a darker mount, laid over the whole 舆图 sheet."""
+    W, H = 1024, 576
+    yy, xx = np.mgrid[0:H, 0:W]
+    dark = np.zeros((H, W))
+    for x0 in (W / 3, W * 2 / 3):
+        dx = xx - x0 - (noise((H, 1), 30, int(x0))[:, 0][:, None] - .5) * 6
+        dark += .10 * np.exp(-(dx / 1.3) ** 2)
+    dy = yy - H / 2 - (noise((1, W), 40, 7)[0][None, :] - .5) * 6
+    dark += .10 * np.exp(-(dy / 1.3) ** 2)
+    rng = np.random.default_rng(3401)
+    spots = np.zeros((H, W))
+    for _ in range(140):
+        x, y, r = rng.uniform(0, W), rng.uniform(0, H), rng.uniform(1.0, 3.8)
+        x0, x1, y0, y1 = int(max(0, x - 3 * r)), int(min(W, x + 3 * r)), int(max(0, y - 3 * r)), int(min(H, y + 3 * r))
+        spots[y0:y1, x0:x1] = np.maximum(spots[y0:y1, x0:x1], np.exp(-(((xx[y0:y1, x0:x1] - x) ** 2 + (yy[y0:y1, x0:x1] - y) ** 2) / (r * r))))
+    tide = np.clip((noise((H, W), 50, 3402) - .70) * 4, 0, 1) * .10
+    edge = np.clip(np.sqrt(((xx - W / 2) / (W * .56)) ** 2 + ((yy - H / 2) / (H * .56)) ** 2) - .62, 0, 1) * .55
+    a = np.clip(dark + spots * .28 + tide + edge, 0, .8)
+    col = np.where((spots > .2)[..., None], np.array([120, 80, 36.]), np.array([90, 66, 40.]))
+    save(from_array(col, a * 255), OUT / 'aging.png')
 
 
 def contact_sheet():
@@ -528,6 +583,8 @@ def main():
     bake_hills()
     bake_mist()
     bake_glyphs()
+    bake_map_stamps()
+    bake_aging()
     return contact_sheet()
 
 
