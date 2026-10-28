@@ -35,7 +35,7 @@ python unity/bake_scroll.py
 
 ## 用真实数据核对构图
 
-本环境没有 Unity 编辑器和 C# 编译器，所以**这次没有在 Unity 里实际运行，也没有编译验证**。为了检查构图，用规则引擎生成了 1800 人、种子 42 的世界，导出临安府、抚州、建康府、泉州、平安京的 `/api/city` 数据，再用 PIL 按 `CityAtlas.cs`、`CityScroll.cs` 的同一套几何关系画了近似图。近似图的文字与人物头像和游戏里不同：
+PR 原始提交的环境没有 Unity 编辑器和 C# 编译器，因此当时没有实际运行或编译验证；后续本机原生验证见文末。为了检查构图，原提交用规则引擎生成了 1800 人、种子 42 的世界，导出临安府、抚州、建康府、泉州、平安京的 `/api/city` 数据，再用 PIL 按 `CityAtlas.cs`、`CityScroll.cs` 的同一套几何关系画了近似图。近似图的文字与人物头像和游戏里不同：
 
 - `validation/screenshots/city-atlas-preview-linan.png`：上半是临安府舆图（西湖、御街、城、外镇、北村、南门驿口，往建康府、泉州、抚州、平安京四条去路），下半是临安府城的长卷。
 - `validation/screenshots/city-atlas-preview-heiankyo.png`：平安京舆图（碎石地画作山头、东侧河川、鞍马寺驻地），以及鞍马寺的长卷。
@@ -77,3 +77,22 @@ python unity/bake_scroll.py
 - 同一聚落内各设施共用地格，所以长卷里主角站在哪处设施只是显示上的区别，规则不记录。
 - 旧版布局没有 `settlements` 时，自动退回地格图。
 - `python -m unittest discover -s tests` 共 453 项全部通过。这只说明规则侧没有受影响，不能代替 Unity 实机验收。
+
+## 本机 PR #8 整合验收（2026-10-28）
+
+将 PR #8 的 `4f92290`（包含 `f00d16d`）无冲突合入本地 PR #7 整合版 `d1a4d66`。共享规则、后端同步副本与存档格式没有变化。
+
+首次原生验收发现测试脚本在城中数据加载前检查默认视图，此时客户端正常回退到地格，导致误报。已把断言移至首个地区加载完成后、任何主动切换视图前，仍然验证真实默认值。
+
+| 验证 | 结果 |
+| --- | --- |
+| Unity 6000.6.7f1 Windows 构建，Direct3D 11 | 通过；成品附带 Python 运行时 |
+| `-cityAtlasSmokeDir` | 53 项通过；临安府、江陵府、南京开封府与大理城，覆盖默认视图、设施归属、节点边界、去路重叠、长卷与地格渲染，以及浏览时世界状态保持 |
+| `-citySmokeDir -cityWalkOnly true` | 24 项通过；逐格扣费、连续行走、停止、改道、离开地图取消、键盘连续行走及月份／模型调用保持 |
+| `-uiNavigationSmoke` | 21 项通过；页面返回、物品归属、筛选保持、迟到响应、交互菜单阻止行走及人物状态保持 |
+| `python -B -m unittest discover -s tests -v` | 453 项通过，200.283 秒 |
+| `git diff --check` | 通过 |
+
+已检查原生舆图与长卷截图。完整结果、截图和独立测试存档位于本机 `output/pr8-integrated-20261028/`，最终构建日志为 `unity/pr8-integrated-final-build.log`。本次没有使用正式存档或调用真实模型；自动验收未穷举新视图中的每条远行路线与所有鼠标拖动交互。
+
+验证后的成品位于 `unity/Build/PR8Integrated/江湖未央.exe`，本机默认启动版本由 `unity/Build/active-build.txt` 选择为 `PR8Integrated`。源码合入本地 `main`；此次未向 GitHub 推送或关闭远程 PR。

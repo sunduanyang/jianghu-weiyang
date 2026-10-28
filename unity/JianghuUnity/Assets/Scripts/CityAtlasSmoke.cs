@@ -45,11 +45,13 @@ public class CityAtlasSmoke : MonoBehaviour {
         int month=client.World["month"].I;double calls=client.World["ai"]["calls"].N;string events=client.World["events"].S,hero=client.World["hero"].ToString();
         Screen.SetResolution(1680,960,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.3f);
         app.GoStage(Stage.City,false);
-        Check("舆图 is the default city view",app.CityModeForSmoke==CityMode.Atlas);
         var places=client.World["locations"].A.OrderByDescending(p=>p["population"].I).Take(3).Select(p=>p["id"].I).ToList();
         if(client.World["hero"]["created"].B&&!places.Contains(client.World["hero"]["place"].I))places.Insert(0,client.World["hero"]["place"].I);
         foreach(int place in places){
-            yield return app.CityLoadForSmoke(place);app.SetCityModeForSmoke(CityMode.Atlas);
+            yield return app.CityLoadForSmoke(place);
+            // The unloaded map deliberately falls back to tiles; check the default after its data arrives.
+            if(place==places[0])Check("舆图 is the default city view",app.CityModeForSmoke==CityMode.Atlas);
+            app.SetCityModeForSmoke(CityMode.Atlas);
             yield return new WaitForSecondsRealtime(.3f);
             Check("every facility belongs to a settlement: "+place,app.ValidateCityAtlasData(out J data),data);
             yield return Capture("atlas-"+place);
