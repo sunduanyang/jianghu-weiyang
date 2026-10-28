@@ -39,12 +39,12 @@ class RicherLivesTests(unittest.TestCase):
         self.assertNotIn('trade:2',[a['id'] for a in w.legal_actions(n)])
         self.assertNotIn('trade:1',[a['id'] for a in w.legal_actions(q)])
 
-    def test_same_opportunity_has_different_value_for_honest_and_greedy_people(self):
+    def test_same_opportunity_has_different_value_for_upright_and_cold_people(self):
         w=self.world();n,q=self.adults(w);w.set_goal(n,'wealth',initial=True)
         steal={'kind':'steal','target':2};work={'kind':'work','target':None}
-        n['traits'].update({'honesty':95,'greed':10,'compassion':85,'caution':65})
+        n['traits'].update({'integrity':95,'kindness':88,'boldness':35})
         self.assertLess(w.score(n,steal),w.score(n,work))
-        n['traits'].update({'honesty':10,'greed':90,'compassion':10,'caution':20})
+        n['traits'].update({'integrity':10,'kindness':10,'boldness':80})
         self.assertGreater(w.score(n,steal),w.score(n,work))
 
     def test_secret_theft_preserves_money_and_victim_does_not_learn_thief(self):
@@ -57,7 +57,7 @@ class RicherLivesTests(unittest.TestCase):
         self.assertFalse(any('暗中窃取' in m['fact'] for m in q['memories']))
 
     def test_rumor_is_attributed_and_not_silently_converted_to_verified_fact(self):
-        w=self.world();n,q=self.adults(w);n['traits']['honesty']=10;n['traits']['ambition']=90
+        w=self.world();n,q=self.adults(w);n['traits']['integrity']=10;n['traits']['ambition']=90
         w.link(n,q,-20,0);w.know(n,w.npcs[3])
         with patch.object(w.rng,'random',return_value=1):e=w.execute(n,{'id':'smear:2'})
         self.assertEqual(e['kind'],'slander')
@@ -80,13 +80,13 @@ class RicherLivesTests(unittest.TestCase):
         self.assertGreater(n['probation_until'],w.month)
         self.assertNotIn('embezzle:self',[a['id'] for a in w.legal_actions(n,planning=True)])
 
-    def test_repeated_crime_can_erode_honesty_instead_of_always_improving_virtue(self):
-        w=self.world();n=w.npcs[1];n['traits']['honesty']=20;before=n['traits']['honesty']
+    def test_repeated_crime_can_erode_integrity_instead_of_always_improving_virtue(self):
+        w=self.world();n=w.npcs[1];n['traits']['integrity']=20;before=n['traits']['integrity']
         for _ in range(8):
             w.month+=1;n['drift_month']={}
             w.emit('secret_theft',[1],'未被发现的窃取。',.65,facts={'offender':1,'secret':True})
-        self.assertLess(n['traits']['honesty'],before)
-        self.assertLess(before-n['traits']['honesty'],1)
+        self.assertLess(n['traits']['integrity'],before)
+        self.assertLess(before-n['traits']['integrity'],1)
 
     def test_ai_recommendation_is_not_duplicated_and_really_executes(self):
         w=self.world();n,q=self.adults(w);ctx=context_for(w,n);result=decision(ctx)

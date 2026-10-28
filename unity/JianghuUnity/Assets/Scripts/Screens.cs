@@ -9,8 +9,6 @@ namespace Jianghu {
 public partial class JianghuApp {
     readonly List<int> recentPeople=new List<int>();
     string dialogueText="";
-    static readonly string[] TraitOrder={"compassion","honesty","loyalty","caution","sociability","ambition","greed","aggression"};
-    static readonly Dictionary<string,string> TraitNames=new Dictionary<string,string>{{"compassion","仁厚"},{"honesty","诚实"},{"loyalty","忠义"},{"caution","审慎"},{"sociability","合群"},{"ambition","进取"},{"greed","贪欲"},{"aggression","暴烈"}};
     static readonly Dictionary<string,string> MoodNames=new Dictionary<string,string>{{"joy","喜"},{"anger","怒"},{"fear","忧"}};
 
     void RememberPerson(int id){recentPeople.Remove(id);recentPeople.Insert(0,id);if(recentPeople.Count>6)recentPeople.RemoveAt(6);}
@@ -71,15 +69,8 @@ public partial class JianghuApp {
             new KeyValuePair<string,string>("声望",Num(p["reputation"])),new KeyValuePair<string,string>("心情",MoodWord(p)),new KeyValuePair<string,string>("心愿",p["goal"]["title"].S)};
         for(int i=0;i<facts.Count;i++){Rect row=new Rect(564,194+i*31,316,30);GUI.Label(new Rect(row.x,row.y,80,row.height),facts[i].Key,new GUIStyle(text){alignment=TextAnchor.MiddleLeft});GUI.Label(new Rect(row.x+80,row.y,row.width-80,row.height),facts[i].Value,valueStyle);Fill(new Rect(row.x,row.yMax,row.width,1),hairline);}
         Rect tr=new Rect(260,536,620,346);Frame(tr,"card",8);
-        GUI.Label(new Rect(tr.x,tr.y+6,tr.width,26),"心性",new GUIStyle(sub){alignment=TextAnchor.MiddleCenter});
-        for(int i=0;i<TraitOrder.Length;i++){
-            string key=TraitOrder[i];if(!p["traits"][key].Has)continue;float v=(float)p["traits"][key].N;
-            Rect c=new Rect(tr.x+16+(i%4)*148,tr.y+42+(i/4)*90,140,80);Frame(c,"btn",8);
-            GUI.Label(new Rect(c.x,c.y+8,c.width,26),TraitNames[key],new GUIStyle(sub){alignment=TextAnchor.MiddleCenter});
-            Rect bar=new Rect(c.x+14,c.y+46,c.width-28,6);Fill(bar,new Color(.10f,.12f,.12f));Fill(new Rect(bar.x,bar.y,bar.width*Mathf.Clamp01(v/100f),bar.height),v>=60?brass:v<=30?jade:new Color(.62f,.60f,.55f));
-            GUI.Label(new Rect(c.x,c.y+54,c.width,22),Mathf.RoundToInt(v).ToString(),centerSmall);
-        }
-        GUILayout.BeginArea(new Rect(tr.x+20,tr.y+228,tr.width-40,110));GUILayout.Label(p["last_action"]["label"].Has?"近来："+p["last_action"]["label"].S:"尚未开始行动。",text);GUILayout.EndArea();
+        DrawTemperamentCard(tr,p["temperament_view"]);
+        GUILayout.BeginArea(new Rect(tr.x+20,tr.y+258,tr.width-40,82));GUILayout.Label(p["last_action"]["label"].Has?"近来："+p["last_action"]["label"].S:"尚未开始行动。",text);GUILayout.EndArea();
         GUILayout.BeginArea(new Rect(910,116,710,766));personScroll=GUILayout.BeginScrollView(personScroll);
         H("此刻");
         if(p["appearance_view"]["description"].Has)T(p["appearance_view"]["description"].S,small);
@@ -121,10 +112,43 @@ public partial class JianghuApp {
         DrawPersonRank();
         DrawRankProgress(Person["rank_progression"],false);
         Details("各业本领",Person["career_view"],true);Details("可学营生",Person["career_options"]);Details("旧业履历",Person["career"]);
-        H("心性");
-        Details("稳定心性",Person["traits"],true);Details("当前情绪",Person["mood"],true);Details("世界信念",Person["beliefs"],true);Details("心中所欲",Person["desires"],true);
-        Metric("压力",Num(Person["pressure"]));Metric("孤独",Num(Person["loneliness"]));
-        Details("长远心愿",Person["goal"],true);Details("心性变化",Person["personality_changes"]);Details("记忆与理解",Person["memories"]);
+        DrawTemperamentDetail(Person["temperament_view"],Person["goal"]);
+        Details("记忆与理解",Person["memories"]);
+    }
+    // 品性卡：处世立场一行，五根双向轴，再以一句话写出突出之处与心境。
+    void DrawTemperamentCard(Rect tr,J tv){
+        GUI.Label(new Rect(tr.x,tr.y+6,tr.width,26),"品性",new GUIStyle(sub){alignment=TextAnchor.MiddleCenter});
+        if(!tv.Has){GUI.Label(new Rect(tr.x+20,tr.y+40,tr.width-40,26),"正在读取品性…",centerSmall);return;}
+        GUI.Label(new Rect(tr.x+20,tr.y+34,tr.width-40,26),"处世 · "+tv["stance_label"].S+"　"+tv["stance_text"].S,new GUIStyle(text){alignment=TextAnchor.MiddleCenter});
+        var axes=tv["axes"].A;var left=new GUIStyle(text){alignment=TextAnchor.MiddleRight};var right=new GUIStyle(text){alignment=TextAnchor.MiddleLeft};
+        for(int i=0;i<axes.Count;i++){
+            var a=axes[i];float v=(float)a["value"].N;float y=tr.y+70+i*34;
+            GUI.Label(new Rect(tr.x+18,y,76,26),a["low"].S,left);GUI.Label(new Rect(tr.x+526,y,76,26),a["high"].S,right);
+            Rect bar=new Rect(tr.x+104,y+10,412,6);Fill(bar,new Color(.10f,.12f,.12f));Fill(new Rect(bar.center.x-1,bar.y-4,2,bar.height+8),hairline);
+            float from=Mathf.Min(.5f,v/100f),to=Mathf.Max(.5f,v/100f);
+            Fill(new Rect(bar.x+bar.width*from,bar.y,bar.width*(to-from),bar.height),Mathf.Abs(v-50)>=20?(v>=50?brass:jade):new Color(.62f,.60f,.55f));
+            Fill(new Rect(bar.x+bar.width*Mathf.Clamp01(v/100f)-3,bar.y-3,6,bar.height+6),paperText);
+        }
+        string words=string.Join("、",tv["words"].A.Select(w=>w.S));
+        GUI.Label(new Rect(tr.x+20,tr.y+70+axes.Count*34,tr.width-40,24),(words.Length>0?words:"性情平平")+" · 心境："+tv["mood"].S,centerSmall);
+    }
+    // 品性页：立场、五轴说明、世界观、心境与心愿，心性变化按年谱列出。
+    void DrawTemperamentDetail(J tv,J goal){
+        H("品性");
+        if(!tv.Has){T("正在读取品性…",small);return;}
+        Metric("处世立场",tv["stance_label"].S);T(tv["stance_text"].S,small);
+        foreach(var a in tv["axes"].A){
+            Metric(a["low"].S+" ↔ "+a["high"].S,a["word"].S+" · "+Mathf.RoundToInt((float)a["value"].N));
+            if(a["word"].S!="居中")T(a["text"].S,small);
+        }
+        Metric("世界观",tv["outlook_words"].A.Count>0?string.Join("、",tv["outlook_words"].A.Select(w=>w.S)):"看法平常");
+        Metric("近来心境",tv["mood"].S);
+        if(goal.Has){Metric("长远心愿",goal["title"].S+" · 进展 "+Mathf.RoundToInt((float)goal["progress"].N*100)+"%");}
+        var changes=tv["changes"].A;
+        if(changes.Count>0){
+            T("心性变化",sub);
+            foreach(var c in changes.Take(8)){double d=c["delta"].N;T((c["legacy"].B?"（旧档）":"")+c["name"].S+(d>=0?" +":" ")+d.ToString("0.##")+" · "+c["source"].S,small);}
+        }
     }
     void DrawHeroCharacter(){
         var identity=Hero["identity"];

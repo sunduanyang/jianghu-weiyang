@@ -1,12 +1,7 @@
-from . import combat_attributes
 """Motives, limited opportunities and morally mixed choices; no generated consequences."""
-import random
+from . import combat_attributes, temperament
 
-EXTRA_TRAITS = {'honesty': '诚实', 'greed': '贪欲', 'aggression': '暴烈'}
-POLES = {'compassion': ('冷漠自利', '共情怜悯'), 'ambition': ('知足退让', '进取野心'),
-         'caution': ('轻信冒险', '谨慎多疑'), 'sociability': ('内敛疏离', '外向善交'),
-         'loyalty': ('逐利易变', '守义护短'), 'honesty': ('欺瞒圆滑', '坦率守信'),
-         'greed': ('淡泊节制', '贪求占有'), 'aggression': ('克制退避', '冲动好斗')}
+POLES = temperament.POLES
 LABELS = {'steal': '行窃', 'extort': '勒索', 'smear': '造谣中伤', 'embezzle': '侵吞公帑',
           'gamble': '赌局', 'leisure': '消遣', 'care': '照料', 'meditate': '静思', 'play': '玩耍'}
 KINDS = set(LABELS)
@@ -22,12 +17,8 @@ CRIMES = {'betrayal', 'theft_exposed', 'extortion', 'extortion_resisted', 'sland
 
 
 def initialize(w, n):
-    # Migration adds dispositions reproducibly without consuming the world's future RNG.
-    rng = random.Random(w.seed*1000003+n['id']*7919)
-    for k in EXTRA_TRAITS:
-        value = rng.uniform(12, 88)
-        n['traits'].setdefault(k, value)
-        n['initial_traits'].setdefault(k, n['traits'][k])
+    # Legacy eight-trait saves convert reproducibly without consuming the world's RNG.
+    temperament.migrate(w, n)
     defaults = {'time_left': 4, 'activity_month': w.month, 'action_counts': {},
                 'monthly_actions': [], 'choice_source': '规则', 'last_ai_execution': None,
                 'pressure': 0., 'loneliness': 25., 'last_review_attempt': -100,
@@ -101,7 +92,7 @@ def actions(w, n, visible):
         listeners=[j for j in w.residents[n['place']] if j not in (n['id'],i) and
                    w.npcs[j]['age_months']>=144 and str(j) in n['knowledge']]
         r=n['relationships'].get(str(i),{})
-        motive=r.get('affinity',0)<-15 or (n['traits']['ambition']>65 and n['traits']['honesty']<50)
+        motive=r.get('affinity',0)<-15 or (n['traits']['ambition']>65 and n['traits']['integrity']<50)
         if str(i) in n['knowledge'] and listeners and motive:
             add('smear',i,q['name'])
     return result
@@ -117,30 +108,30 @@ def adjustment(w, n, a):
     if k in ('befriend','court','rumor','leisure'):
         value+=n['loneliness']*.12
     if k=='aid' and q:
-        value+= (n['traits']['loyalty']*.1 if q['id'] in n['parents']+n['children'] else 0)
-        value-= t['greed']*.16
+        value+= (n['traits']['integrity']*.1 if q['id'] in n['parents']+n['children'] else 0)
+        value-= (100-t['kindness'])*.16
     if k=='betray':
-        value+=(100-t['honesty'])*.24+t['greed']*.22 - t['honesty']*.2
+        value+=(100-t['integrity'])*.24+(100-t['kindness'])*.22 - t['integrity']*.2
     if k=='duel':
-        value+=t['aggression']*.2+n['mood']['anger']*.15
+        value+=t['boldness']*.2+n['mood']['anger']*.15
     if k=='care':
-        value+=t['compassion']*.3+t['loyalty']*.15-t['greed']*.15
+        value+=t['kindness']*.3+t['integrity']*.15-(100-t['kindness'])*.15
     elif k=='leisure':
         value+=8+n['pressure']*.25+(100-t['ambition'])*.1
     elif k=='meditate':
         value+=2+n['mood']['anger']*.45+n['mood']['fear']*.3+(100-n['health'])*.08
     elif k=='gamble':
-        value+=t['greed']*.36+(100-t['caution'])*.19-t['caution']*.1-8
+        value+=t['ambition']*.2+(100-t['kindness'])*.16+t['boldness']*.19-(100-t['boldness'])*.1-8
     elif k=='steal':
-        value+=(100-t['honesty'])*.4+t['greed']*.3+n['pressure']*.22-t['compassion']*.15-t['caution']*.17-10
+        value+=(100-t['integrity'])*.4+(100-t['kindness'])*.3+n['pressure']*.22-t['kindness']*.15-(100-t['boldness'])*.17-10
     elif k=='extort':
-        value+=t['aggression']*.4+t['greed']*.25+(100-t['compassion'])*.2-t['honesty']*.32-t['caution']*.08-6
+        value+=t['boldness']*.4+(100-t['kindness'])*.45-t['integrity']*.32-(100-t['boldness'])*.08-6
     elif k=='smear':
         relation=n['relationships'].get(str(a['target']),{})
         resentment=max(0,-relation.get('affinity',0))
-        value+=(100-t['honesty'])*.25+t['ambition']*.18+t['greed']*.1+resentment*.2-t['compassion']*.18-t['honesty']*.25-5
+        value+=(100-t['integrity'])*.25+t['ambition']*.18+(100-t['kindness'])*.1+resentment*.2-t['kindness']*.18-t['integrity']*.25-5
     elif k=='embezzle':
-        value+=(100-t['honesty'])*.45+t['greed']*.4-t['loyalty']*.22-t['caution']*.12
+        value+=(100-t['integrity'])*.45+(100-t['kindness'])*.4-t['integrity']*.22-(100-t['boldness'])*.12
     elif k=='play':
         value+=18
     return value
@@ -250,42 +241,42 @@ def interpretation(w, n, e):
     k=e['kind'];t=n['traits'];f=e['facts'];changes=[]
     culprit=f.get('offender')==n['id']
     if k in ('secret_theft','slander','embezzlement'):
-        if t['honesty']<45:
+        if t['integrity']<45:
             text='规矩管不住所有机会，这次得手值得记住。'
-            changes=[w.drift(n,'honesty',-.06,event_id=e['id']),w.drift(n,'greed',.05,event_id=e['id'])]
+            changes=[w.drift(n,'integrity',-.06,event_id=e['id']),w.drift(n,'kindness',-.05,event_id=e['id'])]
         else:
             text='眼前得利，却不敢细想自己跨过了哪条线。'
             n['mood']['fear']=min(100,n['mood']['fear']+6)
-            changes=[w.drift(n,'loyalty',-.03,event_id=e['id'])]
+            changes=[w.drift(n,'integrity',-.03,event_id=e['id'])]
     elif k in CRIMES or k=='judgment':
         victim = f.get('victim')==n['id']
         if k=='judgment' and not culprit:
             if victim:
-                n['beliefs']['justice']=min(1,n['beliefs']['justice']+.015)
+                n['beliefs']['justice']=min(100,n['beliefs']['justice']+1.5)
                 return '讨回了部分公道，往后仍要看人行事。',[]
             return '办成一桩案子，也会得罪一方的人。',[]
         if culprit:
-            text='只是这回被抓住了；下次要更会掩饰。' if t['honesty']<45 else '后果落到身上，才知侥幸不能长久。'
-            changes=[w.drift(n,'caution',.15,event_id=e['id'])]
-            if k=='judgment':n['beliefs']['justice']=max(0,n['beliefs']['justice']-.025)
+            text='只是这回被抓住了；下次要更会掩饰。' if t['integrity']<45 else '后果落到身上，才知侥幸不能长久。'
+            changes=[w.drift(n,'boldness',-.15,event_id=e['id'])]
+            if k=='judgment':n['beliefs']['justice']=max(0,n['beliefs']['justice']-2.5)
         else:
-            text='这笔账不能轻轻揭过。' if t['aggression']>55 else '与其逞强，不如留下证据再作打算。'
-            n['beliefs']['trust']=max(0,n['beliefs']['trust']-.035)
+            text='这笔账不能轻轻揭过。' if t['boldness']>55 else '与其逞强，不如留下证据再作打算。'
+            n['beliefs']['trust']=max(0,n['beliefs']['trust']-3.5)
             n['mood']['anger']=min(100,n['mood']['anger']+12)
             if k!='judgment':
-                n['desires']['revenge']=min(100,n['desires']['revenge']+30+(100-t['compassion'])*.6+t['ambition']*.12)
+                n['desires']['revenge']=min(100,n['desires']['revenge']+30+(100-t['kindness'])*.6+t['ambition']*.12)
                 n['grievance_cause']=e['id']
-            changes=[w.drift(n,'compassion',-.1 if t['compassion']<50 else -.025,event_id=e['id'])]
+            changes=[w.drift(n,'kindness',-.1 if t['kindness']<50 else -.025,event_id=e['id'])]
     elif k=='hearsay':
-        text='闲话未必可信，先记下来源。' if t['caution']>50 else '这番话听来有理，往来时得留意此人。'
+        text='闲话未必可信，先记下来源。' if t['boldness']<50 else '这番话听来有理，往来时得留意此人。'
     elif k=='gamble':
-        text=('赢过一次，也许还会再赢。' if f['won'] else '不甘心就这样认输，还想把本钱拿回来。') if t['greed']>55 else (
+        text=('赢过一次，也许还会再赢。' if f['won'] else '不甘心就这样认输，还想把本钱拿回来。') if t['ambition']>55 else (
               '输赢都是代价，往后应量力。')
-        changes=[w.drift(n,'greed',.035 if t['greed']>55 else -.025,event_id=e['id'])]
+        changes=[w.drift(n,'ambition',.035 if t['ambition']>55 else -.025,event_id=e['id'])]
     elif k in ('leisure','meditate','play','care'):
         text={'leisure':'人生不能只有账本和前程。','meditate':'忍一时，并不意味着旧事已经放下。',
               'play':'今日的好奇与快乐也是生活。','care':'身边人的安危，会改变自己的取舍。'}[k]
-        if k=='meditate':changes=[w.drift(n,'aggression',-.015,event_id=e['id'])]
+        if k=='meditate':changes=[w.drift(n,'boldness',-.015,event_id=e['id'])]
     else:
         return None
     return text,[c for c in changes if c]

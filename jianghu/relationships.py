@@ -71,8 +71,8 @@ def candidates(w, n, visible, planning=False):
 def score(w, n, a):
     r = n['relationships'][str(a['target'])]
     if a['kind'] == 'swear':
-        return 12 + n['traits']['loyalty'] * .16 + (18 if n['goal']['kind'] == 'belonging' else 0)
-    return (n['traits']['honesty'] * .16 + n['traits']['compassion'] * .14
+        return 12 + n['traits']['integrity'] * .16 + (18 if n['goal']['kind'] == 'belonging' else 0)
+    return (n['traits']['integrity'] * .16 + n['traits']['kindness'] * .14
             - n['mood']['anger'] * .25 + (15 if r.get('sworn') or r['label'].startswith(('夫妻', '亲子', '师徒')) else 0))
 
 

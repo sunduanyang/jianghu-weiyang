@@ -26,9 +26,9 @@ def fixture(path):
         n['career'].update(profession='农人',experience={'农人':20.})
         w.set_goal(n,'wealth',initial=True)
         n['identity']=careers.identity(w,n)
-    w.npcs[1]['traits'].update(compassion=95.,loyalty=90.,greed=5.,honesty=90.,sociability=85.)
+    w.npcs[1]['traits'].update(kindness=95.,integrity=90.,sociability=85.)
     w.npcs[2]['wealth']=5.
-    w.npcs[4]['traits'].update(compassion=5.,loyalty=15.,greed=95.,honesty=30.)
+    w.npcs[4]['traits'].update(kindness=5.,integrity=20.)
     w.reindex();local_life.reconcile(w)
     protagonist.perform(w,dict(action='create',revision=0,month=w.month,name='沈行舟',sex='男',age=24,place=place))
     w.player['ties']['1']=dict(affinity=60.,trust=40.)

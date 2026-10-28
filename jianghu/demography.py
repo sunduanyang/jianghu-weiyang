@@ -11,7 +11,7 @@ def initialize(w, n):
                 'birth_month': w.month-n['age_months'], 'guardian': n['parents'][0] if parents else None,
                 'pregnancy': None, 'family_intent_until': -1, 'illness': None, 'wound': None,
                 'starvation_months': 0, 'death': None,
-                'family_size': 3 + int(n['traits']['compassion'] > 60) + int((n['id']+w.seed) % 5 == 0),
+                'family_size': 3 + int(n['traits']['kindness'] > 60) + int((n['id']+w.seed) % 5 == 0),
                 'orientation': '同性' if (n['id']*37+w.seed) % 100 < 5 else
                                '皆可' if (n['id']*37+w.seed) % 100 < 18 else '异性'}
     for key, value in defaults.items():
@@ -49,7 +49,7 @@ def households(w):
         candidates = [w.npcs[i] for i in relatives if w.npcs[i]['alive'] and w.npcs[i]['age_months'] >= 216
                       and w.npcs[i]['health'] >= 30
                       and w.npcs[i]['relationships'].get(str(child['id']), {}).get('affinity', 0) >= -25
-                      and w.npcs[i]['traits']['compassion'] + w.npcs[i]['traits']['loyalty'] >= 60]
+                      and w.npcs[i]['traits']['kindness'] + w.npcs[i]['traits']['integrity'] >= 60]
         # Adult siblings can continue a household. A parent's sworn friend may
         # volunteer locally, provided there is a real bond and capacity to care.
         if not candidates:
@@ -62,7 +62,7 @@ def households(w):
                     if (tie.get('sworn') and back.get('sworn') and back.get('affinity', 0) >= 20
                             and q['alive'] and q['place'] == child['place'] and q['age_months'] >= 216
                             and q['health'] >= 50 and q['wealth'] >= 15
-                            and q['traits']['compassion'] >= 55 and q['traits']['loyalty'] >= 50
+                            and q['traits']['kindness'] >= 55 and q['traits']['integrity'] >= 50
                             and q['relationships'].get(str(child['id']), {}).get('affinity', 0) >= -10):
                         volunteers.add(q['id'])
             candidates = [w.npcs[i] for i in sorted(volunteers)]
@@ -103,7 +103,7 @@ def pregnancies(w):
         elif not p and fertile_pair(w, mother):
             father = w.npcs[mother['spouse']]
             # Parenthood is shaped by both people's values and resources, not a population quota.
-            readiness = (mother['traits']['loyalty']+father['traits']['loyalty']+100)/200
+            readiness = (mother['traits']['integrity']+father['traits']['integrity']+100)/200
             money = min(1., (mother['wealth']+father['wealth']+w.local_government(mother)['fund']*.02)/50)
             intent = 1.6 if max(mother['family_intent_until'], father['family_intent_until']) >= w.month else 1.
             if w.rng.random() < .065 * readiness * money * intent:

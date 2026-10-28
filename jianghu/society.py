@@ -111,7 +111,7 @@ def monthly(w):
             q = w.npcs[i]
             r = q['relationships'].get(str(n['id']), {})
             if (q['age_months'] < 192 or q['health'] < 35 or r.get('affinity', 0) < -25
-                    or r.get('trust', 0) < -30 or q['traits']['compassion'] + q['traits']['loyalty'] < 75):
+                    or r.get('trust', 0) < -30 or q['traits']['kindness'] + q['traits']['integrity'] < 75):
                 continue
             reserve = 12 + sum(upkeep(w.npcs[j]) * 2 for j in dependants.get(i, ())
                                if w.npcs[j]['place'] == q['place'])
@@ -192,8 +192,8 @@ def candidates(w, n, visible, planning=False):
 def score(w, n, a):
     t = n['traits']
     if a['kind'] == 'donate_relief':
-        return 4 + t['compassion'] * .24 + t['loyalty'] * .07 - t['greed'] * .17
-    return 10 + t['compassion'] * .32 - t['greed'] * .1 + (10 if a['target'] in kin_ids(n) else 0)
+        return 4 + t['kindness'] * .24 + t['integrity'] * .07 - (100-t['kindness']) * .17
+    return 10 + t['kindness'] * .32 - (100-t['kindness']) * .1 + (10 if a['target'] in kin_ids(n) else 0)
 
 
 def execute(w, n, a, facts):

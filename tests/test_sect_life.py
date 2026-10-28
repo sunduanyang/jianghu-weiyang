@@ -19,7 +19,7 @@ class SectLifeTests(unittest.TestCase):
         protagonist.perform(w, dict(action='create', revision=0, month=0, name='门中验收', sex='女', age=24,
                                    place=f['place']))
         self.elder = self.npc(faction=0, contribution=35., rating=45.)
-        self.elder['traits'].update(loyalty=80., compassion=80.)
+        self.elder['traits'].update(integrity=80., kindness=80.)
         self.join()
 
     # ---------------------------------------------------------- fixtures
@@ -245,7 +245,7 @@ class SectLifeTests(unittest.TestCase):
         self.interact(self.elder, 'sect_counsel')
         self.assertEqual(self.h['contribution'], 1.)
         self.reject(lambda: self.interact(self.elder, 'sect_counsel'))
-        self.elder['traits'].update(loyalty=0., compassion=0.); r['affinity'] = 0.
+        self.elder['traits'].update(integrity=0., kindness=0.); r['affinity'] = 0.
         art = next(o['art'] for o in player_interactions.view(w, self.elder['id'])['manual_offers'] if not o['reason'])
         result = self.interact(self.elder, 'teach', art=art)
         self.assertTrue(result['event']['facts']['accepted']); self.assertTrue(result['event']['facts']['lineage'])
@@ -296,7 +296,7 @@ class SectLifeTests(unittest.TestCase):
         self.assertIn(w.month, self.h['rank_progress']['activity']['service'])
         self.reject(lambda: self.interact(junior, 'sect_guide'))
         outsider = self.npc(rating=30.)
-        outsider['beliefs']['tradition'] = .9
+        outsider['beliefs']['tradition'] = 90.
         self.assertNotIn('sect_recruit', [a['id'] for a in player_interactions.view(w, outsider['id'])['actions']])
         self.set_grade(3)
         self.reject(lambda: self.interact(outsider, 'sect_recruit'))

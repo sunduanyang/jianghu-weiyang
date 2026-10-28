@@ -119,7 +119,8 @@ class CareerTests(unittest.TestCase):
         n = self.person()
         adult_income = careers.income(n)
         n['age_months'] = 180
-        self.assertAlmostEqual(careers.income(n), round(adult_income*.45, 4), places=4)
+        # Both sides are rounded to four places independently, so allow one unit of rounding.
+        self.assertAlmostEqual(careers.income(n), adult_income*.45, delta=.0002)
         n['age_months'] = 119
         self.assertEqual({a['kind'] for a in self.w.legal_actions(n)}, {'rest', 'play'})
 

@@ -1,3 +1,4 @@
+from . import temperament
 from . import combat_attributes
 """Livelihoods and earned social standing; the world still settles every action.
 
@@ -10,25 +11,25 @@ from . import social_ranks
 
 
 PROFESSIONS = {
-    '农人': {'base': 9, 'trait': 'caution', 'places': [0, 1, 2, 3, 4],
+    '农人': {'base': 9, 'trait': '-boldness', 'places': [0, 1, 2, 3, 4],
            'demand': [1.2, .9, .85, 1.1, 1.05], 'cost': 4, 'entry': 0,
            'description': '耕作供给乡里，青溪与桃花渡较宜农事。'},
     '行商': {'base': 10, 'trait': 'sociability', 'places': [0, 2, 3],
            'demand': [1, .85, 1.2, 1.1, .9], 'cost': 12, 'entry': 0,
            'description': '往来贩运，商埠收益较高，合营时可运用商术。'},
-    '药师': {'base': 10, 'trait': 'compassion', 'places': [0, 1, 2],
+    '药师': {'base': 10, 'trait': 'kindness', 'places': [0, 1, 2],
            'demand': [1, 1.15, 1.1, 1, .95], 'cost': 8, 'entry': 12,
            'description': '采药诊治，须先学医理；熟练度提高诊治效果。'},
-    '匠人': {'base': 10, 'trait': 'caution', 'places': [0, 2, 4],
+    '匠人': {'base': 10, 'trait': '-boldness', 'places': [0, 2, 4],
            'demand': [1.05, .9, 1.15, .9, 1.1], 'cost': 8, 'entry': 8,
            'description': '修器制具，先学手艺再置办工具。'},
-    '镖师': {'base': 10, 'trait': 'loyalty', 'places': [0, 2, 4],
+    '镖师': {'base': 10, 'trait': 'integrity', 'places': [0, 2, 4],
            'demand': [1, 1, 1.1, 1, 1.15], 'cost': 6, 'entry': 0, 'martial': 20,
            'description': '护送商旅，入行须武学20；习武也能积累护镖经验。'},
-    '渔人': {'base': 9, 'trait': 'caution', 'places': [0, 3],
+    '渔人': {'base': 9, 'trait': '-boldness', 'places': [0, 3],
            'demand': [1.1, .65, .9, 1.3, .65], 'cost': 4, 'entry': 0,
            'description': '临水捕捞，在桃花渡最能施展本领。'},
-    '猎户': {'base': 9, 'trait': 'caution', 'places': [1, 4],
+    '猎户': {'base': 9, 'trait': 'boldness', 'places': [1, 4],
            'demand': [.9, 1.25, .7, .85, 1.2], 'cost': 4, 'entry': 0, 'martial': 12,
            'description': '入山猎获，须武学12，栖云山与寒石寨较宜。'},
     '书生': {'base': 9, 'trait': 'ambition', 'places': [0, 2],
@@ -37,7 +38,7 @@ PROFESSIONS = {
     '艺人': {'base': 9, 'trait': 'sociability', 'places': [0, 2, 3],
            'demand': [1, .75, 1.2, 1.15, .8], 'cost': 4, 'entry': 0,
            'description': '以曲艺娱人，城镇渡口容易谋生。'},
-    '短工': {'base': 6, 'trait': 'caution', 'places': [0, 1, 2, 3, 4],
+    '短工': {'base': 6, 'trait': '-boldness', 'places': [0, 1, 2, 3, 4],
            'demand': [1, .85, 1.1, 1.1, .9], 'cost': 0, 'entry': 0,
            'description': '没有固定产业，以搬运和杂役糊口，属于九品游民；攒下置业费后可另寻营生。'},
 }
@@ -93,7 +94,7 @@ def income(n, place=None, profession=None):
     if profession not in PROFESSIONS:
         return 0.
     p = PROFESSIONS[profession]
-    aptitude = .85 + n['traits'][p['trait']] * .003
+    aptitude = .85 + temperament.lean(n, p['trait']) * .003
     gross = (p['base'] + experience(n, profession)*.09) * p['demand'][place_archetype(n['place'] if place is None else place)] * aptitude
     if profession in ('镖师', '猎户'):
         gross += combat_attributes.rating(n)*.035

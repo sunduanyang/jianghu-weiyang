@@ -23,7 +23,7 @@ class PlayerInteractionTests(unittest.TestCase):
         protagonist.perform(w, dict(action='create', revision=0, month=0, name='来客', sex='女', age=24, place=45))
         self.n = n = w.make_npc(place=45)
         n.update(age_months=360, health=100., wealth=100., time_left=4, spouse=None, orientation='皆可')
-        n['traits'].update(loyalty=90., sociability=90., compassion=90., caution=50.)
+        n['traits'].update(integrity=90., sociability=90., kindness=90., boldness=50.)
         n['mood'].update(anger=0., joy=0.)
         w.reindex(); w.checkpoint()
 
