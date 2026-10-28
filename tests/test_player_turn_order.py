@@ -16,7 +16,7 @@ class PlayerFirstTurnTests(unittest.TestCase):
         place = w.npcs[1]['place']
         for n in w.npcs.values():
             n.update(place=place, age_months=360, health=100., time_left=4)
-            n['traits'].update(loyalty=90., compassion=90.)
+            n['traits'].update(integrity=90., kindness=90.)
         w.reindex()
         protagonist.perform(w, dict(action='create', name='先行人', age=24, sex='女', place=place, month=0, revision=0))
         self.n=w.npcs[1]

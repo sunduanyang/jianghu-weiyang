@@ -68,7 +68,7 @@ def request(w, owner, teacher_id, art_id, action=None):
     relation = (w.player['ties'].get(str(teacher_id), {}) if player else
                 pupil['relationships'].get(str(teacher_id), {}))
     accepted = (relation.get('affinity', 0) > -10 and relation.get('trust', 0) > -10 and
-                teacher['traits']['loyalty'] + teacher['traits']['compassion'] + relation.get('affinity', 0) >= 65)
+                teacher['traits']['integrity'] + teacher['traits']['kindness'] + relation.get('affinity', 0) >= 65)
     # A formal master in the pupil's own sect passes on that sect's arts.
     from . import sect_life
     lineage = player and (sect_life.master(w) or {}).get('id') == teacher_id and relation.get('affinity', 0) > -10

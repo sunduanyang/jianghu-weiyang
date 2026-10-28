@@ -119,7 +119,7 @@ def reason(w, n, action):
 def theft_chance(w, n):
     own = combat_attributes.ratings(w.player); other = combat_attributes.ratings(n)
     return round(max(.1, min(.9, .5 + (own['dexterity']+own['footwork']-other['dexterity']-other['footwork'])/300
-                              + (50-n['traits']['caution'])/250)), 3)
+                              + (n['traits']['boldness']-50)/250)), 3)
 
 
 def goods(w, owner, operation=None):
@@ -263,7 +263,7 @@ def perform(w, body):
         battle['cause'] = result['id']; w.battle = battle
     elif key == 'steal':
         success = w.rng.random() < theft_chance(w, n)
-        aware = not success or w.rng.random() < n['traits']['caution']/200
+        aware = not success or w.rng.random() < (100-n['traits']['boldness'])/200
         amount = 0.
         if success:
             if item:
@@ -280,7 +280,7 @@ def perform(w, body):
         if item and success:
             item['last_event'] = result['id']
     else:
-        accepted = n['mood']['anger'] < 65 and (r.get('affinity', 0)+r.get('trust', 0)+n['traits']['loyalty']+n['traits']['sociability'] >= 100)
+        accepted = n['mood']['anger'] < 65 and (r.get('affinity', 0)+r.get('trust', 0)+n['traits']['integrity']+n['traits']['sociability'] >= 100)
         if key == 'praise':
             accepted = n['mood']['anger'] < 65 and r.get('affinity', 0) > -40
             change_tie(r, 4 if accepted else -1, 2 if accepted else 0)

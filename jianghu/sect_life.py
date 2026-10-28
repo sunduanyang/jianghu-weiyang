@@ -574,7 +574,7 @@ def perform_interaction(w, n, key):
         battle['cause'] = e['id']
     elif key == 'sect_apprentice':
         r = own_tie(w, n['id'])
-        accepted = n['mood']['anger'] < 65 and n['traits']['loyalty'] + n['traits']['compassion'] + r.get('affinity', 0) >= 90
+        accepted = n['mood']['anger'] < 65 and n['traits']['integrity'] + n['traits']['kindness'] + r.get('affinity', 0) >= 90
         s['asked'][f"master:{n['id']}"] = w.month
         if accepted:
             s.update(master=n['id'], master_since=w.month)
@@ -602,7 +602,7 @@ def perform_interaction(w, n, key):
                       dict(accepted=True, faction=f['id'], student_contribution=.5, player_points=points))
     elif key == 'sect_recruit':
         r = own_tie(w, n['id'])
-        score = r.get('affinity', 0) + n['beliefs']['tradition']*40 + n['traits']['loyalty']*.3
+        score = r.get('affinity', 0) + n['beliefs']['tradition']*.4 + n['traits']['integrity']*.3
         accepted = n['mood']['anger'] < 65 and score >= 55
         s['asked'][f"recruit:{n['id']}"] = w.month
         if accepted:

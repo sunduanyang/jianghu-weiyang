@@ -20,7 +20,7 @@ def prepare(folder):
         protagonist.perform(w, dict(action='create', revision=0, month=0, name='秘籍验收', sex='女', age=24, place=45))
         n = w.make_npc(place=45)
         n.update(name='授业师父', age_months=480, health=100., time_left=4)
-        n['traits'].update(loyalty=80., compassion=80.)
+        n['traits'].update(integrity=80., kindness=80.)
         n['martial']['learned'] = ['shaolin_g9']
         w.set_goal(n, 'mastery', initial=True)
         martial.sync_actor(w, n)

@@ -1,3 +1,4 @@
+from . import temperament
 from . import combat_attributes
 """Seed a playable cast from geography and the two nine-grade systems.
 
@@ -82,6 +83,8 @@ def civil(w, place, job=None, years=None, title=None):
     weights = job_weights(place)
     job = job or w.rng.choices(list(weights), list(weights.values()))[0]
     trade(w, n, job)
+    # Temperament follows the life the person actually leads (own stream; world RNG untouched).
+    temperament.assign(w, n, job)
     if title:
         n['social_status'] = dict(title=title, country=PLACES[place]['country'],
                                   since=w.month, source='九品世界期初身份')
@@ -116,6 +119,7 @@ def school(w, f, count):
                      round(w.rng.uniform(required_ability, min(95, required_ability + 12)), 2))},
                  reputation=w.rng.uniform(max(0, 40 - grade * 5), max(2, 65 - grade * 6)))
         trade(w, n, '药师' if f['public_axis'] == 'sanitation' else '镖师' if grade <= 7 else '农人')
+        temperament.assign(w, n, n['career']['profession'], f['tradition'])
         if grade == 1:
             f.update(leader=n['id'], leader_since=w.month, leader_review_since=w.month)
         members.append(n)
@@ -161,7 +165,7 @@ def seed(w, total):
     for p in sites:
         local = [n for n in w.npcs.values() if n['place'] == p['id']]
         adults = [n for n in local if n['faction'] is None and n['age_months'] >= 360
-                  and n['wealth'] >= 20 and n['traits']['compassion'] + n['traits']['loyalty'] >= 60]
+                  and n['wealth'] >= 20 and n['traits']['kindness'] + n['traits']['integrity'] >= 60]
         if not adults:
             adults = [n for n in local if n['age_months'] >= 360]
         for i, n in enumerate(q for q in local if q['age_months'] < 192):

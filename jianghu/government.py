@@ -76,8 +76,8 @@ def appoint(w, g=None):
                 g.setdefault('departed', {})[office] = current['id']
             continue
         def merit(n):
-            return n['reputation'] + n['contribution']*.15 + n['traits']['loyalty']*.25 + (
-                combat_attributes.rating(n)*.5 if office == '捕头' else n['traits']['compassion']*.2 if office == '县令' else n['traits']['caution']*.2)
+            return n['reputation'] + n['contribution']*.15 + n['traits']['integrity']*.25 + (
+                combat_attributes.rating(n)*.5 if office == '捕头' else n['traits']['kindness']*.2 if office == '县令' else (100-n['traits']['boldness'])*.2)
         chosen = max(candidates, key=lambda n: (merit(n), -n['id']))
         old = current['id'] if current else g.get('departed', {}).pop(office, None)
         if current:
@@ -218,7 +218,7 @@ def annual(w, g=None):
         if previous != policy or g['policy_since'] is None:
             g['policy_since'] = w.month
         g['tax_rate'] = ({'relief': .06, 'security': .11, 'health': .09}.get(policy)
-                         or round(max(.05, min(.15, .07+(100-t['compassion'])*.0006)), 4))
+                         or round(max(.05, min(.15, .07+(100-t['kindness'])*.0006)), 4))
         budget = min(g['fund']*.2, max(12, population*.15))
         g['fund'] -= budget
         from . import economics

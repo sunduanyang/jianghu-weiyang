@@ -79,17 +79,17 @@ def score(w, n, a):
     if a['kind'] == 'leave_faction':
         leader = w.factions[n['faction']]['leader']
         resentment = max(0, -n['relationships'].get(str(leader), {}).get('affinity', 0))
-        return (-20 + (100 - n['traits']['loyalty']) * .15
+        return (-20 + (100 - n['traits']['integrity']) * .15
                 + (35 + min(30, resentment * .3) if leader != n['id'] and resentment > 25 else 0)
-                + (15 if n['beliefs']['tradition'] < .3 else 0))
+                + (15 if n['beliefs']['tradition'] < 30 else 0))
     if a['kind'] == 'sect_service':
-        return (13 + n['traits']['loyalty'] * .12 + (4 if a.get('at_seat') else 0)
+        return (13 + n['traits']['integrity'] * .12 + (4 if a.get('at_seat') else 0)
                 + (14 if n['goal']['kind'] == 'renown' else 0))
     if a['kind'] == 'faction_study':
         return 16 + n['traits']['ambition'] * .1 + (25 if n['goal']['kind'] == 'mastery' else 0)
     if a['kind'] == 'faction_guide':
-        return 15 + n['traits']['loyalty'] * .1 + n['traits']['compassion'] * .08
-    return (16 + n['traits']['loyalty'] * .1 + max(0, 30 - n['wealth']) * .3
+        return 15 + n['traits']['integrity'] * .1 + n['traits']['kindness'] * .08
+    return (16 + n['traits']['integrity'] * .1 + max(0, 30 - n['wealth']) * .3
             + (20 if n['goal']['kind'] == 'renown' else 0))
 
 

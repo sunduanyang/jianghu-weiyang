@@ -1,7 +1,7 @@
 from . import combat_attributes
 """Bounded task decomposition; only the existing engine executes consequences."""
 from copy import deepcopy
-from . import careers, sect_ranks, llm_policy, npc_attention
+from . import careers, sect_ranks, llm_policy, npc_attention, temperament
 
 VERSION = 1
 
@@ -34,7 +34,7 @@ def adjustment(w, n, a):
     if a['kind'] not in profile['duties']:
         return 0.
     # A duty is a preference, never permission or immunity from personality.
-    return 7. + n['traits']['loyalty'] * .025 if profile['key'] in ('official', 'leader', 'elder', 'steward', 'disciple') else 5.
+    return 7. + n['traits']['integrity'] * .025 if profile['key'] in ('official', 'leader', 'elder', 'steward', 'disciple') else 5.
 
 
 def close(w, n, status, reason, event_id=None):
@@ -89,7 +89,7 @@ def career_target(w, n):
         tutor = tutor_for(w, n, job) if careers.experience(n, job) < p['entry'] else None
         if careers.experience(n, job) < p['entry'] and tutor is None:
             continue
-        options.append((gain * 8 - p['cost'] * .15 + n['traits'][p['trait']] * .025, job, tutor))
+        options.append((gain * 8 - p['cost'] * .15 + temperament.lean(n, p['trait']) * .025, job, tutor))
     return max(options, key=lambda x: (x[0], x[1]))[1:] if options else None
 
 

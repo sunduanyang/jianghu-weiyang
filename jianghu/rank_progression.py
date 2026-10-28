@@ -250,7 +250,7 @@ def adjustment(w,n,action):
     p=n.get('rank_progress',{});s=p.get('sect',{})
     grade=sect_ranks.standing(w.factions[n['faction']],n)['grade']
     if grade<=4 and action['kind'] in ('faction_task','faction_guide','teach','sect_service') and len(months(p,'service',w.month,6))<2:
-        return 18+n['traits']['loyalty']*.08
+        return 18+n['traits']['integrity']*.08
     return 0.
 
 
