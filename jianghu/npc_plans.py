@@ -1,7 +1,7 @@
 from . import combat_attributes
 """Bounded task decomposition; only the existing engine executes consequences."""
 from copy import deepcopy
-from . import careers, sect_ranks, llm_policy, npc_attention, temperament
+from . import careers, sect_ranks, llm_policy, npc_attention, temperament, undertakings
 
 VERSION = 1
 
@@ -51,19 +51,26 @@ def close(w, n, status, reason, event_id=None):
     if p.get('intent', 'sequence') != 'sequence':
         key = 'workflows_completed' if status == '完成' else 'workflows_interrupted'
         w.metrics[key] = w.metrics.get(key, 0) + 1
+    if p.get('intent') in undertakings.KINDS:
+        row = w.metrics.setdefault('undertakings', {}).setdefault(p['intent'], dict(started=0, completed=0, interrupted=0))
+        row['completed' if status == '完成' else 'interrupted'] += 1
     n['plan'] = None
 
 
 def start(w, n, intent, title, steps, **data):
     n['plan_revision'] = n.get('plan_revision', 0) + 1
     n['plan'] = dict(version=VERSION, revision=n['plan_revision'], source='规则', created=w.month,
-                     until=w.month + 18, intent=intent, title=title, reason=title,
+                     until=w.month + (undertakings.MONTHS if intent in undertakings.KINDS else 18), intent=intent, title=title, reason=title,
                      goal=n['goal']['kind'], place=n['place'], faction=n['faction'],
                      steps=steps, completed=[], status='执行中', blocker='',
                      horizon='依真实条件逐步完成，费用与周次在执行时结算', **data)
     w.metrics['plans_started'] = w.metrics.get('plans_started', 0) + 1
     if intent != 'sequence':
         w.metrics['workflows_started'] = w.metrics.get('workflows_started', 0) + 1
+    if intent in undertakings.KINDS:
+        n['plan'].update(last_progress=w.month, last_step=None)
+        row = w.metrics.setdefault('undertakings', {}).setdefault(intent, dict(started=0, completed=0, interrupted=0))
+        row['started'] += 1
 
 
 def tutor_for(w, n, profession):
@@ -95,6 +102,14 @@ def career_target(w, n):
 
 def begin(w, n, chosen):
     profile = role(w, n)
+    # A long undertaking is considered at most once a month, when no plan is held.
+    if n.get('undertaking_review') != w.month:
+        n['undertaking_review'] = w.month
+        found = undertakings.propose(w, n)
+        if found:
+            intent, title, data = found
+            start(w, n, intent, title, [], **data)
+            return
     if n['goal']['kind'] == 'wealth' and chosen['kind'] in ('work', 'learn_trade', 'change_job'):
         target = career_target(w, n)
         if target:
@@ -122,10 +137,17 @@ def resolve(w, n, actions):
     p = n.get('plan')
     if not p:
         return None
+    intent = p.get('intent', 'sequence')
+    if intent in undertakings.KINDS:
+        done = undertakings.achieved(w, n, p)
+        if done:
+            close(w, n, '完成', done, n['last_event'])
+            return None
     if w.month > p['until']:
         close(w, n, '中断', '计划期限已到，重新审视处境')
         return None
-    if p.get('version') and (p['goal'] != n['goal']['kind'] or p['place'] != n['place'] or p['faction'] != n['faction']):
+    moved = p.get('place', n['place']) != n['place'] and intent != 'journey'
+    if p.get('version') and (p['goal'] != n['goal']['kind'] or moved or p['faction'] != n['faction']):
         close(w, n, '中断', '心愿、所在地点或门派发生变化')
         return None
     by_id = {a['id']: a for a in actions}
@@ -133,7 +155,8 @@ def resolve(w, n, actions):
     def pick(kind, predicate=lambda a: True):
         return next((a for a in actions if a['kind'] == kind and predicate(a)), None)
     choice = None
-    intent = p.get('intent', 'sequence')
+    if intent in undertakings.KINDS:
+        return undertake(w, n, p, actions)
     if intent == 'career_change':
         job = p['profession']; spec = careers.PROFESSIONS[job]
         if n['career']['profession'] == job:
@@ -172,6 +195,25 @@ def resolve(w, n, actions):
             return blocked(w, n, '本周时间或合作对象的时段不足，等待下次机会')
     if choice is None:
         return blocked(w, n, '当前条件不满足或目标对象无法接触')
+    p.update(status='执行中', blocker='', next_action=choice['label'], next_id=choice['id'], blocked_since=None)
+    return choice
+
+
+def undertake(w, n, p, actions):
+    if p.get('last_step') == w.month:
+        p.update(status='执行中', blocker='本月已推进一步，其余时间照常过日子', next_id=None)
+        return None
+    if w.month - p['last_progress'] >= undertakings.PATIENCE:
+        close(w, n, '中断', '半年未有进展，暂且放下')
+        return None
+    verdict = undertakings.step(w, n, p, actions)
+    if verdict[0] == 'close':
+        close(w, n, '中断', verdict[1])
+        return None
+    if verdict[0] == 'wait':
+        p.update(status='等待时机', blocker=verdict[1])
+        return None
+    choice = verdict[1]
     p.update(status='执行中', blocker='', next_action=choice['label'], next_id=choice['id'], blocked_since=None)
     return choice
 
@@ -237,6 +279,11 @@ def record(w, n, a, event):
         p['steps'].pop(0)
         if not p['steps']:
             close(w, n, '完成', '已完成安排的行动', event['id'])
+    elif p.get('intent') in undertakings.KINDS:
+        p.update(last_step=w.month, last_progress=w.month)
+        ended = undertakings.after(w, n, p, a, event)
+        if ended and n.get('plan') is p:
+            close(w, n, ended[0], ended[1], event['id'])
     elif p.get('intent') == 'career_change' and n['career']['profession'] == p['profession']:
         close(w, n, '完成', '已置办生计并转入'+p['profession'], event['id'])
     elif (p.get('intent') == 'sect_training' and n['contribution'] >= p['target_contribution']
@@ -258,6 +305,9 @@ def view(w, n):
             p['next_description'] = ('办差积累贡献至'+str(p['target_contribution']) if n['contribution'] < p['target_contribution'] else
                                      '备足请益费用与生活余银' if n['wealth'] < 8 else
                                      '练好基本功，达到武学12' if combat_attributes.rating(n) < 12 else '向同门请益或继续习武')
+        elif p.get('intent') in undertakings.KINDS:
+            p['next_description'] = undertakings.describe(w, n, p)
+            p['undertaking'] = undertakings.KINDS[p['intent']]
         else:
             p['next_description'] = p.get('next_action', '按约定步骤继续，执行前再核对条件')
     return dict(version=VERSION, role=role(w, n), current=p, decision=deepcopy(n.get('decision')),life_policy=llm_policy.view(w,n),
