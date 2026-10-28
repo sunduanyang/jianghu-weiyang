@@ -2,8 +2,8 @@
 
 `reputation` stays one number — what a person has done. How widely it is known
 is kept per town as a share from 0 to 1: living somewhere makes a person fully
-known there within months; hearsay carries a name to neighbouring towns, faster
-for great renown or infamy; places a person left slowly forget them. Anything
+known there within months; hearsay carries a name to neighbouring towns, and
+the greater the renown or infamy the better it is known there; places a person left slowly forget them. Anything
 judged by local people (local office, notable status, how wary a would-be
 offender is of their own infamy) reads the locally known reputation. Town keys are
 stored as strings so saves reload identically. Spreading is deterministic and never consumes the world RNG.
@@ -14,6 +14,8 @@ PRESENT = .25     # monthly closing of the gap where one lives
 FORGET = .97      # monthly retention elsewhere
 FLOOR = .02       # shares below this are forgotten entirely
 NOTICED = 5.      # reputations smaller than this do not travel
+REACH_CAP = .8    # neighbours never know a name as well as its home town does
+HEARSAY = .1      # monthly closing of the gap in a neighbouring town
 
 
 def shares(holder):
@@ -40,7 +42,8 @@ def spread(w, holder, place):
     m = shares(holder)
     place = str(place)
     rep = abs(holder['reputation'])
-    reach = .04 + .06 * min(100., rep) / 100
+    # Neighbouring towns come to know a name only as far as it is worth talking about.
+    reach = min(REACH_CAP, rep / 100) * m.get(place, 0.)
     here = m.get(place, 0.) + (1 - m.get(place, 0.)) * PRESENT
     nxt = {}
     for town, share in m.items():
@@ -51,8 +54,8 @@ def spread(w, holder, place):
     if rep >= NOTICED:
         for town in map(str, w.neighbors.get(int(place), [])):
             heard = nxt.get(town, 0.)
-            if here > heard:
-                nxt[town] = round(heard + (here - heard) * reach, 4)
+            if reach > heard:
+                nxt[town] = round(heard + (reach - heard) * HEARSAY, 4)
     nxt[place] = round(here, 4)
     holder['fame'] = nxt
 
