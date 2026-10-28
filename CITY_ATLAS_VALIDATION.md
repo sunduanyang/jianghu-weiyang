@@ -95,4 +95,8 @@ PR 原始提交的环境没有 Unity 编辑器和 C# 编译器，因此当时没
 
 已检查原生舆图与长卷截图。完整结果、截图和独立测试存档位于本机 `output/pr8-integrated-20261028/`，最终构建日志为 `unity/pr8-integrated-final-build.log`。本次没有使用正式存档或调用真实模型；自动验收未穷举新视图中的每条远行路线与所有鼠标拖动交互。
 
-验证后的成品位于 `unity/Build/PR8Integrated/江湖未央.exe`，本机默认启动版本由 `unity/Build/active-build.txt` 选择为 `PR8Integrated`。源码统一以默认分支 `main` 为准。
+发布前继续整合 PR #8 的补充提交 `84a0edb`：新增手绘长卷素材提示词与导入脚本，客户端优先读取 `Resources/Scroll/Art/`，缺失时回退到原有贴图。`python -B unity/import_scroll_art.py --help` 通过；本次没有导入或替换美术图片。
+
+补充提交在干净检出中使用 Unity 6000.6.7f1 再次构建成功，并以独立测试存档重新通过 53 项地图验收。隐藏窗口没有产生有效渲染帧，最终在可见客户端窗口中完成截图检查；结果位于 `output/pr8-integrated-20261028/atlas-default-visible/`，构建日志为 `unity/pr8-default-clean-build.log`。共享规则没有变化，规则、行走与导航验证范围仍见上表。
+
+最终成品位于 `unity/Build/PR8Default/江湖未央.exe`，本机默认启动版本由 `unity/Build/active-build.txt` 选择为 `PR8Default`。源码统一以默认分支 `main` 为准。
