@@ -60,7 +60,7 @@ public partial class JianghuApp {
         cityLastPrepareMs=(Time.realtimeSinceStartupAsDouble-prepare)*1000;
         bool changed=!City.Has||City["place"].I!=data["place"].I;City=data;
         if(changed){SelectCityCell(new Vector2Int(-1,-1));originRow=originCol=-1;cityZoom=2.4f;cityPan=new Vector2(0,35);cityKind="全部聚落";cityLastClickAt=-10;}
-        EnsureCityIndex();EnsureCityRoutes();cityLoading=false;cityPointerDown=false;cityHover=new Vector2Int(-1,-1);
+        EnsureCityIndex();EnsureCityRoutes();if(changed||!CitySettlement(cityScrollSite).Has)CityAtlasReset();cityLoading=false;cityPointerDown=false;cityHover=new Vector2Int(-1,-1);
         cityLastLoadMs=(Time.realtimeSinceStartupAsDouble-started)*1000;
     }
 }

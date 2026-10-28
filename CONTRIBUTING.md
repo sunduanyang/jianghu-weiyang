@@ -39,7 +39,7 @@ python unity/prepare.py
 python unity/bake_paper_cast.py
 ```
 
-只调整界面纹理或舆图画法时，运行 `python unity/bake_ui.py` 即可（`--ui-only` 只重做界面纹理）；重建内置字体子集用 `python unity/build_fonts.py`。
+城中舆图与长卷的建筑、绢底和节点标记由 `python unity/bake_scroll.py` 生成。只调整界面纹理或舆图画法时，运行 `python unity/bake_ui.py` 即可（`--ui-only` 只重做界面纹理）；重建内置字体子集用 `python unity/build_fonts.py`。
 
 修改皮影皮肤或通用动画后，运行 `python unity/bake_paper_cast.py`，提交更新后的 `Assets/Resources/PaperCast/` 与 `.meta`。原始设计板及独立拆分件保存在 `art/puppet-modern-24/`。拆分件关节和遮挡见 `split-calibration-*.json`，最终效果的目标关节见 `assembly-calibration.json`。所有绑定像素必须来自右侧拆分格；最终效果只供对照。重建后同时提交 `PaperCast/`、`PaperBust/`、`PaperReference/` 及 `.meta`；在衣橱以「最终效果对照」复核绑定姿态，再检查活动时的接缝。请在 Unity 的皮影衣橱检查左右朝向、各动作、关节与配饰，再检查人物头像、对话和演武中的形象一致性。
 
