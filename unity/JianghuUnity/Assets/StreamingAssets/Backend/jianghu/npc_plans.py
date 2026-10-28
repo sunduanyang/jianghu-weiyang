@@ -13,9 +13,9 @@ def role(w, n):
         return dict(key='official', label=n['office']+'公务', duties=['public_service', 'report'])
     if n['faction'] is not None:
         grade = sect_ranks.standing(w.factions[n['faction']], n)['grade']
-        key, label, duties = (('leader', '主持门务', ['faction_guide', 'duty', 'donate_relief']) if grade == 1 else
-                              ('elder', '传艺护持', ['faction_guide', 'teach', 'duty']) if grade <= 4 else
-                              ('steward', '门中修业', ['seek_teacher', 'work']) if grade <= 6 else
+        key, label, duties = (('leader', '主持门务', ['sect_service', 'duty', 'donate_relief']) if grade == 1 else
+                              ('elder', '传艺护持', ['sect_service', 'duty']) if grade <= 4 else
+                              ('steward', '门中修业', ['sect_service', 'seek_teacher', 'work']) if grade <= 6 else
                               ('disciple', '入门求学', ['seek_teacher', 'work']))
         return dict(key=key, label=label, duties=duties)
     if n.get('social_status'):

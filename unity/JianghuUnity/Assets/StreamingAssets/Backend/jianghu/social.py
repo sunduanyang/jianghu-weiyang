@@ -16,6 +16,7 @@ LIMITS = {'trade': 1, 'travel': 1, 'duel': 1, 'family': 1, 'report': 1,
           'faction_study': 1, 'leave_faction': 1, 'reconcile': 1, 'swear': 1}
 LIMITS.update(donate_relief=1, neighbor_care=1)
 LIMITS['faction_guide'] = 1
+LIMITS['sect_service'] = 1
 LIMITS['seek_teacher'] = 1
 CRIMES = {'betrayal', 'theft_exposed', 'extortion', 'extortion_resisted', 'slander_exposed', 'embezzlement_exposed'}
 

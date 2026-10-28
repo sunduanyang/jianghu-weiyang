@@ -351,7 +351,7 @@ class World:
                          'pregnancy', 'recovery', 'government_relief', 'judgment', 'guardianship',
                          'household_support', 'community_relief', 'donate_relief', 'neighbor_care')
         negative = k in ('betrayal', 'duel', 'death', 'disaster', 'loss', 'rejection', 'illness', 'accident', 'epidemic')
-        if k in ('work', 'trade', 'train', 'duty'):
+        if k in ('work', 'trade', 'train', 'duty', 'sect_service'):
             # Small repeated feedback has an observable cumulative effect over decades.
             # These proposals depend on this person's existing interpretation/disposition.
             if k == 'trade':
@@ -1429,6 +1429,8 @@ class World:
                 self.player['protagonist']['records'].append(e['id'])
                 tie.update(last_event=e['id'], last_contact=self.month)
                 tie['encounter_records'] = (tie.get('encounter_records', [])+[e['id']])[-24:]
+                if hostile.get('after'):
+                    hostile['after'](e)
         self.battle = b
         self.checkpoint()
         return self.martial_view()
@@ -1631,9 +1633,10 @@ class World:
         return n
 
     def faction_detail(self, faction_id):
+        from . import sect_life
         f = self.factions[faction_id]
         members = [n for n in self.npcs.values() if n['alive'] and n['faction'] == f['id']]
-        return {**organizations.view(self, f),
+        return {**organizations.view(self, f), 'sect_life': sect_life.view(self, f),
                 'martial_curriculum': martial.martial_catalog.school_view(f['key']),
                 'player_options': organizations.player_options(self, faction_id),
                 'player_membership': organizations.player_membership(self),

@@ -11,6 +11,9 @@ VERSION = 1
 LABELS = {'establish_trade':'登记商旅营生', 'establish_business':'筹办商号', 'recognize_notable':'立业乡里'}
 PROMOTION_MONTHS = {8:2, 7:2, 6:3, 5:3, 4:6, 3:6, 2:12}
 PUBLIC = {'aid', 'donate_relief', 'neighbor_care', 'care', 'public_service', 'faction_guide'}
+# Event kinds that count as actual sect duty; donations never do.
+SERVICE = {'faction_task', 'faction_guide', 'hero_sect_task', 'sect_service', 'player_sect_errand',
+           'player_sect_guide', 'player_sect_recruit'}
 OWN_EVENTS = {'rank_assessment', 'rank_change', 'rank_warning', 'ranks_registered', 'identity_change'}
 
 
@@ -98,7 +101,7 @@ def on_event(w, event, who=None):
     who = who if who is not None else facts.get('actor',event['people'][0] if event['people'] else None)
     if who is not None and (who=='player' or who in w.npcs) and (who=='player' or w.npcs[who]['alive']):
         p=prepare(w,who)
-        if kind in ('join','hero_sect_join','player_join_sect'):
+        if kind in ('join','hero_sect_join','player_join_sect','player_join_sect_result'):
             p.pop('sect',None);prepare(w,who)
         if kind=='work':
             mark(p,'attempt',w.month,event['id'])
@@ -109,7 +112,7 @@ def on_event(w, event, who=None):
         if kind=='hero_market' and facts.get('operation')=='sell':
             mark(p,'work',w.month,event['id']);mark(p,'trade',w.month,event['id']);p['turnover']+=facts['silver']
         if kind in PUBLIC and facts.get('accepted',True):mark(p,'public',w.month,event['id'])
-        if kind in ('faction_task','faction_guide','hero_sect_task') and facts.get('accepted',True):mark(p,'service',w.month,event['id'])
+        if kind in SERVICE and facts.get('accepted',True) and facts.get('service',True):mark(p,'service',w.month,event['id'])
         if kind=='teaching' and who!='player':
             teacher=w.npcs[who]
             if teacher['faction'] is not None and any(i!=who and w.npcs[i]['faction']==teacher['faction'] for i in event['people']):
@@ -164,9 +167,12 @@ def sect_conditions(w,who):
                   dict(label='年龄（月）',current=n['age_months'],required=192 if target<=5 else 120)]
     for r in requirements:r['met']=r['current']>=r['required']
     blocked='处分期间暂停晋升' if w.month<s['censure_until'] else '品阶变动后观察期' if w.month<s['cooldown_until'] else ''
+    from . import sect_life
+    sponsor=sect_life.recommended(w,who,target) if current>2 else None
     return dict(current=current,target=target,requirements=requirements,blocked=blocked,
                 qualified=all(r['met'] for r in requirements) and not blocked,
-                required_months=PROMOTION_MONTHS[target],completed_months=s['qualified'],
+                required_months=max(1,PROMOTION_MONTHS[target]-(1 if sponsor else 0)),completed_months=s['qualified'],
+                sponsor=dict(id=sponsor['id'],name=sponsor['name']) if sponsor else None,
                 leader_only=current<=2,penalty=s['penalty'],reason=s['reason'],
                 deficient_months=s.get('leader_deficient',0) if current==1 else s['deficient'])
 
@@ -243,7 +249,7 @@ def adjustment(w,n,action):
     if not active(w) or n['faction'] is None:return 0.
     p=n.get('rank_progress',{});s=p.get('sect',{})
     grade=sect_ranks.standing(w.factions[n['faction']],n)['grade']
-    if grade<=4 and action['kind'] in ('faction_task','faction_guide','teach') and len(months(p,'service',w.month,6))<2:
+    if grade<=4 and action['kind'] in ('faction_task','faction_guide','teach','sect_service') and len(months(p,'service',w.month,6))<2:
         return 18+n['traits']['loyalty']*.08
     return 0.
 

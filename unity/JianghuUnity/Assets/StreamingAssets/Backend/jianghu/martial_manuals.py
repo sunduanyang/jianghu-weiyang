@@ -69,7 +69,12 @@ def request(w, owner, teacher_id, art_id, action=None):
                 pupil['relationships'].get(str(teacher_id), {}))
     accepted = (relation.get('affinity', 0) > -10 and relation.get('trust', 0) > -10 and
                 teacher['traits']['loyalty'] + teacher['traits']['compassion'] + relation.get('affinity', 0) >= 65)
-    facts = dict(teacher=teacher_id, pupil=str(owner), art=art_id, accepted=accepted, npc_time_cost=0 if player else 1)
+    # A formal master in the pupil's own sect passes on that sect's arts.
+    from . import sect_life
+    lineage = player and (sect_life.master(w) or {}).get('id') == teacher_id and relation.get('affinity', 0) > -10
+    accepted = accepted or lineage
+    facts = dict(teacher=teacher_id, pupil=str(owner), art=art_id, accepted=accepted, npc_time_cost=0 if player else 1,
+                 lineage=bool(lineage))
     if action:
         facts.update(action=action['id'], actor=pupil['id'], decision_source=pupil['choice_source'], time_cost=action['time_cost'])
     item = None

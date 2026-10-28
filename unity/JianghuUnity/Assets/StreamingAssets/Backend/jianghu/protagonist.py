@@ -256,7 +256,7 @@ def perform(w, body, defer_end_turn=None):
                    dict(place=place, origin=origin, destination=[row, col], path=path, points=cost))
         elif isinstance(action, str) and action.startswith('sect_'):
             from . import organizations
-            organizations.player_action(w, action, integer(body.get('faction'), '门派'))
+            organizations.player_action(w, action, integer(body.get('faction'), '门派'), body.get('choice'))
         elif action == 'end_turn':
             if defer_end_turn is not None:return defer_end_turn()
             record(w, 'hero_end_turn', f"{w.player['name']}结束本月行程，江湖推移一月。",

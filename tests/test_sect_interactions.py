@@ -101,7 +101,9 @@ class SectInteractionTests(unittest.TestCase):
         self.assertIsNone(w.execute(self.n, dict(id='faction_task:0')))
         self.assertEqual(w.export(), before)
         player_interactions.perform(w, self.body())
-        self.assertEqual({o['action'] for o in organizations.player_options(w, 0)}, {'sect_donate', 'sect_leave'})
+        # Old paid duties stay removed; commissions are the new, separately settled duty.
+        actions = {o['action'] for o in organizations.player_options(w, 0)}
+        self.assertTrue({'sect_donate', 'sect_leave'} <= actions <= {'sect_donate', 'sect_leave', 'sect_accept'})
 
 
 if __name__ == '__main__':
