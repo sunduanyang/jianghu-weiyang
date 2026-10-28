@@ -77,3 +77,13 @@ python unity/bake_scroll.py
 - 同一聚落内各设施共用地格，所以长卷里主角站在哪处设施只是显示上的区别，规则不记录。
 - 旧版布局没有 `settlements` 时，自动退回地格图。
 - `python -m unittest discover -s tests` 共 453 项全部通过。这只说明规则侧没有受影响，不能代替 Unity 实机验收。
+
+## 手绘设施（2026-10-28 补充）
+
+16 种设施换成了 GPT 按 `unity/ART_PROMPTS.md` 第 5 节画的南宋界画淡彩版本（提示词与生成记录在 `art/scroll-facilities/`）。用 `python unity/import_scroll_art.py` 导入到 `Assets/Resources/Scroll/Art/`，导入时做了这几件事：
+
+- 抠掉洋红背景（这批的底色是 #EF0CF1 一类，并非严格的 #FF00FF，脚本按「红蓝高、绿低」判断，不依赖精确色值），收缩一像素去品红边；16 张导入后不透明区域内残留品红像素均为 0。
+- 色调统一到长卷绢底：白色压成绢白，整体略降饱和，舟埠、园林偏艳的蓝色水面降得更多（`--raw` 可保留原色）。
+- 缩到 442 像素宽，保留各张之间的大小比例；建筑底边对齐长卷街线（第 309 行）；舟埠按岸线对齐，水面在街线以下。
+
+游戏优先读取 `Scroll/Art/`，删掉某张就回到 `bake_scroll.py` 程序画的版本。效果预览（PIL 近似，非实机截图）：`validation/screenshots/city-scroll-painted-preview.png`。原图约 30MB，没有放进仓库。

@@ -1,0 +1,272 @@
+{
+  "title": "南宋界画淡彩设施素材",
+  "date": "2026-10-28",
+  "generator": "built-in image_gen",
+  "count": 16,
+  "reference": "inn.png（已确认的 inn-v3）",
+  "requested_canvas": [
+    1536,
+    1024
+  ],
+  "background": "不透明洋红色；生成像素存在色差，并非严格统一 #FF00FF",
+  "alignment": "构图比例及台基基线为生成近似；下列物体边界来自4像素步长的粗略取样，供后续对齐参考，非精确抠图边界。",
+  "previews": "index.html 默认以每张400像素宽显示，原始PNG保持不变。",
+  "assets": [
+    {
+      "id": "inn",
+      "name": "客栈",
+      "file": "inn.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1844057,
+      "background_sample": "#EF0CF1",
+      "approximate_foreground_bounds": [
+        80,
+        248,
+        1488,
+        928
+      ],
+      "approximate_bottom_blank_percent": 9.3
+    },
+    {
+      "id": "gate",
+      "name": "城门",
+      "file": "gate.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1952946,
+      "background_sample": "#F20DF2",
+      "approximate_foreground_bounds": [
+        0,
+        152,
+        1532,
+        912
+      ],
+      "approximate_bottom_blank_percent": 10.8
+    },
+    {
+      "id": "palace",
+      "name": "宫城",
+      "file": "palace.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1917671,
+      "background_sample": "#EE0CF1",
+      "approximate_foreground_bounds": [
+        12,
+        288,
+        1524,
+        892
+      ],
+      "approximate_bottom_blank_percent": 12.8
+    },
+    {
+      "id": "government",
+      "name": "官署",
+      "file": "government.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1854434,
+      "background_sample": "#EC0FEE",
+      "approximate_foreground_bounds": [
+        44,
+        280,
+        1492,
+        920
+      ],
+      "approximate_bottom_blank_percent": 10.1
+    },
+    {
+      "id": "market",
+      "name": "市集",
+      "file": "market.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1787788,
+      "background_sample": "#EF0CEF",
+      "approximate_foreground_bounds": [
+        40,
+        316,
+        1508,
+        904
+      ],
+      "approximate_bottom_blank_percent": 11.6
+    },
+    {
+      "id": "dock",
+      "name": "舟埠",
+      "file": "dock.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2077045,
+      "background_sample": "#EF0EF2",
+      "approximate_foreground_bounds": [
+        0,
+        232,
+        1532,
+        1020
+      ],
+      "approximate_bottom_blank_percent": 0.3
+    },
+    {
+      "id": "clinic",
+      "name": "医馆",
+      "file": "clinic.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1724025,
+      "background_sample": "#F00EF1",
+      "approximate_foreground_bounds": [
+        32,
+        356,
+        1504,
+        896
+      ],
+      "approximate_bottom_blank_percent": 12.4
+    },
+    {
+      "id": "workshop",
+      "name": "作坊",
+      "file": "workshop.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1825712,
+      "background_sample": "#EC0FF1",
+      "approximate_foreground_bounds": [
+        68,
+        196,
+        1476,
+        900
+      ],
+      "approximate_bottom_blank_percent": 12
+    },
+    {
+      "id": "training",
+      "name": "演武场",
+      "file": "training.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1635053,
+      "background_sample": "#EE0EEE",
+      "approximate_foreground_bounds": [
+        48,
+        288,
+        1488,
+        900
+      ],
+      "approximate_bottom_blank_percent": 12
+    },
+    {
+      "id": "school",
+      "name": "书院",
+      "file": "school.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1941750,
+      "background_sample": "#ED0CF1",
+      "approximate_foreground_bounds": [
+        4,
+        260,
+        1484,
+        904
+      ],
+      "approximate_bottom_blank_percent": 11.6
+    },
+    {
+      "id": "temple",
+      "name": "寺院",
+      "file": "temple.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1804461,
+      "background_sample": "#F10BF1",
+      "approximate_foreground_bounds": [
+        112,
+        52,
+        1472,
+        916
+      ],
+      "approximate_bottom_blank_percent": 10.4
+    },
+    {
+      "id": "sect",
+      "name": "门派山门",
+      "file": "sect.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2184670,
+      "background_sample": "#ED0DF1",
+      "approximate_foreground_bounds": [
+        60,
+        68,
+        1460,
+        928
+      ],
+      "approximate_bottom_blank_percent": 9.3
+    },
+    {
+      "id": "residence",
+      "name": "民居",
+      "file": "residence.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1835578,
+      "background_sample": "#EE0FF0",
+      "approximate_foreground_bounds": [
+        40,
+        380,
+        1496,
+        856
+      ],
+      "approximate_bottom_blank_percent": 16.3
+    },
+    {
+      "id": "granary",
+      "name": "义仓",
+      "file": "granary.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1843802,
+      "background_sample": "#EC0FED",
+      "approximate_foreground_bounds": [
+        40,
+        340,
+        1496,
+        908
+      ],
+      "approximate_bottom_blank_percent": 11.2
+    },
+    {
+      "id": "garden",
+      "name": "园林",
+      "file": "garden.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2216392,
+      "background_sample": "#EF10F1",
+      "approximate_foreground_bounds": [
+        32,
+        288,
+        1500,
+        928
+      ],
+      "approximate_bottom_blank_percent": 9.3
+    },
+    {
+      "id": "generic",
+      "name": "通用厅堂",
+      "file": "generic.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1668274,
+      "background_sample": "#F10FF1",
+      "approximate_foreground_bounds": [
+        32,
+        356,
+        1504,
+        900
+      ],
+      "approximate_bottom_blank_percent": 12
+    }
+  ]
+}

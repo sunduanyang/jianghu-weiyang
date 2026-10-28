@@ -9,6 +9,7 @@ Unity .meta. The game prefers these files over the baked ones; delete a file to 
 
     python unity/import_scroll_art.py path/to/building_inn.png [more files ...]
     python unity/import_scroll_art.py --preview sheet.png path/to/*.png
+    (inn.png works as well as building_inn.png; --raw keeps the painted colours)
 """
 import argparse
 from pathlib import Path
@@ -23,8 +24,8 @@ OUT = ASSETS / 'Resources' / 'Scroll' / 'Art'
 W, H, GROUND = 442, 338, 309            # sprite size and street line used by CityScroll.cs
 KINDS = {'gate', 'palace', 'government', 'market', 'inn', 'dock', 'clinic', 'workshop', 'training',
          'school', 'temple', 'sect', 'residence', 'granary', 'garden', 'generic'}
-# The landing stands in water: its picture already shows the bank, so keep its own composition.
-KEEP_COMPOSITION = {'dock'}
+# The landing stands in water: its bank, not the bottom of the picture, goes on the street line.
+WATERFRONT = {'dock'}
 
 
 def key_magenta(img):
@@ -42,6 +43,26 @@ def key_magenta(img):
     return Image.fromarray(rgba, 'RGBA')
 
 
+def tone(img, chroma=.85, water=.62):
+    """Settle a painting onto the scroll's silk: whites become silk-white, colour loses a little
+    chroma and saturated blue water a good deal more, so a set from one session reads as one scroll."""
+    a = np.array(img).astype(float)
+    rgb, alpha = a[..., :3] / 255, a[..., 3]
+    lum = (rgb @ np.array([.3, .59, .11]))[..., None]
+    blue = np.clip((rgb[..., 2] - rgb[..., 0]) * 3, 0, 1)[..., None]           # water and 花青
+    rgb = lum + (rgb - lum) * (chroma * (1 - blue) + water * blue)
+    rgb = rgb * np.array([.985, .955, .885])                                    # warm toward the silk
+    return Image.fromarray(np.dstack([np.clip(rgb, 0, 1) * 255, alpha]).astype(np.uint8), 'RGBA')
+
+
+def water_line(img):
+    """First row, from the top, where most of the picture is water (bluish, opaque)."""
+    a = np.array(img).astype(float)
+    wet = (a[..., 3] > 200) & (a[..., 2] > a[..., 0] + 25)
+    rows = np.nonzero(wet.mean(axis=1) > .45)[0]
+    return int(rows[0]) if len(rows) else None
+
+
 def fit(img, kind):
     scale = W / img.width
     img = img.resize((W, max(1, round(img.height * scale))), Image.LANCZOS)
@@ -50,7 +71,8 @@ def fit(img, kind):
     if len(rows) == 0:
         raise SystemExit(f'{kind}: nothing left after removing the #FF00FF background')
     top, foot = rows[0], rows[-1]
-    shift = (H - img.height) if kind in KEEP_COMPOSITION else GROUND - foot
+    bank = water_line(img) if kind in WATERFRONT else None
+    shift = GROUND + 4 - bank if bank is not None else GROUND - foot
     shift = max(shift, -top + 2)                                       # never push the roof off the top
     out = Image.new('RGBA', (W, H), (0, 0, 0, 0))
     out.alpha_composite(img.crop((0, max(0, -shift), W, img.height)), (0, max(0, shift)))
@@ -61,6 +83,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('files', nargs='+', type=Path)
     parser.add_argument('--preview', type=Path, help='also write a contact sheet of the imported buildings on silk')
+    parser.add_argument('--raw', action='store_true', help='keep the painted colours instead of settling them onto the silk')
     args = parser.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     write_folder_meta(OUT)
@@ -69,7 +92,8 @@ def main():
         kind = path.stem.removeprefix('building_')
         if kind not in KINDS:
             raise SystemExit(f'{path.name}: name it building_<kind>.png, kind one of {", ".join(sorted(KINDS))}')
-        sprite = fit(key_magenta(Image.open(path)), kind)
+        painted = key_magenta(Image.open(path))
+        sprite = fit(painted if args.raw else tone(painted), kind)
         save(sprite, OUT / f'building_{kind}.png')
         done.append(sprite)
     if args.preview:
