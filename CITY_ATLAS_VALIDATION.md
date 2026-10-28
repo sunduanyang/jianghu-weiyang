@@ -100,3 +100,13 @@ PR 原始提交的环境没有 Unity 编辑器和 C# 编译器，因此当时没
 补充提交在干净检出中使用 Unity 6000.6.7f1 再次构建成功，并以独立测试存档重新通过 53 项地图验收。隐藏窗口没有产生有效渲染帧，最终在可见客户端窗口中完成截图检查；结果位于 `output/pr8-integrated-20261028/atlas-default-visible/`，构建日志为 `unity/pr8-default-clean-build.log`。共享规则没有变化，规则、行走与导航验证范围仍见上表。
 
 最终成品位于 `unity/Build/PR8Default/江湖未央.exe`，本机默认启动版本由 `unity/Build/active-build.txt` 选择为 `PR8Default`。源码统一以默认分支 `main` 为准。
+
+## 手绘设施（2026-10-28 补充）
+
+16 种设施换成了 GPT 按 `unity/ART_PROMPTS.md` 第 5 节画的南宋界画淡彩版本（提示词与生成记录在 `art/scroll-facilities/`）。用 `python unity/import_scroll_art.py` 导入到 `Assets/Resources/Scroll/Art/`，导入时做了这几件事：
+
+- 抠掉洋红背景（这批的底色是 #EF0CF1 一类，并非严格的 #FF00FF，脚本按「红蓝高、绿低」判断，不依赖精确色值），收缩一像素去品红边；16 张导入后不透明区域内残留品红像素均为 0。
+- 色调统一到长卷绢底：白色压成绢白，整体略降饱和，舟埠、园林偏艳的蓝色水面降得更多（`--raw` 可保留原色）。
+- 缩到 442 像素宽，保留各张之间的大小比例；建筑底边对齐长卷街线（第 309 行）；舟埠按岸线对齐，水面在街线以下。
+
+游戏优先读取 `Scroll/Art/`，删掉某张就回到 `bake_scroll.py` 程序画的版本。效果预览（PIL 近似，非实机截图）：`validation/screenshots/city-scroll-painted-preview.png`。原图约 30MB，没有放进仓库。
