@@ -183,14 +183,20 @@ def seed(w, total):
             civil(w, hub, job, years, title)
         for _ in range(count - len(specs)):
             civil(w, hub)
-    # Declare initial guardianship, without fabricating parentage or marriages.
+    # Register the households and acquaintances that exist at the start (no past events);
+    # children without a registered family then receive an initial guardian as before.
+    from . import households
+    by_place = {}
+    for n in w.npcs.values():
+        by_place.setdefault(n['place'], []).append(n)
+    household_summary = households.register(w, by_place)
     for p in sites:
         local = [n for n in w.npcs.values() if n['place'] == p['id']]
         adults = [n for n in local if n['faction'] is None and n['age_months'] >= 360
                   and n['wealth'] >= 20 and n['traits']['kindness'] + n['traits']['integrity'] >= 60]
         if not adults:
             adults = [n for n in local if n['age_months'] >= 360]
-        for i, n in enumerate(q for q in local if q['age_months'] < 192):
+        for i, n in enumerate(q for q in local if q['age_months'] < 192 and not q['parents']):
             if adults:
                 guardian = adults[i % len(adults)]
                 n['guardian'] = guardian['id']
@@ -205,7 +211,8 @@ def seed(w, total):
             w.know(n, w.npcs[int(other)])
     w.population_generation = dict(version=VERSION, month=w.month, requested=total,
                                    sect_population=sect_total, civil_population=total - sect_total,
-                                   initial_condition=True, household_basis='期初监护登记，不补造亲生谱系')
+                                   initial_condition=True, households=household_summary,
+                                   household_basis='期初登记婚姻、亲子与乡里旧识，不补写过往事件；其余未成年人期初登记监护')
 
 
 def place_member(w, n, event_id):
