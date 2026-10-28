@@ -3,7 +3,7 @@ from . import items, martial, martial_catalog, social, player_social
 
 
 # NPCs seek out a new art at most once in this many months (the player is limited by action points).
-REQUEST_MONTHS = 4
+REQUEST_MONTHS = 6
 
 
 def unlearned(w, pupil):
@@ -47,7 +47,7 @@ def reason(w, owner, teacher, art_id):
         return '本月已向这位老师求取过此秘籍'
     if not player and unlearned(w, pupil):
         return '行囊中尚有未曾研习的秘籍，先学会再求新的'
-    if not player and w.month - max(pupil['martial'].get('requests', {}).values(), default=-99) < REQUEST_MONTHS:
+    if not player and not window_open(w, pupil):
         return f'近{REQUEST_MONTHS}个月内已求过师，先把所学练熟'
     if player and h['points'] < 2:
         return '求师需要2行动力'
@@ -64,10 +64,14 @@ def offers(w, teacher):
                  reason=reason(w, 'player', teacher, key)) for key in known]
 
 
+def window_open(w, pupil):
+    """Whether enough months have passed since this NPC last asked anyone for an art."""
+    return w.month - max(pupil['martial'].get('requests', {}).values(), default=-99) >= REQUEST_MONTHS
+
+
 def ready(w, pupil):
     """Pupil-side conditions an NPC must meet before asking anyone for a new art."""
-    return (w.month - max(pupil['martial'].get('requests', {}).values(), default=-99) >= REQUEST_MONTHS
-            and pupil['time_left'] >= 1 and not unlearned(w, pupil))
+    return window_open(w, pupil) and pupil['time_left'] >= 1 and not unlearned(w, pupil)
 
 
 def candidates(w, pupil, teacher):

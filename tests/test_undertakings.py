@@ -136,6 +136,19 @@ class UndertakingTests(unittest.TestCase):
         child['age_months'] = 200
         self.assertEqual(undertakings.propose(self.w, n)[0], 'journey')
 
+    def test_a_new_teacher_is_sought_only_when_the_request_window_is_open(self):
+        from jianghu import martial, martial_catalog, martial_manuals
+        n, q = self.adult(), self.adult('男')
+        mine = set(martial.resolve(self.w, n)['known'])
+        q['martial']['learned'] = [k for k in martial_catalog.ARTS if k not in mine][:1]
+        self.w.link(n, q, 30, 30)
+        self.goal(n, 'mastery')
+        self.assertEqual(undertakings.propose(self.w, n)[0], 'study')
+        n['martial'].setdefault('requests', {})['x'] = self.w.month - 1
+        self.assertIsNone(undertakings.propose(self.w, n))
+        self.w.month += martial_manuals.REQUEST_MONTHS
+        self.assertEqual(undertakings.propose(self.w, n)[0], 'study')
+
     def test_standing_counts_real_good_deeds(self):
         n, q = self.adult(), self.adult('男', wealth=5.)
         self.goal(n, 'renown'); p = self.begin(n)
