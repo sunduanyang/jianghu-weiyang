@@ -1,5 +1,5 @@
 """Motives, limited opportunities and morally mixed choices; no generated consequences."""
-from . import combat_attributes, temperament
+from . import combat_attributes, fame, temperament
 
 POLES = temperament.POLES
 LABELS = {'steal': '行窃', 'extort': '勒索', 'smear': '造谣中伤', 'embezzle': '侵吞公帑',
@@ -110,7 +110,8 @@ def deterrence(w, n, q):
     risk = min(12, 4*len(kin)) + (6 if q['faction'] is not None else 0) + (8 if q.get('office') else 0)
     own = [i for i in n['children'] + ([n['spouse']] if n['spouse'] else []) if i in w.npcs and w.npcs[i]['alive']]
     stake = (5 if n['faction'] is not None else 0) + (4 if own else 0)
-    infamy = .7 if n['reputation'] < -20 else 1.
+    # Someone already infamous here has less standing to lose.
+    infamy = .7 if fame.local(n) < -20 else 1.
     return round((risk + stake) * (1.3 - n['traits']['boldness']/100) * infamy, 4)
 
 
