@@ -165,7 +165,8 @@ class ItemTests(unittest.TestCase):
 
     def test_retired_martial_manuals_are_not_offered(self):
         w=self.world()
-        self.assertFalse(any(d['category']=='manual' for d in items.CATALOG.values()))
+        self.assertTrue(all(d.get('art') for d in items.CATALOG.values() if d['category']=='manual'))
+        self.assertFalse(items.RETIRED_MANUALS & items.CATALOG.keys())
         self.assertFalse(any(a['kind']=='read_item' for n in w.npcs.values() for a in w.legal_actions(n)))
 
     def test_gift_preserves_origin_and_cannot_duplicate(self):
@@ -284,8 +285,10 @@ class ItemTests(unittest.TestCase):
         self.assertAlmostEqual(b['fighters'][0]['damage_scale'], abilities.parameters(abilities.ratings(w.player),items.bonuses(w,'player'))['damage_scale'])
         self.assertAlmostEqual(b['fighters'][0]['damage_reduction'], abilities.parameters(abilities.ratings(w.player),items.bonuses(w,'player'))['damage_reduction'])
         w.battle_action(b['id'], b['revision'], 'surrender')
-        self.assertLess(w.player['health'], 100)
+        self.assertEqual(w.player['health'], 100)
+        self.assertEqual(w.battle['resource_policy'], 'per-bout-v1')
         self.assertEqual(self.find(w, 'wood_sword')['durability'], 98)
+        w.player['health'] = 95.
         w.month_step()
         self.assertEqual(w.player['health'], 100)
 

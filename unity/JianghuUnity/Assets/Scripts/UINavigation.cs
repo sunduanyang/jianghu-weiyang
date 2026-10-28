@@ -7,8 +7,8 @@ namespace Jianghu {
 public partial class JianghuApp {
     // Presentation state belongs to each unique view in UiNav's stack.
     internal sealed class ViewState {
-        public int place,community,grade,gift,ai,settings;
-        public string kind,bag,market,item,query,category,sort;
+        public int place,community,gift,ai,settings;
+        public string kind,bag,market,item,query,category;
         public J institution,record;
         public Vector2 scroll,personScroll,eventScroll,itemScroll,detailScroll;
     }
@@ -27,13 +27,13 @@ public partial class JianghuApp {
         TopView.State=new ViewState {place=SelectedPlace,community=communityPlace,
             kind=institutionKind,bag=inventoryMode,market=marketMode,gift=giftTarget,ai=aiTab,settings=settingsTab,
             institution=Institution,record=EventDetail,scroll=mainScroll,personScroll=personScroll,eventScroll=eventScroll,
-            item=selectedItem,query=itemQuery,category=itemCategory,grade=itemGrade,sort=itemSort,itemScroll=itemScroll,detailScroll=detailScroll};
+            item=selectedItem,query=itemQuery,category=itemCategory,itemScroll=itemScroll,detailScroll=detailScroll};
     }
     void RestoreViewState(ViewState at){
         SelectedPlace=at.place;communityPlace=at.community;giftTarget=at.gift;aiTab=at.ai;settingsTab=at.settings;
         institutionKind=at.kind;inventoryMode=at.bag;marketMode=at.market;Institution=at.institution;EventDetail=at.record;
         mainScroll=at.scroll;personScroll=at.personScroll;eventScroll=at.eventScroll;
-        selectedItem=at.item;itemQuery=at.query;itemCategory=at.category;itemGrade=at.grade;itemSort=at.sort;itemScroll=at.itemScroll;detailScroll=at.detailScroll;
+        selectedItem=at.item;itemQuery=at.query;itemCategory=at.category;itemScroll=at.itemScroll;detailScroll=at.detailScroll;
     }
     void InvalidateViewRequests(){institutionRequest++;eventRequest++;martialRequest++;}
     void LoadMartialView(){
@@ -57,8 +57,9 @@ public partial class JianghuApp {
             Fill(choiceBounds,new Color(.055f,.075f,.07f,1));Outline(choiceBounds,brass);
             GUI.ModalWindow(19274,choiceBounds,DrawChoiceWindow,"",card);
         }
-        if(!string.IsNullOrEmpty(GUI.tooltip)){
-            string hint=GUI.tooltip;float width=Mathf.Min(540,small.CalcSize(new GUIContent(hint)).x+24);
+        string hint=cityScrollPersonHint.Length>0?cityScrollPersonHint:GUI.tooltip;
+        if(Event.current.type==EventType.Repaint&&Application.isFocused&&new Rect(0,0,1680,960).Contains(Event.current.mousePosition)&&!string.IsNullOrEmpty(hint)){
+            float width=Mathf.Min(540,small.CalcSize(new GUIContent(hint)).x+24);
             Vector2 m=Event.current.mousePosition;
             Rect r=new Rect(Mathf.Clamp(m.x+14,8,1672-width),Mathf.Clamp(m.y+24,8,902),width,42);
             Frame(r,"panel_solid",12);GUI.Label(new Rect(r.x+10,r.y+5,r.width-20,r.height-10),hint,small);
@@ -118,6 +119,8 @@ public partial class JianghuApp {
         GUILayout.BeginHorizontal();for(int i=0;i<labels.Length;i++)if(GUILayout.Button(labels[i],current==i?selected:chip)){current=i;mainScroll=Vector2.zero;}GUILayout.EndHorizontal();
     }
     void ResetWorldUi(){
+        ResetInteractionConversation();
+        interactionRequest++;interactionSubject=-1;interactionData=new J();interactionChoice="";interactionResult="";
         personFetchVersion++;InvalidateViewRequests();views.Clear();recentPeople.Clear();CloseTransient();ClosePhysicsArena();
         Person=new J();Institution=new J();EventDetail=new J();City=new J();Inventory=new J();Market=new J();Martial=new J();
         SelectedPerson=-1;creatingHero=false;

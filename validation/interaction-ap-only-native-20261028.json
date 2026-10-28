@@ -1,0 +1,618 @@
+{
+  "date": "2026-10-28",
+  "build": "InteractionAPOnly",
+  "unit_tests": {
+    "passed": true,
+    "tests": 522,
+    "modules": 47,
+    "results": [
+      {
+        "module": "test_appearance.py",
+        "passed": true,
+        "tests": 7,
+        "seconds": 9.34
+      },
+      {
+        "module": "test_atlas.py",
+        "passed": true,
+        "tests": 11,
+        "seconds": 0.83
+      },
+      {
+        "module": "test_careers.py",
+        "passed": true,
+        "tests": 16,
+        "seconds": 2.94
+      },
+      {
+        "module": "test_city_gardens.py",
+        "passed": true,
+        "tests": 4,
+        "seconds": 8.91
+      },
+      {
+        "module": "test_city_landscape.py",
+        "passed": true,
+        "tests": 7,
+        "seconds": 57.78
+      },
+      {
+        "module": "test_city_maps.py",
+        "passed": true,
+        "tests": 14,
+        "seconds": 64.47
+      },
+      {
+        "module": "test_combat_attributes.py",
+        "passed": true,
+        "tests": 9,
+        "seconds": 3.66
+      },
+      {
+        "module": "test_combat_pace.py",
+        "passed": true,
+        "tests": 5,
+        "seconds": 1.02
+      },
+      {
+        "module": "test_economics.py",
+        "passed": true,
+        "tests": 19,
+        "seconds": 1.34
+      },
+      {
+        "module": "test_equipment.py",
+        "passed": true,
+        "tests": 12,
+        "seconds": 2.59
+      },
+      {
+        "module": "test_generations.py",
+        "passed": true,
+        "tests": 11,
+        "seconds": 2.2
+      },
+      {
+        "module": "test_interaction_ap_only.py",
+        "passed": true,
+        "tests": 7,
+        "seconds": 1.16
+      },
+      {
+        "module": "test_items.py",
+        "passed": true,
+        "tests": 21,
+        "seconds": 123.64
+      },
+      {
+        "module": "test_lace_puppet.py",
+        "passed": true,
+        "tests": 4,
+        "seconds": 0.75
+      },
+      {
+        "module": "test_llm_agency.py",
+        "passed": true,
+        "tests": 16,
+        "seconds": 9.3
+      },
+      {
+        "module": "test_local_life.py",
+        "passed": true,
+        "tests": 11,
+        "seconds": 1.5
+      },
+      {
+        "module": "test_martial.py",
+        "passed": true,
+        "tests": 12,
+        "seconds": 10.09
+      },
+      {
+        "module": "test_martial_curricula.py",
+        "passed": true,
+        "tests": 12,
+        "seconds": 0.58
+      },
+      {
+        "module": "test_martial_manuals.py",
+        "passed": true,
+        "tests": 9,
+        "seconds": 0.44
+      },
+      {
+        "module": "test_merged_systems.py",
+        "passed": true,
+        "tests": 5,
+        "seconds": 0.45
+      },
+      {
+        "module": "test_model_service.py",
+        "passed": true,
+        "tests": 6,
+        "seconds": 0.27
+      },
+      {
+        "module": "test_no_bridges.py",
+        "passed": true,
+        "tests": 3,
+        "seconds": 43.89
+      },
+      {
+        "module": "test_npc_plans.py",
+        "passed": true,
+        "tests": 13,
+        "seconds": 0.64
+      },
+      {
+        "module": "test_paper_cast.py",
+        "passed": true,
+        "tests": 11,
+        "seconds": 17.67
+      },
+      {
+        "module": "test_persuasion.py",
+        "passed": true,
+        "tests": 13,
+        "seconds": 1.95
+      },
+      {
+        "module": "test_physical_combat.py",
+        "passed": true,
+        "tests": 12,
+        "seconds": 3.48
+      },
+      {
+        "module": "test_physical_impact.py",
+        "passed": true,
+        "tests": 4,
+        "seconds": 1.66
+      },
+      {
+        "module": "test_physical_reference.py",
+        "passed": true,
+        "tests": 12,
+        "seconds": 2.45
+      },
+      {
+        "module": "test_player_interactions.py",
+        "passed": true,
+        "tests": 18,
+        "seconds": 2.02
+      },
+      {
+        "module": "test_player_social.py",
+        "passed": true,
+        "tests": 17,
+        "seconds": 1.95
+      },
+      {
+        "module": "test_player_turn_order.py",
+        "passed": true,
+        "tests": 8,
+        "seconds": 1.36
+      },
+      {
+        "module": "test_population.py",
+        "passed": true,
+        "tests": 8,
+        "seconds": 14.83
+      },
+      {
+        "module": "test_priority_thinking.py",
+        "passed": true,
+        "tests": 14,
+        "seconds": 4.12
+      },
+      {
+        "module": "test_protagonist.py",
+        "passed": true,
+        "tests": 15,
+        "seconds": 15.42
+      },
+      {
+        "module": "test_rank_progression.py",
+        "passed": true,
+        "tests": 24,
+        "seconds": 0.86
+      },
+      {
+        "module": "test_richer_lives.py",
+        "passed": true,
+        "tests": 11,
+        "seconds": 6.78
+      },
+      {
+        "module": "test_sect_ranks.py",
+        "passed": true,
+        "tests": 8,
+        "seconds": 0.53
+      },
+      {
+        "module": "test_sects.py",
+        "passed": true,
+        "tests": 6,
+        "seconds": 3.67
+      },
+      {
+        "module": "test_settlement_layouts.py",
+        "passed": true,
+        "tests": 8,
+        "seconds": 1.95
+      },
+      {
+        "module": "test_settlements.py",
+        "passed": true,
+        "tests": 9,
+        "seconds": 19.17
+      },
+      {
+        "module": "test_simulation.py",
+        "passed": true,
+        "tests": 16,
+        "seconds": 104.22
+      },
+      {
+        "module": "test_social_livelihood.py",
+        "passed": true,
+        "tests": 19,
+        "seconds": 1.25
+      },
+      {
+        "module": "test_social_ranks.py",
+        "passed": true,
+        "tests": 12,
+        "seconds": 0.45
+      },
+      {
+        "module": "test_society.py",
+        "passed": true,
+        "tests": 18,
+        "seconds": 2.14
+      },
+      {
+        "module": "test_territory.py",
+        "passed": true,
+        "tests": 12,
+        "seconds": 1.84
+      },
+      {
+        "module": "test_unified.py",
+        "passed": true,
+        "tests": 5,
+        "seconds": 2.91
+      },
+      {
+        "module": "test_weapons.py",
+        "passed": true,
+        "tests": 8,
+        "seconds": 0.76
+      }
+    ]
+  },
+  "native_repeat": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated world is ready",
+        "passed": true
+      },
+      {
+        "check": "legacy player appointment is released without charging player AP",
+        "passed": true
+      },
+      {
+        "check": "NPC remains busy with its independent schedule",
+        "passed": true
+      },
+      {
+        "check": "legacy cooldown and busy NPC do not block praise",
+        "passed": true
+      },
+      {
+        "check": "five praises use five player AP in the same month",
+        "passed": true
+      },
+      {
+        "check": "five insults are allowed and charge each time",
+        "passed": true
+      },
+      {
+        "check": "five same-art requests award five real manuals for ten AP",
+        "passed": true
+      },
+      {
+        "check": "paid spar opens the actual arena again: 0",
+        "passed": true
+      },
+      {
+        "check": "paid spar opens the actual arena again: 1",
+        "passed": true
+      },
+      {
+        "check": "two same-month spars cost four AP",
+        "passed": true
+      },
+      {
+        "check": "actions can continue until player AP reaches zero",
+        "passed": true
+      },
+      {
+        "check": "all interactions leave NPC time and schedule unchanged",
+        "passed": true
+      },
+      {
+        "check": "menu blocks on player AP rather than monthly count",
+        "passed": true
+      },
+      {
+        "check": "insufficient AP request is rejected without negative AP",
+        "passed": true
+      },
+      {
+        "check": "no native exceptions",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "native_gameplay": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated game ready",
+        "passed": true
+      },
+      {
+        "check": "all twelve menu actions are loaded from the live engine",
+        "passed": true
+      },
+      {
+        "check": "praise updates real affinity",
+        "passed": true
+      },
+      {
+        "check": "praise remains available for another paid interaction",
+        "passed": true
+      },
+      {
+        "check": "insult changes reputation and trust",
+        "passed": true
+      },
+      {
+        "check": "gift transfers the selected real item",
+        "passed": true
+      },
+      {
+        "check": "teacher awards a real manual",
+        "passed": true
+      },
+      {
+        "check": "confidant is registered",
+        "passed": true
+      },
+      {
+        "check": "marriage belongs to the intended person",
+        "passed": true
+      },
+      {
+        "check": "sworn bond belongs to the intended person",
+        "passed": true
+      },
+      {
+        "check": "NPC purchase transfers ownership",
+        "passed": true
+      },
+      {
+        "check": "sale transfers back and conserves silver",
+        "passed": true
+      },
+      {
+        "check": "theft produces a real settled outcome",
+        "passed": true
+      },
+      {
+        "check": "spar opens the actual physical arena",
+        "passed": true
+      },
+      {
+        "check": "spar runs the normal game campaign without demo entry",
+        "passed": true
+      },
+      {
+        "check": "spar uses improved mechanics for both fighters",
+        "passed": true
+      },
+      {
+        "check": "spar uses the calibrated solver in the game",
+        "passed": true
+      },
+      {
+        "check": "spar loads physical hand and foot driver inertia",
+        "passed": true
+      },
+      {
+        "check": "spar has a real unpaid kick windup",
+        "passed": true
+      },
+      {
+        "check": "spar saves paid kick and physical drivers through the game backend",
+        "passed": true
+      },
+      {
+        "check": "spar can leave an unresolved game battle",
+        "passed": true
+      },
+      {
+        "check": "spar returns to the same improved battle with its kick state",
+        "passed": true
+      },
+      {
+        "check": "spar settles once and returns to the encounter",
+        "passed": true
+      },
+      {
+        "check": "rob opens the actual physical arena",
+        "passed": true
+      },
+      {
+        "check": "rob runs the normal game campaign without demo entry",
+        "passed": true
+      },
+      {
+        "check": "rob uses improved mechanics for both fighters",
+        "passed": true
+      },
+      {
+        "check": "rob uses the calibrated solver in the game",
+        "passed": true
+      },
+      {
+        "check": "rob loads physical hand and foot driver inertia",
+        "passed": true
+      },
+      {
+        "check": "rob has a real unpaid kick windup",
+        "passed": true
+      },
+      {
+        "check": "rob saves paid kick and physical drivers through the game backend",
+        "passed": true
+      },
+      {
+        "check": "rob can leave an unresolved game battle",
+        "passed": true
+      },
+      {
+        "check": "rob returns to the same improved battle with its kick state",
+        "passed": true
+      },
+      {
+        "check": "rob settles once and returns to the encounter",
+        "passed": true
+      },
+      {
+        "check": "assault opens the actual physical arena",
+        "passed": true
+      },
+      {
+        "check": "assault runs the normal game campaign without demo entry",
+        "passed": true
+      },
+      {
+        "check": "assault uses improved mechanics for both fighters",
+        "passed": true
+      },
+      {
+        "check": "assault uses the calibrated solver in the game",
+        "passed": true
+      },
+      {
+        "check": "assault loads physical hand and foot driver inertia",
+        "passed": true
+      },
+      {
+        "check": "assault has a real unpaid kick windup",
+        "passed": true
+      },
+      {
+        "check": "assault saves paid kick and physical drivers through the game backend",
+        "passed": true
+      },
+      {
+        "check": "assault can leave an unresolved game battle",
+        "passed": true
+      },
+      {
+        "check": "assault returns to the same improved battle with its kick state",
+        "passed": true
+      },
+      {
+        "check": "assault settles once and returns to the encounter",
+        "passed": true
+      },
+      {
+        "check": "hostile battles persist world costs and reputation",
+        "passed": true
+      },
+      {
+        "check": "all actions preserve the current month",
+        "passed": true
+      },
+      {
+        "check": "all actions cost exactly the advertised action points",
+        "passed": true
+      },
+      {
+        "check": "stale submissions cannot charge or duplicate effects",
+        "passed": true
+      },
+      {
+        "check": "no native exceptions",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "legacy_save_copy": {
+    "passed": true,
+    "checks": {
+      "month_unchanged": true,
+      "player_points_age_and_money_unchanged": true,
+      "events_unchanged": true,
+      "rng_unchanged": true,
+      "npc_assets_and_history_unchanged": true,
+      "player_bookings_released": true,
+      "policy_prepared": true,
+      "genuine_npc_schedule_preserved": true,
+      "only_player_booked_time_refunded": true,
+      "reload_idempotent": true
+    },
+    "counts": {
+      "npcs": 1800,
+      "obsolete_bookings_before": 3
+    },
+    "source": "read-only online backup of current Unity save; original not modified"
+  },
+  "backend_matches_source": {
+    "passed": true,
+    "files": [
+      {
+        "file": "player_interactions.py",
+        "matches_source": true,
+        "sha256": "a2c970490e3c2957aa32cd91a650e0f98ba0b1c73b81a7f6397825f1d687077d"
+      },
+      {
+        "file": "player_social.py",
+        "matches_source": true,
+        "sha256": "9b906fc9687597359ad6125c1f037839b84a00f76b565a1a2a5579b8d294a528"
+      },
+      {
+        "file": "martial_manuals.py",
+        "matches_source": true,
+        "sha256": "108d6c249bf95e74248138247a76a7d73f549ded2427e957a5467ad0c6f8c491"
+      },
+      {
+        "file": "protagonist.py",
+        "matches_source": true,
+        "sha256": "4b42c722d6d16b3fbd41e91e9727afc1beccbb9e1c218c6ac79e55f349321198"
+      },
+      {
+        "file": "social.py",
+        "matches_source": true,
+        "sha256": "449371fe7f36eaf98d092d64fb3eb4ddc28f39af96c2643d9ae32f2bcad76197"
+      },
+      {
+        "file": "engine.py",
+        "matches_source": true,
+        "sha256": "08cb008d1ff95ccb83750a518da2495d966c5198cd0ec8a9738a2671aff80fa0"
+      },
+      {
+        "file": "server.py",
+        "matches_source": true,
+        "sha256": "a8441d15363b97b0033c9704c864e3529410e045016c47511473d7e3104dd334"
+      }
+    ]
+  },
+  "passed": true
+}

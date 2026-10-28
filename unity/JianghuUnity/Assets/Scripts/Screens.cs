@@ -42,14 +42,14 @@ public partial class JianghuApp {
         }
         GUILayout.EndArea();
     }
-    // One line above every tab but 概览: whose scroll this is, and what you can do with them.
+    // One line above every tab but 概览: whose scroll this is.
     void DrawPersonBar(Rect r){
         var name=new GUIStyle(heading){wordWrap=false};
         GUILayout.BeginArea(r);GUILayout.BeginHorizontal();
         if(InspectingNpc){
             var p=Person;GUILayout.Label(p["name"].S,name);
             GUILayout.Label(p["identity"]["grade_label"].S+" · "+p["identity"]["title"].S+" · "+p["age_months"].I/12+"岁"+(p["alive"].B?"":" · 已故"),caption,GUILayout.Height(36));
-            GUILayout.FlexibleSpace();DrawNpcActions(p);
+            GUILayout.FlexibleSpace();
         }else{
             GUILayout.Label(HeroName,name);
             GUILayout.Label("我的人物 · "+Hero["identity"]["grade_label"].S+" · "+Hero["identity"]["title"].S,caption,GUILayout.Height(36));
@@ -57,15 +57,6 @@ public partial class JianghuApp {
         }
         GUILayout.EndHorizontal();GUILayout.EndArea();
     }
-    void DrawNpcActions(J p){
-        int id=p["id"].I;bool alive=p["alive"].B;
-        if(Btn("交谈",alive))Later(()=>TalkTo(id));
-        if(Btn("接济 4 银",alive))Later(()=>TalkTo(id,"gift"));
-        if(Btn("赠送物品",alive))Later(()=>OpenOwnInventory(id));
-        if(Btn("切磋",alive&&Paused))Intervene("challenge");
-        if(Btn("请其反思",alive&&W["ai"]["config"]["enabled"].B))Client.Act("/api/ai/review",J.O("npc_id",id));
-    }
-
     // 概览 · 他人：头像、要目、心性，右栏为此刻近况与打算。
     void DrawNpcOverview(){
         var p=Person;
@@ -79,7 +70,6 @@ public partial class JianghuApp {
             new KeyValuePair<string,string>("营生",p["job"].S),new KeyValuePair<string,string>("门派",faction),new KeyValuePair<string,string>("家资",Num(p["wealth"])+"银"),
             new KeyValuePair<string,string>("声望",Num(p["reputation"])),new KeyValuePair<string,string>("心情",MoodWord(p)),new KeyValuePair<string,string>("心愿",p["goal"]["title"].S)};
         for(int i=0;i<facts.Count;i++){Rect row=new Rect(564,194+i*31,316,30);GUI.Label(new Rect(row.x,row.y,80,row.height),facts[i].Key,new GUIStyle(text){alignment=TextAnchor.MiddleLeft});GUI.Label(new Rect(row.x+80,row.y,row.width-80,row.height),facts[i].Value,valueStyle);Fill(new Rect(row.x,row.yMax,row.width,1),hairline);}
-        GUILayout.BeginArea(new Rect(260,482,620,46));GUILayout.BeginHorizontal();DrawNpcActions(p);GUILayout.EndHorizontal();GUILayout.EndArea();
         Rect tr=new Rect(260,536,620,346);Frame(tr,"card",8);
         GUI.Label(new Rect(tr.x,tr.y+6,tr.width,26),"心性",new GUIStyle(sub){alignment=TextAnchor.MiddleCenter});
         for(int i=0;i<TraitOrder.Length;i++){
@@ -92,6 +82,7 @@ public partial class JianghuApp {
         GUILayout.BeginArea(new Rect(tr.x+20,tr.y+228,tr.width-40,110));GUILayout.Label(p["last_action"]["label"].Has?"近来："+p["last_action"]["label"].S:"尚未开始行动。",text);GUILayout.EndArea();
         GUILayout.BeginArea(new Rect(910,116,710,766));personScroll=GUILayout.BeginScrollView(personScroll);
         H("此刻");
+        if(p["appearance_view"]["description"].Has)T(p["appearance_view"]["description"].S,small);
         Metric("家资",Num(p["wealth"])+"银");Bar("体力",p["health"].N,100);Metric("声望",Num(p["reputation"]));T(p["goal"]["title"].S,sub);T(p["last_action"]["label"].S);
         Details("本月四周行程",p["monthly_actions"]);Details("生活近况",J.O("illness",p["illness"],"wound",p["wound"],"pregnancy",p["pregnancy"],"plan",p["plan"]));
         GUILayout.Space(10);DrawThinking();
@@ -146,19 +137,20 @@ public partial class JianghuApp {
     // 武学：战斗能力、所学与各派武学。自己的还可调养、进演武场。
     void DrawNpcMartial(){
         var p=Person;var m=CharacterMartial;
-        T("精力 "+Num(m["stamina"])+" · 银两 "+Num(p["wealth"]),sub);
-        DrawCombatAttributes(m["combat"],p["health"].N,m["stamina"].N,true);
+        T("银两 "+Num(p["wealth"]),sub);
+        DrawCombatAttributes(m["combat"],true);
         DrawKnownMartial(m);DrawMartialCatalog();
     }
     void DrawHeroMartial(){
         GUILayout.BeginHorizontal();H("人物战斗能力");GUILayout.FlexibleSpace();if(Btn("演武场 / 续战"))Later(OpenBattle);GUILayout.EndHorizontal();
         if(!Martial.Has){T("正在载入人物属性…");return;}
         var p=Martial["player"];var m=p["martial"];
-        T("精力 "+Num(m["stamina"])+" · 行囊 "+Num(p["wealth"])+"银",sub);
-        DrawCombatAttributes(m["combat"],p["health"].N,m["stamina"].N);
+        T("行囊 "+Num(p["wealth"])+"银",sub);
+        DrawCombatAttributes(m["combat"]);
         DrawKnownMartial(m);
         DrawMartialCatalog();
-        T("调养会推进江湖一个月，恢复体力与精力。",small);
+        T("切磋每场恢复完整气血、气力与肢体；伤势和疲劳不带入下一场。",small);
+        T("调养会推进江湖一个月，恢复江湖中的体力与精力。",small);
         if(Btn("调养一月",Paused))MartialAction("rest");
     }
 
@@ -179,7 +171,7 @@ public partial class JianghuApp {
     }
     void DrawHeroTies(){
         H("门中");
-        if(Hero["membership"].Has)Details("门中身份",Hero["membership"],true);else T("尚未投入任何门派。到门派驻地或在江湖卷·势力中可拜入。",small);
+        if(Hero["membership"].Has)Details("门中身份",Hero["membership"],true);else T("尚未投入任何门派。与该门派三品及以上人物对话，在「互动」栏选择「拜入门派」。",small);
         GUILayout.Space(8);DrawHousehold(Economy,true);
         T("与各人的交情记在对方人物卷的「人情」里。",small);
     }

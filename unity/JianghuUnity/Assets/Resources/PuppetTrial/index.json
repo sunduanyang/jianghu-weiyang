@@ -1,0 +1,990 @@
+{
+  "version": 1,
+  "profile": "bloody-reference-v1",
+  "binding_basis": "right-hand detached component artwork only",
+  "source_sha256": "2f285a9c3c5933bcc2c320ae379329dada5e5764e4e84f07bf0c0825616afba5",
+  "atlas_sha256": "6784ee0652eef82bce084b86efd27b484c336e39878b84ee12bf68a344d78fd0",
+  "atlas_size": [
+    1024,
+    1024
+  ],
+  "skin_color": [
+    0.98,
+    0.87,
+    0.67,
+    1
+  ],
+  "parts": [
+    {
+      "id": "far-upper-arm",
+      "bone": "upperFar",
+      "rect": [
+        1053,
+        396,
+        1188,
+        598
+      ],
+      "a": [
+        1092,
+        433
+      ],
+      "b": [
+        1156,
+        568
+      ],
+      "breadth": 0.86,
+      "layer": 10,
+      "socket_masks": [
+        [
+          1069,
+          400,
+          1104,
+          428
+        ],
+        [
+          1149,
+          556,
+          1184,
+          595
+        ]
+      ],
+      "source_rect": [
+        1053,
+        396,
+        1188,
+        598
+      ],
+      "runtime_rect": [
+        1053,
+        396,
+        1188,
+        598
+      ],
+      "source_region": "right-hand detached component artwork",
+      "pivot": [
+        39,
+        37
+      ],
+      "tip": [
+        103,
+        172
+      ],
+      "size": [
+        135,
+        202
+      ],
+      "uv": [
+        0.0078125,
+        0.794921875,
+        0.1318359375,
+        0.197265625
+      ],
+      "rgba_sha256": "edd4c5eb0a34c61aba46c1c368016f3449b00afe1dd3bc818280d35f2541e15d"
+    },
+    {
+      "id": "far-forearm",
+      "bone": "forearmFar",
+      "rect": [
+        1217,
+        433,
+        1395,
+        608
+      ],
+      "a": [
+        1248,
+        471
+      ],
+      "b": [
+        1355,
+        568
+      ],
+      "breadth": 0.9,
+      "layer": 11,
+      "socket_masks": [
+        [
+          1226,
+          437,
+          1260,
+          464
+        ],
+        [
+          1342,
+          568,
+          1374,
+          604
+        ]
+      ],
+      "source_rect": [
+        1217,
+        433,
+        1395,
+        608
+      ],
+      "runtime_rect": [
+        1217,
+        433,
+        1395,
+        608
+      ],
+      "source_region": "right-hand detached component artwork",
+      "pivot": [
+        31,
+        38
+      ],
+      "tip": [
+        138,
+        135
+      ],
+      "size": [
+        178,
+        175
+      ],
+      "uv": [
+        0.1474609375,
+        0.8212890625,
+        0.173828125,
+        0.1708984375
+      ],
+      "rgba_sha256": "2104a7742536781256e2965e783dbc54f8c935a48bc8ba528c22f5822f832deb"
+    },
+    {
+      "id": "far-hand",
+      "bone": "handFar",
+      "rect": [
+        1408,
+        514,
+        1511,
+        605
+      ],
+      "a": [
+        1440,
+        550
+      ],
+      "b": [
+        1495,
+        581
+      ],
+      "breadth": 1,
+      "layer": 12,
+      "socket_masks": [
+        [
+          1413,
+          515,
+          1440,
+          541
+        ]
+      ],
+      "source_rect": [
+        1408,
+        514,
+        1511,
+        605
+      ],
+      "runtime_rect": [
+        1408,
+        514,
+        1511,
+        605
+      ],
+      "source_region": "right-hand detached component artwork",
+      "pivot": [
+        32,
+        36
+      ],
+      "tip": [
+        87,
+        67
+      ],
+      "size": [
+        103,
+        91
+      ],
+      "uv": [
+        0.3291015625,
+        0.9033203125,
+        0.1005859375,
+        0.0888671875
+      ],
+      "rgba_sha256": "1315426d51f0891d030e2af21983e3b122aa74bb68edb15f31882ed096867924"
+    },
+    {
+      "id": "far-thigh",
+      "bone": "thighFar",
+      "rect": [
+        1035,
+        623,
+        1162,
+        929
+      ],
+      "a": [
+        1090,
+        662
+      ],
+      "b": [
+        1109,
+        882
+      ],
+      "breadth": 0.91,
+      "layer": 20,
+      "socket_masks": [
+        [
+          1073,
+          627,
+          1109,
+          653
+        ],
+        [
+          1086,
+          892,
+          1126,
+          925
+        ]
+      ],
+      "source_rect": [
+        1035,
+        623,
+        1162,
+        929
+      ],
+      "runtime_rect": [
+        1035,
+        623,
+        1162,
+        929
+      ],
+      "source_region": "right-hand detached component artwork",
+      "pivot": [
+        55,
+        39
+      ],
+      "tip": [
+        74,
+        259
+      ],
+      "size": [
+        127,
+        306
+      ],
+      "uv": [
+        0.4375,
+        0.693359375,
+        0.1240234375,
+        0.298828125
+      ],
+      "rgba_sha256": "54c9f94796c6541e8a2884a51814ea59162ad529603f99dd3b21d74b23630c25"
+    },
+    {
+      "id": "far-shin",
+      "bone": "shinFar",
+      "rect": [
+        1198,
+        633,
+        1295,
+        922
+      ],
+      "a": [
+        1247,
+        677
+      ],
+      "b": [
+        1255,
+        881
+      ],
+      "breadth": 1,
+      "layer": 21,
+      "socket_masks": [
+        [
+          1230,
+          637,
+          1266,
+          666
+        ],
+        [
+          1237,
+          890,
+          1274,
+          918
+        ]
+      ],
+      "source_rect": [
+        1198,
+        633,
+        1295,
+        922
+      ],
+      "runtime_rect": [
+        1198,
+        633,
+        1295,
+        922
+      ],
+      "source_region": "right-hand detached component artwork",
+      "pivot": [
+        49,
+        44
+      ],
+      "tip": [
+        57,
+        248
+      ],
+      "size": [
+        97,
+        289
+      ],
+      "uv": [
+        0.5693359375,
+        0.7099609375,
+        0.0947265625,
+        0.2822265625
+      ],
+      "rgba_sha256": "e58bd20a8191af86ec6e130d39057e795b7cb0d4a7e6ecc6b46077e8a9509b14"
+    },
+    {
+      "id": "far-foot",
+      "bone": "footFar",
+      "rect": [
+        1339,
+        859,
+        1507,
+        981
+      ],
+      "a": [
+        1378,
+        901
+      ],
+      "b": [
+        1490,
+        938
+      ],
+      "heel": [
+        1350,
+        938
+      ],
+      "breadth": 1,
+      "layer": 22,
+      "socket_masks": [
+        [
+          1363,
+          863,
+          1400,
+          892
+        ]
+      ],
+      "source_rect": [
+        1339,
+        859,
+        1507,
+        981
+      ],
+      "runtime_rect": [
+        1339,
+        859,
+        1507,
+        981
+      ],
+      "source_region": "right-hand detached component artwork",
+      "pivot": [
+        39,
+        42
+      ],
+      "tip": [
+        151,
+        79
+      ],
+      "size": [
+        168,
+        122
+      ],
+      "uv": [
+        0.671875,
+        0.873046875,
+        0.1640625,
+        0.119140625
+      ],
+      "rgba_sha256": "1d00f70d779a5be6027e5e52487b453093a4b8dd9ecf1c7f931c3f7ae01a1a71",
+      "heel_pivot": [
+        11,
+        79
+      ]
+    },
+    {
+      "id": "near-thigh",
+      "bone": "thighNear",
+      "rect": [
+        553,
+        627,
+        676,
+        950
+      ],
+      "a": [
+        606,
+        667
+      ],
+      "b": [
+        626,
+        908
+      ],
+      "breadth": 1,
+      "layer": 30,
+      "socket_masks": [
+        [
+          583,
+          631,
+          621,
+          660
+        ],
+        [
+          605,
+          915,
+          644,
+          946
+        ]
+      ],
+      "source_rect": [
+        553,
+        627,
+        676,
+        950
+      ],
+      "runtime_rect": [
+        553,
+        627,
+        676,
+        950
+      ],
+      "source_region": "right-hand detached component artwork",
+      "pivot": [
+        53,
+        40
+      ],
+      "tip": [
+        73,
+        281
+      ],
+      "size": [
+        123,
+        323
+      ],
+      "uv": [
+        0.84375,
+        0.6767578125,
+        0.1201171875,
+        0.3154296875
+      ],
+      "rgba_sha256": "6edccf229dd1e824ca700017b14fab832782ee8d2e1827538e21ae6b6e234747"
+    },
+    {
+      "id": "near-shin",
+      "bone": "shinNear",
+      "rect": [
+        720,
+        646,
+        814,
+        924
+      ],
+      "a": [
+        764,
+        685
+      ],
+      "b": [
+        777,
+        881
+      ],
+      "breadth": 1,
+      "layer": 31,
+      "socket_masks": [
+        [
+          747,
+          650,
+          782,
+          677
+        ],
+        [
+          756,
+          891,
+          794,
+          920
+        ]
+      ],
+      "source_rect": [
+        720,
+        646,
+        814,
+        924
+      ],
+      "runtime_rect": [
+        720,
+        646,
+        814,
+        924
+      ],
+      "source_region": "right-hand detached component artwork",
+      "pivot": [
+        44,
+        39
+      ],
+      "tip": [
+        57,
+        235
+      ],
+      "size": [
+        94,
+        278
+      ],
+      "uv": [
+        0.0078125,
+        0.3974609375,
+        0.091796875,
+        0.271484375
+      ],
+      "rgba_sha256": "e586b793a2f3ed18530ad0da1e8a15cda8865a035516077f6650561e9ef3f382"
+    },
+    {
+      "id": "near-foot",
+      "bone": "footNear",
+      "rect": [
+        845,
+        859,
+        1012,
+        980
+      ],
+      "a": [
+        883,
+        901
+      ],
+      "b": [
+        995,
+        937
+      ],
+      "heel": [
+        855,
+        937
+      ],
+      "breadth": 1,
+      "layer": 32,
+      "socket_masks": [
+        [
+          867,
+          862,
+          903,
+          891
+        ]
+      ],
+      "source_rect": [
+        845,
+        859,
+        1012,
+        980
+      ],
+      "runtime_rect": [
+        845,
+        859,
+        1012,
+        980
+      ],
+      "source_region": "right-hand detached component artwork",
+      "pivot": [
+        38,
+        42
+      ],
+      "tip": [
+        150,
+        78
+      ],
+      "size": [
+        167,
+        121
+      ],
+      "uv": [
+        0.107421875,
+        0.55078125,
+        0.1630859375,
+        0.1181640625
+      ],
+      "rgba_sha256": "d5fbff3f851be50732ca0b063a582896001320e0d791cf770e0c8b6adc16525e",
+      "heel_pivot": [
+        10,
+        78
+      ]
+    },
+    {
+      "id": "torso",
+      "bone": "spine",
+      "rect": [
+        861,
+        11,
+        1130,
+        394
+      ],
+      "runtime_bottom": 218,
+      "a": [
+        1010,
+        211
+      ],
+      "b": [
+        1018,
+        57
+      ],
+      "breadth": 0.86,
+      "layer": 40,
+      "socket_masks": [
+        [
+          994,
+          13,
+          1036,
+          48
+        ]
+      ],
+      "source_rect": [
+        861,
+        11,
+        1130,
+        394
+      ],
+      "runtime_rect": [
+        861,
+        11,
+        1130,
+        218
+      ],
+      "source_region": "right-hand detached component artwork",
+      "pivot": [
+        149,
+        200
+      ],
+      "tip": [
+        157,
+        46
+      ],
+      "size": [
+        269,
+        207
+      ],
+      "uv": [
+        0.2783203125,
+        0.466796875,
+        0.2626953125,
+        0.2021484375
+      ],
+      "rgba_sha256": "ed0c9228a06c8209133397a91723cd400e0c219d325951c2554a8ba4f6f176da"
+    },
+    {
+      "id": "pelvis",
+      "bone": "pelvis",
+      "rect": [
+        1187,
+        164,
+        1427,
+        377
+      ],
+      "a": [
+        1305,
+        209
+      ],
+      "b": [
+        1305,
+        338
+      ],
+      "breadth": 1.05,
+      "layer": 41,
+      "socket_masks": [
+        [
+          1288,
+          167,
+          1326,
+          201
+        ],
+        [
+          1288,
+          345,
+          1325,
+          373
+        ]
+      ],
+      "source_rect": [
+        1187,
+        164,
+        1427,
+        377
+      ],
+      "runtime_rect": [
+        1187,
+        164,
+        1427,
+        377
+      ],
+      "source_region": "right-hand detached component artwork",
+      "pivot": [
+        118,
+        45
+      ],
+      "tip": [
+        118,
+        174
+      ],
+      "size": [
+        240,
+        213
+      ],
+      "uv": [
+        0.548828125,
+        0.4609375,
+        0.234375,
+        0.2080078125
+      ],
+      "rgba_sha256": "9869c8df699d9b9a3609865b2ebc36b6839114cc9de34fcd0298a2827002b986"
+    },
+    {
+      "id": "head-neck",
+      "bone": "head",
+      "rect": [
+        531,
+        7,
+        820,
+        324
+      ],
+      "a": [
+        711,
+        218
+      ],
+      "b": [
+        711,
+        73
+      ],
+      "breadth": 0.95,
+      "layer": 50,
+      "socket_masks": [
+        [
+          689,
+          269,
+          734,
+          299
+        ]
+      ],
+      "source_rect": [
+        531,
+        7,
+        820,
+        324
+      ],
+      "runtime_rect": [
+        531,
+        7,
+        820,
+        324
+      ],
+      "source_region": "right-hand detached component artwork",
+      "pivot": [
+        180,
+        211
+      ],
+      "tip": [
+        180,
+        66
+      ],
+      "size": [
+        289,
+        317
+      ],
+      "uv": [
+        0.0078125,
+        0.080078125,
+        0.2822265625,
+        0.3095703125
+      ],
+      "rgba_sha256": "3b1dc9183f570790644b6cc8528ac617b246f6c6183b385cbb2da1e543a85204"
+    },
+    {
+      "id": "near-upper-arm",
+      "bone": "upperNear",
+      "rect": [
+        592,
+        376,
+        721,
+        615
+      ],
+      "a": [
+        635,
+        418
+      ],
+      "b": [
+        670,
+        574
+      ],
+      "breadth": 0.96,
+      "layer": 60,
+      "socket_masks": [
+        [
+          614,
+          380,
+          649,
+          406
+        ],
+        [
+          659,
+          584,
+          694,
+          611
+        ]
+      ],
+      "source_rect": [
+        592,
+        376,
+        721,
+        615
+      ],
+      "runtime_rect": [
+        592,
+        376,
+        721,
+        615
+      ],
+      "source_region": "right-hand detached component artwork",
+      "pivot": [
+        43,
+        42
+      ],
+      "tip": [
+        78,
+        198
+      ],
+      "size": [
+        129,
+        239
+      ],
+      "uv": [
+        0.2978515625,
+        0.15625,
+        0.1259765625,
+        0.2333984375
+      ],
+      "rgba_sha256": "c5de8384b6bf83de4a04eadadffe181c176e2561bdb3ec5f17c1bc8826b2fd6c"
+    },
+    {
+      "id": "near-forearm",
+      "bone": "forearmNear",
+      "rect": [
+        729,
+        427,
+        898,
+        612
+      ],
+      "a": [
+        761,
+        469
+      ],
+      "b": [
+        864,
+        576
+      ],
+      "breadth": 0.95,
+      "layer": 61,
+      "socket_masks": [
+        [
+          734,
+          430,
+          769,
+          460
+        ],
+        [
+          853,
+          571,
+          885,
+          604
+        ]
+      ],
+      "source_rect": [
+        729,
+        427,
+        898,
+        612
+      ],
+      "runtime_rect": [
+        729,
+        427,
+        898,
+        612
+      ],
+      "source_region": "right-hand detached component artwork",
+      "pivot": [
+        32,
+        42
+      ],
+      "tip": [
+        135,
+        149
+      ],
+      "size": [
+        169,
+        185
+      ],
+      "uv": [
+        0.431640625,
+        0.208984375,
+        0.1650390625,
+        0.1806640625
+      ],
+      "rgba_sha256": "96486b2f83de5b2a641413930214febbc84fb6fb80cc9263a6394649c8f5af98"
+    },
+    {
+      "id": "near-hand",
+      "bone": "handNear",
+      "rect": [
+        920,
+        502,
+        1029,
+        609
+      ],
+      "a": [
+        951,
+        545
+      ],
+      "b": [
+        1005,
+        581
+      ],
+      "breadth": 1,
+      "layer": 62,
+      "socket_masks": [
+        [
+          922,
+          505,
+          950,
+          532
+        ]
+      ],
+      "source_rect": [
+        920,
+        502,
+        1029,
+        609
+      ],
+      "runtime_rect": [
+        920,
+        502,
+        1029,
+        609
+      ],
+      "source_region": "right-hand detached component artwork",
+      "pivot": [
+        31,
+        43
+      ],
+      "tip": [
+        85,
+        79
+      ],
+      "size": [
+        109,
+        107
+      ],
+      "uv": [
+        0.6044921875,
+        0.28515625,
+        0.1064453125,
+        0.1044921875
+      ],
+      "rgba_sha256": "b8c7233a75a8c8b304f811de7d0988909894e03df903eacc16247d3710b97931"
+    }
+  ]
+}

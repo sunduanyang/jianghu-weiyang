@@ -1,0 +1,261 @@
+{
+  "Dagger_1H": {
+    "source": {
+      "file": "102446f8fadae834884c4d24a9950f34",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Dagger_1H",
+    "up": [
+      "1Hand_SwingDown"
+    ],
+    "down": [
+      "1Hand_SwingDown",
+      "1Hand_SwingDown"
+    ]
+  },
+  "Dagger_2H": {
+    "source": {
+      "file": "805de045170d1184094ef1c10371fc30",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Dagger_2H",
+    "up": [
+      "2Hands_SwingDown"
+    ],
+    "down": [
+      "2Hands_Stab",
+      "2Hands_SwingUp"
+    ]
+  },
+  "Sword_1H": {
+    "source": {
+      "file": "2761b1785be3c73428dfc2374397741f",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Sword_1H",
+    "up": [
+      "1Hand_SwingDown"
+    ],
+    "down": [
+      "2Hands_Stab",
+      "1Hand_SwingUp"
+    ]
+  },
+  "Sword_2H": {
+    "source": {
+      "file": "d7281c107c9ed094fad1fc3418b38cbe",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Sword_2H",
+    "up": [
+      "2Hands_SwingDown"
+    ],
+    "down": [
+      "2Hands_Stab",
+      "2Hands_SwingUp"
+    ]
+  },
+  "Axe_1H": {
+    "source": {
+      "file": "bf32dedb06c505c4e8d389a0e73a7be6",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Axe_1H",
+    "up": [
+      "1Hand_SwingDown"
+    ],
+    "down": [
+      "1Hand_Stab",
+      "1Hand_SwingUp",
+      "1Hand_SwingDown",
+      "1Hand_SwingDown",
+      "1Hand_SwingDown"
+    ]
+  },
+  "Axe_2H": {
+    "source": {
+      "file": "556c90543c4cbee4e9f3eb60dd5280c8",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Axe_2H",
+    "up": [
+      "2Hands_SwingDown"
+    ],
+    "down": [
+      "2Hands_Stab"
+    ]
+  },
+  "Mace_1H": {
+    "source": {
+      "file": "3b532e24f20398e46b55327282d51fad",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Mace_1H",
+    "up": [
+      "1Hand_SwingDown"
+    ],
+    "down": [
+      "1Hand_SwingDown",
+      "1Hand_SwingDown",
+      "1Hand_SwingDown"
+    ]
+  },
+  "Mace_2H": {
+    "source": {
+      "file": "ac825da7c525c414eb3cdaa0c1c7ef64",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Mace_2H",
+    "up": [
+      "2Hands_SwingDown"
+    ],
+    "down": [
+      "2Hands_SwingDown"
+    ]
+  },
+  "Hammer_1H": {
+    "source": {
+      "file": "137a3c0cc2de7fb46bab4aaa3fb9b1ae",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Hammer_1H",
+    "up": [
+      "1Hand_SwingDown"
+    ],
+    "down": [
+      "1Hand_Stab",
+      "1Hand_SwingUp",
+      "1Hand_SwingDown",
+      "1Hand_SwingDown",
+      "1Hand_SwingDown"
+    ]
+  },
+  "Hammer_2H": {
+    "source": {
+      "file": "ea65a5ad220ad6442835c5bb27c3d6da",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Hammer_2H",
+    "up": [
+      "2Hands_SwingDown"
+    ],
+    "down": [
+      "2Hands_SwingDown"
+    ]
+  },
+  "Flail_1H": {
+    "source": {
+      "file": "74214b52992d5ed429f5b556abc16944",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Flail_1H",
+    "up": [
+      "1Hand_SwingDown"
+    ],
+    "down": [
+      "1Hand_SwingUp"
+    ]
+  },
+  "Flail_2H": {
+    "source": {
+      "file": "4fb113b3d4dfbb3428efe14e2687e4a9",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Flail_2H",
+    "up": [
+      "2Hands_SwingDown"
+    ],
+    "down": [
+      "2Hands_SwingDown"
+    ]
+  },
+  "Stick_1H": {
+    "source": {
+      "file": "e91f1192f7c60304db640fdf381acc28",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Stick_1H",
+    "up": [
+      "1Hand_SwingDown"
+    ],
+    "down": [
+      "1Hand_Stab",
+      "1Hand_SwingUp",
+      "1Hand_SwingDown",
+      "1Hand_SwingDown",
+      "1Hand_SwingDown"
+    ]
+  },
+  "Stick_2H": {
+    "source": {
+      "file": "1d7956e6818bfc140869cf8b45ac190a",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Stick_2H",
+    "up": [
+      "2Hands_SwingDown"
+    ],
+    "down": [
+      "2Hands_Stab",
+      "2Hands_SwingUp"
+    ]
+  },
+  "Spear_1H": {
+    "source": {
+      "file": "15039a3aa25c3ce43a81f95597364163",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Spear_1H",
+    "up": [
+      "1Hand_SwingDown"
+    ],
+    "down": [
+      "1Hand_Stab",
+      "1Hand_SwingUp"
+    ]
+  },
+  "Spear_2H": {
+    "source": {
+      "file": "a7f39314318b91b49ad96c1aede1b302",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Spear_2H",
+    "up": [
+      "2Hands_Stab",
+      "2Hands_SwingUp",
+      "2Hands_SwingDown"
+    ],
+    "down": [
+      "2Hands_Stab",
+      "2Hands_SwingUp"
+    ]
+  },
+  "Shield_1H": {
+    "source": {
+      "file": "15e6621fe43c4dc4d9551112f5a6900b",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Shield_1H",
+    "up": [
+      "1Hand_SwingDown"
+    ],
+    "down": [
+      "1Hand_Stab",
+      "1Hand_SwingUp"
+    ]
+  },
+  "Shield_2H": {
+    "source": {
+      "file": "e25c669c72682bf4b922da0eee750d63",
+      "id": 1
+    },
+    "name": "AIHandAnimBundle_Shield_2H",
+    "up": [
+      "2Hands_SwingDown"
+    ],
+    "down": [
+      "2Hands_Stab",
+      "2Hands_SwingUp"
+    ]
+  }
+}

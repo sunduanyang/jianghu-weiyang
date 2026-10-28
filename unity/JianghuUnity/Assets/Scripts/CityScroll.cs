@@ -9,6 +9,7 @@ namespace Jianghu {
 // 在设施之间走动不耗行动力，前往城门或别处聚落仍沿原寻路扣行动力。
 public partial class JianghuApp {
     string cityScrollSite="",cityScrollPick="",cityScrollHover="",cityScrollHeroAt="";
+    string cityScrollPersonHint="";
     float cityScrollX,cityScrollHeroX=float.NaN;int cityScrollFocus=-1;
     bool cityScrollDragging,cityScrollMoved;Vector2 cityScrollPress;float cityScrollPressX;
     const float ScrollStep=420,ScrollMargin=260,ScrollSpriteW=442,ScrollSpriteH=338;
@@ -90,7 +91,7 @@ public partial class JianghuApp {
             GUI.Label(new Rect(slip.xMax+4,slip.y+2,140,18),node["label"].S,atlasLegend);
             GUI.Label(new Rect(slip.xMax+4,slip.y+20,140,18),"在场 "+node["residents"].A.Count,atlasLegend);
             cityScrollHits[id]=Rect.MinMaxRect(Mathf.Min(slip.x,b.x+50),slip.y,b.xMax-50,ground+6);
-            DrawScrollPeople(node["residents"].A,fx,ground+8,heroIndex==i);
+            DrawScrollPeople(node["residents"].A,fx,ground+8,heroIndex==i,strip);
             if(mist!=null&&i%2==1){var old=GUI.color;GUI.color=new Color(1,1,1,.55f);GUI.DrawTexture(new Rect(fx+ScrollStep/2-160,ground-300,320,96),mist);GUI.color=old;}
         }
         if(facilities.Count==0)GUI.Label(new Rect(0,h/2-20,w,40),"此处尚无设施记录",inkBold);
@@ -104,7 +105,7 @@ public partial class JianghuApp {
         GUI.EndGroup();
         DrawScrollOverview(new Rect(strip.x,strip.yMax+12,strip.width,24),facilities,content,offset,strip.width,maxX,heroIndex);
     }
-    void DrawScrollPeople(List<J> people,float fx,float y,bool heroHere){
+    void DrawScrollPeople(List<J> people,float fx,float y,bool heroHere,Rect strip){
         const float pw=30,ph=38,gap=4;int max=7,shown=Mathf.Min(max,people.Count);
         float total=shown*pw+Mathf.Max(0,shown-1)*gap+(people.Count>max?34:0);float x=fx-total/2+(heroHere?24:0);
         for(int k=0;k<shown;k++){
@@ -112,8 +113,12 @@ public partial class JianghuApp {
             bool hasPerson=cityPersonViews.TryGetValue(id,out var person);
             if(hasPerson)Portrait(r,id,person["sex"].S,person["age_months"].I);else Fill(r,new Color(.15f,.17f,.16f,.72f));
             Outline(r,id==SelectedPerson?brass:new Color(.17f,.13f,.10f,.8f),id==SelectedPerson?2:1);
-            if(GUI.Button(r,new GUIContent("",resident["name"].S+" · "+resident["job"].S),GUIStyle.none))OpenInteraction(id,true);
-            if(r.Contains(Event.current.mousePosition))HaloLabel(new Rect(r.center.x-60,r.yMax+2,120,18),resident["name"].S,inkBold,atlasHalo);
+            // Portrait hints follow this frame's visible hit box, never IMGUI's cached/focused tooltip.
+            Vector2 mouse=Event.current.mousePosition;
+            bool hovered=r.Contains(mouse)&&new Rect(0,0,strip.width,strip.height).Contains(mouse)&&CityStagePointer(mouse+strip.position);
+            if(Event.current.type==EventType.Repaint&&hovered)cityScrollPersonHint=resident["name"].S+" · "+resident["job"].S;
+            if(GUI.Button(r,GUIContent.none,GUIStyle.none))OpenInteraction(id,true);
+            if(hovered)HaloLabel(new Rect(r.center.x-60,r.yMax+2,120,18),resident["name"].S,inkBold,atlasHalo);
         }
         if(people.Count>max)GUI.Label(new Rect(x+shown*(pw+gap),y+8,34,22),"+"+(people.Count-max),inkBold);
     }

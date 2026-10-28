@@ -1,0 +1,60 @@
+"""Generate the REVIEWABLE Jianghu adapter, not an original-item replacement.
+
+No original prefab/art is copied. APK observations and Jianghu design choices
+are stored in separate sections. Run with --check to detect catalog drift.
+"""
+import argparse
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+DEST = ROOT / 'unity/JianghuUnity/Assets/Resources/CombatSource/equipment.json'
+
+
+def build():
+    catalog = json.loads((ROOT / 'jianghu/weapon_catalog.json').read_text(encoding='utf-8'))
+    profiles = json.loads((ROOT / 'jianghu/physical_profiles.json').read_text(encoding='utf-8'))
+    weapons = {}
+    for key, row in catalog.items():
+        profile = row['profile']
+        head = ('WoodBlunt' if key == 'wood_sword' else 'MetalBlunt' if key == 'iron_practice_sword'
+                or profile in ('mace', 'warhammer') else 'MetalSpike' if profile == 'spear' else 'MetalBlade')
+        handle = 'WoodHandle' if key == 'wood_sword' or profile in ('axe', 'greataxe', 'mace', 'warhammer', 'spear') else 'MetalHandle'
+        weapons[key] = dict(profile=profile, head=head, handle=handle,
+                            damage_coefficient=row['damage'], effective_source_D=round(16 * row['damage'] - 15, 8),
+                            mass_scale=round(row['mass'] / profiles[profile]['mass'], 8))
+    return dict(schema=1, adapter='jianghu-source-equipment-v1',
+        apk_sha256='c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba',
+        source_observations=dict(damage_formula='weighted_speed * (1 + D / 15) * .25 * 2.15',
+            special_D=.1, special_formula='weighted_speed * .25 / 2.5',
+            mass_va='0x363e0d8', armor_defense_va='0x3428820', armor_material_va='0x341a75c',
+            armor_materials=dict(Nothing=0, Cloth=1, Leather=2, Wood=3, Mail=4, PlateThin=5, PlateThick=6, Brigandin=7)),
+        adaptation=dict(damage='effective_D = 16 * game_damage_coefficient - 15; base D=1; negative values intentionally preserve ratios',
+            mass='source category masses multiplied by game mass / profile base mass',
+            armor='one campaign armor slot maps to one covered layer, not three duplicated layers',
+            unarmed='game fallback only, D=.1; APK has no equivalent unarmed item',
+            shield='existing wood_shield maps to ordinary source shield D=1, WoodBlunt'),
+        profiles={key: dict(base_mass=row['mass'], base_damage=row['damage']) for key, row in profiles.items()},
+        weapons=weapons,
+        armor={
+            'cloth': dict(material=1, defense=1, coverage=['torso','belly','pelvis','upper','forearm']),
+            'leather': dict(material=2, defense=4, coverage=['torso','belly','pelvis']),
+            'silk_robe': dict(material=1, defense=7, coverage=['torso','belly','pelvis','upper','forearm','thigh']),
+        })
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--check', action='store_true')
+    args = parser.parse_args()
+    text = json.dumps(build(), ensure_ascii=False, indent=2) + '\n'
+    if args.check:
+        if DEST.read_text(encoding='utf-8') != text:
+            raise SystemExit('equipment.json differs: run scripts/build_duel_source_equipment.py')
+    else:
+        DEST.write_text(text, encoding='utf-8')
+    print('equipment bridge: 16 weapon templates, 10 profiles, 3 armor templates')
+
+
+if __name__ == '__main__':
+    main()

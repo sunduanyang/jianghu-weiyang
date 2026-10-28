@@ -98,7 +98,7 @@ def on_event(w, event, who=None):
     who = who if who is not None else facts.get('actor',event['people'][0] if event['people'] else None)
     if who is not None and (who=='player' or who in w.npcs) and (who=='player' or w.npcs[who]['alive']):
         p=prepare(w,who)
-        if kind in ('join','hero_sect_join'):
+        if kind in ('join','hero_sect_join','player_join_sect'):
             p.pop('sect',None);prepare(w,who)
         if kind=='work':
             mark(p,'attempt',w.month,event['id'])

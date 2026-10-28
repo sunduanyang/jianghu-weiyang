@@ -37,11 +37,16 @@ python unity/prepare.py --backend-only
 python -m pip install -r requirements-dev.txt
 python unity/prepare.py
 python unity/bake_paper_cast.py
+python unity/bake_appearance_masks.py
 ```
 
 城中舆图与长卷的建筑、绢底和节点标记由 `python unity/bake_scroll.py` 生成。只调整界面纹理或舆图画法时，运行 `python unity/bake_ui.py` 即可（`--ui-only` 只重做界面纹理）；重建内置字体子集用 `python unity/build_fonts.py`。
 
+战斗改进必须应用于正式游戏的切磋、抢夺和袭击，共用 `unity/JianghuUnity/Assets/Scripts/PhysicsCombat/`，不得只交付独立试玩。发布前使用普通游戏客户端和独立验收存档，从人物交互实际进入上述战斗，验证新机制、保存、返回和结算，再更新 `unity/Build/active-build.txt`。独立物理试玩通过正式启动器传入 `-referenceCombat 1` 打开，与正式游戏使用同一成品；`demos/PhysicsDuelUnity/` 仅保留历史原型。
+
 修改皮影皮肤或通用动画后，运行 `python unity/bake_paper_cast.py`，提交更新后的 `Assets/Resources/PaperCast/` 与 `.meta`。原始设计板及独立拆分件保存在 `art/puppet-modern-24/`。拆分件关节和遮挡见 `split-calibration-*.json`，最终效果的目标关节见 `assembly-calibration.json`。所有绑定像素必须来自右侧拆分格；最终效果只供对照。重建后同时提交 `PaperCast/`、`PaperBust/`、`PaperReference/` 及 `.meta`；在衣橱以「最终效果对照」复核绑定姿态，再检查活动时的接缝。请在 Unity 的皮影衣橱检查左右朝向、各动作、关节与配饰，再检查人物头像、对话和演武中的形象一致性。
+
+修改皮影原件后还需运行 `python unity/bake_appearance_masks.py` 重建 `Assets/Resources/Appearance/Masks/`。遮罩是线性 RGBA 数据，四个通道分别代表肤色、主衣色、发色、次衣色，不可按透明图片预处理。`Jianghu.Editor.AppearanceBuild.Build` 配置遮罩导入后调用原 Windows 构建；人物组合逻辑位于 `jianghu/appearance.py` 与 `PaperAppearanceArt.cs`。用独立 `-saveDir` 和 `-appearanceSmoke <输出目录>` 运行组合渲染验收；测试窗口必须实际绘制，隐藏窗口会得到空白截图并使关节测量失败。
 
 如果需要让 Windows 成品自带 Python，在 Windows 的 CPython 安装环境运行 `python unity/prepare.py --bundle-python`，再使用 Unity 菜单「江湖 / 构建 Windows 游戏」。打包运行时和游戏成品不提交到源码仓库，CPython 的许可证随打包运行时保留。其他 Unity 安装路径可以通过 Unity Hub 打开，或给构建脚本传入 `-EditorPath`。
 

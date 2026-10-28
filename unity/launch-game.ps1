@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 $buildPath = Join-Path $PSScriptRoot 'Build'
 $activeBuildFile = Join-Path $buildPath 'active-build.txt'
 $activeBuildSelected = $false
@@ -19,7 +19,7 @@ if ($players.Count -ne 1) {
     exit 1
 }
 if ($args.Count -gt 0) {
-    $playerArguments = @('-force-d3d11') + @($args | ForEach-Object { '"' + $_.Replace('"', '\"') + '"' })
+    $playerArguments = @('-force-d3d11') + @($args | ForEach-Object { '"' + ([string]$_).Replace('"', '\"') + '"' })
     Start-Process -FilePath $players[0].FullName -ArgumentList $playerArguments -WindowStyle Normal
 } else {
     Start-Process -FilePath $players[0].FullName -ArgumentList @('-force-d3d11') -WindowStyle Normal

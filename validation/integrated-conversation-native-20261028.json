@@ -1,0 +1,696 @@
+{
+  "date": "2026-10-28",
+  "build": "IntegratedConversation",
+  "rules": {
+    "passed": true,
+    "tests": 59,
+    "results": [
+      {
+        "module": "test_interaction_conversation.py",
+        "passed": true,
+        "tests": 4
+      },
+      {
+        "module": "test_player_interactions.py",
+        "passed": true,
+        "tests": 18
+      },
+      {
+        "module": "test_persuasion.py",
+        "passed": true,
+        "tests": 13
+      },
+      {
+        "module": "test_player_social.py",
+        "passed": true,
+        "tests": 17
+      },
+      {
+        "module": "test_interaction_ap_only.py",
+        "passed": true,
+        "tests": 7
+      }
+    ]
+  },
+  "integrated_conversation": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated world ready",
+        "passed": true
+      },
+      {
+        "check": "legacy talk entry opens the same new six-category screen",
+        "passed": true
+      },
+      {
+        "check": "all six old conversation topics and twelve direct actions remain",
+        "passed": true
+      },
+      {
+        "check": "conversation preserves actual favors and introductions",
+        "passed": true
+      },
+      {
+        "check": "refusal opens five personality choices within the new screen",
+        "passed": true
+      },
+      {
+        "check": "five original lines and labels are available",
+        "passed": true
+      },
+      {
+        "check": "profile return keeps original person topic refusal and pane",
+        "passed": true
+      },
+      {
+        "check": "a late response for another person cannot replace conversation",
+        "passed": true
+      },
+      {
+        "check": "selected original personality line is submitted and answered",
+        "passed": true
+      },
+      {
+        "check": "persuasion outcome applies real silver exactly once",
+        "passed": true
+      },
+      {
+        "check": "persuasion does not change month or NPC time",
+        "passed": true
+      },
+      {
+        "check": "answer appears in the same conversation history",
+        "passed": true
+      },
+      {
+        "check": "a newly submitted request receives its live refusal and five generated lines",
+        "passed": true
+      },
+      {
+        "check": "new refusal automatically opens its own persuasion pane for one AP",
+        "passed": true
+      },
+      {
+        "check": "failed options remain recoverable in the unified screen",
+        "passed": true
+      },
+      {
+        "check": "retry regenerates five choices without charging AP",
+        "passed": true
+      },
+      {
+        "check": "old preset request is sent through the new conversation pane",
+        "passed": true
+      },
+      {
+        "check": "old sworn invitation remains in the conversation topic selector",
+        "passed": true
+      },
+      {
+        "check": "returning to a person restores its actual saved conversation",
+        "passed": true
+      },
+      {
+        "check": "integrated conversation saves through the normal game",
+        "passed": true
+      },
+      {
+        "check": "no native exceptions",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "navigation": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated world ready",
+        "passed": true
+      },
+      {
+        "check": "clicking a portrait opens that person's full interaction screen",
+        "passed": true
+      },
+      {
+        "check": "interaction has the six requested categories",
+        "passed": true
+      },
+      {
+        "check": "all six categories switch without changing the person",
+        "passed": true
+      },
+      {
+        "check": "returning from a profile preserves interaction person and category",
+        "passed": true
+      },
+      {
+        "check": "opening another portrait replaces the interaction and resets to talk",
+        "passed": true
+      },
+      {
+        "check": "farewell returns from the interaction to its map",
+        "passed": true
+      },
+      {
+        "check": "interaction blocks city movement",
+        "passed": true
+      },
+      {
+        "check": "farewell preserves the city stage",
+        "passed": true
+      },
+      {
+        "check": "talking opens selected person's integrated conversation",
+        "passed": true
+      },
+      {
+        "check": "portrait opens same person's scroll above the conversation",
+        "passed": true
+      },
+      {
+        "check": "inventory belongs to selected NPC",
+        "passed": true
+      },
+      {
+        "check": "NPC inventory contains no player instances",
+        "passed": true
+      },
+      {
+        "check": "martial tab displays NPC's actual abilities",
+        "passed": true
+      },
+      {
+        "check": "switching NPC keeps martial tab and changes data",
+        "passed": true
+      },
+      {
+        "check": "switching NPC changes inventory owner",
+        "passed": true
+      },
+      {
+        "check": "related person links update scroll owner",
+        "passed": true
+      },
+      {
+        "check": "closing scroll returns to original conversation",
+        "passed": true
+      },
+      {
+        "check": "gifting explicitly opens player's inventory",
+        "passed": true
+      },
+      {
+        "check": "own scroll keeps player context",
+        "passed": true
+      },
+      {
+        "check": "own martial keeps player context",
+        "passed": true
+      },
+      {
+        "check": "cross links open above the scroll",
+        "passed": true
+      },
+      {
+        "check": "navigation stack never repeats a view kind",
+        "passed": true
+      },
+      {
+        "check": "back returns to the conversation it came from",
+        "passed": true
+      },
+      {
+        "check": "back from the last view returns to the map",
+        "passed": true
+      },
+      {
+        "check": "gifting scroll returns to original conversation",
+        "passed": true
+      },
+      {
+        "check": "late response cannot replace newly selected NPC",
+        "passed": true
+      },
+      {
+        "check": "browsing preserves month money and actions",
+        "passed": true
+      },
+      {
+        "check": "browsing preserves both NPC possessions",
+        "passed": true
+      },
+      {
+        "check": "leaving to the map closes every view",
+        "passed": true
+      },
+      {
+        "check": "no native exceptions",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "gameplay": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated game ready",
+        "passed": true
+      },
+      {
+        "check": "all twelve menu actions are loaded from the live engine",
+        "passed": true
+      },
+      {
+        "check": "praise updates real affinity",
+        "passed": true
+      },
+      {
+        "check": "praise remains available for another paid interaction",
+        "passed": true
+      },
+      {
+        "check": "insult changes reputation and trust",
+        "passed": true
+      },
+      {
+        "check": "gift transfers the selected real item",
+        "passed": true
+      },
+      {
+        "check": "teacher awards a real manual",
+        "passed": true
+      },
+      {
+        "check": "confidant is registered",
+        "passed": true
+      },
+      {
+        "check": "marriage belongs to the intended person",
+        "passed": true
+      },
+      {
+        "check": "sworn bond belongs to the intended person",
+        "passed": true
+      },
+      {
+        "check": "NPC purchase transfers ownership",
+        "passed": true
+      },
+      {
+        "check": "sale transfers back and conserves silver",
+        "passed": true
+      },
+      {
+        "check": "theft produces a real settled outcome",
+        "passed": true
+      },
+      {
+        "check": "spar opens the actual physical arena",
+        "passed": true
+      },
+      {
+        "check": "spar runs the normal game campaign without demo entry",
+        "passed": true
+      },
+      {
+        "check": "spar uses improved mechanics for both fighters",
+        "passed": true
+      },
+      {
+        "check": "spar uses the calibrated solver in the game",
+        "passed": true
+      },
+      {
+        "check": "spar loads physical hand and foot driver inertia",
+        "passed": true
+      },
+      {
+        "check": "spar has a real unpaid kick windup",
+        "passed": true
+      },
+      {
+        "check": "spar saves paid kick and physical drivers through the game backend",
+        "passed": true
+      },
+      {
+        "check": "spar persists recovered core and bashed limb through formal mode",
+        "passed": true
+      },
+      {
+        "check": "spar can leave an unresolved game battle",
+        "passed": true
+      },
+      {
+        "check": "spar returns to the same improved battle with its kick state",
+        "passed": true
+      },
+      {
+        "check": "spar settles once and returns to the encounter",
+        "passed": true
+      },
+      {
+        "check": "rob opens the actual physical arena",
+        "passed": true
+      },
+      {
+        "check": "rob runs the normal game campaign without demo entry",
+        "passed": true
+      },
+      {
+        "check": "rob uses improved mechanics for both fighters",
+        "passed": true
+      },
+      {
+        "check": "rob uses the calibrated solver in the game",
+        "passed": true
+      },
+      {
+        "check": "rob loads physical hand and foot driver inertia",
+        "passed": true
+      },
+      {
+        "check": "rob has a real unpaid kick windup",
+        "passed": true
+      },
+      {
+        "check": "rob saves paid kick and physical drivers through the game backend",
+        "passed": true
+      },
+      {
+        "check": "rob persists recovered core and bashed limb through formal mode",
+        "passed": true
+      },
+      {
+        "check": "rob can leave an unresolved game battle",
+        "passed": true
+      },
+      {
+        "check": "rob returns to the same improved battle with its kick state",
+        "passed": true
+      },
+      {
+        "check": "rob settles once and returns to the encounter",
+        "passed": true
+      },
+      {
+        "check": "assault opens the actual physical arena",
+        "passed": true
+      },
+      {
+        "check": "assault runs the normal game campaign without demo entry",
+        "passed": true
+      },
+      {
+        "check": "assault uses improved mechanics for both fighters",
+        "passed": true
+      },
+      {
+        "check": "assault uses the calibrated solver in the game",
+        "passed": true
+      },
+      {
+        "check": "assault loads physical hand and foot driver inertia",
+        "passed": true
+      },
+      {
+        "check": "assault has a real unpaid kick windup",
+        "passed": true
+      },
+      {
+        "check": "assault saves paid kick and physical drivers through the game backend",
+        "passed": true
+      },
+      {
+        "check": "assault persists recovered core and bashed limb through formal mode",
+        "passed": true
+      },
+      {
+        "check": "assault can leave an unresolved game battle",
+        "passed": true
+      },
+      {
+        "check": "assault returns to the same improved battle with its kick state",
+        "passed": true
+      },
+      {
+        "check": "assault settles once and returns to the encounter",
+        "passed": true
+      },
+      {
+        "check": "hostile battles persist world costs and reputation",
+        "passed": true
+      },
+      {
+        "check": "all actions preserve the current month",
+        "passed": true
+      },
+      {
+        "check": "all actions cost exactly the advertised action points",
+        "passed": true
+      },
+      {
+        "check": "stale submissions cannot charge or duplicate effects",
+        "passed": true
+      },
+      {
+        "check": "no native exceptions",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "reload": {
+    "passed": true,
+    "checks": {
+      "conversation_unchanged_after_load": true,
+      "points_unchanged": true,
+      "model_response_and_selected_style_persist": true,
+      "favors_and_introductions_persist": true
+    }
+  },
+  "build_matches_source": {
+    "passed": true,
+    "backend": [
+      {
+        "file": "ai.py",
+        "matches_source": true
+      },
+      {
+        "file": "appearance.py",
+        "matches_source": true
+      },
+      {
+        "file": "atlas.py",
+        "matches_source": true
+      },
+      {
+        "file": "atlas_expansion.py",
+        "matches_source": true
+      },
+      {
+        "file": "atlas_migration.py",
+        "matches_source": true
+      },
+      {
+        "file": "careers.py",
+        "matches_source": true
+      },
+      {
+        "file": "city_biomes.py",
+        "matches_source": true
+      },
+      {
+        "file": "city_gardens.py",
+        "matches_source": true
+      },
+      {
+        "file": "city_landscape.py",
+        "matches_source": true
+      },
+      {
+        "file": "city_maps.py",
+        "matches_source": true
+      },
+      {
+        "file": "city_plans.py",
+        "matches_source": true
+      },
+      {
+        "file": "city_regions.py",
+        "matches_source": true
+      },
+      {
+        "file": "combat_attributes.py",
+        "matches_source": true
+      },
+      {
+        "file": "deliberation.py",
+        "matches_source": true
+      },
+      {
+        "file": "demography.py",
+        "matches_source": true
+      },
+      {
+        "file": "economics.py",
+        "matches_source": true
+      },
+      {
+        "file": "engine.py",
+        "matches_source": true
+      },
+      {
+        "file": "equipment.py",
+        "matches_source": true
+      },
+      {
+        "file": "government.py",
+        "matches_source": true
+      },
+      {
+        "file": "historical_map.py",
+        "matches_source": true
+      },
+      {
+        "file": "items.py",
+        "matches_source": true
+      },
+      {
+        "file": "llm_policy.py",
+        "matches_source": true
+      },
+      {
+        "file": "local_life.py",
+        "matches_source": true
+      },
+      {
+        "file": "martial.py",
+        "matches_source": true
+      },
+      {
+        "file": "martial_catalog.py",
+        "matches_source": true
+      },
+      {
+        "file": "martial_manuals.py",
+        "matches_source": true
+      },
+      {
+        "file": "model_service.py",
+        "matches_source": true
+      },
+      {
+        "file": "npc_attention.py",
+        "matches_source": true
+      },
+      {
+        "file": "npc_memory.py",
+        "matches_source": true
+      },
+      {
+        "file": "npc_plans.py",
+        "matches_source": true
+      },
+      {
+        "file": "organizations.py",
+        "matches_source": true
+      },
+      {
+        "file": "physical_combat.py",
+        "matches_source": true
+      },
+      {
+        "file": "physical_reference.py",
+        "matches_source": true
+      },
+      {
+        "file": "player_interactions.py",
+        "matches_source": true
+      },
+      {
+        "file": "player_social.py",
+        "matches_source": true
+      },
+      {
+        "file": "politics.py",
+        "matches_source": true
+      },
+      {
+        "file": "population.py",
+        "matches_source": true
+      },
+      {
+        "file": "protagonist.py",
+        "matches_source": true
+      },
+      {
+        "file": "rank_progression.py",
+        "matches_source": true
+      },
+      {
+        "file": "relationships.py",
+        "matches_source": true
+      },
+      {
+        "file": "sect_catalog.py",
+        "matches_source": true
+      },
+      {
+        "file": "sect_migration.py",
+        "matches_source": true
+      },
+      {
+        "file": "sect_ranks.py",
+        "matches_source": true
+      },
+      {
+        "file": "server.py",
+        "matches_source": true
+      },
+      {
+        "file": "settlements.py",
+        "matches_source": true
+      },
+      {
+        "file": "social.py",
+        "matches_source": true
+      },
+      {
+        "file": "social_ranks.py",
+        "matches_source": true
+      },
+      {
+        "file": "society.py",
+        "matches_source": true
+      },
+      {
+        "file": "store.py",
+        "matches_source": true
+      },
+      {
+        "file": "territory.py",
+        "matches_source": true
+      },
+      {
+        "file": "weapons.py",
+        "matches_source": true
+      },
+      {
+        "file": "__init__.py",
+        "matches_source": true
+      }
+    ],
+    "sources_changed_after_compilation": [],
+    "assembly_sha256": "4f4981905f3b22b7827927096dd7d3e5fe9121f01ce8fad62c38dcd2e7413f4b"
+  },
+  "model_validation": "Scripted local model transport through production API and queue; not a real model quality evaluation",
+  "original_save_modified": false,
+  "native_checks": 103,
+  "passed": true,
+  "notes": [
+    "Earlier gameplay acceptance exposed test setup races and an artificial injury without a matching hit count; the harness was corrected and all 51 gameplay checks passed in native-gameplay-final. Earlier logs are retained."
+  ]
+}

@@ -56,6 +56,14 @@ public class CityAtlasSmoke : MonoBehaviour {
             Check("every facility belongs to a settlement: "+place,app.ValidateCityAtlasData(out J data),data);
             yield return Capture("atlas-"+place);
             Check("every settlement, the gate and each road out are drawn inside the sheet: "+place,app.ValidateCityAtlasHits(out J hits),hits);
+            Check("zoom preserves the pointer anchor and clamps the view: "+place,app.ValidateCityAtlasCamera(out J camera),camera);
+            foreach(float zoom in new[]{1.2f,2.5f,5f}){
+                app.SetCityAtlasCameraForSmoke(zoom);yield return new WaitForSecondsRealtime(.2f);
+                Check("rendered node hit boxes follow zoom "+zoom+": "+place,app.ValidateCityAtlasCameraHits(out J cameraHits),cameraHits);
+                if(place==places[0]&&zoom==2.5f)yield return Capture("atlas-zoomed-"+place);
+            }
+            app.SetCityAtlasCameraForSmoke(1);yield return new WaitForSecondsRealtime(.2f);
+            Check("full view restores every node: "+place,app.ValidateCityAtlasHits(out J restored),restored);
             foreach(var site in app.City["settlements"].A.Select(s=>s["id"].S).ToList()){
                 app.OpenCityScroll(site);yield return new WaitForSecondsRealtime(.3f);
                 Check("scroll lists the facilities of "+site+" at "+place,app.ValidateCityScroll(out J scroll),scroll);
@@ -74,6 +82,33 @@ public class CityAtlasSmoke : MonoBehaviour {
 public partial class JianghuApp {
     public CityMode CityModeForSmoke=>CityModeShown;
     public void SetCityModeForSmoke(CityMode mode)=>SetCityMode(mode);
+    public void SetCityAtlasCameraForSmoke(float zoom){CityAtlasFullView();CityAtlasZoomAt(zoom,CityAtlasViewport.center);if(zoom>1)cityAtlasPan=new Vector2(37,-29);}
+    public bool ValidateCityAtlasCamera(out J facts){
+        float savedZoom=cityAtlasZoom;Vector2 savedPan=cityAtlasPan;Rect sheet=CityAtlasViewport;
+        CityAtlasFullView();Vector2 anchor=sheet.center+new Vector2(90,-50);
+        CityAtlasZoomAt(2.5f,anchor);float anchorError=Vector2.Distance(CityAtlasViewPoint(sheet,anchor),anchor);
+        cityAtlasPan=new Vector2(100000,-100000);CityAtlasClampPan(sheet);
+        Vector2 bounds=sheet.size*cityAtlasZoom*.48f;
+        bool bounded=Mathf.Abs(cityAtlasPan.x)<=bounds.x+.01f&&Mathf.Abs(cityAtlasPan.y)<=bounds.y+.01f;
+        CityAtlasZoomAt(100,sheet.center);bool maximum=cityAtlasZoom==5;
+        CityAtlasZoomAt(.1f,sheet.center);bool minimum=cityAtlasZoom==1;
+        CityAtlasZoomAt(3,sheet.center);cityAtlasPan=new Vector2(30,-20);CityAtlasFullView();bool reset=cityAtlasZoom==1&&cityAtlasPan==Vector2.zero;
+        float scale=Mathf.Min(Screen.width/1680f,Screen.height/960f);var offset=new Vector2((Screen.width-1680*scale)/2,(Screen.height-960*scale)/2);
+        bool fullscreen=Vector2.Distance(sheet.min*scale+offset,Vector2.zero)<.01f&&Vector2.Distance(sheet.max*scale+offset,new Vector2(Screen.width,Screen.height))<.01f;
+        bool savedRoster=rosterOpen;CityAtlasGeometry(sheet,out var openMap,out float openUnit);rosterOpen=!rosterOpen;
+        CityAtlasGeometry(CityAtlasViewport,out var closedMap,out float closedUnit);bool stable=openMap==closedMap&&openUnit==closedUnit;rosterOpen=savedRoster;
+        cityAtlasZoom=savedZoom;cityAtlasPan=savedPan;
+        facts=J.O("anchor_error",anchorError,"bounded",bounded,"maximum_500_percent",maximum,"minimum_full_view",minimum,"reset",reset,"covers_client",fullscreen,"roster_camera_stable",stable);
+        return anchorError<.01f&&bounded&&maximum&&minimum&&reset&&fullscreen&&stable;
+    }
+    public bool ValidateCityAtlasCameraHits(out J facts){
+        Rect sheet=CityAtlasViewport;CityAtlasGeometry(sheet,out var map,out float unit);var failures=new List<J>();
+        foreach(var site in CitySettlementsList){
+            string key="s:"+site["id"].S;var tile=SiteCenter(site);var point=CityAtlasViewPoint(sheet,AtlasPoint(map,unit,tile.x,tile.y));
+            if(!cityAtlasHits.TryGetValue(key,out var hit)||!hit.Contains(point))failures.Add(new J(key));
+        }
+        facts=J.O("zoom",cityAtlasZoom,"settlements_checked",CitySettlementsList.Count,"failures",new J(failures));return failures.Count==0;
+    }
     public bool ValidateCityAtlasData(out J facts){
         var sites=new HashSet<string>(CitySettlementsList.Select(s=>s["id"].S));
         var orphans=City["nodes"].A.Where(n=>!sites.Contains(n["settlement_id"].S)).Select(n=>new J(n["id"].S)).ToList();
@@ -83,7 +118,7 @@ public partial class JianghuApp {
         return CityAtlasReady&&orphans.Count==0&&empty.Count==0;
     }
     public bool ValidateCityAtlasHits(out J facts){
-        Rect sheet=CitySheetRect;var expected=CitySettlementsList.Select(s=>"s:"+s["id"].S).Concat(new[]{"gate"}).Concat(City["connections"].A.Select(c=>"x:"+c["place"].S)).ToList();
+        Rect sheet=CityAtlasViewport;var expected=CitySettlementsList.Select(s=>"s:"+s["id"].S).Concat(new[]{"gate"}).Concat(City["connections"].A.Select(c=>"x:"+c["place"].S)).ToList();
         var missing=expected.Where(k=>!cityAtlasHits.ContainsKey(k)).Select(k=>new J(k)).ToList();
         var outside=cityAtlasHits.Where(p=>!sheet.Overlaps(p.Value)||p.Value.x<sheet.x-2||p.Value.xMax>sheet.xMax+2).Select(p=>new J(p.Key)).ToList();
         var overlapping=new List<J>();var keys=cityAtlasHits.Keys.Where(k=>k.StartsWith("x:")).ToList();

@@ -21,7 +21,7 @@ public partial class JianghuApp : MonoBehaviour {
     public J Hero=>W["hero"];
     public bool Paused=>!W["autoplay"].B && W["job"]["remaining"].I==0 && !W["battle_active"].B;
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    static void Boot(){if(FindAnyObjectByType<JianghuApp>()!=null)return;var go=new GameObject("江湖未央 · Unity");DontDestroyOnLoad(go);go.AddComponent<JianghuApp>();}
+    static void Boot(){if(GameClient.Arg("-referenceCombat").Length>0){PhysicsDuel.OpenReferenceSandbox();return;}if(FindAnyObjectByType<JianghuApp>()!=null)return;var go=new GameObject("江湖未央 · Unity");DontDestroyOnLoad(go);go.AddComponent<JianghuApp>();}
     void Awake(){Client=GetComponent<GameClient>()??gameObject.AddComponent<GameClient>();valley=Resources.Load<Texture2D>("Art/river-valley");if(GameClient.Arg("-paperDemo")=="true")OpenPaperDemo();}
     void Update(){
         if(!Client.Ready)return;
@@ -35,6 +35,8 @@ public partial class JianghuApp : MonoBehaviour {
     }
     static Texture2D Solid(Color c){var t=new Texture2D(1,1);t.SetPixel(0,0,c);t.Apply();return t;}
     public void OnGUI(){
+        // IMGUI retains the last tooltip over empty space unless this repaint clears it.
+        if(Event.current.type==EventType.Repaint){GUI.tooltip="";cityScrollPersonHint="";}
         if(PhysicsBattleVisible)return;
         paperDraws.Clear();paperDrawOrigin=Vector2.zero;
         InitSkin();GUI.skin=skin;
@@ -46,6 +48,7 @@ public partial class JianghuApp : MonoBehaviour {
             HandleUiInput();
             var e=Event.current;
             if(e.type==EventType.KeyDown&&e.keyCode==KeyCode.Escape&&HandleEscape())e.Use();
+            bool previousEnabled=GUI.enabled;GUI.enabled=previousEnabled&&!WorldTravelOpen;
             var top=TopView;
             if(top==null)DrawStage(screen);
             else switch(top.Kind){
@@ -53,9 +56,10 @@ public partial class JianghuApp : MonoBehaviour {
                 case ViewKind.Jianghu:DrawJianghuScroll();break;
                 case ViewKind.System:DrawSystemScroll();break;
                 case ViewKind.Dialogue:DrawDialogue();break;
+                case ViewKind.Interaction:DrawInteractionScreen();break;
                 case ViewKind.Battle:DrawBattleScreen();break;
             }
-            FlushPaperFigures();DrawUiOverlay();
+            FlushPaperFigures();if(TopIs(ViewKind.Interaction))DrawInteractionForeground();GUI.enabled=previousEnabled;DrawUiOverlay();DrawWorldTravel();
         }finally{RunDeferred();}
     }
     // 底层场景：天下或城中铺满全屏，四周浮着顶栏、左侧人物列表、右侧地点卡与底栏。
@@ -67,7 +71,7 @@ public partial class JianghuApp : MonoBehaviour {
         DrawTopBar();if(!city)DrawLayerRow();
         DrawRoster();
         if(city)DrawNodeCard();else DrawPlaceCard();
-        DrawDock();DrawHeroCreation();DrawAdvance();DrawInteraction();
+        DrawDock();DrawHeroCreation();DrawAdvance();
     }
     public void SelectPerson(int id){
         if(SelectedPerson!=id)Person=new J();
@@ -106,7 +110,7 @@ public partial class JianghuApp : MonoBehaviour {
             people=W["npcs"].A.Where(n=>(includeDead||n["alive"].B)&&(string.IsNullOrEmpty(query)||n["name"].S.Contains(query)||n["job"].S.Contains(query))&&(placeFilter=="全部城镇"||Place(n["place"].I)["name"].S==placeFilter)&&(countryFilter=="全部势力"||Country(Place(n["place"].I)["country"].I)["name"].S==countryFilter)&&(factionFilter=="全部门派"||(factionFilter=="非门派人士"&&n["identity"]["system"].S=="nation")||W["factions"].A.Any(f=>f["id"].I==n["faction"].I&&n["faction"].Has&&f["name"].S==factionFilter))&&(jobFilter=="百业"||n["job"].S==jobFilter)&&(gradeFilter=="全部品级"||n["identity"]["grade_label"].S==gradeFilter)&&(circuitFilter=="全部州路"||Place(n["place"].I)["region"].S==circuitFilter));
             if(rosterSort!="乡籍")people=people.OrderByDescending(n=>rosterSort=="财富"?n["wealth"].N:rosterSort=="战斗能力"?n["combat_rating"].N:rosterSort=="年岁"?n["age_months"].N:-n["identity"]["grade"].N);
         }
-        var rows=people.ToList();GUILayout.Label(rows.Count+"人  ·  点人物可交谈、赠礼或查看",small);
+        var rows=people.ToList();GUILayout.Label(rows.Count+"人  ·  点头像进入人物交互",small);
         rosterScroll=GUILayout.BeginScrollView(rosterScroll);
         if(rows.Count==0){T("没有匹配人物。",sub);if(GUILayout.Button("清除搜索与筛选",chip))ResetRosterFilters();}
         int first=Mathf.Clamp((int)(rosterScroll.y/60)-2,0,Mathf.Max(0,rows.Count-1)),last=Mathf.Min(rows.Count,first+16);
@@ -121,39 +125,6 @@ public partial class JianghuApp : MonoBehaviour {
         GUILayout.EndScrollView();GUILayout.EndArea();
     }
 
-    // ---------------------------------------------------------------- 点人：交互小菜单
-    // Clicking a person on the map, in the roster or on a place card opens this menu beside the list it came from.
-    int interactWith=-1;bool interactRight;
-    Rect InteractRect=>interactRight?new Rect(PlaceCard.x-322,PlaceCard.y,310,330):new Rect(LeftPanel.xMax+12,LeftPanel.y+40,310,330);
-    void OpenInteraction(int id,bool right=false){interactWith=id;interactRight=right;advanceOpen=false;if(SelectedPerson!=id)SelectPerson(id);}
-    void DrawInteraction(){
-        if(interactWith<0)return;
-        int id=interactWith;var n=Npc(id);
-        if(!n.Has){Later(()=>interactWith=-1);return;}
-        Rect r=InteractRect;var e=Event.current;
-        bool dismiss=e.type==EventType.MouseDown&&!r.Contains(e.mousePosition);
-        Panel(r);Fill(new Rect(r.x,r.y,3,r.height),brass);
-        Portrait(new Rect(r.x+16,r.y+16,64,80),id,n["sex"].S,n["age_months"].I,!n["alive"].B);
-        GUI.Label(new Rect(r.x+92,r.y+16,r.width-136,28),n["name"].S,sub);
-        GUI.Label(new Rect(r.x+92,r.y+44,r.width-104,22),n["age_months"].I/12+"岁 · "+n["identity"]["grade_label"].S+" · "+n["job"].S,small);
-        GUI.Label(new Rect(r.x+92,r.y+66,r.width-104,22),n["identity"]["title"].S+" · "+Place(n["place"].I)["name"].S,small);
-        if(GUI.Button(new Rect(r.xMax-40,r.y+10,30,30),"×",linkStyle))dismiss=true;
-        bool alive=n["alive"].B,loaded=Person.Has&&Person["id"].I==id;
-        Action act=null;
-        GUILayout.BeginArea(new Rect(r.x+16,r.y+108,r.width-32,r.height-120));
-        if(Btn("交谈",alive))act=()=>TalkTo(id);
-        GUILayout.BeginHorizontal();
-        if(Btn("接济 4 银",alive&&loaded))act=()=>TalkTo(id,"gift");
-        if(Btn("赠送物品",alive))act=()=>OpenOwnInventory(id);
-        GUILayout.EndHorizontal();
-        if(Btn("切磋",alive&&Paused))act=()=>Intervene("challenge");
-        if(Btn("查看人物卷"))act=()=>ViewPerson(id);
-        if(!alive)T("此人已故，只能查看生平。",small);
-        else if(!Paused)T("世界推演中，暂停后才能切磋。",small);
-        GUILayout.EndArea();
-        if(act!=null)Later(()=>{interactWith=-1;act();});
-        else if(dismiss)Later(()=>{if(interactWith==id)interactWith=-1;});
-    }
     void Intervene(string action){Client.Act("/api/intervene",J.O("action",action,"npc_id",SelectedPerson,"text",talk),j=>{if(action=="challenge"){Martial=j;OpenBattle();}else{Client.Status=j["reply"].S;dialogueText=j["reply"].S;if(action=="talk")talk="";SelectPerson(SelectedPerson);}});}
     // 年谱条目一律在江湖卷·年谱中展开。
     public void OpenEvent(int id){

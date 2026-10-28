@@ -1,0 +1,59 @@
+{
+  "build": "unity/Build/LimbCombatStable/江湖未央.exe",
+  "previous_active_build": "CharactersSharp",
+  "active_build": "LimbCombatStable",
+  "assembly_sha256": "ea2ac7ddb528cc1beb039da7d04edf38683bf710de25427a3c8eb624d4781cf5",
+  "apk_evidence": "output/limb-support-20261028/apk-evidence.json",
+  "phases": [
+    {
+      "phase": "injury",
+      "passed": true,
+      "checks": 73
+    },
+    {
+      "phase": "injury-resume",
+      "passed": true,
+      "checks": 9
+    },
+    {
+      "phase": "reference-mechanics",
+      "passed": true,
+      "checks": 49
+    },
+    {
+      "phase": "resume",
+      "passed": true,
+      "checks": 21
+    },
+    {
+      "phase": "reference",
+      "passed": true,
+      "checks": 46
+    }
+  ],
+  "native_checks": 198,
+  "native_passed": true,
+  "unit_tests": {
+    "count": 35,
+    "passed": true,
+    "modules": [
+      "test_physical_reference",
+      "test_physical_combat",
+      "test_lace_puppet",
+      "test_appearance"
+    ]
+  },
+  "injury_cases": 11,
+  "min_grounded_ticks_last_60": 60,
+  "max_joint_gap_m": 0.002467515,
+  "max_active_joint_limit_error_degrees": 2.562332,
+  "raw_solver_spin_peak_degrees_per_second": 12061.01,
+  "velocity_corrections": 89,
+  "shipped_spin_limit_degrees_per_second": 5729.5779513082325,
+  "real_user_save_modified": false,
+  "evidence_directory": "output/limb-support-20261028/stable-native",
+  "limits": [
+    "Scripted injury fixtures test physical response, not source-game damage equivalence.",
+    "APK review was static; identical original-game runtime trajectories remain unverified."
+  ]
+}

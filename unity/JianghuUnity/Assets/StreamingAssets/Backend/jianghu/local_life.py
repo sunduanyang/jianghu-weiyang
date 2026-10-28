@@ -14,8 +14,8 @@ from . import city_maps
 VERSION = 1
 PEER_ACTIONS = {'befriend', 'court', 'propose', 'aid', 'trade', 'betray', 'duel',
                 'mentor', 'teach', 'treatment', 'care', 'neighbor_care',
-                'reconcile', 'swear', 'rumor', 'learn_trade'}
-SCHEDULED = {'befriend', 'court', 'propose', 'mentor', 'teach', 'treatment', 'rumor', 'care'}
+                'reconcile', 'swear', 'rumor', 'learn_trade', 'seek_teacher'}
+SCHEDULED = {'befriend', 'court', 'propose', 'mentor', 'teach', 'treatment', 'rumor', 'care', 'seek_teacher'}
 ROLES = {'city': '交易与公共服务', 'town': '加工与乡里集散',
          'village': '农事与原料供给', 'sect': '门中起居与传艺'}
 

@@ -6,6 +6,11 @@ from . import social_ranks,sect_ranks
 CONTACT_KINDS=('player_talk','player_gift','player_visit','player_duel','spar_start','item_gift','player_social_request')
 LABELS={'player_talk':'交谈','player_gift':'赠银','player_visit':'拜访','player_duel':'切磋',
         'spar_start':'约定切磋','item_gift':'赠物','player_social_request':'当面商谈'}
+LABELS.update(player_praise='夸奖',player_insult='羞辱',player_confide='知交',player_marry='结亲',
+              player_swear='结义',player_steal='行窃败露',player_rob='抢夺',player_assault='袭击',
+              player_trade='交易',manual_teaching='请教',player_spar='约定切磋',
+              player_rob_result='抢夺交手结果',player_assault_result='袭击交手结果')
+CONTACT_KINDS=tuple(LABELS)
 
 
 def targets(event):
@@ -13,6 +18,7 @@ def targets(event):
     if event['kind']=='item_gift':
         facts=event.get('facts',{})
         return [facts['recipient']] if facts.get('owner')=='player' and facts.get('recipient') is not None else []
+    if event['kind']=='manual_teaching' and event.get('facts',{}).get('pupil')!='player':return []
     return event['people']
 
 
@@ -122,8 +128,9 @@ def player_memories(w,n,limit=3):
 
 
 def player_view(w,n):
+    from . import player_social
     row=contact(w,n)
     if not row:return None
     return dict(last_month=row['last_month'],last_event=row['last_event'],interactions=row['count'],
-                relationship=deepcopy(w.player.get('ties',{}).get(str(n['id']),{})),
+                relationship=player_social.visible_tie(w,n['id']),
                 memories=player_memories(w,n),basis='本人亲历的玩家往来；玩家发言保留为意见，未作为事实兑现。')

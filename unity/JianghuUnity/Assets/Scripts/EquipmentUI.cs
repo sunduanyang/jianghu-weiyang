@@ -68,7 +68,7 @@ public partial class JianghuApp {
         }
         if(candidates.Count==0)T("行囊中暂无此类装备，可前往货栈购置。",small);
         GUILayout.EndScrollView();
-        if(Btn("前往货栈")){string category=equipmentSlot=="weapon"?"武器":equipmentSlot=="shield"?"盾牌":"护甲";Later(()=>{OpenMarket("货栈");itemCategory=category;selectedItem="";itemQuery="";itemGrade=0;});}
+        if(Btn("前往货栈")){string category=equipmentSlot=="weapon"?"武器":equipmentSlot=="shield"?"盾牌":"护甲";Later(()=>{OpenMarket("货栈");itemCategory=category;selectedItem="";itemQuery="";});}
         GUILayout.EndVertical();GUILayout.Space(10);
 
         GUILayout.BeginVertical(GUILayout.Width(468));

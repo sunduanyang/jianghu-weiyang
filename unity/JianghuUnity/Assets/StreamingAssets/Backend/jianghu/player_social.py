@@ -64,6 +64,13 @@ def tie(w, npc_id):
     return w.player['ties'].get(str(npc_id), dict(affinity=0., trust=0.))
 
 
+def visible_tie(w, npc_id):
+    # Player bookkeeping includes undetected theft; it is not the NPC's knowledge.
+    return {key: deepcopy(value) for key, value in tie(w, npc_id).items()
+            if key not in ('encounter_months', 'encounter_records', 'social_slot_month',
+                           'chat_changed_month', 'reconcile_month', 'aid_given_month', 'aid_received_month')}
+
+
 def free_week(w, n):
     if n['time_left'] < 1:
         return None
@@ -84,8 +91,6 @@ def blocker(w, n):
         return '请先前往对方所在地区'
     if h['points'] < 1:
         return '本月行动力不足'
-    if tie(w, n['id']).get('social_slot_month') != w.month and free_week(w, n) is None:
-        return '对方本月暂无空闲，稍后再访'
     return ''
 
 
@@ -106,15 +111,14 @@ def choices(w, n, action):
     r = tie(w, n['id'])
     adult = min(n['age_months'], w.player['protagonist']['age_months']) >= 192
     if action == 'talk':
-        changed = r.get('chat_changed_month') == w.month
         rows = [dict(id='chat', label='平常交谈', effect='交谈一次，关系保持'),
-                dict(id='warm', label='愿意亲近', effect='友善回应，关系保持' if changed else '友善回应，情分增加2、信任增加1'),
-                dict(id='guarded', label='保持距离', effect='谨慎回应，关系保持' if changed else '保持距离，情分减少2、信任减少1')]
+                dict(id='warm', label='愿意亲近', effect='友善回应，情分增加2、信任增加1'),
+                dict(id='guarded', label='保持距离', effect='保持距离，情分减少2、信任减少1')]
         if adult and n['wealth'] < 12:
             rows.append(dict(id='seek_help', label='主动请求接济', effect='对方向你请求接济4银，尚未交付'))
     elif action == 'ask_aid':
         reserve = aid_reserve(w,n)
-        if adult and n['wealth'] >= reserve + 4 and r.get('aid_given_month') != w.month:
+        if adult and n['wealth'] >= reserve + 4:
             rows.append(dict(id='give_aid', label='援助盘缠', effect='对方援助你4银，记下一次人情'))
     elif action == 'introduce' and adult:
         given = {(i['by'], i['target']) for i in state(w)['introductions']}
@@ -122,14 +126,14 @@ def choices(w, n, action):
             if (n['id'], person['id']) not in given:
                 rows.append(dict(id='introduce:' + str(person['id']), label='引荐' + person['name'],
                                  effect='交付此人的引荐凭据与最近所知去向；不代表对方已经答应帮助', person=person))
-    elif action == 'swear' and adult and not r.get('sworn'):
+    elif action == 'swear' and adult and not r.get('sworn') and not r.get('married'):
         contacts = npc_attention.contact(w, n) or {}
         if r.get('affinity', 0) >= 50 and r.get('trust', 0) >= 30 and contacts.get('count', 0) >= 3:
             rows.append(dict(id='swear', label='自愿结义', effect='你与对方正式结为义亲'))
     elif action == 'reconcile' and adult and w.player['wealth'] >= 2:
-        if -70 < r.get('affinity', 0) < 5 and r.get('trust', 0) > -70 and r.get('reconcile_month') != w.month:
+        if -70 < r.get('affinity', 0) < 5 and r.get('trust', 0) > -70:
             rows.append(dict(id='reconcile', label='收礼缓和', effect='你以2银赔礼，情分增加8、信任增加4，旧事保留'))
-    elif action == 'help' and adult and w.player['wealth'] >= 4 and r.get('aid_received_month') != w.month:
+    elif action == 'help' and adult and w.player['wealth'] >= 4:
         rows.append(dict(id='receive_aid', label='接受接济', effect='你接济对方4银，可回报此前援助'))
     return rows
 
@@ -143,7 +147,7 @@ def fingerprint(w, n):
     h = w.player['protagonist']
     return dict(month=w.month, phase=w.phase,
                 npc={k: deepcopy(n[k]) for k in ('alive', 'place', 'job', 'faction', 'office', 'wealth',
-                                                'health', 'illness', 'time_left', 'last_event', 'children', 'traits', 'mood', 'goal')},
+                                                'health', 'illness', 'last_event', 'children', 'traits', 'mood', 'goal')},
                 hero={k: h[k] for k in ('place', 'points', 'revision')},
                 player_wealth=w.player['wealth'], relation=deepcopy(tie(w, n['id'])))
 
@@ -163,12 +167,9 @@ def view(w, npc_id):
         r['can_persuade'] = can_persuade(w, r) and not reason
         r['can_retry_options'] = (eligible_refusal(w,r) and r.get('persuasion_status')=='failed'
                                   and r.get('options_attempts',0)<3 and not reason)
-    refused={r['action'] for r in s['requests'] if r['npc_id']==npc_id and r['month']==w.month
-             and r.get('input_mode')=='preset' and r.get('choice_id')=='refuse'}
     options=[]
     for key,label in ACTIONS.items():
-        why=reason or ('本月已被拒绝，请从该次答复选择说服方式' if key!='talk' and key in refused else '')
-        options.append(dict(id=key,label=label,enabled=not why,reason=why))
+        options.append(dict(id=key,label=label,enabled=not reason,reason=reason))
     return dict(revision=s['revision'], pending=bool(pending), reason=reason, requests=requests,
                 options=options,
                 favors=[deepcopy(f) for f in s['favors'] if f['npc_id'] == npc_id][-12:],
@@ -213,10 +214,6 @@ def _start(w, npc_id, action, text, revision, parent=None, option=None):
         raise ValueError(reason)
     if any(is_pending(r) for r in state(w)['requests']):
         raise ValueError('请先等候当前回应')
-    if parent is None and action!='talk' and any(r['npc_id']==npc_id and r['action']==action
-            and r['month']==w.month and r.get('input_mode')=='preset' and r.get('choice_id')=='refuse'
-            for r in state(w)['requests']):
-        raise ValueError('本月此请求已被拒绝，请从该次答复选择说服方式，或下月再议')
     s = state(w, True)
     event = w.emit('player_social_request', [npc_id],
                    f"{w.player['name']}向{n['name']}{ACTIONS[action]}：「{text}」", .5,
@@ -241,7 +238,7 @@ def _start(w, npc_id, action, text, revision, parent=None, option=None):
     ctx = dict(npc_id=npc_id, month=w.month, _interaction=True, _request_id=row['id'],
                self={k: deepcopy(n[k]) for k in ('name', 'sex', 'age_months', 'job', 'traits', 'mood', 'wealth',
                                                 'health', 'illness', 'office', 'goal')},
-               identity=careers.identity(w, n), relationship=deepcopy(tie(w, npc_id)),
+               identity=careers.identity(w, n), relationship=visible_tie(w, npc_id),
                player=dict(name=w.player['name'], utterance=text,
                            age_months=w.player['protagonist']['age_months'], sex=w.player['protagonist']['sex'],
                            visible_identity=social_ranks.player_identity(w)),
@@ -456,15 +453,8 @@ def apply(w, ctx, result):
     h = w.player['protagonist']
     h['points'] -= 1
     h['revision'] += 1
-    if r.get('social_slot_month') != w.month:
-        week = free_week(w, n)
-        n['time_left'] -= 1
-        n['monthly_actions'].append(dict(id='player_social:self', kind='player_social', label='与玩家面谈',
-                                         target=None, month=w.month, week=week, time_cost=1,
-                                         event_id=row['event_id'], source='玩家邀约', role='当面交谈'))
-        r['social_slot_month'] = w.month
     facts = dict(request_id=row['id'], action=row['action'], choice_id=selected, source='LLM',
-                 player_points=1, npc_slot_month=w.month)
+                 player_points=1, npc_time_cost=0)
     outcome = choice['effect']
     new_favor = None
     if selected in ('give_aid', 'receive_aid', 'reconcile'):
@@ -476,9 +466,7 @@ def apply(w, ctx, result):
         if selected == 'reconcile':
             r['affinity'] = min(100., r['affinity'] + 8)
             r['trust'] = min(100., r['trust'] + 4)
-            r['reconcile_month'] = w.month
         else:
-            r['aid_given_month' if to_player else 'aid_received_month'] = w.month
             r['affinity'] = min(100., r['affinity'] + 3)
             r['trust'] = min(100., r['trust'] + 2)
             owed_by = 'player' if to_player else n['id']
@@ -499,11 +487,10 @@ def apply(w, ctx, result):
         outcome = f"已获{person['name']}的引荐凭据，最近所知在{person['place_name']}；对方是否相助需另行商谈"
     elif selected == 'seek_help':
         r['help_requested_month'] = w.month
-    elif selected in ('warm', 'guarded') and r.get('chat_changed_month') != w.month:
+    elif selected in ('warm', 'guarded'):
         sign = 1 if selected == 'warm' else -1
         r['affinity'] = max(-100., min(100., r['affinity'] + sign * 2))
         r['trust'] = max(-100., min(100., r['trust'] + sign))
-        r['chat_changed_month'] = w.month
     event = w.emit('player_social_result', [n['id']],
                    f"{n['name']}回应{w.player['name']}：{choice['label']}。{outcome}。", .6,
                    [row['event_id']] + result['memory_ids'], facts)

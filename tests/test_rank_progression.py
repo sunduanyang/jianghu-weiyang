@@ -26,9 +26,8 @@ class RankProgressionTests(unittest.TestCase):
     def tick(self,n=None,service=False):
         w=self.w;w.month+=1
         if service:
-            social.reset_month(w,n);w.phase=1
-            event=w.execute(n,dict(id=f'faction_task:{n["faction"]}'))
-            self.assertIsNotNone(event);w.phase=0
+            # Historical service remains evidence after paid duties are removed.
+            r.mark(r.prepare(w, n['id']), 'service', w.month)
         r.monthly(w)
 
     def test_migration_registers_existing_standings_without_rewriting_assets_or_rng(self):

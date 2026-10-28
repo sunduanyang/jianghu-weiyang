@@ -4,7 +4,7 @@ import json
 import math
 from pathlib import Path
 import random
-from . import martial, combat_attributes, weapons
+from . import martial, combat_attributes, weapons, physical_reference
 
 RULESET, ENGINE, MAX_SECONDS = 4, 'unity-physics2d-v09', 180
 PROFILES = weapons.PROFILES
@@ -27,7 +27,7 @@ def equipment(w, owner):
     return {**gear, 'weapon_profile':profile, 'weapon_name':spec['name'] if spec else '徒手',
             'weapon_item':item_id if spec else None, 'weapon':weapon, 'shield':has_shield}
 
-def fighter(actor, key, gear=None):
+def fighter(actor, key, gear=None, *, fresh=False):
     gear = gear or {}
     profile = gear.get('weapon_profile', 'unarmed')
     weapon = {**gear.get('weapon', PROFILES[profile]), 'id':profile,
@@ -35,10 +35,10 @@ def fighter(actor, key, gear=None):
     hero = actor.get('protagonist', {})
     abilities = combat_attributes.view(actor, gear)
     params = abilities['parameters']
-    vigor = round(params['max_health'] * max(.25, actor['health']/100), 4)
+    vigor = round(params['max_health'] * (1 if fresh else max(.25, actor['health']/100)), 4)
     return {'id':key, 'name':str(hero.get('name') or actor.get('name') or '无名客'),
             'vigor':vigor, 'vigor_max':vigor,
-            'stamina':params['stamina_max']*min(100.,actor['martial']['stamina'])/100,
+            'stamina':params['stamina_max']*(1 if fresh else min(100.,actor['martial']['stamina'])/100),
             'stamina_max':params['stamina_max'], 'balance_max':params['balance_max'],
             'attribute_version':combat_attributes.VERSION, 'combat_ratings':abilities['ratings'],
             'tuning_version':combat_attributes.TUNING['version'], 'weapon_version':weapons.VERSION,
@@ -51,8 +51,11 @@ def fighter(actor, key, gear=None):
 
 def start(a,b,seed,battle_id='',spar=True,equipment=None):
     gears = equipment or (None,None)
+    fighters = [fighter(a,a.get('id','player'),gears[0],fresh=spar),fighter(b,b['id'],gears[1],fresh=spar)]
+    for f in fighters:
+        f['physics_profile'] = physical_reference.PROFILE
     return dict(id=battle_id,seed=seed,ruleset=RULESET,engine=ENGINE,revision=1,status='active',spar=spar,
-        fighters=[fighter(a,a.get('id','player'),gears[0]),fighter(b,b['id'],gears[1])],elapsed=0.,frame=None,
+        fighters=fighters,elapsed=0.,frame=None,resource_policy='per-bout-v1' if spar else 'world',
         log=[],summary=[{},{}],winner=None,reason='',settled=False,simulation='unity',hits=0,clashes=0)
 
 def upgrade_tuning(w):
@@ -67,7 +70,7 @@ def upgrade_tuning(w):
             continue
         owner = 'player' if side == 0 else old['id']
         actor = w.player if side == 0 else w.npcs[owner]
-        current = fighter(actor, old['id'], equipment(w, owner))
+        current = fighter(actor, old['id'], equipment(w, owner),fresh=b.get('spar',True))
         health_ratio = current['vigor_max']/max(.001, old['vigor_max'])
         stamina_ratio = current['stamina_max']/max(.001, old.get('stamina_max',100.))
         balance_ratio = current['balance_max']/max(.001, old.get('balance_max',100.))
@@ -98,9 +101,9 @@ def number(value,lo,hi,label):
         raise ValueError('物理战局数据不合法：'+label)
     return float(value)
 
-def fields(packet,spec):
+def fields(packet,spec,context=''):
     if not isinstance(packet,dict):raise ValueError('物理状态格式不合法')
-    return {k:number(packet.get(k),lo,hi,k) for k,lo,hi in spec}
+    return {k:number(packet.get(k),lo,hi,context+'.'+k if context else k) for k,lo,hi in spec}
 
 def validate_frame(battle,frame):
     if not isinstance(frame,dict) or frame.get('engine')!=ENGINE or frame.get('version')!=1:
@@ -110,7 +113,8 @@ def validate_frame(battle,frame):
         clashes=int(number(frame.get('clashes'),battle['clashes'],1000000,'clashes')),fighters=[])
     packets=frame.get('fighters')
     if not isinstance(packets,list) or len(packets)!=2:raise ValueError('缺少双方物理状态')
-    for old,p in zip(battle['fighters'],packets):
+    for fighter_index,(old,p) in enumerate(zip(battle['fighters'],packets)):
+        reference = old.get('physics_profile') == physical_reference.PROFILE
         clean=fields(p,[('health',0,old['vigor']+.001),('stamina',0,old.get('stamina_max',100)),('balance',0,old.get('balance_max',100)),('strength',0,1.2),
             ('heat',0,1),('motion_spent',old['motion_spent'],100000),('attack_count',old['attack_count'],10000),('landed_hits',old['hits'],10000)])
         for key, hi in [('stun_left',10),('injury_left',10),('guard_break_left',10),('regen_left',10),('motion_exhausted',1),('swing_seconds',MAX_SECONDS+5)]:
@@ -121,15 +125,25 @@ def validate_frame(battle,frame):
         keys=[x.get('key') for x in bodies if isinstance(x,dict)]
         expected=BODY_KEYS-({'shield'} if old['weapon']['support_grip'] else set())
         if len(keys)!=len(set(keys)) or set(keys)!=expected:raise ValueError('骨架部件不匹配')
-        clean['bodies']=[dict(key=x['key'],**fields(x,[('x',-20,20),('y',-10,20),('angle',-1000000,1000000),
-            ('vx',-100,100),('vy',-100,100),('spin',-2000,2000)])) for x in bodies]
+        body_spec=physical_reference.BODY_FIELDS if reference else [
+            ('x',-20,20),('y',-10,20),('angle',-1000000,1000000),
+            ('vx',-100,100),('vy',-100,100),('spin',-2000,2000)]
+        clean['bodies']=[dict(key=x['key'],**fields(x,body_spec,
+            f'fighters[{fighter_index}].bodies.'+x['key'])) for x in bodies]
         feet=p.get('feet')
         if not isinstance(feet,dict) or set(feet)!={'Near','Far'}:raise ValueError('落脚状态缺失')
         clean['feet']={}
         for side,f in feet.items():
             if f.get('state') not in (0,1,2):raise ValueError('落脚阶段不合法')
-            clean['feet'][side]=dict(state=f['state'],**fields(f,[('phase',0,1),('anchor_x',-20,20),('anchor_y',-10,20),
-                ('from_x',-20,20),('from_y',-10,20),('target_x',-20,20),('target_y',-10,20)]))
+            x_limit=physical_reference.MAX_POSITION if reference else 20
+            y_low=-physical_reference.MAX_POSITION if reference else -10
+            y_high=physical_reference.MAX_POSITION if reference else 20
+            clean['feet'][side]=dict(state=f['state'],**fields(f,[('phase',0,1),('anchor_x',-x_limit,x_limit),('anchor_y',y_low,y_high),
+                ('from_x',-x_limit,x_limit),('from_y',y_low,y_high),('target_x',-x_limit,x_limit),('target_y',y_low,y_high)],
+                f'fighters[{fighter_index}].feet.'+side))
+        if reference:
+            previous = ((battle.get('frame') or {}).get('fighters') or [{}, {}])[fighter_index].get('reference', {})
+            clean['reference'] = physical_reference.validate(p.get('reference'), old, previous, number, fields)
         result['fighters'].append(clean)
     if result['hits']!=sum(int(f['landed_hits']) for f in result['fighters']):raise ValueError('命中计数不一致')
     for i in (0,1):

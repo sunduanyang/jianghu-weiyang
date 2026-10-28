@@ -66,7 +66,7 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
         StaticBox("地面",new Vector2(0,-.3f),new Vector2(22,.6f));
         StaticBox("左界",new Vector2(-6.15f,3),new Vector2(.3f,8));
         StaticBox("右界",new Vector2(6.15f,3),new Vector2(.3f,8));
-        smoke=GameClient.Arg("-physicalCombatSmoke").Length>0;
+        smoke=GameClient.Arg("-physicalCombatSmoke").Length>0||GameClient.Arg("-interactionGameplaySmoke").Length>0;
         ResetRound();
         if(Campaign){
             started=true;paused=true;
@@ -86,6 +86,8 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
     static PhysicsMaterial2D Material(string name,float friction,float bounce)=>new PhysicsMaterial2D(name){friction=friction,bounciness=bounce};
     void StaticBox(string name,Vector2 p,Vector2 size) { var go=new GameObject(name);go.transform.SetParent(transform);go.layer=8;go.transform.position=p;go.AddComponent<BoxCollider2D>().size=size; }
     internal void ResetRound() {
+        ConfigureReferencePhysics();
+        hits=blocks=headHits=0;strongestImpact=0;
         controls.ReleaseAll();
         if(player!=null){player.root.SetActive(false);Destroy(player.root);}
         if(enemy!=null){enemy.root.SetActive(false);Destroy(enemy.root);}
@@ -102,12 +104,12 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
         enemy = new Fighter(this,catalog,Campaign?campaign.enemySkin:"f-youth-farmer",opening,-1,false,enemySpec,Campaign?campaign.battle["fighters"][1]:null);
         finished=false; result=""; elapsed=0; sparks.Clear();floating.Clear();
         Time.timeScale=1; paused=false; help=false; hurtFlash=0;
-        notice="左键主手，右键副手；两键同按同时控制，松开保持 / 续势，中键收住。"; noticeUntil=7;
+        notice=ReferenceCombat?"按住鼠标拖动双手；挥动速度决定命中，松开回收手臂。":"左键主手，右键副手；两键同按同时控制，松开保持 / 续势，中键收住。"; noticeUntil=7;
     }
     void Begin(bool practice) { training=practice; started=true; help=false; round=1;wins=losses=0;ResetRound(); }
     void Update() {
         if(CampaignHidden)return;
-        if(!smoke) {
+        if(!smoke&&!ModularTrial) {
             if(!Campaign&&Input.GetKeyDown(KeyCode.Return)){if(armory)ApplyArmory();else if(!started)Begin(false);}
             if(Input.GetKeyDown(KeyCode.Escape)){if(armory)CloseArmory();else if(started)paused=!paused;}
             if(!Campaign&&Input.GetKeyDown(KeyCode.W)){if(armory)CloseArmory();else OpenArmory();}
@@ -137,19 +139,26 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
     void LateUpdate(){FinishCampaignTimeout();}
     void FixedUpdate() {
         if(player==null||CampaignHidden||paused||help||armory) return;
-        Clock+=Time.fixedDeltaTime;
-        ResolveContacts();
-        physicsStep++;
         if(fixtureMode)return;
-        player.Step(started&&!finished,enemy);
-        enemy.Step(started&&!finished,player);
-        combatPhysics.Simulate(Time.fixedDeltaTime);
+        SimulateFighters();
+    }
+    void SimulateFighters(){
+        int steps=ReferenceCombat?referenceSteps:1;
+        float dt=Time.fixedDeltaTime/steps;
+        for(referenceSubstep=0;referenceSubstep<steps;referenceSubstep++){
+            Clock+=dt;ResolveContacts();physicsStep++;
+            player.Step(started&&!finished,enemy);
+            enemy.Step(started&&!finished,player);
+            combatPhysics.Simulate(dt);
+            if(ReferenceCombat){player.FinishReferencePhysics();enemy.FinishReferencePhysics();}
+        }
     }
     void OnApplicationFocus(bool focus) {if(CampaignHidden)return;if(!smoke&&!focus&&player!=null){controls.ReleaseAll(true);player.ClearMouseCapture();if(started)paused=true;if(Campaign)campaign.command?.Invoke("checkpoint");} }
     public bool Live => started&&!paused&&!help&&!finished&&!armory;
     public bool IsSmoke => smoke;
 
     public void Contact(DuelContact weapon,DuelContact other,Collision2D collision) {
+        if(ReferenceCombat){ReferenceContact(weapon,other,collision);return;}
         if(!Live||weapon.owner==other.owner||weapon.kind!="sword"||collision.contactCount==0)return;
         weapon.owner.RecordWeaponResistance(weapon.limb);
         bool guardContact=other.kind=="shield"||other.kind=="sword"||other.kind=="hilt";
@@ -229,6 +238,7 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
     bool Button(Rect r,string value,bool primary=false) {bool hover=r.Contains(Event.current.mousePosition);Fill(r,primary?(hover?new Color(.28f,.43f,.37f):jade):new Color(.19f,.27f,.24f,hover?.16f:.08f));button.normal.textColor=primary?new Color(.97f,.93f,.82f):ink;return GUI.Button(r,value,button);}
     void OnGUI() {
         if(CampaignHidden)return;
+        if(ModularTrial&&ModularPuppetControl.Instance!=null){ModularPuppetControl.Instance.DrawWorkshop();return;}
         if(text==null){text=new GUIStyle(GUI.skin.label){font=font,wordWrap=true};button=new GUIStyle(GUI.skin.button){font=font,fontSize=23,normal={background=null},hover={background=null},active={background=null},focused={background=null}};}
         float s=Mathf.Min(Screen.width/1600f,Screen.height/950f);GUI.matrix=Matrix4x4.TRS(new Vector3((Screen.width-1600*s)/2,(Screen.height-950*s)/2),Quaternion.identity,new Vector3(s,s,1));
         GUI.DrawTexture(new Rect(0,0,1600,950),background);
@@ -248,6 +258,7 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
         else if(paused)DrawPause();
         else if(help)DrawHelp();
         else if(finished&&Clock-resultAt>1.3f)DrawResult();
+        if(LaceTrial&&PuppetTrialControl.Instance!=null)PuppetTrialControl.Instance.DrawOverlay();
         GUI.matrix=Matrix4x4.identity;
     }
     void DrawScenery() {
@@ -305,6 +316,10 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
     }
     void DrawHelp() {
         Panel(new Rect(400,230,800,480));Label(new Rect(445,258,710,55),"交 手 要 诀",38,ink,TextAnchor.MiddleCenter);
+        if(ReferenceCombat){
+            Label(new Rect(450,335,700,245),"按住左键拖动主手，按住右键拖动副手；松开手臂回收。\n触屏左右区域各控制一只手，双击该侧并按住移步。\nA / D 移步 · S 沉身 · Space 踢击 · Esc 暂歇\n挥动兵器形成速度，再利用真实碰撞击中对手。\n盾牌和兵器靠接触挡击；身体暴露的部位仍可被击中。\n连续小圈急挥更耗气，力竭会倒地三秒再尝试起身。\n四肢分别受伤，断手会失去握持；V 查看碰撞框。",20,ink);
+            if(Button(new Rect(570,620,460,52),"明白了 · 返回擂台",true))help=false;return;
+        }
         Label(new Rect(450,335,700,245),"左键主手、右键副手；两键同按，鼠标同时驱动两手。\n切换不跳姿，松开的一手保留目标；无需拖两个摇杆。\n松开后直刺向外续伸、到最远挺住；转圈劈砍带阻力续转。\n中键收住双手续势；静态姿态保持，挥动与顶压仍耗气。\n双手兵器受固定握距约束；无盾副手可独立出拳。\nA/D 移步 · Space 进身 · J 单次变招 · L 刺 · K 守\n触屏保留双手轮盘 · S 沉身 · Esc 暂歇、保存或收招。",20,ink);
         if(Button(new Rect(570,620,460,52),"明白了 · 返回擂台",true))help=false;
     }
@@ -336,13 +351,13 @@ public sealed class DuelContact : MonoBehaviour {
     [NonSerialized] public PhysicsDuel.Limb limb;
     public string kind;
     void OnCollisionEnter2D(Collision2D collision) {Deliver(collision);}
-    void OnCollisionStay2D(Collision2D collision) {Deliver(collision);}
+    void OnCollisionStay2D(Collision2D collision) {if(owner!=null&&!owner.Reference)Deliver(collision);}
     void Deliver(Collision2D collision) {
         var own=collision.otherCollider.GetComponent<DuelContact>();if(own==null)return;
         if(own.kind=="foot"&&collision.collider.gameObject.layer==8) {
             for(int i=0;i<collision.contactCount;i++)if(collision.GetContact(i).normal.y>.5f)own.limb.lastGroundContact=PhysicsDuel.Instance.Clock;
         }
-        if(own.kind!="sword")return;
+        if(own.kind!="sword"&&!(own.owner!=null&&own.owner.Reference&&own.kind=="shield"))return;
         var other=collision.collider.GetComponent<DuelContact>();if(other!=null)PhysicsDuel.Instance.Contact(own,other,collision);
     }
 }

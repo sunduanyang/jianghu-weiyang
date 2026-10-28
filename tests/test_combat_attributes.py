@@ -103,7 +103,8 @@ class CombatAttributesTests(unittest.TestCase):
             self.assertFalse({'train','mentor','teach','faction_study','faction_guide','read_item'} & {a['kind'] for a in w.legal_actions(n)})
         for _ in range(3):w.month_step()
         self.assertTrue(all('skill' not in a and not a['martial']['arts'] for a in [w.player,*w.npcs.values()]))
-        self.assertFalse(any(v['category']=='manual' for v in items.CATALOG.values()))
+        self.assertTrue(all(v.get('art') for v in items.CATALOG.values() if v['category']=='manual'))
+        self.assertFalse(items.RETIRED_MANUALS & items.CATALOG.keys())
 
     def test_independent_abilities_persist_across_database_restart(self):
         with tempfile.TemporaryDirectory() as folder:

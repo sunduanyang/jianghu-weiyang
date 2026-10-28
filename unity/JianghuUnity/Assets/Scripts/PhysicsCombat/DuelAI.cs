@@ -1,4 +1,5 @@
 using System;
+using Jianghu;
 using UnityEngine;
 
 public sealed partial class PhysicsDuel {
@@ -9,9 +10,13 @@ public sealed partial class PhysicsDuel {
         System.Random aiRandom;
         AIPhase aiPhase;
         float aiDecisionAt,aiPhaseAt,aiUntil,aiArc,aiSign,aiAimBias;
+        DuelSourceMotion.Motion aiSourceAttack;
+        float aiSourceAt,aiSourceStart;
+        int aiSourceAggression;
+        Vector2 aiSourceParentNear,aiSourceParentFar;
         public int aiDecisions,aiAttacks,aiRetargets;
         public string aiTargetZone="body";
-        public string AIState=>aiPhase.ToString();
+        public string AIState=>Reference&&sourceAIInitialized?SourceAIState.ToString():aiPhase.ToString();
         float AIRandom(float low,float high)=>Mathf.Lerp(low,high,(float)aiRandom.NextDouble());
         Vector2 AIDirection(float localDegrees){float a=localDegrees*Mathf.Deg2Rad;return new Vector2(facing*Mathf.Cos(a),Mathf.Sin(a));}
         void AITransition(AIPhase phase,float duration){aiPhase=phase;aiPhaseAt=game.Clock;aiUntil=game.Clock+duration;}
@@ -20,6 +25,9 @@ public sealed partial class PhysicsDuel {
             int seed=game.Campaign?game.campaign.battle["seed"].I:42;
             foreach(char c in weapon.id)seed=unchecked(seed*31+c);
             aiRandom=new System.Random(seed^(human?7919:104729));
+            if(Reference){aiSourceAggression=1;InitializeSourceAI();return;}
+            // CharacterEnemyAI.cik truncates a float Range(1,5).
+            aiSourceAggression=Mathf.Clamp((int)AIRandom(1,5),1,5);
             aiDecisionAt=game.Clock+AIRandom(.08f,.22f);AITransition(AIPhase.Guard,.15f);
         }
         Vector2 ObserveOpening(Fighter target){
@@ -53,6 +61,7 @@ public sealed partial class PhysicsDuel {
         public void ReadAI(Fighter target,bool passive){
             if(testOverride)return;
             InitializeAI();aiDriving=true;swordControl=false;
+            if(Reference){ReadSourceAI(target,passive);return;}
             float dx=target.Hip.x-Hip.x,dist=Mathf.Abs(dx);
             float preferred=weapon.id=="spear"?2.35f:weapon.distance*.88f;
             bool danger=target.IsAttacking&&dist<target.weapon.distance+.55f;
@@ -75,13 +84,22 @@ public sealed partial class PhysicsDuel {
                     aiThrust=weapon.id=="spear"||aiRandom.NextDouble()<.28;
                     aiOffAttack=!HasShield&&!weapon.TwoHanded&&aiRandom.NextDouble()<.3;
                     aiArc=AIRandom(65,100);aiSign=aiRandom.NextDouble()<.5?1:-1;
-                    AITransition(AIPhase.Windup,AIRandom(.13f,.29f)/weapon.handling);
+                    if(Reference)BeginSourceAttack(target);
+                    else AITransition(AIPhase.Windup,AIRandom(.13f,.29f)/weapon.handling);
                 }
             }
             if(aiPhase==AIPhase.Windup&&game.Clock>=aiUntil){AITransition(AIPhase.Strike,AIRandom(.17f,.29f)/weapon.handling);aiAttacks++;}
             else if(aiPhase==AIPhase.Strike&&game.Clock>=aiUntil)AITransition(AIPhase.Recover,AIRandom(.22f,.5f)/weapon.handling);
             else if(aiPhase==AIPhase.Recover&&game.Clock>=aiUntil){AITransition(AIPhase.Guard,AIRandom(.08f,.22f));aiDecisionAt=Mathf.Min(aiDecisionAt,game.Clock);}
             if(aiPhase==AIPhase.Guard)return;
+            if(Reference&&aiPhase==AIPhase.Strike&&aiSourceAttack!=null){
+                // The source animates target containers. Do not feed these
+                // metre-valued curves into the normalized joystick adapter.
+                if(aiOffAttack)aiOff=Vector2.one;
+                else aiMain=Vector2.one;
+                if(weapon.TwoHanded)aiOff=Vector2.one;
+                return;
+            }
             float t=Mathf.Clamp01((game.Clock-aiPhaseAt)/Mathf.Max(.01f,aiUntil-aiPhaseAt));
             float eased=t*t*(3-2*t);
             Vector2 shoulder=limbs[aiOffAttack?"upperFar":"upperNear"].A;
@@ -94,13 +112,71 @@ public sealed partial class PhysicsDuel {
                 Vector2 main=AIDirection(7);
                 Vector2 line=aiAim-sword.WorldPoint(weapon.Local(Vector2.zero,facing));
                 float wanted=Mathf.Atan2(line.y,line.x)*Mathf.Rad2Deg;
-                aiAimBias=Mathf.Clamp(aiAimBias-Mathf.DeltaAngle(wanted,sword.rb.rotation+90)*Time.deltaTime,-50,50);
+                float aimDt=game.fixtureMode?Time.fixedDeltaTime:Time.deltaTime;
+                aiAimBias=Mathf.Clamp(aiAimBias-Mathf.DeltaAngle(wanted,sword.rb.rotation+90)*aimDt,-50,50);
                 float axis=(wanted+aiAimBias)*Mathf.Deg2Rad;
                 aiMain=main*reach;
                 aiOff=Vector2.ClampMagnitude((new Vector2(Mathf.Cos(axis),Mathf.Sin(axis))-main)*(gripSpacing/.42f),1);
             }else if(aiOffAttack)aiOff=command;
             else aiMain=command;
             if(aiPhase==AIPhase.Strike&&dist>preferred-.2f)move=Mathf.Sign(dx)*.65f;
+        }
+        string SourceItemType=>weapon.id=="dagger"?"Dagger":weapon.id=="axe"||weapon.id=="greataxe"?"Axe":weapon.id=="mace"?"Mace":weapon.id=="warhammer"?"Hammer":weapon.id=="spear"?"Spear":weapon.id=="unarmed"?"Stick":"Sword";
+        void BeginSourceAttack(Fighter target){
+            aiSourceParentNear=SourceParentFromHand("Near");aiSourceParentFar=SourceParentFromHand("Far");
+            // cjm/cjn compare two heights against the nearest held threats.
+            float origin=target.referenceBodies["chestCOM"].position.y;
+            bool hasMain=target.weapon.id!="unarmed"&&target.primaryGrip!=null&&target.primaryGrip.enabled;
+            bool hasShield=target.HasShield&&target.offhandGrip!=null&&target.offhandGrip.enabled&&target.shield!=null;
+            Vector2 nearest=target.sword.rb.position;
+            if(hasShield&&(!hasMain||Mathf.Abs(target.shield.rb.position.x-mover.position.x)<Mathf.Abs(nearest.x-mover.position.x)))nearest=target.shield.rb.position;
+            float aggression=(aiSourceAggression-1)*.25f;
+            bool up=target.PassedOut?true:target.ReferenceDowned?aiRandom.Next(1,3)==1:DuelReferenceRules.AttackUp(origin,hasMain||hasShield,nearest.y,hasShield,hasShield?target.shield.rb.position.y:0,aggression,(float)aiRandom.NextDouble());
+            aiSourceAttack=DuelSourceMotion.Choose(SourceItemType,weapon.TwoHanded,up,aiRandom);
+            // AIHandsInputRelayer.Attack sets animation TIME, not speed.
+            float low=aiSourceAggression<=2?.05f:aiSourceAggression==3?.15f:aiSourceAggression==4?.25f:.45f;
+            float high=aiSourceAggression==1?.2f:aiSourceAggression==2?.25f:aiSourceAggression==3?.35f:aiSourceAggression==4?.45f:.55f;
+            aiSourceStart=AIRandom(low,high)*.5f;aiSourceAt=game.Clock;
+            AITransition(AIPhase.Strike,aiSourceAttack.duration-aiSourceStart);aiAttacks++;
+        }
+        bool SourceHandTarget(string side,out Vector2 target){
+            target=Vector2.zero;
+            if(sourceAIInitialized&&TrySourceAITarget(side,out var parent,out var nub)){target=SourceAIWorldHandTarget(side,parent,nub);return true;}
+            if(!aiDriving||aiPhase!=AIPhase.Strike||aiSourceAttack==null||(!weapon.TwoHanded&&(side=="Far")!=aiOffAttack))return false;
+            string path=weapon.TwoHanded?(side=="Near"?"HandLeftPointContainer":"HandRightPointContainer"):"";
+            // Some original one-hand bundles include a two-hand clip. Legacy
+            // Animation leaves absent transform bindings untouched.
+            Vector2 local=side=="Near"?aiSourceParentNear:aiSourceParentFar;
+            if(aiSourceAttack.positions.ContainsKey(path))local=aiSourceAttack.Position(path,aiSourceStart+game.Clock-aiSourceAt);
+            // Original target hierarchy: ControlPoints(-.025,0) -> Top ->
+            // animated container -> active nub(.15,.25). The current rig's
+            // pelvis target is .435 m higher; keep that explicit adaptation.
+            target=mover.position+new Vector2(facing*(local.x+.125f),local.y+.25f+.435f);
+            if(ReferenceDowned)target+=pelvis.B-(mover.position+new Vector2(0,.935f));
+            return true;
+        }
+        // Physical hierarchy adapter only. The source AI supplies metre-valued
+        // animation parents and independent child nub offsets.
+        Vector2 SourceAIWorldHandTarget(string side,Vector2 parent,Vector2 nub){
+            Vector2 result=mover.position+new Vector2(facing*(parent.x+nub.x-.025f),parent.y+nub.y+.435f);
+            if(ReferenceDowned)result+=pelvis.B-(mover.position+new Vector2(0,.935f));
+            return result;
+        }
+        Vector2 SourceParentFromHand(string side){var p=referenceHands[side].target-mover.position;if(ReferenceDowned)p-=pelvis.B-(mover.position+new Vector2(0,.935f));return new Vector2(p.x/facing-.125f,p.y-.685f);}
+        J CaptureSourceMotion(){
+            // Pausing releases input captures; it must retain an NPC's
+            // in-flight animation so a cold restart resumes the same sample.
+            bool active=aiPhase==AIPhase.Strike&&aiSourceAttack!=null&&(!human||game.CampaignAutoplay);
+            return J.O("version",1,"clip",active?aiSourceAttack.name:"","time",active?Mathf.Clamp(aiSourceStart+game.Clock-aiSourceAt,0,aiSourceAttack.duration):0,"off",active&&aiOffAttack,"aggression",aiSourceAggression);
+        }
+        void RestoreSourceMotion(J state){
+            if(!state.Has)return;
+            if(state["clip"].S.Length==0){aiSourceAggression=state["aggression"].I;return;}
+            InitializeAI();aiSourceAggression=state["aggression"].I;
+            aiSourceParentNear=SourceParentFromHand("Near");aiSourceParentFar=SourceParentFromHand("Far");
+            aiSourceAttack=DuelSourceMotion.Named(state["clip"].S);aiSourceStart=(float)state["time"].N;aiSourceAt=game.Clock;aiOffAttack=state["off"].B;
+            aiDriving=true;AITransition(AIPhase.Strike,Mathf.Max(0,aiSourceAttack.duration-aiSourceStart));
+            if(aiOffAttack)aiOff=Vector2.one;else aiMain=Vector2.one;if(weapon.TwoHanded)aiOff=Vector2.one;
         }
     }
 }

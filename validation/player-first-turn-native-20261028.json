@@ -1,0 +1,321 @@
+{
+  "passed": true,
+  "date": "2026-10-28",
+  "build": "PlayerFirstTurns",
+  "unit_tests": {
+    "passed": true,
+    "tests": 514,
+    "modules": 46,
+    "results": [
+      {
+        "module": "test_atlas",
+        "passed": true,
+        "tests": 11
+      },
+      {
+        "module": "test_careers",
+        "passed": true,
+        "tests": 16
+      },
+      {
+        "module": "test_city_gardens",
+        "passed": true,
+        "tests": 4
+      },
+      {
+        "module": "test_appearance",
+        "passed": true,
+        "tests": 7
+      },
+      {
+        "module": "test_combat_pace",
+        "passed": true,
+        "tests": 5
+      },
+      {
+        "module": "test_economics",
+        "passed": true,
+        "tests": 19
+      },
+      {
+        "module": "test_combat_attributes",
+        "passed": true,
+        "tests": 9
+      },
+      {
+        "module": "test_equipment",
+        "passed": true,
+        "tests": 12
+      },
+      {
+        "module": "test_generations",
+        "passed": true,
+        "tests": 11
+      },
+      {
+        "module": "test_lace_puppet",
+        "passed": true,
+        "tests": 4
+      },
+      {
+        "module": "test_llm_agency",
+        "passed": true,
+        "tests": 16
+      },
+      {
+        "module": "test_local_life",
+        "passed": true,
+        "tests": 11
+      },
+      {
+        "module": "test_martial",
+        "passed": true,
+        "tests": 12
+      },
+      {
+        "module": "test_martial_curricula",
+        "passed": true,
+        "tests": 12
+      },
+      {
+        "module": "test_martial_manuals",
+        "passed": true,
+        "tests": 9
+      },
+      {
+        "module": "test_merged_systems",
+        "passed": true,
+        "tests": 5
+      },
+      {
+        "module": "test_model_service",
+        "passed": true,
+        "tests": 6
+      },
+      {
+        "module": "test_city_landscape",
+        "passed": true,
+        "tests": 7
+      },
+      {
+        "module": "test_npc_plans",
+        "passed": true,
+        "tests": 13
+      },
+      {
+        "module": "test_city_maps",
+        "passed": true,
+        "tests": 14
+      },
+      {
+        "module": "test_persuasion",
+        "passed": true,
+        "tests": 13
+      },
+      {
+        "module": "test_physical_combat",
+        "passed": true,
+        "tests": 12
+      },
+      {
+        "module": "test_paper_cast",
+        "passed": true,
+        "tests": 11
+      },
+      {
+        "module": "test_physical_impact",
+        "passed": true,
+        "tests": 4
+      },
+      {
+        "module": "test_physical_reference",
+        "passed": true,
+        "tests": 12
+      },
+      {
+        "module": "test_player_interactions",
+        "passed": true,
+        "tests": 18
+      },
+      {
+        "module": "test_player_turn_order",
+        "passed": true,
+        "tests": 7
+      },
+      {
+        "module": "test_player_social",
+        "passed": true,
+        "tests": 17
+      },
+      {
+        "module": "test_no_bridges",
+        "passed": true,
+        "tests": 3
+      },
+      {
+        "module": "test_priority_thinking",
+        "passed": true,
+        "tests": 14
+      },
+      {
+        "module": "test_rank_progression",
+        "passed": true,
+        "tests": 24
+      },
+      {
+        "module": "test_population",
+        "passed": true,
+        "tests": 8
+      },
+      {
+        "module": "test_sect_ranks",
+        "passed": true,
+        "tests": 8
+      },
+      {
+        "module": "test_richer_lives",
+        "passed": true,
+        "tests": 11
+      },
+      {
+        "module": "test_settlement_layouts",
+        "passed": true,
+        "tests": 8
+      },
+      {
+        "module": "test_sects",
+        "passed": true,
+        "tests": 6
+      },
+      {
+        "module": "test_protagonist",
+        "passed": true,
+        "tests": 15
+      },
+      {
+        "module": "test_social_livelihood",
+        "passed": true,
+        "tests": 19
+      },
+      {
+        "module": "test_social_ranks",
+        "passed": true,
+        "tests": 12
+      },
+      {
+        "module": "test_society",
+        "passed": true,
+        "tests": 18
+      },
+      {
+        "module": "test_territory",
+        "passed": true,
+        "tests": 12
+      },
+      {
+        "module": "test_unified",
+        "passed": true,
+        "tests": 5
+      },
+      {
+        "module": "test_settlements",
+        "passed": true,
+        "tests": 9
+      },
+      {
+        "module": "test_weapons",
+        "passed": true,
+        "tests": 8
+      },
+      {
+        "module": "test_items",
+        "passed": true,
+        "tests": 21
+      },
+      {
+        "module": "test_simulation",
+        "passed": true,
+        "tests": 16
+      }
+    ],
+    "rerun_note": "test_sects re-run after persisting the NPC budget marker on the first successful protagonist action; all 28 turn/protagonist/sect persistence tests also re-run successfully"
+  },
+  "native": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated legacy fixture is ready",
+        "passed": true
+      },
+      {
+        "check": "old exhausted NPC starts with four free weeks",
+        "passed": true
+      },
+      {
+        "check": "migration preserves hero actions age and wealth",
+        "passed": true
+      },
+      {
+        "check": "praise is available before NPC acts",
+        "passed": true
+      },
+      {
+        "check": "player's first visit occupies one NPC week",
+        "passed": true
+      },
+      {
+        "check": "teaching reserves a second week before NPC actions",
+        "passed": true
+      },
+      {
+        "check": "NPC phase keeps both player bookings",
+        "passed": true
+      },
+      {
+        "check": "NPC only acts outside the player's occupied weeks",
+        "passed": true
+      },
+      {
+        "check": "next month opens with refreshed player and NPC budgets",
+        "passed": true
+      },
+      {
+        "check": "the old busy schedule no longer disables next-turn interaction",
+        "passed": true
+      },
+      {
+        "check": "the second month also returns control with free NPC time",
+        "passed": true
+      },
+      {
+        "check": "no native UI exceptions",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "legacy_copy": {
+    "passed": true,
+    "checks": {
+      "month": true,
+      "hero_actions": true,
+      "hero_age": true,
+      "player_wealth": true,
+      "events": true,
+      "random_state": true,
+      "npc_assets_history": true,
+      "budget_prepared": true
+    },
+    "counts": {
+      "npcs": 1800,
+      "exhausted_before": 1797,
+      "exhausted_after": 0
+    },
+    "source": "read-only online backup of current Unity save; original not modified"
+  },
+  "screenshots": [
+    "validation/screenshots/player-first-turn-begin-20261028.png",
+    "validation/screenshots/player-first-turn-booked-20261028.png",
+    "validation/screenshots/player-first-turn-next-20261028.png"
+  ]
+}

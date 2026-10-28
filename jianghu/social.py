@@ -10,12 +10,13 @@ POLES = {'compassion': ('冷漠自利', '共情怜悯'), 'ambition': ('知足退
 LABELS = {'steal': '行窃', 'extort': '勒索', 'smear': '造谣中伤', 'embezzle': '侵吞公帑',
           'gamble': '赌局', 'leisure': '消遣', 'care': '照料', 'meditate': '静思', 'play': '玩耍'}
 KINDS = set(LABELS)
-COSTS = {'work': 2, 'travel': 2, 'duel': 2, 'extort': 2, 'faction_task': 2}
+COSTS = {'work': 2, 'travel': 2, 'duel': 2, 'extort': 2}
 LIMITS = {'trade': 1, 'travel': 1, 'duel': 1, 'family': 1, 'report': 1,
           'steal': 1, 'extort': 1, 'smear': 1, 'embezzle': 1, 'gamble': 1, 'join': 1,
-          'faction_task': 1, 'faction_study': 1, 'leave_faction': 1, 'reconcile': 1, 'swear': 1}
+          'faction_study': 1, 'leave_faction': 1, 'reconcile': 1, 'swear': 1}
 LIMITS.update(donate_relief=1, neighbor_care=1)
 LIMITS['faction_guide'] = 1
+LIMITS['seek_teacher'] = 1
 CRIMES = {'betrayal', 'theft_exposed', 'extortion', 'extortion_resisted', 'slander_exposed', 'embezzlement_exposed'}
 
 
@@ -45,13 +46,26 @@ def available(w, n):
                                   for a in n['monthly_actions'])
 
 
-def reset_month(w, n):
-    n['time_left'] = 4 if n['age_months'] >= 120 else 2
-    if n['probation_until']>=w.month:n['time_left']=min(2,n['time_left'])
+def activity_capacity(w, n):
+    weeks = 4 if n['age_months'] >= 120 else 2
+    return min(2,weeks) if n['probation_until']>=w.month else weeks
+
+
+def reset_activity(w, n):
+    """Prepare a new NPC time budget without advancing its life or finances."""
+    n['time_left'] = activity_capacity(w, n)
     n['action_counts'] = {}
     n['monthly_actions'] = []
     n['activity_month'] = w.month
     n['settlement_logged'] = False
+
+
+def reset_month(w, n, keep_activity=False):
+    if not keep_activity:
+        reset_activity(w, n)
+    else:
+        n['activity_month'] = w.month
+        n['settlement_logged'] = False
     n['pressure'] = min(100., max(0, 35-n['wealth']) + (18 if n['illness'] else 0)
                         + max(0, 50-n['health']) + len([i for i in n['children'] if w.npcs[i]['age_months']<72])*4)
     n['loneliness'] = min(100., n['loneliness']+6)

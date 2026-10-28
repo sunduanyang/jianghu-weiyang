@@ -3,7 +3,7 @@ from . import combat_attributes
 from . import martial, relationships, sect_ranks, npc_plans
 from .atlas import PLACES
 
-LABELS = {'faction_task': '门中差事', 'faction_study': '门中请益', 'faction_guide': '同门授业', 'leave_faction': '辞别门派'}
+LABELS = {'faction_study': '门中请益', 'faction_guide': '同门授业', 'leave_faction': '辞别门派'}
 STATE_FIELDS = ('leader', 'fund', 'opening_fund', 'account_since', 'revenue', 'expenses',
                 'tasks_completed', 'leader_since', 'leader_review_since', 'vacancy_previous',
                 'vacancy_event', 'last_event', 'records')
@@ -56,9 +56,6 @@ def candidates(w, n, planning=False):
         for q in sorted(students, key=lambda q: (combat_attributes.rating(q), q['id']))[:2]:
             options.append(dict(id=f'faction_guide:{q["id"]}', kind='faction_guide', target=q['id'],
                                 label='同门授业 · 指点'+q['name']+'（双方各一周）'))
-    if n['health'] > 45 and f['fund'] >= 3:
-        duty = f['duty']
-        add('faction_task', f'{duty}，两周 / 酬银3 / 贡献2')
     if n['wealth'] >= 6 and n['contribution'] >= 5 and n['health'] > 30 and combat_attributes.rating(n) >= 12:
         tutors = [w.npcs[i] for i in w.residents.get(n['place'], []) if i != n['id']
                   and w.npcs[i]['faction'] == f['id'] and w.npcs[i]['age_months'] >= 192
@@ -94,21 +91,9 @@ def execute(w, n, a, facts):
     people, causes = [n['id']], [n['last_event'], f['last_event']]
     kind = a['kind']
     facts['faction'] = f['id']
-    if kind == 'faction_task':
-        f['fund'] -= 3
-        f['expenses'] += 3
-        f['tasks_completed'] += 1
-        n['wealth'] += 3
-        n['contribution'] += 2
-        n['health'] -= 1
-        n['reputation'] = min(100, n['reputation'] + .4)
-        g = w.governments[f['country']]
-        axis = f['public_axis']
-        improvement = min(.004, .95 - g[axis])
-        g[axis] += improvement
-        facts.update(reward=3, contribution=2, public_axis=axis, improvement=improvement, country=f['country'])
-        text = f"{n['name']}为{f['name']}办妥差事，获得库银3银、贡献2点，并协助地方{'公医' if axis == 'sanitation' else '治安'}。"
-    elif kind == 'faction_study':
+    if kind not in LABELS:
+        raise ValueError('门派事项已移除或不存在')
+    if kind == 'faction_study':
         q = w.npcs[a['tutor']] if a.get('tutor') else None
         if q:
             people.append(q['id'])
@@ -291,6 +276,27 @@ def player_membership(w):
                 contribution=h['contribution'], since=h['faction_since'])
 
 
+def recruiting_faction(w, recruiter):
+    faction_id = recruiter.get('faction')
+    if not recruiter['alive'] or faction_id is None:
+        return None
+    faction = w.factions[faction_id]
+    return faction if faction['kind'] == 'sect' and rank(w, recruiter)['grade'] <= 3 else None
+
+
+def player_join_reason(w, recruiter):
+    if recruiting_faction(w, recruiter) is None:
+        return '只有本门派三品及以上人物可以引收入门'
+    h = w.player['protagonist']
+    if h.get('faction') is not None:
+        return '已经加入门派，请先辞别原门派'
+    if w.month < h.get('faction_rejoin_after', -1):
+        return '辞别门派满一年后方可另择门派'
+    if combat_attributes.rating(w.player) < 12:
+        return '战斗能力须达到12'
+    return ''
+
+
 def player_options(w, faction_id):
     from . import city_maps
     h = w.player['protagonist']; f = w.factions[faction_id]
@@ -298,33 +304,17 @@ def player_options(w, faction_id):
     area = city_maps.city_regions.area_at(city, h['row'], h['col'])
     at_seat = area is not None and area.get('faction') == faction_id
     counts = h.get('sect_counts', {}) if h.get('sect_activity_month') == w.month else {}
-    choices = [('join', '拜入'+f['name'], 4)] if h.get('faction') is None else (
-        [('task', f['duty']+' · 酬银3 / 贡献2', 8), ('donate', '捐助门中 · 4银 / 贡献1.5', 2),
-         ('study', '请益'+f['art']+' · 2银 / 贡献须5', 6),
-         ('leave', '辞别'+f['name'], 2)] if h['faction'] == faction_id else [])
+    choices = [('donate', '捐助门中 · 4银 / 贡献1.5', 2),
+               ('leave', '辞别'+f['name'], 2)] if h.get('faction') == faction_id else []
     result = []
     for action, label, points in choices:
-        if action == 'study':
-            continue
         reason = '请先创建主角' if not h['created'] else '请先走入这座门派驻地' if not at_seat else ''
         if not reason and h['points'] < points:
             reason = '本月行动力不足'
-        if not reason and counts.get(action, 0) and action in ('task', 'study', 'donate'):
+        if not reason and counts.get(action, 0) and action == 'donate':
             reason = '本月已办理此事'
-        if not reason and action == 'join':
-            reason = ('一年后方可另择门派' if w.month < h.get('faction_rejoin_after', -1) else
-                      '战斗能力须达到12' if combat_attributes.rating(w.player) < 12 else '')
-        if not reason and action == 'task':
-            reason = '门派库银不足' if f['fund'] < 3 else '请先养伤' if w.player['health'] <= 45 else ''
         if not reason and action == 'donate' and w.player['wealth'] < 4:
             reason = '银两不足'
-        if not reason and action == 'study':
-            entry = w.player['martial']['arts'].get(f['art_id'])
-            reason = ('门中贡献须达到5' if h['contribution'] < 5 else
-                      '战斗能力须达到12' if combat_attributes.rating(w.player) < 12 else
-                      '银两不足' if w.player['wealth'] < 2 else
-                      '此功法已臻化境' if entry and entry['realm'] >= 3 else
-                      '请先调养' if w.player['health'] <= 30 or w.player['martial']['stamina'] < 12 else '')
         result.append(dict(action='sect_'+action, faction=faction_id, label=label,
                            points=points, enabled=not reason, reason=reason))
     return result
@@ -341,32 +331,11 @@ def player_action(w, action, faction_id):
         raise ValueError(option['reason'])
     h = w.player['protagonist']; f = w.factions[faction_id]
     kind = action.removeprefix('sect_'); facts = dict(faction=faction_id, key=f['key'], points=option['points'])
-    if kind == 'join':
-        h.update(faction=faction_id, faction_since=w.month, contribution=0.)
-        text = f"{w.player['name']}拜入{f['name']}，成为九品{f['ranks'][8]}。"
-    elif kind == 'task':
-        f['fund'] -= 3; f['expenses'] += 3; f['tasks_completed'] += 1
-        w.player['wealth'] += 3; w.player['health'] -= 1
-        h['contribution'] += 2
-        g = w.governments[f['country']]; axis = f['public_axis']
-        improvement = min(.004, max(0., .95-g[axis])); g[axis] += improvement
-        facts.update(reward=3, contribution=2, country=f['country'], public_axis=axis, improvement=improvement)
-        text = f"{w.player['name']}为{f['name']}{f['duty']}，获银3两、贡献2点。"
-    elif kind == 'donate':
+    if kind == 'donate':
         w.player['wealth'] -= 4; f['fund'] += 4; f['revenue'] += 4
         h['contribution'] += 1.5
         facts.update(payment=4, contribution=1.5)
         text = f"{w.player['name']}向{f['name']}捐助4银，积累贡献1.5点。"
-    elif kind == 'study':
-        if f['art_id'] not in w.player['martial']['arts']:
-            martial.learn(w.player, f['art_id'])
-            facts.update(art=f['art_id'], learned=True)
-        else:
-            entry = w.player['martial']['arts'][f['art_id']]
-            facts['training'] = martial.practice(w.player, w.rng, f['art_id'],
-                                                 entry['practice'] >= martial.GATES[entry['realm']])
-        w.player['wealth'] -= 2; f['fund'] += 2; f['revenue'] += 2
-        text = f"{w.player['name']}在{f['name']}请益{f['art']}，付师资2银入库。"
     else:
         h['membership_history'].append(dict(faction=faction_id, name=f['name'], since=h['faction_since'],
                                             until=w.month, contribution=h['contribution']))

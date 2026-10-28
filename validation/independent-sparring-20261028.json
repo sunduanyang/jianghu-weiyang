@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-28",
+  "build": "unity\\Build\\IndependentSparring\\江湖未央.exe",
+  "entry": "启动Unity版.bat",
+  "active_build": "IndependentSparring",
+  "previous_active_build": "BattleSaveFixed",
+  "policy": "per-bout-v1",
+  "behavior": [
+    "Every spar starts at full attribute-based health and stamina, with fresh body parts and effort state.",
+    "World health and energy do not gate a spar or reduce opening capacity.",
+    "Winning, losing or surrendering a spar does not deduct world health or energy.",
+    "Checkpointing or resuming the same bout preserves its damage and exhaustion."
+  ],
+  "native": {
+    "passed": true,
+    "checks": 38,
+    "consecutive_bouts": 3,
+    "source": "output\\independent-sparring-20261028\\native\\acceptance.json",
+    "isolated_copy_of_user_save": true,
+    "initial_world_health": 73.084,
+    "initial_world_energy": 4,
+    "scripted_injury_and_finish_fixture": true
+  },
+  "backend_tests": {
+    "passed": 43,
+    "subtests_passed": 58,
+    "files": [
+      "tests/test_physical_combat.py",
+      "tests/test_physical_reference.py",
+      "tests/test_combat_attributes.py",
+      "tests/test_weapons.py",
+      "tests/test_physical_impact.py"
+    ]
+  },
+  "source_sha256": {
+    "engine.py": "6e67b3d20a78aa91fe408fa06f685eb6c6acd869030f4e05ae645a78377996d8",
+    "physical_combat.py": "dce26d88949dbd1e4ae5ad6d124332d5deea8a135c6cdb4e9e3441139ce023b0",
+    "physical_reference.py": "c49ff8cbdfb0973717247741b6277b8ed5336da499f2a0631ec4c56f7f1ec2da"
+  },
+  "production_save_modified_by_tests": false,
+  "scope": [
+    "Equipment durability and NPC world grievance duels retain their existing rules.",
+    "Previously depleted global values remain stored, but no longer affect spar eligibility or starting resources."
+  ]
+}

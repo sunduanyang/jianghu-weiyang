@@ -12,7 +12,7 @@ public partial class JianghuApp {
     string CharacterName=>InspectingNpc?(CharacterReady?Person["name"].S:Npc(FocusPersonId)["name"].S):HeroName;
 
     void ResetItemFilters(int owner){
-        selectedItem="";itemQuery="";itemCategory="全部";itemGrade=0;equipmentSelected="";
+        selectedItem="";itemQuery="";itemCategory="全部";equipmentSelected="";
         mainScroll=personScroll=itemScroll=detailScroll=Vector2.zero;
         if(owner>=0&&inventoryMode!="装备")inventoryMode="行囊";
     }

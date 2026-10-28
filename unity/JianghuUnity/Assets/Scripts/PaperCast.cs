@@ -17,12 +17,12 @@ public partial class JianghuApp {
     int paperGuiPivotSamples;
     double paperGuiEndpointDrift;
     int paperGuiEndpointSamples;
-    readonly bool paperMeasureGui=GameClient.Arg("-smokeDir").Length>0||GameClient.Arg("-paperRegressionDir").Length>0;
+    readonly bool paperMeasureGui=GameClient.Arg("-smokeDir").Length>0||GameClient.Arg("-paperRegressionDir").Length>0||GameClient.Arg("-appearanceSmoke").Length>0;
     sealed class PaperFigureDraw {
         public Rect PixelViewport;
         public string Skin,Clip;
         public float Phase;
-        public bool Left,Bones;
+        public bool Left,Bones,Bust;
         public PaperPose Pose;
     }
     readonly List<PaperFigureDraw> paperDraws=new List<PaperFigureDraw>();
@@ -32,7 +32,10 @@ public partial class JianghuApp {
     J PaperCast {get{if(paperCast==null){var textAsset=Resources.Load<TextAsset>("PaperCast/index");if(textAsset==null)throw new InvalidOperationException("Missing PaperCast/index; run python unity/bake_paper_cast.py");paperCast=J.Parse(textAsset.text);}return paperCast;}}
     Texture2D PaperAtlas(string id){if(!paperAtlases.TryGetValue(id,out var atlas)){atlas=Resources.Load<Texture2D>("PaperCast/"+id);if(atlas==null)throw new InvalidOperationException("Missing paper puppet atlas: "+id);paperAtlases[id]=atlas;}return atlas;}
 
-    public string PaperSkinFor(J person,bool player=false){
+    public string PaperSkinFor(J person,bool player=false)=>CharacterLook.ForPerson(PaperOutfitFor(person,player),person);
+    J PaperSkin(string id)=>PaperAppearanceArt.Skin(PaperCast,id);
+    Texture PaperTexture(string id)=>PaperAppearanceArt.IsLook(id)?PaperAppearanceArt.Atlas(PaperSkin(id)):PaperAtlas(id);
+    string PaperOutfitFor(J person,bool player=false){
         string sex=person["sex"].Has?person["sex"].S:"男",prefix=sex=="女"?"f-":"m-";
         int age=person["age_months"].Has?person["age_months"].I/12:18;
         if(age<16)return prefix+"child";
@@ -58,15 +61,18 @@ public partial class JianghuApp {
     J PaperPerson(int id,string sex,int months){if(id<0)return Hero["created"].B?Hero:J.O("sex",sex,"age_months",months);var p=Npc(id);return p.Has?p:J.O("sex",sex,"age_months",months);}
     static Rect PaperUV(J part)=>new Rect((float)part["uv"][0].N,(float)part["uv"][1].N,(float)part["uv"][2].N,(float)part["uv"][3].N);
     void DrawPaperPortrait(Rect r,J person,bool player=false,bool deceased=false,bool backdrop=true){
-        string id=PaperSkinFor(person,player);var skin=PaperCast["skins"][id];J part=skin["portrait"].Has?skin["portrait"]:skin["parts"]["head-neck"];
+        string id=PaperSkinFor(person,player);
+        if(CharacterLook.IsId(id)){if(backdrop)Fill(r,new Color(.15f,.17f,.16f,.72f));CharacterArt.DrawPortrait(r,id,deceased);return;}
+        var skin=PaperSkin(id);J part=skin["portrait"].Has?skin["portrait"]:skin["parts"]["head-neck"];
         if(backdrop)Fill(r,new Color(.15f,.17f,.16f,.72f));
         float aspect=(float)(part["size"][0].N/part["size"][1].N),h=Mathf.Min(r.height,r.width/aspect),w=h*aspect;
         Rect target=new Rect(r.center.x-w/2,r.center.y-h/2,w,h);var old=GUI.color;
         if(deceased)GUI.color=new Color(.64f,.63f,.59f,1);
-        GUI.DrawTextureWithTexCoords(target,PaperAtlas(id),PaperUV(part));GUI.color=old;
+        GUI.DrawTextureWithTexCoords(target,PaperAppearanceArt.PartAtlas(skin,part,PaperTexture(id)),PaperUV(part));GUI.color=old;
     }
     void DrawPaperBust(Rect r,J person,bool player=false){
         string id=PaperSkinFor(person,player);var skin=PaperCast["skins"][id];
+        if(PaperAppearanceArt.IsLook(id)){DrawPaperFigure(r,id,"bind",0,bust:true);return;}
         var texture=Resources.Load<Texture2D>("PaperBust/"+id);
         if(texture==null){DrawPaperPortrait(r,person,player,backdrop:false);return;}
         // Frame the resting assembly of independent split components at its waist.
@@ -79,7 +85,7 @@ public partial class JianghuApp {
         GUI.DrawTextureWithTexCoords(target,texture,new Rect(x/texture.width,1-height/texture.height,width/texture.width,height/texture.height),true);
     }
 
-    void PaperPart(Texture2D atlas,J part,Vector2 pivot,float angle,float size,bool left,Vector2? endpoint){
+    void PaperPart(Texture atlas,J part,Vector2 pivot,float angle,float size,bool left,Vector2? endpoint){
         Vector2 source=PaperRig.Point(part["pivot"]),dimensions=PaperRig.Point(part["size"]);
         Matrix4x4 old=GUI.matrix;Rect uv=PaperUV(part);
         Vector2 tip=endpoint.HasValue?PaperRig.Point(part["tip"]):Vector2.zero;
@@ -111,12 +117,12 @@ public partial class JianghuApp {
         if(paperMeasureGui){paperGuiPivotDrift=Math.Max(paperGuiPivotDrift,Vector2.Distance(before,GUI.matrix.MultiplyPoint3x4(unclipped)));paperGuiPivotSamples++;}
     }
     static Vector2 PaperScreenPoint(Vector2 origin,float fit,bool left,Vector2 point)=>origin+new Vector2((left?-1:1)*fit*point.x,fit*point.y);
-    public void DrawPaperFigure(Rect r,string id,string clip,float phase,bool left=false,bool bones=false,PaperPose sampled=null){
+    public void DrawPaperFigure(Rect r,string id,string clip,float phase,bool left=false,bool bones=false,PaperPose sampled=null,bool bust=false){
         if(Event.current.type!=EventType.Repaint)return;
         // The virtual canvas has one explicit area origin and one root matrix.
         // Project once here; do not mix GUIClip's window and screen conversions.
         Vector2 a=GUI.matrix.MultiplyPoint3x4(r.min+paperDrawOrigin),b=GUI.matrix.MultiplyPoint3x4(r.max+paperDrawOrigin);
-        paperDraws.Add(new PaperFigureDraw{PixelViewport=Rect.MinMaxRect(a.x,a.y,b.x,b.y),Skin=id,Clip=clip,Phase=phase,Left=left,Bones=bones,Pose=sampled});
+        paperDraws.Add(new PaperFigureDraw{PixelViewport=Rect.MinMaxRect(a.x,a.y,b.x,b.y),Skin=id,Clip=clip,Phase=phase,Left=left,Bones=bones,Pose=sampled,Bust=bust});
     }
     void FlushPaperFigures(){
         if(Event.current.type!=EventType.Repaint||paperDraws.Count==0)return;
@@ -128,27 +134,29 @@ public partial class JianghuApp {
                 GUI.BeginGroup(viewport);
                 try{
                     bool theater=BattleVisible;
-                    if(theater)RenderPaperFigure(new Rect(4,-2,viewport.width,viewport.height),draw.Skin,draw.Clip,draw.Phase,draw.Left,false,draw.Pose,new Color(.12f,.16f,.13f,.14f));
-                    RenderPaperFigure(new Rect(0,0,viewport.width,viewport.height),draw.Skin,draw.Clip,draw.Phase,draw.Left,draw.Bones,draw.Pose,theater?new Color(1,.99f,.96f,.97f):(Color?)null);
+                    if(theater)RenderPaperFigure(new Rect(4,-2,viewport.width,viewport.height),draw.Skin,draw.Clip,draw.Phase,draw.Left,false,draw.Pose,new Color(.12f,.16f,.13f,.14f),draw.Bust);
+                    RenderPaperFigure(new Rect(0,0,viewport.width,viewport.height),draw.Skin,draw.Clip,draw.Phase,draw.Left,draw.Bones,draw.Pose,theater?new Color(1,.99f,.96f,.97f):(Color?)null,draw.Bust);
                 }
                 finally{GUI.EndGroup();}
             }
         }finally{GUI.matrix=original;GUI.color=color;paperDraws.Clear();}
     }
-    void RenderPaperFigure(Rect r,string id,string clip,float phase,bool left,bool bones,PaperPose sampled,Color? tint=null){
-        var skin=PaperCast["skins"][id];if(!skin.Has)throw new InvalidOperationException("Unknown paper skin: "+id);
+    void RenderPaperFigure(Rect r,string id,string clip,float phase,bool left,bool bones,PaperPose sampled,Color? tint=null,bool bust=false){
+        if(CharacterLook.IsId(id)){CharacterArt.DrawFigure(r,id,clip,phase,left,bust,tint);return;}
+        var skin=PaperSkin(id);if(!skin.Has)throw new InvalidOperationException("Unknown paper skin: "+id);
         var rig=PaperCast["rig"];var pose=sampled??PaperRig.Sample(rig,skin,clip,phase);var p=pose.Joints;
         if(!paperLayers.TryGetValue(id,out var layers)){layers=skin["parts"].D.Values.OrderBy(v=>v["layer"].N).ToList();paperLayers[id]=layers;}
         float ground=PaperRig.Ground(rig,skin),frame=ground+PaperRig.Length(rig,skin,"spine")+(float)skin["parts"]["head-neck"]["height"].N+80;
         float fit=Mathf.Min(r.width/430f,r.height/frame)*(float)skin["scale"].N;
         Vector2 screenOrigin=new Vector2(r.center.x,r.yMax-24*fit-fit*ground);
         if(skin["canvas"].Has){Vector2 canvas=PaperRig.Point(skin["canvas"]),anchor=PaperRig.Point(skin["canvas_origin"]);fit=Mathf.Min(r.width/canvas.x,r.height/canvas.y);screenOrigin=r.center+new Vector2((left?-1:1)*(anchor.x-canvas.x/2)*fit,(anchor.y-canvas.y/2)*fit);}
+        if(bust){fit=Mathf.Min(r.width/280f,r.height/(PaperRig.Length(rig,skin,"spine")+(float)skin["parts"]["head-neck"]["height"].N+35));screenOrigin=new Vector2(r.center.x,r.yMax+18*fit);}
         Matrix4x4 old=GUI.matrix;Color color=GUI.color;
         try{
             GUI.color=tint??Color.white;
             foreach(var part in layers){
                 if(part["hidden"].B)continue;
-                var atlas=PaperAtlas(id);
+                var atlas=PaperAppearanceArt.PartAtlas(skin,part,PaperTexture(id));
                 Vector2 pivot;float angle,scale;Vector2? endpoint=null;
                 if(part["bone"].Has){
                     var bone=rig["bones"][part["bone"].S];Vector2 a=p[bone[0].S],b=p[bone[1].S],delta=b-a;
@@ -176,14 +184,16 @@ public partial class JianghuApp {
     }
     void DrawPaperPerson(Rect r,J person,bool player,string clip="bind",bool left=false,float phase=-1){
         string id=PaperSkinFor(person,player);float now=Time.realtimeSinceStartup;
+        if(CharacterLook.IsId(id)){DrawPaperFigure(r,id,clip,phase<0?Mathf.Repeat(now/1.9f,1):phase,left);return;}
         if(phase<0)phase=PaperRig.Phase(PaperCast["rig"],clip,now);
         string key=W["database"].S+":"+(player?"player":person["id"].S);
         if(!paperActors.TryGetValue(key,out var animator)){if(paperActors.Count>2048)paperActors.Clear();animator=new PaperAnimator();paperActors[key]=animator;}
-        DrawPaperFigure(r,id,clip,phase,left,false,animator.Sample(PaperCast["rig"],PaperCast["skins"][id],clip,phase,now));
+        DrawPaperFigure(r,id,clip,phase,left,false,animator.Sample(PaperCast["rig"],PaperSkin(id),clip,phase,now));
     }
 
     void DrawPuppets(){
-        GUILayout.BeginHorizontal();H("皮影衣橱");GUILayout.FlexibleSpace();if(Btn(paperPreviewGallery?"返回单人":"全部皮肤"))paperPreviewGallery=!paperPreviewGallery;GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();H("皮影衣橱");GUILayout.FlexibleSpace();if(Btn(appearanceGallery?"旧版原画":"模块化人物"))appearanceGallery=!appearanceGallery;if(!appearanceGallery&&Btn(paperPreviewGallery?"返回单人":"全部皮肤"))paperPreviewGallery=!paperPreviewGallery;GUILayout.EndHorizontal();
+        if(appearanceGallery){DrawAppearanceGallery();return;}
         T("二十四种新形象 · 独立部件骨骼绑定 · 统一关节骨架 · 行走",small);
         if(paperPreviewGallery){
             var skins=PaperCast["skins"].D.ToArray();Rect gallery=GUILayoutUtility.GetRect(1200,620,GUILayout.ExpandWidth(true));StagePanel(gallery);gallery=new Rect(gallery.x+16,gallery.y+16,gallery.width-32,gallery.height-32);

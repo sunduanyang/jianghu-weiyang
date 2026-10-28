@@ -1,0 +1,450 @@
+{
+  "passed": true,
+  "date": "2026-10-28",
+  "build": "CharacterInteractionPlayable",
+  "unit_tests": {
+    "passed": true,
+    "tests": 505,
+    "modules": 45,
+    "results": [
+      {
+        "module": "tests.test_atlas",
+        "passed": true,
+        "tests": 11
+      },
+      {
+        "module": "tests.test_careers",
+        "passed": true,
+        "tests": 16
+      },
+      {
+        "module": "tests.test_appearance",
+        "passed": true,
+        "tests": 5
+      },
+      {
+        "module": "tests.test_city_gardens",
+        "passed": true,
+        "tests": 4
+      },
+      {
+        "module": "tests.test_combat_pace",
+        "passed": true,
+        "tests": 5
+      },
+      {
+        "module": "tests.test_combat_attributes",
+        "passed": true,
+        "tests": 9
+      },
+      {
+        "module": "tests.test_economics",
+        "passed": true,
+        "tests": 19
+      },
+      {
+        "module": "tests.test_equipment",
+        "passed": true,
+        "tests": 12
+      },
+      {
+        "module": "tests.test_generations",
+        "passed": true,
+        "tests": 11
+      },
+      {
+        "module": "tests.test_lace_puppet",
+        "passed": true,
+        "tests": 4
+      },
+      {
+        "module": "tests.test_llm_agency",
+        "passed": true,
+        "tests": 16
+      },
+      {
+        "module": "tests.test_local_life",
+        "passed": true,
+        "tests": 11
+      },
+      {
+        "module": "tests.test_martial",
+        "passed": true,
+        "tests": 12
+      },
+      {
+        "module": "tests.test_martial_curricula",
+        "passed": true,
+        "tests": 12
+      },
+      {
+        "module": "tests.test_martial_manuals",
+        "passed": true,
+        "tests": 9
+      },
+      {
+        "module": "tests.test_merged_systems",
+        "passed": true,
+        "tests": 5
+      },
+      {
+        "module": "tests.test_model_service",
+        "passed": true,
+        "tests": 6
+      },
+      {
+        "module": "tests.test_city_landscape",
+        "passed": true,
+        "tests": 7
+      },
+      {
+        "module": "tests.test_npc_plans",
+        "passed": true,
+        "tests": 13
+      },
+      {
+        "module": "tests.test_city_maps",
+        "passed": true,
+        "tests": 14
+      },
+      {
+        "module": "tests.test_persuasion",
+        "passed": true,
+        "tests": 13
+      },
+      {
+        "module": "tests.test_physical_combat",
+        "passed": true,
+        "tests": 12
+      },
+      {
+        "module": "tests.test_physical_impact",
+        "passed": true,
+        "tests": 4
+      },
+      {
+        "module": "tests.test_physical_reference",
+        "passed": true,
+        "tests": 12
+      },
+      {
+        "module": "tests.test_paper_cast",
+        "passed": true,
+        "tests": 11
+      },
+      {
+        "module": "tests.test_no_bridges",
+        "passed": true,
+        "tests": 3
+      },
+      {
+        "module": "tests.test_player_interactions",
+        "passed": true,
+        "tests": 18
+      },
+      {
+        "module": "tests.test_player_social",
+        "passed": true,
+        "tests": 17
+      },
+      {
+        "module": "tests.test_priority_thinking",
+        "passed": true,
+        "tests": 14
+      },
+      {
+        "module": "tests.test_rank_progression",
+        "passed": true,
+        "tests": 24
+      },
+      {
+        "module": "tests.test_richer_lives",
+        "passed": true,
+        "tests": 11
+      },
+      {
+        "module": "tests.test_sect_ranks",
+        "passed": true,
+        "tests": 8
+      },
+      {
+        "module": "tests.test_population",
+        "passed": true,
+        "tests": 8
+      },
+      {
+        "module": "tests.test_settlement_layouts",
+        "passed": true,
+        "tests": 8
+      },
+      {
+        "module": "tests.test_sects",
+        "passed": true,
+        "tests": 6
+      },
+      {
+        "module": "tests.test_protagonist",
+        "passed": true,
+        "tests": 15
+      },
+      {
+        "module": "tests.test_social_livelihood",
+        "passed": true,
+        "tests": 19
+      },
+      {
+        "module": "tests.test_social_ranks",
+        "passed": true,
+        "tests": 12
+      },
+      {
+        "module": "tests.test_society",
+        "passed": true,
+        "tests": 18
+      },
+      {
+        "module": "tests.test_territory",
+        "passed": true,
+        "tests": 12
+      },
+      {
+        "module": "tests.test_unified",
+        "passed": true,
+        "tests": 5
+      },
+      {
+        "module": "tests.test_weapons",
+        "passed": true,
+        "tests": 8
+      },
+      {
+        "module": "tests.test_settlements",
+        "passed": true,
+        "tests": 9
+      },
+      {
+        "module": "tests.test_items",
+        "passed": true,
+        "tests": 21
+      },
+      {
+        "module": "tests.test_simulation",
+        "passed": true,
+        "tests": 16
+      }
+    ],
+    "rerun_note": "test_persuasion retried with unittest discovery to supply its sibling import path; raw first-run logs retained"
+  },
+  "native": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated game ready",
+        "passed": true
+      },
+      {
+        "check": "all twelve menu actions are loaded from the live engine",
+        "passed": true
+      },
+      {
+        "check": "praise updates real affinity",
+        "passed": true
+      },
+      {
+        "check": "monthly praise is now blocked",
+        "passed": true
+      },
+      {
+        "check": "insult changes reputation and trust",
+        "passed": true
+      },
+      {
+        "check": "gift transfers the selected real item",
+        "passed": true
+      },
+      {
+        "check": "teacher awards a real manual",
+        "passed": true
+      },
+      {
+        "check": "confidant is registered",
+        "passed": true
+      },
+      {
+        "check": "marriage belongs to the intended person",
+        "passed": true
+      },
+      {
+        "check": "sworn bond belongs to the intended person",
+        "passed": true
+      },
+      {
+        "check": "NPC purchase transfers ownership",
+        "passed": true
+      },
+      {
+        "check": "sale transfers back and conserves silver",
+        "passed": true
+      },
+      {
+        "check": "theft produces a real settled outcome",
+        "passed": true
+      },
+      {
+        "check": "spar opens the actual physical arena",
+        "passed": true
+      },
+      {
+        "check": "spar settles once and returns to the encounter",
+        "passed": true
+      },
+      {
+        "check": "rob opens the actual physical arena",
+        "passed": true
+      },
+      {
+        "check": "rob settles once and returns to the encounter",
+        "passed": true
+      },
+      {
+        "check": "assault opens the actual physical arena",
+        "passed": true
+      },
+      {
+        "check": "assault settles once and returns to the encounter",
+        "passed": true
+      },
+      {
+        "check": "hostile battles persist world costs and reputation",
+        "passed": true
+      },
+      {
+        "check": "all actions preserve the current month",
+        "passed": true
+      },
+      {
+        "check": "all actions cost exactly the advertised action points",
+        "passed": true
+      },
+      {
+        "check": "stale submissions cannot charge or duplicate effects",
+        "passed": true
+      },
+      {
+        "check": "no native exceptions",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "screenshots": {
+    "praise": "validation/screenshots/character-interaction-gameplay-praise-20261028.png",
+    "gift": "validation/screenshots/character-interaction-gameplay-gift-20261028.png",
+    "teaching": "validation/screenshots/character-interaction-gameplay-teaching-20261028.png",
+    "trade": "validation/screenshots/character-interaction-gameplay-trade-20261028.png",
+    "assault": "validation/screenshots/character-interaction-gameplay-assault-20261028.png",
+    "marriage": "validation/screenshots/character-interaction-gameplay-marriage-20261028.png"
+  },
+  "previous_1680_native": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated game ready",
+        "passed": true
+      },
+      {
+        "check": "all twelve menu actions are loaded from the live engine",
+        "passed": true
+      },
+      {
+        "check": "praise updates real affinity",
+        "passed": true
+      },
+      {
+        "check": "monthly praise is now blocked",
+        "passed": true
+      },
+      {
+        "check": "insult changes reputation and trust",
+        "passed": true
+      },
+      {
+        "check": "gift transfers the selected real item",
+        "passed": true
+      },
+      {
+        "check": "teacher awards a real manual",
+        "passed": true
+      },
+      {
+        "check": "confidant is registered",
+        "passed": true
+      },
+      {
+        "check": "marriage belongs to the intended person",
+        "passed": true
+      },
+      {
+        "check": "sworn bond belongs to the intended person",
+        "passed": true
+      },
+      {
+        "check": "NPC purchase transfers ownership",
+        "passed": true
+      },
+      {
+        "check": "sale transfers back and conserves silver",
+        "passed": true
+      },
+      {
+        "check": "theft produces a real settled outcome",
+        "passed": true
+      },
+      {
+        "check": "spar opens the actual physical arena",
+        "passed": true
+      },
+      {
+        "check": "spar settles once and returns to the encounter",
+        "passed": true
+      },
+      {
+        "check": "rob opens the actual physical arena",
+        "passed": true
+      },
+      {
+        "check": "rob settles once and returns to the encounter",
+        "passed": true
+      },
+      {
+        "check": "assault opens the actual physical arena",
+        "passed": true
+      },
+      {
+        "check": "assault settles once and returns to the encounter",
+        "passed": true
+      },
+      {
+        "check": "hostile battles persist world costs and reputation",
+        "passed": true
+      },
+      {
+        "check": "all actions preserve the current month",
+        "passed": true
+      },
+      {
+        "check": "all actions cost exactly the advertised action points",
+        "passed": true
+      },
+      {
+        "check": "stale submissions cannot charge or duplicate effects",
+        "passed": true
+      },
+      {
+        "check": "no native exceptions",
+        "passed": true
+      }
+    ],
+    "errors": []
+  }
+}

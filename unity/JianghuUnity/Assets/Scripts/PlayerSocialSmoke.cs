@@ -62,7 +62,7 @@ public class PlayerSocialSmoke : MonoBehaviour {
         Check("second decision and reply completed",second["status"].S=="completed"&&second["reply"].S.Length>0);
         bool paid=second["choice_id"].S=="give_aid";
         Check("accepted or refused aid matches actual money",Math.Abs(app.W["player"]["wealth"].N-wealth-(paid?4:0))<.001&&Math.Abs(app.Person["wealth"].N-npcWealth+(paid?4:0))<.001);
-        Check("monthly action time reserved once",app.Person["time_left"].I==3);
+        Check("conversation does not consume NPC time",app.Person["time_left"].I==4);
         Check("two completed conversations cost two player points",app.Hero["points"].N==points-2);
         Check("dialogue does not advance time",app.W["month"].I==month);
         Check("conversation retains both turns",app.Person["player_social"]["requests"].A.Count==2);

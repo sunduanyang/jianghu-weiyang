@@ -1,0 +1,231 @@
+{
+  "date": "2026-10-28",
+  "scope": "Unity bag and shop filtering simplification",
+  "implementation_build": "unity/Build/SimpleInventory/江湖未央.exe",
+  "build_log": "unity/simple-inventory-final-build.log",
+  "verified_default_build": "unity\\Build\\BattleSaveFixed\\江湖未央.exe",
+  "default_assembly_sha256": "324d5d0a58368e985952559b69873d0cf760cb613e9de41e4062b4c0d2773675",
+  "default_build_note": "A newer integrated default build already includes the final UI changes; its launcher selection was preserved and both native suites were rerun against it.",
+  "changes": [
+    "Replace five permanent control rows with one category dropdown, name search and reset row.",
+    "Remove grade and manual-sort filter state; preserve category, query and selected item when returning.",
+    "Keep grade labels and colors on cards and details; sort automatically by category and grade.",
+    "Use a continuous five-column grid with 556px list/detail viewports instead of 408px.",
+    "Manage equipment on the existing equipment tab; retain NPC read-only and gifting contexts."
+  ],
+  "native_suites": {
+    "navigation": {
+      "passed": true,
+      "checks": [
+        {
+          "check": "isolated world ready",
+          "passed": true
+        },
+        {
+          "check": "test world includes real event records",
+          "passed": true
+        },
+        {
+          "check": "links load the requested real record",
+          "passed": true
+        },
+        {
+          "check": "event person link opens that profile above the event",
+          "passed": true
+        },
+        {
+          "check": "back restores the event detail and tab",
+          "passed": true
+        },
+        {
+          "check": "profile links load real faction detail",
+          "passed": true
+        },
+        {
+          "check": "faction back restores character and section",
+          "passed": true
+        },
+        {
+          "check": "NPC martial tab loads the complete shared catalog",
+          "passed": true
+        },
+        {
+          "check": "gift view explicitly owns player items",
+          "passed": true
+        },
+        {
+          "check": "system back restores the real event detail",
+          "passed": true
+        },
+        {
+          "check": "nested browsing restores inventory owner and filters",
+          "passed": true
+        },
+        {
+          "check": "late event response cannot overwrite the restored view",
+          "passed": true
+        },
+        {
+          "check": "explicit map return clears every view",
+          "passed": true
+        },
+        {
+          "check": "open choice prevents keyboard city movement",
+          "passed": true
+        },
+        {
+          "check": "person menu prevents keyboard city movement",
+          "passed": true
+        },
+        {
+          "check": "city trading uses player inventory",
+          "passed": true
+        },
+        {
+          "check": "city scroll returns to city map",
+          "passed": true
+        },
+        {
+          "check": "all browsing preserves world month money and actions",
+          "passed": true
+        },
+        {
+          "check": "browsing preserves full hero state",
+          "passed": true
+        },
+        {
+          "check": "browsing preserves NPC inventory and combat state",
+          "passed": true
+        },
+        {
+          "check": "no native UI exceptions",
+          "passed": true
+        }
+      ],
+      "errors": []
+    },
+    "character_ownership": {
+      "passed": true,
+      "checks": [
+        {
+          "check": "isolated world ready",
+          "passed": true
+        },
+        {
+          "check": "clicking a person opens the interaction menu",
+          "passed": true
+        },
+        {
+          "check": "talking opens selected person's conversation",
+          "passed": true
+        },
+        {
+          "check": "portrait opens same person's scroll above the conversation",
+          "passed": true
+        },
+        {
+          "check": "inventory belongs to selected NPC",
+          "passed": true
+        },
+        {
+          "check": "NPC inventory contains no player instances",
+          "passed": true
+        },
+        {
+          "check": "martial tab displays NPC's actual abilities",
+          "passed": true
+        },
+        {
+          "check": "switching NPC keeps martial tab and changes data",
+          "passed": true
+        },
+        {
+          "check": "switching NPC changes inventory owner",
+          "passed": true
+        },
+        {
+          "check": "related person links update scroll owner",
+          "passed": true
+        },
+        {
+          "check": "closing scroll returns to original conversation",
+          "passed": true
+        },
+        {
+          "check": "gifting explicitly opens player's inventory",
+          "passed": true
+        },
+        {
+          "check": "own scroll keeps player context",
+          "passed": true
+        },
+        {
+          "check": "own martial keeps player context",
+          "passed": true
+        },
+        {
+          "check": "cross links open above the scroll",
+          "passed": true
+        },
+        {
+          "check": "navigation stack never repeats a view kind",
+          "passed": true
+        },
+        {
+          "check": "back returns to the conversation it came from",
+          "passed": true
+        },
+        {
+          "check": "back from the last view returns to the map",
+          "passed": true
+        },
+        {
+          "check": "gifting scroll returns to original conversation",
+          "passed": true
+        },
+        {
+          "check": "late response cannot replace newly selected NPC",
+          "passed": true
+        },
+        {
+          "check": "browsing preserves month money and actions",
+          "passed": true
+        },
+        {
+          "check": "browsing preserves both NPC possessions",
+          "passed": true
+        },
+        {
+          "check": "leaving to the map closes every view",
+          "passed": true
+        },
+        {
+          "check": "no native exceptions",
+          "passed": true
+        }
+      ],
+      "errors": []
+    }
+  },
+  "manual_ui": {
+    "build": "SimpleInventory",
+    "verified": [
+      "Category dropdown selects weapons",
+      "Reset restores all items",
+      "Chinese name query 药 filters immediately",
+      "Shop uses the same single-row controls",
+      "Final integrated default screenshot shows the continuous grid"
+    ]
+  },
+  "isolated_test_directories": [
+    "output\\simple-inventory-20261028\\save-navigation",
+    "output\\simple-inventory-20261028\\save-character"
+  ],
+  "screenshot": "validation\\screenshots\\inventory-simple-20261028.png",
+  "earlier_run": {
+    "path": "output\\simple-inventory-20261028\\navigation-final\\acceptance.json",
+    "failed_check": "system back restores the real event detail",
+    "note": "One run failed the existing fixed-delay asynchronous event check with zero native errors. An unchanged rerun passed all 21 checks, as did the newer integrated default build."
+  },
+  "validation_scope": "Native UI/navigation regression and manual filtering checks, using isolated SQLite copies; no production save was used."
+}

@@ -5,6 +5,16 @@ namespace Jianghu {
 public partial class JianghuApp {
     bool showMartialCatalog;
     int martialSchoolIndex;
+    string Choose(string current,string[] values,string caption,string[] labels){
+        if(values.Length==0)return current;
+        if(labels==null||labels.Length!=values.Length)return Choose(current,values,caption);
+        int selected=System.Array.IndexOf(values,current);
+        // Keep the stored martial-art identifier while the existing picker
+        // presents the localized title expected by the teacher panel.
+        string picked=Choose(labels[selected<0?0:selected],labels,caption);
+        int index=System.Array.IndexOf(labels,picked);
+        return index<0?current:values[index];
+    }
     void DrawKnownMartial(J m) {
         H("已掌握功法");
         J c=m["curriculum"];
@@ -13,6 +23,7 @@ public partial class JianghuApp {
             T(c["system"].S=="sect"?"依门中品阶掌握本派本品至九品功法。":"依社会品阶掌握一门籍贯国功法，来源门派固定。",small);
         }
         T("已掌握功法的加成自动累加，计入上方能力；每项能力最高100。",small);
+        T("使用秘籍习得的功法永久保留，不随身份或门派变动失去。",small);
         if(m["arts"].A.Count==0)T("创建主角后，按籍贯与身份确定初始功法。",small);
         DrawRankArts(m["arts"]);
     }
@@ -21,6 +32,7 @@ public partial class JianghuApp {
             GUILayout.BeginVertical(card);
             T(art["grade_label"].S+" · "+art["name"].S,sub);
             T(art["school_name"].S+" · "+art["kind"].S,small);
+            if(art["source"].Has)T(art["source"].S,small);
             T(art["description"].S);
             GUILayout.EndVertical();
         }

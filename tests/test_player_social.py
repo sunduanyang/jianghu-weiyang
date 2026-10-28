@@ -60,7 +60,7 @@ class PlayerSocialTests(unittest.TestCase):
         before=deepcopy(w.export());self.assertFalse(player_social.apply(w,ctx,decision(ctx,'give_aid'))[0])
         self.assertEqual(w.export(),before)
         next_ctx=self.start(w,'ask_aid','')
-        self.assertNotIn('give_aid',[c['id'] for c in next_ctx['choices']])
+        self.assertIn('give_aid',[c['id'] for c in next_ctx['choices']])
         self.assertTrue(player_social.apply(w,next_ctx,decision(next_ctx,'refuse'))[0])
         self.apply(w,'help','receive_aid')
         self.assertEqual(w.player['wealth'],money)
@@ -127,17 +127,17 @@ class PlayerSocialTests(unittest.TestCase):
                 self.assertEqual(w.player['wealth'],money);self.assertEqual(w.npcs[1]['wealth'],npc)
                 self.assertEqual(w.player['protagonist']['points'],points)
 
-    def test_multiturn_memory_monthly_relation_limit_and_shared_time_slot(self):
+    def test_multiturn_memory_repeated_effects_and_no_npc_time_cost(self):
         w=self.world();n=w.npcs[1];points=w.player['protagonist']['points'];time=n['time_left']
         self.apply(w,'talk','warm','')
         ctx=self.start(w,'talk','')
         self.assertEqual(ctx['history'][-1]['player'],player_social.DEFAULT_TEXT['talk'])
         self.assertTrue(player_social.apply(w,ctx,decision(ctx,'warm'))[0])
-        self.assertEqual(n['time_left'],time-1)
+        self.assertEqual(n['time_left'],time)
         self.assertEqual(w.player['protagonist']['points'],points-2)
-        self.assertEqual(player_social.tie(w,1)['affinity'],2.)
-        self.assertEqual(player_social.tie(w,1)['trust'],1.)
-        self.assertEqual(len([a for a in n['monthly_actions'] if a['kind']=='player_social']),1)
+        self.assertEqual(player_social.tie(w,1)['affinity'],4.)
+        self.assertEqual(player_social.tie(w,1)['trust'],2.)
+        self.assertEqual(len([a for a in n['monthly_actions'] if a['kind']=='player_social']),0)
 
     def test_introduction_uses_observed_contacts_and_does_not_force_friendship(self):
         w=self.world();n=w.npcs[1];q=w.npcs[2];w.link(n,q,30,10)

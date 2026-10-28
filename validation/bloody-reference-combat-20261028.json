@@ -1,0 +1,197 @@
+{
+  "date": "2026-10-28",
+  "profile": "bloody-reference-v1",
+  "build": "unity/Build/BloodyReferenceVerified/江湖未央.exe",
+  "entry": "启动物理格斗Demo.bat",
+  "apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "native_phases": {
+    "reference": {
+      "passed": true,
+      "checks": 43,
+      "source": "output\\bloody-reference-20261028\\native-verified\\acceptance.json",
+      "failures": []
+    },
+    "cold_restart": {
+      "passed": true,
+      "checks": 13,
+      "source": "output\\bloody-reference-20261028\\native-verified-resume\\acceptance.json",
+      "failures": []
+    },
+    "legacy": {
+      "passed": true,
+      "checks": 15,
+      "source": "output\\bloody-reference-20261028\\legacy-kinetic\\acceptance.json",
+      "failures": []
+    }
+  },
+  "python_full_suite": {
+    "passed": 464,
+    "subtests_passed": 966,
+    "seconds": 173.73
+  },
+  "weapon_cases": [
+    {
+      "weapon": "unarmed",
+      "max_gap": 0.008402746,
+      "skeleton_gap": 0.008402746,
+      "grip_gap": 0.008169997,
+      "counterweight_gap": 0,
+      "item_mass": 0.12,
+      "counterweight_mass": 0,
+      "min_head_y": 1.627739,
+      "travel": 3.347916,
+      "max_weapon_speed": 17.4764,
+      "motion_spent": 72,
+      "health": 120,
+      "worst": "handFar"
+    },
+    {
+      "weapon": "dagger",
+      "max_gap": 0.08140267,
+      "skeleton_gap": 0.01390831,
+      "grip_gap": 0.08140267,
+      "counterweight_gap": 0.008810424,
+      "item_mass": 1,
+      "counterweight_mass": 1,
+      "min_head_y": 1.627419,
+      "travel": 3.297323,
+      "max_weapon_speed": 20.49239,
+      "motion_spent": 68.7495,
+      "health": 117.55,
+      "worst": "handNear"
+    },
+    {
+      "weapon": "sabre",
+      "max_gap": 0.0263666,
+      "skeleton_gap": 0.008514706,
+      "grip_gap": 0.0263666,
+      "counterweight_gap": 0.002289557,
+      "item_mass": 1,
+      "counterweight_mass": 1,
+      "min_head_y": 1.628518,
+      "travel": 3.290953,
+      "max_weapon_speed": 24.68528,
+      "motion_spent": 73.331,
+      "health": 119.65,
+      "worst": "handNear"
+    },
+    {
+      "weapon": "sword",
+      "max_gap": 0.05278818,
+      "skeleton_gap": 0.008915795,
+      "grip_gap": 0.05278818,
+      "counterweight_gap": 0.006543367,
+      "item_mass": 1,
+      "counterweight_mass": 1,
+      "min_head_y": 1.623742,
+      "travel": 3.132623,
+      "max_weapon_speed": 24.94424,
+      "motion_spent": 59.7495,
+      "health": 117.227,
+      "worst": "handNear"
+    },
+    {
+      "weapon": "axe",
+      "max_gap": 0.03641316,
+      "skeleton_gap": 0.01079222,
+      "grip_gap": 0.03641316,
+      "counterweight_gap": 0.001927217,
+      "item_mass": 1,
+      "counterweight_mass": 1,
+      "min_head_y": 1.630338,
+      "travel": 3.243541,
+      "max_weapon_speed": 36.04382,
+      "motion_spent": 72,
+      "health": 114.9788,
+      "worst": "handNear"
+    },
+    {
+      "weapon": "mace",
+      "max_gap": 0.03980253,
+      "skeleton_gap": 0.01335359,
+      "grip_gap": 0.03980253,
+      "counterweight_gap": 0.001121902,
+      "item_mass": 3,
+      "counterweight_mass": 2.5,
+      "min_head_y": 1.625357,
+      "travel": 3.311098,
+      "max_weapon_speed": 19.2837,
+      "motion_spent": 81.4165,
+      "health": 118.494,
+      "worst": "handNear"
+    },
+    {
+      "weapon": "spear",
+      "max_gap": 0.04005708,
+      "skeleton_gap": 0.01348144,
+      "grip_gap": 0.04005708,
+      "counterweight_gap": 0.003233018,
+      "item_mass": 3,
+      "counterweight_mass": 0.5,
+      "min_head_y": 1.632975,
+      "travel": 3.266371,
+      "max_weapon_speed": 25.43653,
+      "motion_spent": 54,
+      "health": 96.30952,
+      "worst": "handNear"
+    },
+    {
+      "weapon": "greatsword",
+      "max_gap": 0.05261417,
+      "skeleton_gap": 0.01132412,
+      "grip_gap": 0.05261417,
+      "counterweight_gap": 0.003696317,
+      "item_mass": 2,
+      "counterweight_mass": 0.25,
+      "min_head_y": 1.602007,
+      "travel": 3.345625,
+      "max_weapon_speed": 36.5221,
+      "motion_spent": 54,
+      "health": 116.7079,
+      "worst": "handNear"
+    },
+    {
+      "weapon": "greataxe",
+      "max_gap": 0.02484418,
+      "skeleton_gap": 0.01183223,
+      "grip_gap": 0.02484418,
+      "counterweight_gap": 0.003580871,
+      "item_mass": 2.25,
+      "counterweight_mass": 1.25,
+      "min_head_y": 1.615545,
+      "travel": 3.29805,
+      "max_weapon_speed": 32.40666,
+      "motion_spent": 60,
+      "health": 118.0065,
+      "worst": "handNear"
+    },
+    {
+      "weapon": "warhammer",
+      "max_gap": 0.02537804,
+      "skeleton_gap": 0.01201036,
+      "grip_gap": 0.02537804,
+      "counterweight_gap": 0.003410829,
+      "item_mass": 3,
+      "counterweight_mass": 1.5,
+      "min_head_y": 1.616392,
+      "travel": 3.325596,
+      "max_weapon_speed": 27.65407,
+      "motion_spent": 48,
+      "health": 119.5016,
+      "worst": "handNear"
+    }
+  ],
+  "maximum_gaps_m": {
+    "skeleton_gap": 0.01390831,
+    "grip_gap": 0.08140267,
+    "counterweight_gap": 0.008810424
+  },
+  "original_runtime_comparison_completed": false,
+  "limitations": [
+    "Original AI input animations and full kick branches have not been reconstructed.",
+    "Layered armor, piercing/bleeding/finisher state machines, flails and network prediction remain incomplete.",
+    "Body and weapon shapes/inertias and counterweight offsets still need runtime calibration.",
+    "Solver iterations are 50/60; reference uses 10/10.",
+    "The supplied APK is a modification; equivalence with the official release has not been established."
+  ]
+}
