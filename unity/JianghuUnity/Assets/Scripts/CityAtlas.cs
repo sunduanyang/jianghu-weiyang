@@ -32,7 +32,9 @@ public partial class JianghuApp {
     GUIStyle inkLabel,inkBold,inkSmall,atlasTitle,atlasHalo,atlasNote,atlasLegend,inkBoldOn,inkSmallOn,atlasTitleVertical,atlasSeal;
     static readonly Color AtlasInkColor=new Color(.17f,.13f,.10f),AtlasRoad=new Color(.62f,.40f,.20f,.85f),AtlasPost=new Color(.60f,.16f,.10f,.92f),AtlasSea=new Color(.18f,.38f,.44f,.92f),AtlasGold=new Color(.86f,.60f,.18f);
 
-    Texture2D ScrollArt(string name){if(!scrollArt.TryGetValue(name,out var t)){t=Resources.Load<Texture2D>("Scroll/"+name);scrollArt[name]=t;}return t;}
+    // Hand-painted replacements in Resources/Scroll/Art/ (same file name) win over the baked texture;
+    // bake_scroll.py never writes there. See unity/ART_PROMPTS.md and unity/import_scroll_art.py.
+    Texture2D ScrollArt(string name){if(!scrollArt.TryGetValue(name,out var t)){t=Resources.Load<Texture2D>("Scroll/Art/"+name);if(t==null)t=Resources.Load<Texture2D>("Scroll/"+name);scrollArt[name]=t;}return t;}
     void InitAtlasStyles(){
         if(inkLabel!=null)return;
         inkLabel=new GUIStyle(mapLabel){fontSize=13,alignment=TextAnchor.MiddleCenter,wordWrap=false};TextColor(inkLabel,AtlasInkColor);
