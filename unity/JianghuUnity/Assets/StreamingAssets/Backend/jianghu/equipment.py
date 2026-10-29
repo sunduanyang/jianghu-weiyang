@@ -139,7 +139,7 @@ def view(w, owner='player'):
             continue
         candidates.append({**items.describe(item), **items.grade_info(spec['grade']),
                            'slot': spec['category'], 'slot_name': items.SLOTS[spec['category']],
-                           'repair_price': items.repair_price(item),
+                           'repair_price': items.repair_price(item, items.repair_cap(w, owner)),
                            'operations': items.operations(w, owner, item),
                            'preview': preview(w, owner, item['id'])})
     locked = bool(w.battle and w.battle['status'] == 'active')
