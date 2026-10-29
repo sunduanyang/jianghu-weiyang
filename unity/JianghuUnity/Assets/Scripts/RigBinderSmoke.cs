@@ -48,6 +48,27 @@ public sealed class RigBinderSmoke:MonoBehaviour {
             bool grounded=mode!=RigPuppet.Mode.Fall||puppet.JointIds.All(j=>puppet.Joint(j).y<=puppet.Ground+1);
             Check("puppet stays together while "+(mode==RigPuppet.Mode.Hang?"dragged on its string":"falling"),puppet.Finite&&puppet.MaxStretch()<.03f&&grounded,J.O("max_stretch",puppet.MaxStretch(),"grounded",grounded));
         }
+        // 3b. 自动猜关节：与示例的手工标注相比，中位误差不超过拆件尺寸的 8%；面朝左的原画猜出的点左右对称。
+        var guessErrors=new List<float>();
+        foreach(var def in RigSlots.All){
+            if(!rig.Usable(def.Id))continue;var piece=rig.SlotPiece(def.Id);var guess=RigAutoJoints.Guess(def.Id,piece.Tex);
+            foreach(var p in rig.Slots[def.Id].Points)if(guess.TryGetValue(p.Key,out var g))guessErrors.Add(Vector2.Distance(g,p.Value)/Mathf.Max(piece.Width,piece.Height));
+        }
+        guessErrors.Sort();float median=guessErrors.Count>0?guessErrors[guessErrors.Count/2]:1;
+        Check("auto-guessed joints land near the hand-placed ones",median<.08f,J.O("median_error_of_piece_size",Math.Round(median,3),"points",guessErrors.Count));
+        var arm=rig.SlotPiece("upperNear").Tex;var flipped=new Texture2D(arm.width,arm.height,TextureFormat.RGBA32,false);var src=arm.GetPixels32();var dst=new Color32[src.Length];
+        for(int y=0;y<arm.height;y++)for(int x=0;x<arm.width;x++)dst[y*arm.width+x]=src[y*arm.width+arm.width-1-x];flipped.SetPixels32(dst);flipped.Apply();
+        var right=RigAutoJoints.Guess("upperNear",arm);var leftGuess=RigAutoJoints.Guess("upperNear",flipped,true);Destroy(flipped);
+        float mirrorError=right.Keys.Max(key=>Vector2.Distance(right[key],new Vector2(arm.width-1-leftGuess[key].x,leftGuess[key].y)));
+        Check("left-facing art is guessed as the mirror image",mirrorError<=2,J.O("max_px",mirrorError));
+        // 3c. 接缝：出场姿势下测量；开启接缝补偿后最大接缝不增大。
+        var pose=RigDuelPreview.Provider(RigDuelPreview.SpawnPose(0,1),rig);float k=RigPoseRenderer.FitScale(rig,pose);
+        float savedTol=rig.FitTolerance;rig.FitTolerance=0;var raw=RigPoseRenderer.MeasureSeams(rig,pose,k,false);
+        rig.FitTolerance=.15f;var fitted=RigPoseRenderer.MeasureSeams(rig,pose,k,false);rig.FitTolerance=savedTol;
+        var mirrored=RigPoseRenderer.MeasureSeams(rig,RigDuelPreview.Provider(RigDuelPreview.SpawnPose(0,-1),rig),k,true);
+        Check("seams are measured for every joint and compensation closes them overall",raw.Count>=11&&fitted.Values.Sum()<raw.Values.Sum(),
+            J.O("meters_per_pixel",k,"total_raw",raw.Values.Sum(),"total_fitted",fitted.Values.Sum(),"seams",J.O(raw.SelectMany(p=>new object[]{p.Key,Math.Round(p.Value,1)}).ToArray())));
+        Check("facing left gives the same seams as facing right",raw.All(p=>mirrored.TryGetValue(p.Key,out var m)&&Mathf.Abs(m-p.Value)<.5f));
         // 4. 存取一致
         string copy=Path.Combine(output,"saved-copy");rig.Save(copy);var again=RigBinding.Load(copy);
         Check("saved rig reloads identically",again.ToJson().ToString()==rig.ToJson().ToString()&&again.Pieces.Count==rig.Pieces.Count&&again.Pieces.All(p=>p.Tex!=null&&p.Tex.width==rig.Piece(p.Name).Width));
@@ -60,15 +81,16 @@ public sealed class RigBinderSmoke:MonoBehaviour {
             Check("binder tab opens on a saved rig",app.RigBinderRig!=null,J.O("status",app.RigBinderStatus));
         }else Check("backend ready for binder screen",false);
         // 6. 切磋里使用绑定
-        string priorActive=RigLibrary.Active;bool priorEnemy=RigLibrary.EnemyToo;
+        string priorActive=RigLibrary.Active,priorOpponent=RigLibrary.Opponent;
         try{
-            RigLibrary.Active="示例少年";RigLibrary.EnemyToo=true;
+            RigLibrary.Active="示例少年";RigLibrary.Opponent="示例少年";
             PhysicsDuel.OpenReferenceSandbox();for(int i=0;i<20;i++)yield return null;
             var duel=PhysicsDuel.Instance;
             yield return Picture("duel");
             var mismatch=duel!=null&&duel.player!=null?duel.player.BoundRigMismatch():new Dictionary<string,float>();
-            Check("sparring draws both fighters with the bound rig",duel!=null&&duel.player!=null&&duel.player.UsesBoundRig&&duel.enemy.UsesBoundRig,J.O("meters_per_pixel",duel?.player?.BoundRigMetersPerPixel??0,"mismatch",J.O(mismatch.SelectMany(p=>new object[]{p.Key,Math.Round(p.Value,3)}).ToArray())));
-        }finally{RigLibrary.Active=priorActive;RigLibrary.EnemyToo=priorEnemy;}
+            var liveSeams=duel!=null&&duel.player!=null?duel.player.BoundRigSeams():new Dictionary<string,float>();
+            Check("sparring draws both fighters with the bound rig",duel!=null&&duel.player!=null&&duel.player.UsesBoundRig&&duel.enemy.UsesBoundRig,J.O("meters_per_pixel",duel?.player?.BoundRigMetersPerPixel??0,"mismatch",J.O(mismatch.SelectMany(p=>new object[]{p.Key,Math.Round(p.Value,3)}).ToArray()),"seams",J.O(liveSeams.SelectMany(p=>new object[]{p.Key,Math.Round(p.Value,1)}).ToArray())));
+        }finally{RigLibrary.Active=priorActive;RigLibrary.Opponent=priorOpponent;}
     }
 }
 }

@@ -48,7 +48,8 @@ public sealed class RigPuppet {
             string parentId=l.TorsoRelative?"torso":rig.ParentRef(b.Id).Split('.')[0];
             if(!BoneOf.TryGetValue(parentId,out var pb))continue;
             float rest=Mathf.DeltaAngle(BindAngle(pb),BindAngle(b));
-            limits.Add(new JointLimit{Child=b,Parent=pb,Rest=rest,Min=l.Min,Max=l.Max});
+            // 限位按面朝右定义（负值向前、向上）；原画面朝左时左右相反。
+            limits.Add(new JointLimit{Child=b,Parent=pb,Rest=rest,Min=rig.ArtFacesLeft?-l.Max:l.Min,Max=rig.ArtFacesLeft?-l.Min:l.Max});
         }
         if(Ids.Count>0){
             float x0=float.MaxValue,y0=float.MaxValue,x1=float.MinValue,y1=float.MinValue;

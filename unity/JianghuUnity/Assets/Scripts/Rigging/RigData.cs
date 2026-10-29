@@ -61,6 +61,8 @@ public sealed class RigBinding {
     public const string Format="jianghu-joint-rig";
     public const int Version=2;
     public string Name="新角色",Folder="",SourceSheet="";
+    public bool ArtFacesLeft;          // 原画人物面朝左
+    public float FitTolerance;         // 接缝补偿：允许每块按骨长等比缩放的幅度（0 ~ 0.2），不拉伸
     public readonly List<RigPiece> Pieces=new List<RigPiece>();
     public Dictionary<string,RigSlotBind> Slots=new Dictionary<string,RigSlotBind>();
     public List<string> Order=RigSlots.DefaultOrder.ToList();
@@ -115,7 +117,7 @@ public sealed class RigBinding {
         var pieces=new List<J>();
         foreach(var p in Pieces)pieces.Add(J.O("name",p.Name,"file",p.File??"","size",new J(new List<J>{new J(p.Width),new J(p.Height)}),"source_rect",p.Source.x<0?new J():new J(new List<J>{new J(p.Source.x),new J(p.Source.y),new J(p.Source.width),new J(p.Source.height)})));
         var limits=J.O();foreach(var l in Limits)limits[l.Key]=J.O("relative_to",l.Value.TorsoRelative?"torso":"parent","min_deg",l.Value.Min,"max_deg",l.Value.Max);
-        return J.O("format",Format,"version",Version,"name",Name,"facing","right","coordinates","每块拆件自身像素坐标，x 向右，y 向下",
+        return J.O("format",Format,"version",Version,"name",Name,"facing",ArtFacesLeft?"left":"right","fit_tolerance",Math.Round(FitTolerance,2),"coordinates","每块拆件自身像素坐标，x 向右，y 向下",
             "source_sheet",SourceSheet,"pieces",new J(pieces),"slots",slots,"draw_order",new J(Order.Select(o=>new J(o)).ToList()),"limits",limits);
     }
     static J Pair(Vector2 v)=>new J(new List<J>{new J(Math.Round(v.x,1)),new J(Math.Round(v.y,1))});
@@ -123,7 +125,7 @@ public sealed class RigBinding {
     // 读入绑定。pieceLoader 根据拆件记录返回贴图（可为空）；网页版导出的 v1 没有 pieces 字段，按 slots 里的名称对应。
     public static RigBinding FromJson(J j,Func<J,Texture2D> pieceLoader){
         if(j["format"].S!=Format)throw new FormatException("不是关节绑定数据（format 应为 "+Format+"）");
-        var r=new RigBinding{Name=j["name"].Has?j["name"].S:"导入的角色",SourceSheet=j["source_sheet"].S};
+        var r=new RigBinding{Name=j["name"].Has?j["name"].S:"导入的角色",SourceSheet=j["source_sheet"].S,ArtFacesLeft=j["facing"].S=="left",FitTolerance=Mathf.Clamp((float)j["fit_tolerance"].N,0,.2f)};
         foreach(var pj in j["pieces"].A){
             var p=new RigPiece{Name=pj["name"].S,File=pj["file"].S};var sr=pj["source_rect"];
             if(sr.A.Count==4)p.Source=new RectInt(sr[0].I,sr[1].I,sr[2].I,sr[3].I);
@@ -181,10 +183,11 @@ public static class RigLibrary {
     public static string BuiltinSheets=>Path.Combine(Application.streamingAssetsPath,"RigSources");
     public static string PlayerSheets=>Path.Combine(Application.persistentDataPath,"RigSources");
     public static string SaveRoot=>Application.isEditor?BuiltinRigs:PlayerRigs;
-    const string ActiveKey="jianghu.rig.active",EnemyKey="jianghu.rig.enemy";
+    const string ActiveKey="jianghu.rig.active",EnemyKey="jianghu.rig.opponent";
     static readonly Dictionary<string,RigBinding> cache=new Dictionary<string,RigBinding>();
     public static string Active{get=>PlayerPrefs.GetString(ActiveKey,"");set{PlayerPrefs.SetString(ActiveKey,value??"");PlayerPrefs.Save();}}
-    public static bool EnemyToo{get=>PlayerPrefs.GetInt(EnemyKey,0)==1;set{PlayerPrefs.SetInt(EnemyKey,value?1:0);PlayerPrefs.Save();}}
+    // 对手外观：可与玩家不同；为空时对手保持原来的人物。
+    public static string Opponent{get=>PlayerPrefs.GetString(EnemyKey,"");set{PlayerPrefs.SetString(EnemyKey,value??"");PlayerPrefs.Save();}}
     public static string SafeFolder(string name){
         var bad=Path.GetInvalidFileNameChars();var s=new string((name??"").Trim().Select(c=>bad.Contains(c)?'_':c).ToArray());
         return string.IsNullOrEmpty(s)?"角色":s;
@@ -219,13 +222,12 @@ public static class RigLibrary {
         cache[folder]=r;return r;
     }
     public static void Invalidate(string folder){if(folder!=null)cache.Remove(folder);listed=null;}
-    // 切磋用的外观：玩家用「设为切磋外观」选中的绑定；勾选「对手也用」时对手同样使用。
+    // 切磋用的外观：玩家用「设为切磋外观」选中的绑定，对手用「设为对手外观」选中的绑定。
     // 其它验收脚本运行时不用玩家选的外观，保证它们看到的仍是原来的人物；本功能自己的验收除外。
     public static bool SuppressedForAcceptance=>Environment.GetCommandLineArgs().Any(a=>a.StartsWith("-")&&a.EndsWith("Smoke")&&a!="-rigBinderSmoke");
     public static RigBinding ForDuel(bool human){
         if(SuppressedForAcceptance)return null;
-        if(!human&&!EnemyToo)return null;
-        var r=Get(Active);
+        var r=Get(human?Active:Opponent);
         return ForDuelCandidate(r)?r:null;
     }
     // 切磋至少需要躯干、头、近侧手臂和两条腿；远侧手臂和衣摆可缺。

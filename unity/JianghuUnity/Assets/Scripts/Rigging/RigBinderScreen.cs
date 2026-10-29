@@ -8,7 +8,7 @@ namespace Jianghu {
 // 系统 · 关节绑定：导入拆件图、分配部位、点关节、拖动木偶检查、保存并设为切磋外观。
 public partial class JianghuApp {
     RigBinding rbRig;RigPuppet rbPuppet;string rbFolder,rbSel="torso",rbPt="pivot",rbStatus="",rbDragPt,rbDragJoint,rbName="";
-    RigPuppet.Mode rbMode=RigPuppet.Mode.Hang;bool rbSheets,rbShowJoints=true,rbOpened;
+    RigPuppet.Mode rbMode=RigPuppet.Mode.Hang;bool rbSheets,rbShowJoints=true,rbOpened,rbDuelView;
     Vector2 rbDragTo,rbSlotScroll,rbTrayScroll,rbOrderScroll,rbSheetScroll;float rbClock;
     readonly Stack<string> rbUndo=new Stack<string>();
     static Texture2D rbDisc;
@@ -71,9 +71,17 @@ public partial class JianghuApp {
             else{RigLibrary.Active=rbFolder;rbStatus="下次进入切磋时，你的角色会用「"+rbRig.Name+"」。";}
         }
         GUI.enabled=true;x+=132;
-        bool enemy=GUI.Toggle(new Rect(x,y+3,90,22),RigLibrary.EnemyToo,"对手也用");if(enemy!=RigLibrary.EnemyToo)RigLibrary.EnemyToo=enemy;x+=96;
-        if(GUI.Button(new Rect(x,y,150,26),"读入网页版 JSON",chip))RbImportClipboard();x+=156;
-        if(GUI.Button(new Rect(x,y,90,26),"存放位置",chip)){Directory.CreateDirectory(RigLibrary.SaveRoot);Application.OpenURL(RigLibrary.SaveRoot);}x+=96;
+        bool isOpponent=rbFolder!=null&&RigLibrary.Opponent==rbFolder;
+        GUI.enabled=canDuel||isOpponent;
+        if(GUI.Button(new Rect(x,y,126,26),isOpponent?"取消对手外观":"设为对手外观",isOpponent?selected:chip)){
+            if(isOpponent){RigLibrary.Opponent="";rbStatus="对手改回原来的人物外观。";}
+            else{RigLibrary.Opponent=rbFolder;rbStatus="下次切磋时，对手会用「"+rbRig.Name+"」"+(RigLibrary.Active==rbFolder?"（与你相同，略偏冷色以便区分）。":"。");}
+        }
+        GUI.enabled=true;x+=132;
+        bool left=GUI.Toggle(new Rect(x,y+3,104,22),rbRig.ArtFacesLeft,"原画面朝左");
+        if(left!=rbRig.ArtFacesLeft){RbChange();rbRig.ArtFacesLeft=left;RbRebuild();rbStatus=left?"按面朝左的原画处理：切磋里会自动翻转。":"按面朝右的原画处理。";}x+=110;
+        if(GUI.Button(new Rect(x,y,132,26),"读入网页版 JSON",chip))RbImportClipboard();x+=138;
+        if(GUI.Button(new Rect(x,y,84,26),"存放位置",chip)){Directory.CreateDirectory(RigLibrary.SaveRoot);Application.OpenURL(RigLibrary.SaveRoot);}x+=90;
         GUI.Label(new Rect(x,y+3,r.xMax-x,24),rbStatus,small);
     }
     void RbSave(){
@@ -134,7 +142,8 @@ public partial class JianghuApp {
 
     // ---------------------------------------------------------------- slots
     void RbSlots(Rect r){
-        GUI.Label(new Rect(r.x,r.y,r.width,22),"部位  "+rbRig.RequiredDone+" / "+rbRig.RequiredTotal+" 完成",small);
+        GUI.Label(new Rect(r.x,r.y,r.width,22),"部位  "+rbRig.RequiredDone+" / "+rbRig.RequiredTotal,small);
+        if(GUI.Button(new Rect(r.xMax-96,r.y-2,96,22),"补猜空部位",chip))RbGuessAll();
         Rect view=new Rect(r.x,r.y+24,r.width,r.height-24);
         int rows=RigSlots.All.Length+RigSlots.All.Select(s=>s.Group).Distinct().Count();
         Rect content=new Rect(0,0,r.width-18,rows*27);
@@ -178,7 +187,8 @@ public partial class JianghuApp {
         }else GUI.Label(new Rect(r.x,by,r.width,22),rbSel=="torso"?"躯干是根，不限转动。":"大臂绕肩自由转动。",small);
         if(GUI.Button(new Rect(r.x,by+26,96,26),"取消分配",chip)&&piece!=null){RbChange();rbRig.Slots[rbSel]=new RigSlotBind();RbRebuild();}
         if(GUI.Button(new Rect(r.x+102,by+26,120,26),"清空本块关节",chip)&&piece!=null){RbChange();rbRig.Slots[rbSel].Points.Clear();rbPt="pivot";RbRebuild();}
-        GUI.Label(new Rect(r.x+230,by+28,r.width-230,24),"起点接上一级，终点接下一级。手的握点决定兵器握在哪。",small);
+        if(GUI.Button(new Rect(r.x+228,by+26,110,26),"自动猜关节",chip)&&piece!=null)RbGuess(rbSel,true);
+        GUI.Label(new Rect(r.x+346,by+28,r.width-346,24),"猜完再拖动微调。",small);
     }
     void RbEditImage(Rect img,RigPiece piece){
         float s=Mathf.Min((img.width-40)/piece.Width,(img.height-40)/piece.Height,3f);
@@ -211,11 +221,13 @@ public partial class JianghuApp {
     void RbPreview(Rect r){
         float x=r.x;
         foreach(var m in new[]{(RigPuppet.Mode.Bind,"原样拼合"),(RigPuppet.Mode.Hang,"提线悬挂"),(RigPuppet.Mode.Fall,"落地")}){
-            if(GUI.Button(new Rect(x,r.y,96,26),m.Item2,rbMode==m.Item1?selected:chip)){rbMode=m.Item1;rbPuppet?.Reset(rbMode);}x+=100;
+            if(GUI.Button(new Rect(x,r.y,84,26),m.Item2,rbMode==m.Item1&&!rbDuelView?selected:chip)){rbMode=m.Item1;rbDuelView=false;rbPuppet?.Reset(rbMode);}x+=88;
         }
-        if(GUI.Button(new Rect(x,r.y,60,26),"复位",chip))rbPuppet?.Reset(rbMode);x+=66;
-        rbShowJoints=GUI.Toggle(new Rect(x,r.y+3,100,22),rbShowJoints,"显示关节");
+        if(GUI.Button(new Rect(x,r.y,84,26),"切磋预览",rbDuelView?selected:chip))rbDuelView=true;x+=88;
+        if(GUI.Button(new Rect(x,r.y,50,26),"复位",chip))rbPuppet?.Reset(rbMode);x+=54;
+        rbShowJoints=GUI.Toggle(new Rect(x,r.y+3,r.xMax-x,22),rbShowJoints,"关节");
         Rect stage=new Rect(r.x,r.y+32,r.width,330);StagePanel(stage);
+        if(rbDuelView){RbDuelPreview(stage,new Rect(r.x,stage.yMax+6,r.width,r.yMax-stage.yMax-6));return;}
         if(rbPuppet==null||!rbPuppet.Has("torso")){GUI.Label(new Rect(stage.x,stage.center.y-12,stage.width,24),"先完成躯干的四个关节，木偶才会出现。",new GUIStyle(text){alignment=TextAnchor.MiddleCenter});RbProportions(new Rect(r.x,stage.yMax+6,r.width,r.yMax-stage.yMax-6));return;}
         var e=Event.current;
         if(e.type==EventType.Repaint){rbClock+=Mathf.Min(.1f,Time.unscaledDeltaTime);int steps=0;while(rbClock>=1f/60&&steps<4){rbPuppet.Step(rbMode,rbDragJoint,rbDragTo);rbClock-=1f/60;steps++;}}
@@ -291,6 +303,61 @@ public partial class JianghuApp {
             if(i<rbRig.Order.Count-1&&GUI.Button(new Rect(content.width-32,i*24,30,22),"↓",chip)){RbChange();var t=rbRig.Order[i+1];rbRig.Order[i+1]=id;rbRig.Order[i]=t;}
         }
         GUI.EndScrollView();
+    }
+
+    // ---------------------------------------------------------------- auto guess
+    void RbGuess(string id,bool overwrite){
+        var piece=rbRig.SlotPiece(id);if(piece?.Tex==null)return;
+        if(overwrite)RbChange();
+        var guess=RigAutoJoints.Guess(id,piece.Tex,rbRig.ArtFacesLeft);var pts=rbRig.Slots[id].Points;
+        foreach(var g in guess)if(overwrite||!pts.ContainsKey(g.Key))pts[g.Key]=g.Value;
+        RbRebuild();if(overwrite)rbStatus="已按形状猜出「"+RigSlots.ById[id].Label+"」的关节，请对照布料拖动微调。";
+    }
+    void RbGuessAll(){
+        RbChange();int n=0;
+        foreach(var s in RigSlots.All){var b=rbRig.Slots[s.Id];if(rbRig.SlotPiece(s.Id)?.Tex==null||b.Points.Count>0)continue;RbGuess(s.Id,false);n++;}
+        rbStatus=n>0?"已给 "+n+" 个还没点关节的部位猜了关节，逐个检查一下。":"已分配的部位都已有关节；要重猜某一块，用中间的「自动猜关节」。";
+    }
+
+    // ---------------------------------------------------------------- sparring preview
+    // 两人按切磋骨架的出场姿势对面站，画法与切磋完全相同。下方列出各关节的接缝与补偿。
+    void RbDuelPreview(Rect stage,Rect below){
+        if(!RigLibrary.ForDuelCandidate(rbRig)){
+            GUI.Label(new Rect(stage.x+20,stage.center.y-24,stage.width-40,48),"切磋至少需要躯干、头、近侧手臂和两条腿都完成。",new GUIStyle(text){alignment=TextAnchor.MiddleCenter,wordWrap=true});return;
+        }
+        var left=RigDuelPreview.SpawnPose(-.62f,1);var right=RigDuelPreview.SpawnPose(.62f,-1);
+        var lp=RigDuelPreview.Provider(left,rbRig);var rp=RigDuelPreview.Provider(right,rbRig);
+        float k=RigPoseRenderer.FitScale(rbRig,lp);if(!(k>0))return;
+        float ppm=Mathf.Min(stage.width/2.6f,stage.height/2.05f);Vector2 ground=new Vector2(stage.width/2,stage.height-22);
+        System.Func<Vector2,Vector2> toLocal=w=>ground+new Vector2(w.x*ppm,-w.y*ppm);
+        GUI.BeginClip(stage);
+        try{
+            Vector2 clip=paperDrawOrigin+stage.position;
+            Fill(new Rect(0,ground.y,stage.width,1.5f),new Color(.2f,.13f,.08f,.6f));
+            foreach(var side in new[]{(lp,false,left),(rp,true,right)}){
+                var pose=side.Item3;bool faceLeft=side.Item2;
+                RigPoseRenderer.Draw(rbRig,side.Item1,toLocal,k,ppm,faceLeft,faceLeft?new Color(.84f,.9f,1f):Color.white,clip,()=>{
+                    var h=pose["handNear"];Vector2 a=toLocal(h.B),dir=(toLocal(h.B)-toLocal(h.A)).normalized;
+                    float turn=faceLeft?60:-60,rad=turn*Mathf.Deg2Rad;Vector2 d=new Vector2(dir.x*Mathf.Cos(rad)-dir.y*Mathf.Sin(rad),dir.x*Mathf.Sin(rad)+dir.y*Mathf.Cos(rad));
+                    RbLine(a-d*ppm*.12f,a+d*ppm*.8f,3,new Color(.25f,.27f,.3f),clip);
+                });
+                if(rbShowJoints)foreach(var pair in pose){RbLine(toLocal(pair.Value.A),toLocal(pair.Value.B),1.5f,new Color(.1f,.5f,.45f,.8f),clip);RbDot(toLocal(pair.Value.A),6,new Color(.7f,.18f,.1f));}
+            }
+        }finally{GUI.EndClip();}
+        var seams=RigPoseRenderer.MeasureSeams(rbRig,lp,k,false);
+        GUI.Label(new Rect(below.x,below.y,below.width,20),"接缝（原画像素）：上一块的接口与下一块起点相距多远。露在外面且超过 20 的标红。",small);
+        int i=0;
+        foreach(var g in seams){
+            string hidden=RigPoseRenderer.SeamHidden(rbRig,g.Key);
+            var old=GUI.color;GUI.color=hidden!=null?new Color(.3f,.24f,.17f,.5f):g.Value>20?new Color(.72f,.2f,.12f):new Color(.3f,.24f,.17f);
+            GUI.Label(new Rect(below.x+(i%4)*(below.width/4),below.y+20+(i/4)*18,below.width/4,18),RigPoseRenderer.SeamLabel(g.Key)+" "+Mathf.RoundToInt(g.Value)+(hidden!=null?"（"+hidden+"）":""),small);
+            GUI.color=old;i++;
+        }
+        float y=below.y+22+Mathf.CeilToInt(seams.Count/4f)*18;
+        GUI.Label(new Rect(below.x,y,170,22),"接缝补偿 ±"+Mathf.RoundToInt(rbRig.FitTolerance*100)+"%",small);
+        float tol=GUI.HorizontalSlider(new Rect(below.x+170,y+6,180,16),rbRig.FitTolerance,0,.2f);
+        if(Mathf.Abs(tol-rbRig.FitTolerance)>.001f)rbRig.FitTolerance=Mathf.Round(tol*100)/100;
+        GUI.Label(new Rect(below.x+360,y,below.width-360,22),"每块按骨长等比微缩放，不拉伸",small);
     }
 
     // ---------------------------------------------------------------- small drawing helpers
