@@ -1,7 +1,7 @@
-"""Rebuild art/world-map/geography-compact.json for the consolidated town regions.
+"""Rebuild art/world-map/geography-compact.json for the eight regional cities.
 
-It reuses the land and political layers of art/world-map/geography.json, recomputes the town cells for the
-current settlements.HUBS and lays a winding road for every consolidated route. Roads are a path search
+It reuses the land layer of art/world-map/geography.json, recomputes the region cells for
+settlements.HUBS and lays a winding road for every route. Roads are a path search
 over a cost field (sea and mountain ranges are expensive, a smooth noise field makes them meander, and
 cells already used by a road are cheaper so routes share trunks); sea routes are gentle arcs.
 
@@ -188,8 +188,8 @@ def roads(land_path):
 
 
 def label_anchors(data):
-    """Store each town region's land area and land centroid, so the game can place a power's name in
-    the middle of the land it holds (cells are clipped to the native territory and the coast)."""
+    """Store each region's land area and land centroid, so the game can place the region's name in
+    the middle of its land (cells are clipped to the jianghu range and the coast)."""
     def mask(paths):
         m = Image.new('L', (1280, 760), 0)
         d = ImageDraw.Draw(m)
@@ -213,7 +213,7 @@ def main():
     full = json.loads((ROOT / 'art' / 'world-map' / 'geography.json').read_text(encoding='utf-8'))
     hubs = [PLACES[h] for h in settlements.HUBS]
     data = {**full, **political_layers(hubs)}
-    data['note'] = f'{len(hubs)}处主要城镇区域，按各方疆域广狭设置；周边小聚落与山门并入所属城镇。'
+    data['note'] = f'江湖分为{len(hubs)}个地区，每区一城；范围按邻近城池示意划分。'
     data['roads'] = roads(full['land'])
     label_anchors(data)
     target = ROOT / 'art' / 'world-map' / 'geography-compact.json'

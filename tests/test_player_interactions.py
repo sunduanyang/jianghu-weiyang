@@ -20,8 +20,8 @@ class PlayerInteractionTests(unittest.TestCase):
     def setUp(self):
         self.w = w = World(42, 0, durable=False)
         self.addCleanup(w.store.close)
-        protagonist.perform(w, dict(action='create', revision=0, month=0, name='来客', sex='女', age=24, place=45))
-        self.n = n = w.make_npc(place=45)
+        protagonist.perform(w, dict(action='create', revision=0, month=0, name='来客', sex='女', age=24, place=0))
+        self.n = n = w.make_npc(place=0)
         n.update(age_months=360, health=100., wealth=100., time_left=4, spouse=None, orientation='皆可')
         n['traits'].update(integrity=90., sociability=90., kindness=90., boldness=50.)
         n['mood'].update(anger=0., joy=0.)
@@ -52,7 +52,7 @@ class PlayerInteractionTests(unittest.TestCase):
     def test_hard_blockers_and_invalid_revisions_are_atomic(self):
         for extra in ({'revision':-1}, {'revision':True}, {'month':True}, {'action':'unknown'}, {'npc_id':True}, {'price':0}):
             body=self.body('praise');body.update(extra);self.reject_unchanged(body)
-        for field,value in (('alive',False),('place',46)):
+        for field,value in (('alive',False),('place',1)):
             before=self.n[field];self.n[field]=value;self.reject_unchanged(self.body('praise'));self.n[field]=before
         self.w.player['protagonist']['points']=0
         self.reject_unchanged(self.body('insult'))

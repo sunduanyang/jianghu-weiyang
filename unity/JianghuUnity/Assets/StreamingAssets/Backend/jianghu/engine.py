@@ -14,7 +14,7 @@ from .atlas import PLACES, FACTIONS, COUNTRIES, ROUTES, NEIGHBORS, MAP_VERSION, 
 from . import careers, crafts, social_ranks, undertakings, fame, visits, turning, creed
 from . import martial, martial_manuals, physical_combat as combat, player_interactions, player_social
 from . import city_maps, relationships, organizations, protagonist, settlements, society, temperament, goals
-from . import npc_plans, npc_memory, economics, rank_progression, local_life, llm_policy, npc_attention
+from . import npc_plans, npc_memory, economics, rank_progression, local_life, llm_policy, npc_attention, sect_life
 
 TRAITS = dict(temperament.NAMES)
 BELIEFS = dict(temperament.OUTLOOK_NAMES)
@@ -43,6 +43,13 @@ def date(month):
     return f'景和{month // 12 + 1}年{month % 12 + 1}月'
 
 
+class LegacyWorldError(ValueError):
+    """A save from the historical East Asian atlas (map version 4 or older)."""
+    def __init__(self, version):
+        self.version = version
+        super().__init__(f'此存档来自旧版天下（舆图第{version or 1}版），新版江湖分为八个地区，只能另起新世界；原存档文件保持不变。')
+
+
 class World:
     def __init__(self, seed=42, population=100, store=None, load=True, durable=True, compact=False,
                  population_profile=False, start_month=0, market_economy=False, rank_assessments=False):
@@ -63,7 +70,6 @@ class World:
         self._atlas_migration = None
         self.countries = politics.new()
         self.territory = territory.new()
-        self.campaigns = {'last_attack': {}, 'history': []}
         self.city_map_version = city_maps.VERSION
         self.city_settlement_profiles = {}
         self.city_positions = {}
@@ -84,38 +90,15 @@ class World:
         self.residents = {}
         self.durable = durable
         state = self.store.load() if load else None
+        if state and state.get('map_version') != MAP_VERSION:
+            self.store.close()
+            raise LegacyWorldError(state.get('map_version'))
         if state:
             self.restore(state)
             if self._sect_migration:
-                e = self.emit('sects_rebuilt', [], '门派重整为十四家，各建独立九格驻地；撤销的组织退出现世，旧履历与库银交接留档。',
+                e = self.emit('sects_rebuilt', [], f'门派重整为{len(FACTIONS)}家，各建独立九格驻地；撤销的组织退出现世，旧履历与库银交接留档。',
                               .9, facts=self._sect_migration)
                 self._sect_migration['event_id'] = e['id']
-                self.checkpoint()
-            if 'government' not in state:
-                government.establish(self)
-            elif 'governments' not in state:
-                for g in self.governments[1:]:
-                    government.establish(self, g)
-            if state.get('map_version') == 2:
-                self.emit('atlas_revised', [], '舆图改依约公元1200年宋金形势重绘；原有公帑按辖地转入各政权，人物财产与旧年谱保留。', .9,
-                          facts=self._atlas_migration)
-            elif state.get('map_version') == 3:
-                self.emit('world_expansion', [], '东海舆图展开：补入高丽、日本与各地聚落，城镇开始独立记录控制权；'
-                          '旧有人物、财产、外交与年谱保留。', .9,
-                          facts={'from_version': 3, 'map_version': MAP_VERSION, 'places': len(PLACES),
-                                 'countries': len(COUNTRIES), 'factions': len(FACTIONS),
-                                 'new_government_opening_funds': 80*(len(COUNTRIES)-len(state['countries'])),
-                                 'new_faction_opening_funds': 100*(len(FACTIONS)-len(state['factions'])),
-                                 'initial_condition': True})
-            elif state.get('map_version', 1) < MAP_VERSION:
-                self.emit('world_expansion', [], '全国舆图展开：旧五地归入南宋，新增各地府衙与江湖组织；'
-                          '原有人物、财产和经历继续保留，新机构库银作为初始条件登记。', .9,
-                          facts={'map_version': MAP_VERSION, 'places': len(PLACES),
-                                 'countries': len(COUNTRIES), 'factions': len(FACTIONS),
-                                 'new_government_opening_funds': 80 * (len(COUNTRIES)-1),
-                                 'new_faction_opening_funds': 100 * (len(FACTIONS)-3),
-                                 'initial_condition': True})
-            if state.get('map_version', 1) < MAP_VERSION or 'government' not in state:
                 self.checkpoint()
         else:
             if population_profile:
@@ -569,6 +552,11 @@ class World:
                 add('betray', i, q['name'])
             if r['affinity'] < -25 and n['health'] > 55 and q['health'] > 25 and n['age_months'] >= 216 and q['age_months'] >= 216:
                 add('duel', i, q['name'])
+            elif (n['faction'] is not None and q['faction'] is not None and n['faction'] != q['faction']
+                  and self.factions[n['faction']]['kind'] == 'sect' and self.factions[q['faction']]['kind'] == 'sect'
+                  and n['health'] > 55 and q['health'] > 25 and n['age_months'] >= 216 and q['age_months'] >= 216
+                  and sect_life.relation(self, n['faction'], q['faction']) <= sect_life.FEUD_THRESHOLD - 10):
+                add('duel', i, f"{q['name']} · {self.factions[q['faction']]['name']}", feud=True)
             if n['age_months'] >= 120 and combat_attributes.rating(q) > combat_attributes.rating(n) + 12 and not n['mentor'] and r['affinity'] >= 6:
                 add('mentor', i, q['name'])
             if q['mentor'] == n['id'] and q['health'] > 30:
@@ -673,9 +661,11 @@ class World:
             score -= a['cost'] * .16
             score += 60 if a.get('migration') else 0
             score += 5 if a['target'] not in n.get('visited_places', []) else -2
-            score -= 6 if a['border'] == '交恶' else 0
         if k == 'join':
             score += 5 if self.factions[a['target']]['focus'] == g else 0
+        if k == 'duel' and a.get('feud'):
+            # A sworn enemy sect: zeal for one's own tradition, tempered by caution.
+            score += 4 + n['beliefs']['tradition']*.08 - (100-t['boldness'])*.05
         if k == 'befriend':
             observed = n['knowledge'].get(str(a['target']), {})
             score += (9-observed.get('identity_grade', 9))*t['ambition']*.02
@@ -813,10 +803,6 @@ class World:
             people += demography.follow_guardian(self, n, old)
             n['wealth'] -= a['cost']
             economics.fee(self, old, a['fare'], 'transport')
-            destination_government = self.governments[a['destination_country']]
-            destination_government['fund'] += a['toll']
-            destination_government['revenue'] += a['toll']
-            politics.record_crossing(self, a)
             n['health'] = clamp(n['health'] - min(10, 1+a['km']/300)*crafts.travel_strain(n))
             if i not in n['visited_places']:
                 n['visited_places'].append(i)
@@ -824,7 +810,7 @@ class World:
             facts.update({'origin': old, 'destination': i})
             if a.get('migration'):
                 facts['migration'] = a['migration']
-            text = f"{name}离开{PLACES[old]['name']}，行经{a['km']}公里来到{PLACES[i]['name']}，花费{a['cost']:.1f}银（关税{a['toll']:.1f}银）。"
+            text = f"{name}离开{PLACES[old]['name']}，行经{a['km']}公里来到{PLACES[i]['name']}，花费{a['cost']:.1f}银。"
             if a.get('migration'):
                 text += f"此行按此前见闻，前往{PLACES[a['migration']['destination']]['name']}投亲求助。"
             imp = .4
@@ -981,8 +967,15 @@ class World:
                 # Winning revenge settles part of a grievance; it does not erase the opponent's memory.
                 if winner:
                     self.relation(winner, loser['id'])['affinity'] = clamp(self.relation(winner, loser['id'])['affinity'] + 20, -100, 100)
-                result = f"{winner['name']}取胜讨回颜面" if winner else '双方交手未分胜负'
-                text, imp = f"{name}因旧怨向{q['name']}挑战，{result}。", .8
+                if a.get('feud'):
+                    mine, theirs = self.factions[n['faction']], self.factions[q['faction']]
+                    sect_life.adjust_relation(self, mine['id'], theirs['id'], -.5)
+                    result = f"{winner['name']}胜出" if winner else '双方交手未分胜负'
+                    text, imp = f"{name}以{mine['name']}门人的身份向{theirs['name']}的{q['name']}寻仇，{result}。", .8
+                    facts.update(feud=True, factions=[mine['id'], theirs['id']])
+                else:
+                    result = f"{winner['name']}取胜讨回颜面" if winner else '双方交手未分胜负'
+                    text, imp = f"{name}因旧怨向{q['name']}挑战，{result}。", .8
                 facts.update({'winner': winner['id'] if winner else None, 'loser': loser['id'] if loser else None})
             elif k == 'mentor':
                 accepted = q['traits']['integrity'] + q['traits']['kindness'] > 65
@@ -1278,7 +1271,6 @@ class World:
 
     def annual(self):
         government.annual(self)
-        politics.annual(self)
         for n in self.npcs.values():
             if n['alive'] and n['spouse']:
                 q = self.npcs[n['spouse']]
@@ -1475,7 +1467,7 @@ class World:
                 'city_settlement_profiles': self.city_settlement_profiles,
                 'local_life': self.local_life,
                 'npc_attention': self.npc_attention,
-                'territory': self.territory, 'campaigns': self.campaigns,
+                'territory': self.territory,
                 'factions': self.factions, 'sect_version': self.sect_version, 'sect_history': self.sect_history,
                 'government': self.government, 'governments': self.governments,
                 'society': self.society,
@@ -1516,27 +1508,10 @@ class World:
         self.factions, self.player, self.metrics = state['factions'], state['player'], state['metrics']
         self.countries = deepcopy(state.get('countries', politics.new()))
         self.territory = deepcopy(state.get('territory', territory.new()))
-        self.campaigns = deepcopy(state.get('campaigns', {'last_attack': {}, 'history': []}))
-        self.governments = deepcopy(state.get('governments', [government.new(c['id']) for c in COUNTRIES]))
-        if 'governments' not in state:
-            self.governments[0] = state.get('government', government.new())
-            self.governments[0]['country'] = 0
+        self.governments = deepcopy(state['governments'])
         self.atlas_history = state.get('atlas_history', [])
         self._atlas_migration = None
-        if state.get('map_version') == 2:
-            from .atlas_migration import from_v2
-            self._atlas_migration = from_v2(self, state)
-        defaults = politics.new()
-        for c in defaults[len(self.countries):]:
-            self.countries.append(c)
-            self.governments.append(government.new(c['id']))
-        territory.refresh_relations(self)
-        if state.get('map_version') == 3:
-            self.atlas_history = self.atlas_history + [
-                {'map_version': 3, 'month': self.month, 'countries': deepcopy(state['countries']),
-                 'governments': deepcopy(state['governments'])}]
         self.government = self.governments[0]
-        self.government['name'] = COUNTRIES[0]['government_name']
         from . import sect_migration
         sect_migration.restore(self, state)
         settlements.align_factions(self)
@@ -1570,10 +1545,6 @@ class World:
         self.items = state.get('items')
         if items.initialize(self, legacy=True):
             self.checkpoint()
-        if self.compact_requested and not self.settlements:
-            settlements.activate(self)
-        elif self.settlements:
-            settlements.expand(self)
         society.initialize(self)
         self._martial_migrated = martial.synchronize(self)
         self.restart_legacy_battle()
@@ -1616,7 +1587,6 @@ class World:
                               for p in self.active_places],
                 'factions': [organizations.view(self, f) for f in self.factions],
                 'map_version': MAP_VERSION, 'era': ERA, 'routes': self.routes,
-                'campaigns': deepcopy(self.campaigns['history'][-12:]),
                 'countries': [{**c, 'population': sum(territory.owner(self, n['place']) == c['id'] for n in living),
                                'settlements': len(territory.controlled(self, c['id'])),
                                'government': {**self.governments[c['id']], 'cases': self.governments[c['id']]['cases'][-12:]},

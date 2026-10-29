@@ -85,7 +85,7 @@ class PriorityThinkingTests(unittest.TestCase):
     def test_grade_uses_real_sect_and_social_standing_not_wallet(self):
         w=self.world(3);n=w.npcs[1];n['wealth']=1e9
         self.assertEqual(npc_attention.profile(w,n)['level'],'standard')
-        n['social_status']=dict(title='国主');self.assertEqual(npc_attention.grade(w,n),1)
+        n['social_status']=dict(title='知府');self.assertEqual(npc_attention.grade(w,n),1)
         n['social_status']=None;n['faction']=0;set_rating(n, 100);n['contribution']=999
         n['rank_progress']=dict(sect=dict(faction=0,grade=9,penalty=0.))
         self.assertEqual(npc_attention.grade(w,n),9)
@@ -107,7 +107,7 @@ class PriorityThinkingTests(unittest.TestCase):
         self.assertEqual(old['level'],'deep');self.assertLess(old['memory_limit'],profile['memory_limit'])
 
     def test_newest_contact_then_high_standing_get_slots_before_general_rotation(self):
-        w=self.world(8);w.intervene(2,'talk','较早来往');w.intervene(3,'talk','最新来往');w.npcs[4]['social_status']=dict(title='国主')
+        w=self.world(8);w.intervene(2,'talk','较早来往');w.intervene(3,'talk','最新来往');w.npcs[4]['social_status']=dict(title='知府')
         manager=self.manager();chosen=[]
         def mocked(model,ctx):chosen.append(ctx['npc_id']);return self.mock_request(model,ctx)
         with patch.object(ai.LocalModel,'request',mocked):
@@ -117,7 +117,7 @@ class PriorityThinkingTests(unittest.TestCase):
     def test_priority_groups_leave_regular_people_real_rotation_opportunities(self):
         w=self.world(16)
         for i in (1,2,3):w.intervene(i,'talk','有过来往')
-        for i in (4,5,6):w.npcs[i]['social_status']=dict(title='国主')
+        for i in (4,5,6):w.npcs[i]['social_status']=dict(title='知府')
         manager=self.manager();seen=[]
         def mocked(model,ctx):seen.append(ctx['npc_id']);return self.mock_request(model,ctx)
         with patch.object(ai.LocalModel,'request',mocked):
@@ -155,7 +155,7 @@ class PriorityThinkingTests(unittest.TestCase):
             finally:gate.set()
 
     def test_high_standing_can_upgrade_once_this_month_and_rethink_on_new_major_news(self):
-        w=self.world(1);n=w.npcs[1];n['social_status']=dict(title='国主')
+        w=self.world(1);n=w.npcs[1];n['social_status']=dict(title='知府')
         n.update(last_review=w.month,last_review_attempt=w.month)
         manager=self.manager()
         with patch.object(ai.LocalModel,'request',lambda model,ctx:self.mock_request(model,ctx)):

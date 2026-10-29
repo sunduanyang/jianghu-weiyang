@@ -11,10 +11,10 @@ class ManualPacingTests(unittest.TestCase):
     def setUp(self):
         self.w = World(42, 0, durable=False)
         self.addCleanup(self.w.store.close)
-        protagonist.perform(self.w, dict(action='create', revision=0, month=0, name='习武人', sex='女', age=24, place=45))
+        protagonist.perform(self.w, dict(action='create', revision=0, month=0, name='习武人', sex='女', age=24, place=0))
 
     def npc(self, **values):
-        n = self.w.make_npc(place=45)
+        n = self.w.make_npc(place=0)
         n.update(age_months=360, health=100., time_left=4, **values)
         n['traits'].update(integrity=80., kindness=80.)
         self.w.reindex()
@@ -23,7 +23,7 @@ class ManualPacingTests(unittest.TestCase):
     def pair(self):
         teacher, pupil = self.npc(), self.npc()
         mine = set(martial.resolve(self.w, pupil)['known'])
-        arts = [k for k in martial_catalog.SCHOOL_ARTS['shaolin'] if k not in mine][:2]
+        arts = [k for k in martial_catalog.SCHOOL_ARTS['wudang'] if k not in mine][:2]
         teacher['martial']['learned'] = arts
         self.w.link(pupil, teacher, 30, 30)
         return teacher, pupil, arts

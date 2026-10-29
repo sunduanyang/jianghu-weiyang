@@ -34,7 +34,7 @@ public class SectRankSmoke : MonoBehaviour {
     }
     IEnumerator Run(){
         int month=client.World["month"].I,events=client.World["events"].I;double calls=client.World["ai"]["calls"].N;
-        Check("fourteen sects",client.World["factions"].A.Count==14);
+        Check("eight sects",client.World["factions"].A.Count==8);
         foreach(var f in client.World["factions"].A){
             J detail=null;yield return client.Request("/api/faction/"+f["id"].S,null,j=>detail=j);
             Check("detail "+f["name"].S,detail!=null);if(detail==null)continue;
@@ -49,7 +49,7 @@ public class SectRankSmoke : MonoBehaviour {
         // Resizing initializes a hidden acceptance window's swapchain.
         Screen.SetResolution(1280,800,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.5f);
         Screen.SetResolution(1680,960,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.5f);
-        foreach(string key in new[]{"wudang","beggars","shaolin","haidong","heishui"}){
+        foreach(string key in new[]{"wudang","beggars","shaolin","wudu","mizong"}){
             var f=client.World["factions"].A.First(s=>s["key"].S==key);app.Institution=new J();app.OpenInstitution(false,f["id"].I);
             float deadline=Time.realtimeSinceStartup+15;while((!app.Institution.Has||app.Institution["key"].S!=key)&&Time.realtimeSinceStartup<deadline)yield return null;
             Check("native rank panel "+key,app.Institution["rank_system"]["grades"].A.Count==9);app.ShowSectRanksForSmoke();yield return Capture("nine-grades-"+key);

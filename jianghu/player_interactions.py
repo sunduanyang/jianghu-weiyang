@@ -373,7 +373,7 @@ def perform(w, body):
 def settle_hostile(w, battle, n):
     """Called once by the existing battle settlement, including after reload."""
     key = battle.get('encounter')
-    if key in ('sect_trial', 'sect_hunt'):
+    if key in ('sect_trial', 'sect_hunt', 'sect_feud'):
         return sect_life.settle_battle(w, battle, n)
     if key not in {'rob', 'assault'}:
         return None

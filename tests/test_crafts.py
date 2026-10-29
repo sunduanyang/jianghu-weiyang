@@ -17,8 +17,8 @@ class CraftTests(unittest.TestCase):
     def setUp(self):
         self.w = w = World(42, 0, durable=False)
         self.addCleanup(w.store.close)
-        protagonist.perform(w, dict(action='create', revision=0, month=0, name='来客', sex='女', age=24, place=45))
-        self.n = n = w.make_npc(place=45)
+        protagonist.perform(w, dict(action='create', revision=0, month=0, name='来客', sex='女', age=24, place=0))
+        self.n = n = w.make_npc(place=0)
         n.update(age_months=360, health=100., wealth=100., time_left=4, spouse=None, job='匠人')
         n['career'].update(profession='匠人', experience={'匠人': 0.})
         n['traits'].update(integrity=90., sociability=90., kindness=90., boldness=50.)
@@ -264,7 +264,7 @@ class CraftTests(unittest.TestCase):
         self.skill('letters', 40)
         gains = []
         for job, learning, tradition in (('农人', 0, 30), ('书生', 60, 80)):
-            n = self.w.make_npc(place=45)
+            n = self.w.make_npc(place=0)
             n.update(age_months=360, health=100., wealth=50., job=job)
             n['career'].update(profession=job, experience={job: 0., '书生': learning})
             n['beliefs']['tradition'] = tradition

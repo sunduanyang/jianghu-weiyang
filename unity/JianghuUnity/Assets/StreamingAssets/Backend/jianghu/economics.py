@@ -281,7 +281,7 @@ def routes(w, n):
 def haul(w, n):
     options = routes(w, n)
     if not options:
-        return dict(gross=0., tax=0., produced={}, sold={}, inputs={}, note='暂无能覆盖盘缠与关税的邻城货路')
+        return dict(gross=0., tax=0., produced={}, sold={}, inputs={}, note='暂无能覆盖盘缠的邻城货路')
     trip = max(options, key=lambda t: t['profit']); a, b, g = trip['origin'], trip['destination'], trip['good']
     origin, destination = market(w, a), market(w, b); amount = trip['quantity']
     purchase = round(amount * origin['prices'][g], 4); sale = round(amount * wholesale(destination, g), 4)
@@ -290,15 +290,13 @@ def haul(w, n):
     origin['cash'] += purchase; destination['cash'] -= sale
     fee(w, a, freight, 'transport')
     origin['stock'][g] = q(origin['stock'][g] - amount); destination['stock'][g] = q(destination['stock'][g] + amount)
-    government = w.governments[territory.owner(w, b)]; government['fund'] += toll; government['revenue'] += toll
-    politics.record_crossing(w, dict(origin_country=territory.owner(w, a), destination_country=territory.owner(w, b), toll=toll))
     gross = sale - purchase - freight - toll
     from . import government as rules
     tax = rules.tax(w, n, gross) if n['age_months'] >= 192 else 0.
     prepare(n)['income'] += sale; prepare(n)['expenses'] += purchase + freight + toll
     state(w)['transfers'] += 1
     return dict(gross=gross, tax=tax, produced={}, sold={g: amount}, inputs={}, shipment=trip,sales=sale,purchases=purchase,
-                note=f"从{w.place_name(a)}转运{GOODS[g][0]}至{w.place_name(b)}，实付货款、运费与关税")
+                note=f"从{w.place_name(a)}转运{GOODS[g][0]}至{w.place_name(b)}，实付货款与运费")
 
 
 def work(w, n):

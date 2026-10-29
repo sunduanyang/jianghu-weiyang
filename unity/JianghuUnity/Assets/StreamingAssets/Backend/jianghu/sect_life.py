@@ -29,17 +29,19 @@ PRECEPTS = {
                  acts=('steal', 'rob', 'assault'), scope='poor'),
     '剑派': dict(id='chivalry', label='行侠仗义', text='不得偷窃、抢夺他人财物。',
                  acts=('steal', 'rob'), scope='any'),
-    '武人集团': dict(id='oath', label='奉约护国', text='不得袭击、抢夺本国治下之人。',
-                   acts=('rob', 'assault'), scope='compatriot'),
-    '部族武帐': dict(id='kinfolk', label='守望部众', text='不得偷窃、抢夺或袭击本部治下之人。',
-                   acts=('steal', 'rob', 'assault'), scope='compatriot'),
-    '祖灵信仰': dict(id='community', label='守护社众', text='不得偷窃、抢夺或袭击本社治下之人。',
-                   acts=('steal', 'rob', 'assault'), scope='compatriot'),
-    '萨满信仰': dict(id='forest', label='敬畏山川', text='不得偷窃、抢夺或袭击本族治下之人。',
-                   acts=('steal', 'rob', 'assault'), scope='compatriot'),
+    '巫蛊': dict(id='village', label='护佑寨民', text='不得偷窃、抢夺或袭击本地治下之人。',
+                 acts=('steal', 'rob', 'assault'), scope='compatriot'),
+    '明教': dict(id='mutual', label='患难相恤', text='不得偷窃、抢夺或袭击家资不足二十银的贫弱之人。',
+                 acts=('steal', 'rob', 'assault'), scope='poor'),
 }
-ESCORT_SUBJECT = {'佛门': '香客', '道门': '香客', '帮会': '流民', '剑派': '行旅', '武人集团': '军资',
-                  '部族武帐': '牧队', '祖灵信仰': '药材', '萨满信仰': '药材'}
+ESCORT_SUBJECT = {'佛门': '香客', '道门': '香客', '帮会': '流民', '剑派': '行旅', '巫蛊': '药材',
+                  '明教': '教众', '密宗': '经卷'}
+# How a sect names a commission against a sworn enemy, by its own camp.
+FEUD_VERBS = {'正': '除魔', '邪': '立威', '中': '了断'}
+FEUD_THRESHOLD = -20.
+# Standing between camps: 正道 sects hold together, 邪道 sects only tolerate each other.
+CAMP_RELATIONS = {('正', '正'): 15., ('邪', '邪'): 5., ('正', '邪'): -25.,
+                  ('中', '正'): 5., ('中', '邪'): -10., ('中', '中'): 0.}
 KINDS = {
     # months: how many calendar months, counting the current one, the commission stays open.
     'patrol': dict(name='巡守', points=4, contribution=2., silver=0., reputation=0., months=1, grade=9),
@@ -47,6 +49,7 @@ KINDS = {
     'relief': dict(name='赈济', points=1, contribution=3., silver=0., reputation=1., months=2, grade=9),
     'visit': dict(name='致书', points=1, contribution=3., silver=0., reputation=0., months=2, grade=8),
     'hunt': dict(name='缉拿', points=3, contribution=6., silver=5., reputation=3., months=2, grade=7),
+    'feud': dict(name='寻仇', points=3, contribution=6., silver=4., reputation=2., months=2, grade=7),
 }
 INTERACTIONS = {
     # key: (label, category, points, description)
@@ -144,8 +147,16 @@ def at_seat(w, f):
 
 # ------------------------------------------------------------ relations
 
+def camp_relation(a, b):
+    pair = (a.get('alignment', '中'), b.get('alignment', '中'))
+    return CAMP_RELATIONS.get(pair, CAMP_RELATIONS.get(pair[::-1], 0.))
+
+
 def base_relation(a, b):
-    return (10 if a['tradition'] == b['tradition'] else 0) + (5 if a['country'] == b['country'] else 0)
+    from .sect_catalog import feud
+    standing = feud(a['key'], b['key']) if a.get('key') and b.get('key') else None
+    return ((10 if a['tradition'] == b['tradition'] else 0) + (5 if a['country'] == b['country'] else 0)
+            + camp_relation(a, b) + (standing['value'] if standing else 0.))
 
 
 def relation(w, a, b):
@@ -166,10 +177,16 @@ def relation_label(value):
 
 
 def relations_view(w, f):
-    rows = [dict(faction=g['id'], name=g['name'], value=relation(w, f['id'], g['id']))
+    from .sect_catalog import feud
+    rows = [dict(faction=g['id'], name=g['name'], value=relation(w, f['id'], g['id']),
+                 alignment=g.get('alignment', '中'), alignment_label=g.get('alignment_label', '中立'))
             for g in w.factions if g['id'] != f['id']]
     for row in rows:
         row['label'] = relation_label(row['value'])
+        standing = feud(f['key'], w.factions[row['faction']]['key'])
+        if standing:
+            row['feud'] = '宿敌' if standing['kind'] == 'bitter' else '争雄'
+            row['feud_note'] = standing['note']
     return sorted(rows, key=lambda r: (-r['value'], r['faction']))
 
 
@@ -250,6 +267,21 @@ def board(w, f):
         rows.append(commission(w, f, 'hunt', who, target=n, place=n['place'],
                                label=f"缉拿{PLACES[n['place']]['name']}的{n['name']}",
                                detail=f"{n['name']}恶名在外或新近获罪。本月或下月内寻到此人，在交互「门派差事」中以真实交手将其制服。"))
+    foes = sorted((n for p in reach for n in (w.npcs[i] for i in w.residents.get(p, []))
+                   if n['alive'] and n['age_months'] >= 216 and n['health'] > 25
+                   and n['faction'] is not None and n['faction'] != f['id']
+                   and w.factions[n['faction']]['kind'] == 'sect'
+                   and relation(w, f['id'], n['faction']) <= FEUD_THRESHOLD
+                   and not tie(w, n['id']).get('married') and not tie(w, n['id']).get('sworn')),
+                  key=lambda n: (relation(w, f['id'], n['faction']), -npc_grade(w, n), n['id']))[:3]
+    if foes:
+        n = rng.choice(foes)
+        g = w.factions[n['faction']]
+        verb = FEUD_VERBS.get(f.get('alignment', '中'), '了断')
+        rows.append(commission(w, f, 'feud', who, target=n, place=n['place'], other=g['id'], verb=verb,
+                               label=f"{verb} · {g['name']}的{n['name']}",
+                               detail=f"{g['name']}与本门{relation_label(relation(w, f['id'], g['id']))}。本月或下月内在{PLACES[n['place']]['name']}寻到{n['name']}，"
+                                      f"在交互「门派差事」中以真实交手胜之。"))
     return rows
 
 
@@ -285,7 +317,7 @@ def find_active(w, cid):
 
 
 def errand_for(w, n):
-    return next((c for c in state(w)['commissions'] if c.get('target') == n['id'] and c['kind'] in ('relief', 'visit', 'hunt')), None)
+    return next((c for c in state(w)['commissions'] if c.get('target') == n['id'] and c['kind'] in ('relief', 'visit', 'hunt', 'feud')), None)
 
 
 def accept_reason(w, f, c):
@@ -387,7 +419,7 @@ def interaction_rows(w, n):
     errand = errand_for(w, n) if member(w) else None
     if errand:
         label, category, points, _ = INTERACTIONS['sect_errand']
-        rows.append(('sect_errand', f"{label} · {errand['kind_name']}", 1 if errand['kind'] == 'hunt' else category,
+        rows.append(('sect_errand', f"{label} · {errand.get('verb') or errand['kind_name']}", 1 if errand['kind'] in ('hunt', 'feud') else category,
                      errand['points'], f"{errand['label']}：{errand['detail']}"))
     if same:
         their = npc_grade(w, n)
@@ -428,7 +460,7 @@ def interaction_reason(w, n, key):
             return '差事已过期限'
         if c['kind'] == 'relief' and f['fund'] < c['silver_out']:
             return '门中库银不足，暂不能拨付赈银'
-        if c['kind'] == 'hunt':
+        if c['kind'] in ('hunt', 'feud'):
             if min(h['age_months'], n['age_months']) < 216:
                 return '双方须年满18岁'
             if min(w.player['health'], n['health']) <= 25:
@@ -543,6 +575,17 @@ def perform_interaction(w, n, key):
             e = npc_event(w, n, key, f"{name}奉{f['name']}之命缉拿{n['name']}，双方拔兵交手。",
                           dict(commission=c['id'], kind='hunt', battle_id=battle_id, service=False, player_points=points),
                           importance=.7)
+            battle['cause'] = e['id']
+        elif c['kind'] == 'feud':
+            martial.sync_actor(w, w.player, True); martial.sync_actor(w, n)
+            battle_id = f'{w.seed}-{w.month}-{w.store.next_id}'
+            battle = combat.start(w.player, n, w.rng.getrandbits(63), battle_id, spar=False,
+                                  equipment=(combat.equipment(w, 'player'), combat.equipment(w, n['id'])))
+            battle.update(encounter='sect_feud', commission=c['id'], faction=f['id'], other=c['other'])
+            change_tie(own_tie(w, n['id']), -25, -20)
+            e = npc_event(w, n, key, f"{name}奉{f['name']}之命{c['verb']}，向{w.factions[c['other']]['name']}的{n['name']}挑战，双方拔兵交手。",
+                          dict(commission=c['id'], kind='feud', other=c['other'], battle_id=battle_id, service=False,
+                               player_points=points), importance=.7)
             battle['cause'] = e['id']
         elif c['kind'] == 'relief':
             silver = c['silver_out']
@@ -688,6 +731,20 @@ def settle_battle(w, battle, n):
             if won and c and find_active(w, c['id']):
                 settle_commission(w, c, event)
         return dict(kind='player_sect_hunt_result', summary=text, loot=0, after=after)
+    if key == 'sect_feud':
+        from . import crafts
+        crafts.settle_battle(battle, (w.player, n))
+        won = battle['winner'] == 0
+        c = find_active(w, battle['commission'])
+        other = w.factions[battle['other']]
+        text = (f"{w.player['name']}与{other['name']}的{n['name']}交手，" +
+                ('胜出，为本门扬名。' if won else '落败，对方扬长而去。'))
+
+        def after(event):
+            adjust_relation(w, battle['faction'], other['id'], -3)
+            if won and c and find_active(w, c['id']):
+                settle_commission(w, c, event)
+        return dict(kind='player_sect_feud_result', summary=text, loot=0, after=after)
     return None
 
 

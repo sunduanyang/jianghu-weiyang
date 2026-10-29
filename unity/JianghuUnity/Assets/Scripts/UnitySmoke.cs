@@ -29,7 +29,7 @@ public class UnitySmoke : MonoBehaviour {
     }
     IEnumerator Run(){
         if(GameClient.Arg("-smokePhase")=="social-ranks"){yield return SocialRanksFlow();yield break;}
-        Check("native client ready",client.Ready);Check("49 towns migrated",client.World["locations"].A.Count==49);Check("34 organisations migrated",client.World["factions"].A.Count==34);Check("AI defaults disabled",!client.World["ai"]["config"]["enabled"].B);
+        Check("native client ready",client.Ready);Check("8 regional cities",client.World["locations"].A.Count==8);Check("8 sects",client.World["factions"].A.Count==8);Check("AI defaults disabled",!client.World["ai"]["config"]["enabled"].B);
         if(GameClient.Arg("-smokePhase")=="society"){yield return SocietyFlow();yield break;}
         string proof=Path.Combine(client.SaveDir,"acceptance-state.json");
         if(GameClient.Arg("-smokePhase")=="restart"){
@@ -64,13 +64,13 @@ public class UnitySmoke : MonoBehaviour {
         if(File.Exists(source)){string hash=Hash(source);yield return Call("/api/unity/import",J.O("path",source));yield return client.Refresh();Check("import preserves original bytes",hash==Hash(source));Check("import uses a new save",Path.GetFullPath(client.World["database"].S)!=Path.GetFullPath(source));}
         else Check("private migration fixture absent; import round-trip not run",true,J.O("skipped",true));
         yield return Call("/api/new",J.O("population",100,"seed",20261026,"prehistory",0));yield return client.Refresh();Check("new world population",client.World["population"].I==100);Check("new world month zero",client.World["month"].I==0);
-        yield return Call("/api/hero",client.HeroBody("create","name","Unity验收","sex","女","age",20,"place",45));yield return client.Refresh();yield return Call("/api/hero",client.HeroBody("end_turn"));yield return client.Refresh();yield return Call("/api/save",J.O());
+        yield return Call("/api/hero",client.HeroBody("create","name","Unity验收","sex","女","age",20,"place",0));yield return client.Refresh();yield return Call("/api/hero",client.HeroBody("end_turn"));yield return client.Refresh();yield return Call("/api/save",J.O());
         File.WriteAllText(proof,J.O("month",client.World["month"],"hero",client.World["hero"],"inventory",client.World["player"]["inventory"]).ToString());
     }
     IEnumerator SocietyFlow(){
         yield return Call("/api/new",J.O("population",100,"seed",20261026,"prehistory",0));
         yield return client.Refresh();
-        Check("49 independent community accounts",client.World["society"]["communities"].A.Count==49);
+        Check("8 independent community accounts",client.World["society"]["communities"].A.Count==8);
         Check("no invented opening community silver",client.World["society"]["fund"].N==0);
         var person=client.World["npcs"].A.First(n=>n["alive"].B&&n["age_months"].I>=192);
         app.ShowSocietyForSmoke(person["place"].I);yield return Snapshot(null,"society-towns");

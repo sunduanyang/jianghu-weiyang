@@ -17,6 +17,8 @@ SERVICE = {'faction_task', 'faction_guide', 'hero_sect_task', 'sect_service', 'p
 OWN_EVENTS = {'rank_assessment', 'rank_change', 'rank_warning', 'ranks_registered', 'identity_change'}
 
 
+GENERAL_TITLES = ('兵马都监',)
+
 def active(w):
     return bool(getattr(w, 'rank_system', None))
 
@@ -62,12 +64,12 @@ def initialize(w):
             status=n.get('social_status') or {}
             if n['alive'] and n['faction'] is None and status.get('country')==country:
                 grade=social_ranks.grade_for(status['title'])
-                slot='ruler' if grade==1 else 'general' if status['title']=='大将军' else 'minister' if grade==2 else None
+                slot='ruler' if grade==1 else 'general' if status['title'] in GENERAL_TITLES else 'minister' if grade==2 else None
                 if slot and slot not in holders:holders[slot]=n['id']
         w.rank_system['courts'][str(country)]=dict(holders=holders, established=bool(holders),
             titles={slot:w.npcs[i]['social_status']['title'] for slot,i in holders.items()},
             since={slot:w.month for slot in holders}, extinct_months=0)
-    event=w.emit('ranks_registered', [], '品阶升降开始按实际经历考核：门中按月验功，乡里依营生与家业升降，朝廷与掌门之位须真实任命。', .8,
+    event=w.emit('ranks_registered', [], '品阶升降开始按实际经历考核：门中按月验功，乡里依营生与家业升降，府尊僚佐与掌门之位须真实任命。', .8,
                  facts=dict(version=VERSION,initial_condition=True,people=sum(n['alive'] for n in w.npcs.values())))
     w.rank_system['registration_event']=event['id']
     return True
@@ -133,7 +135,7 @@ def on_event(w, event, who=None):
                     '已生效判决，门中依违纪事实降阶并暂停晋升一年',event['id'])
     status=n.get('social_status') or {}
     if status.get('title')=='乡绅' or social_ranks.grade_for(status.get('title'))==2:
-        revoke_status(w,offender,'生效判决导致撤销乡里资格或公卿职衔',event['id'])
+        revoke_status(w,offender,'生效判决导致撤销乡里资格或府衙职衔',event['id'])
 
 
 def change_sect(w,who,grade,reason,cause=None):
@@ -334,7 +336,7 @@ def courts(w):
         court['extinct_months']=0 if occupied else court['extinct_months']+1
         if court['extinct_months']>=6:
             for who in list(court['holders'].values()):
-                if who in w.npcs and w.npcs[who]['alive']:revoke_status(w,who,'所属政权失去全部辖地已满半年，原在任职衔终止')
+                if who in w.npcs and w.npcs[who]['alive']:revoke_status(w,who,'所属府衙失去全部辖地已满半年，原在任职衔终止')
             court['holders'].clear();continue
         if not occupied:continue
         for slot in ('ruler','minister','general'):

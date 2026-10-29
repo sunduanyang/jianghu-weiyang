@@ -346,7 +346,7 @@ class LocalModel:
             dict(name=ARTS[key]['name'],grade=ARTS[key]['grade'],school=ARTS[key]['school_name'])
             for key in martial.get('curriculum',{}).get('known',[]) if key in ARTS][:9]
         if wire['membership']:
-            wire['membership']={k:wire['membership'][k] for k in ('id','name','place','leader','focus','tradition','art') if k in wire['membership']}
+            wire['membership']={k:wire['membership'][k] for k in ('id','name','place','leader','focus','tradition','art','alignment_label') if k in wire['membership']}
         economy=wire['local_economy']
         if economy.get('enabled'):
             household=economy.get('household',{})

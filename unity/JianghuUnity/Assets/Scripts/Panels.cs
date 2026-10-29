@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Jianghu {
 public partial class JianghuApp {
-    string inventoryMode="装备",marketMode="货栈",itemQuery="",itemCategory="全部",selectedItem="",institutionKind="政权",institutionQuery="",importPath="",newPopulation="1800",newSeed="42",newYears="0";
+    string inventoryMode="装备",marketMode="货栈",itemQuery="",itemCategory="全部",selectedItem="",institutionKind="官府",institutionQuery="",importPath="",newPopulation="1800",newSeed="42",newYears="0";
     int giftTarget=-1;
     int aiTab,settingsTab;
     bool fastMode,aiEditing,aiEnabled,aiOllama,aiAutoStart=true;
@@ -100,18 +100,18 @@ public partial class JianghuApp {
     void MartialAction(string action){Client.Act("/api/martial",J.O("action",action),j=>Martial=j);}
     public void OpenInstitution(bool country,int id){
         if(DeferWhileDrawing(()=>OpenInstitution(country,id)))return;
-        OpenJianghu(JianghuTab.Powers);institutionKind=country?"政权":"门派";Institution=new J();
+        OpenJianghu(JianghuTab.Powers);institutionKind=country?"官府":"门派";Institution=new J();
         int request=++institutionRequest;
         Client.Fetch("/api/"+(country?"country/":"faction/")+id,j=>{if(request==institutionRequest)Institution=j;});
     }
     void DrawInstitutions(){
         GUILayout.BeginHorizontal();H("天下势力");GUILayout.FlexibleSpace();T("先选分类，再选左侧条目查看详情。",small);GUILayout.EndHorizontal();
-        GUILayout.BeginHorizontal();foreach(string kind in new[]{"政权","门派","乡里"})if(GUILayout.Button(kind,institutionKind==kind?selected:chip)&&institutionKind!=kind){institutionKind=kind;Institution=new J();institutionRequest++;mainScroll=itemScroll=Vector2.zero;}GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();foreach(string kind in new[]{"官府","门派","乡里"})if(GUILayout.Button(kind,institutionKind==kind?selected:chip)&&institutionKind!=kind){institutionKind=kind;Institution=new J();institutionRequest++;mainScroll=itemScroll=Vector2.zero;}GUILayout.EndHorizontal();
         institutionQuery=SearchField(institutionQuery,"查找");
         if(institutionKind=="乡里"){DrawCommunityDirectory();return;}
-        GUILayout.BeginHorizontal();GUILayout.BeginVertical(GUILayout.Width(275));itemScroll=GUILayout.BeginScrollView(itemScroll);foreach(var f in W[institutionKind=="政权"?"countries":"factions"].A.Where(f=>f["name"].S.Contains(institutionQuery))){if(GUILayout.Button(f["name"].S+"\n"+(institutionKind=="政权"?f["population"].S+"人 · "+f["settlements"].S+"地区":"成员"+f["members"].S+"人 · 库银"+Num(f["fund"])),rowStyle))OpenInstitution(institutionKind=="政权",f["id"].I);}GUILayout.EndScrollView();GUILayout.EndVertical();
-        GUILayout.BeginVertical(GUILayout.Width(665));mainScroll=GUILayout.BeginScrollView(mainScroll);if(Institution.Has){H(Institution["name"].S);T(Institution["ethos"].S);if(Institution["government"].Has){var g=Institution["government"];Metric("国库",Num(g["fund"])+"银");Metric("现行施政",g["policy"].S);Metric("税率",(g["tax_rate"].N*100).ToString("0.#")+"%");Metric("治安 / 公医",Num(g["security"])+" / "+Num(g["sanitation"]));DrawNationalRanks(Institution["rank_system"]);Details("国库收支与民政",g);Details("边境往来",Institution["border_activity"]);Details("外交关系",Institution["relations"]);foreach(var p in Institution["places"].A)if(Btn("城镇 · "+p["name"].S)){int place=p["id"].I;Later(()=>{SelectedPlace=place;GoStage(Stage.World);});}}
-            else{Metric("传承",Institution["tradition"].S+" · "+Institution["art"].S);Metric("驻地",Institution["place_name"].S+" · "+Institution["seat_name"].S+" · 独立9格");T(Institution["basis"].S,small);
+        GUILayout.BeginHorizontal();GUILayout.BeginVertical(GUILayout.Width(275));itemScroll=GUILayout.BeginScrollView(itemScroll);foreach(var f in W[institutionKind=="官府"?"countries":"factions"].A.Where(f=>f["name"].S.Contains(institutionQuery))){if(GUILayout.Button(f["name"].S+"\n"+(institutionKind=="官府"?f["government_name"].S+" · "+f["population"].S+"人":"成员"+f["members"].S+"人 · 库银"+Num(f["fund"])),rowStyle))OpenInstitution(institutionKind=="官府",f["id"].I);}GUILayout.EndScrollView();GUILayout.EndVertical();
+        GUILayout.BeginVertical(GUILayout.Width(665));mainScroll=GUILayout.BeginScrollView(mainScroll);if(Institution.Has){H(Institution["name"].S);T(Institution["ethos"].S);if(Institution["government"].Has){var g=Institution["government"];Metric("府库",Num(g["fund"])+"银");Metric("现行施政",g["policy"].S);Metric("税率",(g["tax_rate"].N*100).ToString("0.#")+"%");Metric("治安 / 公医",Num(g["security"])+" / "+Num(g["sanitation"]));DrawNationalRanks(Institution["rank_system"]);Details("府库收支与民政",g);foreach(var p in Institution["places"].A)if(Btn("城镇 · "+p["name"].S)){int place=p["id"].I;Later(()=>{SelectedPlace=place;GoStage(Stage.World);});}}
+            else{Metric("传承",Institution["tradition"].S+" · "+Institution["art"].S);Metric("正邪",Institution["alignment_label"].S);Metric("驻地",Institution["place_name"].S+" · "+Institution["seat_name"].S+" · 独立9格");T(Institution["basis"].S,small);
                 if(Institution["leader_name"].Has)Metric("现任主持",Institution["leader_name"].S);
                 var membership=Institution["player_membership"];if(membership.Has)T("主角身份 · "+membership["name"].S+" "+membership["grade_label"].S+" "+membership["title"].S+" · 贡献"+Num(membership["contribution"]),sub);
                 if(Btn("查看门派驻地 ›")){int seat=Institution["place"].I;Later(()=>{SelectedPlace=seat;GoStage(Stage.City);});}
@@ -190,7 +190,7 @@ public partial class JianghuApp {
         GUILayout.EndScrollView();
     }
     // ---------------------------------------------------------------- 江湖卷 · 系统
-    // 江湖卷：天下的事——势力（政权 / 门派 / 乡里）、市井、年谱。
+    // 江湖卷：天下的事——势力（官府 / 门派 / 乡里）、市井、年谱。
     void DrawJianghuScroll(){
         var view=TopView;
         BookScreen("江湖卷");

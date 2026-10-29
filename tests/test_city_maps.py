@@ -60,7 +60,7 @@ class CityMapTests(unittest.TestCase):
                     self.assertTrue(all(abs(a[0]-b[0])+abs(a[1]-b[1])==1 for a,b in zip(path,path[1:])))
 
     def test_named_landmarks_survive_seeded_landscapes_and_organizations_have_homes(self):
-        self.assertEqual(len(city_maps.PLANS),25)
+        self.assertEqual(set(city_maps.PLANS),set(SITES))
         for name,profile in city_maps.PLANS.items():
             city = city_maps.layout(42,SITES[name])
             other = city_maps.layout(999,SITES[name])
@@ -74,14 +74,22 @@ class CityMapTests(unittest.TestCase):
             self.assertTrue(any(n.get('faction')==f['id'] for n in city['nodes']))
 
     def test_generated_maps_are_seed_stable_and_cached_results_cannot_be_mutated(self):
-        place = SITES['义州']
-        a = city_maps.layout(42,place)
-        self.assertFalse(a['authored'])
-        self.assertEqual(a,city_maps.layout(42,place))
-        self.assertNotEqual(a['layout_id'],city_maps.layout(43,place)['layout_id'])
-        a['nodes'][0]['name'] = '污染'
-        a['rows'][0] = 'bad'
-        self.assertNotEqual(a,city_maps.layout(42,place))
+        # Every regional city is authored; the generator remains the fallback for an unplanned place.
+        place = SITES['凉州']
+        city_maps._layout.cache_clear();city_maps._gate_paths.cache_clear()
+        self.addCleanup(city_maps._layout.cache_clear);self.addCleanup(city_maps._gate_paths.cache_clear)
+        with patch.dict(city_maps.PLANS):
+            del city_maps.PLANS['凉州']
+            a = city_maps.layout(42,place)
+            self.assertFalse(a['authored'])
+            self.assertEqual(a['theme'],'oasis')
+            self.assertEqual(a,city_maps.layout(42,place))
+            self.assertNotEqual(a['layout_id'],city_maps.layout(43,place)['layout_id'])
+            a['nodes'][0]['name'] = '污染'
+            a['rows'][0] = 'bad'
+            self.assertNotEqual(a,city_maps.layout(42,place))
+        city_maps._layout.cache_clear();city_maps._gate_paths.cache_clear()
+        self.assertTrue(city_maps.layout(42,place)['authored'])
 
     def test_new_terrain_covers_every_cell_once_and_respects_asset_footprints(self):
         sizes = set()
@@ -106,12 +114,12 @@ class CityMapTests(unittest.TestCase):
                     self.assertNotIn(city['rows'][tile['row']][tile['col']],'+=#')
                 used.update(cells)
             self.assertEqual(len(used),city['size']**2)
-        self.assertEqual(sizes,{20,30})
+        self.assertEqual(sizes,{30})
 
     def test_legacy_save_moves_hero_to_same_facility_without_spending_time(self):
         w = self.world()
         state = deepcopy(w.export())
-        old = city_maps.layout(w.seed,SITES['临安府'],1)
+        old = city_maps.layout(w.seed,SITES['洛阳'],1)
         market = next(n for n in old['nodes'] if n['id']=='market')
         state['city_map_version'] = 1
         state['player']['protagonist'].update(created=True,place=old['place'],row=market['row'],col=market['col'])
@@ -141,7 +149,7 @@ class CityMapTests(unittest.TestCase):
 
     def test_real_work_and_rest_record_venues_and_existing_itinerary_costs(self):
         w = self.world()
-        n = self.adult(w,SITES['临安府'])
+        n = self.adult(w,SITES['洛阳'])
         n['job'] = '匠人'
         w.execute(n,{'id':'work:self'})
         pos = w.city_positions[str(n['id'])]
@@ -170,20 +178,16 @@ class CityMapTests(unittest.TestCase):
         self.assertEqual(home['residents'][0]['source'],'乡籍居所')
         self.assertIsNone(home['residents'][0]['event_id'])
 
-    def test_conquest_changes_government_but_preserves_streets_and_culture(self):
+    def test_each_city_names_its_own_yamen_and_sect(self):
         w = self.world()
-        target = SITES['对马府中']
-        before = city_maps.view(w,target)
-        w.territory[target]['guard'] = 1
-        with patch.object(w.rng,'uniform',return_value=1):
-            territory.campaign(w,10,target,declare=True)
-        after = city_maps.view(w,target)
-        self.assertEqual(before['layout_id'],after['layout_id'])
-        self.assertEqual(before['rows'],after['rows'])
-        self.assertEqual(after['country_name'],'高丽')
-        self.assertTrue(after['occupied'])
-        self.assertEqual(next(n for n in after['nodes'] if n['kind']=='government')['name'],'高丽驻署')
-        self.assertEqual([(n['id'],n['name']) for n in before['nodes'] if n['kind']=='faction'], [(n['id'],n['name']) for n in after['nodes'] if n['kind']=='faction'])
+        for p in PLACES:
+            city = city_maps.view(w,p['id'])
+            self.assertEqual(city['country_name'],w.countries[p['country']]['name'])
+            self.assertFalse(city['occupied'])
+            yamen = next(n for n in city['nodes'] if n['kind']=='government')
+            self.assertIn(w.countries[p['country']]['government_name'],yamen['description'])
+            self.assertEqual([n['name'] for n in city['nodes'] if n['kind']=='faction'],
+                             [f['name'] for f in FACTIONS if f['place']==p['id']])
 
     def test_old_save_adds_no_invented_activity_and_continuation_is_reproducible(self):
         w = self.world(30)
@@ -205,7 +209,7 @@ class CityMapTests(unittest.TestCase):
         self.assertEqual(again.rng.getstate(),restored.rng.getstate())
 
     def test_invalid_place_or_version_does_not_alias_another_map(self):
-        for place in (-1,168,'0',True):
+        for place in (-1,len(PLACES),'0',True):
             with self.assertRaises(ValueError):city_maps.layout(42,place)
         with self.assertRaises(ValueError):city_maps.layout(42,0,999)
 
@@ -213,7 +217,7 @@ class CityMapTests(unittest.TestCase):
         for compact in (False,True):
             w=World(population=0,durable=False,compact=compact)
             self.addCleanup(w.store.close)
-            for name in ('临安府','海东聚落','克鲁伦河营地'):
+            for name in ('洛阳','泉州','凉州'):
                 city=city_maps.view(w,SITES[name])
                 gate=next(n for n in city['nodes'] if n['id']==city['entrance'])
                 start=(gate['row'],gate['col'])
@@ -238,8 +242,8 @@ class CityHTTPTests(unittest.TestCase):
 
     def test_city_api_is_read_only_and_web_game_is_unavailable(self):
         before = deepcopy(self.w.export())
-        with urllib.request.urlopen(self.base+'/api/city?place=45') as r:city=json.load(r)
-        self.assertEqual(city['name'],'临安府')
+        with urllib.request.urlopen(self.base+'/api/city?place=0') as r:city=json.load(r)
+        self.assertEqual(city['name'],'洛阳')
         self.assertTrue(city['authored'])
         for path in ('/','/index.html','/city.js','/city.css','/assets/terrain-biomes-v3/01-open-plains.png'):
             with self.assertRaises(urllib.error.HTTPError) as error:

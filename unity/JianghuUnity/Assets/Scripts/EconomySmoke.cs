@@ -35,7 +35,7 @@ public class EconomySmoke : MonoBehaviour {
         Check("1800 NPC save",client.World["population"].I==1800);
         Check("model disabled",!client.World["ai"]["config"]["enabled"].B);
         int month=client.World["month"].I;J market=new J();yield return client.Request("/api/economy",null,j=>market=j);
-        Check("13 goods and 49 finite town markets",market["enabled"].B&&market["goods"].A.Count==13&&market["towns"].A.Count==49);
+        Check("13 goods and 8 finite city markets",market["enabled"].B&&market["goods"].A.Count==13&&market["towns"].A.Count==8);
         var buy=client.HeroBody("market","operation","buy","good","grain","amount",1,"place",client.World["hero"]["place"]);
         double pantry=market["household"]["stock"]["grain"].N;bool ok=false;
         yield return client.Request("/api/economy",buy,j=>{market=j["market"];ok=true;});Check("real player buy",ok&&market["household"]["stock"]["grain"].N>pantry);

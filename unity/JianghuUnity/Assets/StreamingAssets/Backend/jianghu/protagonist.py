@@ -7,7 +7,7 @@ from .atlas import PLACES, ROUTES
 from . import city_maps, appearance
 
 POINTS_PER_MONTH = 30
-HOME = next(p['id'] for p in PLACES if p['name'] == '临安府')
+HOME = next(p['id'] for p in PLACES if p['name'] == '洛阳')
 
 
 def prepare_npc_turn(w):

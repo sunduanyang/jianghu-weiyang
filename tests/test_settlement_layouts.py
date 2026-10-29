@@ -7,8 +7,8 @@ from jianghu import city_maps,city_regions,settlements
 from jianghu.atlas import PLACES
 from jianghu.engine import World
 
-HOME=next(p['id'] for p in PLACES if p['name']=='临安府')
-SECT=next(p['id'] for p in PLACES if p['name']=='襄阳府')
+HOME=next(p['id'] for p in PLACES if p['name']=='洛阳')
+SECT=next(p['id'] for p in PLACES if p['name']=='襄阳')
 
 
 class SettlementLayoutTests(unittest.TestCase):

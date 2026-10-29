@@ -55,7 +55,7 @@ def bundle_runtime(assets):
     (runtime / f'python{version}._pth').write_text(f'python{version}.zip\n.\nDLLs\n../Backend\n', encoding='utf-8')
 
 
-def prepare(backend_only=False, bundle_python=False, include_local_save=False):
+def prepare(backend_only=False, bundle_python=False, include_local_save=False, map_only=False):
     assets = PROJECT / 'Assets'
     backend = assets / 'StreamingAssets' / 'Backend'
     backend.mkdir(parents=True, exist_ok=True)
@@ -69,7 +69,7 @@ def prepare(backend_only=False, bundle_python=False, include_local_save=False):
         target = backend / 'jianghu' / 'data' / source.relative_to(ROOT / 'jianghu' / 'data')
         target.parent.mkdir(parents=True, exist_ok=True)
         copy_backend_file(source, target)
-    for retired in ('combat.py', 'combat_flow.py', 'combat_realtime.py'):
+    for retired in ('combat.py', 'combat_flow.py', 'combat_realtime.py', 'atlas_expansion.py', 'atlas_migration.py'):
         old = backend / 'jianghu' / retired
         if old.exists(): old.unlink()
         meta = Path(str(old)+'.meta')
@@ -78,10 +78,11 @@ def prepare(backend_only=False, bundle_python=False, include_local_save=False):
     if backend_only:
         print('Shared engine synchronized into Unity.')
         return
-    resources = assets / 'Resources' / 'Art'
-    resources.mkdir(parents=True, exist_ok=True)
-    for name in ('portraits.png', 'river-valley.png'):
-        shutil.copy2(ROOT / 'art' / 'unity-shared' / name, resources / name)
+    if not map_only:
+        resources = assets / 'Resources' / 'Art'
+        resources.mkdir(parents=True, exist_ok=True)
+        for name in ('portraits.png', 'river-valley.png'):
+            shutil.copy2(ROOT / 'art' / 'unity-shared' / name, resources / name)
     shutil.copy2(ROOT / 'art' / 'world-map' / 'geography-compact.json', assets / 'Resources' / 'geography.json')
     # Bake vector geography masks; ownership colours and interaction stay native in Unity.
     from PIL import Image, ImageDraw, ImageChops
@@ -116,9 +117,21 @@ def prepare(backend_only=False, bundle_python=False, include_local_save=False):
             draw.polygon(poly, fill=255)
         mask = ImageChops.multiply(mask, territories[cell['native_country']])
         save_mask(ImageChops.multiply(mask, land), maps / f"cell-{cell['place']}.png")
+    # Region washes of places that no longer exist would otherwise linger in Resources.
+    current = {f"cell-{cell['place']}.png" for cell in geo['cells']}
+    for stale in maps.glob('cell-*.png'):
+        if stale.name not in current:
+            stale.unlink()
+            meta = Path(str(stale) + '.meta')
+            if meta.exists():
+                meta.unlink()
     # Paper/ink skin, painted atlas and watercolour territory washes (overwrites the flat masks above).
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import bake_ui
+    if map_only:
+        bake_ui.bake_atlas()
+        print('World map regenerated.')
+        return
     bake_ui.bake_ui()
     bake_ui.bake_atlas()
     import bake_paper_cast
@@ -147,5 +160,6 @@ if __name__ == '__main__':
     parser.add_argument('--backend-only', action='store_true', help='Only sync the shared Python engine; no art dependencies required')
     parser.add_argument('--bundle-python', action='store_true', help='Bundle this Windows CPython for a self-contained player (ignored by Git)')
     parser.add_argument('--include-local-save', action='store_true', help='Opt in to a local SQLite snapshot; never committed to Git')
+    parser.add_argument('--map-only', action='store_true', help='Sync the engine and regenerate only the world map (geography, region washes, atlas)')
     options = parser.parse_args()
     prepare(**vars(options))

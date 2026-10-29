@@ -6,7 +6,7 @@ from jianghu import city_maps, local_life, economics, society
 from jianghu.atlas import PLACES
 from jianghu.engine import World
 
-HOME = next(p['id'] for p in PLACES if p['name'] == '临安府')
+HOME = next(p['id'] for p in PLACES if p['name'] == '洛阳')
 
 
 class LocalLifeTests(unittest.TestCase):

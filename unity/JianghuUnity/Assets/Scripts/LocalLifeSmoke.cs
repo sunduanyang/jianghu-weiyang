@@ -48,7 +48,7 @@ public class LocalLifeSmoke : MonoBehaviour {
             if(city["settlement_layout"]["tier"].S=="prosperous")prosperous++;
         }
         Check("all living people have one home and one current presence",homes==client.World["population"].I&&present==homes);
-        Check("approved layout retained",ordinary==client.World["locations"].A.Count*2+prosperous&&sects==14&&client.World["locations"].A.Count==49);
+        Check("approved layout retained",ordinary==client.World["locations"].A.Count*2+prosperous&&sects==8&&client.World["locations"].A.Count==8);
         yield return client.Refresh();Check("browsing preserves saved progress",client.World["month"].I==month&&client.World["events"].S==events&&client.World["hero"].ToString()==hero);
         Screen.SetResolution(1280,800,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.3f);Screen.SetResolution(1680,960,FullScreenMode.Windowed);
         int placeId=client.World["hero"]["place"].I;

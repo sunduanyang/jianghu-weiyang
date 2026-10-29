@@ -34,7 +34,7 @@ class NoBridgeTests(unittest.TestCase):
             self.assertEqual(current['settlements'],old['settlements'])
 
     def test_saved_bridge_position_becomes_a_ford_without_spending_a_turn(self):
-        place=next(p['id'] for p in PLACES if p['name']=='克鲁伦河营地')
+        place=next(p['id'] for p in PLACES if p['name']=='洛阳')
         w=World(population=0,durable=False);self.addCleanup(w.store.close)
         state=deepcopy(w.export());old=city_maps.layout(w.seed,place,6)
         r,c=next((r,c) for r,row in enumerate(old['rows']) for c,t in enumerate(row) if t=='=')
