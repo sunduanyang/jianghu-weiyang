@@ -205,18 +205,19 @@ public partial class JianghuApp {
         }
         GUILayout.EndArea();
     }
-    // 系统（Esc）：存档、本地模型与调试用的皮影衣橱。
+    // 系统（Esc）：存档、本地模型、调试用的皮影衣橱与关节绑定。
     void DrawSystemScroll(){
         var view=TopView;var tab=(SystemTab)view.Tab;
         BookScreen("系统");
         int pick=BookTabStrip(SystemTabNames,view.Tab);
         if(pick>=0&&pick!=view.Tab)Later(()=>SetTab(pick));
-        Rect area=tab==SystemTab.Puppets?new Rect(200,118,1280,760):new Rect(260,118,1160,760);
+        Rect area=tab==SystemTab.Puppets||tab==SystemTab.Rigging?new Rect(200,118,1280,760):new Rect(260,118,1160,760);
         paperDrawOrigin=area.position;GUILayout.BeginArea(area);
         switch(tab){
             case SystemTab.Saves:DrawSettings();break;
             case SystemTab.Model:DrawAI();break;
             case SystemTab.Puppets:DrawPuppets();break;
+            case SystemTab.Rigging:DrawRigBinder();break;
         }
         GUILayout.EndArea();paperDrawOrigin=Vector2.zero;
     }

@@ -11,7 +11,7 @@ public enum Stage { World, City }
 public enum ViewKind { Person, Jianghu, System, Dialogue, Battle, Interaction }
 public enum PersonTab { Overview, Character, Martial, Bag, Ties, Life }
 public enum JianghuTab { Powers, Market, Chronicle }
-public enum SystemTab { Saves, Model, Puppets }
+public enum SystemTab { Saves, Model, Puppets, Rigging }
 
 public sealed class UiView {
     public ViewKind Kind;
@@ -23,7 +23,7 @@ public sealed class UiView {
 public partial class JianghuApp {
     public static readonly string[] PersonTabNames={"概览","品性","武学","行囊","人情","生平"};
     public static readonly string[] JianghuTabNames={"势力","市井","年谱"};
-    public static readonly string[] SystemTabNames={"存档","本地模型","皮影衣橱"};
+    public static readonly string[] SystemTabNames={"存档","本地模型","皮影衣橱","关节绑定"};
 
     public Stage CurrentStage{get;private set;}=Stage.World;
     readonly List<UiView> views=new List<UiView>();

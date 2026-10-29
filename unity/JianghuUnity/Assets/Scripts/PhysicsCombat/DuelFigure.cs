@@ -6,6 +6,7 @@ using UnityEngine;
 public sealed partial class PhysicsDuel {
     public sealed partial class Fighter {
         public void Draw(bool debug) {
+            if(TryDrawBoundRig(debug))return;
             if(TryDrawCharacterModules(debug))return;
             if(TryDrawModularPuppet(debug))return;
             if(TryDrawLacePuppet(debug))return;
