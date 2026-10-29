@@ -11,7 +11,7 @@ from . import demography, government, items, appearance
 from . import social
 from . import politics, territory
 from .atlas import PLACES, FACTIONS, COUNTRIES, ROUTES, NEIGHBORS, MAP_VERSION, ERA
-from . import careers, social_ranks, undertakings, fame
+from . import careers, social_ranks, undertakings, fame, hearsay
 from . import martial, martial_manuals, physical_combat as combat, player_interactions, player_social
 from . import city_maps, relationships, organizations, protagonist, settlements, society, temperament, goals
 from . import npc_plans, npc_memory, economics, rank_progression, local_life, llm_policy, npc_attention
@@ -1149,6 +1149,7 @@ class World:
                     self.execute(n,self.choose(n,actions),legal=actions)
         self.phase=0
         fame.monthly(self)
+        hearsay.monthly(self)
         if economics.active(self):
             economics.close_month(self)
             for n in list(self.npcs.values()):
