@@ -52,8 +52,10 @@ public partial class JianghuApp {
             if(epoch!=socialNetworkEpoch||FocusPersonId!=id||SelectedPerson!=id)return;
             if(j["player_social"]["revision"].I<InteractionSocial["revision"].I)return;
             bool wasPending=InteractionSocial["pending"].B;
+            bool reactionWas=Person["player_reactions"].A.Any(r=>r["status"].S=="pending");
             Person=j;ApplySocialSnapshot(id,j["player_social"]);
             if(wasPending&&!j["player_social"]["pending"].B){StartCoroutine(Client.Refresh());if(TopIs(ViewKind.Interaction))LoadInteraction();}
+            else if(reactionWas&&!j["player_reactions"].A.Any(r=>r["status"].S=="pending")&&TopIs(ViewKind.Interaction))LoadInteraction();
         },false);
         conversationPolling=false;
     }
