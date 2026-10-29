@@ -8,6 +8,8 @@ public struct OriginalImpact {
     public OriginalBodyPart part;
     public Vector2 point,velocity,normal;
     public float localDamage,globalDamage;
+    public bool cannon;
+    public int armorMaterial;
     public OriginalSurface surface;
 }
 
@@ -19,7 +21,7 @@ public static class OriginalCombatRules {
         count++;expires=now+.1f;return true;
     }
     // CharacterDamageCalculator.OnHandItemImpact_Authoritative 0x3428224.
-    public static float RawDamage(int category,bool two,Vector2 velocity,float stat,float defense,OriginalSurface surface,bool shield,int armorMaterial,float damagePerMps=.25f) {
+    public static float RawDamage(int category,bool two,Vector2 velocity,float stat,float defense,OriginalSurface surface,bool shield,int armorMaterial,float damagePerMps=.25f,float defenseL2=0,float defenseL3=0) {
         Vector2 factor=Vector2.one;
         switch(category) {
             case 0:case 1:factor=new Vector2(two?1:.75f,.75f);break;
@@ -33,6 +35,7 @@ public static class OriginalCombatRules {
         float damage=stat==.1f?speed*damagePerMps/2.5f:damagePerMps*speed*(stat/15+1)*2.15f;
         if(shield)damage*=.5f;
         damage-=defense;
+        damage-=defenseL2;damage-=defenseL3;
         if(category==1&&surface==OriginalSurface.SpikePommel)damage*=1.5f;
         if(armorMaterial>4) {
             if(surface==OriginalSurface.MetalBlade||surface==OriginalSurface.MetalSpike) {

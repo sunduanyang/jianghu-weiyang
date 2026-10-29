@@ -1,0 +1,2393 @@
+{
+  "source_scene": "Game/Scenes/MainScene.unity",
+  "source_scene_sha256": "6cc1af4bb23b1b13df00b9d7dd93a0712b44be6d61b8d23b0684cb07cc7ad88b",
+  "controller": {
+    "source_component": 16538,
+    "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController",
+    "data": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "fileID": 0,
+        "path": null
+      },
+      "m_PrefabInstance": {
+        "fileID": 0,
+        "path": null
+      },
+      "m_PrefabAsset": {
+        "fileID": 0,
+        "path": null
+      },
+      "m_GameObject": {
+        "fileID": 344,
+        "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "673fcf2596871221f62ece368170b913",
+        "type": 3,
+        "path": null
+      },
+      "m_Name": null,
+      "m_EditorClassIdentifier": null,
+      "tutorialContainer": {
+        "fileID": 1615,
+        "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer"
+      },
+      "tutorialScreens": [
+        {
+          "fileID": 18063,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1"
+        },
+        {
+          "fileID": 18067,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2"
+        },
+        {
+          "fileID": 18074,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3"
+        },
+        {
+          "fileID": 22178,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4"
+        }
+      ],
+      "tutorialHandsCanvasGroups": [
+        {
+          "fileID": 15409,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/HandsContainerContainer"
+        },
+        {
+          "fileID": 15378,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/HandsContainerContainer"
+        },
+        {
+          "fileID": 15411,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/HandsContainerContainer"
+        }
+      ],
+      "topBarInGame": {
+        "fileID": 213,
+        "path": "CanvasAndCamera/Canvas/MainContainer/TopBar_InGame"
+      },
+      "cinemachineBrain": {
+        "fileID": 22519,
+        "path": "CanvasAndCamera/MainCamera"
+      }
+    }
+  },
+  "buttons": [
+    {
+      "source_component": 17307,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_No",
+      "interactable": true,
+      "calls": [
+        {
+          "m_Target": {
+            "fileID": 16538,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+          },
+          "m_TargetAssemblyTypeName": "TutorialController, Assembly-CSharp",
+          "m_MethodName": "OnClickedNo",
+          "m_Mode": 1,
+          "m_Arguments": {
+            "m_ObjectArgument": {
+              "fileID": 0,
+              "path": null
+            },
+            "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+            "m_IntArgument": 0,
+            "m_FloatArgument": 0,
+            "m_StringArgument": null,
+            "m_BoolArgument": 0
+          },
+          "m_CallState": 2
+        }
+      ],
+      "all_persistent_calls": [
+        {
+          "m_Target": {
+            "fileID": 16538,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+          },
+          "m_TargetAssemblyTypeName": "TutorialController, Assembly-CSharp",
+          "m_MethodName": "OnClickedNo",
+          "m_Mode": 1,
+          "m_Arguments": {
+            "m_ObjectArgument": {
+              "fileID": 0,
+              "path": null
+            },
+            "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+            "m_IntArgument": 0,
+            "m_FloatArgument": 0,
+            "m_StringArgument": null,
+            "m_BoolArgument": 0
+          },
+          "m_CallState": 2
+        }
+      ]
+    },
+    {
+      "source_component": 17717,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial",
+      "interactable": true,
+      "calls": [
+        {
+          "m_Target": {
+            "fileID": 16538,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+          },
+          "m_TargetAssemblyTypeName": "TutorialController, Assembly-CSharp",
+          "m_MethodName": "OnClickedNext",
+          "m_Mode": 1,
+          "m_Arguments": {
+            "m_ObjectArgument": {
+              "fileID": 0,
+              "path": null
+            },
+            "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+            "m_IntArgument": 0,
+            "m_FloatArgument": 0,
+            "m_StringArgument": null,
+            "m_BoolArgument": 0
+          },
+          "m_CallState": 2
+        }
+      ],
+      "all_persistent_calls": [
+        {
+          "m_Target": {
+            "fileID": 16538,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+          },
+          "m_TargetAssemblyTypeName": "TutorialController, Assembly-CSharp",
+          "m_MethodName": "OnClickedNext",
+          "m_Mode": 1,
+          "m_Arguments": {
+            "m_ObjectArgument": {
+              "fileID": 0,
+              "path": null
+            },
+            "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+            "m_IntArgument": 0,
+            "m_FloatArgument": 0,
+            "m_StringArgument": null,
+            "m_BoolArgument": 0
+          },
+          "m_CallState": 2
+        }
+      ]
+    },
+    {
+      "source_component": 17718,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial",
+      "interactable": true,
+      "calls": [
+        {
+          "m_Target": {
+            "fileID": 16538,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+          },
+          "m_TargetAssemblyTypeName": "TutorialController, Assembly-CSharp",
+          "m_MethodName": "OnClickedNext",
+          "m_Mode": 1,
+          "m_Arguments": {
+            "m_ObjectArgument": {
+              "fileID": 0,
+              "path": null
+            },
+            "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+            "m_IntArgument": 0,
+            "m_FloatArgument": 0,
+            "m_StringArgument": null,
+            "m_BoolArgument": 0
+          },
+          "m_CallState": 2
+        }
+      ],
+      "all_persistent_calls": [
+        {
+          "m_Target": {
+            "fileID": 16538,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+          },
+          "m_TargetAssemblyTypeName": "TutorialController, Assembly-CSharp",
+          "m_MethodName": "OnClickedNext",
+          "m_Mode": 1,
+          "m_Arguments": {
+            "m_ObjectArgument": {
+              "fileID": 0,
+              "path": null
+            },
+            "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+            "m_IntArgument": 0,
+            "m_FloatArgument": 0,
+            "m_StringArgument": null,
+            "m_BoolArgument": 0
+          },
+          "m_CallState": 2
+        }
+      ]
+    },
+    {
+      "source_component": 19441,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_Yes",
+      "interactable": true,
+      "calls": [
+        {
+          "m_Target": {
+            "fileID": 16538,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+          },
+          "m_TargetAssemblyTypeName": "TutorialController, Assembly-CSharp",
+          "m_MethodName": "OnClickedFight",
+          "m_Mode": 1,
+          "m_Arguments": {
+            "m_ObjectArgument": {
+              "fileID": 0,
+              "path": null
+            },
+            "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+            "m_IntArgument": 0,
+            "m_FloatArgument": 0,
+            "m_StringArgument": "ArenaSingleplayer",
+            "m_BoolArgument": 0
+          },
+          "m_CallState": 2
+        }
+      ],
+      "all_persistent_calls": [
+        {
+          "m_Target": {
+            "fileID": 16538,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+          },
+          "m_TargetAssemblyTypeName": "TutorialController, Assembly-CSharp",
+          "m_MethodName": "OnClickedFight",
+          "m_Mode": 1,
+          "m_Arguments": {
+            "m_ObjectArgument": {
+              "fileID": 0,
+              "path": null
+            },
+            "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+            "m_IntArgument": 0,
+            "m_FloatArgument": 0,
+            "m_StringArgument": "ArenaSingleplayer",
+            "m_BoolArgument": 0
+          },
+          "m_CallState": 2
+        }
+      ]
+    },
+    {
+      "source_component": 19542,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial",
+      "interactable": true,
+      "calls": [
+        {
+          "m_Target": {
+            "fileID": 16538,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+          },
+          "m_TargetAssemblyTypeName": "TutorialController, Assembly-CSharp",
+          "m_MethodName": "OnClickedNext",
+          "m_Mode": 1,
+          "m_Arguments": {
+            "m_ObjectArgument": {
+              "fileID": 0,
+              "path": null
+            },
+            "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+            "m_IntArgument": 0,
+            "m_FloatArgument": 0,
+            "m_StringArgument": null,
+            "m_BoolArgument": 0
+          },
+          "m_CallState": 2
+        }
+      ],
+      "all_persistent_calls": [
+        {
+          "m_Target": {
+            "fileID": 16538,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+          },
+          "m_TargetAssemblyTypeName": "TutorialController, Assembly-CSharp",
+          "m_MethodName": "OnClickedNext",
+          "m_Mode": 1,
+          "m_Arguments": {
+            "m_ObjectArgument": {
+              "fileID": 0,
+              "path": null
+            },
+            "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+            "m_IntArgument": 0,
+            "m_FloatArgument": 0,
+            "m_StringArgument": null,
+            "m_BoolArgument": 0
+          },
+          "m_CallState": 2
+        }
+      ]
+    }
+  ],
+  "hands_canvas_groups": [
+    {
+      "reference": {
+        "fileID": 15409,
+        "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/HandsContainerContainer"
+      },
+      "alpha": 1,
+      "blocks_raycasts": false,
+      "interactable": false
+    },
+    {
+      "reference": {
+        "fileID": 15378,
+        "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/HandsContainerContainer"
+      },
+      "alpha": 1,
+      "blocks_raycasts": false,
+      "interactable": false
+    },
+    {
+      "reference": {
+        "fileID": 15411,
+        "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/HandsContainerContainer"
+      },
+      "alpha": 1,
+      "blocks_raycasts": false,
+      "interactable": false
+    }
+  ],
+  "texts": [
+    {
+      "source_component": 15570,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face/Text_Continue",
+      "text": "Continuă"
+    },
+    {
+      "source_component": 15571,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face/Text_Continue",
+      "text": "Continuă"
+    },
+    {
+      "source_component": 15628,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint/Container/Text_Yes",
+      "text": true
+    },
+    {
+      "source_component": 15638,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/TopPart/Background/Text_TutorialExplainer_Gamepad",
+      "text": "Move your left joystick to move your left hand and your right joystick to move your right hand."
+    },
+    {
+      "source_component": 15652,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face/Text_Continue",
+      "text": "Continuă"
+    },
+    {
+      "source_component": 15680,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint/Container/Text_No",
+      "text": false
+    },
+    {
+      "source_component": 15717,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/TopPart/Background/Text_TutorialExplainer_Gamepad",
+      "text": "Press L1 or L2 repeatedly to go left and R1 or R2 to go right."
+    },
+    {
+      "source_component": 15739,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Text_Hint",
+      "text": "Melanjutkan"
+    },
+    {
+      "source_component": 15793,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Text_Hint",
+      "text": "Melanjutkan"
+    },
+    {
+      "source_component": 15820,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_Yes/Face/Text_Button",
+      "text": true
+    },
+    {
+      "source_component": 15823,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/TopPart/Text_TutorialExplainer_Touch",
+      "text": "Press and hold on the left side of the screen to move your left hand, and on the right side to move your right hand."
+    },
+    {
+      "source_component": 15824,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/TopPart/Text_TutorialExplainer_Touch",
+      "text": "Double tap on both sides of the screen at the same time to perform a kick to push your enemies.\r"
+    },
+    {
+      "source_component": 15881,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Text_Hint",
+      "text": "Melanjutkan"
+    },
+    {
+      "source_component": 15898,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_No/Face/Text_Button",
+      "text": false
+    },
+    {
+      "source_component": 15901,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/TopPart/Background/Text_TutorialExplainer_Gamepad",
+      "text": "Double-press L1 and R1 or L2 and R2 to perform a kick. Useful for knocking back enemies."
+    },
+    {
+      "source_component": 15902,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/Text_AreYouReady",
+      "text": "Are you ready to fight?"
+    },
+    {
+      "source_component": 15963,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Text_AreYouReady",
+      "text": "Are you ready to fight?"
+    },
+    {
+      "source_component": 15991,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/TopPart/Text_TutorialExplainer_Touch",
+      "text": "Double-tap on the left side of the screen to walk left hand and on the right side of the screen to walk right."
+    }
+  ],
+  "localizers": [
+    {
+      "source_component": 17108,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint/Container/Text_Yes",
+      "term": "UI/General/Yes",
+      "secondary_term": "Materials/Medium - Outline"
+    },
+    {
+      "source_component": 17791,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face/Text_Continue",
+      "term": "UI/General/Continue",
+      "secondary_term": "Fonts/Medium - Alagard SDF"
+    },
+    {
+      "source_component": 17792,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face/Text_Continue",
+      "term": "UI/General/Continue",
+      "secondary_term": "Fonts/Medium - Alagard SDF"
+    },
+    {
+      "source_component": 18066,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/TopPart/Text_TutorialExplainer_Touch",
+      "term": "UI/Tutorial/Tutorial Message Part 3",
+      "secondary_term": "Materials/Small - Drop Shadow"
+    },
+    {
+      "source_component": 18496,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Text_Hint",
+      "term": "UI/General/Continue",
+      "secondary_term": "Materials/Medium - Outline"
+    },
+    {
+      "source_component": 19150,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/Text_AreYouReady",
+      "term": "UI/Tutorial/Tutorial Message Are You Ready",
+      "secondary_term": "Materials/Medium - Outline"
+    },
+    {
+      "source_component": 19233,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/TopPart/Background/Text_TutorialExplainer_Gamepad",
+      "term": "UI/Tutorial/Gamepad Tutorial Message Part 3",
+      "secondary_term": "Materials/Small - Drop Shadow"
+    },
+    {
+      "source_component": 19241,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint/Container/Text_No",
+      "term": "UI/General/No",
+      "secondary_term": "Materials/Medium - Outline"
+    },
+    {
+      "source_component": 19252,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/TopPart/Text_TutorialExplainer_Touch",
+      "term": "UI/Tutorial/Tutorial Message Part 2",
+      "secondary_term": "Materials/Small - Drop Shadow"
+    },
+    {
+      "source_component": 19487,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face/Text_Continue",
+      "term": "UI/General/Continue",
+      "secondary_term": "Fonts/Medium - Alagard SDF"
+    },
+    {
+      "source_component": 19800,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/TopPart/Background/Text_TutorialExplainer_Gamepad",
+      "term": "UI/Tutorial/Gamepad Tutorial Message Part 1",
+      "secondary_term": "Materials/Small - Drop Shadow"
+    },
+    {
+      "source_component": 19834,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Text_AreYouReady",
+      "term": "UI/Tutorial/Tutorial Message Are You Ready",
+      "secondary_term": "Materials/Medium - Outline"
+    },
+    {
+      "source_component": 20131,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_Yes/Face/Text_Button",
+      "term": "UI/General/Yes",
+      "secondary_term": "Fonts/Medium - Alagard SDF"
+    },
+    {
+      "source_component": 20258,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/TopPart/Text_TutorialExplainer_Touch",
+      "term": "UI/Tutorial/Tutorial Message Part 2",
+      "secondary_term": "Materials/Small - Drop Shadow"
+    },
+    {
+      "source_component": 20554,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Text_Hint",
+      "term": "UI/General/Continue",
+      "secondary_term": "Materials/Medium - Outline"
+    },
+    {
+      "source_component": 21330,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/TopPart/Text_TutorialExplainer_Touch",
+      "term": "UI/Tutorial/Tutorial Message Part 1",
+      "secondary_term": "Materials/Small - Drop Shadow"
+    },
+    {
+      "source_component": 21331,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/TopPart/Text_TutorialExplainer_Touch",
+      "term": "UI/Tutorial/Tutorial Message Part 3",
+      "secondary_term": "Materials/Small - Drop Shadow"
+    },
+    {
+      "source_component": 21757,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/TopPart/Background/Text_TutorialExplainer_Gamepad",
+      "term": "UI/Tutorial/Gamepad Tutorial Message Part 2",
+      "secondary_term": "Materials/Small - Drop Shadow"
+    },
+    {
+      "source_component": 22132,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_No/Face/Text_Button",
+      "term": "UI/General/No",
+      "secondary_term": "Fonts/Medium - Alagard SDF"
+    },
+    {
+      "source_component": 22419,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Text_Hint",
+      "term": "UI/General/Continue",
+      "secondary_term": "Materials/Medium - Outline"
+    }
+  ],
+  "languages": [
+    {
+      "Name": "English",
+      "Code": "en",
+      "Flags": 0
+    },
+    {
+      "Name": "Russian",
+      "Code": "ru",
+      "Flags": 0
+    },
+    {
+      "Name": "Spanish",
+      "Code": "es",
+      "Flags": 0
+    },
+    {
+      "Name": "Indonesian",
+      "Code": "id",
+      "Flags": 0
+    },
+    {
+      "Name": "French (France)",
+      "Code": "fr-FR",
+      "Flags": 0
+    },
+    {
+      "Name": "Portuguese (Brazil)",
+      "Code": "pt-BR",
+      "Flags": 0
+    },
+    {
+      "Name": "Turkish",
+      "Code": "tr",
+      "Flags": 0
+    },
+    {
+      "Name": "Ukrainian",
+      "Code": "uk",
+      "Flags": 0
+    },
+    {
+      "Name": "German",
+      "Code": "de",
+      "Flags": 0
+    },
+    {
+      "Name": "Romanian",
+      "Code": "ro",
+      "Flags": 0
+    },
+    {
+      "Name": "Japanese",
+      "Code": "ja",
+      "Flags": 0
+    }
+  ],
+  "terms": {
+    "UI/General/Yes": [
+      true,
+      "Да",
+      "Sí",
+      "Ya",
+      "Oui ",
+      "Sim",
+      "Evet",
+      "Так",
+      "Ja",
+      "Da",
+      "はい"
+    ],
+    "UI/General/Continue": [
+      "Continue",
+      "Продолжить",
+      "Seguir",
+      "Melanjutkan",
+      "Continuez",
+      "Prosseguir",
+      "Devam Et",
+      "Продовжувати",
+      "Fortsetzen",
+      "Continuă",
+      "続ける"
+    ],
+    "UI/Tutorial/Tutorial Message Part 3": [
+      "Double tap on both sides of the screen at the same time to perform a kick to push your enemies.\r",
+      "Дважды коснитесь одновременно обеих сторон экрана, чтобы выполнить удар ногой и столкнуть врагов.\r",
+      "Toca dos veces en ambos lados de la pantalla al mismo tiempo para realizar una patada que empuje a tus enemigos.",
+      "Ketuk dua kali di kedua sisi layar secara bersamaan untuk melakukan tendangan untuk mendorong musuh Anda.",
+      "Double tapez sur les deux côtés de l'écran en même temps pour effectuer un coup de pied afin de pousser vos ennemis.",
+      "Toque duplo em ambos os lados do ecrã ao mesmo tempo para executar um pontapé para empurrar os seus inimigos.",
+      "Düşmanlarınızı itmek için tekme atmak için ekranın her iki tarafına aynı anda iki kez dokunun.\r",
+      "Двічі торкніться одночасно з обох боків екрана, щоб виконати удар ногою, щоб штовхнути своїх ворогів.\r",
+      "Doppeltippen Sie gleichzeitig auf beide Seiten des Bildschirms, um einen Tritt auszuführen, um Ihre Feinde zu stoßen.\r",
+      "Atinge de două ori pe ambele părti ale ecranului în acelasi timp pentru a da cu sutul pentru a-ti împinge inamicii.",
+      "画面の両側を同時にダブルタップして、\nキックで敵を押し戻します。"
+    ],
+    "UI/Tutorial/Tutorial Message Are You Ready": [
+      "Are you ready to fight?",
+      "Вы готовы к бою?",
+      "¿Estás listo para luchar?",
+      "Siap bertarung?",
+      "Es-tu prêt à te battre ?",
+      "Você está pronto para lutar?",
+      "Savaşmaya hazır mısın?",
+      "Ви готові до бою?",
+      "Bist du bereit zu kämpfen?",
+      "Esti gata să lupti?",
+      "戦闘準備OK?"
+    ],
+    "UI/Tutorial/Gamepad Tutorial Message Part 3": [
+      "Double-press L1 and R1 or L2 and R2 to perform a kick. Useful for knocking back enemies.",
+      "Дважды нажмите L1 и R1 или L2 и R2, чтобы выполнить удар ногой. Полезно для отбрасывания врагов.",
+      "Pulsa dos veces L1 y R1 o L2 y R2 para realizar una patada. Útil para derribar enemigos.",
+      "Tekan dua kali L1 dan R1 atau L2 dan R2 untuk melakukan tendangan. Berguna untuk memukul mundur musuh.",
+      "Appuyez deux fois sur L1 et R1 ou L2 et R2 pour effectuer un coup de pied. Utile pour repousser les ennemis.",
+      "Pressione duas vezes L1 e R1 ou L2 e R2 para executar um chute. Útil para repelir inimigos.",
+      null,
+      null,
+      null,
+      "Apăsă de două ori L1 si R1 sau L2 si R2 pentru a da cu sutul. Util pentru a da inamicii în spate.",
+      "L1 と R1、または L2 と R2 を 2 回押してキックを実行します。\n敵をノックバックさせるのに便利です。"
+    ],
+    "UI/General/No": [
+      false,
+      "Нет",
+      false,
+      "Tidak",
+      "Non",
+      "Não",
+      "Hayır",
+      "Немає",
+      "Nein",
+      "Nu",
+      "いいえ"
+    ],
+    "UI/Tutorial/Tutorial Message Part 2": [
+      "Double-tap on the left side of the screen to walk left hand and on the right side of the screen to walk right.",
+      "Дважды нажмите на левую сторону экрана, чтобы двигаться влево, и на правую сторону, чтобы двигаться вправо.",
+      "Toque dos veces en el lado izquierdo de la pantalla para moverse hacia la izquierda y en el lado derecho para moverse hacia la derecha.",
+      "Pencet dua kali di sisi kiri layar untuk bergerak ke kiri dan di sisi kanan untuk bergerak ke kanan.",
+      "Double-tapez sur le côté gauche de l'écran pour vous déplacer à gauche et sur le côté droit pour vous déplacer à droite.",
+      "Toque duas vezes no lado esquerdo da tela para mover para a esquerda e no lado direito para mover para a direita.",
+      "Sola gitmek için ekranın sol tarafına, sağa gitmek için sağ tarafına çift dokunun.",
+      "Двічі торкніться лівої частини екрана, щоб переміститися вліво, і правої сторони, щоб переміститися вправо.",
+      "Doppeltippen Sie auf die linke Seite des Bildschirms, um sich nach links zu bewegen, und auf die rechte Seite, um sich nach rechts zu bewegen.",
+      "Atinge de două ori pe partea stângă a ecranului pentru a te misca la stânga si pe partea dreaptă pentru a te misca la dreapta.",
+      "画面左側をダブルタップして左に移動し、\n右側をダブルタップして右に移動します。"
+    ],
+    "UI/Tutorial/Gamepad Tutorial Message Part 1": [
+      "Move your left joystick to move your left hand and your right joystick to move your right hand.",
+      "Двигайте левый джойстик, чтобы переместить левую руку, и правый джойстик, чтобы переместить правую руку.",
+      "Mueva el joystick izquierdo para mover la mano izquierda y el joystick derecho para mover la mano derecha.",
+      "Gerakkan joystick kiri untuk menggerakkan tangan kiri dan joystick kanan untuk menggerakkan tangan kanan.",
+      "Déplacez votre joystick gauche pour déplacer votre main gauche et votre joystick droit pour déplacer votre main droite.",
+      "Mova o joystick esquerdo para mover a mão esquerda e o joystick direito para mover a mão direita.",
+      null,
+      null,
+      null,
+      "Miscă joystick-ul stâng pentru a-ti misca mâna stângă si joystick-ul drept pentru a-ti misca mâna dreaptă.",
+      "左手を動かすには左のジョイスティックを動かし、\n右手を動かすには右のジョイスティックを動かします。"
+    ],
+    "UI/Tutorial/Tutorial Message Part 1": [
+      "Press and hold on the left side of the screen to move your left hand, and on the right side to move your right hand.",
+      "Нажмите и удерживайте кнопку в левой части экрана, чтобы двигать левой рукой, и в правой части, чтобы двигать правой рукой.",
+      "Mantenga presionado en el lado izquierdo de la pantalla para mover su mano izquierda y en el lado derecho de la pantalla para mover su mano derecha.",
+      "Tekan dan tahan di sisi kiri layar untuk menggerakkan tangan kiri Anda dan di sisi kanan layar untuk menggerakkan tangan kanan Anda.",
+      "Appuie et maintiens la pression sur le côté gauche de l'écran pour déplacer ta main gauche et sur le côté droit de l'écran pour déplacer ta main droite.",
+      "Pressione e segure no lado esquerdo da tela para mover a mão esquerda e no lado direito da tela para mover a mão direita.",
+      "Sol elinizi hareket ettirmek için ekranın sol tarafını ve sağ elinizi hareket ettirmek için ekranın sağ tarafını basılı tutun.",
+      "Натисніть і утримуйте ліву частину екрана, щоб рухати лівою рукою, і праву сторону екрана, щоб рухати правою рукою.",
+      "Halten Sie die linke Seite des Bildschirms gedrückt, um Ihre linke Hand zu bewegen, und die rechte Seite des Bildschirms, um Ihre rechte Hand zu bewegen.",
+      "Tine apăsat pe partea stângă a ecranului pentru a misca mâna stângă si pe partea dreaptă a ecranului pentru a misca mâna dreaptă.",
+      "画面左側を押し続けて左手を動かし、\n右側を押し続けて右手を動かします。"
+    ],
+    "UI/Tutorial/Gamepad Tutorial Message Part 2": [
+      "Press L1 or L2 repeatedly to go left and R1 or R2 to go right.",
+      "Несколько раз нажмите L1 или L2, чтобы пойти налево, и R1 или R2, чтобы пойти направо.",
+      "Presione L1 o L2 repetidamente para ir a la izquierda y R1 o R2 para ir a la derecha.",
+      "Tekan L1 atau L2 berulang kali untuk ke kiri dan R1 atau R2 untuk ke kanan.",
+      "Appuyez plusieurs fois sur L1 ou L2 pour aller à gauche et R1 ou R2 pour aller à droite.",
+      "Pressione L1 ou L2 repetidamente para ir para a esquerda e R1 ou R2 para ir para a direita.",
+      null,
+      null,
+      null,
+      "Apasă L1 sau L2 repetat pentru a merge la stânga si R1 sau R2 pentru a merge la dreapta.",
+      "L1 または L2 を繰り返し押すと左に移動し、\nR1 または R2 を押すと右に移動します。"
+    ]
+  },
+  "localization_source_sha256": "39c1905f706b90dbf81dbfbf462dffe88536aae8343d7d531d5d2e50c709c5a4",
+  "initial_active": {
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_No/Face/Text_Button": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Text_Hint": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/TopPart/Outline": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/TopPart/Outline": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_No/Body": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/HandsContainerContainer": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_No/Face/Icon": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Selected": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/TopPart/Background": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Icon_South": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_No/Face": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/TopPart/Background/Text_TutorialExplainer_Gamepad": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Left/Handle": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_No/Body/BodyDisabled": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Body/Body": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Body/Body": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/TopPart": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/GamepadHint/Container": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/Text_AreYouReady": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face/Icon": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face/Icon": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Left/Handle": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Left": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/DarkBackground": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Right/Handle": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Left": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/TopPart/Text_TutorialExplainer_Touch": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/HandsContainerContainer/HandsContainer": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Right/Hand/Frame 2": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Right/Hand": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/HandsContainerContainer/HandsContainer": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Left/Hand/Frame 1": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Left/Hand": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Right": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Left/Hand/Frame 2": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Right/Handle": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Right/Hand/Frame 1": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/HandsContainerContainer": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Right/Hand/Frame 2": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Text_AreYouReady": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_Yes/Face/Highlight": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Icon_South": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/HandsContainerContainer/HandsContainer": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Selected": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Selected": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint/Container/Icon_East": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/TopPart/Background": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Right/Hand/Frame 2": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Text_Hint": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/TopPart": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_No/Face/Highlight": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/TopPart/Outline": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/GamepadHint": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/TopPart/Text_TutorialExplainer_Touch": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/TopPart/Text_TutorialExplainer_Touch": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_Yes/Face/Text_Button": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint/Container": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Left/Hand/Frame 2": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Body/Body": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_Yes/Body": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_Yes/Face/Icon": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/TopPart": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/TopPart": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_Yes/Face": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face/Icon": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_Yes/Body/BodyDisabled": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Body": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Body": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face/Text_Continue": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face/Highlight": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/TopPart/Background": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Left/Hand/Frame 1": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/GamepadHint": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/GamepadHint/Container": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_Yes/Face/FaceDisabled": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Right/Hand": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Left/Hand": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint/Container/Text_No": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Left/Handle": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/TopPart/Background": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/TopPart/Background/Text_TutorialExplainer_Gamepad": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Icon_South": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Right/Handle": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/TopPart": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Right/Hand": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Text_Hint": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_Yes": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Left/Hand/Frame 2": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint/Container/Spacer": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Right/Hand/Frame 1": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/GamepadHint/Container": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/HandsContainerContainer": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Body": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Right/Hand/Frame 1": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/GamepadHint": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_No": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face/Highlight": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face/Highlight": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face/Text_Continue": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Face/Face/Text_Continue": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/TopPart/Background": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/TopPart/Background": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Left/Hand": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Left": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Right": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/TopPart": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint/Container/Icon_South": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/TopPart/Background/Text_TutorialExplainer_Gamepad": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_No/Face/FaceDisabled": false,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint/Container/Text_Yes": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Right": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer": true,
+    "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/HandsContainerContainer/HandsContainer/Joystick_Left/Hand/Frame 1": false
+  },
+  "auxiliary_behaviours": [
+    {
+      "source_component": 17259,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial",
+      "script": "ButtonSFX",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 4861,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "3d40c67c3a6df90fbb4853669f2d97f6",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "button": {
+          "fileID": 17717,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial"
+        },
+        "buttonPressed": {
+          "fileID": 11400000,
+          "guid": "fbb09a2ee053ca7428560d4c95dec9f9",
+          "type": 2,
+          "path": null
+        },
+        "buttonReleased": {
+          "fileID": 11400000,
+          "guid": "90829aea224e522478f329317e0dcf80",
+          "type": 2,
+          "path": null
+        },
+        "butoonDisabled": {
+          "fileID": 11400000,
+          "guid": "676d80aa63c4cd0438435127bddce6b2",
+          "type": 2,
+          "path": null
+        },
+        "audioSource": {
+          "fileID": 6619,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial"
+        }
+      }
+    },
+    {
+      "source_component": 17260,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial",
+      "script": "ButtonSFX",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 4862,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "3d40c67c3a6df90fbb4853669f2d97f6",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "button": {
+          "fileID": 17718,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial"
+        },
+        "buttonPressed": {
+          "fileID": 11400000,
+          "guid": "fbb09a2ee053ca7428560d4c95dec9f9",
+          "type": 2,
+          "path": null
+        },
+        "buttonReleased": {
+          "fileID": 11400000,
+          "guid": "90829aea224e522478f329317e0dcf80",
+          "type": 2,
+          "path": null
+        },
+        "butoonDisabled": {
+          "fileID": 11400000,
+          "guid": "676d80aa63c4cd0438435127bddce6b2",
+          "type": 2,
+          "path": null
+        },
+        "audioSource": {
+          "fileID": 6618,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial"
+        }
+      }
+    },
+    {
+      "source_component": 17417,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Selected",
+      "script": "ButtonSelectedFrameAlpha",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 992,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Selected"
+        },
+        "m_Enabled": 0,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "9283eeeb7d73504c140979fa07b69b82",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "selectedImage": {
+          "fileID": 19012,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Selected"
+        }
+      }
+    },
+    {
+      "source_component": 17527,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint",
+      "script": "GamepadUIButton",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 1211,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "6c69bf8e5b5ef9ef3ab06961beee73f7",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "actions": 0,
+        "Icon": {
+          "fileID": 17459,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint/Container/Icon_South"
+        },
+        "Icon_XBox_Active": {
+          "fileID": 21300000,
+          "guid": "ad4f13ea27b7b504eb4910ad29965204",
+          "type": 2,
+          "path": null
+        },
+        "Icon_XBox_Locked": {
+          "fileID": 21300000,
+          "guid": "a56deea22ba7a6b42abe429d9f5cbdf2",
+          "type": 2,
+          "path": null
+        },
+        "Text": {
+          "fileID": 15628,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint/Container/Text_Yes"
+        },
+        "ActiveColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "PressedColor": {
+          "r": 0.7490196,
+          "g": 0.7490196,
+          "b": 0.7490196,
+          "a": 1
+        },
+        "LockedColor": {
+          "r": 0.5,
+          "g": 0.5,
+          "b": 0.5,
+          "a": 1
+        },
+        "shouldIgnoreLockingPopup": 0,
+        "OnPressed": {
+          "m_PersistentCalls": {
+            "m_Calls": [
+              {
+                "m_Target": {
+                  "fileID": 16538,
+                  "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+                },
+                "m_TargetAssemblyTypeName": "TutorialController, Assembly-CSharp",
+                "m_MethodName": "OnClickedFight",
+                "m_Mode": 1,
+                "m_Arguments": {
+                  "m_ObjectArgument": {
+                    "fileID": 0,
+                    "path": null
+                  },
+                  "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+                  "m_IntArgument": 0,
+                  "m_FloatArgument": 0,
+                  "m_StringArgument": null,
+                  "m_BoolArgument": 0
+                },
+                "m_CallState": 2
+              }
+            ]
+          }
+        },
+        "OnPressedWhenLocked": {
+          "m_PersistentCalls": {
+            "m_Calls": []
+          }
+        }
+      }
+    },
+    {
+      "source_component": 17554,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/GamepadHint",
+      "script": "fd",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 2345,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/GamepadHint"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "7f5dc49a3f5907b1cc2433bcd8db62ff",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null
+      }
+    },
+    {
+      "source_component": 17820,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer",
+      "script": "UIInputManagerLite",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 1615,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "e107132a0478e38f35a3f01cccb9d8a9",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "normalInputGameObjects": [
+          {
+            "fileID": 4385,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer"
+          },
+          {
+            "fileID": 658,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer"
+          },
+          {
+            "fileID": 2141,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer"
+          },
+          {
+            "fileID": 5257,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer"
+          }
+        ],
+        "gamepadInputGameObjects": [
+          {
+            "fileID": 1316,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer"
+          },
+          {
+            "fileID": 3558,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer"
+          },
+          {
+            "fileID": 3790,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer"
+          },
+          {
+            "fileID": 1025,
+            "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer"
+          }
+        ],
+        "selectionFrames": [],
+        "firstSelected": {
+          "fileID": 0,
+          "path": null
+        }
+      }
+    },
+    {
+      "source_component": 17824,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_No",
+      "script": "ButtonSFXEventRelayer",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 4637,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_No"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "a99bc9bc10f673a62ecfef412ada1c5a",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "pressedSFX": {
+          "fileID": 11400000,
+          "guid": "fbb09a2ee053ca7428560d4c95dec9f9",
+          "type": 2,
+          "path": null
+        },
+        "releasedSFX": {
+          "fileID": 11400000,
+          "guid": "90829aea224e522478f329317e0dcf80",
+          "type": 2,
+          "path": null
+        },
+        "disabledSFX": {
+          "fileID": 11400000,
+          "guid": "e793dc85283392740a47a4aa2ed99269",
+          "type": 2,
+          "path": null
+        },
+        "playRelease": 1
+      }
+    },
+    {
+      "source_component": 18286,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial",
+      "script": "ButtonSFX",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 3976,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "3d40c67c3a6df90fbb4853669f2d97f6",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "button": {
+          "fileID": 19542,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial"
+        },
+        "buttonPressed": {
+          "fileID": 11400000,
+          "guid": "fbb09a2ee053ca7428560d4c95dec9f9",
+          "type": 2,
+          "path": null
+        },
+        "buttonReleased": {
+          "fileID": 11400000,
+          "guid": "90829aea224e522478f329317e0dcf80",
+          "type": 2,
+          "path": null
+        },
+        "butoonDisabled": {
+          "fileID": 11400000,
+          "guid": "676d80aa63c4cd0438435127bddce6b2",
+          "type": 2,
+          "path": null
+        },
+        "audioSource": {
+          "fileID": 6584,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial"
+        }
+      }
+    },
+    {
+      "source_component": 18492,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Selected",
+      "script": "ButtonSelectedFrameAlpha",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 1907,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Selected"
+        },
+        "m_Enabled": 0,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "9283eeeb7d73504c140979fa07b69b82",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "selectedImage": {
+          "fileID": 17948,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Selected"
+        }
+      }
+    },
+    {
+      "source_component": 18493,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Selected",
+      "script": "ButtonSelectedFrameAlpha",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 1906,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Selected"
+        },
+        "m_Enabled": 0,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "9283eeeb7d73504c140979fa07b69b82",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "selectedImage": {
+          "fileID": 17947,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Selected"
+        }
+      }
+    },
+    {
+      "source_component": 18603,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_Yes",
+      "script": "ButtonSFXEventRelayer",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 4045,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_Yes"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "a99bc9bc10f673a62ecfef412ada1c5a",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "pressedSFX": {
+          "fileID": 11400000,
+          "guid": "fbb09a2ee053ca7428560d4c95dec9f9",
+          "type": 2,
+          "path": null
+        },
+        "releasedSFX": {
+          "fileID": 11400000,
+          "guid": "90829aea224e522478f329317e0dcf80",
+          "type": 2,
+          "path": null
+        },
+        "disabledSFX": {
+          "fileID": 11400000,
+          "guid": "e793dc85283392740a47a4aa2ed99269",
+          "type": 2,
+          "path": null
+        },
+        "playRelease": 1
+      }
+    },
+    {
+      "source_component": 18941,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/GamepadHint",
+      "script": "GamepadUIButton",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 2345,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/GamepadHint"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "6c69bf8e5b5ef9ef3ab06961beee73f7",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "actions": 0,
+        "Icon": {
+          "fileID": 18961,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Icon_South"
+        },
+        "Icon_XBox_Active": {
+          "fileID": 21300000,
+          "guid": "ad4f13ea27b7b504eb4910ad29965204",
+          "type": 2,
+          "path": null
+        },
+        "Icon_XBox_Locked": {
+          "fileID": 21300000,
+          "guid": "a56deea22ba7a6b42abe429d9f5cbdf2",
+          "type": 2,
+          "path": null
+        },
+        "Text": {
+          "fileID": 15739,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Text_Hint"
+        },
+        "ActiveColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "PressedColor": {
+          "r": 0.7490196,
+          "g": 0.7490196,
+          "b": 0.7490196,
+          "a": 1
+        },
+        "LockedColor": {
+          "r": 0.5,
+          "g": 0.5,
+          "b": 0.5,
+          "a": 1
+        },
+        "shouldIgnoreLockingPopup": 0,
+        "OnPressed": {
+          "m_PersistentCalls": {
+            "m_Calls": [
+              {
+                "m_Target": {
+                  "fileID": 16538,
+                  "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+                },
+                "m_TargetAssemblyTypeName": "TutorialController, Assembly-CSharp",
+                "m_MethodName": "OnClickedNext",
+                "m_Mode": 1,
+                "m_Arguments": {
+                  "m_ObjectArgument": {
+                    "fileID": 0,
+                    "path": null
+                  },
+                  "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+                  "m_IntArgument": 0,
+                  "m_FloatArgument": 0,
+                  "m_StringArgument": null,
+                  "m_BoolArgument": 0
+                },
+                "m_CallState": 2
+              }
+            ]
+          }
+        },
+        "OnPressedWhenLocked": {
+          "m_PersistentCalls": {
+            "m_Calls": []
+          }
+        }
+      }
+    },
+    {
+      "source_component": 19049,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint",
+      "script": "fd",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 1211,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "7f5dc49a3f5907b1cc2433bcd8db62ff",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null
+      }
+    },
+    {
+      "source_component": 19641,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint",
+      "script": "GamepadUIButton",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 1211,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "6c69bf8e5b5ef9ef3ab06961beee73f7",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "actions": 786432,
+        "Icon": {
+          "fileID": 21325,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint/Container/Icon_East"
+        },
+        "Icon_XBox_Active": {
+          "fileID": 21300000,
+          "guid": "af807a0cdc6ece4459857d2e94ea2e54",
+          "type": 2,
+          "path": null
+        },
+        "Icon_XBox_Locked": {
+          "fileID": 21300000,
+          "guid": "81734779cdbf3eb4783a082a64f7081b",
+          "type": 2,
+          "path": null
+        },
+        "Text": {
+          "fileID": 15628,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup/Content/GamepadHint/Container/Text_Yes"
+        },
+        "ActiveColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "PressedColor": {
+          "r": 0.7490196,
+          "g": 0.7490196,
+          "b": 0.7490196,
+          "a": 1
+        },
+        "LockedColor": {
+          "r": 0.5,
+          "g": 0.5,
+          "b": 0.5,
+          "a": 1
+        },
+        "shouldIgnoreLockingPopup": 0,
+        "OnPressed": {
+          "m_PersistentCalls": {
+            "m_Calls": [
+              {
+                "m_Target": {
+                  "fileID": 16538,
+                  "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+                },
+                "m_TargetAssemblyTypeName": "TutorialController, Assembly-CSharp",
+                "m_MethodName": "OnClickedNo",
+                "m_Mode": 1,
+                "m_Arguments": {
+                  "m_ObjectArgument": {
+                    "fileID": 0,
+                    "path": null
+                  },
+                  "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+                  "m_IntArgument": 0,
+                  "m_FloatArgument": 0,
+                  "m_StringArgument": null,
+                  "m_BoolArgument": 0
+                },
+                "m_CallState": 2
+              }
+            ]
+          }
+        },
+        "OnPressedWhenLocked": {
+          "m_PersistentCalls": {
+            "m_Calls": []
+          }
+        }
+      }
+    },
+    {
+      "source_component": 20168,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/GamepadHint",
+      "script": "fd",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 4579,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/GamepadHint"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "7f5dc49a3f5907b1cc2433bcd8db62ff",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null
+      }
+    },
+    {
+      "source_component": 20836,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/GamepadHint",
+      "script": "GamepadUIButton",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 3241,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/GamepadHint"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "6c69bf8e5b5ef9ef3ab06961beee73f7",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "actions": 0,
+        "Icon": {
+          "fileID": 20786,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Icon_South"
+        },
+        "Icon_XBox_Active": {
+          "fileID": 21300000,
+          "guid": "ad4f13ea27b7b504eb4910ad29965204",
+          "type": 2,
+          "path": null
+        },
+        "Icon_XBox_Locked": {
+          "fileID": 21300000,
+          "guid": "a56deea22ba7a6b42abe429d9f5cbdf2",
+          "type": 2,
+          "path": null
+        },
+        "Text": {
+          "fileID": 15793,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Text_Hint"
+        },
+        "ActiveColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "PressedColor": {
+          "r": 0.7490196,
+          "g": 0.7490196,
+          "b": 0.7490196,
+          "a": 1
+        },
+        "LockedColor": {
+          "r": 0.5,
+          "g": 0.5,
+          "b": 0.5,
+          "a": 1
+        },
+        "shouldIgnoreLockingPopup": 0,
+        "OnPressed": {
+          "m_PersistentCalls": {
+            "m_Calls": [
+              {
+                "m_Target": {
+                  "fileID": 16538,
+                  "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+                },
+                "m_TargetAssemblyTypeName": "TutorialController, Assembly-CSharp",
+                "m_MethodName": "OnClickedNext",
+                "m_Mode": 1,
+                "m_Arguments": {
+                  "m_ObjectArgument": {
+                    "fileID": 0,
+                    "path": null
+                  },
+                  "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+                  "m_IntArgument": 0,
+                  "m_FloatArgument": 0,
+                  "m_StringArgument": null,
+                  "m_BoolArgument": 0
+                },
+                "m_CallState": 2
+              }
+            ]
+          }
+        },
+        "OnPressedWhenLocked": {
+          "m_PersistentCalls": {
+            "m_Calls": []
+          }
+        }
+      }
+    },
+    {
+      "source_component": 21007,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial",
+      "script": "ButtonSelectedGraphicEnabler",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 3976,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "c677e8c9d80212b1f1ec1f6e166cff1b",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "SelectedGraphic": {
+          "fileID": 19012,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Selected"
+        }
+      }
+    },
+    {
+      "source_component": 21442,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/GamepadHint",
+      "script": "fd",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 3241,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/GamepadInputContainer/ExplainerPopup/GamepadHint"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "7f5dc49a3f5907b1cc2433bcd8db62ff",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null
+      }
+    },
+    {
+      "source_component": 21469,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup",
+      "script": "PopupSFXRelayer",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 1891,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "6dc83a709b6cb385101d8fe5bfca640f",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "openSFXType": {
+          "fileID": 11400000,
+          "guid": "ba99e1e10a91dc740974121d4e989688",
+          "type": 2,
+          "path": null
+        },
+        "closeSFXType": {
+          "fileID": 11400000,
+          "guid": "0407bdaa9e022164f993c1cee06486ff",
+          "type": 2,
+          "path": null
+        }
+      }
+    },
+    {
+      "source_component": 21923,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/GamepadHint",
+      "script": "GamepadUIButton",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 4579,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/GamepadHint"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "6c69bf8e5b5ef9ef3ab06961beee73f7",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "actions": 0,
+        "Icon": {
+          "fileID": 21998,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Icon_South"
+        },
+        "Icon_XBox_Active": {
+          "fileID": 21300000,
+          "guid": "ad4f13ea27b7b504eb4910ad29965204",
+          "type": 2,
+          "path": null
+        },
+        "Icon_XBox_Locked": {
+          "fileID": 21300000,
+          "guid": "a56deea22ba7a6b42abe429d9f5cbdf2",
+          "type": 2,
+          "path": null
+        },
+        "Text": {
+          "fileID": 15881,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/GamepadInputContainer/ExplainerPopup/GamepadHint/Container/Text_Hint"
+        },
+        "ActiveColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "PressedColor": {
+          "r": 0.7490196,
+          "g": 0.7490196,
+          "b": 0.7490196,
+          "a": 1
+        },
+        "LockedColor": {
+          "r": 0.5,
+          "g": 0.5,
+          "b": 0.5,
+          "a": 1
+        },
+        "shouldIgnoreLockingPopup": 0,
+        "OnPressed": {
+          "m_PersistentCalls": {
+            "m_Calls": [
+              {
+                "m_Target": {
+                  "fileID": 16538,
+                  "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController"
+                },
+                "m_TargetAssemblyTypeName": "TutorialController, Assembly-CSharp",
+                "m_MethodName": "OnClickedNext",
+                "m_Mode": 1,
+                "m_Arguments": {
+                  "m_ObjectArgument": {
+                    "fileID": 0,
+                    "path": null
+                  },
+                  "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+                  "m_IntArgument": 0,
+                  "m_FloatArgument": 0,
+                  "m_StringArgument": null,
+                  "m_BoolArgument": 0
+                },
+                "m_CallState": 2
+              }
+            ]
+          }
+        },
+        "OnPressedWhenLocked": {
+          "m_PersistentCalls": {
+            "m_Calls": []
+          }
+        }
+      }
+    },
+    {
+      "source_component": 21926,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial",
+      "script": "ButtonSelectedGraphicEnabler",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 4861,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "c677e8c9d80212b1f1ec1f6e166cff1b",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "SelectedGraphic": {
+          "fileID": 17948,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Selected"
+        }
+      }
+    },
+    {
+      "source_component": 21927,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial",
+      "script": "ButtonSelectedGraphicEnabler",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 4862,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "c677e8c9d80212b1f1ec1f6e166cff1b",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "SelectedGraphic": {
+          "fileID": 17947,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial/Selected"
+        }
+      }
+    },
+    {
+      "source_component": 21977,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup",
+      "script": "PopupSFXRelayer",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 4884,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "6dc83a709b6cb385101d8fe5bfca640f",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "openSFXType": {
+          "fileID": 11400000,
+          "guid": "ba99e1e10a91dc740974121d4e989688",
+          "type": 2,
+          "path": null
+        },
+        "closeSFXType": {
+          "fileID": 11400000,
+          "guid": "0407bdaa9e022164f993c1cee06486ff",
+          "type": 2,
+          "path": null
+        }
+      }
+    }
+  ],
+  "popup_sfx": [
+    {
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup",
+      "source_component": 21469,
+      "open": {
+        "kind": "audio_object",
+        "key": "ba99e1e10a91dc740974121d4e989688"
+      },
+      "close": {
+        "kind": "audio_object",
+        "key": "0407bdaa9e022164f993c1cee06486ff"
+      }
+    },
+    {
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/GamepadInputContainer/Popup",
+      "source_component": 21977,
+      "open": {
+        "kind": "audio_object",
+        "key": "ba99e1e10a91dc740974121d4e989688"
+      },
+      "close": {
+        "kind": "audio_object",
+        "key": "0407bdaa9e022164f993c1cee06486ff"
+      }
+    }
+  ],
+  "audio": {
+    "bcd3138e5aca3cf49811b836a3bc1482": {
+      "name": "ShopEntry_Appear_4",
+      "resource": "OriginalTutorial/bcd3138e5aca3cf49811b836a3bc1482",
+      "source_path": "AudioClip/ShopEntry_Appear_4.ogg",
+      "sha256": "93013b7106f620f6e71b57a58524d89e044021b869b218b87669e67697e5cb9b"
+    },
+    "0ee6be4b9ade6d941840b33240fe71e4": {
+      "name": "Popup_Close_1",
+      "resource": "OriginalTutorial/0ee6be4b9ade6d941840b33240fe71e4",
+      "source_path": "AudioClip/Popup_Close_1.ogg",
+      "sha256": "2501c6e14c7451876f00db206ae052075f47ef458d5be459c8b18131b2bfbf6a"
+    }
+  },
+  "audio_objects": {
+    "ba99e1e10a91dc740974121d4e989688": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "fileID": 0
+      },
+      "m_PrefabInstance": {
+        "fileID": 0
+      },
+      "m_PrefabAsset": {
+        "fileID": 0
+      },
+      "m_GameObject": {
+        "fileID": 0
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_Popup_Open_Default",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "bcd3138e5aca3cf49811b836a3bc1482"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 1.15,
+        "max": 1.25
+      },
+      "pitch": {
+        "min": 0.775,
+        "max": 0.825
+      }
+    },
+    "0407bdaa9e022164f993c1cee06486ff": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "fileID": 0
+      },
+      "m_PrefabInstance": {
+        "fileID": 0
+      },
+      "m_PrefabAsset": {
+        "fileID": 0
+      },
+      "m_GameObject": {
+        "fileID": 0
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_Popup_Close",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "0ee6be4b9ade6d941840b33240fe71e4"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 0.65,
+        "max": 0.65
+      },
+      "pitch": {
+        "min": 1,
+        "max": 1
+      }
+    }
+  },
+  "uisfx_default": {
+    "source_component": 6622,
+    "path": "CanvasAndCamera/Canvas",
+    "ordinal": 0
+  }
+}

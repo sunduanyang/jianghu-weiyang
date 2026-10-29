@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-29",
+  "completed_at": "2026-10-29T20:33:59.260430+08:00",
+  "pr": {
+    "number": 28,
+    "url": "https://github.com/sunduanyang/jianghu-weiyang/pull/28",
+    "integrated_head": "415e9ca34157e33598310a4b830b037046a2e972",
+    "commits": [
+      "c9127216c7eb5267e900235047b64feb9b2395f0",
+      "415e9ca34157e33598310a4b830b037046a2e972"
+    ],
+    "remote_merge_performed": false
+  },
+  "integration": {
+    "method": "Applied the PR commit diff, then three-way integrated its follow-up; local edits remain in the working tree.",
+    "docs": "docs/design/JOINT_BINDING.md",
+    "local_fixes": [
+      "Compact readable controls on the binding canvas",
+      "Independent-save guard and formal sparring/save coverage in RigBinderSmoke",
+      "Fixed-resolution actual-window capture in the existing formal gameplay acceptance"
+    ],
+    "preserved_in_progress_physics_core_work": true,
+    "build_baseline": "Saved pre-PhysicsCore scripts, preserving the verified CombatContactFinal20261029 combat behavior",
+    "isolation_record": "output/pr28-integration-20261029/isolated-build.json"
+  },
+  "build": {
+    "succeeded": true,
+    "unity": "6000.6.7f1",
+    "graphics": "Direct3D11",
+    "executable": "unity/Build/RigBinderLatest20261029/江湖未央.exe",
+    "default_marker": "RigBinderLatest20261029",
+    "rollback_build": "RigBinder20261029",
+    "log": "output/pr28-integration-20261029/latest-build.log",
+    "temporary_project_compiler_options": [
+      "-skipanalyzers+"
+    ],
+    "source_manifest": "output/pr28-integration-20261029/build-inputs-final.json",
+    "assembly_sha256": "bd3c97dd95fc099a5b70ddad531a808c7c59fc131e7a3bb55941d5f6440efb0a"
+  },
+  "python_rules": {
+    "passed": true,
+    "tests": 715,
+    "seconds": 816.521,
+    "log": "output/pr28-integration-20261029/rules.log",
+    "no_python_changes_in_pr_followup": true
+  },
+  "native": {
+    "binding": {
+      "passed": true,
+      "checks": 17,
+      "report": "output/pr28-integration-20261029/latest-binder/report.json"
+    },
+    "formal_gameplay": {
+      "passed": true,
+      "checks": 81,
+      "report": "output/pr28-integration-20261029/latest-formal/acceptance.json"
+    },
+    "default_launcher": {
+      "passed": true,
+      "checks": 17,
+      "report": "output/pr28-integration-20261029/latest-launcher/report.json"
+    }
+  },
+  "backend_package": {
+    "files_checked": 73,
+    "matches_workspace": true,
+    "mismatches": []
+  },
+  "visual_review": {
+    "binder": true,
+    "formal_bound_fighters_both_directions": true,
+    "screenshots": [
+      "output/pr28-integration-20261029/latest-binder/binder.png",
+      "output/pr28-integration-20261029/latest-binder/duel.png"
+    ]
+  },
+  "save_policy": "All validation used newly created output/ saves; personal saves were not used. Active/opponent appearance choices are restored by the test.",
+  "limits": [
+    "The example art and physical skeleton retain proportion differences. Seam compensation is bounded uniform scaling, not a physics/body-proportion change.",
+    "Formal settlement acceptance uses test damage injection and does not establish combat balance.",
+    "The in-progress Physics Core migration and 180-second stress acceptance are outside this delivery."
+  ]
+}

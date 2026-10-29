@@ -6,6 +6,14 @@ using UnityEngine;
 // HandCannon / HandCannonSync: one scheduled shot per original round state 4.
 // ResolveShot 0x350ed58, authoritative hit 0x351023c, recoil 0x350f538.
 public sealed class OriginalHandCannon : MonoBehaviour {
+    public struct ShotTrace {
+        public Vector2 origin,direction;
+        public int layerMask,blockerLayers,hitCount;
+        public float radius,range;
+        public OriginalBodyPart bodyPart;
+        public OriginalPracticeDummyBodyPart dummyBodyPart;
+    }
+    public ShotTrace LastShot {get;private set;}
     public OriginalItem item;
     public bool fired,awaitingShot;
     J config;
@@ -21,7 +29,9 @@ public sealed class OriginalHandCannon : MonoBehaviour {
         muzzle=item.RefTransform(config["muzzle"]);target=item.RefTransform(config["projectileTargetPoint"]);hinge=item.RefTransform(config["hinge"]);
         thrower=item.Ref<Rigidbody2D>(config["throwerRigidbody2D"]);tracer=item.Ref<LineRenderer>(config["tracer"]);
         muzzleBlast=item.Ref<ParticleSystem>(config["muzzleBlastVFX"]);impact=item.Ref<ParticleSystem>(config["impactVFX"]);
-        if(impact!=null)impact.transform.SetParent(null,true);
+        // Awake 0x350e6e4 caches this Transform then SetParent(null,true)
+        // at 0x350e778; the serialized component reference remains valid.
+        if(impact!=null){item.PreserveReference(config["impactVFX"],impact.transform);impact.transform.SetParent(null,true);}
         if(tracer!=null){tracer.useWorldSpace=true;tracer.positionCount=2;tracer.enabled=false;}
         if(hinge!=null)hinge.localRotation=Quaternion.Euler(0,0,N("hingeAngleMenu"));
         SetSourceActive("sparksVFX",false);
@@ -56,14 +66,16 @@ public sealed class OriginalHandCannon : MonoBehaviour {
         var filter=new ContactFilter2D {useTriggers=false,useLayerMask=true,layerMask=mask};
         int count=Physics2D.CircleCast(origin,N("shotRadius"),direction,filter,hits,N("shotRange"));
         Array.Sort(hits,0,count,OriginalShotComparer.Instance);
-        OriginalBodyPart part=null;
+        OriginalBodyPart part=null;OriginalPracticeDummyBodyPart dummyPart=null;
         for(int i=0;i<count;i++) {
             var hit=hits[i];if(hit.collider==null)continue;
             if((blockers&(1<<hit.collider.gameObject.layer))!=0){end=hit.point;normal=hit.normal;break;}
             var p=hit.collider.GetComponentInParent<OriginalBodyPart>();
-            if(p==null)continue;
-            part=p;end=hit.point;normal=hit.normal;break;
+            var d=p==null&&hit.collider.gameObject.layer==11?hit.collider.GetComponentInParent<OriginalPracticeDummyBodyPart>():null;
+            if(p==null&&d==null)continue;
+            part=p;dummyPart=d;end=hit.point;normal=hit.normal;break;
         }
+        LastShot=new ShotTrace{origin=origin,direction=direction,layerMask=mask,blockerLayers=blockers,hitCount=count,radius=N("shotRadius"),range=N("shotRange"),bodyPart=part,dummyBodyPart=dummyPart};
         if(thrower!=null)thrower.AddForce(-direction*N("recoilImpulse"),ForceMode2D.Impulse);
         if(hinge!=null)hinge.localRotation=Quaternion.Euler(0,0,N("hingeAngleArena"));
         SetSourceActive("sparksVFX",false);
@@ -73,6 +85,11 @@ public sealed class OriginalHandCannon : MonoBehaviour {
         if(tracer!=null){tracer.SetPosition(0,origin);tracer.SetPosition(1,end);tracer.enabled=true;hideTracerAt=Time.time+N("tracerTime");}
         if(impact!=null){impact.transform.position=end;impact.Play(true);}
         if(part!=null)part.ProcessImpact(item,end,direction*N("muzzleSpeed"),normal,OriginalSurface.MetalSpike,true);
+        // ResolveShot 0x350ed58 has separate BodyPart/DummyBodyPart results.
+        // FixedUpdateNetwork 0x35100fc..0x3510124 passes the source cannon,
+        // shotMaterial (HandItem_MetalSpike), hit point/normal and direction
+        // times muzzleSpeed directly to DummyBodyPart with cannon=true.
+        if(dummyPart!=null)dummyPart.ProcessImpact(item,end,direction*N("muzzleSpeed"),normal,OriginalSurface.MetalSpike,true);
     }
     void SetSourceActive(string key,bool active){var t=item.RefTransform(config[key]);if(t!=null)t.gameObject.SetActive(active);}
     void OnDestroy(){if(impact!=null)Destroy(impact.gameObject);}

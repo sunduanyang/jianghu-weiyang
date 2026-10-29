@@ -14,6 +14,7 @@ public partial class JianghuApp {
         new GameObject("Interaction gameplay acceptance").AddComponent<InteractionGameplaySmoke>();
     }
     internal IEnumerator VerifyInteractionGameplay(){
+        Screen.SetResolution(1680,1000,FullScreenMode.Windowed);
         string output=GameClient.Arg("-interactionGameplaySmoke");Directory.CreateDirectory(output);
         var checks=new List<J>();var errors=new List<string>();
         Application.LogCallback capture=(s,t,k)=>{if(k==LogType.Error||k==LogType.Exception)errors.Add(s+"\n"+t);};Application.logMessageReceived+=capture;
@@ -25,7 +26,8 @@ public partial class JianghuApp {
             int a=fixture["people"][0].I,b=fixture["people"][1].I,c=fixture["people"][2].I;
             int month=W["month"].I;double money=W["player"]["wealth"].N;
             yield return InteractionSubjectForSmoke(a);
-            check("all twelve menu actions are loaded from the live engine",interactionData["actions"].A.Count==12);
+            var requiredActions=new[]{"praise","insult","gift","teach","confide","marry","swear","trade","steal","spar","rob","assault"};
+            check("live menu contains every action exercised by this acceptance",requiredActions.All(id=>interactionData["actions"].A.Any(action=>action["id"].S==id)));
             ChooseInteraction("praise");yield return CharacterPicture(output,"01-praise-confirm");
             yield return InteractionActForSmoke(a,"praise");
             check("praise updates real affinity",interactionData["relationship"]["affinity"].N==84);
@@ -66,7 +68,7 @@ public partial class JianghuApp {
                     check(action+" uses improved mechanics for both fighters",arena.ReferenceCombat&&arena.player.Reference&&arena.enemy.Reference&&Martial["battle"]["fighters"].A.All(f=>f["physics_profile"].S==PhysicsDuel.ReferenceProfile));
                     bool sourceGraphs=arena.player.SourceRigActive&&arena.enemy.SourceRigActive;
                     check(action+" runs both complete source graphs through the formal encounter",sourceGraphs);
-                    int expectedSteps=sourceGraphs?1:arena.player.weapon.id!="unarmed"||arena.enemy.weapon.id!="unarmed"||arena.player.HasShield||arena.enemy.HasShield?16:8;
+                    int expectedSteps=sourceGraphs?8:arena.player.weapon.id!="unarmed"||arena.enemy.weapon.id!="unarmed"||arena.player.HasShield||arena.enemy.HasShield?16:8;
                     check(action+" uses the formal constraint solver in the game",sourceGraphs&&arena.CombatSolverSubsteps==expectedSteps&&Physics2D.velocityIterations==50&&Physics2D.positionIterations==60&&Mathf.Abs(Time.fixedDeltaTime-1f/60)<.000001f);
                     var formalSpecs=Martial["battle"]["fighters"];
                     var formalFighters=new[]{arena.player,arena.enemy};

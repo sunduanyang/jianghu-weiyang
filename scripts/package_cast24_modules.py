@@ -15,7 +15,7 @@ def main():
     for path in sorted(resource.rglob('*')):
         if path.is_file():entries.append((path,'unity-resources/Characters/Cast24/'+path.relative_to(resource).as_posix()))
     for name in ['binding-manifest.json','asset-validation.json']:entries.append((OUT/name,name))
-    entries.extend([(ROOT/'CAST24_BINDING_VALIDATION.md','README.md'),(OUT/'native-verified/character-cast24-native.json','validation/character-cast24-native.json')])
+    entries.extend([(ROOT/'docs/validation/CAST24_BINDING_VALIDATION.md','README.md'),(OUT/'native-verified/character-cast24-native.json','validation/character-cast24-native.json')])
     with zipfile.ZipFile(destination,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
         for path,name in entries:z.write(path,name)
     with zipfile.ZipFile(destination) as z:

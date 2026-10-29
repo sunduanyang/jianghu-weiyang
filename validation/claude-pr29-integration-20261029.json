@@ -1,0 +1,186 @@
+{
+  "date": "2026-10-29",
+  "pull_request": {
+    "url": "https://github.com/sunduanyang/jianghu-weiyang/pull/29",
+    "title": "技艺系统第一期：锻造、医术、诗书",
+    "head": "77cc4dc09ff390d2b0048867aa5863ffc64f400c",
+    "commits": [
+      "567ff01",
+      "77cc4dc"
+    ],
+    "remote_merge_performed": false
+  },
+  "integration": {
+    "method": "Three-way local patch, preserving existing working changes. Source integration remains uncommitted.",
+    "input_record": "output/pr29-integration-20261029/integration-inputs.json",
+    "design_document": "docs/design/CRAFTS_DESIGN.md",
+    "local_adjustments": [
+      "Group inventory by full craft metadata so same-label forged items with different attributes remain distinct.",
+      "Adapt old direct-action acceptance from twelve to fifteen.",
+      "Add isolated crafts API/UI/formal combat/cold restart acceptance. Test input and controlled step guards require the explicit crafts smoke flag."
+    ],
+    "personal_saves_used": false
+  },
+  "build": {
+    "name": "CraftsIntegrated20261029Final",
+    "default_marker": "unity/Build/active-build.txt",
+    "rollback": "SourceGuardRelease20261029",
+    "unity": "6000.6.7f1",
+    "renderer": "Direct3D11",
+    "log": "output/pr29-integration-20261029/source-guard-build.log",
+    "executable": {
+      "path": "unity/Build/CraftsIntegrated20261029Final/江湖未央.exe",
+      "sha256": "9806abde4a406ed68647e9505852c49f6aa72a372f4f084e2aa2821affea57a2",
+      "bytes": 667136
+    },
+    "assembly": {
+      "path": "unity/Build/CraftsIntegrated20261029Final/江湖未央_Data/Managed/Assembly-CSharp.dll",
+      "sha256": "3270bb1d0a7c44b07a0d3b8f87eb87d9887fe0983f9b62b6d2975d7a240fcc77",
+      "bytes": 1522176
+    },
+    "isolated_project": "output/pr29-integration-20261029/BuildProject",
+    "baseline": "Snapshot of current root Assets, Packages and ProjectSettings after SourceGuardRelease20261029; all recorded source guard input hashes match. Initial PR28-only build was superseded before delivery.",
+    "inputs": "output/pr29-integration-20261029/build-inputs-final.json",
+    "temporary_project_analyzer_setting": "-skipanalyzers+; not added to root project",
+    "physics": "Current optional Core backend retained; new encounters continue to select the verified legacy Physics2D path by default.",
+    "source_guard_hashes": [
+      {
+        "path": "unity/JianghuUnity/Assets/Scripts/InteractionGameplaySmoke.cs",
+        "sha256": "18b259f88e1376dd3a7e562cec7fa30c89e03dd991ccb46b795b3428a2e38f2e"
+      },
+      {
+        "path": "unity/JianghuUnity/Assets/Scripts/PhysicsBattleSmoke.cs",
+        "sha256": "a04703ab8a1c2ecd938de2c7b422c88f529c223464564023c00016a8346247ae"
+      },
+      {
+        "path": "unity/JianghuUnity/Assets/Scripts/PhysicsGuardSmoke.cs",
+        "sha256": "ddc856c6a1ccfd27d073534095cde5df1eb24918c1f56ee712725e11a9a6434a"
+      },
+      {
+        "path": "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelBackend.cs",
+        "sha256": "01c69e79a4a4cb44914a4a7424b264e97ce57870cdbda76006ef69e61089184e"
+      },
+      {
+        "path": "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelCoreWorld.cs",
+        "sha256": "d8a81d72964f3a813d3a733eccdbc959fca2b08d7de60fb30e19816f0ebe10ac"
+      },
+      {
+        "path": "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelGuardProbe.cs",
+        "sha256": "59d4e8e4c0cbc4c51670c45e98844d80a06c8c84b7d0b7051ebe2702fa36639b"
+      },
+      {
+        "path": "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelReference.cs",
+        "sha256": "b6aa6a5afe4619fd4ca1f9a44740bc8739c198f0344c1df7ef1ec82c2a5548e0"
+      },
+      {
+        "path": "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelSourceEquipment.cs",
+        "sha256": "8b9eb22737eae5738eab95be7b04cba4c5d5600646d2bdd1dfac8928f1ca2202"
+      },
+      {
+        "path": "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelSourceEquipmentContact.cs",
+        "sha256": "58b881733b17630ef091c789a7b93a35417cd4ff6bf944145b355eed39adda7d"
+      },
+      {
+        "path": "unity/JianghuUnity/Assets/Resources/CombatSource/equipment.json",
+        "sha256": "27d56c7a55be88f778054370584e52bb629e6517900f81410f6b397a596479fa"
+      }
+    ]
+  },
+  "rules": {
+    "full": {
+      "passed": true,
+      "tests": 737,
+      "seconds": 436.698,
+      "log": "output/pr29-integration-20261029/rules.log"
+    },
+    "crafts_subset": {
+      "passed": true,
+      "tests": 22,
+      "seconds": 4.446,
+      "log": "output/pr29-integration-20261029/crafts-tests.log",
+      "included_in_full_suite": true
+    },
+    "backend_files": 74,
+    "backend_drift": [],
+    "fingerprints": "output/pr29-integration-20261029/backend-fingerprints.json"
+  },
+  "native": {
+    "main": {
+      "passed": true,
+      "checks": 32,
+      "path": "output/pr29-integration-20261029/release-main/report.json",
+      "sha256": "654663786577774f4195a0e82e3da636161d0a16bff56e4fced51e0b2bcf7f93"
+    },
+    "restore": {
+      "passed": true,
+      "checks": 19,
+      "path": "output/pr29-integration-20261029/release-restore/report.json",
+      "sha256": "6d952374244cfd9aff35c1f467881ffc16f5fec78f285bbc35ae2c2dbf605f12"
+    },
+    "verify": {
+      "passed": true,
+      "checks": 8,
+      "path": "output/pr29-integration-20261029/release-verify/report.json",
+      "sha256": "f0e28155e6bcbaea7122a9d3ef26b2e267e7f056d091ac99fb73dd5225ea4c59"
+    },
+    "interaction": {
+      "passed": true,
+      "checks": 81,
+      "path": "output/pr29-integration-20261029/release-interaction-ready/acceptance.json",
+      "sha256": "cbe4792afda51c912654079b3eddc59fd4d89ed155842ab0a013fb7a9afae57f"
+    },
+    "binding": {
+      "passed": true,
+      "checks": 17,
+      "path": "output/pr29-integration-20261029/release-binding/report.json",
+      "sha256": "b146aa3e5eb0869bea922504b5a357d5909c5bb68ec81d26895fce9a7646abfd"
+    },
+    "latest_guard_fix": {
+      "passed": true,
+      "checks": 11,
+      "path": "output/pr29-integration-20261029/release-guard/guard/acceptance.json",
+      "sha256": "24b463b19b2c6e2d19070466dd73d22c6378a8d027923835a9eb1eb1e94da3bd"
+    },
+    "actual_default_launcher": {
+      "passed": true,
+      "checks": 8,
+      "path": "output/pr29-integration-20261029/launcher/report.json",
+      "sha256": "f0e28155e6bcbaea7122a9d3ef26b2e267e7f056d091ac99fb73dd5225ea4c59"
+    }
+  },
+  "legacy_save": {
+    "passed": true,
+    "checks": 6,
+    "path": "output/pr29-integration-20261029/old-save-compatibility.json",
+    "source": "Copy of previous isolated PR28 acceptance save; no personal save involved."
+  },
+  "ui": {
+    "route": "江湖卷 → 市井 → 技艺",
+    "visual_verified": true,
+    "reviewed": [
+      "release-main/02-forging.png",
+      "release-restore/06-part-care.png"
+    ],
+    "screenshots": [
+      "output/pr29-integration-20261029/release-main/01-levels.png",
+      "output/pr29-integration-20261029/release-main/02-forging.png",
+      "output/pr29-integration-20261029/release-main/03-writing.png",
+      "output/pr29-integration-20261029/release-main/04-brewing.png",
+      "output/pr29-integration-20261029/release-main/05-hostile-checkpoint.png",
+      "output/pr29-integration-20261029/release-restore/06-part-care.png",
+      "output/pr29-integration-20261029/release-restore/07-practised-crafts.png"
+    ]
+  },
+  "limits": [
+    "Controlled acceptance damage injection verifies part-wound persistence and treatment; it does not establish combat balance.",
+    "World part injuries affect work, travel and treatment; this PR intentionally does not import them into the next physical bout.",
+    "Core backend migration and the prior 180-second stress limit are outside this PR acceptance.",
+    "Earlier fixture/harness debug failures remain in output, including incomplete release-interaction (missing fixture). Final evidence uses release-main/restore/verify, release-interaction-ready, release-binding and release-guard."
+  ],
+  "launcher_process": {
+    "pid": 51580,
+    "executable": "D:\\Desktop\\新新游戏\\unity\\Build\\CraftsIntegrated20261029Final\\江湖未央.exe",
+    "expected_executable": true
+  },
+  "launcher_entry": "启动Unity版.bat"
+}

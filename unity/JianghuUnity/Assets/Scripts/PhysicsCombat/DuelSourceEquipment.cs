@@ -27,6 +27,14 @@ public static class DuelSourceEquipment {
     // effective D: doing so would erase the campaign's lower damage tiers.
     public static float EffectiveDamageStat(float coefficient)=>16*coefficient-15;
     public static float DamageStat(DuelWeapon spec,bool shield=false)=>shield?1:spec.id=="unarmed"?.1f:EffectiveDamageStat(spec.damage);
+    public static float ItemImpactThreshold(DuelWeapon spec,bool shield=false)=>spec.id=="unarmed"&&!shield?(float)Nothing["impact_speed_threshold"].N:(float)Data["held_profiles"][shield?"shield":spec.id]["impact_speed_threshold"].N;
+    // Stamina events use the source item's positive D, not the algebraic
+    // effective D used solely to preserve this game's health-damage ratios.
+    public static float ClashDamageStat(DuelWeapon spec,bool shield=false){
+        if(shield)return (float)Data["held_profiles"]["shield"]["clash_damage_stat"].N;
+        if(spec.id=="unarmed")return .1f;
+        return (float)Data["held_profiles"][spec.id]["clash_damage_stat"].N*spec.damage/(float)Data["profiles"][spec.id]["base_damage"].N;
+    }
     public static DuelReferenceRules.Surface Surface(DuelWeapon spec,bool handle=false,bool shield=false){
         if(shield)return DuelReferenceRules.Surface.WoodBlunt;
         if(spec.id=="unarmed")return DuelReferenceRules.Surface.WoodBlunt;

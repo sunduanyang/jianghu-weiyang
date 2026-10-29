@@ -257,8 +257,10 @@ def perform(w, body, defer_end_turn=None):
             origin = [h['row'], h['col']]
             h.update(row=row, col=col, points=h['points']-cost)
             node = next((n for n in city['nodes'] if (n['row'], n['col']) == (row, col)), None)
+            area = city_maps.city_regions.area_at(city, row, col)
+            spot = node['name'] if node else area['name'] if area else city_maps.TERRAIN[city['rows'][row][col]]
             record(w, 'hero_walk', f"{w.player['name']}在{city['name']}移步至"
-                   f"{node['name'] if node else '地格'}（{row+1}，{col+1}），消耗{cost}行动力。",
+                   f"{spot}（{row+1}，{col+1}），消耗{cost}行动力。",
                    dict(place=place, origin=origin, destination=[row, col], path=path, points=cost))
         elif isinstance(action, str) and action.startswith('sect_'):
             from . import organizations

@@ -22,10 +22,13 @@ public sealed class OriginalBodyPart : MonoBehaviour {
     Vector3 restPosition;
     float severAngular;
     bool pendingMode;
+    int originalLayer;
+    public int OriginalCollisionLayer=>originalLayer;
     public void Initialize(OriginalRig owner,J record) {
         rig=owner;config=record["data"];sourceId=record["id"].I;
         type=config["bodyPartType"].I;maxHealth=health=(float)config["MaxHealth"].N;
         restPosition=transform.localPosition;
+        originalLayer=gameObject.layer;StartCoroutine(OriginalLayerWarmup());
         overallMultiplier=(float)config["overallDamageMultiplier"].N;severable=config["severable"].B;
         body=rig.Resolve<Rigidbody2D>(config["thisRigidbody2D"]);
         if(body!=null){normalMass=body.mass;normalDrag=body.linearDamping;normalAngular=body.angularDamping;}
@@ -34,6 +37,7 @@ public sealed class OriginalBodyPart : MonoBehaviour {
     public void ApplyLocalDamage(float damage){if(damage>0&&mode==OriginalPartMode.None)health=Mathf.Max(0,health-damage);}
     void OnCollisionEnter2D(Collision2D collision) {
         if(rig==null||Time.time<impactCooldown||collision.contactCount==0)return;
+        if(!collision.collider.CompareTag("HandItem"))return;
         var item=OriginalItem.From(collision.collider);if(item==null||item.owner==rig)return;
         var contact=collision.GetContact(0);
         var surface=OriginalCombatRules.Surface(collision.collider.sharedMaterial);
@@ -46,17 +50,17 @@ public sealed class OriginalBodyPart : MonoBehaviour {
         if(!rig.RegisterOriginalImpact()&&!cannon)return false;
         // Original enemy reaction is rolled before material/category math.
         if(!rig.human&&Random.Range(0,100)>75)rig.StartOriginalPullBackward();
-        float defense=0;int material=config["armorMaterialIndex"].I;
-        foreach(var layer in armor)if(layer!=null){defense+=layer.defense;material=layer.material;}
+        int material=config["armorMaterialIndex"].I;
+        foreach(var layer in armor)if(layer!=null)material=layer.material;
         material=Mathf.Max(1,material);
-        float raw=OriginalCombatRules.RawDamage(item.category,item.twoHanded,velocity,item.damage,defense,surface,item.isShield,material,rig.DamageNumber("damagePerMps"));
+        float raw=OriginalCombatRules.RawDamage(item.category,item.twoHanded,velocity,item.damage,armor[0]==null?0:armor[0].defense,surface,item.isShield,material,rig.DamageNumber("damagePerMps"),armor[1]==null?0:armor[1].defense,armor[2]==null?0:armor[2].defense);
         rig.rootBody.AddForceX((rig.OriginalFlipped?raw:-raw)*rig.DamageNumber("knockbackPerDamage"));
         float local=Mathf.Clamp(raw,1,100),global=local*overallMultiplier;
         ApplyLocalDamage(local);rig.ApplyOriginalGlobalDamage(global);rig.AccumulateOriginalImpact(global);
         if(type==0)severable=rig.health<20;
         var deathMode=OriginalCombatRules.DeathMode(surface);
         if(!cannon)impactCooldown=Time.time+.15f;
-        rig.PublishOriginalImpact(new OriginalImpact {attacker=item.owner,victim=rig,item=item,part=this,point=point,velocity=velocity,normal=normal,localDamage=local,globalDamage=global,surface=surface});
+        rig.PublishOriginalImpact(new OriginalImpact {attacker=item.owner,victim=rig,item=item,part=this,point=point,velocity=velocity,normal=normal,localDamage=local,globalDamage=global,surface=surface,cannon=cannon,armorMaterial=material});
         if(cannon) {
             Vector2 direction=velocity.sqrMagnitude>1e-8f?velocity.normalized:-normal;
             body.linearVelocity=direction*30+Vector2.up;
@@ -78,6 +82,7 @@ public sealed class OriginalBodyPart : MonoBehaviour {
         if(type==0)rig.ApplyOriginalGlobalDamage(rig.health);
         if(value==OriginalPartMode.Pierced||value==OriginalPartMode.Severed)rig.StartOriginalBleeding();
         rig.DisableOriginalPart(this);
+        if(type==0&&rig.OriginalExpression!=null)rig.OriginalExpression.Voice.StopAllVoices();
         if(value==OriginalPartMode.Pierced||value==OriginalPartMode.Severed) {
             foreach(var rb in GetComponentsInChildren<Rigidbody2D>(true))if(rb.gameObject.layer!=15&&rb.gameObject.layer!=16)rb.gameObject.layer=17;
             foreach(var r in config["relatedBodyParts"].A) {
@@ -94,9 +99,16 @@ public sealed class OriginalBodyPart : MonoBehaviour {
             foreach(var r in config["objectsToActivate"].A) {var t=rig.ResolveTransform(r);if(t!=null)t.gameObject.SetActive(true);}
             if(body!=null){body.linearDamping=0;body.angularDamping=5;body.mass=9;var material=rig.OriginalDeadMaterial(config["deadPhysicsMaterial"]);if(material!=null)body.sharedMaterial=material;}
             severed=true;
+            gameObject.tag="SeveredBodyPart";
         }
         rig.PublishOriginalPartMode(this,value);
+        if(rig.OriginalExpression!=null) {
+            // cdx calls both native scream entry points; cdy calls severing.
+            rig.OriginalExpression.StartScreamingAfterSeveringLimb();
+            if(value==OriginalPartMode.Bashed)rig.OriginalExpression.StartScreamingAfterBashingLimb();
+        }
     }
+    IEnumerator OriginalLayerWarmup(){gameObject.layer=13;yield return new WaitForSeconds(.5f);if(!severed)gameObject.layer=originalLayer;}
     void RebakeJointAtRest() {
         var joint=rig.Resolve<AnchoredJoint2D>(config["joint2D"]);if(joint==null)return;
         joint.autoConfigureConnectedAnchor=false;transform.localPosition=restPosition;

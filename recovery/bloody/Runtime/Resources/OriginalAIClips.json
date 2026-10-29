@@ -1,0 +1,26 @@
+{
+  "1Hand_SwingUp": {
+    "source": "29821f1fb5096a645bdc34b98a65d6fe:1",
+    "resource": "OriginalHandClips/29821f1fb5096a645bdc34b98a65d6fe_1"
+  },
+  "2Hands_SwingUp": {
+    "source": "2ba6fe5d8ff2ed347b5f64dae2fb1eca:1",
+    "resource": "OriginalHandClips/2ba6fe5d8ff2ed347b5f64dae2fb1eca_1"
+  },
+  "2Hands_SwingDown": {
+    "source": "7ece566ffae47ee45bc6c2328d679bb2:1",
+    "resource": "OriginalHandClips/7ece566ffae47ee45bc6c2328d679bb2_1"
+  },
+  "2Hands_Stab": {
+    "source": "d8e5e75057aedeb468602ec6e4470c59:1",
+    "resource": "OriginalHandClips/d8e5e75057aedeb468602ec6e4470c59_1"
+  },
+  "1Hand_Stab": {
+    "source": "e1346f83fae7c6a46830090b1c087c0f:1",
+    "resource": "OriginalHandClips/e1346f83fae7c6a46830090b1c087c0f_1"
+  },
+  "1Hand_SwingDown": {
+    "source": "f789dd976f0c6e942a0b27d883cecf26:1",
+    "resource": "OriginalHandClips/f789dd976f0c6e942a0b27d883cecf26_1"
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "records": {
+    "CountdownView": {
+      "path": "CanvasAndCamera/Canvas/MainContainer/Countdown",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "kind": "null"
+        },
+        "m_PrefabInstance": {
+          "kind": "null"
+        },
+        "m_PrefabAsset": {
+          "kind": "null"
+        },
+        "m_GameObject": {
+          "kind": "scene",
+          "id": 382,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Countdown",
+          "type": "GameObject"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "3cc722e3331560471d5710f96359fc68",
+          "type": 3
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "countdownText": {
+          "kind": "scene",
+          "id": 15514,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Countdown/Text_Countdown",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "fightText": {
+          "kind": "scene",
+          "id": 15513,
+          "path": "CanvasAndCamera/Canvas/MainContainer/Countdown/Text_Fight",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "countdownSecondSFX": {
+          "kind": "audio_object",
+          "key": "5142c4d60b8294947a6eb42b493c529e"
+        },
+        "countdownFightSFX": {
+          "kind": "audio_object",
+          "key": "b4af7112f1d8b7843b421dd37b2ad3e8"
+        }
+      }
+    },
+    "UISFX": {
+      "path": "CanvasAndCamera/Canvas",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "kind": "null"
+        },
+        "m_PrefabInstance": {
+          "kind": "null"
+        },
+        "m_PrefabAsset": {
+          "kind": "null"
+        },
+        "m_GameObject": {
+          "kind": "scene",
+          "id": 4069,
+          "path": "CanvasAndCamera/Canvas",
+          "type": "GameObject"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "8ade3c438601c725a700e5a10d561928",
+          "type": 3
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "audioSourceDefault": {
+          "kind": "scene",
+          "id": 6622,
+          "path": "CanvasAndCamera/Canvas",
+          "type": "AudioSource",
+          "ordinal": 0
+        },
+        "audioSourceTransitions": {
+          "kind": "scene",
+          "id": 6658,
+          "path": "CanvasAndCamera/Canvas",
+          "type": "AudioSource",
+          "ordinal": 1
+        }
+      }
+    }
+  },
+  "audio": {
+    "9ad75196f49d30749b6a01b87ba90b60": {
+      "name": "CountdownNumber_5",
+      "resource": "OriginalCountdown/9ad75196f49d30749b6a01b87ba90b60",
+      "source_path": "AudioClip/CountdownNumber_5.ogg"
+    },
+    "33e6ec3039e5bfe4bad619f966f9deb7": {
+      "name": "CountdownFight_6",
+      "resource": "OriginalCountdown/33e6ec3039e5bfe4bad619f966f9deb7",
+      "source_path": "AudioClip/CountdownFight_6.ogg"
+    }
+  },
+  "audio_objects": {
+    "5142c4d60b8294947a6eb42b493c529e": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "null"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_Countdown_Seconds",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "9ad75196f49d30749b6a01b87ba90b60"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 1,
+        "max": 1
+      },
+      "pitch": {
+        "min": 1,
+        "max": 1
+      }
+    },
+    "b4af7112f1d8b7843b421dd37b2ad3e8": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "null"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_Countdown_Fight",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "33e6ec3039e5bfe4bad619f966f9deb7"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 1.5,
+        "max": 1.5
+      },
+      "pitch": {
+        "min": 1,
+        "max": 1
+      }
+    }
+  }
+}

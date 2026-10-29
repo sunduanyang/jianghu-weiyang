@@ -160,7 +160,6 @@ public partial class JianghuApp {
     bool OverUI(Vector2 m){
         if(ViewOpen||choiceOpen||WorldTravelOpen)return true;
         if(TopBar.Contains(m)||LeftPanel.Contains(m)||PlaceCard.Contains(m))return true;
-        if(CurrentStage==Stage.City&&CityOverviewRect.Contains(m))return true;
         if(m.y>Dock.y+40||new Rect(740,812,200,150).Contains(m)||new Rect(1520,780,160,180).Contains(m)||new Rect(0,712,300,248).Contains(m))return true;
         if(CurrentStage==Stage.World&&LayerRow.Contains(m))return true;
         if(advanceOpen&&AdvancePopup.Contains(m))return true;

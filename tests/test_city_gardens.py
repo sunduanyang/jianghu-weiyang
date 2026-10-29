@@ -2,7 +2,6 @@ from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
-import struct
 import unittest
 
 from jianghu import city_gardens, city_maps
@@ -21,19 +20,6 @@ class CityGardenTests(unittest.TestCase):
             data=(archive/'source'/item['file']).read_bytes()
             self.assertEqual(hashlib.sha256(data).hexdigest(),item['sha256'])
         self.assertEqual(sum('duplicate_of' in f for f in manifest['files']),1)
-
-    def test_mixed_exports_are_calibrated_and_match_the_selected_footprints(self):
-        runtime=ROOT/'unity/JianghuUnity/Assets/Resources/CityBiomes'
-        manifest=json.loads((runtime/'art-pack.json').read_text(encoding='utf-8'))
-        self.assertEqual((manifest['source_count'],manifest['original_terrain_count'],manifest['additional_count']),(43,32,11))
-        self.assertEqual(manifest['pack'],city_gardens.PACK)
-        for item in manifest['assets']:
-            data=(runtime/(item['id']+'.png')).read_bytes()
-            self.assertEqual(data[:8],b'\x89PNG\r\n\x1a\n')
-            self.assertEqual(struct.unpack('>II',data[16:24]),(512,512))
-            self.assertEqual(hashlib.sha256(data).hexdigest(),item['runtime_sha256'])
-            self.assertEqual(item['size'],city_gardens.FOOTPRINTS[item['id']])
-            self.assertGreaterEqual(item.get('top_margin',0),-1)
 
     def test_version_seven_two_sizes_four_settlements_and_breathing_room(self):
         seen=set();sizes=set()

@@ -25,7 +25,6 @@ public partial class JianghuApp : MonoBehaviour {
     void Awake(){Client=GetComponent<GameClient>()??gameObject.AddComponent<GameClient>();valley=Resources.Load<Texture2D>("Art/river-valley");if(GameClient.Arg("-paperDemo")=="true")OpenPaperDemo();}
     void Update(){
         if(!Client.Ready)return;
-        UpdateCityWarmup();
         UpdateBattle();
         UpdateSocialDialogue();
         if(seenRevision!=Client.Revision){seenRevision=Client.Revision;if(W["month"].I!=lastMonth){lastMonth=W["month"].I;ReloadView();if(SelectedPerson>=0)SelectPerson(SelectedPerson);} }
@@ -70,7 +69,7 @@ public partial class JianghuApp : MonoBehaviour {
         if(city)DrawCityHud();
         DrawTopBar();if(!city)DrawLayerRow();
         DrawRoster();
-        if(city)DrawNodeCard();else DrawPlaceCard();
+        if(city)DrawCityAtlasCard();else DrawPlaceCard();
         DrawDock();DrawHeroCreation();DrawAdvance();
     }
     public void SelectPerson(int id){
@@ -82,7 +81,7 @@ public partial class JianghuApp : MonoBehaviour {
     public void HeroAction(string action,params object[] extra){Client.Act("/api/hero",Client.HeroBody(action,extra),j=>{Client.StartCoroutine(AfterHero());});}
     System.Collections.IEnumerator AfterHero(){yield return null;yield return Client.Refresh();if(!ViewOpen&&CurrentStage==Stage.City)LoadCity(Hero["place"].I);else if(TopIs(ViewKind.Jianghu)&&CurrentJianghuTab==JianghuTab.Powers&&institutionKind=="门派"&&Institution.Has)OpenInstitution(false,Institution["id"].I);}
     void Control(string action,int months=1){Client.Act("/api/control",J.O("action",action,"months",months,"fast",fastMode));}
-    // 左侧人物列表：此地（天下为本城镇中人，城中为所选地格之人）/ 名册（全天下，可筛选）/ 城镇（按势力列出城镇）。
+    // 左侧人物列表：此地（天下为本城镇中人，城中为舆图所选聚落或长卷所选设施之人）/ 名册（全天下，可筛选）/ 城镇（按势力列出城镇）。
     string rosterMode="此地";
     static readonly string[] RosterModes={"此地","名册","城镇"};
     void DrawRoster(){
@@ -99,7 +98,7 @@ public partial class JianghuApp : MonoBehaviour {
             }
             GUILayout.EndScrollView();GUILayout.EndArea();return;
         }
-        if(CurrentStage==Stage.City&&rosterMode=="此地"){if(CityModeShown==CityMode.Tiles)DrawCityCellRoster();else DrawCityPlaceRoster();GUILayout.EndArea();return;}
+        if(CurrentStage==Stage.City&&rosterMode=="此地"){DrawCityPlaceRoster();GUILayout.EndArea();return;}
         T("按姓名或营生查找",small);
         GUI.SetNextControlName("RosterSearch");string priorQuery=query;query=GUILayout.TextField(query,field);if(priorQuery!=query)rosterScroll=Vector2.zero;
         IEnumerable<J> people;

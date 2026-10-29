@@ -9,7 +9,7 @@ import unittest
 import urllib.error
 import urllib.request
 
-from jianghu import items, martial
+from jianghu import crafts, items, martial
 from jianghu.ai import context_for
 from jianghu.engine import World
 from jianghu.server import handler_for
@@ -147,6 +147,12 @@ class ItemTests(unittest.TestCase):
         material = self.find(w, 'iron')['id']
         items.perform(w, 'player', 'repair', sword['id'])
         self.assertNotIn(material, w.items['objects'])
+        # Without forging practice a mend only restores serviceable condition.
+        self.assertEqual(sword['durability'], 70)
+        self.assertNotIn('repair', items.operations(w, 'player', sword))
+        crafts.prepare(w.player)['skill']['forging'] = crafts.SKILLED_REPAIR
+        items.create(w, 'player', 'iron', '测试补料')
+        items.perform(w, 'player', 'repair', sword['id'])
         self.assertEqual(sword['durability'], 100)
         self.assertNotIn('attack', items.bonuses(w, 'player'))
         self.assertEqual(items.describe(sword)['weapon_attributes']['durability'], 100)

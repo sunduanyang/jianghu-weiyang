@@ -13,7 +13,7 @@ public sealed partial class PhysicsDuel {
                 var victim=victimIsPlayer?player:enemy;var attacker=victimIsPlayer?enemy:player;
                 foreach(var fighter in new[]{player,enemy})fighter.FreezeSourceKickReceiverProbe();
                 victim.PrepareSourceKickVictimProbe(passedOut);attacker.PrepareSourceKickAttackerProbe(victim);
-                Physics2D.SyncTransforms();combatPhysics.Simulate(1f/6000);
+                Physics2D.SyncTransforms();SimulateCombat(1f/6000);
                 var result=J.O("victim_player",victimIsPlayer,"passed_out",passedOut,"after_trigger",victim.ReadSourceKickReceiverProbe(),"trigger_active",attacker.SourceKickTriggerEnabledForProbe());
                 var phases=new List<J>();
                 for(int phase=1;phase<=2;phase++){

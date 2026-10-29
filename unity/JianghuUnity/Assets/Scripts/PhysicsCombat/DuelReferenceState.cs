@@ -92,7 +92,7 @@ public sealed partial class PhysicsDuel {
             // OnHandItemImpact_Authoritative accumulates the requested global
             // damage after applying it, including damage beyond remaining HP.
             AccumulateSourceImpact(requestedGlobal);
-            mover.AddForce(new Vector2(-facing*knockback*.01f*game.referenceSteps,0));
+            mover.CombatAddForce(new Vector2(-facing*knockback*.01f*game.referenceSteps,0));
             bool vital=key=="head"||key=="neck";
             bool canDisable=SourceRigActive?(sourceParts[key]["bodyPartType"].I==0?health<20:sourceParts[key]["severable"].B):(!vital||health<20)&&key!="pelvis"&&key!="belly"&&key!="torso";
             if(partHealth[key]<=0&&canDisable)SetReferencePartMode(key,DuelReferenceRules.ModeFor(surface));

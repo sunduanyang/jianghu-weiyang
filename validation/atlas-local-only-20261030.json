@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-30",
+  "change": "Remove cross-region land/sea exit signs, lines, legend entries and travel actions from the city atlas.",
+  "build": {
+    "name": "Current",
+    "previous": "CraftsIntegrated20261029Final",
+    "unity": "6000.6.7f1",
+    "assembly": {
+      "path": "unity\\Build\\Current\\江湖未央_Data\\Managed\\Assembly-CSharp.dll",
+      "sha256": "f65c772a20c17d88498d0e74b0147f9a20dfb835a7835acb7a55adcadea6ebd6",
+      "bytes": 1517056
+    },
+    "executable": {
+      "path": "unity\\Build\\Current\\江湖未央.exe",
+      "sha256": "9806abde4a406ed68647e9505852c49f6aa72a372f4f084e2aa2821affea57a2",
+      "bytes": 667136
+    },
+    "log": "output/atlas-local-only-20261030/build.log",
+    "verified_baseline_files": 403,
+    "changed_baseline_files": [
+      "Assets/Scripts/CityAtlas.cs",
+      "Assets/Scripts/CityAtlasSmoke.cs"
+    ]
+  },
+  "preservation": {
+    "backend_files_compared": 75,
+    "backend_drift": [],
+    "resource_files_compared": 2,
+    "personal_save_used": false,
+    "local_gate_paths_and_dock_facilities_retained": true
+  },
+  "rules": {
+    "passed": 23,
+    "city_maps": 14,
+    "world_travel": 9,
+    "sandbox_initial_run": "12 city map checks passed; two HTTP checks and one travel persistence check required unsandboxed rerun for Windows socket/temp permissions.",
+    "rerun": "output/atlas-local-only-20261030/rules-rerun.log"
+  },
+  "native": {
+    "atlas": {
+      "passed": true,
+      "checks": 48,
+      "path": "output\\atlas-local-only-20261030\\atlas-native-v3\\city-atlas.json",
+      "sha256": "253b13ba6266fcecbb748eb8c505b2173f78a58936de31e8a5d687060090e417",
+      "bytes": 6364
+    },
+    "travel": {
+      "passed": true,
+      "checks": 19,
+      "path": "output\\atlas-local-only-20261030\\travel-native-v3\\world-travel.json",
+      "sha256": "08b89f6621c7864b0953f5c0646ec7237d4681d726fd2b4ef1f168a70ab93d00",
+      "bytes": 3001
+    }
+  },
+  "land_and_sea_exit_absence_verified": true,
+  "screenshot": "validation/screenshots/atlas-local-only-20261030.png",
+  "visual_verified": true,
+  "inspected": [
+    "atlas-native-v3/atlas-45.png",
+    "travel-native-v3/travel-confirmation.png"
+  ],
+  "earlier_fixture_failure": "v2 fixture had NPCs with no initial goal; v3 initializes their goals and both probes pass.",
+  "current_running_personal_game": "Left open on the previous build; restart applies the new launcher selection."
+}

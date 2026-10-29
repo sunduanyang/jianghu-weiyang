@@ -4,24 +4,18 @@ using System.Linq;
 using UnityEngine;
 
 namespace Jianghu {
-// 城中的三种看法：
-//   舆图 — 本地区的聚落、出入口与相邻城镇画成节点，驿道、步道与航路连线，地形退为底色；
-//   长卷 — 一处聚落的营生设施沿街展开，在场之人站在各处门前（CityScroll.cs）；
-//   地格 — 原 30×30 行走图，保留给需要逐格查看的人。
-// 三者读同一份 /api/city 数据，行走与远行仍走原有的寻路和 /api/hero，不另立规则。
-public enum CityMode { Atlas, Scroll, Tiles }
+// 城中的两种看法：
+//   舆图 — 本地区的聚落与出入口画成节点，步道连线，地形退为底色；
+//   长卷 — 一处聚落的营生设施沿街展开，在场之人站在各处门前（CityScroll.cs）。
+// 两者读同一份 /api/city 数据，行走使用原有寻路；跨地区远行由天下地图发起。
+public enum CityMode { Atlas, Scroll }
 
 public partial class JianghuApp {
-    // Smoke runs predate the atlas and photograph the tile board; they keep it as their default.
-    CityMode cityMode=CityDefaultMode();
-    static CityMode CityDefaultMode(){
-        foreach(var arg in Environment.GetCommandLineArgs())
-            if(arg.StartsWith("-")&&arg.IndexOf("smoke",StringComparison.OrdinalIgnoreCase)>=0&&arg!="-cityAtlasSmokeDir")return CityMode.Tiles;
-        return CityMode.Atlas;
-    }
-    // Settlements carry the footprints the atlas needs; very old layouts without them stay on tiles.
+    CityMode cityMode=CityMode.Atlas;
+    // Settlements carry the footprints the atlas needs. Saves migrate to the current
+    // layout version on load, so a city without them is reported rather than drawn.
     bool CityAtlasReady=>City.Has&&City["settlements"].A.Count>0&&City["rows"].A.Count==City["size"].I;
-    CityMode CityModeShown=>cityMode!=CityMode.Tiles&&!CityAtlasReady?CityMode.Tiles:cityMode;
+    CityMode CityModeShown=>cityMode;
     Rect CitySheetRect=>new Rect(CityHudRect.x,CityHudRect.y+6,CityHudRect.width,CityHudRect.height-10);
     Rect CityAtlasViewport=>CityViewport;
 
@@ -34,8 +28,8 @@ public partial class JianghuApp {
     Texture2D cityAtlasWash;string cityAtlasWashKey="";
     readonly Dictionary<string,Texture2D> scrollArt=new Dictionary<string,Texture2D>();
     readonly Dictionary<string,Rect> cityAtlasHits=new Dictionary<string,Rect>();
-    GUIStyle inkLabel,inkBold,inkSmall,atlasTitle,atlasHalo,atlasNote,atlasLegend,inkBoldOn,inkSmallOn,atlasTitleVertical,atlasSeal;
-    static readonly Color AtlasInkColor=new Color(.17f,.13f,.10f),AtlasRoad=new Color(.62f,.40f,.20f,.85f),AtlasPost=new Color(.60f,.16f,.10f,.92f),AtlasSea=new Color(.18f,.38f,.44f,.92f),AtlasGold=new Color(.86f,.60f,.18f);
+    GUIStyle inkLabel,inkBold,inkSmall,atlasTitle,atlasHalo,atlasNote,atlasLegend,atlasTitleVertical,atlasSeal;
+    static readonly Color AtlasInkColor=new Color(.17f,.13f,.10f),AtlasRoad=new Color(.62f,.40f,.20f,.85f),AtlasGold=new Color(.86f,.60f,.18f);
 
     // Hand-painted replacements in Resources/Scroll/Art/ (same file name) win over the baked texture;
     // bake_scroll.py never writes there. See unity/ART_PROMPTS.md and unity/import_scroll_art.py.
@@ -51,18 +45,16 @@ public partial class JianghuApp {
         atlasSeal=new GUIStyle(inkBold){fontSize=13};TextColor(atlasSeal,paperText);
         atlasNote=new GUIStyle(inkSmall){wordWrap=true,alignment=TextAnchor.UpperLeft,fontSize=12};
         atlasLegend=new GUIStyle(inkSmall){alignment=TextAnchor.MiddleLeft};
-        inkBoldOn=new GUIStyle(inkBold);TextColor(inkBoldOn,paperText);
-        inkSmallOn=new GUIStyle(inkSmall);TextColor(inkSmallOn,new Color(.95f,.88f,.72f));
     }
 
     // ---------------------------------------------------------------- data helpers
     List<J> CitySettlementsList=>City["settlements"].A;
     J CitySettlement(string id)=>CitySettlementsList.FirstOrDefault(s=>s["id"].S==id)??new J();
     J CityGateNode=>City["nodes"].A.FirstOrDefault(n=>n["id"].S==City["entrance"].S)??new J();
-    J CityDockNode=>City["nodes"].A.FirstOrDefault(n=>n["kind"].S=="dock")??new J();
     static readonly string[] FacilityOrder={"gate","palace","government","market","inn","dock","clinic","workshop","training","school","temple","faction","residence","granary","garden"};
     static int FacilityRank(string kind){int i=Array.IndexOf(FacilityOrder,kind);return i<0?FacilityOrder.Length:i;}
     List<J> CityFacilities(string site)=>City["nodes"].A.Where(n=>n["settlement_id"].S==site).OrderBy(n=>FacilityRank(n["kind"].S)).ToList();
+    static bool CityHasService(J site,string service)=>site["kind"].S==service||site["services"].A.Any(s=>s.S==service);
     static int SiteSize(J site)=>Mathf.Max(1,site["footprint"]["size"].Has?site["footprint"]["size"].I:1);
     static Vector2Int SiteCorner(J site)=>site["footprint"].Has?new Vector2Int(site["footprint"]["row"].I,site["footprint"]["col"].I):new Vector2Int(site["row"].I,site["col"].I);
     static Vector2 SiteCenter(J site){int size=SiteSize(site);var c=SiteCorner(site);return new Vector2(c.x+(size-1)*.5f,c.y+(size-1)*.5f);}
@@ -76,19 +68,16 @@ public partial class JianghuApp {
         foreach(var site in CitySettlementsList)if(SiteContains(site,HeroTile))return "s:"+site["id"].S;
         return "";
     }}
-    // Tile-space position of the hero (row, col), following the step animation.
+    // A readable name for a grid cell in status lines: the gate, the landing or the settlement around it.
+    string CityPlaceLabel(Vector2Int at){
+        var gate=CityGateNode;if(gate.Has&&gate["row"].I==at.x&&gate["col"].I==at.y)return gate["name"].S;
+        var dock=City["nodes"].A.FirstOrDefault(n=>n["kind"].S=="dock"&&n["row"].I==at.x&&n["col"].I==at.y);if(dock!=null)return dock["name"].S;
+        foreach(var site in CitySettlementsList)if(SiteContains(site,at))return site["name"].S;
+        return "此处";
+    }
+    // Grid position of the hero (row, col), following the step animation.
     Vector2 HeroTileFloat=>cityStepAnimating?Vector2.Lerp(new Vector2(cityStepFrom.x,cityStepFrom.y),new Vector2(cityStepTo.x,cityStepTo.y),cityStepProgress):new Vector2(Hero["row"].I,Hero["col"].I);
     int CityWalkCost(Vector2Int target){EnsureCityRoutes();return cityCosts.TryGetValue(target,out int cost)?cost:-1;}
-    J CityConnection(int place){
-        foreach(var c in Hero["connections"].A)if(c["place"].I==place&&CityLocal)return c;
-        foreach(var c in City["connections"].A)if(c["place"].I==place){
-            int points=8+Mathf.CeilToInt((float)c["km"].N/120f)+(c["sea"].B?4:0);
-            double silver=Math.Round(1+c["km"].N/250+(c["sea"].B?1.5:0),2);
-            return J.O("place",place,"name",Place(place)["name"].S,"km",c["km"],"sea",c["sea"],"points",points,"silver",silver,"enabled",false,"reason","远方地图预览");
-        }
-        return new J();
-    }
-    List<J> CityExits=>City["connections"].A.Select(c=>CityConnection(c["place"].I)).Where(c=>c.Has).ToList();
     void CityAtlasReset(){
         string key=HeroAtlasKey;
         cityAtlasPick=key.Length>0?key:CitySettlementsList.Count>0?"s:"+CitySettlementsList[0]["id"].S:"";
@@ -99,7 +88,7 @@ public partial class JianghuApp {
     void SetCityMode(CityMode mode){
         if(mode==CityMode.Scroll&&!CitySettlement(cityScrollSite).Has)CityAtlasReset();
         if(mode==CityMode.Scroll&&cityAtlasPick.StartsWith("s:")&&cityAtlasPick.Substring(2)!=cityScrollSite)OpenCityScroll(cityAtlasPick.Substring(2));
-        cityMode=mode;cityPointerDown=false;cityScrollDragging=false;cityAtlasDragging=false;
+        cityMode=mode;cityScrollDragging=false;cityAtlasDragging=false;
     }
 
     // ---------------------------------------------------------------- terrain wash
@@ -182,16 +171,6 @@ public partial class JianghuApp {
         CityAtlasClampPan(sheet);cityAtlasDragging=false;cityAtlasLastClickAt=-10;
     }
     static Vector2 AtlasPoint(Rect map,float unit,float row,float col)=>new Vector2(map.x+(col+.5f)*unit,map.y+(row+.5f)*unit);
-    // A road leaving the region ends in the side margin toward the town it reaches, at the height
-    // its compass bearing crosses that margin, so north-east roads leave high on the right.
-    Vector2 AtlasExitPoint(Rect sheet,Rect map,int place){
-        var here=Place(City["place"].I);var there=Place(place);
-        var d=new Vector2((float)(there["x"].N-here["x"].N),(float)(there["y"].N-here["y"].N));
-        if(d.sqrMagnitude<.0001f)d=Vector2.right;d.Normalize();
-        float side=d.x<0?-1:1,reach=map.width/2+120;
-        float y=map.center.y+(Mathf.Abs(d.x)>.05f?d.y/Mathf.Abs(d.x)*reach:Mathf.Sign(d.y)*map.height);
-        return new Vector2(map.center.x+side*reach,Mathf.Clamp(y,sheet.y+176,map.yMax-26));
-    }
     // Stair-stepped tile paths become a brushed road by corner cutting (Chaikin).
     static List<Vector2> AtlasSmooth(List<Vector2> pts,int passes=3){
         for(int k=0;k<passes&&pts.Count>2;k++){
@@ -276,26 +255,6 @@ public partial class JianghuApp {
             AtlasPolyline(pts,new Color(.95f,.89f,.74f,.75f),5);AtlasPolyline(pts,AtlasRoad,2.2f);
         }
         if(City["road_name"].S.Length>0){var main=CitySettlementsList.FirstOrDefault(s=>s["kind"].S=="city")??CitySettlementsList.FirstOrDefault();if(main!=null){var pts=AtlasPath(main["path"],map,unit);if(pts.Count>3){var m=AtlasMidpoint(pts);HaloLabel(new Rect(m.x+8,m.y-10,90,20),City["road_name"].S,inkSmall,atlasHalo);}}}
-        // 驿道 / 航路: from the gate (or the landing) to the margin
-        var dock=CityDockNode;Vector2 dockPoint=dock.Has?AtlasPoint(map,unit,dock["row"].I,dock["col"].I):gatePoint;
-        var exits=CityExits;var exitPoints=new Dictionary<int,Vector2>();
-        foreach(var exit in exits){
-            var p=AtlasExitPoint(sheet,baseMap,exit["place"].I);
-            // keep exit slips apart along the margin
-            float top=sheet.y+176,bottom=sheet.yMax-40;
-            for(int pass=0;pass<4;pass++)foreach(var other in exitPoints.Values)if(Mathf.Abs(other.x-p.x)<10&&Mathf.Abs(other.y-p.y)<76){
-                float up=other.y-76,down=other.y+76;p.y=(p.y<other.y||down>bottom)&&up>=top?up:down;
-            }
-            p.y=Mathf.Clamp(p.y,top,bottom);
-            exitPoints[exit["place"].I]=p;
-        }
-        foreach(var exit in exits){
-            var p=CityAtlasViewPoint(sheet,exitPoints[exit["place"].I]);exitPoints[exit["place"].I]=p;
-            bool sea=exit["sea"].B;var from=sea?dockPoint:gatePoint;var bend=new Vector2(Mathf.Lerp(from.x,p.x,.5f),Mathf.Lerp(from.y,p.y,.15f));
-            var pts=AtlasSmooth(new List<Vector2>{from,bend,p},4);
-            string key="x:"+exit["place"].S;bool lit=cityAtlasPick==key||cityAtlasHover==key;
-            AtlasDashed(pts,sea?AtlasSea:AtlasPost,lit?3f:2.2f,sea?9:6,sea?6:4);
-        }
         // the hero's next walk, when a reachable place is picked
         var target=AtlasTarget(cityAtlasHover.Length>0?cityAtlasHover:cityAtlasPick);
         if(CityLocal&&target.HasValue&&!cityWalking){
@@ -304,8 +263,6 @@ public partial class JianghuApp {
         }else if(cityWalking&&cityWalkRoute.Count>1){var pts=AtlasPath(cityWalkRoute.Skip(Math.Max(0,cityWalkIndex-1)).ToList(),map,unit);AtlasDashed(pts,AtlasGold,2.8f,6,4);}
         // nodes
         if(gate.Has)DrawAtlasNode("gate",gatePoint,22,null,gate["name"].S,"出入口",false);
-        if(dock.Has&&dock["row"].I==gate["row"].I&&dock["col"].I==gate["col"].I){}   // a landing at the gate shares its mark
-        else if(dock.Has&&!CitySettlementsList.Any(s=>SiteContains(s,new Vector2Int(dock["row"].I,dock["col"].I))))DrawAtlasNode("dock",dockPoint,24,SiteMark("port"),dock["name"].S,"舟埠",false);
         foreach(var site in CitySettlementsList.OrderBy(s=>s["row"].I)){
             var c=SiteCenter(site);var p=AtlasPoint(map,unit,c.x,c.y);string kind=site["kind"].S;
             // 府城 a vermilion double square, 镇 a ruled square, 村 a ruled circle, 山门 a peak with a gate
@@ -313,18 +270,16 @@ public partial class JianghuApp {
             Texture2D mark=kind=="city"?capitalMark:kind=="town"?cityMark:kind=="sect"?SiteMark("mountain"):SiteMark("city");
             DrawAtlasNode("s:"+site["id"].S,p,size,mark,site["name"].S,site["glyph"].S+" · 在场"+site["residents"].A.Count,true);
         }
-        foreach(var exit in exits)DrawAtlasExit(exit,exitPoints[exit["place"].I]);
         if(CityLocal)DrawAtlasHero(AtlasPoint(map,unit,HeroTileFloat.x,HeroTileFloat.y));
         // Margin furniture stays readable while the map, routes and their hit boxes move together.
         Vector2 hud=CityHudRect.position-CityAtlasViewport.position;
         DrawAtlasCartouche(new Rect(hud.x+26,hud.y+58,52,0),City["name"].S+"舆图");
         GUI.Label(new Rect(hud.x+92,hud.y+60,150,70),City["note"].S,atlasNote);
         if(compassMark!=null)GUI.DrawTexture(new Rect(1330-CityAtlasViewport.x,72-CityAtlasViewport.y,76,76),compassMark);
-        DrawAtlasLegend(new Rect(1240-CityAtlasViewport.x,204-CityAtlasViewport.y,130,66));
+        DrawAtlasLegend(new Rect(1240-CityAtlasViewport.x,204-CityAtlasViewport.y,130,22));
     }
     Vector2Int? AtlasTarget(string key){
         if(key=="gate"){var g=CityGateNode;if(g.Has)return new Vector2Int(g["row"].I,g["col"].I);}
-        if(key=="dock"){var d=CityDockNode;if(d.Has)return new Vector2Int(d["row"].I,d["col"].I);}
         if(key.StartsWith("s:")){var s=CitySettlement(key.Substring(2));if(s.Has)return SiteTarget(s);}
         return null;
     }
@@ -356,9 +311,7 @@ public partial class JianghuApp {
     // Under the compass: what each kind of line means.
     void DrawAtlasLegend(Rect r){
         float x=r.x+10,y=r.y+11;
-        AtlasLine(new Vector2(x,y),new Vector2(x+34,y),AtlasRoad,2.2f);GUI.Label(new Rect(x+42,y-9,90,18),"步道 · 城中",atlasLegend);y+=22;
-        for(float d=0;d<34;d+=10)AtlasLine(new Vector2(x+d,y),new Vector2(x+Mathf.Min(34,d+6),y),AtlasPost,2.2f);GUI.Label(new Rect(x+42,y-9,90,18),"驿道 · 远行",atlasLegend);y+=22;
-        for(float d=0;d<34;d+=15)AtlasLine(new Vector2(x+d,y),new Vector2(x+Mathf.Min(34,d+9),y),AtlasSea,2.2f);GUI.Label(new Rect(x+42,y-9,90,18),"航路 · 舟埠",atlasLegend);
+        AtlasLine(new Vector2(x,y),new Vector2(x+34,y),AtlasRoad,2.2f);GUI.Label(new Rect(x+42,y-9,90,18),"步道 · 城中",atlasLegend);
     }
     // Mark (or, with no texture, a ruled 门 box for the gate), a vertical name slip and a caption.
     void DrawAtlasNode(string key,Vector2 p,float size,Texture2D art,string name,string caption,bool slip){
@@ -376,17 +329,6 @@ public partial class JianghuApp {
         }else HaloLabel(new Rect(p.x-60,mark.yMax-2,120,18),name,inkBold,atlasHalo);
         HaloLabel(new Rect(p.x-60,slip?mark.yMax+1:mark.yMax+15,120,16),caption,inkSmall,atlasHalo);
         cityAtlasHits[key]=hit;
-    }
-    void DrawAtlasExit(J exit,Vector2 p){
-        string key="x:"+exit["place"].S;bool picked=cityAtlasPick==key,hovered=cityAtlasHover==key;
-        string name="往"+exit["name"].S,cost=exit["points"].S+"精力 · "+(exit["sea"].B?"航路":"驿道");
-        float w=Mathf.Max(inkBold.CalcSize(new GUIContent(name)).x,inkSmall.CalcSize(new GUIContent(cost)).x)+22;
-        Rect r=new Rect(p.x-w/2,p.y-22,w,44);
-        Fill(r,picked?new Color(.56f,.17f,.13f,.92f):new Color(.91f,.85f,.69f,.94f));Outline(r,picked||hovered?brass:new Color(.17f,.13f,.10f,.75f),picked||hovered?2:1);
-        var nameStyle=picked?inkBoldOn:inkBold;var costStyle=picked?inkSmallOn:inkSmall;
-        GUI.Label(new Rect(r.x,r.y+3,r.width,20),name,nameStyle);GUI.Label(new Rect(r.x,r.y+23,r.width,17),cost,costStyle);
-        AtlasTexture(new Rect(p.x-14,r.y-26,28,28),exit["sea"].B?"node_boat":"node_exit");
-        cityAtlasHits[key]=Rect.MinMaxRect(r.x,r.y-26,r.xMax,r.yMax);
     }
     void DrawAtlasHero(Vector2 p){
         if(pennantMark!=null)GUI.DrawTexture(new Rect(p.x-6,p.y-46,30,30),pennantMark);
@@ -440,7 +382,7 @@ public partial class JianghuApp {
     void DrawCityAtlasDetail(){
         string key=cityAtlasPick;
         if(key.StartsWith("s:")){
-            var site=CitySettlement(key.Substring(2));if(!site.Has){T("单击舆图上的聚落、城门或去路查看。",small);return;}
+            var site=CitySettlement(key.Substring(2));if(!site.Has){T("单击舆图上的聚落或城门查看。",small);return;}
             GUILayout.Space(6);T(site["name"].S,sub);T(site["label"].S+" · "+site["role"].S,small);
             T("常住 "+site["home_residents"].A.Count+"人 · 当前在场 "+site["residents"].A.Count+"人",small);
             var jobs=site["professions"].D.OrderByDescending(p=>p.Value.N).Take(4).Select(p=>p.Key+p.Value.S).ToArray();if(jobs.Length>0)T("营生 · "+string.Join("、",jobs),small);
@@ -448,21 +390,12 @@ public partial class JianghuApp {
             if(Btn("展开长卷 ›"))Later(()=>OpenCityScroll(site["id"].S));
             T("设施",sub);
             foreach(var facility in CityFacilities(site["id"].S))if(GUILayout.Button(facility["glyph"].S+"  "+facility["name"].S+" · 在场"+facility["residents"].A.Count,chip)){string sid=site["id"].S,fid=facility["id"].S;Later(()=>OpenCityScroll(sid,fid));}
-        }else if(key=="gate"||key=="dock"){
-            var node=key=="gate"?CityGateNode:CityDockNode;if(!node.Has)return;
+        }else if(key=="gate"){
+            var node=CityGateNode;if(!node.Has)return;
             GUILayout.Space(6);T(node["name"].S,sub);T(node["label"].S+" · "+node["description"].S,small);
             DrawAtlasWalk(new Vector2Int(node["row"].I,node["col"].I),HeroAtlasKey==key||CityLocal&&HeroTile==new Vector2Int(node["row"].I,node["col"].I));
-            T("可从本区域任意位置远行。",small);
-            if(CityLocal)DrawTravel();
-        }else if(key.StartsWith("x:")){
-            int place;if(!int.TryParse(key.Substring(2),out place))return;var exit=CityConnection(place);if(!exit.Has)return;
-            GUILayout.Space(6);T("往"+exit["name"].S,sub);
-            T((exit["sea"].B?"航路":"驿道")+" · "+exit["km"].S+"里程 · "+exit["points"].S+"精力",small);
-            if(!CityLocal){T("远方地图预览，不能从这里出发。",small);return;}
-            if(exit["enabled"].B){if(Btn("沿路远行 →",Paused))HeroAction("travel","place",exit["place"]);}
-            else{T(exit["reason"].S,small);if(exit["reason"].S=="精力不足，点击过月"&&Btn("过月",Paused))HeroAction("end_turn");}
-            if(Btn("在天下舆图查看 ›")){SelectedPlace=place;Later(()=>GoStage(Stage.World));}
-        }else{T("单击舆图上的聚落、城门或去路查看；双击聚落展开长卷。",small);}
+            T("远行请在天下地图选择目的地。",small);
+        }else{T("单击舆图上的聚落或城门查看；双击聚落展开长卷。",small);}
         GUILayout.Space(8);T("单击查看 · 双击聚落展开长卷 · 浏览不耗行动力",small);
     }
     // "前往" for a settlement or the gate, with the real walking cost from where the hero stands.
@@ -472,9 +405,13 @@ public partial class JianghuApp {
         int cost=CityWalkCost(target);
         if(cityWalking){if(Btn("停止行走"))StopCityWalk();return;}
         string reason=CityMovementBlockReason;
+        int spend=CityWalkThisMonthCost(target);
+        string label=spend<cost?"本月先行":HeroAtlasKey.Length==0?"继续前往":"前往";
         if(cost<0)T("没有可通行的步道",small);
-        else if(Btn("前往 · "+cost+" 行动力",reason.Length==0&&cost<=Hero["points"].I))TryCityWalk(target);
-        if(reason.Length>0)T(reason,small);else if(cost>Hero["points"].I)T("本月行动力不足，可在下方月盘结束本月。",small);
+        else if(Btn(label+" · "+spend+" 行动力",reason.Length==0&&spend>0))TryCityWalk(target);
+        if(reason.Length>0)T(reason,small);
+        else if(spend==0&&cost>0)T("余下行动力不足以迈出下一步，可过月后继续。",small);
+        else if(spend<cost)T("余程共需 "+cost+" 行动力，本月先走一段；过月后可继续前往。",small);
     }
     // 此地: the people of the picked settlement (舆图) or facility (长卷), with portraits.
     void DrawCityPlaceRoster(){
@@ -514,16 +451,14 @@ public partial class JianghuApp {
     string CityFacilityName(string id){if(string.IsNullOrEmpty(id))return "";var n=City["nodes"].A.FirstOrDefault(x=>x["id"].S==id);return n!=null?n["name"].S:"";}
 
     // ---------------------------------------------------------------- toolbar
-    // Returns the width used by the 舆图 / 长卷 / 地格 switch at the start of the toolbar.
+    // Returns the width used by the 舆图 / 长卷 switch at the start of the toolbar.
     float DrawCityModeTabs(float x,float y){
-        bool ready=CityAtlasReady;
-        GUI.enabled=!cityLoading&&ready;
+        GUI.enabled=!cityLoading&&CityAtlasReady;
         if(CityTool(new Rect(x,y,52,28),"舆图",CityModeShown==CityMode.Atlas))SetCityMode(CityMode.Atlas);
         if(CityTool(new Rect(x+54,y,52,28),"长卷",CityModeShown==CityMode.Scroll))SetCityMode(CityMode.Scroll);
         GUI.enabled=!cityLoading;
-        if(CityTool(new Rect(x+108,y,52,28),"地格",CityModeShown==CityMode.Tiles))SetCityMode(CityMode.Tiles);
-        GUI.Label(new Rect(x+162,y+4,14,20),"|",centerSmall);
-        return 176;
+        GUI.Label(new Rect(x+108,y+4,14,20),"|",centerSmall);
+        return 122;
     }
     void DrawCityAtlasTools(float left,float y,Rect r){
         if(CityModeShown==CityMode.Atlas){

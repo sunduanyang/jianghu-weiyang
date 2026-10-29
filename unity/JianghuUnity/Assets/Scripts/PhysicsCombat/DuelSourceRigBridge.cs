@@ -128,7 +128,7 @@ public sealed partial class PhysicsDuel {
             SourceAIWeaponLengthMetres=weapon.id=="unarmed"?0:weapon.Length;
             SourceAIWeaponMount=sword.Frame;SourceAIShieldCOM=HasShield?shield?.Frame:null;
             BindSourceAITargets(sourceRig.ResolveTransform(sourceRig.Source("CharacterEnemyAI")["aimOrigin"]),sourcePoints["handLeftPoint"],sourcePoints["handRightPoint"],sourcePoints["handLeftPointParent"],sourcePoints["handRightPointParent"]);
-            foreach(var a in colliders)foreach(var b in colliders)if(a!=b&&a!=null&&b!=null)Physics2D.IgnoreCollision(a,b);
+            foreach(var a in colliders)foreach(var b in colliders)if(a!=b&&a!=null&&b!=null)DuelPhysicsAPI.IgnoreCollision(a,b);
             referenceSimulatedBodies=root.GetComponentsInChildren<Rigidbody2D>(true);
             SampleReference();
             CaptureCharacterBindingPose();
@@ -202,15 +202,15 @@ public sealed partial class PhysicsDuel {
             if(!PassedOut){
                 float command=active&&!ReferenceKicking&&!ReferenceBeingKicked?move:0;
                 if(mover.position.x*command>5.1f)command=0;
-                if(ReferenceKicking)mover.linearVelocity=Vector2.zero;else mover.AddForce(new Vector2(command*(ReferenceDowned?10:19),0));
+                if(ReferenceKicking)mover.linearVelocity=Vector2.zero;else mover.CombatAddForce(new Vector2(command*(ReferenceDowned?10:19),0));
                 float lean=1+2*Mathf.Abs(referenceBodies["headCOM"].position.x-referenceBodies["pelvisCOM"].position.x),up=(health+100)*(float)sourceMover["HeadForceUpwardsMultiplier"].N;
                 if(!severed.Contains("head")&&!severed.Contains("neck")){
-                    referenceBodies["headCOM"].AddForce(Vector2.up*((lean*250+up)*3));
-                    referenceBodies["chestCOM"].AddForce(new Vector2(mover.linearVelocity.x*(float)sourceMover["HeadForceSidewaysMultiplier"].N,up)*3);
+                    referenceBodies["headCOM"].CombatAddForce(Vector2.up*((lean*250+up)*3));
+                    referenceBodies["chestCOM"].CombatAddForce(new Vector2(mover.linearVelocity.x*(float)sourceMover["HeadForceSidewaysMultiplier"].N,up)*3);
                 }
                 foreach(var p in referenceDriverGoals.ToArray())if(p.Key!=null&&p.Key.simulated&&p.Key.gameObject.activeInHierarchy)MoveReferenceDriver(p.Key,p.Value);
-                if(ReferenceKicking){var rb=referenceBodies["pelvisCOM"];if(game.referenceSubstep==0)sourceRotationStarts[rb]=rb.rotation;rb.MoveRotation(Mathf.LerpAngle(sourceRotationStarts[rb],facing>0?-120:120,(game.referenceSubstep+1)/(float)game.referenceSteps));}
-            }else mover.MovePosition(new Vector2(referenceBodies["pelvisCOM"].position.x,mover.position.y));
+                if(ReferenceKicking){var rb=referenceBodies["pelvisCOM"];if(game.referenceSubstep==0)sourceRotationStarts[rb]=rb.rotation;rb.CombatMoveRotation(Mathf.LerpAngle(sourceRotationStarts[rb],facing>0?-120:120,(game.referenceSubstep+1)/(float)game.referenceSteps));}
+            }else mover.CombatMovePosition(new Vector2(referenceBodies["pelvisCOM"].position.x,mover.position.y));
             foreach(string side in new[]{"Near","Far"})if(PassedOut||ReferenceArmDisabled(side))limbs["hand"+side].rb.linearDamping=limbs["hand"+side].rb.angularDamping=(float)sourceMover["handsDragWhenActive"].N;
             var push=sourceRig.Resolve<AreaEffector2D>(sourceMover["pushingAreaEffector"]);if(push!=null)push.forceMagnitude=Mathf.Clamp(mover.position.x*(-facing)*5,5,50);
             var pushShape=sourceRig.Resolve<Collider2D>(sourceMover["pushingCollider"]);if(pushShape!=null)pushShape.enabled=!PassedOut;

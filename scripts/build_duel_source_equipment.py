@@ -6,6 +6,7 @@ are stored in separate sections. Run with --check to detect catalog drift.
 import argparse
 import json
 from pathlib import Path
+from build_bloody_item_catalog import plain_float
 
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / 'unity/JianghuUnity/Assets/Resources/CombatSource/equipment.json'
@@ -35,6 +36,13 @@ def build():
     base = physics[nothing['data']['ItemBaseRigidbody2D']['m_PathID']]
     counter = physics[nothing['data']['CounterweightRigidbody2D']['m_PathID']]
     circle = physics[149137]
+    held = {}
+    for key, row in HELD_SAMPLES.items():
+        item = next(x['data'] for x in source['items'] if x['script']=='SourcePrefab_HandItem' and x['data']['itemId']==row[1])
+        held[key] = dict(sample_name=row[0], sample_item_id=row[1],
+            body_gravity=1, counterweight_gravity=1, linear_damping=row[2], angular_damping=row[3],
+            counterweight_linear_damping=0, counterweight_angular_damping=.05,
+            impact_speed_threshold=item['impactSpeedThreshold'],clash_damage_stat=plain_float(item['obs_Damage']))
     assert nothing['data']['Name']=='Nothing' and nothing['data']['Type']==7 and nothing['data']['HandItemType']==0
     weapons = {}
     for key, row in catalog.items():
@@ -57,14 +65,12 @@ def build():
             unarmed='source Nothing numeric shape/body/counterweight; Type=7 controls COM/arm props while HandItemType=0 controls cqe masses; AI still filters Nothing',
             shield='existing wood_shield maps to ordinary source shield D=1, WoodBlunt'),
         profiles={key: dict(base_mass=row['mass'], base_damage=row['damage']) for key, row in profiles.items()},
-        held_profiles={key: dict(sample_name=row[0], sample_item_id=row[1],
-            body_gravity=1, counterweight_gravity=1, linear_damping=row[2], angular_damping=row[3],
-            counterweight_linear_damping=0, counterweight_angular_damping=.05) for key,row in HELD_SAMPLES.items()},
+        held_profiles=held,
         nonarena_override=dict(condition='!Application.isBatchMode && !TransitionController.InArena && !IsFlailHead',
             body_gravity=-1, counterweight_gravity=-5, linear_damping=50, angular_damping=100,
             flag_getter_va='0x36893fc', flag_static_offset=8,
             initialization_window='SpawnRunner precedes InArena=true; first equipment OnEnable timing remains unverified dynamically'),
-        nothing=dict(source=nothing['source'], name='Nothing', type=7, hand_item_type=0, length=nothing['data']['Length'],
+        nothing=dict(source=nothing['source'], name='Nothing', type=7, hand_item_type=0, length=nothing['data']['Length'],impact_speed_threshold=nothing['data']['impactSpeedThreshold'],
             body_mass=1, counterweight_mass=1, body_gravity=base['m_GravityScale'], counterweight_gravity=counter['m_GravityScale'],
             linear_damping=base['m_LinearDamping'], angular_damping=base['m_AngularDamping'],
             counterweight_linear_damping=counter['m_LinearDamping'], counterweight_angular_damping=counter['m_AngularDamping'],

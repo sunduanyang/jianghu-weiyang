@@ -1,0 +1,1972 @@
+{
+  "records": [
+    {
+      "id": 16367,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_RandomAndFriendly",
+      "script": "WonPopupRandom",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "kind": "null"
+        },
+        "m_PrefabInstance": {
+          "kind": "null"
+        },
+        "m_PrefabAsset": {
+          "kind": "null"
+        },
+        "m_GameObject": {
+          "kind": "scene",
+          "id": 4471,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_RandomAndFriendly",
+          "type": "GameObject"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "6f16dcaae4af476a1f914a4720ef22dd",
+          "type": 3
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "animancer": {
+          "kind": "animancer",
+          "id": 15466,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_RandomAndFriendly",
+          "animator": {
+            "kind": "scene",
+            "id": 6700,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_RandomAndFriendly",
+            "type": "Animator",
+            "ordinal": 0,
+            "update_mode": 2
+          },
+          "action_on_disable": 0
+        },
+        "open": {
+          "kind": "clip",
+          "key": "ca398d759e622cf46ae26b2760bb000a"
+        },
+        "audioSource": {
+          "kind": "scene",
+          "id": 6622,
+          "path": "CanvasAndCamera/Canvas",
+          "type": "AudioSource",
+          "ordinal": 0
+        },
+        "openSFX": {
+          "kind": "audio_object",
+          "key": "e0a353ebabed9904ca29a61484eb1cfb"
+        }
+      },
+      "enable_events": []
+    },
+    {
+      "id": 16553,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Ranked",
+      "script": "LostPopupRanked",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "kind": "null"
+        },
+        "m_PrefabInstance": {
+          "kind": "null"
+        },
+        "m_PrefabAsset": {
+          "kind": "null"
+        },
+        "m_GameObject": {
+          "kind": "scene",
+          "id": 4470,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Ranked",
+          "type": "GameObject"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "1e2648585ad6e0d24f9aa9edcad137e9",
+          "type": 3
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "animancer": {
+          "kind": "animancer",
+          "id": 15467,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Ranked",
+          "animator": {
+            "kind": "scene",
+            "id": 6708,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Ranked",
+            "type": "Animator",
+            "ordinal": 0,
+            "update_mode": 2
+          },
+          "action_on_disable": 0
+        },
+        "open": {
+          "kind": "clip",
+          "key": "9a54f5ca2c9d84a488bd84680cb47048"
+        },
+        "rankDown": {
+          "kind": "clip",
+          "key": "fccbf5000722b964f85034446bc7de29"
+        },
+        "header": {
+          "kind": "scene",
+          "id": 563,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Ranked/Popup/Header",
+          "type": "GameObject"
+        },
+        "rpLostText": {
+          "kind": "scene",
+          "id": 15856,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Ranked/Popup/Text_RpLost",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "rpSlider": {
+          "kind": "scene",
+          "id": 16624,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Ranked/Popup/Header/BarContainer/Slider",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "rankPointsText": {
+          "kind": "scene",
+          "id": 15851,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Ranked/Popup/Header/Text_RankPoints",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "currentRankBadge": {
+          "kind": "scene",
+          "id": 16353,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Ranked/Popup/Header/BarContainer/RankedBadge_Small_Left",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "nextRankBadge": {
+          "kind": "scene",
+          "id": 16595,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Ranked/Popup/Header/BarContainer/RankedBadge_Small_Right",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "resultTimeout": 8,
+        "audioSource": {
+          "kind": "scene",
+          "id": 6622,
+          "path": "CanvasAndCamera/Canvas",
+          "type": "AudioSource",
+          "ordinal": 0
+        },
+        "openSFX": {
+          "kind": "audio_object",
+          "key": "a52978335470fbf4e95312a4e9c74489"
+        },
+        "sliderUpSFX": {
+          "kind": "audio_object",
+          "key": "1f2d018625ba39c4c8bbff218e044d3f"
+        },
+        "sliderDownSFX": {
+          "kind": "audio_object",
+          "key": "909b72079a8559f4e88e23a38e9d5d6d"
+        },
+        "derankSFX": {
+          "kind": "audio_object",
+          "key": "909b72079a8559f4e88e23a38e9d5d6d"
+        }
+      },
+      "enable_events": []
+    },
+    {
+      "id": 16742,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_RandomAndFriendly",
+      "script": "LostPopup",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "kind": "null"
+        },
+        "m_PrefabInstance": {
+          "kind": "null"
+        },
+        "m_PrefabAsset": {
+          "kind": "null"
+        },
+        "m_GameObject": {
+          "kind": "scene",
+          "id": 4472,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_RandomAndFriendly",
+          "type": "GameObject"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "ba882d3fe81c0b111174fb9f879d227b",
+          "type": 3
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "animancer": {
+          "kind": "animancer",
+          "id": 15469,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_RandomAndFriendly",
+          "animator": {
+            "kind": "scene",
+            "id": 6717,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_RandomAndFriendly",
+            "type": "Animator",
+            "ordinal": 0,
+            "update_mode": 0
+          },
+          "action_on_disable": 0
+        },
+        "open": {
+          "kind": "clip",
+          "key": "92e8c9c2db019ce4bacfc1f93e3492ca"
+        },
+        "header": {
+          "kind": "null"
+        },
+        "audioSource": {
+          "kind": "scene",
+          "id": 6622,
+          "path": "CanvasAndCamera/Canvas",
+          "type": "AudioSource",
+          "ordinal": 0
+        },
+        "openSFX": {
+          "kind": "audio_object",
+          "key": "a52978335470fbf4e95312a4e9c74489"
+        },
+        "winningsSFX": {
+          "kind": "null"
+        }
+      },
+      "enable_events": []
+    },
+    {
+      "id": 18540,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_OpponentForfeited",
+      "script": "LostPopup",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "kind": "null"
+        },
+        "m_PrefabInstance": {
+          "kind": "null"
+        },
+        "m_PrefabAsset": {
+          "kind": "null"
+        },
+        "m_GameObject": {
+          "kind": "scene",
+          "id": 2270,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_OpponentForfeited",
+          "type": "GameObject"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "ba882d3fe81c0b111174fb9f879d227b",
+          "type": 3
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "animancer": {
+          "kind": "animancer",
+          "id": 15470,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_OpponentForfeited",
+          "animator": {
+            "kind": "scene",
+            "id": 6844,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_OpponentForfeited",
+            "type": "Animator",
+            "ordinal": 0,
+            "update_mode": 0
+          },
+          "action_on_disable": 0
+        },
+        "open": {
+          "kind": "clip",
+          "key": "92e8c9c2db019ce4bacfc1f93e3492ca"
+        },
+        "header": {
+          "kind": "null"
+        },
+        "audioSource": {
+          "kind": "scene",
+          "id": 6622,
+          "path": "CanvasAndCamera/Canvas",
+          "type": "AudioSource",
+          "ordinal": 0
+        },
+        "openSFX": {
+          "kind": "audio_object",
+          "key": "a52978335470fbf4e95312a4e9c74489"
+        },
+        "winningsSFX": {
+          "kind": "null"
+        }
+      },
+      "enable_events": [
+        {
+          "target": {
+            "kind": "scene",
+            "id": 168,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd",
+            "type": "GameObject"
+          },
+          "active": 1
+        },
+        {
+          "target": {
+            "kind": "scene",
+            "id": 501,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups",
+            "type": "GameObject"
+          },
+          "active": 1
+        }
+      ]
+    },
+    {
+      "id": 20448,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked",
+      "script": "WonPopupRanked",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "kind": "null"
+        },
+        "m_PrefabInstance": {
+          "kind": "null"
+        },
+        "m_PrefabAsset": {
+          "kind": "null"
+        },
+        "m_GameObject": {
+          "kind": "scene",
+          "id": 1000,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked",
+          "type": "GameObject"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "df0487679e04cf0d77daec69d0638477",
+          "type": 3
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "animancer": {
+          "kind": "animancer",
+          "id": 15476,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked",
+          "animator": {
+            "kind": "scene",
+            "id": 6938,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked",
+            "type": "Animator",
+            "ordinal": 0,
+            "update_mode": 2
+          },
+          "action_on_disable": 0
+        },
+        "open": {
+          "kind": "clip",
+          "key": "ed499e6459a7af34aaeda9ce378bf29e"
+        },
+        "rankUp": {
+          "kind": "clip",
+          "key": "712c62c2887686e43a51632c7f29f11a"
+        },
+        "header": {
+          "kind": "scene",
+          "id": 1369,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked/Popup/Header",
+          "type": "GameObject"
+        },
+        "rpGainText": {
+          "kind": "scene",
+          "id": 15861,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked/Popup/Header/Text_RpGain",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "rankUpPopup": {
+          "kind": "scene",
+          "id": 2890,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked/Popup_RankUp",
+          "type": "GameObject"
+        },
+        "rpSlider": {
+          "kind": "scene",
+          "id": 21075,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked/Popup/Header/BarContainer/Slider",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "rankPointsText": {
+          "kind": "scene",
+          "id": 15601,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked/Popup/Header/Text_RankPoints",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "currentRankBadge": {
+          "kind": "scene",
+          "id": 17025,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked/Popup/Header/BarContainer/RankedBadge_Small_Left",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "nextRankBadge": {
+          "kind": "scene",
+          "id": 17431,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked/Popup/Header/BarContainer/RankedBadge_Small_Right",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "nextRankBadgeFull": {
+          "kind": "scene",
+          "id": 19400,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked/Popup/Header/BarContainer/RankedBadge_Small_Right/RankedBadge_Full",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "bigBadges": [
+          {
+            "kind": "scene",
+            "id": 21729,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked/Popup_RankUp/RankedBadge",
+            "type": "MonoBehaviour",
+            "ordinal": 0
+          }
+        ],
+        "resultTimeout": 8,
+        "audioSource": {
+          "kind": "scene",
+          "id": 6622,
+          "path": "CanvasAndCamera/Canvas",
+          "type": "AudioSource",
+          "ordinal": 0
+        },
+        "openSFX": {
+          "kind": "audio_object",
+          "key": "e0a353ebabed9904ca29a61484eb1cfb"
+        },
+        "sliderUpSFX": {
+          "kind": "audio_object",
+          "key": "1f2d018625ba39c4c8bbff218e044d3f"
+        },
+        "sliderDownSFX": {
+          "kind": "audio_object",
+          "key": "909b72079a8559f4e88e23a38e9d5d6d"
+        },
+        "badgeFillSFX": {
+          "kind": "audio_object",
+          "key": "b12310d9c32bd4842bf524f4bc16414d"
+        }
+      },
+      "enable_events": []
+    },
+    {
+      "id": 21027,
+      "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd/Popups/Popup_RoundEnd",
+      "script": "LostPopup",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "kind": "null"
+        },
+        "m_PrefabInstance": {
+          "kind": "null"
+        },
+        "m_PrefabAsset": {
+          "kind": "null"
+        },
+        "m_GameObject": {
+          "kind": "scene",
+          "id": 4096,
+          "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd/Popups/Popup_RoundEnd",
+          "type": "GameObject"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "ba882d3fe81c0b111174fb9f879d227b",
+          "type": 3
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "animancer": {
+          "kind": "animancer",
+          "id": 15478,
+          "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd/Popups/Popup_RoundEnd",
+          "animator": {
+            "kind": "scene",
+            "id": 6975,
+            "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd/Popups/Popup_RoundEnd",
+            "type": "Animator",
+            "ordinal": 0,
+            "update_mode": 0
+          },
+          "action_on_disable": 0
+        },
+        "open": {
+          "kind": "clip",
+          "key": "7e21d53207d44b442a7963bb486261d1"
+        },
+        "header": {
+          "kind": "null"
+        },
+        "audioSource": {
+          "kind": "scene",
+          "id": 6622,
+          "path": "CanvasAndCamera/Canvas",
+          "type": "AudioSource",
+          "ordinal": 0
+        },
+        "openSFX": {
+          "kind": "audio_object",
+          "key": "6270c0562ac10d547badf40629dcca1d"
+        },
+        "winningsSFX": {
+          "kind": "null"
+        }
+      },
+      "enable_events": []
+    },
+    {
+      "id": 21659,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Campaign",
+      "script": "LostPopup",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "kind": "null"
+        },
+        "m_PrefabInstance": {
+          "kind": "null"
+        },
+        "m_PrefabAsset": {
+          "kind": "null"
+        },
+        "m_GameObject": {
+          "kind": "scene",
+          "id": 969,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Campaign",
+          "type": "GameObject"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "ba882d3fe81c0b111174fb9f879d227b",
+          "type": 3
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "animancer": {
+          "kind": "animancer",
+          "id": 15482,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Campaign",
+          "animator": {
+            "kind": "scene",
+            "id": 7012,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Campaign",
+            "type": "Animator",
+            "ordinal": 0,
+            "update_mode": 0
+          },
+          "action_on_disable": 0
+        },
+        "open": {
+          "kind": "clip",
+          "key": "92e8c9c2db019ce4bacfc1f93e3492ca"
+        },
+        "header": {
+          "kind": "null"
+        },
+        "audioSource": {
+          "kind": "scene",
+          "id": 6622,
+          "path": "CanvasAndCamera/Canvas",
+          "type": "AudioSource",
+          "ordinal": 0
+        },
+        "openSFX": {
+          "kind": "audio_object",
+          "key": "a52978335470fbf4e95312a4e9c74489"
+        },
+        "winningsSFX": {
+          "kind": "null"
+        }
+      },
+      "enable_events": []
+    },
+    {
+      "id": 22056,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign",
+      "script": "WonPopupCampaign",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "kind": "null"
+        },
+        "m_PrefabInstance": {
+          "kind": "null"
+        },
+        "m_PrefabAsset": {
+          "kind": "null"
+        },
+        "m_GameObject": {
+          "kind": "scene",
+          "id": 1163,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign",
+          "type": "GameObject"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "d9897892b46a9799f6b49fd45f5635be",
+          "type": 3
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "animancer": {
+          "kind": "animancer",
+          "id": 15486,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign",
+          "animator": {
+            "kind": "scene",
+            "id": 7030,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign",
+            "type": "Animator",
+            "ordinal": 0,
+            "update_mode": 2
+          },
+          "action_on_disable": 0
+        },
+        "open": {
+          "kind": "clip",
+          "key": "ec4184b91b7ba9c42a7e84487825ef62"
+        },
+        "jump": {
+          "kind": "clip",
+          "key": "532be4d39031262468bf46dfa09a13cb"
+        },
+        "stars": [
+          {
+            "kind": "scene",
+            "id": 4099,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/Star 1/Star_Filled",
+            "type": "GameObject"
+          },
+          {
+            "kind": "scene",
+            "id": 2337,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/Star 2/Star_Filled",
+            "type": "GameObject"
+          },
+          {
+            "kind": "scene",
+            "id": 4151,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/Star 3/Star_Filled",
+            "type": "GameObject"
+          }
+        ],
+        "winningsContainer": {
+          "kind": "scene",
+          "id": 3803,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/CoinsWonContainer",
+          "type": "GameObject"
+        },
+        "newItemsContainer": {
+          "kind": "scene",
+          "id": 3646,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/NewItemsUnlockedContainer",
+          "type": "GameObject"
+        },
+        "goldWonText": {
+          "kind": "scene",
+          "id": 15944,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/CoinsWonContainer/CoinsWonContainer/Text_GoldWon",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "nextGameObjects": [
+          {
+            "kind": "scene",
+            "id": 3657,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/BottomButtonsContainer/Button_Next",
+            "type": "GameObject"
+          },
+          {
+            "kind": "scene",
+            "id": 1734,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/BottomGamepadHintContainer/GamepadHint/Container/Spacer",
+            "type": "GameObject"
+          },
+          {
+            "kind": "scene",
+            "id": 2214,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/BottomGamepadHintContainer/GamepadHint/Container/Icon_South",
+            "type": "GameObject"
+          },
+          {
+            "kind": "scene",
+            "id": 662,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/BottomGamepadHintContainer/GamepadHint/Container/NextIcon",
+            "type": "GameObject"
+          }
+        ],
+        "gamepadUIButtonNext": {
+          "kind": "scene",
+          "id": 20578,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/BottomGamepadHintContainer/GamepadHint",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "x2Button": {
+          "kind": "scene",
+          "id": 20216,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/CoinsWonContainer/CoinsWonContainer/X2ButonContainer/X2Button",
+          "type": "MonoBehaviour",
+          "ordinal": 1
+        },
+        "x2Container": {
+          "kind": "scene",
+          "id": 1650,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/CoinsWonContainer/CoinsWonContainer/X2ButonContainer",
+          "type": "GameObject"
+        },
+        "adsManager": {
+          "kind": "scene",
+          "id": 16405,
+          "path": "AdsManager",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "audioSource": {
+          "kind": "scene",
+          "id": 6622,
+          "path": "CanvasAndCamera/Canvas",
+          "type": "AudioSource",
+          "ordinal": 0
+        },
+        "openSFX": {
+          "kind": "audio_object",
+          "key": "e0a353ebabed9904ca29a61484eb1cfb"
+        },
+        "starSFX": [
+          {
+            "kind": "audio_object",
+            "key": "2a00b96b04eaece4b96f2e41ddee2ed6"
+          },
+          {
+            "kind": "audio_object",
+            "key": "b94e9166c23e95e4c879fc3a4d770b0c"
+          },
+          {
+            "kind": "audio_object",
+            "key": "9c08a78d3f7d9aa4c931a09901553e17"
+          }
+        ],
+        "winningsSFX": {
+          "kind": "audio_object",
+          "key": "b1714630c2eb10c4390ce97640d166ff"
+        },
+        "noWinningsSFX": {
+          "kind": "audio_object",
+          "key": "1f06bbc776848ea49aa9809f420042fe"
+        }
+      },
+      "enable_events": []
+    },
+    {
+      "id": 22193,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Survival",
+      "script": "WonPopupSurvival",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "kind": "null"
+        },
+        "m_PrefabInstance": {
+          "kind": "null"
+        },
+        "m_PrefabAsset": {
+          "kind": "null"
+        },
+        "m_GameObject": {
+          "kind": "scene",
+          "id": 2094,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Survival",
+          "type": "GameObject"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "d51452d9d13dd9fa7bea707166f41674",
+          "type": 3
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "animancer": {
+          "kind": "animancer",
+          "id": 15488,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Survival",
+          "animator": {
+            "kind": "scene",
+            "id": 7039,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Survival",
+            "type": "Animator",
+            "ordinal": 0,
+            "update_mode": 0
+          },
+          "action_on_disable": 0
+        },
+        "open": {
+          "kind": "clip",
+          "key": "0a3be64110dd536498f19fafad7904c7"
+        },
+        "currentWaveText": {
+          "kind": "scene",
+          "id": 15766,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Survival/Popup/Header/Text_CurrentWave",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "goldWonText": {
+          "kind": "scene",
+          "id": 15711,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Survival/Popup/CoinsWonContainer/CoinsWonContainer/Text_GoldWon",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "header": {
+          "kind": "scene",
+          "id": 1954,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Survival/Popup/Header",
+          "type": "GameObject"
+        },
+        "winnersContainer": {
+          "kind": "scene",
+          "id": 393,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Survival/Popup/CoinsWonContainer",
+          "type": "GameObject"
+        },
+        "x2Button": {
+          "kind": "scene",
+          "id": 21395,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Survival/Popup/CoinsWonContainer/CoinsWonContainer/X2ButonContainer/X2Button",
+          "type": "MonoBehaviour",
+          "ordinal": 1
+        },
+        "x2Container": {
+          "kind": "scene",
+          "id": 536,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Survival/Popup/CoinsWonContainer/CoinsWonContainer/X2ButonContainer",
+          "type": "GameObject"
+        },
+        "adsManager": {
+          "kind": "scene",
+          "id": 16405,
+          "path": "AdsManager",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        },
+        "audioSource": {
+          "kind": "scene",
+          "id": 6622,
+          "path": "CanvasAndCamera/Canvas",
+          "type": "AudioSource",
+          "ordinal": 0
+        },
+        "openSFX": {
+          "kind": "audio_object",
+          "key": "e0a353ebabed9904ca29a61484eb1cfb"
+        },
+        "headerSFX": {
+          "kind": "audio_object",
+          "key": "b1714630c2eb10c4390ce97640d166ff"
+        },
+        "winningsSFX": {
+          "kind": "audio_object",
+          "key": "b1714630c2eb10c4390ce97640d166ff"
+        }
+      },
+      "enable_events": []
+    },
+    {
+      "id": 22473,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Survival",
+      "script": "LostPopup",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "kind": "null"
+        },
+        "m_PrefabInstance": {
+          "kind": "null"
+        },
+        "m_PrefabAsset": {
+          "kind": "null"
+        },
+        "m_GameObject": {
+          "kind": "scene",
+          "id": 4474,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Survival",
+          "type": "GameObject"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "ba882d3fe81c0b111174fb9f879d227b",
+          "type": 3
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "animancer": {
+          "kind": "animancer",
+          "id": 15493,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Survival",
+          "animator": {
+            "kind": "scene",
+            "id": 7065,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Survival",
+            "type": "Animator",
+            "ordinal": 0,
+            "update_mode": 0
+          },
+          "action_on_disable": 0
+        },
+        "open": {
+          "kind": "clip",
+          "key": "574a98306afca4b468b5ac934e233b0e"
+        },
+        "header": {
+          "kind": "scene",
+          "id": 590,
+          "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Survival/Popup/Header",
+          "type": "GameObject"
+        },
+        "audioSource": {
+          "kind": "scene",
+          "id": 6622,
+          "path": "CanvasAndCamera/Canvas",
+          "type": "AudioSource",
+          "ordinal": 0
+        },
+        "openSFX": {
+          "kind": "audio_object",
+          "key": "a52978335470fbf4e95312a4e9c74489"
+        },
+        "winningsSFX": {
+          "kind": "audio_object",
+          "key": "1f06bbc776848ea49aa9809f420042fe"
+        }
+      },
+      "enable_events": []
+    }
+  ],
+  "views": {
+    "MatchEndView": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "scene",
+        "id": 400,
+        "path": "CanvasAndCamera",
+        "type": "GameObject"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "83c271d584b53453de273da0160c6d2f",
+        "type": 3
+      },
+      "m_Name": null,
+      "m_EditorClassIdentifier": null,
+      "popupsContainer": {
+        "kind": "scene",
+        "id": 501,
+        "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups",
+        "type": "GameObject"
+      },
+      "popups": [
+        {
+          "mode": 0,
+          "isWin": 1,
+          "popup": {
+            "kind": "scene",
+            "id": 1163,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign",
+            "type": "GameObject"
+          }
+        },
+        {
+          "mode": 0,
+          "isWin": 0,
+          "popup": {
+            "kind": "scene",
+            "id": 969,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Campaign",
+            "type": "GameObject"
+          }
+        },
+        {
+          "mode": 1,
+          "isWin": 1,
+          "popup": {
+            "kind": "scene",
+            "id": 2094,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Survival",
+            "type": "GameObject"
+          }
+        },
+        {
+          "mode": 1,
+          "isWin": 0,
+          "popup": {
+            "kind": "scene",
+            "id": 4474,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Survival",
+            "type": "GameObject"
+          }
+        },
+        {
+          "mode": 3,
+          "isWin": 1,
+          "popup": {
+            "kind": "scene",
+            "id": 4471,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_RandomAndFriendly",
+            "type": "GameObject"
+          }
+        },
+        {
+          "mode": 3,
+          "isWin": 0,
+          "popup": {
+            "kind": "scene",
+            "id": 4472,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_RandomAndFriendly",
+            "type": "GameObject"
+          }
+        },
+        {
+          "mode": 5,
+          "isWin": 1,
+          "popup": {
+            "kind": "scene",
+            "id": 4471,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_RandomAndFriendly",
+            "type": "GameObject"
+          }
+        },
+        {
+          "mode": 5,
+          "isWin": 0,
+          "popup": {
+            "kind": "scene",
+            "id": 4472,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_RandomAndFriendly",
+            "type": "GameObject"
+          }
+        },
+        {
+          "mode": 4,
+          "isWin": 1,
+          "popup": {
+            "kind": "scene",
+            "id": 1000,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked",
+            "type": "GameObject"
+          }
+        },
+        {
+          "mode": 4,
+          "isWin": 0,
+          "popup": {
+            "kind": "scene",
+            "id": 4470,
+            "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Ranked",
+            "type": "GameObject"
+          }
+        }
+      ],
+      "opponentForfeitedPopup": {
+        "kind": "scene",
+        "id": 2270,
+        "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_OpponentForfeited",
+        "type": "GameObject"
+      },
+      "opponentForfeitedText": {
+        "kind": "scene",
+        "id": 15616,
+        "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_OpponentForfeited/Popup/ContentContainer/Text_OpponentForfeited",
+        "type": "MonoBehaviour",
+        "ordinal": 0
+      },
+      "audioSource": {
+        "kind": "scene",
+        "id": 6622,
+        "path": "CanvasAndCamera/Canvas",
+        "type": "AudioSource",
+        "ordinal": 0
+      },
+      "deathWon": {
+        "kind": "audio_object",
+        "key": "566a312c145df7847bfbb33750ee2d7d"
+      },
+      "deathLost": {
+        "kind": "audio_object",
+        "key": "0800e6b32088444469cfaec7a75f4a54"
+      }
+    },
+    "RoundEndView": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "scene",
+        "id": 400,
+        "path": "CanvasAndCamera",
+        "type": "GameObject"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "fba89f16de1f275c9a13097fe225801f",
+        "type": 3
+      },
+      "m_Name": null,
+      "m_EditorClassIdentifier": null,
+      "popupsContainer": {
+        "kind": "scene",
+        "id": 327,
+        "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd/Popups",
+        "type": "GameObject"
+      },
+      "popups": [
+        {
+          "mode": 3,
+          "isWin": 1,
+          "popup": {
+            "kind": "scene",
+            "id": 4096,
+            "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd/Popups/Popup_RoundEnd",
+            "type": "GameObject"
+          }
+        },
+        {
+          "mode": 3,
+          "isWin": 0,
+          "popup": {
+            "kind": "scene",
+            "id": 4096,
+            "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd/Popups/Popup_RoundEnd",
+            "type": "GameObject"
+          }
+        },
+        {
+          "mode": 4,
+          "isWin": 1,
+          "popup": {
+            "kind": "scene",
+            "id": 4096,
+            "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd/Popups/Popup_RoundEnd",
+            "type": "GameObject"
+          }
+        },
+        {
+          "mode": 4,
+          "isWin": 0,
+          "popup": {
+            "kind": "scene",
+            "id": 4096,
+            "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd/Popups/Popup_RoundEnd",
+            "type": "GameObject"
+          }
+        },
+        {
+          "mode": 5,
+          "isWin": 1,
+          "popup": {
+            "kind": "scene",
+            "id": 4096,
+            "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd/Popups/Popup_RoundEnd",
+            "type": "GameObject"
+          }
+        },
+        {
+          "mode": 5,
+          "isWin": 0,
+          "popup": {
+            "kind": "scene",
+            "id": 4096,
+            "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd/Popups/Popup_RoundEnd",
+            "type": "GameObject"
+          }
+        }
+      ],
+      "playerXWonTheRoundTexts": [
+        {
+          "kind": "scene",
+          "id": 15827,
+          "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd/Popups/Popup_RoundEnd/Popup/Label/Text_PlayerXWonTheRound",
+          "type": "MonoBehaviour",
+          "ordinal": 0
+        }
+      ],
+      "audioSource": {
+        "kind": "scene",
+        "id": 6622,
+        "path": "CanvasAndCamera/Canvas",
+        "type": "AudioSource",
+        "ordinal": 0
+      },
+      "roundWon": {
+        "kind": "audio_object",
+        "key": "566a312c145df7847bfbb33750ee2d7d"
+      },
+      "roundLost": {
+        "kind": "audio_object",
+        "key": "0800e6b32088444469cfaec7a75f4a54"
+      }
+    }
+  },
+  "clips": {
+    "ca398d759e622cf46ae26b2760bb000a": {
+      "name": "VerdictPopup_Random_Open_Won",
+      "resource": "OriginalUIPopups/ca398d759e622cf46ae26b2760bb000a",
+      "events": [],
+      "source_path": "AnimationClip/VerdictPopup_Random_Open_Won.anim"
+    },
+    "9a54f5ca2c9d84a488bd84680cb47048": {
+      "name": "VerdictPopup_Ranked_Open_Lost",
+      "resource": "OriginalUIPopups/9a54f5ca2c9d84a488bd84680cb47048",
+      "events": [],
+      "source_path": "AnimationClip/VerdictPopup_Ranked_Open_Lost.anim"
+    },
+    "fccbf5000722b964f85034446bc7de29": {
+      "name": "VerdictPopup_Ranked_Open_LostAndRankDown",
+      "resource": "OriginalUIPopups/fccbf5000722b964f85034446bc7de29",
+      "events": [],
+      "source_path": "AnimationClip/VerdictPopup_Ranked_Open_LostAndRankDown.anim"
+    },
+    "92e8c9c2db019ce4bacfc1f93e3492ca": {
+      "name": "VerdictPopup_Campaign_Open_Lost",
+      "resource": "OriginalUIPopups/92e8c9c2db019ce4bacfc1f93e3492ca",
+      "events": [],
+      "source_path": "AnimationClip/VerdictPopup_Campaign_Open_Lost.anim"
+    },
+    "ed499e6459a7af34aaeda9ce378bf29e": {
+      "name": "VerdictPopup_Ranked_Open_Won",
+      "resource": "OriginalUIPopups/ed499e6459a7af34aaeda9ce378bf29e",
+      "events": [],
+      "source_path": "AnimationClip/VerdictPopup_Ranked_Open_Won.anim"
+    },
+    "712c62c2887686e43a51632c7f29f11a": {
+      "name": "VerdictPopup_Ranked_Open_WonAndRankUp",
+      "resource": "OriginalUIPopups/712c62c2887686e43a51632c7f29f11a",
+      "events": [
+        {
+          "time": 0.083333336,
+          "functionName": "PlayBadgeFillHaptic",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 1.1833333,
+          "functionName": "PlayRankUpHaptic",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 4.2,
+          "functionName": "PlayNewItemsInShopHaptic",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0,
+          "intParameter": 0,
+          "messageOptions": 0
+        }
+      ],
+      "source_path": "AnimationClip/VerdictPopup_Ranked_Open_WonAndRankUp.anim"
+    },
+    "7e21d53207d44b442a7963bb486261d1": {
+      "name": "RoundEndPopup_RoundEnd",
+      "resource": "OriginalUIPopups/7e21d53207d44b442a7963bb486261d1",
+      "events": [],
+      "source_path": "AnimationClip/RoundEndPopup_RoundEnd.anim"
+    },
+    "ec4184b91b7ba9c42a7e84487825ef62": {
+      "name": "VerdictPopup_Campaign_Open_Won",
+      "resource": "OriginalUIPopups/ec4184b91b7ba9c42a7e84487825ef62",
+      "events": [],
+      "source_path": "AnimationClip/VerdictPopup_Campaign_Open_Won.anim"
+    },
+    "532be4d39031262468bf46dfa09a13cb": {
+      "name": "VerdictPopup_Campaign_Jump",
+      "resource": "OriginalUIPopups/532be4d39031262468bf46dfa09a13cb",
+      "events": [],
+      "source_path": "AnimationClip/VerdictPopup_Campaign_Jump.anim"
+    },
+    "0a3be64110dd536498f19fafad7904c7": {
+      "name": "VerdictPopup_Survival_Open_Won",
+      "resource": "OriginalUIPopups/0a3be64110dd536498f19fafad7904c7",
+      "events": [
+        {
+          "time": 0.5,
+          "functionName": "PlayHeaderSFX",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 1,
+          "functionName": "PlayWinningsSFX",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0,
+          "intParameter": 0,
+          "messageOptions": 0
+        }
+      ],
+      "source_path": "AnimationClip/VerdictPopup_Survival_Open_Won.anim"
+    },
+    "574a98306afca4b468b5ac934e233b0e": {
+      "name": "VerdictPopup_Survival_Open_Lost",
+      "resource": "OriginalUIPopups/574a98306afca4b468b5ac934e233b0e",
+      "events": [
+        {
+          "time": 0.5,
+          "functionName": "PlayWinningsSFX",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0,
+          "intParameter": 0,
+          "messageOptions": 0
+        }
+      ],
+      "source_path": "AnimationClip/VerdictPopup_Survival_Open_Lost.anim"
+    }
+  },
+  "audio": {
+    "da9e089cd06de16429c9bc39c3a32d0b": {
+      "name": "WinPopupAppear",
+      "resource": "OriginalUIPopups/da9e089cd06de16429c9bc39c3a32d0b",
+      "source_path": "AudioClip/WinPopupAppear.ogg"
+    },
+    "a3502b8fb9676b64aaccabc5f8bb3267": {
+      "name": "LoseLevel",
+      "resource": "OriginalUIPopups/a3502b8fb9676b64aaccabc5f8bb3267",
+      "source_path": "AudioClip/LoseLevel.ogg"
+    },
+    "c49474b87adf0434baf13fa7c990b1e8": {
+      "name": "RankPointsBar_TickUp",
+      "resource": "OriginalUIPopups/c49474b87adf0434baf13fa7c990b1e8",
+      "source_path": "AudioClip/RankPointsBar_TickUp.ogg"
+    },
+    "eaae6b542d5ac4e4a8bfd1fcbbcd77f8": {
+      "name": "RankPointsBar_TickDown_2",
+      "resource": "OriginalUIPopups/eaae6b542d5ac4e4a8bfd1fcbbcd77f8",
+      "source_path": "AudioClip/RankPointsBar_TickDown_2.ogg"
+    },
+    "3f7f0c5df904e9f408ccdc335a87884d": {
+      "name": "DeathWon",
+      "resource": "OriginalUIPopups/3f7f0c5df904e9f408ccdc335a87884d",
+      "source_path": "AudioClip/DeathWon.ogg"
+    },
+    "036a77e9d04b4b34a80ede4c9a8127d2": {
+      "name": "DeathLost",
+      "resource": "OriginalUIPopups/036a77e9d04b4b34a80ede4c9a8127d2",
+      "source_path": "AudioClip/DeathLost.ogg"
+    },
+    "37cb1624587a4d248a9f9ade022e2427": {
+      "name": "RankPointsBar_BarFull_4",
+      "resource": "OriginalUIPopups/37cb1624587a4d248a9f9ade022e2427",
+      "source_path": "AudioClip/RankPointsBar_BarFull_4.ogg"
+    },
+    "2eb3729a91d32b74b89d78f752f9c9dd": {
+      "name": "WinPopupResult",
+      "resource": "OriginalUIPopups/2eb3729a91d32b74b89d78f752f9c9dd",
+      "source_path": "AudioClip/WinPopupResult.ogg"
+    },
+    "545444297e952264fbc83a228c483b09": {
+      "name": "Star_Awarded",
+      "resource": "OriginalUIPopups/545444297e952264fbc83a228c483b09",
+      "source_path": "AudioClip/Star_Awarded.ogg"
+    }
+  },
+  "audio_objects": {
+    "e0a353ebabed9904ca29a61484eb1cfb": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "null"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_Verdict_Won_Open",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "da9e089cd06de16429c9bc39c3a32d0b"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 1,
+        "max": 1
+      },
+      "pitch": {
+        "min": 1,
+        "max": 1
+      }
+    },
+    "a52978335470fbf4e95312a4e9c74489": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "null"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_LostLevel_PopupOpen",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "a3502b8fb9676b64aaccabc5f8bb3267"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 1,
+        "max": 1
+      },
+      "pitch": {
+        "min": 1,
+        "max": 1
+      }
+    },
+    "1f2d018625ba39c4c8bbff218e044d3f": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "null"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_RankPointsBar_TickUp",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "c49474b87adf0434baf13fa7c990b1e8"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 1,
+        "max": 1
+      },
+      "pitch": {
+        "min": 1.05,
+        "max": 1.05
+      }
+    },
+    "909b72079a8559f4e88e23a38e9d5d6d": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "null"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_RankPointsBar_TickDown",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "eaae6b542d5ac4e4a8bfd1fcbbcd77f8"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 1,
+        "max": 1
+      },
+      "pitch": {
+        "min": 1,
+        "max": 1
+      }
+    },
+    "566a312c145df7847bfbb33750ee2d7d": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "null"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_DeathWon",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "3f7f0c5df904e9f408ccdc335a87884d"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 1,
+        "max": 1
+      },
+      "pitch": {
+        "min": 1,
+        "max": 1
+      }
+    },
+    "0800e6b32088444469cfaec7a75f4a54": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "null"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_DeathLost",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "036a77e9d04b4b34a80ede4c9a8127d2"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 1,
+        "max": 1
+      },
+      "pitch": {
+        "min": 0.5,
+        "max": 0.5
+      }
+    },
+    "b12310d9c32bd4842bf524f4bc16414d": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "null"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_RankPointsBar_BarFull",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "37cb1624587a4d248a9f9ade022e2427"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 0.65,
+        "max": 0.65
+      },
+      "pitch": {
+        "min": 1,
+        "max": 1
+      }
+    },
+    "6270c0562ac10d547badf40629dcca1d": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "null"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_Verdict_RoundEnd",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "2eb3729a91d32b74b89d78f752f9c9dd"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 1,
+        "max": 1
+      },
+      "pitch": {
+        "min": 1,
+        "max": 1
+      }
+    },
+    "2a00b96b04eaece4b96f2e41ddee2ed6": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "null"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_Verdict_Star_1",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "545444297e952264fbc83a228c483b09"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 0.5,
+        "max": 0.5
+      },
+      "pitch": {
+        "min": 0.85,
+        "max": 0.85
+      }
+    },
+    "b94e9166c23e95e4c879fc3a4d770b0c": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "null"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_Verdict_Star_2",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "545444297e952264fbc83a228c483b09"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 0.5,
+        "max": 0.5
+      },
+      "pitch": {
+        "min": 1,
+        "max": 1
+      }
+    },
+    "9c08a78d3f7d9aa4c931a09901553e17": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "null"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_Verdict_Star_3",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "545444297e952264fbc83a228c483b09"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 0.5,
+        "max": 0.5
+      },
+      "pitch": {
+        "min": 1.15,
+        "max": 1.15
+      }
+    },
+    "b1714630c2eb10c4390ce97640d166ff": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "null"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_Verdict_Winnings",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "2eb3729a91d32b74b89d78f752f9c9dd"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 1,
+        "max": 1
+      },
+      "pitch": {
+        "min": 1,
+        "max": 1
+      }
+    },
+    "1f06bbc776848ea49aa9809f420042fe": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "kind": "null"
+      },
+      "m_PrefabInstance": {
+        "kind": "null"
+      },
+      "m_PrefabAsset": {
+        "kind": "null"
+      },
+      "m_GameObject": {
+        "kind": "null"
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "b3932926b3db91f6de3c30d032ff0322",
+        "type": 3
+      },
+      "m_Name": "AudioObject_Verdict_NoWinnings",
+      "m_EditorClassIdentifier": null,
+      "audioClip": [
+        {
+          "kind": "audio",
+          "key": "2eb3729a91d32b74b89d78f752f9c9dd"
+        }
+      ],
+      "loop": 0,
+      "volume": {
+        "min": 1,
+        "max": 1
+      },
+      "pitch": {
+        "min": 0.5,
+        "max": 0.5
+      }
+    }
+  },
+  "event_functions": [
+    "PlayBadgeFillHaptic",
+    "PlayHeaderSFX",
+    "PlayNewItemsInShopHaptic",
+    "PlayRankUpHaptic",
+    "PlayWinningsSFX"
+  ],
+  "nonzero_event_object_references": []
+}

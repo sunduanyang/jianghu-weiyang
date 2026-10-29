@@ -10,7 +10,7 @@ from UnityPy.helpers.TypeTreeHelper import read_value, TypeTreeConfig
 from UnityPy.streams.EndianBinaryReader import EndianBinaryReader
 
 from prepare_bloody_recovery_project import resolve_rig
-from build_bloody_item_catalog import graph_index
+from build_bloody_item_catalog import graph_index,plain_float,plain_bool
 
 
 def main():
@@ -61,8 +61,11 @@ def main():
     for item in deps['items']:
         if item['script']!='SourcePrefab_ArmorItem':continue
         source=item['source'];mapping={}
+        slot={8:'Hat',9:'TopL1',10:'TopL2',11:'TopL3',12:'TopL4',13:'Gloves',14:'BottomL1',15:'BottomL2',16:'BottomL3',17:'Shoes'}.get(item['data']['Type'])
         for name,pointer in item['data'].items():
             if not name.startswith('SourceArmorPart_') or not pointer['m_PathID']:continue
+            suffix=name.rsplit('_',1)[-1]
+            if slot is None or suffix not in {slot,slot.replace('BottomL','Bottom')}:continue
             obj=PPtr(**pointer,assetsfile=files[source['file']]).deref()
             pointer=obj.read(check_read=False).m_Script
             if not pointer.m_PathID:continue
@@ -76,9 +79,12 @@ def main():
     # that item's public fields. Preserve its source geometry/settings too.
     extras={}
     original_rows={(i['source']['file'],i['source']['id']):i for i in deps['items']}
+    head_rows={(i['source']['file'],str(i['data']['m_GameObject']['m_PathID'])):i for i in deps['items']
+        if i['script']=='SourcePrefab_HandItem' and i['data']['IsFlailHead']}
     for record in catalog['items']:
-        filename=record['source']['file']
-        goid=str(original_rows[(filename,record['source']['id'])]['data']['m_GameObject']['m_PathID'])
+        runtime_source=record.get('runtime_source',record['source'])
+        filename=runtime_source['file']
+        goid=str(original_rows[(filename,runtime_source['id'])]['data']['m_GameObject']['m_PathID'])
         for component in deps['item_graphs'][filename]['objects'][goid]['m_Component']:
             obj=files[filename].objects[component['component']['m_PathID']]
             if obj.type.name!='MonoBehaviour':continue
@@ -89,9 +95,10 @@ def main():
             data=typed(obj,script)
             extras[(filename,str(data['m_GameObject']['m_PathID']))]=data
     for record in catalog['items']:
-        filename=record['source']['file']
+        runtime_source=record.get('runtime_source',record['source'])
+        filename=runtime_source['file']
         objects,transforms,go_to_t,component_go=graph_index(deps['item_graphs'][filename])
-        root_go=str(original_rows[(filename,record['source']['id'])]['data']['m_GameObject']['m_PathID'])
+        root_go=str(original_rows[(filename,runtime_source['id'])]['data']['m_GameObject']['m_PathID'])
         root_t=go_to_t[root_go]
         cache={root_t:''}
         def path(t):
@@ -127,6 +134,17 @@ def main():
                 if kind:
                     bindings[i]=dict(path=local_path,kind=kind,index=counts.get(kind,0));counts[kind]=counts.get(kind,0)+1
         record['component_bindings']=bindings
+        record['flail_heads']=[]
+        original=original_rows[(filename,runtime_source['id'])]['data']
+        for pointer in original['FlailHeads']:
+            head=head_rows.get((filename,str(pointer['m_PathID'])))
+            if head is None:continue
+            h=head['data']
+            record['flail_heads'].append(dict(name=objects[str(h['m_GameObject']['m_PathID'])]['m_Name'],
+                source=head['source'],item_id=h['itemId'],label=h['Name'],category=h['HandItemType'],
+                two_handed=plain_bool(h['obs_DoubleHanded']),blunt=plain_bool(h['isBlunt']),
+                stats={k:plain_float(h[k]) for k in ['obs_Damage','obs_Defense','obs_Weight']},
+                fields=resolve(h),component_bindings=bindings))
     (destination/'OriginalItemCatalog.json').write_text(json.dumps(catalog,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     print(json.dumps({k:{n:len(v) for n,v in r['controllers'].items() if n in wanted} for k,r in output.items()}))
 

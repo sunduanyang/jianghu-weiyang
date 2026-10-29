@@ -59,8 +59,8 @@ public sealed partial class PhysicsDuel {
             // One reference 60 Hz AddForce call; express its impulse explicitly
             // so four internal contact steps cannot divide the push by four.
             Vector2 impulse=new Vector2(attacker.facing*KickForce,vertical)/60;
-            mover.AddForce(impulse,ForceMode2D.Impulse);
-            if(PassedOut)pelvis.rb.AddForce(impulse*20,ForceMode2D.Impulse);
+            mover.CombatAddForce(impulse,ForceMode2D.Impulse);
+            if(PassedOut)pelvis.rb.CombatAddForce(impulse*20,ForceMode2D.Impulse);
             float dealt=ApplyReferenceGlobalDamage(1);
             game.hits++;attacker.landedHits++;attacker.lastHit=game.Clock;
             game.Impact(pelvis.rb.position,false,dealt);return true;
@@ -73,8 +73,8 @@ public sealed partial class PhysicsDuel {
             // Native OnTriggerEnter2D uses AddForce(Vector2), Force mode. Its
             // one 60 Hz force application is represented as an impulse so the
             // host's extra contact substeps cannot divide the source push.
-            Vector2 impulse=force/60;baseBody.AddForce(impulse,ForceMode2D.Impulse);
-            if(PassedOut)pelvisBody.AddForce(impulse*20,ForceMode2D.Impulse);
+            Vector2 impulse=force/60;baseBody.CombatAddForce(impulse,ForceMode2D.Impulse);
+            if(PassedOut)pelvisBody.CombatAddForce(impulse*20,ForceMode2D.Impulse);
             float dealt=ApplyReferenceGlobalDamage(1);kickImmunityUntil=game.Clock+.5f;
             sourceKickReceiverStage=1;sourceKickReceiverAt=game.Clock+(float)config["timeUntilDampingStart"].N;
             kickedUntil=sourceKickReceiverAt+(float)config["timeUntilDampingReset"].N;

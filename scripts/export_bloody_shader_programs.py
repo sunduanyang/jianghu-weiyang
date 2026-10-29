@@ -23,7 +23,7 @@ def main():
         shader=obj.read()
         if not shader.m_ParsedForm:continue
         name=shader.m_ParsedForm.m_Name
-        if not name.startswith(('Shader Graphs/','BB/','Custom/','Hidden/PaintCore/')):continue
+        if not name.startswith(('Shader Graphs/','BB/','Custom/','Hidden/PaintCore/','Hidden/TopRim','Hidden/FlipView')):continue
         directory=out/name.replace('/','_');directory.mkdir(exist_ok=True)
         structure=obj.read_typetree()
         structure.pop('compressedBlob',None)

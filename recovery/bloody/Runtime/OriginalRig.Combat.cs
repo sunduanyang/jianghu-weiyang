@@ -8,11 +8,16 @@ public sealed partial class OriginalRig {
     public OriginalItem leftItem,rightItem;
     public bool doubleHanded,dead,passedOut,headDisabled,leftArmDisabled,rightArmDisabled,leftLegDisabled,rightLegDisabled;
     public float healthMax,staminaMax,totalWeight,totalDefense;
+    public Transform OriginalEquipmentWeaponCOM {get;private set;}
+    public Transform OriginalEquipmentShieldCOM {get;private set;}
+    public Transform OriginalEquipmentChestCOM {get;private set;}
     public bool OriginalFlipped=>flipped;
     public bool GettingUp=>gettingUpUntil>Time.time;
     public event Action<OriginalImpact> ImpactOccurred;
     public event Action<OriginalRig> Died,PassedOut,Recovered;
     public event Action<OriginalBodyPart,OriginalPartMode> PartModeChanged;
+    // Read-only lifecycle diagnostics; no production listener is required.
+    public event Action<int> OriginalDeathStageCompleted;
     J combatSource,vitality,damageSettings,equipmentSettings;
     static J itemCatalog;
     readonly Dictionary<int,OriginalBodyPart> combatParts=new Dictionary<int,OriginalBodyPart>();
@@ -38,6 +43,11 @@ public sealed partial class OriginalRig {
         vitality=controllers["CharacterVitality"][0]["data"];
         damageSettings=controllers["CharacterDamageCalculator"][0]["data"];
         equipmentSettings=controllers["CharacterConfigApplier"][0]["data"];
+        // Keep the source applier's serialized initial references. Equipment
+        // changes overwrite individual caches; they never reset both first.
+        OriginalEquipmentWeaponCOM=ResolveTransform(equipmentSettings["PlayerWeaponCOM"]);
+        OriginalEquipmentShieldCOM=ResolveTransform(equipmentSettings["PlayerShieldCOM"]);
+        OriginalEquipmentChestCOM=ResolveTransform(equipmentSettings["PlayerChestCOM"]);
         health=healthMax=(float)vitality["MaxHealth"].N;stamina=staminaMax=(float)vitality["MaxStamina"].N;
         recharge=(float)vitality["staminaRechargePerSecond"].N;
         foreach(var row in controllers["bt"].A) {
@@ -112,31 +122,43 @@ public sealed partial class OriginalRig {
     }
     void DieOriginal() {
         if(dead)return;dead=true;
-        StopOriginalAI();
+        DisableOriginalAIUpdates();
         rootBody.bodyType=RigidbodyType2D.Static;gameObject.layer=22;
         var kick=Resolve<Collider2D>(vitality["extraColliderKick"]);if(kick!=null)kick.enabled=false;
-        Died?.Invoke(this);StartCoroutine(OriginalDeathStages());
+        // cmu 0x350d948 invokes expression first, starts the coroutine
+        // (whose first stage runs synchronously), then publishes OnDeath.
+        if(OriginalExpression!=null)OriginalExpression.Died();
+        StartCoroutine(OriginalDeathStages());Died?.Invoke(this);
     }
     IEnumerator OriginalDeathStages() {
         var overlap=Resolve<Collider2D>(vitality["overlapCollider"]);if(overlap!=null)overlap.enabled=false;
         SetOriginalObject(vitality["vaporContainer"],false);SetOriginalObjects(vitality["ExtraColliders"],false);
+        OriginalDeathStageCompleted?.Invoke(0);
         yield return new WaitForSeconds(.025f);
         foreach(var p in combatParts.Values)p.SetPhysicsDead();
+        OriginalDeathStageCompleted?.Invoke(1);
         yield return new WaitForSeconds(.025f);
         foreach(var r in vitality["bodyFixedJoints2D"].A) {var joint=Resolve<FixedJoint2D>(r);if(joint!=null){joint.frequency=10;joint.dampingRatio=0;}}
+        OriginalDeathStageCompleted?.Invoke(2);
         yield return new WaitForSeconds(.025f);
         SetOriginalObject(vitality["weaponSelfColliderWhenDead"],true);DropOriginalHand(0);DropOriginalHand(1);
+        OriginalDeathStageCompleted?.Invoke(3);
         yield return new WaitForSeconds(.025f);
         foreach(var r in vitality["fixedJoints2DToKill"].A){var joint=Resolve<FixedJoint2D>(r);if(joint!=null)joint.enabled=false;}
+        OriginalDeathStageCompleted?.Invoke(4);
         yield return new WaitForSeconds(.025f);
         SetOriginalObjects(vitality["gameObjectsToDeactivateUponDeath"],false);
+        OriginalDeathStageCompleted?.Invoke(5);
         yield return new WaitForSeconds(.025f);
         SetOriginalObjects(vitality["gameObjectsToActivateUponDeath"],true);
+        OriginalDeathStageCompleted?.Invoke(6);
     }
     void SetOriginalObject(J r,bool active){var t=ResolveTransform(r);if(t!=null)t.gameObject.SetActive(active);}
     void SetOriginalObjects(J refs,bool active){foreach(var r in refs.A)SetOriginalObject(r,active);}
     public void DropOriginalHand(int hand) {
-        var item=hand==0?leftItem:rightItem;if(item==null||item.dropped)return;
+        // Native DropHandItem disables each hand's joint even when the same
+        // two-hand item was already marked Dropped by the other hand.
+        var item=hand==0?leftItem:rightItem;if(item==null)return;
         var joint=Resolve<FixedJoint2D>(equipmentSettings[hand==0?"handFixedJoint2DL":"handFixedJoint2DR"]);if(joint!=null)joint.enabled=false;
         item.transform.SetParent(null,true);
         foreach(var d in drainers)if(d.item==item&&d.isLeft==(hand==0))d.disabled=true;
@@ -172,7 +194,7 @@ public sealed partial class OriginalRig {
     OriginalItem CreateOriginalItem(J record,int hand) {
         var prefab=Resources.Load<GameObject>(record["resource"].S);
         if(prefab==null)throw new InvalidOperationException("Missing original item prefab: "+record["resource"].S);
-        bool shield=record["category"].I==8;
+        bool shield=record["fields"]["Type"].I==7;
         string mount=hand==2?"handItemL_TransformDoubleHandedWeapon":hand==0?(shield?"handItemL_TransformShield":"handItemL_TransformWeapon"):(shield?"handItemR_TransformShield":"handItemR_TransformWeapon");
         var parent=ResolveTransform(equipmentSettings[mount]);
         var go=Instantiate(prefab,parent,false);go.SetActive(true);
@@ -184,19 +206,33 @@ public sealed partial class OriginalRig {
             var p=go.transform.localPosition;p.z-=.001f;go.transform.localPosition=p;
             BindOriginalHand(item,0,item.handle1,true);BindOriginalHand(item,1,item.handle2,true);
         } else BindOriginalHand(item,hand,item.handle1,false);
+        CacheOriginalItemCOM(item,hand==2);
         item.ShieldWasHit+=ConsumeOriginalStamina;item.WeaponHitShield+=ConsumeOriginalStamina;
         return item;
+    }
+    void CacheOriginalItemCOM(OriginalItem item,bool two) {
+        if(item.counterweightBody==null)throw new InvalidOperationException("Source equipped item has no CounterweightRigidbody2D COM: "+item.name);
+        var counter=item.counterweightBody.transform;
+        // Apply2H0x34231a8 writes only WeaponCOM. Single-hand Type6/7
+        // writes its own cache, then0x3421ba4/0x3422a78 tests BOTH with
+        // Unity Object==null and assigns BOTH Chest when either is null.
+        if(two||item.OriginalEquipmentType==6)OriginalEquipmentWeaponCOM=counter;
+        else if(item.OriginalEquipmentType==7)OriginalEquipmentShieldCOM=counter;
+        if(!two&&(OriginalEquipmentWeaponCOM==null||OriginalEquipmentShieldCOM==null))
+            OriginalEquipmentWeaponCOM=OriginalEquipmentShieldCOM=OriginalEquipmentChestCOM;
     }
     void BindOriginalHand(OriginalItem item,int hand,Transform handle,bool two) {
         string side=hand==0?"L":"R";
         var joint=Resolve<FixedJoint2D>(equipmentSettings["handFixedJoint2D"+side]);
-        if(joint!=null){joint.enabled=false;joint.connectedBody=item.itemBody;if(two&&handle!=null)joint.connectedAnchor=handle.localPosition;joint.enabled=true;}
+        // ApplyHandItemLeft/Right also assign Handle_1, not only the two-hand
+        // branch (native 0x3421c34 / 0x3422b08 / 0x342303c / 0x3423084).
+        if(joint!=null){joint.enabled=false;joint.connectedBody=item.itemBody;if(handle!=null)joint.connectedAnchor=handle.localPosition;joint.enabled=true;}
         var hinge=Resolve<HingeJoint2D>(equipmentSettings["handHingeJoint2D"+side]);
         var dummy=Resolve<HingeJoint2D>(equipmentSettings["handHingeJoint2D"+side+(two?"_Dummy_TwoHanded":"_Dummy_OneHanded")]);
         if(hinge!=null&&dummy!=null)hinge.limits=dummy.limits;
         var com=hand==0?leftHandCOM:rightHandCOM;
-        if(com!=null)com.mass=(float)equipmentSettings[item.isShield?"handCOMShieldMass":"handCOMWeaponMass"].N;
-        foreach(var r in equipmentSettings[hand==0?"armLeftRidibodies":"armRightRidibodies"].A) {var b=Resolve<Rigidbody2D>(r);if(b!=null)b.linearDamping=b.angularDamping=item.isShield?3:5;}
+        if(com!=null)com.mass=(float)equipmentSettings[item.OriginalUsesShieldMount?"handCOMShieldMass":"handCOMWeaponMass"].N;
+        foreach(var r in equipmentSettings[hand==0?"armLeftRidibodies":"armRightRidibodies"].A) {var b=Resolve<Rigidbody2D>(r);if(b!=null)b.linearDamping=b.angularDamping=item.OriginalUsesShieldMount?3:5;}
     }
     // CharacterConfigApplier Apply{Slot} populates bt objects independently
     // from visual erasure/tucking. A hidden layer retains its source defense.
@@ -250,6 +286,7 @@ public sealed class OriginalInternalOrgan : MonoBehaviour {
     public OriginalRig rig;public OriginalBodyPart linkedPart;public Rigidbody2D body;J config;
     public void Initialize(OriginalRig owner,J source){rig=owner;config=source;linkedPart=rig.BodyPart(source["LinkedBodyPart"]["id"].I);body=rig.Resolve<Rigidbody2D>(source["Rigidbody2D"]);}
     void OnTriggerEnter2D(Collider2D collider) {
+        if(!collider.CompareTag("HandItem"))return;
         var item=OriginalItem.From(collider);if(item==null||item.owner==rig)return;
         var material=OriginalCombatRules.Surface(collider.sharedMaterial);
         if(material==OriginalSurface.MetalBlade||material==OriginalSurface.MetalSpike)rig.TryOriginalImpalement(this,item);

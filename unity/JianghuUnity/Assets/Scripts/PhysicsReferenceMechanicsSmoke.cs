@@ -16,8 +16,10 @@ public sealed partial class PhysicsBattleSmoke {
         int[] studySteps=comparison?new[]{4,8,12,16}:new[]{0};
         var weapons=comparison?new[]{DuelWeapon.Fist,DuelWeapon.All.First(w=>w.id=="sword"),DuelWeapon.All.First(w=>w.id=="greatsword"),DuelWeapon.All.First(w=>w.id=="spear")}:new[]{DuelWeapon.Fist}.Concat(DuelWeapon.All).ToArray();
         foreach(var weapon in weapons)foreach(int steps in studySteps){
+            string requestedWeapon=GameClient.Arg("-referenceStressWeapon");if(requestedWeapon.Length>0&&weapon.id!=requestedWeapon)continue;
             arena.campaign.battle["fighters"]=new J(new List<J>{ReferenceFighter(weapon,weapon.id=="sword"),ReferenceFighter(weapon,weapon.id=="sword")});
-            var row=arena.ProbeReferenceStress(steps);rows.Add(row);File.WriteAllText(Path.Combine(output,"solver-measurements.json"),new J(rows).ToString());
+            float duration=float.TryParse(GameClient.Arg("-referenceStressSeconds"),System.Globalization.NumberStyles.Float,System.Globalization.CultureInfo.InvariantCulture,out var seconds)&&seconds>=1&&seconds<=180?seconds:180;
+            var row=arena.ProbeReferenceStress(steps,duration);rows.Add(row);File.WriteAllText(Path.Combine(output,"solver-measurements.json"),new J(rows).ToString());
             Check("solver measurement completed "+weapon.id+" / "+steps,row["ticks"].I>0&&row["max_gap"].N<1,row);yield return null;
             if(!comparison)Check("production solver keeps active joint limits "+weapon.id,row["limit_bound_passed"].B,row);
             if(!comparison)Check("formal arena contains active roots "+weapon.id,row["arena_bound_passed"].B,J.O("max_root_x",row["max_root_x"]));

@@ -1,0 +1,167 @@
+{
+  "source_apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "status": "native_logic_integrated_whole_match_parity_pending",
+  "entry_point": "OriginalRig.InitializeAI",
+  "runtime_sources": [
+    "Runtime/OriginalRig.AI.cs",
+    "Runtime/OriginalHandAnimations.cs",
+    "Runtime/OriginalAIExecution.cs",
+    "Runtime/OriginalRig.Expressions.cs",
+    "Runtime/OriginalExpressions.cs",
+    "Runtime/OriginalVoice.cs",
+    "Runtime/OriginalRig.Startup.cs",
+    "Runtime/OriginalAnimationController.cs",
+    "Runtime/OriginalKienematicDynamicEnabler.cs",
+    "Runtime/OriginalInputAdapter.cs",
+    "Runtime/OriginalUIFlow.cs",
+    "Runtime/OriginalUITransitionAnimator.cs",
+    "Runtime/OriginalUIPopups.cs",
+    "Runtime/OriginalUIPopupDriver.cs",
+    "Runtime/OriginalUIPopupResult.cs",
+    "Runtime/OriginalUIAudio.cs",
+    "Runtime/OriginalCountdownView.cs"
+  ],
+  "restored_ai": [
+    "All 12 CharacterEnemyAI iterator state machines bz,ca,cc,cd,ce,cf,cg,ch,ci,cj,ck,cl",
+    "Independent coarse-state, action-scheduling and reactive loops",
+    "Bully/Matador switching, opponent nub activity, threat-height exposure, aggression and reaction rules",
+    "Original move taps, cross-side cooldown, four-tap kick, dodge counter, attack feint, follow-up, retreat and victory",
+    "AIHandsInputRelayer weighted 18 animation bundles with duplicate entries preserved",
+    "Original legacy clips, animation starting-time offsets, defending coroutine and local-X/world-Y tweens",
+    "Optional cv procedural strike profiles, variation, aim, both-hand support curves and shield tracking",
+    "Explicit Resources manifest loads all six source hand clips required across weighted bundles, including Shield to 2Hands_Stab"
+  ],
+  "restored_expression_voice": [
+    "CharacterExpressions Charge/Idle/Hit/PantHeavy/Laugh/Died and both screaming coroutines",
+    "Original byte-sequence and two six-bit expression parameters, including banker rounding",
+    "12 original expression clips: nine base clips and three inverted variants",
+    "Original Animator target, clip animation events and FromStart fades through Animation Playables",
+    "29 AudioObjects and 112 original audio clips; five voice packs, gender pitch and spooky suppression branch",
+    "VoiceSFX Random.InitState(Time.renderedFrameCount), pitch/volume/clip draw order, delayed play and volume fades",
+    "Original CharacterAnimationController repeating integer random waits, one source component per actor"
+  ],
+  "important_native_details": {
+    "animation_attack_start": "AnimationState.time=randomOffset*.5, not speed",
+    "legacy_attack_wait_seconds": {
+      "single": 0.95,
+      "double": 1.25
+    },
+    "procedural_default_enabled": false,
+    "cv_rest": [
+      0.425,
+      0.55
+    ],
+    "cv_rest_left": [
+      0.39,
+      0.7
+    ],
+    "cv_rest_right": [
+      0.07,
+      0.7
+    ],
+    "defending_tweens": "DOLocalMoveX plus DOMoveY; OutCirc guards, OutQuad return",
+    "dead_ai": "Behaviour.enabled=false stops Update but leaves coroutines/Invoke running; use DisableOriginalAIUpdates for death, StopOriginalAI for disposal",
+    "round_end": "CharacterVitality.cmu calls HandlePlayerDeath synchronously; no added delay. Survivor AI continues into EnjoyingTheVictory.",
+    "death_expression_start": "Immediate Play, normalized time .25 + .25*quantizedParameter",
+    "startup_kinematic": "Source rigidbody list only, four yield-null frames; not attached to the three fighter prefabs",
+    "voice_config_refresh": "ApplyOriginalAppearance refreshes SetVoice without a second Idle/voice pulse",
+    "time_scale": "Original UI RelayTimeScale timelines exported; cinematic and round-end animators use UnscaledTime, while AI invokes remain scaled",
+    "spawn_points": [
+      [
+        -1.5,
+        0.5,
+        0
+      ],
+      [
+        1.5,
+        0.5,
+        0
+      ]
+    ],
+    "death_expression_subscription": "No Died subscription; direct native-position invocation in combat before stage 0 and external death event",
+    "verdict_popup_start": "View immediately plays deathWon/deathLost while Popups stays disabled; original RoundOrMatchEnd_Enter curve activates Popups at 2.5 seconds, starting child OnEnable/open animation/audio."
+  },
+  "verification": {
+    "native_oracle": "Original ARM64 instructions executed under task-local Unicorn; bounded Random.Range and libm hooks",
+    "shipped_csharp_under_test": "Actual OriginalStrikeCurves class, AI scalar expressions and OriginalExpressionPulse.Pack compiled with portable Unity math shims",
+    "default_profiles": 6,
+    "single_hand_curve_cases": 936,
+    "two_hand_curve_cases": 144,
+    "varied_profiles": 54,
+    "scalar_cases": 5,
+    "expression_pulse_cases": 960,
+    "compared_values": 4148,
+    "failures": 0,
+    "tolerance": 2e-05,
+    "maximum_absolute_error": 7.6293945e-06,
+    "scripts": [
+      "scripts/verify_bloody_ai_native.py",
+      "scripts/verify_bloody_ai_port.py"
+    ],
+    "report": "output/bloody-full-port-20261028/ai-check/native-ai-comparison.txt",
+    "core_roslyn_compilation": "All runtime sources compiled with Unity managed, UI, TMP and SpriteShape references; no errors, obsolete FindObjects warnings only. Shared Unity build owned by root.",
+    "input_native_comparison": {
+      "script": "scripts/verify_bloody_input_port.py",
+      "native_methods": [
+        "Joystick.OnDrag",
+        "DynamicJoystick.dty",
+        "Joystick.dty",
+        "PlayerInputHandler.GetNetworkInput fixed-point instructions"
+      ],
+      "sequences": 20,
+      "drag_points": 700,
+      "compared_values": 2900,
+      "failures": 0,
+      "maximum_absolute_error": 0,
+      "scope": "Unbound adapter drag arithmetic, quantization and raw hand mapping; bound UGUI/camera projection requires engine validation"
+    },
+    "ui_transition_native_comparison": {
+      "script": "scripts/verify_bloody_ui_transition.py",
+      "checks": 179,
+      "failures": 0,
+      "source_bound_nodes": 76,
+      "source_assets": 45,
+      "scope": "Original ARM64 Enter/Exit/OnDisable/iterator call and yield parity; full Animator/UGUI scheduling is pending Unity capture",
+      "source_assets_matched_before_target_script_remap": true,
+      "prepared_script_references": "Old TMP/UGUI/Light2D animation script PPtr references remapped to target Unity6000.4 scripts; preserve curves/events rather than whole-file SHA."
+    },
+    "ui_popup_native_comparison": {
+      "math_script": "scripts/verify_bloody_ui_popup_math.py",
+      "math_checks": 2580,
+      "math_maximum_error": 0,
+      "audio_script": "scripts/verify_bloody_ui_audio.py",
+      "audio_checks": 270,
+      "asset_script": "scripts/verify_bloody_ui_popups.py",
+      "asset_checks": 233,
+      "popup_hosts": 10,
+      "source_clips": 11,
+      "source_audio": 9,
+      "audio_objects": 13,
+      "animation_events": 6,
+      "source_unbound_curve_count": 1,
+      "failures": 0,
+      "scope": "Original scalar/audio calls and source assets; full Playable/tween/UGUI scheduling and remote progression service parity still require engine/reference validation"
+    },
+    "countdown_native_comparison": {
+      "script": "scripts/verify_bloody_countdown.py",
+      "checks": 1854,
+      "failures": 0,
+      "update_cases": 84,
+      "enable_cases": 4,
+      "native_ease_samples": 202,
+      "scope": "Actual shipped C# OnEnable/Update/tween setup and arithmetic with lifecycle/graphics shims; engine update order, TMP, parent exit and audio playback still require capture."
+    }
+  },
+  "explicit_limits": [
+    "Numeric oracle coverage does not establish complete-match physics or input replay parity.",
+    "Unity coroutine, Animator/Playable, DOTween-replacement tween and original Fusion render scheduling still require frame-by-frame original-device comparison.",
+    "Expression animation blending uses the original clips and native fade mode intent, but equivalence to every Animancer overlap case has not been established.",
+    "Global random identity depends on matching all voice/render frame timing and other original random consumers, not only the recovered AI methods.",
+    "Original AIDebugView text and arrow presentation are not restored by these files.",
+    "Native five-mount equipment references are adapted to the separately recovered two-hand item API; runtime binding and original match configuration remain integration checks.",
+    "Campaign/survival/ranked popup services require real progression, wallet, rank configuration and advertising callbacks; their server/account data is not fabricated by the local Friendly combat host."
+  ],
+  "external_coupling_audit": "AI_EXTERNAL_COUPLING_AUDIT.md",
+  "input_boundary_audit": "INPUT_RECOVERY_AUDIT.md",
+  "ui_flow_audit": "UI_FLOW_RECOVERY_AUDIT.md"
+}

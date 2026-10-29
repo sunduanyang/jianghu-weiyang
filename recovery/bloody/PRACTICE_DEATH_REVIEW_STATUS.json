@@ -1,0 +1,37 @@
+{
+  "scope": "Original Practice death verdict and event bridge; no invented HP/rig resurrection",
+  "source_apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "source_rules": {
+    "MatchRulesPractice.OnPlayerDeath": "VA0x3644448 synchronously raises df/da.RaiseHpResetRequested then returns DeathVerdict.None0",
+    "RaiseHpResetRequested": "VA0x351b034 invokes the existing Action at df/da statics+0x48, or returns with no listener; no HP/stamina/dead/part-mode/joint writes",
+    "aliases": "oee VA0x351bc74 and mzm VA0x351c0b4 raise the same slot and also perform no recovery themselves",
+    "host_death_verdict": "NetworkedGameController.HandlePlayerDeath changes score/state only for verdict1/2; None0 leaves the active round and score unchanged",
+    "vitality_order": "CharacterVitality.Render copies NetDead to cached Dead before cmu. cmu disables mover/kick, sets root body static/layer22, invokes expression, starts the death coroutine synchronously through its first yield, then emits OnDeathEvent and notifies the match controller.",
+    "cms_cmt": "CharacterVitality.cms/cmt only forward current health/stamina change events. They are not reset functions."
+  },
+  "source_subscriber_audit": {
+    "canonical_add": "VA0x351af0c",
+    "canonical_remove": "VA0x351b3bc",
+    "static_scan": "No direct B/BL caller for the canonical add/remove in the executable source segment. Only df/da methods directly read their shared TypeInfo GOT cell in the scanned game-code range.",
+    "conclusion": "No actual reset subscriber has been established. Static absence does not exclude reflection or indirect registration. The minimal bridge emits the request and does not synthesize revival.",
+    "native_exports": "output/bloody-full-port-20261028/native-practice-reset-c, 75 source methods"
+  },
+  "host_integration": {
+    "owner": "Root OriginalPreview.Match.cs",
+    "api": "public event Action OriginalHpResetRequested",
+    "mode2_death": "Publish request while OriginalState remains4, then return without calling FinishOriginalRound",
+    "rig_mutation": "None added; no InitializeCombat, HP assignment, dead-flag clearing, pose restoration or respawn",
+    "pause_restart": "Normal existing host/UI path remains available; a live naturally caused Practice death followed by Pause/Restart has not been exercised here"
+  },
+  "validation": {
+    "script": "scripts/verify_bloody_practice_death.py",
+    "native_cases": 8,
+    "native_case_scope": "Actual source Practice OnPlayerDeath and all three raise entry points, each with/without a bounded listener; callback count, verdict0 and untouched rule-object bytes",
+    "actual_host_source_slice_assertions": 252,
+    "slice_scope": "Current OnOriginalDeath body extracted verbatim, compiled with observable FinishOriginalRound/event boundaries; modes0/2/5, states0..6, listener absent/present",
+    "failures": 0,
+    "evidence": "output/bloody-full-port-20261028/ai-check/practice-death/practice-death-check.json",
+    "live_natural_death_pause_restart_verified": false
+  },
+  "runtime_parity_verified": false
+}

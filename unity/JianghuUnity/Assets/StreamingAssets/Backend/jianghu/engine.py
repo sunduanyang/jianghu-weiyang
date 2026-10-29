@@ -11,7 +11,7 @@ from . import demography, government, items, appearance
 from . import social
 from . import politics, territory
 from .atlas import PLACES, FACTIONS, COUNTRIES, ROUTES, NEIGHBORS, MAP_VERSION, ERA
-from . import careers, social_ranks, undertakings, fame, visits, turning, creed
+from . import careers, crafts, social_ranks, undertakings, fame, visits, turning, creed
 from . import martial, martial_manuals, physical_combat as combat, player_interactions, player_social
 from . import city_maps, relationships, organizations, protagonist, settlements, society, temperament, goals
 from . import npc_plans, npc_memory, economics, rank_progression, local_life, llm_policy, npc_attention
@@ -817,7 +817,7 @@ class World:
             destination_government['fund'] += a['toll']
             destination_government['revenue'] += a['toll']
             politics.record_crossing(self, a)
-            n['health'] = clamp(n['health'] - min(10, 1+a['km']/300))
+            n['health'] = clamp(n['health'] - min(10, 1+a['km']/300)*crafts.travel_strain(n))
             if i not in n['visited_places']:
                 n['visited_places'].append(i)
             facts.update({key: a[key] for key in ('km', 'fare', 'toll', 'cost', 'border', 'origin_country', 'destination_country')})
@@ -841,7 +841,10 @@ class World:
             if n['illness']:
                 n['illness']['severity'] *= .45
                 n['illness']['remaining'] = min(2, n['illness']['remaining'])
-            if n['wound']:
+            if n['wound'] and n['wound'].get('parts'):
+                # Part injuries heal by treatment, not by a single visit.
+                facts['part_treatment'] = crafts.treat_parts(n['wound'], crafts.value(q, 'medicine'))
+            elif n['wound']:
                 n['wound']['remaining'] = 1
             people.append(q['id'])
             self.link(n, q, 4, 3)
@@ -1179,6 +1182,7 @@ class World:
             else:
                 self.player['wealth'] += 24
         martial.recover(self.player)
+        crafts.player_month(self)
         self.player['health'] = clamp(self.player['health']+6+items.bonuses(self, 'player')['recovery'])
         protagonist.on_month(self)
         if player_first:

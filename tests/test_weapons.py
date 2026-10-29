@@ -2,7 +2,7 @@ from copy import deepcopy
 import math
 import unittest
 
-from jianghu import combat_attributes, items, physical_combat as combat, weapons
+from jianghu import combat_attributes, crafts, items, physical_combat as combat, weapons
 from jianghu.engine import World
 from tests.physical_helpers import frame
 
@@ -89,7 +89,7 @@ class WeaponSystemTests(unittest.TestCase):
         self.assertEqual(combat.equipment(w, 'player')['weapon_profile'], 'unarmed')
         self.assertEqual(items.describe(item)['weapon_attributes']['durability'], 0)
         items.perform(w, 'player', 'repair', item['id'])
-        self.assertEqual(weapons.attributes(item), before)
+        self.assertEqual(weapons.attributes(item), {**before, 'durability': crafts.SELF_REPAIR_CAP})
         self.assertEqual(combat.equipment(w, 'player')['weapon_item'], item['id'])
 
     def test_crafting_with_large_inventory_still_consumes_real_costs(self):

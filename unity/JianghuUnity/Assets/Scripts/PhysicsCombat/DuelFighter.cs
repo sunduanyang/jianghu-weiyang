@@ -100,7 +100,7 @@ public sealed partial class PhysicsDuel {
             }
             if(!weapon.TwoHanded&&!HasShield)shield=EquipFist("shield",limbs["handFar"],out offhandGrip);
             CreateHandTargets();
-            foreach(var a in colliders)foreach(var b in colliders)if(a!=b)Physics2D.IgnoreCollision(a,b);
+            foreach(var a in colliders)foreach(var b in colliders)if(a!=b)DuelPhysicsAPI.IgnoreCollision(a,b);
             weight=limbs.Values.Select(l=>l.rb).Distinct().Sum(rb=>rb.mass);
             pelvis.driveInertia=weapon.TwoHanded?.60f:.30f;
             foreach(var limb in limbs.Values)limb.SampleVelocity();
@@ -171,12 +171,12 @@ public sealed partial class PhysicsDuel {
             return false;
         }
         public void ClearMouseCapture(){ResetGesture();aiDriving=false;aiMain=aiOff=Vector2.zero;swordControl=shieldControl=false;}
-        public bool Dash(){if(Reference)return KickReference();if(stamina<18*effortScale||health<=0||game.Clock<stunUntil||!game.Live||game.Clock-lastDash<.6f/movementScale)return false;SpendEffort(18,.8f);lastDash=game.Clock;pelvis.rb.AddForce(new Vector2(facing*8*movementScale,0),ForceMode2D.Impulse);return true;}
+        public bool Dash(){if(Reference)return KickReference();if(stamina<18*effortScale||health<=0||game.Clock<stunUntil||!game.Live||game.Clock-lastDash<.6f/movementScale)return false;SpendEffort(18,.8f);lastDash=game.Clock;pelvis.rb.CombatAddForce(new Vector2(facing*8*movementScale,0),ForceMode2D.Impulse);return true;}
         public void Hit(float damage,Vector2 impulse,Vector2 contact) {
             InterruptAttack();regenAt=Mathf.Max(regenAt,game.Clock+.85f*recoveryDelayScale);
             health=Mathf.Max(0,health-damage);balance=Mathf.Max(0,balance-damage*1.7f*balanceLossScale);
             stunUntil=game.Clock+(.12f+damage*.006f)*stunScale;injuredUntil=game.Clock+injuryDuration;hitTint=game.Clock+.15f;
-            pelvis.rb.AddForce(impulse*.40f,ForceMode2D.Impulse);torso.rb.AddForceAtPosition(impulse*.60f,contact,ForceMode2D.Impulse);
+            pelvis.rb.CombatAddForce(impulse*.40f,ForceMode2D.Impulse);torso.rb.CombatAddForceAtPosition(impulse*.60f,contact,ForceMode2D.Impulse);
         }
         public void Step(bool active,Fighter target) {
             if(Reference){StepReference(active,target);return;}
@@ -214,7 +214,7 @@ public sealed partial class PhysicsDuel {
                     desiredVelocity*=Mathf.Clamp01((.55f-ahead)/.25f);
                 }
             }
-            pelvis.rb.AddForce(new Vector2((desiredVelocity-pelvis.rb.linearVelocity.x)*60,vertical)*strength*stabilityScale);
+            pelvis.rb.CombatAddForce(new Vector2((desiredVelocity-pelvis.rb.linearVelocity.x)*60,vertical)*strength*stabilityScale);
             float lean=-driveMove*5+facing*(IsAttacking?-3:0);
             pelvis.Drive(lean*.45f,5.5f,weapon.TwoHanded?230:130,strength*stabilityScale);
             torso.Drive(lean,5.2f,weapon.TwoHanded?150:84,strength*stabilityScale);head.Drive(lean*.4f,5.0f,5,strength*stabilityScale);
@@ -337,6 +337,6 @@ public sealed partial class PhysicsDuel {
         }
         public float MaxJointGap(){var connected=SourceRigActive?SourceLiveBodies():null;float gap=0;foreach(var j in root.GetComponentsInChildren<AnchoredJoint2D>())if(j.enabled&&(connected==null||InSourceLiveComponent(j,connected))){float value=MeasuredJointGap(j);if(value>gap){gap=value;worstJoint=j.name;}}return gap;}
         public string worstLimitJoint="";
-        public float MaxLimitError(){var connected=SourceRigActive?SourceLiveBodies():null;float e=0;foreach(var j in root.GetComponentsInChildren<HingeJoint2D>())if(j.enabled&&j.useLimits&&(connected==null||InSourceLiveComponent(j,connected))){float v=MeasuredLimitError(j);e=Mathf.Max(e,v);if(v>worstLimit){worstLimit=v;worstLimitJoint=j.name+" angle="+j.jointAngle+" limits="+j.limits.min+","+j.limits.max;}}return e;}
+        public float MaxLimitError(){var connected=SourceRigActive?SourceLiveBodies():null;float e=0;foreach(var j in root.GetComponentsInChildren<HingeJoint2D>())if(j.enabled&&j.useLimits&&(connected==null||InSourceLiveComponent(j,connected))){float v=MeasuredLimitError(j);e=Mathf.Max(e,v);if(v>worstLimit){worstLimit=v;worstLimitJoint=j.name+" angle="+j.CombatJointAngle()+" limits="+j.limits.min+","+j.limits.max;}}return e;}
     }
 }

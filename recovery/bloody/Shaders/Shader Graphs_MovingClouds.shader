@@ -26,7 +26,6 @@ HLSLPROGRAM
 
 #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/Core2D.hlsl"
 float4 _RendererColor;
-float4 _TimeParameters;
 float Vector1_fa6fa116710f4857905d550a8a83c964;
 float4 _Color;
 sampler2D _MainTex;
@@ -36,7 +35,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float3 vs_INTERP2:TEXCOORD2;
@@ -47,10 +46,10 @@ float4 u_xlat1;
 float3 u_xlat2;
 float u_xlat6;
 
-    u_xlat0.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat0.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat2.xyz = u_xlat0.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat0.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat0.xxx + u_xlat2.xyz;
-    u_xlat0.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat0.xyz;
+    u_xlat0.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat0.xyz;
     u_xlat0.xyz = u_xlat0.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1 = u_xlat0.yyyy * transpose(UNITY_MATRIX_VP)[1];
     u_xlat1 = transpose(UNITY_MATRIX_VP)[0] * u_xlat0.xxxx + u_xlat1;
@@ -71,6 +70,10 @@ float u_xlat6;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float u_xlat1;
@@ -107,7 +110,6 @@ HLSLPROGRAM
 
 #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/Core2D.hlsl"
 float4 _RendererColor;
-float4 _TimeParameters;
 float Vector1_fa6fa116710f4857905d550a8a83c964;
 float4 _Color;
 sampler2D _MainTex;
@@ -117,7 +119,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float3 vs_INTERP2:TEXCOORD2;
@@ -128,10 +130,10 @@ float4 u_xlat1;
 float3 u_xlat2;
 float u_xlat6;
 
-    u_xlat0.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat0.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat2.xyz = u_xlat0.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat0.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat0.xxx + u_xlat2.xyz;
-    u_xlat0.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat0.xyz;
+    u_xlat0.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat0.xyz;
     u_xlat0.xyz = u_xlat0.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1 = u_xlat0.yyyy * transpose(UNITY_MATRIX_VP)[1];
     u_xlat1 = transpose(UNITY_MATRIX_VP)[0] * u_xlat0.xxxx + u_xlat1;
@@ -152,6 +154,10 @@ float u_xlat6;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 bool u_xlatb1;

@@ -1,0 +1,802 @@
+{
+  "candidate_validated": true,
+  "input_sha256": "d93bf718cf6af2e0f6759baf97f8f3720bd3846ca1b6c42d61deedbb98064347",
+  "duration_seconds_per_weapon": 20,
+  "control_hz": 60,
+  "measurement_scope": "controller and physics CPU time; excludes rendering; first 60 ticks excluded",
+  "comparison": {
+    "legacy": {
+      "weapon_count": 10,
+      "measured_frames": 11400,
+      "mean_tick_ms": 2.8121276666666684,
+      "maximum_joint_gap_m": 0.01291198,
+      "maximum_limit_error_degrees": 9.869587,
+      "maximum_held_grip_gap_m": 0.00677333,
+      "maximum_visible_handle_gap_m": 0.004802701,
+      "constraint_cases_passed": 9,
+      "grip_cases_passed": 10,
+      "measurements": [
+        {
+          "weapon": "unarmed",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 2.56089666666667,
+          "p95_tick_ms": 4.1086,
+          "max_gap": 0.009219755,
+          "max_limit_degrees": 3.913063,
+          "max_held_grip_gap": 0,
+          "max_visible_handle_gap": 0,
+          "actual_body_contact_entries": 33,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "legacy-physics2d",
+            "native_steps": 9600,
+            "simulation_ms": 2128.3308,
+            "legacy_simulation_steps": 9600
+          }
+        },
+        {
+          "weapon": "dagger",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 2.61988078947368,
+          "p95_tick_ms": 4.5014,
+          "max_gap": 0.01059111,
+          "max_limit_degrees": 3.849609,
+          "max_held_grip_gap": 0.00342515,
+          "max_visible_handle_gap": 0.003316487,
+          "actual_body_contact_entries": 96,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "legacy-physics2d",
+            "native_steps": 9600,
+            "simulation_ms": 2254.92009999999,
+            "legacy_simulation_steps": 9600
+          }
+        },
+        {
+          "weapon": "sabre",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 2.86952201754386,
+          "p95_tick_ms": 4.8568,
+          "max_gap": 0.01058776,
+          "max_limit_degrees": 3.826771,
+          "max_held_grip_gap": 0.004058092,
+          "max_visible_handle_gap": 0.004802701,
+          "actual_body_contact_entries": 219,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "legacy-physics2d",
+            "native_steps": 9600,
+            "simulation_ms": 2530.1968,
+            "legacy_simulation_steps": 9600
+          }
+        },
+        {
+          "weapon": "sword",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 2.90827149122807,
+          "p95_tick_ms": 4.8545,
+          "max_gap": 0.01122312,
+          "max_limit_degrees": 4.404076,
+          "max_held_grip_gap": 0.001997656,
+          "max_visible_handle_gap": 0.00199217,
+          "actual_body_contact_entries": 114,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "legacy-physics2d",
+            "native_steps": 9600,
+            "simulation_ms": 2587.04239999999,
+            "legacy_simulation_steps": 9600
+          }
+        },
+        {
+          "weapon": "axe",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 2.65526350877194,
+          "p95_tick_ms": 4.4467,
+          "max_gap": 0.01072807,
+          "max_limit_degrees": 3.84211,
+          "max_held_grip_gap": 0.00311381,
+          "max_visible_handle_gap": 0.003065691,
+          "actual_body_contact_entries": 45,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "legacy-physics2d",
+            "native_steps": 9600,
+            "simulation_ms": 2296.8535,
+            "legacy_simulation_steps": 9600
+          }
+        },
+        {
+          "weapon": "mace",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 2.66020912280702,
+          "p95_tick_ms": 4.4465,
+          "max_gap": 0.01054566,
+          "max_limit_degrees": 5.419195,
+          "max_held_grip_gap": 0.001561866,
+          "max_visible_handle_gap": 0.001906727,
+          "actual_body_contact_entries": 65,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "legacy-physics2d",
+            "native_steps": 9600,
+            "simulation_ms": 2306.3594,
+            "legacy_simulation_steps": 9600
+          }
+        },
+        {
+          "weapon": "spear",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 3.20757114035088,
+          "p95_tick_ms": 5.1986,
+          "max_gap": 0.01291198,
+          "max_limit_degrees": 9.869587,
+          "max_held_grip_gap": 0.00677333,
+          "max_visible_handle_gap": 0.003766189,
+          "actual_body_contact_entries": 52,
+          "constraints_passed": false,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "legacy-physics2d",
+            "native_steps": 9600,
+            "simulation_ms": 2921.90939999999,
+            "legacy_simulation_steps": 9600
+          }
+        },
+        {
+          "weapon": "greatsword",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 2.89837605263158,
+          "p95_tick_ms": 4.757,
+          "max_gap": 0.01236304,
+          "max_limit_degrees": 4.944237,
+          "max_held_grip_gap": 0.004951651,
+          "max_visible_handle_gap": 0.004572191,
+          "actual_body_contact_entries": 116,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "legacy-physics2d",
+            "native_steps": 9600,
+            "simulation_ms": 2567.67629999999,
+            "legacy_simulation_steps": 9600
+          }
+        },
+        {
+          "weapon": "greataxe",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 2.94174403508772,
+          "p95_tick_ms": 4.7968,
+          "max_gap": 0.01122128,
+          "max_limit_degrees": 6.253059,
+          "max_held_grip_gap": 0.005153283,
+          "max_visible_handle_gap": 0.003495471,
+          "actual_body_contact_entries": 47,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "legacy-physics2d",
+            "native_steps": 9600,
+            "simulation_ms": 2611.66349999999,
+            "legacy_simulation_steps": 9600
+          }
+        },
+        {
+          "weapon": "warhammer",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 2.79954184210526,
+          "p95_tick_ms": 4.3573,
+          "max_gap": 0.01254506,
+          "max_limit_degrees": 5.218163,
+          "max_held_grip_gap": 0.003988869,
+          "max_visible_handle_gap": 0.003762008,
+          "actual_body_contact_entries": 62,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "legacy-physics2d",
+            "native_steps": 9600,
+            "simulation_ms": 2488.6433,
+            "legacy_simulation_steps": 9600
+          }
+        }
+      ]
+    },
+    "core": {
+      "weapon_count": 10,
+      "measured_frames": 11400,
+      "mean_tick_ms": 15.904660078947368,
+      "maximum_joint_gap_m": 0.02224131,
+      "maximum_limit_error_degrees": 4.741866,
+      "maximum_held_grip_gap_m": 0.003575509,
+      "maximum_visible_handle_gap_m": 0.00357884,
+      "constraint_cases_passed": 10,
+      "grip_cases_passed": 10,
+      "measurements": [
+        {
+          "weapon": "unarmed",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 15.6042783333333,
+          "p95_tick_ms": 19.216,
+          "max_gap": 0.01004432,
+          "max_limit_degrees": 2.603191,
+          "max_held_grip_gap": 0,
+          "max_visible_handle_gap": 0,
+          "actual_body_contact_entries": 5,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "physics-core-2d",
+            "native_steps": 9600,
+            "solver_substeps": 64,
+            "joint_hertz": 1000,
+            "bodies": 58,
+            "one_way_collision_bodies": 0,
+            "shapes": 75,
+            "joints": 54,
+            "simulation_ms": 10473.0972,
+            "total_ms": 17496.5190000001,
+            "contact_deliveries": 542,
+            "trigger_entries": 51,
+            "legacy_simulation_steps": 0
+          }
+        },
+        {
+          "weapon": "dagger",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 15.8481792982456,
+          "p95_tick_ms": 18.7231,
+          "max_gap": 0.006012708,
+          "max_limit_degrees": 2.163561,
+          "max_held_grip_gap": 0.002384372,
+          "max_visible_handle_gap": 0.002622342,
+          "actual_body_contact_entries": 24,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "physics-core-2d",
+            "native_steps": 9600,
+            "solver_substeps": 64,
+            "joint_hertz": 1000,
+            "bodies": 58,
+            "one_way_collision_bodies": 0,
+            "shapes": 79,
+            "joints": 54,
+            "simulation_ms": 10415.0047,
+            "total_ms": 17758.1322,
+            "contact_deliveries": 600,
+            "trigger_entries": 53,
+            "legacy_simulation_steps": 0
+          }
+        },
+        {
+          "weapon": "sabre",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 15.9860211403509,
+          "p95_tick_ms": 20.1363,
+          "max_gap": 0.009148956,
+          "max_limit_degrees": 4.322771,
+          "max_held_grip_gap": 0.003217768,
+          "max_visible_handle_gap": 0.003477609,
+          "actual_body_contact_entries": 28,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "physics-core-2d",
+            "native_steps": 9600,
+            "solver_substeps": 64,
+            "joint_hertz": 1000,
+            "bodies": 58,
+            "one_way_collision_bodies": 0,
+            "shapes": 79,
+            "joints": 54,
+            "simulation_ms": 10508.4728,
+            "total_ms": 17956.2111,
+            "contact_deliveries": 620,
+            "trigger_entries": 64,
+            "legacy_simulation_steps": 0
+          }
+        },
+        {
+          "weapon": "sword",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 16.3365227192982,
+          "p95_tick_ms": 19.9021,
+          "max_gap": 0.01530534,
+          "max_limit_degrees": 4.741866,
+          "max_held_grip_gap": 0.003221642,
+          "max_visible_handle_gap": 0.002929298,
+          "actual_body_contact_entries": 33,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "physics-core-2d",
+            "native_steps": 9600,
+            "solver_substeps": 64,
+            "joint_hertz": 1000,
+            "bodies": 58,
+            "one_way_collision_bodies": 0,
+            "shapes": 79,
+            "joints": 54,
+            "simulation_ms": 10568.8147,
+            "total_ms": 18325.0623,
+            "contact_deliveries": 636,
+            "trigger_entries": 239,
+            "legacy_simulation_steps": 0
+          }
+        },
+        {
+          "weapon": "axe",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 16.1150738596491,
+          "p95_tick_ms": 19.7984,
+          "max_gap": 0.02113169,
+          "max_limit_degrees": 3.831963,
+          "max_held_grip_gap": 0.003359414,
+          "max_visible_handle_gap": 0.003358105,
+          "actual_body_contact_entries": 24,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "physics-core-2d",
+            "native_steps": 9600,
+            "solver_substeps": 64,
+            "joint_hertz": 1000,
+            "bodies": 58,
+            "one_way_collision_bodies": 0,
+            "shapes": 77,
+            "joints": 54,
+            "simulation_ms": 10487.6729,
+            "total_ms": 18041.6794,
+            "contact_deliveries": 618,
+            "trigger_entries": 61,
+            "legacy_simulation_steps": 0
+          }
+        },
+        {
+          "weapon": "mace",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 17.0474983333333,
+          "p95_tick_ms": 22.4939,
+          "max_gap": 0.009069953,
+          "max_limit_degrees": 4.551584,
+          "max_held_grip_gap": 0.00212311,
+          "max_visible_handle_gap": 0.002610273,
+          "actual_body_contact_entries": 18,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "physics-core-2d",
+            "native_steps": 9600,
+            "solver_substeps": 64,
+            "joint_hertz": 1000,
+            "bodies": 58,
+            "one_way_collision_bodies": 0,
+            "shapes": 93,
+            "joints": 54,
+            "simulation_ms": 10919.4226,
+            "total_ms": 19038.4897,
+            "contact_deliveries": 572,
+            "trigger_entries": 69,
+            "legacy_simulation_steps": 0
+          }
+        },
+        {
+          "weapon": "spear",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 16.5987866666667,
+          "p95_tick_ms": 21.1399,
+          "max_gap": 0.002447032,
+          "max_limit_degrees": 1.513824,
+          "max_held_grip_gap": 0.001733305,
+          "max_visible_handle_gap": 0.001665896,
+          "actual_body_contact_entries": 21,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "physics-core-2d",
+            "native_steps": 9600,
+            "solver_substeps": 64,
+            "joint_hertz": 2000,
+            "bodies": 54,
+            "one_way_collision_bodies": 0,
+            "shapes": 73,
+            "joints": 52,
+            "simulation_ms": 10539.0314,
+            "total_ms": 18678.0298,
+            "contact_deliveries": 854,
+            "trigger_entries": 76,
+            "legacy_simulation_steps": 0
+          }
+        },
+        {
+          "weapon": "greatsword",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 15.5467628070175,
+          "p95_tick_ms": 20.0902,
+          "max_gap": 0.02224131,
+          "max_limit_degrees": 2.745819,
+          "max_held_grip_gap": 0.003421946,
+          "max_visible_handle_gap": 0.003424473,
+          "actual_body_contact_entries": 20,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "physics-core-2d",
+            "native_steps": 9600,
+            "solver_substeps": 64,
+            "joint_hertz": 2000,
+            "bodies": 54,
+            "one_way_collision_bodies": 0,
+            "shapes": 75,
+            "joints": 52,
+            "simulation_ms": 9958.88580000003,
+            "total_ms": 17393.8815,
+            "contact_deliveries": 736,
+            "trigger_entries": 83,
+            "legacy_simulation_steps": 0
+          }
+        },
+        {
+          "weapon": "greataxe",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 15.4695472807018,
+          "p95_tick_ms": 23.4069,
+          "max_gap": 0.01034681,
+          "max_limit_degrees": 2.7966,
+          "max_held_grip_gap": 0.003575509,
+          "max_visible_handle_gap": 0.00357884,
+          "actual_body_contact_entries": 12,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "physics-core-2d",
+            "native_steps": 9600,
+            "solver_substeps": 64,
+            "joint_hertz": 2000,
+            "bodies": 54,
+            "one_way_collision_bodies": 0,
+            "shapes": 73,
+            "joints": 52,
+            "simulation_ms": 10041.4306,
+            "total_ms": 17275.3641,
+            "contact_deliveries": 706,
+            "trigger_entries": 74,
+            "legacy_simulation_steps": 0
+          }
+        },
+        {
+          "weapon": "warhammer",
+          "frames": 1200,
+          "substeps": 8,
+          "mean_tick_ms": 14.4939303508772,
+          "p95_tick_ms": 19.7781,
+          "max_gap": 0.004759065,
+          "max_limit_degrees": 1.933041,
+          "max_held_grip_gap": 0.001904048,
+          "max_visible_handle_gap": 0.001911268,
+          "actual_body_contact_entries": 15,
+          "constraints_passed": true,
+          "held_grip_passed": true,
+          "physics": {
+            "backend": "physics-core-2d",
+            "native_steps": 9600,
+            "solver_substeps": 64,
+            "joint_hertz": 2000,
+            "bodies": 54,
+            "one_way_collision_bodies": 0,
+            "shapes": 73,
+            "joints": 52,
+            "simulation_ms": 9504.1107,
+            "total_ms": 16251.5209000001,
+            "contact_deliveries": 698,
+            "trigger_entries": 76,
+            "legacy_simulation_steps": 0
+          }
+        }
+      ]
+    }
+  },
+  "core_to_legacy_cpu_ratio": 5.655738986345461,
+  "evidence": {
+    "mechanics": {
+      "passed": true,
+      "checks": 93,
+      "failures": [],
+      "path": "D:\\Desktop\\新新游戏\\output\\physics-core-migration-20261029\\distribution-native\\reference-mechanics\\acceptance.json"
+    },
+    "source_rig": {
+      "passed": true,
+      "checks": 97,
+      "failures": [],
+      "path": "D:\\Desktop\\新新游戏\\output\\physics-core-migration-20261029\\distribution-native\\source-rig\\acceptance.json"
+    },
+    "cold_resume": {
+      "passed": true,
+      "checks": 17,
+      "failures": [],
+      "path": "D:\\Desktop\\新新游戏\\output\\physics-core-migration-20261029\\distribution-native\\source-rig-resume\\acceptance.json"
+    },
+    "formal_spar_rob_assault": {
+      "passed": true,
+      "checks": 81,
+      "failures": [],
+      "path": "D:\\Desktop\\新新游戏\\output\\physics-core-migration-20261029\\distribution-formal\\acceptance.json"
+    },
+    "manual_offense_and_shields": {
+      "passed": true,
+      "checks": 11,
+      "failures": [],
+      "path": "D:\\Desktop\\新新游戏\\output\\physics-core-migration-20261029\\distribution-native\\guard\\acceptance.json"
+    },
+    "legacy_manual_offense_and_shields": {
+      "passed": true,
+      "checks": 11,
+      "failures": [],
+      "path": "D:\\Desktop\\新新游戏\\output\\physics-core-migration-20261029\\distribution-legacy-guard\\guard\\acceptance.json"
+    },
+    "ai_sixty_seconds": {
+      "passed": true,
+      "checks": 43,
+      "failures": [],
+      "path": "D:\\Desktop\\新新游戏\\output\\physics-core-migration-20261029\\distribution-ai\\reference-stress\\acceptance.json"
+    },
+    "signed_queries": {
+      "passed": true,
+      "checks": 9,
+      "failures": [],
+      "path": "D:\\Desktop\\新新游戏\\output\\physics-core-migration-20261029\\distribution-native\\core-query\\acceptance.json"
+    },
+    "dropped_weapon_save_bounds": {
+      "passed": true,
+      "checks": 10,
+      "failures": [],
+      "path": "D:\\Desktop\\新新游戏\\output\\physics-core-migration-20261029\\distribution-native\\save-bounds\\acceptance.json"
+    },
+    "dropped_weapon_cold_resume": {
+      "passed": true,
+      "checks": 15,
+      "failures": [],
+      "path": "D:\\Desktop\\新新游戏\\output\\physics-core-migration-20261029\\distribution-native\\save-bounds-resume\\acceptance.json"
+    },
+    "same_input_core": {
+      "passed": true,
+      "checks": 43,
+      "failures": [],
+      "path": "D:\\Desktop\\新新游戏\\output\\physics-core-migration-20261029\\distribution-comparison\\core\\acceptance.json"
+    },
+    "same_input_legacy": {
+      "passed": false,
+      "checks": 33,
+      "failures": [
+        "finite physics and bounded active joints spear"
+      ],
+      "path": "D:\\Desktop\\新新游戏\\output\\physics-core-migration-20261029\\distribution-comparison\\legacy\\acceptance.json"
+    }
+  },
+  "core_has_zero_legacy_combat_steps": true,
+  "provenance": {
+    "input_sha256": "D93BF718CF6AF2E0F6759BAF97F8F3720BD3846CA1B6C42D61DEEDBB98064347",
+    "frames": 1200,
+    "executable": "D:\\Desktop\\新新游戏\\unity\\Build\\PhysicsCoreCurrent20261029\\江湖未央.exe",
+    "executable_sha256": "9806ABDE4A406ED68647E9505852C49F6AA72A372F4F084E2AA2821AFFEA57A2",
+    "assembly_sha256": "8DE81941D021B1E1AFA6D3E4A5AA9AEC88CA221675563256E15C962223982567",
+    "backend_python_manifest": "D:\\Desktop\\新新游戏\\output\\physics-core-migration-20261029\\distribution-comparison\\backend-python.json"
+  },
+  "release": {
+    "unity_editor": "6000.6.7f1",
+    "build_log": "distribution-build.log",
+    "candidate": "unity/Build/PhysicsCoreCurrent20261029",
+    "source_hashes": "current-source-hashes.json",
+    "backend_hashes": "release-backend-hashes.json",
+    "files": [
+      {
+        "file": "江湖未央.exe",
+        "sha256": "9806ABDE4A406ED68647E9505852C49F6AA72A372F4F084E2AA2821AFFEA57A2",
+        "bytes": 667136
+      },
+      {
+        "file": "江湖未央_Data/Managed/Assembly-CSharp.dll",
+        "sha256": "8DE81941D021B1E1AFA6D3E4A5AA9AEC88CA221675563256E15C962223982567",
+        "bytes": 1522176
+      }
+    ],
+    "world": {
+      "single_hand_solver_substeps": 64,
+      "single_hand_joint_hertz": 1000,
+      "two_hand_solver_substeps": 64,
+      "two_hand_joint_hertz": 2000
+    },
+    "default_launcher_changed": false
+  },
+  "saved_core_frame_overrides_legacy_launcher_request": true,
+  "total_native_checks": 463,
+  "core_native_checks": 419,
+  "baseline_acceptance_passed": false,
+  "source_snapshot": "D:\\Desktop\\新新游戏\\output\\physics-core-migration-20261029\\current-source-hashes.json",
+  "earlier_long_ai_study": {
+    "path": "D:\\Desktop\\新新游戏\\output\\physics-core-migration-20261029\\core-stress-combined\\acceptance.json",
+    "scope": "Ten completed cases up to 180 seconds on the frozen pre-offense-restoration gameplay snapshot; not counted as current-build acceptance"
+  },
+  "manual_offense": {
+    "cases": 8,
+    "maximum_grip_gap_m": 0.00459279,
+    "blade_hits": [
+      {
+        "template": "wood_sword",
+        "shield": false,
+        "arc": 6,
+        "hits": 0
+      },
+      {
+        "template": "wood_sword",
+        "shield": false,
+        "arc": 12,
+        "hits": 3
+      },
+      {
+        "template": "wood_sword",
+        "shield": true,
+        "arc": 6,
+        "hits": 0
+      },
+      {
+        "template": "wood_sword",
+        "shield": true,
+        "arc": 12,
+        "hits": 0
+      },
+      {
+        "template": "",
+        "shield": false,
+        "arc": 6,
+        "hits": 0
+      },
+      {
+        "template": "",
+        "shield": false,
+        "arc": 12,
+        "hits": 2
+      },
+      {
+        "template": "",
+        "shield": true,
+        "arc": 6,
+        "hits": 0
+      },
+      {
+        "template": "",
+        "shield": true,
+        "arc": 12,
+        "hits": 0
+      }
+    ]
+  },
+  "current_ai_stress": {
+    "duration_cap_seconds": 60,
+    "death_ends_case_early": true,
+    "maximum_limit_error_degrees": 5.983947,
+    "maximum_joint_gap_m": 0.04189274,
+    "maximum_held_grip_gap_m": 0.005879873,
+    "maximum_visible_handle_gap_m": 0.005730271,
+    "measurements": [
+      {
+        "weapon": "unarmed",
+        "simulation_seconds": 60.00753,
+        "hits": 13,
+        "max_gap": 0.00448628,
+        "max_limit": 1.980492,
+        "maximum_held_grip_gap": 0,
+        "maximum_visible_weapon_handle_gap": 0
+      },
+      {
+        "weapon": "dagger",
+        "simulation_seconds": 60.00753,
+        "hits": 58,
+        "max_gap": 0.004831865,
+        "max_limit": 2.322781,
+        "maximum_held_grip_gap": 0.003285949,
+        "maximum_visible_weapon_handle_gap": 0.003553823
+      },
+      {
+        "weapon": "sabre",
+        "simulation_seconds": 49.89333,
+        "hits": 40,
+        "max_gap": 0.005675971,
+        "max_limit": 3.970688,
+        "maximum_held_grip_gap": 0.003129761,
+        "maximum_visible_weapon_handle_gap": 0.003064656
+      },
+      {
+        "weapon": "sword",
+        "simulation_seconds": 20.4172,
+        "hits": 23,
+        "max_gap": 0.005277819,
+        "max_limit": 4.276712,
+        "maximum_held_grip_gap": 0.002102744,
+        "maximum_visible_weapon_handle_gap": 0.002185699
+      },
+      {
+        "weapon": "axe",
+        "simulation_seconds": 32.96413,
+        "hits": 22,
+        "max_gap": 0.005621539,
+        "max_limit": 4.111774,
+        "maximum_held_grip_gap": 0.004981578,
+        "maximum_visible_weapon_handle_gap": 0.005198723
+      },
+      {
+        "weapon": "mace",
+        "simulation_seconds": 60.00753,
+        "hits": 30,
+        "max_gap": 0.01733088,
+        "max_limit": 5.983947,
+        "maximum_held_grip_gap": 0.003071314,
+        "maximum_visible_weapon_handle_gap": 0.003743173
+      },
+      {
+        "weapon": "spear",
+        "simulation_seconds": 48.47701,
+        "hits": 48,
+        "max_gap": 0.02170473,
+        "max_limit": 3.644455,
+        "maximum_held_grip_gap": 0.005879873,
+        "maximum_visible_weapon_handle_gap": 0.005730271
+      },
+      {
+        "weapon": "greatsword",
+        "simulation_seconds": 31.36452,
+        "hits": 48,
+        "max_gap": 0.04189274,
+        "max_limit": 3.88179,
+        "maximum_held_grip_gap": 0.00315031,
+        "maximum_visible_weapon_handle_gap": 0.00247325
+      },
+      {
+        "weapon": "greataxe",
+        "simulation_seconds": 17.85116,
+        "hits": 14,
+        "max_gap": 0.004911931,
+        "max_limit": 2.853519,
+        "maximum_held_grip_gap": 0.004911931,
+        "maximum_visible_weapon_handle_gap": 0.004260471
+      },
+      {
+        "weapon": "warhammer",
+        "simulation_seconds": 52.14278,
+        "hits": 46,
+        "max_gap": 0.002870775,
+        "max_limit": 3.555832,
+        "maximum_held_grip_gap": 0.002249993,
+        "maximum_visible_weapon_handle_gap": 0.002102884
+      }
+    ]
+  },
+  "python_physical_and_backend_tests": 66,
+  "default_launcher_changed_by_migration": false
+}

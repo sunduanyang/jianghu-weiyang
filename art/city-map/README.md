@@ -1,5 +1,7 @@
 # 城中图彩绘素材
 
+> **已停用（2026-10-29）**：城中地格视图已删除，Unity 不再使用本目录导出的运行纹理，`Resources/City/` 与 `bake_city.py`、`export_city_art.py`、`export_song_city_art.py` 一并移除。原图、提示词和摘要清单按存档保留，以下说明仅记录当时的导出方式。
+
 当前 Unity 城中图使用 `song-20261026/` 的新宋式独立资源：15类建筑、树木、城墙、石桥，以及草地、水面、石板地，共21张原始透明 PNG。`source/` 保留生成像素，`manifest.json` 保留原始 SHA-256；`flat-prompts.json` 和 `visual-review.json` 保留生成提示词及美术检查边界。
 
 `python unity/export_city_art.py` 优先调用 `export_song_city_art.py`，验证21张源图摘要后，导出79张512×512运行纹理。建筑可见图像中心统一对齐逻辑锚点 `(128,171)`，缩放后完整收在1×1或2×2占地内；`building-parcel` 为合并地基。源图不改写，导出测量时排除远离主体的极淡透明杂点，成品轮廓中心误差最多0.5像素。地面规范为2:1菱形，石板路按16种连通组合生成，石桥和城墙各有两种朝向。`song-20261026/runtime-manifest.json` 记录全部源图和运行纹理摘要、缩放及中心校准。完整 `bake_city.py` 最后同样调用此导出流程。

@@ -1,0 +1,73 @@
+{
+  "scope": "Read-only host pointer gate and TransitionView binding review for Build18 hardware-input regression. Production files and active Unity project untouched; exact live cause awaits Root hardware probe.",
+  "files": [
+    {
+      "path": "D:\\Desktop\\新新游戏\\recovery\\bloody\\Runtime\\OriginalPreview.Match.cs",
+      "sha256": "0f6971bd90eb81bfb96aae8defe0418a75f96dece9296e6c494ca2713d2be2ab"
+    },
+    {
+      "path": "D:\\Desktop\\新新游戏\\recovery\\bloody\\Runtime\\OriginalBattleHud.cs",
+      "sha256": "7d8c3a515d0bd8e64959fc20ce18210e81e6d70da858e0a5299cecaade00258b"
+    },
+    {
+      "path": "D:\\Desktop\\新新游戏\\recovery\\bloody\\Runtime\\OriginalTransitionView.cs",
+      "sha256": "9793c2b0d9602172574bdb6a32e45015bc4be329f5f1c568800bf595f71e04fd"
+    }
+  ],
+  "proven_host_branches": [
+    {
+      "source": "OriginalPreview.Update",
+      "rule": "player missing, automated, ExternalInputReplay or IsTransitioning skips ReadOriginalInput."
+    },
+    {
+      "source": "OriginalPreview.Match.cs:148",
+      "rule": "Paused, state!=4 or OriginalTransitionBlocksPointerInput causes every-frame ResetPointers and returns before pointer acquisition, ApplyToRig, keyboard movement and kick."
+    },
+    {
+      "source": "OriginalBattleHud.cs:63",
+      "rule": "TransitionView root Image isActiveAndEnabled && raycastTarget blocks globally. It does not use a real screen raycast, Canvas.enabled or CanvasGroup filtering."
+    },
+    {
+      "source": "OriginalPreview.Match.cs:133",
+      "rule": "OverButton returns true when ANY hit has a Selectable ancestor, including behind the actual top hit. This differs from UGUI and can suppress otherwise capturable pointers."
+    },
+    {
+      "source": "OriginalPreview.Match.cs:160",
+      "rule": "Drag is forwarded only for a pointer that succeeded initial PointerDown capture. Holding a button after a rejected Down does not recapture until another Down."
+    }
+  ],
+  "transition_resource_facts": {
+    "root": "CanvasAndCamera/Canvas/MainContainer/TransitionView",
+    "source_image_component": 20802,
+    "source_initial": "GameObject active, Image.enabled=true, Image.color.a=0, raycastTarget=true. Thus transparent root Image can initially intercept every pointer.",
+    "slide_out": "Original TransitionScreen_SlideOut disables root Image.m_Enabled at t=0 and holds0 through t=.5. It disables internal MainContainer at t=.25. Root Image release is not deferred to .25 or .5.",
+    "initialize": "Original initialize clip also disables Image at t=0 but no source TransitionView method plays it; helper intentionally does not fabricate initialize playback.",
+    "source_clip": "recovery/bloody/Runtime/Resources/OriginalTransitionView/TransitionScreen_SlideOut.anim",
+    "source_image_script": "DLL fileID -765806418, guid d3e719b59ab71ba3f6b398058c866280",
+    "generated_image_script": "Image.cs fileID11500000, guid fe87c0e1cc204ed48ad3b37840f39efc",
+    "generated_validation": "Both workspace and D:/codex-bloody-workspace-20261028 generated copies contain 38 remapped Image references, zero original DLL GUID references; m_FloatCurves and genericBindings both preserved.",
+    "competing_controller": "OriginalUIFlowSource has no TransitionView row; source Animator has no runtime controller. No second TransitionView controller found in examined recovery code.",
+    "conditional_cause": "If actual state4, IsTransitioning=false and current SlideOut sampled beyond .5 but root Image remains enabled, host global predicate will permanently zero pointers. That would implicate actual Playable evaluation/binding/lifecycle, not missing source keys or unmapped GUIDs. Static inspection alone does not establish Image live value."
+  },
+  "over_button_source_evidence": {
+    "package": "D:/Unity/Editors/6000.4.0f1/Editor/Data/Resources/PackageManager/BuiltInPackages/com.unity.ugui",
+    "BaseInputModule.cs:130": "FindFirstRaycast returns the first nonnull gameObject in ordered candidates.",
+    "PointerInputModule.cs:295": "RaycastAll -> FindFirstRaycast -> pointerCurrentRaycast, then clear all results.",
+    "StandaloneInputModule.cs:634": "ProcessMousePress dispatches pointer-down and click handling only up the currentOverGo hierarchy.",
+    "counterexample": "Ordered hits [foreground joystick graphic without Selectable, covered Button graphic] => current OverButton true, source current target remains foreground joystick graphic.",
+    "minimal_correction": "Use first valid hit and its actual event target/ancestor instead of scanning lower hits. Keep pointer capture after successful Down; releases are still required. Do not treat a disabled/noninteractable control policy as automatically proven source behavior without checking original event handling."
+  },
+  "launcher_exclusion": "Both workspace and integration playtest BAT launch Build18 mode0 with independent save and no recoveryCapture/validation flags; these BATs do not explicitly set automated or ExternalInputReplay.",
+  "probe_gap": {
+    "OriginalMatchReplay": "Sets ExternalInputReplay=true and drives separate adapter.PointerDown/Drag/ApplyToRig directly; bypasses host Update, global transition gate, OverButton and raw Unity mouse sampling.",
+    "OriginalOnboardingReplay": "Sets ExternalInputReplay=true; tutorial uses direct Button.onClick; Practice uses separate adapter.ApplyToRig. It explicitly reports desktop hardware input unverified.",
+    "implication": "Previous numeric input checks and full combat replay never established working actual desktop mouse input."
+  },
+  "minimal_live_discriminator": [
+    "Record actual IsTransitioning, state, Paused, automated, ExternalInputReplay, Application.isFocused, raw mouse Down/Held and Input.mousePosition.",
+    "Record Transition root Image.enabled/isActiveAndEnabled/raycastTarget, active state, current clip, actual Playable time/weights/isPlaying and parent Canvas/CanvasGroup state.",
+    "On each actual Down record sorted hit paths and first hit, OverButton decision, capture result, then pre/post adapter nubs and rig input flags.",
+    "Check A/D and Space in same state4: global reset gate suppresses them as well, whereas OverButton affects only capture.",
+    "A fix needs actual raw-input-to-host capture and observable body motion plus UI button behavior; no direct adapter injection should count as this acceptance."
+  ]
+}

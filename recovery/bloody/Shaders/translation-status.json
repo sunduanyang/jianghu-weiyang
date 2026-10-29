@@ -112,34 +112,6 @@
     "render_parity_verified": false
   },
   {
-    "shader": "Shader Graphs/ItemPreview",
-    "passes": 4,
-    "programs": 4,
-    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_ItemPreview",
-    "lighting_variants_ported": true,
-    "unsupported_variants": [
-      "GPU SpriteSkin",
-      "stereo",
-      "DOTS",
-      "debug display"
-    ],
-    "render_parity_verified": false
-  },
-  {
-    "shader": "Shader Graphs/ItemPreview_TopL1",
-    "passes": 4,
-    "programs": 4,
-    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_ItemPreview_TopL1",
-    "lighting_variants_ported": true,
-    "unsupported_variants": [
-      "GPU SpriteSkin",
-      "stereo",
-      "DOTS",
-      "debug display"
-    ],
-    "render_parity_verified": false
-  },
-  {
     "shader": "Shader Graphs/MovingClouds",
     "passes": 2,
     "programs": 2,
@@ -200,6 +172,104 @@
     "passes": 3,
     "programs": 18,
     "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_Vegetation",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Shader Graphs/ItemPreview",
+    "passes": 4,
+    "programs": 4,
+    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_ItemPreview",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Shader Graphs/ItemPreview_TopL1",
+    "passes": 4,
+    "programs": 4,
+    "source": "output/bloody-full-port-20261028/shader-programs/Shader Graphs_ItemPreview_TopL1",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Hidden/FlipView",
+    "passes": 1,
+    "programs": 1,
+    "source": "output/bloody-full-port-20261028/shader-programs/Hidden_FlipView",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Hidden/TopRimBlur",
+    "passes": 2,
+    "programs": 2,
+    "source": "output/bloody-full-port-20261028/shader-programs/Hidden_TopRimBlur",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Hidden/TopRimComposite",
+    "passes": 2,
+    "programs": 2,
+    "source": "output/bloody-full-port-20261028/shader-programs/Hidden_TopRimComposite",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Hidden/TopRimMask",
+    "passes": 1,
+    "programs": 1,
+    "source": "output/bloody-full-port-20261028/shader-programs/Hidden_TopRimMask",
+    "lighting_variants_ported": true,
+    "unsupported_variants": [
+      "GPU SpriteSkin",
+      "stereo",
+      "DOTS",
+      "debug display"
+    ],
+    "render_parity_verified": false
+  },
+  {
+    "shader": "Hidden/TopRimVFXContour",
+    "passes": 1,
+    "programs": 1,
+    "source": "output/bloody-full-port-20261028/shader-programs/Hidden_TopRimVFXContour",
     "lighting_variants_ported": true,
     "unsupported_variants": [
       "GPU SpriteSkin",

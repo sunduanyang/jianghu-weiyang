@@ -28,7 +28,7 @@ public sealed partial class PhysicsDuel {
         }
         void BrakeReleased(Limb item){
             float spin=(item.rb.angularVelocity-torso.rb.angularVelocity)*Mathf.Deg2Rad;
-            item.rb.AddTorque(Mathf.Clamp(-spin*item.rb.inertia*8,-12*ArmPower,12*ArmPower));
+            item.rb.CombatAddTorque(Mathf.Clamp(-spin*item.rb.inertia*8,-12*ArmPower,12*ArmPower));
         }
         void RestoreMousePose(){
             if(!human)return;

@@ -1,0 +1,635 @@
+{
+ "format": "jianghu-joint-rig",
+ "version": 2,
+ "name": "示例少年",
+ "facing": "right",
+ "coordinates": "每块拆件自身像素坐标，x 向右，y 向下",
+ "source_sheet": "示例拆件图.png",
+ "pieces": [
+  {
+   "name": "头",
+   "file": "pieces/piece-01.png",
+   "size": [
+    267,
+    295
+   ],
+   "source_rect": [
+    443,
+    70,
+    267,
+    295
+   ]
+  },
+  {
+   "name": "颈",
+   "file": "pieces/piece-02.png",
+   "size": [
+    116,
+    143
+   ],
+   "source_rect": [
+    732,
+    175,
+    116,
+    143
+   ]
+  },
+  {
+   "name": "躯干",
+   "file": "pieces/piece-03.png",
+   "size": [
+    254,
+    270
+   ],
+   "source_rect": [
+    868,
+    99,
+    254,
+    270
+   ]
+  },
+  {
+   "name": "前摆",
+   "file": "pieces/piece-04.png",
+   "size": [
+    218,
+    236
+   ],
+   "source_rect": [
+    1114,
+    158,
+    218,
+    236
+   ]
+  },
+  {
+   "name": "后摆",
+   "file": "pieces/piece-05.png",
+   "size": [
+    195,
+    228
+   ],
+   "source_rect": [
+    1331,
+    158,
+    195,
+    228
+   ]
+  },
+  {
+   "name": "大臂A",
+   "file": "pieces/piece-06.png",
+   "size": [
+    142,
+    228
+   ],
+   "source_rect": [
+    519,
+    390,
+    142,
+    228
+   ]
+  },
+  {
+   "name": "小臂A",
+   "file": "pieces/piece-07.png",
+   "size": [
+    167,
+    157
+   ],
+   "source_rect": [
+    676,
+    441,
+    167,
+    157
+   ]
+  },
+  {
+   "name": "手A",
+   "file": "pieces/piece-08.png",
+   "size": [
+    119,
+    78
+   ],
+   "source_rect": [
+    874,
+    506,
+    119,
+    78
+   ]
+  },
+  {
+   "name": "大臂B",
+   "file": "pieces/piece-09.png",
+   "size": [
+    161,
+    203
+   ],
+   "source_rect": [
+    1033,
+    410,
+    161,
+    203
+   ]
+  },
+  {
+   "name": "小臂B",
+   "file": "pieces/piece-10.png",
+   "size": [
+    176,
+    131
+   ],
+   "source_rect": [
+    1202,
+    461,
+    176,
+    131
+   ]
+  },
+  {
+   "name": "手B",
+   "file": "pieces/piece-11.png",
+   "size": [
+    112,
+    70
+   ],
+   "source_rect": [
+    1406,
+    507,
+    112,
+    70
+   ]
+  },
+  {
+   "name": "大腿A",
+   "file": "pieces/piece-12.png",
+   "size": [
+    150,
+    250
+   ],
+   "source_rect": [
+    510,
+    630,
+    150,
+    250
+   ]
+  },
+  {
+   "name": "小腿A",
+   "file": "pieces/piece-13.png",
+   "size": [
+    98,
+    269
+   ],
+   "source_rect": [
+    689,
+    696,
+    98,
+    269
+   ]
+  },
+  {
+   "name": "脚A",
+   "file": "pieces/piece-14.png",
+   "size": [
+    183,
+    133
+   ],
+   "source_rect": [
+    818,
+    845,
+    183,
+    133
+   ]
+  },
+  {
+   "name": "大腿B",
+   "file": "pieces/piece-15.png",
+   "size": [
+    140,
+    232
+   ],
+   "source_rect": [
+    1038,
+    634,
+    140,
+    232
+   ]
+  },
+  {
+   "name": "小腿B",
+   "file": "pieces/piece-16.png",
+   "size": [
+    106,
+    274
+   ],
+   "source_rect": [
+    1209,
+    696,
+    106,
+    274
+   ]
+  },
+  {
+   "name": "脚B",
+   "file": "pieces/piece-17.png",
+   "size": [
+    176,
+    132
+   ],
+   "source_rect": [
+    1351,
+    844,
+    176,
+    132
+   ]
+  },
+  {
+   "name": "整身参考",
+   "file": "pieces/piece-18.png",
+   "size": [
+    447,
+    982
+   ],
+   "source_rect": [
+    16,
+    8,
+    447,
+    982
+   ]
+  }
+ ],
+ "slots": {
+  "torso": {
+   "piece": "躯干",
+   "parent": "",
+   "points": {
+    "pivot": [
+     162,
+     252
+    ],
+    "tip": [
+     146,
+     22
+    ],
+    "shoulderNear": [
+     168,
+     88
+    ],
+    "shoulderFar": [
+     160,
+     84
+    ],
+    "hipNear": [
+     168,
+     256
+    ],
+    "hipFar": [
+     156,
+     256
+    ]
+   },
+   "complete": true,
+   "length_px": 230.6
+  },
+  "head": {
+   "piece": "头",
+   "parent": "torso.tip",
+   "points": {
+    "pivot": [
+     170,
+     222
+    ],
+    "tip": [
+     170,
+     100
+    ]
+   },
+   "complete": true,
+   "length_px": 122.0
+  },
+  "skirtFront": {
+   "piece": "前摆",
+   "parent": "torso.pivot",
+   "points": {
+    "pivot": [
+     112,
+     28
+    ],
+    "tip": [
+     112,
+     220
+    ]
+   },
+   "complete": true,
+   "length_px": 192.0
+  },
+  "skirtBack": {
+   "piece": "后摆",
+   "parent": "torso.pivot",
+   "points": {
+    "pivot": [
+     98,
+     30
+    ],
+    "tip": [
+     98,
+     215
+    ]
+   },
+   "complete": true,
+   "length_px": 185.0
+  },
+  "upperNear": {
+   "piece": "大臂A",
+   "parent": "torso.shoulderNear",
+   "points": {
+    "pivot": [
+     60,
+     46
+    ],
+    "tip": [
+     106,
+     160
+    ]
+   },
+   "complete": true,
+   "length_px": 122.9
+  },
+  "forearmNear": {
+   "piece": "小臂A",
+   "parent": "upperNear.tip",
+   "points": {
+    "pivot": [
+     30,
+     32
+    ],
+    "tip": [
+     146,
+     122
+    ]
+   },
+   "complete": true,
+   "length_px": 146.8
+  },
+  "handNear": {
+   "piece": "手A",
+   "parent": "forearmNear.tip",
+   "points": {
+    "pivot": [
+     20,
+     32
+    ],
+    "tip": [
+     92,
+     34
+    ],
+    "grip": [
+     62,
+     34
+    ]
+   },
+   "complete": true,
+   "length_px": 72.0
+  },
+  "upperFar": {
+   "piece": "大臂B",
+   "parent": "torso.shoulderFar",
+   "points": {
+    "pivot": [
+     40,
+     40
+    ],
+    "tip": [
+     116,
+     150
+    ]
+   },
+   "complete": true,
+   "length_px": 133.7
+  },
+  "forearmFar": {
+   "piece": "小臂B",
+   "parent": "upperFar.tip",
+   "points": {
+    "pivot": [
+     22,
+     38
+    ],
+    "tip": [
+     153,
+     98
+    ]
+   },
+   "complete": true,
+   "length_px": 144.1
+  },
+  "handFar": {
+   "piece": "手B",
+   "parent": "forearmFar.tip",
+   "points": {
+    "pivot": [
+     18,
+     32
+    ],
+    "tip": [
+     88,
+     36
+    ],
+    "grip": [
+     58,
+     36
+    ]
+   },
+   "complete": true,
+   "length_px": 70.1
+  },
+  "thighNear": {
+   "piece": "大腿A",
+   "parent": "torso.hipNear",
+   "points": {
+    "pivot": [
+     76,
+     34
+    ],
+    "tip": [
+     70,
+     212
+    ]
+   },
+   "complete": true,
+   "length_px": 178.1
+  },
+  "shinNear": {
+   "piece": "小腿A",
+   "parent": "thighNear.tip",
+   "points": {
+    "pivot": [
+     50,
+     32
+    ],
+    "tip": [
+     47,
+     240
+    ]
+   },
+   "complete": true,
+   "length_px": 208.0
+  },
+  "footNear": {
+   "piece": "脚A",
+   "parent": "shinNear.tip",
+   "points": {
+    "pivot": [
+     52,
+     38
+    ],
+    "tip": [
+     160,
+     100
+    ]
+   },
+   "complete": true,
+   "length_px": 124.5
+  },
+  "thighFar": {
+   "piece": "大腿B",
+   "parent": "torso.hipFar",
+   "points": {
+    "pivot": [
+     66,
+     30
+    ],
+    "tip": [
+     76,
+     184
+    ]
+   },
+   "complete": true,
+   "length_px": 154.3
+  },
+  "shinFar": {
+   "piece": "小腿B",
+   "parent": "thighFar.tip",
+   "points": {
+    "pivot": [
+     58,
+     36
+    ],
+    "tip": [
+     55,
+     240
+    ]
+   },
+   "complete": true,
+   "length_px": 204.0
+  },
+  "footFar": {
+   "piece": "脚B",
+   "parent": "shinFar.tip",
+   "points": {
+    "pivot": [
+     50,
+     38
+    ],
+    "tip": [
+     156,
+     100
+    ]
+   },
+   "complete": true,
+   "length_px": 122.8
+  }
+ },
+ "draw_order": [
+  "handFar",
+  "forearmFar",
+  "upperFar",
+  "skirtBack",
+  "footFar",
+  "shinFar",
+  "thighFar",
+  "footNear",
+  "shinNear",
+  "thighNear",
+  "skirtFront",
+  "torso",
+  "neck",
+  "head",
+  "upperNear",
+  "forearmNear",
+  "handNear"
+ ],
+ "limits": {
+  "neck": {
+   "relative_to": "torso",
+   "min_deg": -30,
+   "max_deg": 30
+  },
+  "head": {
+   "relative_to": "parent",
+   "min_deg": -45,
+   "max_deg": 45
+  },
+  "skirtFront": {
+   "relative_to": "torso",
+   "min_deg": -40,
+   "max_deg": 40
+  },
+  "skirtBack": {
+   "relative_to": "torso",
+   "min_deg": -40,
+   "max_deg": 40
+  },
+  "forearmNear": {
+   "relative_to": "parent",
+   "min_deg": -120,
+   "max_deg": 30
+  },
+  "forearmFar": {
+   "relative_to": "parent",
+   "min_deg": -120,
+   "max_deg": 30
+  },
+  "handNear": {
+   "relative_to": "parent",
+   "min_deg": -70,
+   "max_deg": 70
+  },
+  "handFar": {
+   "relative_to": "parent",
+   "min_deg": -70,
+   "max_deg": 70
+  },
+  "thighNear": {
+   "relative_to": "torso",
+   "min_deg": -110,
+   "max_deg": 40
+  },
+  "thighFar": {
+   "relative_to": "torso",
+   "min_deg": -110,
+   "max_deg": 40
+  },
+  "shinNear": {
+   "relative_to": "parent",
+   "min_deg": -5,
+   "max_deg": 150
+  },
+  "shinFar": {
+   "relative_to": "parent",
+   "min_deg": -5,
+   "max_deg": 150
+  },
+  "footNear": {
+   "relative_to": "parent",
+   "min_deg": -35,
+   "max_deg": 35
+  },
+  "footFar": {
+   "relative_to": "parent",
+   "min_deg": -35,
+   "max_deg": 35
+  }
+ }
+}

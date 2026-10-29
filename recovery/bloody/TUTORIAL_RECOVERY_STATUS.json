@@ -1,0 +1,58 @@
+{
+  "scope": "Original Practice TutorialController and its mounted source screens; external progress/spawn/arena transition remain host-owned",
+  "source_apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "runtime_source": "Runtime/OriginalTutorialController.cs",
+  "resource_exporter": "scripts/export_bloody_tutorial.py",
+  "resources": "Runtime/Resources/OriginalTutorialSource.json and OriginalTutorial/2 original audio clips",
+  "mounted_data": {
+    "source_scene_component": 16538,
+    "controller_path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController",
+    "screens": 4,
+    "hand_canvas_groups": 3,
+    "touch_buttons": 5,
+    "original_tmp_texts": 18,
+    "localization_terms": 10,
+    "popup_sfx_relayer_instances": 2,
+    "popup_audio_objects": 2
+  },
+  "native_behavior": {
+    "initialize_gate": "GameMode == Practice(2), ProgressController exists, IsTutorialPassed == false",
+    "initialize": "Subscribe original pressed/released handlers; deactivate container and four screens; reset step 0; Exit all then Enter step 0; Invoke HideInGameTopBar after .1 scaled seconds",
+    "next": "Only when NetworkedGameController exists and State == Round(4), increment step; enter if it is below the screen-array length",
+    "no_button": "The source OnClickedNo is a 4-byte branch at VA 0x3444134 to OnClickedFight at VA 0x3444138",
+    "fight_button": "Exit all tutorial screens; show TopBar; MarkTutorialPassed if progress exists; if progress and transition owners exist, set Campaign level 1, stage 1, then request TransitionToArena(Campaign=0)",
+    "pressed": "dxo VA 0x3444388, fade all three hands groups to alpha 0 over .1 scaled seconds with OutCubic(9); no CancelInvoke",
+    "released": "dxp VA 0x3444398, CancelInvoke ShowAllTutorialHands then Invoke it after 1 scaled second",
+    "show_hands": "Fade all groups to alpha 1 over .1 scaled seconds, OutCubic(9), no DOKill/SetUpdate/SetLink",
+    "disable": "Remove both hand input handlers; no CancelInvoke or target tween kill",
+    "cinemachine_brain": "Serialized reference is retained in export, but these 16 methods do not read or change it",
+    "rig_and_input": "These methods do not select character/configuration, alter weapon/physics state, or block/gate the player's input"
+  },
+  "live_methodinfo_evidence": {
+    "file": "output/bloody-full-port-20261028/apk-reference36-live/tutorial-method-codeptrs.json",
+    "pressed_global_va": "0x7212de8",
+    "pressed_method_va": "0x3444388",
+    "released_global_va": "0x7212df0",
+    "released_method_va": "0x3444398",
+    "method": "Read-only original APK GOT -> MethodInfo slot -> MethodInfo -> methodPointer, using validated PT_LOAD base; no APK or runtime field/instruction writes"
+  },
+  "validation": {
+    "script": "scripts/verify_bloody_tutorial.py",
+    "native_arm64_vs_actual_csharp_assertions": 989,
+    "local_lifecycle_assertions": 5,
+    "failures": 0,
+    "whole_runtime_roslyn_exit": 0,
+    "oracle": "output/bloody-full-port-20261028/ai-check/tutorial/native-tutorial-oracle.json",
+    "comparison": "output/bloody-full-port-20261028/ai-check/tutorial/comparison.txt",
+    "combined_unity_tutorial_run": "pending Root host integration"
+  },
+  "external_context_and_limits": [
+    "The helper requires actual game-mode, progress-presence/passed flag, MarkTutorialPassed, network-state and transition owner callbacks. It never invents a save, campaign progression or a Friendly substitute for Practice.",
+    "Practice character spawning, original profiles/configuration, arena construction and the Campaign transition implementation belong to the corresponding owning controllers and are not implemented by TutorialController.",
+    "Input callbacks must be raised once for each original successful hand pointer press/release. They are not combined into only first-touch/final-release notifications.",
+    "English uses exact original localization strings, including source typos/carriage returns. All 11 source language columns are retained, but secondary font/material localization and a global language-switch service are not restored here.",
+    "Original UIInputManagerLite/GamepadUIButton and global button SFX/selection components are exported as auxiliary source evidence; their service behavior is not represented as recovered by this 16-method helper. Default imported touch containers match the current mobile reference.",
+    "The numeric oracle bounds engine/UITransitionAnimator/service calls at original ABI boundaries. Those call decisions and ordering are verified; a combined original APK versus Unity tutorial input/visual trajectory comparison is still required."
+  ],
+  "runtime_parity_verified": false
+}

@@ -1,5 +1,7 @@
 # 宋式城中地图资源 · 2026-10-26
 
+> **已停用（2026-10-29）**：城中地格视图已删除，Unity 不再使用本目录导出的运行纹理，`Resources/City/` 与 `bake_city.py`、`export_city_art.py`、`export_song_city_art.py` 一并移除。原图、提示词和摘要清单按存档保留，以下说明仅记录当时的导出方式。
+
 原始资源来自本项目 `output/imagegen/city-song-20261026/flat/`，由内置 image_gen 生成。21张 PNG 原样保存于 `source/`，按项目 MIT 许可证提供。候选稿不参与导出。
 
 在项目根目录运行 `python unity/export_city_art.py`，或完整运行 `python unity/bake_city.py`。运行纹理位于 `unity/JianghuUnity/Assets/Resources/City/`，游戏运行无需生成依赖。

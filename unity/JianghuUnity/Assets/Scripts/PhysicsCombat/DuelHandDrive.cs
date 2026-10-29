@@ -11,12 +11,12 @@ public sealed partial class PhysicsDuel {
         // input target's travel speed or a second extension / heading filter.
         float HandInputBlend=>1-Mathf.Exp(-Time.fixedDeltaTime/.022f);
         public float PrimaryGripError=>MeasuredJointGap(primaryGrip);
-        public float PrimaryGripAngleError=>Mathf.Abs(Mathf.DeltaAngle(sword.rb.rotation-limbs["handNear"].rb.rotation,-primaryGrip.referenceAngle));
+        public float PrimaryGripAngleError=>Mathf.Abs(Mathf.DeltaAngle(sword.rb.rotation-limbs["handNear"].rb.rotation,-primaryGrip.CombatReferenceAngle()));
         public float HandTargetError(string side)=>Vector2.Distance(limbs["hand"+side].A,handTargets[side].target);
         public J HandPoseState(string side) {
             Limb a=limbs["upper"+side],f=limbs["forearm"+side],h=limbs["hand"+side];
             Vector2 t=handTargets[side].target;
-            return J.O("upper_angle",a.rb.rotation,"forearm_angle",f.rb.rotation,"hand_angle",h.rb.rotation,"weapon_angle",sword.rb.rotation,"hand_motor_goal",h.targetAngle,"wrist_relative_angle",Mathf.DeltaAngle(f.rb.rotation,h.rb.rotation),"wrist_joint_angle",h.joint.jointAngle,"wrist_reference",h.joint.referenceAngle,"wrist_min",h.joint.limits.min,"wrist_max",h.joint.limits.max,"primary_fixed_reference",primaryGrip.referenceAngle,"primary_grip_angle_error",PrimaryGripAngleError,"hand_inertia",h.rb.inertia,"weapon_inertia",sword.rb.inertia,"wrist_x",h.A.x,"wrist_y",h.A.y,"target_x",t.x,"target_y",t.y,"target_error",HandTargetError(side),"carry_angle",carryAngle);
+            return J.O("upper_angle",a.rb.rotation,"forearm_angle",f.rb.rotation,"hand_angle",h.rb.rotation,"weapon_angle",sword.rb.rotation,"hand_motor_goal",h.targetAngle,"wrist_relative_angle",Mathf.DeltaAngle(f.rb.rotation,h.rb.rotation),"wrist_joint_angle",h.joint.CombatJointAngle(),"wrist_reference",h.joint.CombatReferenceAngle(),"wrist_min",h.joint.limits.min,"wrist_max",h.joint.limits.max,"primary_fixed_reference",primaryGrip.CombatReferenceAngle(),"primary_grip_angle_error",PrimaryGripAngleError,"hand_inertia",h.rb.inertia,"weapon_inertia",sword.rb.inertia,"wrist_x",h.A.x,"wrist_y",h.A.y,"target_x",t.x,"target_y",t.y,"target_error",HandTargetError(side),"carry_angle",carryAngle);
         }
         void CreateHandTargets() {
             // The small palm collider has hundreds of times less rotational

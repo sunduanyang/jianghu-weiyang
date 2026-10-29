@@ -15,6 +15,7 @@ public sealed partial class PhysicsDuel {
     public bool ReferenceCombat=>!Campaign||campaign.battle["fighters"][0]["physics_profile"].S==ReferenceProfile;
     bool referenceBindProbe;
     bool referenceProbeBody,referenceProbeCollecting;
+    bool referenceContactBaseline;
     int referenceProbeContactEvents;
     int referenceSteps=4;
     int referenceSubstep;
@@ -22,10 +23,14 @@ public sealed partial class PhysicsDuel {
     PhysicsMaterial2D referenceRootMaterial,referencePelvisMaterial,referenceGroundMaterial,referenceHandleMaterial;
     static void ReferenceMaterial(PhysicsMaterial2D material,float friction,float bounce,int combine=1){material.friction=friction;material.bounciness=bounce;material.frictionCombine=(PhysicsMaterialCombine2D)combine;material.bounceCombine=(PhysicsMaterialCombine2D)4;}
     void ConfigureReferencePhysics(){
+        referenceContactBaseline=IsSmoke&&Arg("-referenceContactBaseline")=="1";
         var left=Campaign?DuelWeapon.CampaignWeapon(campaign.battle["fighters"][0]["weapon"]):DuelWeapon.All[playerWeaponIndex];
         var right=Campaign?DuelWeapon.CampaignWeapon(campaign.battle["fighters"][1]["weapon"]):DuelWeapon.All[enemyWeaponIndex];
         bool source=ReferenceCombat&&UseSourceRig;
-        int needed=source?1:Mathf.Max(ReferenceSolverSteps(left),ReferenceSolverSteps(right));
+        // Step the whole constrained character together. Per-weapon CCD
+        // separates the grip; one discrete 60Hz step tunnels thin blades
+        // through each other and leaves compound guards hooked together.
+        int needed=source?8:Mathf.Max(ReferenceSolverSteps(left),ReferenceSolverSteps(right));
         if(!source&&Campaign&&(campaign.battle["fighters"][0]["shield"].B||campaign.battle["fighters"][1]["shield"].B))needed=Mathf.Max(needed,16);
         referenceSteps=IsSmoke&&int.TryParse(Arg("-referenceSubsteps"),out var measuredSteps)&&measuredSteps>=1&&measuredSteps<=16?measuredSteps:needed;
         Time.fixedDeltaTime=ReferenceCombat?1f/60:1f/120;
@@ -33,7 +38,7 @@ public sealed partial class PhysicsDuel {
         // Keep the client's established constraint budget for BOTH graphs.
         // The recovered prefab settings use 10/10, but their graph plus this
         // game's held-item geometry needs the same 50/60 budget as the other
-        // formal rig. Contact cadence and recovered body/force values stay.
+        // formal rig. The outer control tick and recovered body/force values stay.
         Physics2D.velocityIterations=50;
         Physics2D.positionIterations=60;
         if(IsSmoke&&int.TryParse(Arg("-referenceVelocityIterations"),out var velocityStudy)&&velocityStudy>=1&&velocityStudy<=200)Physics2D.velocityIterations=velocityStudy;
@@ -47,10 +52,17 @@ public sealed partial class PhysicsDuel {
         if(IsSmoke&&float.TryParse(Arg("-referenceBaumgarte"),System.Globalization.NumberStyles.Float,System.Globalization.CultureInfo.InvariantCulture,out var baumgarteStudy)&&baumgarteStudy>0&&baumgarteStudy<=1)Physics2D.baumgarteScale=baumgarteStudy;
         controls.reference=ReferenceCombat;
         if(ReferenceCombat){
-            ReferenceMaterial(bodyMaterial,.5f,.25f);ReferenceMaterial(footMaterial,1,0);ReferenceMaterial(bladeMaterial,.7f,.1f,3);ReferenceMaterial(shieldMaterial,.7f,.1f,3);
+            ReferenceMaterial(bodyMaterial,.5f,.25f);ReferenceMaterial(footMaterial,1,0);
+            // Source HandItem_* materials transfer tangential impact with
+            // .7 / Maximum. The previous .05 / Minimum tuning weakened that
+            // transfer and is retained only for controlled regression runs.
+            float surfaceFriction=referenceContactBaseline?.05f:.7f;int surfaceCombine=referenceContactBaseline?2:3;
+            if(IsSmoke&&float.TryParse(Arg("-referenceSurfaceFriction"),System.Globalization.NumberStyles.Float,System.Globalization.CultureInfo.InvariantCulture,out var frictionStudy)&&frictionStudy>=0&&frictionStudy<=1)surfaceFriction=frictionStudy;
+            if(IsSmoke&&int.TryParse(Arg("-referenceSurfaceCombine"),out var combineStudy)&&combineStudy>=0&&combineStudy<=4)surfaceCombine=combineStudy;
+            ReferenceMaterial(bladeMaterial,surfaceFriction,.1f,surfaceCombine);ReferenceMaterial(shieldMaterial,referenceContactBaseline?.25f:.7f,.1f,referenceContactBaseline?2:3);
             if(referenceRootMaterial==null){referenceRootMaterial=Material("Root",.35f,0);referencePelvisMaterial=Material("Pelvis",.95f,0);referenceGroundMaterial=Material("Ground",.25f,.15f);referenceHandleMaterial=Material("Sliding shaft and guard",.18f,.1f);}
             ReferenceMaterial(referenceRootMaterial,.35f,0);ReferenceMaterial(referencePelvisMaterial,.95f,0);ReferenceMaterial(referenceGroundMaterial,.25f,.15f);
-            ReferenceMaterial(referenceHandleMaterial,.18f,.1f,3);
+            ReferenceMaterial(referenceHandleMaterial,surfaceFriction,.1f,surfaceCombine);
             foreach(var collider in GetComponentsInChildren<Collider2D>())if(collider.gameObject.layer==8)collider.sharedMaterial=referenceGroundMaterial;
         }
     }
@@ -164,7 +176,7 @@ public sealed partial class PhysicsDuel {
             BuildReferenceCorpse();
             BuildSourceImpalement();
             BindEquipmentImpaleMaterials();
-            foreach(var a in colliders)foreach(var b in colliders)if(a!=b)Physics2D.IgnoreCollision(a,b);
+            foreach(var a in colliders)foreach(var b in colliders)if(a!=b)DuelPhysicsAPI.IgnoreCollision(a,b);
             // Match the reference graph: per-body CCD splits the solution at
             // individual impacts and lets a driven hand outrun its rigid grip.
             foreach(var rb in root.GetComponentsInChildren<Rigidbody2D>())rb.collisionDetectionMode=CollisionDetectionMode2D.Discrete;
@@ -223,11 +235,15 @@ public sealed partial class PhysicsDuel {
         void MoveReferenceDriver(Rigidbody2D body,Vector2 goal){
             if(game.referenceSubstep==0||!referenceDriverStarts.ContainsKey(body)){referenceDriverStarts[body]=body.position;referenceDriverGoals[body]=goal;}
             Vector2 next=Vector2.Lerp(referenceDriverStarts[body],referenceDriverGoals[body],(game.referenceSubstep+1)/(float)game.referenceSteps);
-            // A distant or blocked target must not turn finer contact steps
-            // into a faster hand motor. Bound the auxiliary hand's sweep;
-            // actual weapon angular velocity and contact impulses stay free.
-            if(!SourceRigActive&&(body==referenceBodies["handCOMNear"]||body==referenceBodies["handCOMFar"]))next=Vector2.MoveTowards(body.position,next,75*Time.fixedDeltaTime/game.referenceSteps);
-            body.MovePosition(next);
+            // CharacterMover.cln (0x3435bfc) directly drives MovePosition.
+            // There is no source 12/24 m/s hand cap. Thin blades remain on
+            // the same contact substeps as their hands and fixed grips.
+            if((!SourceRigActive||game.referenceContactBaseline)&&(body==referenceBodies["handCOMNear"]||body==referenceBodies["handCOMFar"])){
+                bool independentOff=body==referenceBodies["handCOMFar"]&&!weapon.TwoHanded;
+                float speed=SourceRigActive?(weapon.id=="unarmed"||independentOff?24:12):75;
+                next=Vector2.MoveTowards(body.position,next,speed*Time.fixedDeltaTime/game.referenceSteps);
+            }
+            body.CombatMovePosition(next);
         }
         void DropReferenceWeight(string side){if(!referenceWeights.TryGetValue(side,out var rb))return;rb.simulated=false;rb.GetComponent<FixedJoint2D>().enabled=false;var item=side=="Near"?sword:shield;item.rb.mass=1;item.rb.gravityScale=1;item.rb.linearDamping=item.rb.angularDamping=.05f;}
         Vector2 ReferenceStick(string side,out bool held){
@@ -246,13 +262,13 @@ public sealed partial class PhysicsDuel {
             float command=active&&!ReferenceKicking&&!ReferenceBeingKicked?move:0;
             if(mover.position.x*command>5.1f)command=0;
             if(ReferenceKicking)mover.linearVelocity=Vector2.zero;
-            else mover.AddForce(new Vector2(command*(ReferenceDowned?10:19),0));
+            else mover.CombatAddForce(new Vector2(command*(ReferenceDowned?10:19),0));
             float lean=1+2*Mathf.Abs(referenceBodies["headCOM"].position.x-referenceBodies["pelvisCOM"].position.x);
             float up=(health+100)*.25f;
             referenceBodies["headCOM"].gravityScale=referenceBodies["chestCOM"].gravityScale=ReferenceDowned?1:-5;
             if(!ReferenceDowned){
-                referenceBodies["headCOM"].AddForce(Vector2.up*(lean*250+up)*3);
-                referenceBodies["chestCOM"].AddForce(new Vector2(mover.linearVelocity.x*300,up*3));
+                referenceBodies["headCOM"].CombatAddForce(Vector2.up*(lean*250+up)*3);
+                referenceBodies["chestCOM"].CombatAddForce(new Vector2(mover.linearVelocity.x*300,up*3));
             }
             // BodyPart's any-leg-severed branch selects a lower pelvis point,
             // mass 5 and downed locomotion. Keep the source target displacement
@@ -263,7 +279,7 @@ public sealed partial class PhysicsDuel {
                 // above the floor. Downward-only assistance lets real ground
                 // contacts carry the weight; no motor can lift it back up.
                 var body=referenceBodies["pelvisCOM"];
-                body.AddForce(new Vector2(Mathf.Clamp((pelvisGoal.x-body.position.x)*40-body.linearVelocity.x*8,-50,50),Mathf.Min(0,(pelvisGoal.y-body.position.y)*80)));
+                body.CombatAddForce(new Vector2(Mathf.Clamp((pelvisGoal.x-body.position.x)*40-body.linearVelocity.x*8,-50,50),Mathf.Min(0,(pelvisGoal.y-body.position.y)*80)));
             }else MoveReferenceDriver(referenceBodies["pelvisCOM"],pelvisGoal);
             float vx=mover.linearVelocity.x;
             if(Mathf.Abs(vx)>.75f)walkPhase+=vx*lean*4*Mathf.Deg2Rad/game.referenceSteps;
@@ -370,7 +386,7 @@ public sealed partial class PhysicsDuel {
             RestoreReferenceDeath(s["death_state"]);RestoreSourceRig(s["source_rig"]);RestoreSourceImpalement(s["source_impalement"]);SampleReference();
         }
     }
-    void ReferenceContact(DuelContact weapon,DuelContact other,Collision2D collision){
+    void ReferenceContact(DuelContact weapon,DuelContact other,DuelCollision collision){
         SourceEquipmentContact(weapon,other,collision);
     }
 }

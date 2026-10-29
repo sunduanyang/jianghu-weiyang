@@ -6,6 +6,7 @@ runtime validation and are not certified by this translation step.
 """
 import json
 import re
+import argparse
 from pathlib import Path
 
 
@@ -39,6 +40,8 @@ def hlsl(text):
                     ('hlslcc_mtx4x4unity_WorldToObject','unity_WorldToObject'),
                     ('hlslcc_mtx4x4unity_MatrixVP','UNITY_MATRIX_VP')]:
         text=re.sub(r'\b'+old+r'\[(\d+)\]',r'transpose('+new+r')[\1]',text)
+    text=re.sub(r'\bhlslcc_mtx4x4(_\w+)\[(\d+)\]',r'transpose(\1)[\2]',text)
+    text=re.sub(r'\bhlslcc_mtx4x4(unity_\w+)\[(\d+)\]',r'transpose(\1)[\2]',text)
     # GLES permits a scalar constructor to splat into a vector. Desktop HLSL
     # requires the explicit cast form; retain all original vector arities.
     for size in [2,3,4]:
@@ -51,7 +54,7 @@ def hlsl(text):
 def program_parts(text):
     header,body=text.split('void main()',1)
     body=body[body.index('{')+1:body.rfind('}')]
-    local='\n'.join(re.findall(r'^\s*(?:(?:mediump|highp|lowp)\s+)?(?:vec[234]|bvec[234]|float|bool|int|ivec[234])\s+u_xlat\w+(?:\[\d+\])?;',header,re.M))
+    local='\n'.join(re.findall(r'^\s*(?:(?:mediump|highp|lowp)\s+)?(?:vec[234]|bvec[234]|uvec[234]|float|bool|int|uint|ivec[234])\s+(?:u_xlat\w+|TempArray\w+)(?:\[\d+\])?;',header,re.M))
     return header,local,body
 
 
@@ -63,27 +66,44 @@ def translate_program(raw, urp):
     for t,n in re.findall(r'^\s*(?:out|varying)\s+(?:(?:mediump|highp|lowp)\s+)?(vec[234]|float)\s+(\w+);',vh,re.M):interps[n]=t
     fields='\n'.join(f'{hlsl(t)} {n}:TEXCOORD{i};' for i,(n,t) in enumerate(interps.items()))
     uniforms={}
+    for n in re.findall(r'\bhlslcc_mtx4x4(_\w+)\[4\]',vh+'\n'+fh):
+        if not (urp and n in ['_PrevViewProjMatrix','_NonJitteredViewProjMatrix']):uniforms[n]='float4x4 '+n+';'
     builtins=['_Time','_SinTime','_CosTime','_ProjectionParams','_ScreenParams','_WorldSpaceCameraPos']
-    if urp:builtins+=['_GlobalMipBias','unity_SpriteColor','unity_SpriteProps']
+    if urp:builtins+=['_GlobalMipBias','unity_SpriteColor','unity_SpriteProps','unity_MotionVectorsParams','_TimeParameters','_LastTimeParameters','_AlphaToMaskAvailable','_PrevViewProjMatrix','_NonJitteredViewProjMatrix']
     for t,n,suffix in re.findall(r'(?:UNITY_UNIFORM|uniform)\s+(?:(?:mediump|highp|lowp)\s+)?(vec[234]|float|sampler2D)\s+(\w+)(\[\d+\])?;',vh+'\n'+fh):
         if n.startswith(('Xhlslcc_','hlslcc_mtx4x4')) or n in builtins:continue
         uniforms[n]=f'{hlsl(t)} {n}{suffix};'
-    for src,dst in [('in_POSITION0','input.vertex.xyz'),('in_NORMAL0','input.normal'),('in_TEXCOORD0','input.texcoord'),('in_COLOR0','input.color'),('in_TANGENT0','input.tangent')]:vb=re.sub(r'\b'+src+r'\b',dst,vb)
+    attributes=[('in_POSITION0','input.vertex'),('in_NORMAL0','input.normal'),('in_TEXCOORD0','input.texcoord'),('in_COLOR0','input.color'),('in_TANGENT0','input.tangent')]+[(f'in_TEXCOORD{i}',f'input.uv{i}') for i in range(1,8)]
+    for src,dst in attributes:vb=re.sub(r'\b'+src+r'\b',dst,vb)
     for n in interps:
         vb=re.sub(r'\b'+n+r'\b','output.'+n,vb);fb=re.sub(r'\b'+n+r'\b','input.'+n,fb)
     vb=vb.replace('gl_Position','output.vertex').replace('return;','return output;')
+    fullscreen='gl_VertexID' in vb
+    if fullscreen:
+        vb=vb.replace('gl_VertexID','input.vertexId').replace('return output;','output.vertex.z=(output.vertex.z+output.vertex.w)*0.5;\nreturn output;')
+        # Retain source GLES coordinates through all screen-space arithmetic;
+        # reflect render-target coordinates only when sampling on D3D. This
+        # also preserves the rim field's source +y offset toward screen top.
+        fb=replace_calls(fb,'texture',lambda a:f'OriginalSampleRT({a[0]},{a[1]},{a[2] if len(a)>2 else "0"})')
     fb=re.sub(r'\bSV_TARGET0\b','result',fb.replace('return;','return result;'),flags=re.I)
+    fb=fb.replace('gl_FragCoord','sourceFragCoord')
     helpers='\n'.join(f'bool{i} greaterThanEqual(float{i} a,float{i} b){{return a>=b;}}\nbool{i} lessThan(float{i} a,float{i} b){{return a<b;}}' for i in [2,3,4])
+    if fullscreen:helpers+='\nint int_bitfieldInsert(int baseValue,int insertValue,int offset,int bits) { uint mask=uint(~(int(~0)<<uint(bits))<<uint(offset));return int((uint(baseValue)&~mask)|((uint(insertValue)<<uint(offset))&mask)); }'
+    if fullscreen:helpers+='\nfloat4 OriginalSampleRT(sampler2D sourceTexture,float2 sourceUV,float bias) {\n#if UNITY_UV_STARTS_AT_TOP\nsourceUV.y=1-sourceUV.y;\n#endif\nreturn tex2Dbias(sourceTexture,float4(sourceUV,0,bias));\n}'
     setup='SetUpSpriteInstanceProperties();' if urp else ''
     output=f"""{chr(10).join(uniforms.values())}
 {helpers}
-struct appdata {{ float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; }};
+struct appdata {{ float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 uv4:TEXCOORD4;float4 uv5:TEXCOORD5;float4 uv6:TEXCOORD6;float4 uv7:TEXCOORD7;float4 color:COLOR;uint vertexId:SV_VertexID; }};
 struct varying {{ float4 vertex:SV_POSITION;{fields} }};
 varying vert(appdata input) {{ varying output=(varying)0;{setup}
 {hlsl(vl)}
 {hlsl(vb)}
 }}
 float4 frag(varying input):SV_Target {{ float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 {hlsl(fl)}
 {hlsl(fb)}
 }}
@@ -113,6 +133,7 @@ def tags_code(tags):
 
 
 def main():
+    parser=argparse.ArgumentParser();parser.add_argument('--shader-prefix',default='');args=parser.parse_args()
     repo=Path(__file__).resolve().parents[1]
     source=repo/'output/bloody-full-port-20261028/shader-programs'
     project=repo/'unity/BloodyBastardsRecovery/Assets/Shader'
@@ -122,6 +143,7 @@ def main():
     for directory in source.iterdir():
         if not directory.is_dir() or directory.name.startswith('Hidden_PaintCore_'):continue
         structure=json.loads((directory/'structure.json').read_text());parsed=structure['m_ParsedForm'];name=parsed['m_Name']
+        if not name.startswith(args.shader_prefix):continue
         target=project/(name.replace('/','_')+'.shader')
         raw_shader=repo/'output/bloody-full-port-20261028/Recovered/ExportedProject/Assets/Shader'/target.name
         if not raw_shader.exists():continue
@@ -137,7 +159,7 @@ def main():
             programs=[]
             for i,e in enumerate(entries):
                 variant=by_index[e['m_BlobIndex']];raw=(directory/variant['file']).read_text()
-                if any(x in raw for x in ['gl_VertexID','sampler2DArray','sampler3D']):continue
+                if any(x in raw for x in ['sampler2DArray','sampler3D']):continue
                 keys=[parsed['m_KeywordNames'][n] for n in e['m_KeywordIndices']]
                 condition=' && '.join(('defined('+key+')') if key in keys else ('!defined('+key+')') for key in lightkeys)
                 programs.append(('#if '+condition+'\n' if lighting else '')+translate_program(raw,urp)+('\n#endif' if lighting else ''))
@@ -163,10 +185,26 @@ ENDHLSL
             pos=properties.rfind('}');properties=properties[:pos]+'[PerRendererData] _RendererColor ("Renderer color", Color)=(1,1,1,1)\n'+properties[pos:]
         output=f'// Source GLES expressions, original pass states and 16 URP2D shape-light combinations.\nShader "{name}" {{\n{properties}\nSubShader {{\n{tags_code(parsed["m_SubShaders"][0]["m_Tags"])}\n'+chr(10).join(passes)+'\n}\n}\n'
         output='\n'.join(line.rstrip() for line in output.splitlines())+'\n'
-        saved=outputs/target.name;saved.write_text(output,encoding='utf-8');target.write_text(output,encoding='utf-8')
+        saved=outputs/target.name;saved.write_text(output,encoding='utf-8')
         ledger.append(dict(shader=name,passes=len(passes),programs=translated,source=directory.relative_to(repo).as_posix(),
                            lighting_variants_ported=urp,unsupported_variants=['GPU SpriteSkin','stereo','DOTS','debug display'],render_parity_verified=False))
-    (outputs/'translation-status.json').write_text(json.dumps(ledger,indent=2),encoding='utf-8');print(json.dumps(ledger))
+    status=outputs/'translation-status.json'
+    if args.shader_prefix and status.exists():
+        previous=json.loads(status.read_text());ledger=[r for r in previous if not r['shader'].startswith(args.shader_prefix)]+ledger
+    status.write_text(json.dumps(ledger,indent=2),encoding='utf-8');print(json.dumps(ledger))
+    if args.shader_prefix and not 'Hidden/PaintCore/CwDecalPointMultiply'.startswith(args.shader_prefix):return
+    decal=source/'Hidden_PaintCore_CwDecal'
+    # VFXAndDecalManager submits point decals with source blend index 10.
+    # Retain that exact GPU program, including original alpha-preserving blend.
+    raw=(decal/'9-0-51.glsl').read_text()
+    program=translate_program(raw,False)
+    # A UV-space mesh draw targets RT texels directly. Convert clip Y for
+    # D3D-style texture coordinates, without changing source UV/world math.
+    raster='output.vertex.xy = u_xlat0.xy * float2(2.0,2.0) + float2(-1.0,-1.0);'
+    if program.count(raster)!=1:raise ValueError('Original paint UV raster assignment missing or ambiguous')
+    program=program.replace(raster,raster+'\n#if UNITY_UV_STARTS_AT_TOP && !defined(ORIGINAL_PAINT_LEGACY_UV)\noutput.vertex.y = -output.vertex.y;\n#endif')
+    paint='Shader "Hidden/PaintCore/CwDecalPointMultiply" {SubShader {Cull Off ZWrite Off ZTest Always Pass {HLSLPROGRAM\n#pragma vertex vert\n#pragma fragment frag\n#pragma target 3.5\n#pragma multi_compile_local _ ORIGINAL_PAINT_LEGACY_UV\n#include "UnityCG.cginc"\n'+program+'\nENDHLSL\n}}}\n'
+    (outputs/'Hidden_PaintCore_CwDecalPointMultiply.shader').write_text(paint,encoding='utf-8')
 
 
 if __name__=='__main__':main()

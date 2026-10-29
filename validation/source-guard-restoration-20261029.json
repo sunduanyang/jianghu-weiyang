@@ -1,0 +1,897 @@
+{
+  "date": "2026-10-29",
+  "scope": "Shared formal spar/rob/assault combat. Original drive/material/shield response restoration; not full APK equivalence.",
+  "release": {
+    "name": "SourceGuardRelease20261029",
+    "executable": {
+      "path": "unity/Build/SourceGuardRelease20261029/江湖未央.exe",
+      "sha256": "9806abde4a406ed68647e9505852c49f6aa72a372f4f084e2aa2821affea57a2",
+      "bytes": 667136
+    },
+    "assembly": {
+      "path": "unity/Build/SourceGuardRelease20261029/江湖未央_Data/Managed/Assembly-CSharp.dll",
+      "sha256": "931021e89a673ac164085a7120a9d1eb0a233be4810e5b02da30e97df43f888a",
+      "bytes": 1519104
+    },
+    "build_log": "output/source-guard-release-build-20261029.log",
+    "backend_python_files": 69,
+    "backend_python_drift": []
+  },
+  "original_source": {
+    "apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+    "evidence": [
+      {
+        "path": "output/bloody-full-port-20261028/decompiled-clean/CharacterMover__cln_3435bfc.c",
+        "sha256": "bc6c15c098647af9e5612211775686aad24a207175fb2476256ff3048a95ee38",
+        "bytes": 5096
+      },
+      {
+        "path": "output/bloody-full-port-20261028/native-full-c/SourcePrefab_HandItem__OnCollisionEnter2D_363f08c.c",
+        "sha256": "13f0fcbb7c693e9f26fb52640734922be38d7dfda068bdd0e7118c001653a060",
+        "bytes": 9084
+      },
+      {
+        "path": "recovery/bloody/Runtime/OriginalRig.Combat.cs",
+        "sha256": "5614775044115cb54c0ea3c414df877043585199bb59ff42e037b06ea0ca273c",
+        "bytes": 22069
+      },
+      {
+        "path": "unity/JianghuUnity/Assets/Resources/CombatSource/rig.json",
+        "sha256": "a423cf4bfaf89cf24a46cb27b6b82ed6c4102be07929e92d47e6178214ec9810",
+        "bytes": 629299
+      }
+    ],
+    "hand_driver": "CharacterMover.cln 0x3435bfc: direct MovePosition; no per-hand 12/24 m/s cap. Original global max linear speed 100 retained.",
+    "item_material": {
+      "friction": 0.7,
+      "combine": 3,
+      "combine_name": "Maximum"
+    },
+    "enemy_weapon_layers_15_16_collide": true,
+    "shield_response": {
+      "method": "SourcePrefab_HandItem.OnCollisionEnter2D 0x363f08c",
+      "impact_speed_gate": 5,
+      "stamina": "min(2.5, relative linear speed * incoming item D / 50)",
+      "velocity": "Shield copies incoming item body velocity if relative linear speed > 0.5",
+      "events": "ShieldWasHit and WeaponHitShield subscribe to stamina consumer",
+      "is_shield": "category 8; Nothing Type 7 is not a shield"
+    },
+    "clash_D_samples": {
+      "dagger": 1,
+      "sabre": 2,
+      "sword": 2,
+      "axe": 2,
+      "mace": 1.5,
+      "spear": 5.5,
+      "greatsword": 4,
+      "greataxe": 6,
+      "warhammer": 4,
+      "shield": 1
+    },
+    "clash_D_adaptation": "Separate positive original item D, scaled by game damage coefficient / profile base coefficient; never reuse potentially negative health effectiveD. Health formula unchanged."
+  },
+  "production": {
+    "removed_source_hand_caps_mps": [
+      12,
+      24
+    ],
+    "restored_item_material": "0.7 Maximum",
+    "added": "Original shield stamina and velocity response",
+    "preserved": [
+      "Discrete held bodies",
+      "head neck-hinge origin",
+      "outer 60Hz",
+      "8 whole-rig substeps",
+      "50/60 iterations"
+    ],
+    "default_new_battle_backend": "legacy-physics2d",
+    "core_selection": "Explicit core flag and saved Core frames retain backend choice"
+  },
+  "validation": {
+    "guard": {
+      "passed": true,
+      "checks": 10,
+      "report": "output/source-guard-release-20261029/guard/guard/acceptance.json",
+      "failed_checks": []
+    },
+    "baseline": {
+      "passed": false,
+      "checks": 9,
+      "report": "output/source-guard-release-20261029/baseline/guard/acceptance.json",
+      "failed_checks": [
+        "fast manual primary blade can hit beyond a weapon guard 枣木剑 / 12",
+        "fast manual primary blade can hit beyond a weapon guard 单手剑 / 12",
+        "human primary blade can hit after an actual guard contact"
+      ]
+    },
+    "source": {
+      "passed": true,
+      "checks": 97,
+      "report": "output/source-guard-release-20261029/source/source-rig/acceptance.json",
+      "failed_checks": []
+    },
+    "resume": {
+      "passed": true,
+      "checks": 17,
+      "report": "output/source-guard-release-20261029/source/source-rig-resume/acceptance.json",
+      "failed_checks": []
+    },
+    "mechanics": {
+      "passed": true,
+      "checks": 93,
+      "report": "output/source-guard-release-20261029/source/reference-mechanics/acceptance.json",
+      "failed_checks": []
+    },
+    "formal": {
+      "passed": true,
+      "checks": 81,
+      "report": "output/source-guard-release-20261029/formal/acceptance.json",
+      "failed_checks": []
+    },
+    "mesh": {
+      "passed": true,
+      "checks": 122,
+      "report": "output/source-guard-release-20261029/mesh/character-binding-native.json",
+      "failed_checks": []
+    },
+    "actual_bat_mesh": {
+      "passed": true,
+      "checks": 122,
+      "report": "output/source-guard-release-20261029/launcher/character-binding-native.json",
+      "failed_checks": []
+    }
+  },
+  "comparison": {
+    "raw_reports": [
+      "output/source-guard-release-20261029/guard/guard/guard-cases.json",
+      "output/source-guard-release-20261029/baseline/guard/guard-cases.json"
+    ],
+    "cases": {
+      "guard": [
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 2143.1942,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "wood_sword",
+          "enemy_shield": false,
+          "arc": 6,
+          "baseline_tuning": false,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 20,
+          "blade_friction": 0.7,
+          "friction_combine": 3,
+          "weapon_contacts": 66,
+          "shield_contacts": 0,
+          "first_guard_contact": 1.39375,
+          "peak_guard_contact_speed": 26.02966,
+          "body_hits": 10,
+          "body_hits_after_guard": 10,
+          "first_body_hit": 4.366621,
+          "max_point_speed": 146.8852,
+          "max_grip_gap": 0.00247929,
+          "guard_deflection_degrees": 46.98276,
+          "primary_blade_hits": 0,
+          "primary_handle_hits": 10,
+          "primary_blade_hits_after_guard": 0,
+          "attacker_clash_stamina": 0,
+          "defender_clash_stamina": 0,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        },
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 2000.55120000001,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "wood_sword",
+          "enemy_shield": false,
+          "arc": 12,
+          "baseline_tuning": false,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 20,
+          "blade_friction": 0.7,
+          "friction_combine": 3,
+          "weapon_contacts": 95,
+          "shield_contacts": 0,
+          "first_guard_contact": 1.404167,
+          "peak_guard_contact_speed": 115.7605,
+          "body_hits": 20,
+          "body_hits_after_guard": 20,
+          "first_body_hit": 1.533331,
+          "max_point_speed": 146.8796,
+          "max_grip_gap": 0.002479284,
+          "guard_deflection_degrees": 52.65347,
+          "primary_blade_hits": 2,
+          "primary_handle_hits": 18,
+          "primary_blade_hits_after_guard": 2,
+          "attacker_clash_stamina": 0,
+          "defender_clash_stamina": 0,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        },
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 3020.1098,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "wood_sword",
+          "enemy_shield": true,
+          "arc": 6,
+          "baseline_tuning": false,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 20,
+          "blade_friction": 0.7,
+          "friction_combine": 3,
+          "weapon_contacts": 23,
+          "shield_contacts": 50,
+          "first_guard_contact": 1.389584,
+          "peak_guard_contact_speed": 49.57293,
+          "body_hits": 1,
+          "body_hits_after_guard": 1,
+          "first_body_hit": 2.083323,
+          "max_point_speed": 146.5168,
+          "max_grip_gap": 0.003210243,
+          "guard_deflection_degrees": 50.1022,
+          "primary_blade_hits": 0,
+          "primary_handle_hits": 1,
+          "primary_blade_hits_after_guard": 0,
+          "attacker_clash_stamina": 1.496133,
+          "defender_clash_stamina": 2.393813,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        },
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 2452.6263,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "wood_sword",
+          "enemy_shield": true,
+          "arc": 12,
+          "baseline_tuning": false,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 20,
+          "blade_friction": 0.7,
+          "friction_combine": 3,
+          "weapon_contacts": 43,
+          "shield_contacts": 42,
+          "first_guard_contact": 1.404167,
+          "peak_guard_contact_speed": 153.5161,
+          "body_hits": 5,
+          "body_hits_after_guard": 5,
+          "first_body_hit": 1.899992,
+          "max_point_speed": 146.6299,
+          "max_grip_gap": 0.003428742,
+          "guard_deflection_degrees": 72.94211,
+          "primary_blade_hits": 0,
+          "primary_handle_hits": 5,
+          "primary_blade_hits_after_guard": 0,
+          "attacker_clash_stamina": 2.884265,
+          "defender_clash_stamina": 4.614825,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        },
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 2192.54490000001,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "",
+          "enemy_shield": false,
+          "arc": 6,
+          "baseline_tuning": false,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 15,
+          "blade_friction": 0.7,
+          "friction_combine": 3,
+          "weapon_contacts": 91,
+          "shield_contacts": 0,
+          "first_guard_contact": 1.391667,
+          "peak_guard_contact_speed": 38.16249,
+          "body_hits": 18,
+          "body_hits_after_guard": 18,
+          "first_body_hit": 1.933325,
+          "max_point_speed": 127.5309,
+          "max_grip_gap": 0.001791929,
+          "guard_deflection_degrees": 45.84668,
+          "primary_blade_hits": 0,
+          "primary_handle_hits": 18,
+          "primary_blade_hits_after_guard": 0,
+          "attacker_clash_stamina": 0,
+          "defender_clash_stamina": 0,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        },
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 2053.8748,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "",
+          "enemy_shield": false,
+          "arc": 12,
+          "baseline_tuning": false,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 15,
+          "blade_friction": 0.7,
+          "friction_combine": 3,
+          "weapon_contacts": 100,
+          "shield_contacts": 0,
+          "first_guard_contact": 1.402083,
+          "peak_guard_contact_speed": 90.06075,
+          "body_hits": 27,
+          "body_hits_after_guard": 27,
+          "first_body_hit": 1.549998,
+          "max_point_speed": 126.7444,
+          "max_grip_gap": 0.00173716,
+          "guard_deflection_degrees": 59.49994,
+          "primary_blade_hits": 3,
+          "primary_handle_hits": 24,
+          "primary_blade_hits_after_guard": 3,
+          "attacker_clash_stamina": 0,
+          "defender_clash_stamina": 0,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        },
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 2805.804,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "",
+          "enemy_shield": true,
+          "arc": 6,
+          "baseline_tuning": false,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 15,
+          "blade_friction": 0.7,
+          "friction_combine": 3,
+          "weapon_contacts": 27,
+          "shield_contacts": 63,
+          "first_guard_contact": 1.370834,
+          "peak_guard_contact_speed": 42.83418,
+          "body_hits": 6,
+          "body_hits_after_guard": 6,
+          "first_body_hit": 2.099989,
+          "max_point_speed": 128.3939,
+          "max_grip_gap": 0.001738083,
+          "guard_deflection_degrees": 56.75674,
+          "primary_blade_hits": 0,
+          "primary_handle_hits": 6,
+          "primary_blade_hits_after_guard": 0,
+          "attacker_clash_stamina": 2.578315,
+          "defender_clash_stamina": 5.15663,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        },
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 2389.54870000001,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "",
+          "enemy_shield": true,
+          "arc": 12,
+          "baseline_tuning": false,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 15,
+          "blade_friction": 0.7,
+          "friction_combine": 3,
+          "weapon_contacts": 40,
+          "shield_contacts": 93,
+          "first_guard_contact": 1.404167,
+          "peak_guard_contact_speed": 110.9117,
+          "body_hits": 3,
+          "body_hits_after_guard": 3,
+          "first_body_hit": 2.099989,
+          "max_point_speed": 128.4229,
+          "max_grip_gap": 0.001738142,
+          "guard_deflection_degrees": 66.41782,
+          "primary_blade_hits": 0,
+          "primary_handle_hits": 3,
+          "primary_blade_hits_after_guard": 0,
+          "attacker_clash_stamina": 3.363764,
+          "defender_clash_stamina": 6.727527,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        }
+      ],
+      "baseline": [
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 1969.51789999999,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "wood_sword",
+          "enemy_shield": false,
+          "arc": 6,
+          "baseline_tuning": true,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 20,
+          "blade_friction": 0.05,
+          "friction_combine": 2,
+          "weapon_contacts": 101,
+          "shield_contacts": 0,
+          "first_guard_contact": 1.527081,
+          "peak_guard_contact_speed": 10.88524,
+          "body_hits": 0,
+          "body_hits_after_guard": 0,
+          "first_body_hit": -1,
+          "max_point_speed": 27.01213,
+          "max_grip_gap": 0.0008700738,
+          "guard_deflection_degrees": 44.6153,
+          "primary_blade_hits": 0,
+          "primary_handle_hits": 0,
+          "primary_blade_hits_after_guard": 0,
+          "attacker_clash_stamina": 0,
+          "defender_clash_stamina": 0,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        },
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 2254.7916,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "wood_sword",
+          "enemy_shield": false,
+          "arc": 12,
+          "baseline_tuning": true,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 20,
+          "blade_friction": 0.05,
+          "friction_combine": 2,
+          "weapon_contacts": 93,
+          "shield_contacts": 0,
+          "first_guard_contact": 1.564581,
+          "peak_guard_contact_speed": 19.11973,
+          "body_hits": 0,
+          "body_hits_after_guard": 0,
+          "first_body_hit": -1,
+          "max_point_speed": 27.01213,
+          "max_grip_gap": 0.001289125,
+          "guard_deflection_degrees": 44.23068,
+          "primary_blade_hits": 0,
+          "primary_handle_hits": 0,
+          "primary_blade_hits_after_guard": 0,
+          "attacker_clash_stamina": 0,
+          "defender_clash_stamina": 0,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        },
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 2837.97420000001,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "wood_sword",
+          "enemy_shield": true,
+          "arc": 6,
+          "baseline_tuning": true,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 20,
+          "blade_friction": 0.05,
+          "friction_combine": 2,
+          "weapon_contacts": 213,
+          "shield_contacts": 161,
+          "first_guard_contact": 1.522915,
+          "peak_guard_contact_speed": 8.554446,
+          "body_hits": 0,
+          "body_hits_after_guard": 0,
+          "first_body_hit": -1,
+          "max_point_speed": 27.04485,
+          "max_grip_gap": 0.0008232726,
+          "guard_deflection_degrees": 44.97223,
+          "primary_blade_hits": 0,
+          "primary_handle_hits": 0,
+          "primary_blade_hits_after_guard": 0,
+          "attacker_clash_stamina": 0,
+          "defender_clash_stamina": 0,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        },
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 2434.1691,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "wood_sword",
+          "enemy_shield": true,
+          "arc": 12,
+          "baseline_tuning": true,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 20,
+          "blade_friction": 0.05,
+          "friction_combine": 2,
+          "weapon_contacts": 147,
+          "shield_contacts": 211,
+          "first_guard_contact": 1.566664,
+          "peak_guard_contact_speed": 19.5715,
+          "body_hits": 0,
+          "body_hits_after_guard": 0,
+          "first_body_hit": -1,
+          "max_point_speed": 27.02419,
+          "max_grip_gap": 0.00106489,
+          "guard_deflection_degrees": 47.13409,
+          "primary_blade_hits": 0,
+          "primary_handle_hits": 0,
+          "primary_blade_hits_after_guard": 0,
+          "attacker_clash_stamina": 0,
+          "defender_clash_stamina": 0,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        },
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 1979.8162,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "",
+          "enemy_shield": false,
+          "arc": 6,
+          "baseline_tuning": true,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 15,
+          "blade_friction": 0.05,
+          "friction_combine": 2,
+          "weapon_contacts": 90,
+          "shield_contacts": 0,
+          "first_guard_contact": 1.531248,
+          "peak_guard_contact_speed": 9.272055,
+          "body_hits": 0,
+          "body_hits_after_guard": 0,
+          "first_body_hit": -1,
+          "max_point_speed": 25.65913,
+          "max_grip_gap": 0.0009974313,
+          "guard_deflection_degrees": 46.60678,
+          "primary_blade_hits": 0,
+          "primary_handle_hits": 0,
+          "primary_blade_hits_after_guard": 0,
+          "attacker_clash_stamina": 0,
+          "defender_clash_stamina": 0,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        },
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 1834.8079,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "",
+          "enemy_shield": false,
+          "arc": 12,
+          "baseline_tuning": true,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 15,
+          "blade_friction": 0.05,
+          "friction_combine": 2,
+          "weapon_contacts": 91,
+          "shield_contacts": 0,
+          "first_guard_contact": 1.570831,
+          "peak_guard_contact_speed": 18.54143,
+          "body_hits": 0,
+          "body_hits_after_guard": 0,
+          "first_body_hit": -1,
+          "max_point_speed": 25.57869,
+          "max_grip_gap": 0.001143445,
+          "guard_deflection_degrees": 42.35318,
+          "primary_blade_hits": 0,
+          "primary_handle_hits": 0,
+          "primary_blade_hits_after_guard": 0,
+          "attacker_clash_stamina": 0,
+          "defender_clash_stamina": 0,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        },
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 2090.7767,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "",
+          "enemy_shield": true,
+          "arc": 6,
+          "baseline_tuning": true,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 15,
+          "blade_friction": 0.05,
+          "friction_combine": 2,
+          "weapon_contacts": 198,
+          "shield_contacts": 178,
+          "first_guard_contact": 1.524998,
+          "peak_guard_contact_speed": 8.194942,
+          "body_hits": 0,
+          "body_hits_after_guard": 0,
+          "first_body_hit": -1,
+          "max_point_speed": 25.68386,
+          "max_grip_gap": 0.0007968377,
+          "guard_deflection_degrees": 44.68829,
+          "primary_blade_hits": 0,
+          "primary_handle_hits": 0,
+          "primary_blade_hits_after_guard": 0,
+          "attacker_clash_stamina": 0,
+          "defender_clash_stamina": 0,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        },
+        {
+          "physics_backend": {
+            "backend": "legacy-physics2d",
+            "native_steps": 5760,
+            "simulation_ms": 1884.41929999999,
+            "legacy_simulation_steps": 5760
+          },
+          "weapon": "sword",
+          "template": "",
+          "enemy_shield": true,
+          "arc": 12,
+          "baseline_tuning": true,
+          "aim": "primary_blade_center_through_torso",
+          "body_threshold": 15,
+          "blade_friction": 0.05,
+          "friction_combine": 2,
+          "weapon_contacts": 138,
+          "shield_contacts": 175,
+          "first_guard_contact": 1.574997,
+          "peak_guard_contact_speed": 18.58354,
+          "body_hits": 0,
+          "body_hits_after_guard": 0,
+          "first_body_hit": -1,
+          "max_point_speed": 25.68386,
+          "max_grip_gap": 0.0008088846,
+          "guard_deflection_degrees": 46.11786,
+          "primary_blade_hits": 0,
+          "primary_handle_hits": 0,
+          "primary_blade_hits_after_guard": 0,
+          "attacker_clash_stamina": 0,
+          "defender_clash_stamina": 0,
+          "attacker_stamina_budget": 1000,
+          "defender_stamina": 100,
+          "duration": 12.00075
+        }
+      ]
+    },
+    "attacker_stamina_budget": 1000,
+    "defender_stamina_budget": 100,
+    "max_duration_seconds": 12,
+    "input": "Controlled manual stick input aims primary blade center through torso; real complete source fighters, active colliders, health damage. No teleports, collider removal or unbound grips.",
+    "blade_success": "Fast arc 12 no-shield sample: wood 2 / metal 3 primary blade body hits after actual guard contact; baseline all eight zero. Hilt hits reported separately. Slow sweeps and shields need not yield blade hits.",
+    "body_speed_thresholds": {
+      "wood": 20,
+      "metal": 15
+    },
+    "baseline_switch": "IsSmoke only -referenceContactBaseline 1 selects prior caps, low friction and missing shield response"
+  },
+  "focused_checks": [
+    {
+      "checks": 117,
+      "kind": "C# equipment runtime",
+      "log": "output/source-guard-equipment-csharp-20261029.log"
+    },
+    {
+      "checks": 63,
+      "kind": "Python physical combat",
+      "log": "output/source-original-combat-python-physical-20261029.log"
+    },
+    {
+      "checks": 5,
+      "kind": "Python source state",
+      "log": "output/source-original-combat-python-state-20261029.log"
+    }
+  ],
+  "launcher": {
+    "entry": "启动Unity版.bat",
+    "marker": "unity/Build/active-build.txt",
+    "active_build": "SourceGuardRelease20261029",
+    "isolated_native_process": {
+      "ProcessId": 48992,
+      "ExecutablePath": "D:\\Desktop\\新新游戏\\unity\\Build\\SourceGuardRelease20261029\\江湖未央.exe",
+      "CommandLine": "\"D:\\Desktop\\新新游戏\\unity\\Build\\SourceGuardRelease20261029\\江湖未央.exe\" -force-d3d11 \"-saveDir\" \"D:\\Desktop\\新新游戏\\output\\source-guard-release-20261029\\launcher-save\" \"-python\" \"D:\\Desktop\\新新游戏\\unity\\Build\\SourceGuardRelease20261029\\江湖未央_Data\\StreamingAssets\\Python\\python.exe\" \"-logFile\" \"D:\\Desktop\\新新游戏\\output\\source-guard-release-20261029\\launcher\\play.log\" "
+    },
+    "process_report": "output/source-guard-release-20261029/launcher/process.json",
+    "normal_log": "output/source-guard-release-20261029/launcher/play.log",
+    "smoke_log": "output/source-guard-release-20261029/launcher/game.log",
+    "isolated_save": "output/source-guard-release-20261029/launcher-save",
+    "isolated_normal_test_process_closed": true
+  },
+  "limits": {
+    "equivalence": "Original item graph/geometry and APK same-input dynamic equivalence not established. Substeps and solver budget remain game adaptations.",
+    "long_spear": {
+      "report": "output/source-original-combat-20261029/contact/binds/acceptance.json",
+      "failed_checks": [
+        {
+          "check": "weapon contact releases spear body 12",
+          "facts": {
+            "weapon": "spear",
+            "target": "body",
+            "arc": 12,
+            "retreat": true,
+            "physics_substeps": 8,
+            "actual_contact_events": 129,
+            "contact_frames": 114,
+            "pressed_last_12": 12,
+            "straight_release_seconds": 0.3,
+            "twist_release_seconds": -1,
+            "release_seconds": 0.3,
+            "stationary_bind_seconds": 0.01666667,
+            "deep_frames": 49,
+            "maximum_depth": 0.1280489,
+            "maximum_joint_gap": 0.0109631,
+            "withdrawal_tip_travel": 7.472158,
+            "approach_frames": 65,
+            "enemy_guard_y": 0.5,
+            "initial_target_distance": 2.643943,
+            "enemy_guard_x": -0.15,
+            "target_weapon": "spear",
+            "weapon_colliders": 2,
+            "target_colliders": 20,
+            "source_body_target": true,
+            "blade_friction": 0.7,
+            "friction_combine": 3,
+            "baumgarte": 0.005
+          }
+        },
+        {
+          "check": "hand-only withdrawal releases spear body",
+          "facts": {
+            "weapon": "spear",
+            "target": "body",
+            "arc": 12,
+            "retreat": false,
+            "physics_substeps": 8,
+            "actual_contact_events": 103,
+            "contact_frames": 116,
+            "pressed_last_12": 12,
+            "straight_release_seconds": -1,
+            "twist_release_seconds": -1,
+            "release_seconds": -1,
+            "stationary_bind_seconds": 0.01666667,
+            "deep_frames": 294,
+            "maximum_depth": 0.1346498,
+            "maximum_joint_gap": 0.01056673,
+            "withdrawal_tip_travel": 0.6367691,
+            "approach_frames": 65,
+            "enemy_guard_y": 0.5,
+            "initial_target_distance": 2.643943,
+            "enemy_guard_x": -0.15,
+            "target_weapon": "spear",
+            "weapon_colliders": 2,
+            "target_colliders": 20,
+            "source_body_target": true,
+            "blade_friction": 0.7,
+            "friction_combine": 3,
+            "baumgarte": 0.005
+          }
+        }
+      ],
+      "note": "Retreat release 0.3 s fails strict <0.3 s. Hand-only no-retreat sample has no complete clearance in first 3 s. Global offense caps were not reinstated."
+    },
+    "core_candidate": {
+      "report": "output/source-guard-restore-20261029/core-source/guard/guard-cases.json",
+      "cases": 8,
+      "body_hits": 0,
+      "weapon_contacts": 0,
+      "shield_contacts": 0,
+      "maximum_grip_gap": 0.06188099,
+      "note": "Core has not passed this offense/grip check and is not the new encounter default."
+    }
+  },
+  "source_fingerprints": [
+    {
+      "path": "unity/JianghuUnity/Assets/Scripts/InteractionGameplaySmoke.cs",
+      "sha256": "18b259f88e1376dd3a7e562cec7fa30c89e03dd991ccb46b795b3428a2e38f2e",
+      "bytes": 16577
+    },
+    {
+      "path": "unity/JianghuUnity/Assets/Scripts/PhysicsBattleSmoke.cs",
+      "sha256": "a04703ab8a1c2ecd938de2c7b422c88f529c223464564023c00016a8346247ae",
+      "bytes": 18586
+    },
+    {
+      "path": "unity/JianghuUnity/Assets/Scripts/PhysicsGuardSmoke.cs",
+      "sha256": "ddc856c6a1ccfd27d073534095cde5df1eb24918c1f56ee712725e11a9a6434a",
+      "bytes": 3214
+    },
+    {
+      "path": "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelBackend.cs",
+      "sha256": "01c69e79a4a4cb44914a4a7424b264e97ce57870cdbda76006ef69e61089184e",
+      "bytes": 1787
+    },
+    {
+      "path": "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelCoreWorld.cs",
+      "sha256": "d8a81d72964f3a813d3a733eccdbc959fca2b08d7de60fb30e19816f0ebe10ac",
+      "bytes": 38469
+    },
+    {
+      "path": "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelGuardProbe.cs",
+      "sha256": "59d4e8e4c0cbc4c51670c45e98844d80a06c8c84b7d0b7051ebe2702fa36639b",
+      "bytes": 5513
+    },
+    {
+      "path": "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelReference.cs",
+      "sha256": "b6aa6a5afe4619fd4ca1f9a44740bc8739c198f0344c1df7ef1ec82c2a5548e0",
+      "bytes": 37835
+    },
+    {
+      "path": "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelSourceEquipment.cs",
+      "sha256": "8b9eb22737eae5738eab95be7b04cba4c5d5600646d2bdd1dfac8928f1ca2202",
+      "bytes": 9314
+    },
+    {
+      "path": "unity/JianghuUnity/Assets/Scripts/PhysicsCombat/DuelSourceEquipmentContact.cs",
+      "sha256": "58b881733b17630ef091c789a7b93a35417cd4ff6bf944145b355eed39adda7d",
+      "bytes": 10904
+    },
+    {
+      "path": "unity/JianghuUnity/Assets/Resources/CombatSource/equipment.json",
+      "sha256": "27d56c7a55be88f778054370584e52bb629e6517900f81410f6b397a596479fa",
+      "bytes": 11334
+    },
+    {
+      "path": "scripts/build_duel_source_equipment.py",
+      "sha256": "b736139a97b77b1e41fc3224d8fa8399020f1163f37b5919d1851f4880e15aad",
+      "bytes": 7009
+    }
+  ]
+}

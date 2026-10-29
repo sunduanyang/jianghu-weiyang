@@ -5,27 +5,44 @@ using System.Linq;
 using Jianghu;
 using UnityEngine;
 
-public sealed class OriginalPreview : MonoBehaviour {
+public sealed partial class OriginalPreview : MonoBehaviour {
     public GameObject playerPrefab,enemyPrefab;
     public OriginalRig player,enemy;
-    Vector2 leftStart,rightStart;
-    bool heldLeft,heldRight,leftMouseSide;
+    public OriginalBattleHud hud;
+    public bool ExternalInputReplay {get;set;}
     bool automated;
+    float captureSeconds=3;
+    int impacts;
     string output;
     IEnumerator Start() {
         var args=Environment.GetCommandLineArgs();
+        InitializeDesktopPresentation(args);
         for(int i=0;i+1<args.Length;i++)if(args[i]=="-recoveryCapture"){automated=true;output=args[i+1];}
+        for(int i=0;i+1<args.Length;i++)if(args[i]=="-captureSeconds"&&float.TryParse(args[i+1],out var seconds))captureSeconds=Mathf.Clamp(seconds,1,60);
+        if(automated||Array.IndexOf(args,"-validateOriginalEquipment")>=0||Array.IndexOf(args,"-validateOriginalLifecycle")>=0)AudioListener.volume=0;
         Application.targetFrameRate=60;
         Physics2D.simulationMode=SimulationMode2D.FixedUpdate;
         Time.fixedDeltaTime=1f/60;
-        player=Create(playerPrefab,true,new Vector3(-1.4f,.05f,0));
-        enemy=Create(enemyPrefab,false,new Vector3(1.4f,.05f,0));
-        player.opponent=enemy;enemy.opponent=player;
-        player.BeginOriginalRound();enemy.BeginOriginalRound();
+        originalInput.Bind(hud==null?null:hud.transform);
+        InitializeOriginalEnvironment();
+        if(OriginalRecoveryValidation.TryStartPractice(this))yield break;
+        if(OriginalRecoveryValidation.TryStart(this))yield break;
+        // Even the direct local arena bootstrap uses the original cover,
+        // context switch and spawn sequence; it does not leave its blocking
+        // Image in the imported initial state.
+        yield return arenaTransition.CreateToArena(GameMode);
+        OriginalOnboardingReplay.TryAttach(this);
+        OriginalMatchReplay.TryAttach(this);
+        TryStartOriginalMouseValidation();
+        TryStartOriginalPaintValidation();
+        TryStartOriginalTimeValidation();
+        AttachPlaytestSetupMenu();
+        OriginalPlaytestSetupValidation.TryAttach(this);
+        if(Array.IndexOf(args,"-recoveryHideHud")>=0&&hud!=null)foreach(var canvas in hud.GetComponentsInChildren<Canvas>(true))canvas.enabled=false;
         yield return null;
         if(automated) {
             Directory.CreateDirectory(output);
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSecondsRealtime(captureSeconds);
             var bodies=player.GetComponentsInChildren<Rigidbody2D>(true);
             var active=bodies.Where(b=>b.gameObject.activeInHierarchy&&b.simulated).ToArray();
             var renderers=new J(player.GetComponentsInChildren<SkinnedMeshRenderer>(true).Select(r=> {
@@ -46,11 +63,22 @@ public sealed class OriginalPreview : MonoBehaviour {
                 "active_bodies",active.Length,"finite",active.All(b=>float.IsFinite(b.position.x)&&float.IsFinite(b.position.y)),
                 "player_root_x",player.rootBody.position.x,"player_root_y",player.rootBody.position.y,
                 "head_x",player.headCOM.position.x,"head_y",player.headCOM.position.y,
+                "game_mode",GameMode,"campaign_level",Progress.Level,"campaign_stage",Progress.Stage,"level_type",Progress.LevelType,
+                "environment_seed",environmentCustomizer.ChosenSeed,"environment_stage",environmentCustomizer.CurrentStage.name,
+                "environment_hour",environmentCustomizer.CurrentContext.Hour,"environment_day",environmentCustomizer.CurrentContext.Day,
+                "enemy_name",EnemyDisplayName,"player_health",player.health,"enemy_health",enemy==null?null:(object)enemy.health,"player_stamina",player.stamina,
+                "player_equipment",J.O("left",player.leftItem==null?0:player.leftItem.itemId,"right",player.rightItem==null?0:player.rightItem.itemId),
+                "enemy_equipment",J.O("left",enemy==null||enemy.leftItem==null?0:enemy.leftItem.itemId,"right",enemy==null||enemy.rightItem==null?0:enemy.rightItem.itemId),
+                "enemy_ai",enemy==null?"none":enemy.OriginalAIState.ToString(),"practice_dummy",practiceDummy!=null,"impacts",impacts,"state",OriginalState,"end_reason",(int)EndReason,
+                "phase_trace",new J(originalPhaseTrace),"round_time_remaining",RoundTimeRemaining,"time_scale",Time.timeScale,
+                "camera",Camera.main==null?"missing":Camera.main.transform.position.ToString(),
                 "renderers",renderers,"complete_port",false,"runtime_parity_verified",false);
             File.WriteAllText(Path.Combine(output,"hierarchy-preview.json"),report.ToString());
             yield return new WaitForEndOfFrame();
+            OriginalRenderingDiagnostics.Capture(Camera.main,output);
+            RenderTexture.active=null;
             ScreenCapture.CaptureScreenshot(Path.Combine(output,"original-hierarchy.png"));
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSecondsRealtime(.5f);
             Application.Quit();
         }
     }
@@ -61,27 +89,20 @@ public sealed class OriginalPreview : MonoBehaviour {
         return rig;
     }
     void Update() {
-        if(player==null||automated)return;
-        player.movement=(Input.GetKey(KeyCode.D)||Input.GetKey(KeyCode.RightArrow)?1:0)-(Input.GetKey(KeyCode.A)||Input.GetKey(KeyCode.LeftArrow)?1:0);
-        Vector2 mouse=Input.mousePosition;
-        if(Input.GetMouseButtonDown(0)) {
-            leftMouseSide=mouse.x<Screen.width*.5f;
-            if(leftMouseSide){leftStart=mouse;heldLeft=true;}else{rightStart=mouse;heldRight=true;}
-            player.OnOriginalScreenTap(leftMouseSide);
+        HandleDesktopWindowKeys();
+        AdvanceOriginalHostClock();
+        if(player==null||automated||ExternalInputReplay||IsTransitioning)return;
+        if(HandlePlaytestSetupKeys())return;
+        if(Input.GetKeyDown(KeyCode.Escape))SetPaused(!Paused);
+        if((OriginalState==5||OriginalState==6)&&(Input.GetKeyDown(KeyCode.Return)||Input.GetKeyDown(KeyCode.R))) {
+            if(OriginalState==6)RestartOriginalMatch();else AdvanceOriginalRound();
         }
-        if(Input.GetMouseButton(0)) {
-            if(leftMouseSide)player.leftInput=Nub(mouse-leftStart);else player.rightInput=Nub(mouse-rightStart);
-        }
-        if(Input.GetMouseButtonUp(0)){if(leftMouseSide)heldLeft=false;else heldRight=false;}
-        player.SetOriginalHandInputs(player.leftInput,player.rightInput,heldLeft,heldRight);
-        if(Mathf.Abs(player.movement)>.01f)player.KeepOriginalMove(player.movement);
-        if(Input.GetKeyDown(KeyCode.Space))player.StartOriginalKick();
-        if(Input.GetKeyDown(KeyCode.Escape))Application.Quit();
+        ReadOriginalInput();
     }
-    Vector2 Nub(Vector2 delta)=>Vector2.ClampMagnitude(delta/(Screen.height/480f),155);
     void OnGUI() {
+        if(Array.IndexOf(Environment.GetCommandLineArgs(),"-recoveryControlsOverlay")<0)return;
         GUI.color=Color.white;
-        GUI.Label(new Rect(20,12,Screen.width-40,25),"Bloody Bastards — original hierarchy recovery / engineering preview");
-        GUI.Label(new Rect(20,Screen.height-40,Screen.width-40,25),"A / D: move    Hold and drag either half of the screen: corresponding hand    Esc: quit");
+        if(hud==null)GUI.Label(new Rect(20,12,Screen.width-40,25),"Bloody Bastards — recovery validation");
+        GUI.Label(new Rect(20,Screen.height-26,Screen.width-40,25),"A / D: move   Left mouse: main hand   Right mouse: off hand   Space: kick   F2: loadout   F11: fullscreen   Esc: pause");
     }
 }

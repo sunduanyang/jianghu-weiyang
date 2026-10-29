@@ -49,13 +49,12 @@ public class CityAtlasSmoke : MonoBehaviour {
         if(client.World["hero"]["created"].B&&!places.Contains(client.World["hero"]["place"].I))places.Insert(0,client.World["hero"]["place"].I);
         foreach(int place in places){
             yield return app.CityLoadForSmoke(place);
-            // The unloaded map deliberately falls back to tiles; check the default after its data arrives.
             if(place==places[0])Check("舆图 is the default city view",app.CityModeForSmoke==CityMode.Atlas);
             app.SetCityModeForSmoke(CityMode.Atlas);
             yield return new WaitForSecondsRealtime(.3f);
             Check("every facility belongs to a settlement: "+place,app.ValidateCityAtlasData(out J data),data);
             yield return Capture("atlas-"+place);
-            Check("every settlement, the gate and each road out are drawn inside the sheet: "+place,app.ValidateCityAtlasHits(out J hits),hits);
+            Check("local nodes stay inside the sheet and no travel exits remain: "+place,app.ValidateCityAtlasHits(out J hits),hits);
             Check("zoom preserves the pointer anchor and clamps the view: "+place,app.ValidateCityAtlasCamera(out J camera),camera);
             foreach(float zoom in new[]{1.2f,2.5f,5f}){
                 app.SetCityAtlasCameraForSmoke(zoom);yield return new WaitForSecondsRealtime(.2f);
@@ -69,9 +68,6 @@ public class CityAtlasSmoke : MonoBehaviour {
                 Check("scroll lists the facilities of "+site+" at "+place,app.ValidateCityScroll(out J scroll),scroll);
                 yield return Capture("scroll-"+place+"-"+site);
             }
-            app.SetCityModeForSmoke(CityMode.Tiles);yield return new WaitForSecondsRealtime(.3f);
-            Check("地格 remains available: "+place,app.CityModeForSmoke==CityMode.Tiles);
-            yield return Capture("tiles-"+place);
             app.SetCityModeForSmoke(CityMode.Atlas);
         }
         yield return client.Refresh();
@@ -82,6 +78,8 @@ public class CityAtlasSmoke : MonoBehaviour {
 public partial class JianghuApp {
     public CityMode CityModeForSmoke=>CityModeShown;
     public void SetCityModeForSmoke(CityMode mode)=>SetCityMode(mode);
+    // Pick a settlement on the 舆图 as a click would, opening its people in the left roster.
+    public void CityPickSettlementForSmoke(string site){SetCityMode(CityMode.Atlas);cityAtlasPick="s:"+site;rosterMode="此地";rosterOpen=true;rosterScroll=Vector2.zero;mainScroll=Vector2.zero;}
     public void SetCityAtlasCameraForSmoke(float zoom){CityAtlasFullView();CityAtlasZoomAt(zoom,CityAtlasViewport.center);if(zoom>1)cityAtlasPan=new Vector2(37,-29);}
     public bool ValidateCityAtlasCamera(out J facts){
         float savedZoom=cityAtlasZoom;Vector2 savedPan=cityAtlasPan;Rect sheet=CityAtlasViewport;
@@ -118,13 +116,13 @@ public partial class JianghuApp {
         return CityAtlasReady&&orphans.Count==0&&empty.Count==0;
     }
     public bool ValidateCityAtlasHits(out J facts){
-        Rect sheet=CityAtlasViewport;var expected=CitySettlementsList.Select(s=>"s:"+s["id"].S).Concat(new[]{"gate"}).Concat(City["connections"].A.Select(c=>"x:"+c["place"].S)).ToList();
+        Rect sheet=CityAtlasViewport;var expected=CitySettlementsList.Select(s=>"s:"+s["id"].S).Concat(new[]{"gate"}).ToList();
         var missing=expected.Where(k=>!cityAtlasHits.ContainsKey(k)).Select(k=>new J(k)).ToList();
+        var unexpected=cityAtlasHits.Keys.Where(k=>!expected.Contains(k)).Select(k=>new J(k)).ToList();
         var outside=cityAtlasHits.Where(p=>!sheet.Overlaps(p.Value)||p.Value.x<sheet.x-2||p.Value.xMax>sheet.xMax+2).Select(p=>new J(p.Key)).ToList();
-        var overlapping=new List<J>();var keys=cityAtlasHits.Keys.Where(k=>k.StartsWith("x:")).ToList();
-        for(int i=0;i<keys.Count;i++)for(int j=i+1;j<keys.Count;j++)if(cityAtlasHits[keys[i]].Overlaps(cityAtlasHits[keys[j]]))overlapping.Add(new J(keys[i]+"/"+keys[j]));
-        facts=J.O("hits",cityAtlasHits.Count,"missing",new J(missing),"outside",new J(outside),"overlapping_exits",new J(overlapping));
-        return missing.Count==0&&outside.Count==0&&overlapping.Count==0;
+        facts=J.O("hits",cityAtlasHits.Count,"missing",new J(missing),"outside",new J(outside),"unexpected",new J(unexpected),
+            "land_connections",City["connections"].A.Count(c=>!c["sea"].B),"sea_connections",City["connections"].A.Count(c=>c["sea"].B));
+        return missing.Count==0&&outside.Count==0&&unexpected.Count==0;
     }
     public bool ValidateCityScroll(out J facts){
         var facilities=CityFacilities(cityScrollSite);var site=CitySettlement(cityScrollSite);

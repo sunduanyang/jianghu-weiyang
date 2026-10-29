@@ -15,6 +15,8 @@ public sealed partial class OriginalRig {
     public bool OriginalKicking {get;private set;}
     public bool OriginalBeingKicked=>Time.time<beingKickedUntil;
     public bool originalGamepadControls;
+    Vector2 desktopLeftAim,desktopRightAim;
+    bool desktopLeftPose,desktopRightPose;
     public int OriginalMotionTick=>motionTick;
     public float OriginalMoveDirection=>moveDirection;
     public GameObject OriginalKickEffector=>sourceKickEffector;
@@ -41,15 +43,21 @@ public sealed partial class OriginalRig {
         if(OriginalKicking||passedOut||dead)return;
         moveDirection=Mathf.Clamp(direction,-1,1);moveUntilTick=motionTick+Ticks(Number("moveSustainSeconds"));
     }
-    public void SetOriginalHandInputs(Vector2 screenLeftNub,Vector2 screenRightNub,bool screenLeftDown,bool screenRightDown) {
+    public void SetOriginalHandInputs(Vector2 nativeLeftNub,Vector2 nativeRightNub,bool nativeLeftDown,bool nativeRightDown) {
         // PlayerInputHandler.FixedUpdateNetwork 0x365ac48 crosses the active
         // flags while storing each nub in its original left/right field.
-        leftInput=SanitizeNub(screenLeftNub);rightInput=SanitizeNub(screenRightNub);
-        rightActive=screenLeftDown;leftActive=screenRightDown;
+        leftInput=SanitizeNub(nativeLeftNub);rightInput=SanitizeNub(nativeRightNub);
+        rightActive=nativeLeftDown;leftActive=nativeRightDown;
+    }
+    // PC-only posture targets, independent of the source pressed/attack flags.
+    // AI and touch keep the original passive-hand behavior.
+    public void SetDesktopHandPoseTargets(Vector2 nativeLeftAim,Vector2 nativeRightAim,bool retainLeft,bool retainRight) {
+        desktopLeftAim=SanitizeNub(nativeLeftAim);desktopRightAim=SanitizeNub(nativeRightAim);
+        desktopLeftPose=human&&retainLeft;desktopRightPose=human&&retainRight;
     }
     public void OnOriginalScreenTap(bool screenLeft) {
         // Input button 0/1 dispatch in PlayerInputHandler, preserving flip.
-        OnOriginalMoveTap(flipped?screenLeft:!screenLeft);
+        OnOriginalMoveTap(flipped?!screenLeft:screenLeft);
     }
     static Vector2 SanitizeNub(Vector2 v) {
         if(!float.IsFinite(v.x)||!float.IsFinite(v.y))return Vector2.zero;
@@ -88,8 +96,10 @@ public sealed partial class OriginalRig {
         leftFootPoint.localPosition=initialLeftFootPoint;rightFootPoint.localPosition=initialRightFootPoint;
     }
     void StepOriginalMotionNetwork() {
-        if(pendingLeftTap){pendingLeftTap=false;ProcessOriginalTap(true);}
-        if(pendingRightTap){pendingRightTap=false;ProcessOriginalTap(false);}
+        // PlayerInputHandler samples button 0 before button 1. With an
+        // unflipped actor these dispatch GoRight then GoLeft, respectively.
+        if(human&&!flipped){ProcessPendingOriginalTap(false);ProcessPendingOriginalTap(true);}
+        else{ProcessPendingOriginalTap(true);ProcessPendingOriginalTap(false);}
         if(dead){if(OriginalKicking)StopOriginalKick();return;}
         if(pushUntilTick>0&&motionTick>=pushUntilTick){pushUntilTick=0;if(pushingCollider!=null)pushingCollider.enabled=false;}
         // cll checks these timers for enemy/gamepad only. Touch input keeps its
@@ -110,6 +120,11 @@ public sealed partial class OriginalRig {
             if(motionTick>=kickUntilTick)StopOriginalKick();
         }
     }
+    void ProcessPendingOriginalTap(bool left) {
+        if(left){if(!pendingLeftTap)return;pendingLeftTap=false;}
+        else{if(!pendingRightTap)return;pendingRightTap=false;}
+        ProcessOriginalTap(left);
+    }
     internal void ReceiveOriginalKick(J receiver) {
         // KickReceiver.OnTriggerEnter2D 0x3512380 and ct.MoveNext 0x3512670.
         var baseBody=Resolve<Rigidbody2D>(receiver["baseRigidbody2D"]);
@@ -121,6 +136,8 @@ public sealed partial class OriginalRig {
         if(passedOut)secondary.AddForce(force*20);
         ApplyOriginalGlobalDamage(1);
         beingKickedUntil=Time.time+(float)receiver["timeUntilDampingStart"].N+(float)receiver["timeUntilDampingReset"].N;
+        // ImpactSFX.Play_Kick 0x3412650 publishes sound25 at volume1.
+        OriginalEffects.PublishSound(this,25,1);
     }
 }
 

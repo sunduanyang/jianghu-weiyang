@@ -34,19 +34,19 @@ public sealed partial class PhysicsDuel {
     void CampaignCommand(string command){PauseCampaign();campaign.command?.Invoke(command);}
     public void RunCampaign(bool run){player?.SourceAIClockPaused(!run);enemy?.SourceAIClockPaused(!run);paused=!run;help=false;Time.timeScale=run?1:0;}
     public void CampaignTestPad(bool primary,Vector2 direction){
-        if(GameClient.Arg("-physicalCombatSmoke").Length==0)throw new InvalidOperationException("Test input requires isolated acceptance mode");
+        if(GameClient.Arg("-physicalCombatSmoke").Length==0&&GameClient.Arg("-craftsSmoke").Length==0)throw new InvalidOperationException("Test input requires isolated acceptance mode");
         int id=primary?7001:7002;var pad=primary?controls.right:controls.left;
         if(!pad.captured)controls.Begin(id,primary?new Vector2(1235,655):new Vector2(365,655));
         controls.Move(id,pad.center+new Vector2(direction.x,-direction.y)*DuelControls.Pad.Radius);
     }
     public void CampaignReleasePads(){controls.ReleaseAll();}
     public void StepCampaignForAcceptance(float seconds){
-        if(GameClient.Arg("-interactionGameplaySmoke").Length==0||seconds<=0||seconds>1)throw new InvalidOperationException("Controlled campaign steps require isolated interaction acceptance");
+        if((GameClient.Arg("-interactionGameplaySmoke").Length==0&&GameClient.Arg("-craftsSmoke").Length==0)||seconds<=0||seconds>1)throw new InvalidOperationException("Controlled campaign steps require isolated interaction acceptance");
         bool previousFixture=fixtureMode;fixtureMode=true;
         try{int ticks=Mathf.RoundToInt(seconds/Time.fixedDeltaTime);for(int i=0;i<ticks;i++)SimulateFighters();elapsed=Clock;}
         finally{fixtureMode=previousFixture;}
     }
-    public J CaptureCampaign()=>J.O("engine","unity-physics2d-v09","version",1,"elapsed",ReferenceCombat?(double)Clock:elapsed,"hits",hits,"clashes",blocks,
+    public J CaptureCampaign()=>J.O("physics_backend",UseCorePhysics?"physics-core-2d":"legacy-physics2d","engine","unity-physics2d-v09","version",1,"elapsed",ReferenceCombat?(double)Clock:elapsed,"hits",hits,"clashes",blocks,
         "fighters",new J(new List<J>{player.CapturePhysicalState(),enemy.CapturePhysicalState()}));
     void RestoreCampaign(J frame){
         if(!frame.Has)return;
@@ -56,9 +56,11 @@ public sealed partial class PhysicsDuel {
         player.ResolveSourceImpalement();enemy.ResolveSourceImpalement();
         Physics2D.SyncTransforms();
         player.FinishSourceRigRestore();enemy.FinishSourceRigRestore();
+        if(UseCorePhysics)CoreWorld.Synchronize();
     }
     public void RestoreCampaignForSmoke(J frame){if(!IsSmoke)throw new InvalidOperationException("Restore probe requires acceptance mode");RestoreCampaign(frame);}
     void DrawCampaignPanel(){
+        if(IsSmoke&&GameClient.Arg("-physicalCombatPhase")=="backend-comparison")return;
         if(help){DrawHelp();return;}
         if(!paused&&!finished)return;
         if(finished&&!paused&&Clock-resultAt<1.3f)return;
@@ -73,6 +75,7 @@ public sealed partial class PhysicsDuel {
         if(Button(new Rect(560,575,480,43),finished?"重试结算":"保存战局"))CampaignCommand(finished?"complete":"checkpoint");
     }
     void OnDestroy(){
+        CoreWorld?.Dispose();
         if(player!=null){player.ReleaseSourceRig();Destroy(player.root);}if(enemy!=null){enemy.ReleaseSourceRig();Destroy(enemy.root);}
         Time.fixedDeltaTime=priorFixedStep;Time.timeScale=priorTimeScale;Application.targetFrameRate=priorTargetFps;Physics2D.gravity=priorGravity;
         Physics2D.velocityIterations=priorVelocityIterations;Physics2D.positionIterations=priorPositionIterations;Physics2D.defaultContactOffset=priorContactOffset;

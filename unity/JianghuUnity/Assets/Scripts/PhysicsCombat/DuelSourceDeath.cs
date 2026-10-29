@@ -58,7 +58,7 @@ public sealed partial class PhysicsDuel {
                     referenceCorpseBody.position=Limb.BodyPoint(fixedJoint.connectedBody,fixedJoint.connectedAnchor);
                     referenceCorpseBody.rotation=fixedJoint.connectedBody.rotation;
                     referenceCorpseBody.gameObject.SetActive(true);
-                    foreach(var shape in colliders.Where(c=>c!=referenceCorpseShape&&c.gameObject.layer==10))Physics2D.IgnoreCollision(referenceCorpseShape,shape,false);
+                    foreach(var shape in colliders.Where(c=>c!=referenceCorpseShape&&c.gameObject.layer==10))DuelPhysicsAPI.IgnoreCollision(referenceCorpseShape,shape,false);
                     DisableReferenceArm("Near",false);DisableReferenceArm("Far",false);
                     break;
                 case 5:

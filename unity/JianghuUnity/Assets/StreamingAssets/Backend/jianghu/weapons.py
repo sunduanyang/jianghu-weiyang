@@ -25,9 +25,15 @@ def attribute_catalog():
 
 
 def attributes(item):
-    """Derive template stats without adding duplicated fields to saved instances."""
+    """Derive template stats without adding duplicated fields to saved instances.
+
+    A forged instance stores only bounded multipliers (`craft.mods`); items
+    without them return exactly the template values.
+    """
     data = CATALOG[item['template']]
-    return {**{key: data[key] for key in STAT_KEYS}, 'durability': item['durability']}
+    mods = (item.get('craft') or {}).get('mods') or {}
+    stats = {key: (round(data[key]*mods[key], 4) if key in mods else data[key]) for key in STAT_KEYS}
+    return {**stats, 'durability': item['durability']}
 
 
 def profile(item):
