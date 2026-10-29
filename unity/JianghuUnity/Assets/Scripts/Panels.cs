@@ -148,6 +148,7 @@ public partial class JianghuApp {
         Metric("模型选定的长期筹划",W["ai"]["model_undertakings"].S+"项进行中 · 累计选定"+W["ai"]["undertakings_chosen"].S+"次、继续"+W["ai"]["undertakings_kept"].S+"次");
         Metric("与你来往的人中由模型主导",W["ai"]["contacted_model_led"].S+" / "+W["ai"]["contacted_people"].S+"人");
         Metric("人物回应",W["ai"]["reactions_completed"].S+"次");
+        Metric("已定口吻的人物",W["ai"]["voices"].S+"人");
         if(W["ai"]["last_error"].S.Length>0)T("最近模型状态："+W["ai"]["last_error"].S,small);
         GUILayout.EndScrollView();
     }

@@ -1639,6 +1639,8 @@ class World:
         n['fame_view'] = fame.view(self, self.npcs[npc_id])
         from . import reactions
         n['player_reactions'] = reactions.view(self, npc_id)
+        from . import persona
+        n['voice_view'] = persona.view(self, self.npcs[npc_id])
         n['recalled_memories'] = npc_memory.retrieve(self, self.npcs[npc_id])
         n['career_view'] = careers.view(self, self.npcs[npc_id])
         n['social_view'] = society.person_view(self, self.npcs[npc_id])
