@@ -41,6 +41,7 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
         RememberPhysicsSettings();
         combatPhysics=gameObject.scene.GetPhysicsScene2D();
         Instance = this;
+        InitializePhysicsBackend();
         Application.targetFrameRate = 90;
         Time.fixedDeltaTime = 1f/120;
         Physics2D.simulationMode=SimulationMode2D.FixedUpdate;
@@ -68,7 +69,7 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
         // motor can move up to 100 m/s; a thin discrete wall lets it tunnel.
         StaticBox("左界",new Vector2(-7.5f,3),new Vector2(3,8));
         StaticBox("右界",new Vector2(7.5f,3),new Vector2(3,8));
-        smoke=GameClient.Arg("-physicalCombatSmoke").Length>0||GameClient.Arg("-interactionGameplaySmoke").Length>0;
+        smoke=GameClient.Arg("-physicalCombatSmoke").Length>0||GameClient.Arg("-interactionGameplaySmoke").Length>0||GameClient.Arg("-craftsSmoke").Length>0;
         ResetRound();
         if(Campaign){
             started=true;paused=true;
@@ -77,7 +78,7 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
             // constraints lazily on the first simulation step.
             var previousMode=Physics2D.simulationMode;
             Physics2D.simulationMode=SimulationMode2D.Script;
-            Physics2D.SyncTransforms();combatPhysics.Simulate(.00001f);
+            Physics2D.SyncTransforms();SimulateCombat(.00001f);
             Physics2D.simulationMode=previousMode;
             contacts.Clear();queuedContacts.Clear();
             RestoreCampaign(campaign.battle["frame"]);PauseCampaign();
@@ -88,6 +89,7 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
     static PhysicsMaterial2D Material(string name,float friction,float bounce)=>new PhysicsMaterial2D(name){friction=friction,bounciness=bounce};
     void StaticBox(string name,Vector2 p,Vector2 size) { var go=new GameObject(name);go.transform.SetParent(transform);go.layer=8;go.transform.position=p;go.AddComponent<BoxCollider2D>().size=size; }
     internal void ResetRound() {
+        ResetPhysicsBackend();
         ConfigureReferencePhysics();
         hits=blocks=headHits=0;strongestImpact=0;
         controls.ReleaseAll();
@@ -107,6 +109,7 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
         finished=false; result=""; elapsed=0; sparks.Clear();floating.Clear();
         Time.timeScale=1; paused=false; help=false; hurtFlash=0;
         notice=ReferenceCombat?"按住鼠标拖动双手；挥动速度决定命中，松开回收手臂。":"左键主手，右键副手；两键同按同时控制，松开保持 / 续势，中键收住。"; noticeUntil=7;
+        if(UseCorePhysics)CoreWorld.Synchronize();
     }
     void Begin(bool practice) { training=practice; started=true; help=false; round=1;wins=losses=0;ResetRound(); }
     void Update() {
@@ -152,7 +155,7 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
             Clock+=dt;ResolveContacts();physicsStep++;
             player.Step(started&&!finished,enemy);
             enemy.Step(started&&!finished,player);
-            combatPhysics.Simulate(dt);
+            SimulateCombat(dt);
             if(ReferenceCombat){player.FinishReferencePhysics();enemy.FinishReferencePhysics();}
         }
     }
@@ -160,7 +163,7 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
     public bool Live => started&&!paused&&!help&&!finished&&!armory;
     public bool IsSmoke => smoke;
 
-    public void Contact(DuelContact weapon,DuelContact other,Collision2D collision) {
+    public void Contact(DuelContact weapon,DuelContact other,DuelCollision collision) {
         if(ReferenceCombat){ReferenceContact(weapon,other,collision);return;}
         if(!Live||weapon.owner==other.owner||weapon.kind!="sword"||collision.contactCount==0)return;
         weapon.owner.RecordWeaponResistance(weapon.limb);
@@ -353,9 +356,10 @@ public sealed class DuelContact : MonoBehaviour {
     [NonSerialized] public PhysicsDuel.Fighter owner;
     [NonSerialized] public PhysicsDuel.Limb limb;
     public string kind;
-    void OnCollisionEnter2D(Collision2D collision) {Deliver(collision);}
-    void OnCollisionStay2D(Collision2D collision) {if(owner!=null&&!owner.Reference)Deliver(collision);}
-    void Deliver(Collision2D collision) {
+    void OnCollisionEnter2D(Collision2D collision) {DeliverCore(new DuelCollision(collision),true);}
+    void OnCollisionStay2D(Collision2D collision) {DeliverCore(new DuelCollision(collision),false);}
+    public void DeliverCore(DuelCollision collision,bool entering) {
+        if(!entering&&owner!=null&&owner.Reference)return;
         var own=collision.otherCollider.GetComponent<DuelContact>();if(own==null)return;
         if(own.kind=="foot"&&collision.collider.gameObject.layer==8) {
             for(int i=0;i<collision.contactCount;i++)if(collision.GetContact(i).normal.y>.5f)own.limb.lastGroundContact=PhysicsDuel.Instance.Clock;

@@ -1,0 +1,12 @@
+{
+  "rollback_build": "Current",
+  "pinned_builds": {
+    "Current": "Default launcher fallback and standard build output",
+    "BloodyContactResolved": "Legacy puppet trial comparison",
+    "LacePuppetTrial": "Legacy puppet art trial",
+    "ModularPuppetNeck": "Legacy face and outfit demo",
+    "RedLotusTrial": "Legacy red lotus fitting",
+    "SourceFormalReplacementVerified": "Separate source combat candidate",
+    "PhysicsCoreCurrent20261029": "Physics Core 2D migration with restored offense and same-input legacy comparison; separate review save"
+  }
+}

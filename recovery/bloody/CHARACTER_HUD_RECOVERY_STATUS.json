@@ -1,0 +1,52 @@
+{
+  "scope": "Original mounted CharacterHUD with actual local Friendly character/score/rules providers",
+  "source_apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "source_unity": "6000.4.0f1",
+  "runtime_source": "Runtime/OriginalCharacterHUD.cs",
+  "source_methods": {
+    "OnEnable": "0x3430f94",
+    "OnDisable": "0x34312b4",
+    "local_player_slot": "0x3431690",
+    "bind": "0x3431750",
+    "reset": "0x3431424",
+    "config_applied": "0x34321d4",
+    "health_changed": "0x3431b04",
+    "stamina_changed": "0x3431ccc",
+    "name_and_profile_url": "0x3431e5c",
+    "profile_url_prefix": "0x34322e8",
+    "pip_coroutine": "0x34325c8",
+    "vitality_render_change_detector": "0x350d75c",
+    "DOTween_scaled_delta_gate": "0x3711b54",
+    "DOTween_default_ease_cctor": "0x36ea628"
+  },
+  "restored": [
+    "Original source host activation and CanvasGroup alpha/blocksRaycasts; interactable is retained",
+    "Fresh binding resets health/stamina cached ratios to -1, kills target tweens and snaps to the initial current ratios",
+    "Reset clears the binding/profile URL, stops pending pip coroutine and hides the optional profile button without resetting cached ratios or killing running target tweens",
+    "Health/maxHealth and stamina/100, original gradient objects and stamina <= 0 flash condition",
+    "Changed non-initial ratios enqueue scaled .35-second OutQuad DOAnchorMax only when timeScale == 1; raw gradient/flash updates still occur when a new tween is deferred",
+    "Overlapping anchor tweens are retained, capture getters at startup, continue for inactive targets and do not startup for scaled delta strictly between -1e-6 and +1e-6",
+    "Pips update once through the original one-WaitUntil coroutine using effective rounds and signed-byte win counts",
+    "Original name, exact http/https prefix policy, optional externally owned URL and underline/animation/button behavior"
+  ],
+  "validation": {
+    "script": "scripts/verify_bloody_character_hud.py",
+    "native_arm64_vs_actual_csharp_assertions": 4716,
+    "local_lifecycle_assertions": 12,
+    "failures": 0,
+    "whole_runtime_roslyn_exit": 0,
+    "oracle": "output/bloody-full-port-20261028/ai-check/character-hud/native-character-hud-oracle.json",
+    "comparison": "output/bloody-full-port-20261028/ai-check/character-hud/comparison.txt",
+    "unity_integration_run": "pending Root's unified build/run"
+  },
+  "limits": [
+    "The original component has no Update method. For the local host, an explicitly documented per-render polling bridge detects changed final vitality values; NotifyHealthChanged/NotifyStaminaChanged/NotifyConfigApplied are available for an authoritative network event bridge.",
+    "Fusion registration/authority ordering and cross-platform Render/tween scheduling parity have not been demonstrated by an original APK replay.",
+    "The oracle observes original calls at engine boundaries; gradient evaluation itself uses engine shims during the isolated comparison, not a running Android Unity renderer.",
+    "The numeric oracle uses denormals-enabled Mathf.Epsilon. The actual component calls its matching Unity Mathf.Approximately so the engine supplies platform epsilon at runtime.",
+    "Ranked badges require authoritative rank context; no ranked data is fabricated. Friendly uses the source game-mode branch without a badge.",
+    "No profile URL is invented for the local rigs. A supplied source-owned URL is only opened by the runtime user pressing its original button.",
+    "These checks establish the covered callback decisions and lifecycle outputs, not complete APK behavior or visual/trajectory equivalence."
+  ],
+  "runtime_parity_verified": false
+}

@@ -1,0 +1,1014 @@
+{
+  "source_apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "wallet_source": "MonoBehaviour/WalletConfig.asset",
+  "wallet_source_sha256": "38785ad8e2c60025ea7a0005d2a334a4b22cb33a0a0027cc773db77566cb321b",
+  "wallet": {
+    "campaignNormalStarRewards": [
+      100,
+      200,
+      300
+    ],
+    "campaignMiniBossRewards": [
+      150,
+      250,
+      500
+    ],
+    "campaignBossRewards": [
+      250,
+      500,
+      1000
+    ],
+    "campaignFinaBossRewards": [
+      1500,
+      2500,
+      5000
+    ],
+    "survivalBasePerEnemy": 100,
+    "survivalCap": 1000,
+    "doubledMultiplier": 2
+  },
+  "wallet_protected_values": {
+    "campaignNormalStarRewards": [
+      {
+        "hash": -996495839,
+        "hiddenValue": -1429559430,
+        "currentCryptoKey": 1432703887
+      },
+      {
+        "hash": 1475337441,
+        "hiddenValue": -1775181522,
+        "currentCryptoKey": 1259892795
+      },
+      {
+        "hash": 1636748137,
+        "hiddenValue": -2042881710,
+        "currentCryptoKey": 1126042907
+      }
+    ],
+    "campaignMiniBossRewards": [
+      {
+        "hash": -381487871,
+        "hiddenValue": -70452954,
+        "currentCryptoKey": 2112257096
+      },
+      {
+        "hash": -860017727,
+        "hiddenValue": -1726079742,
+        "currentCryptoKey": 1284443870
+      },
+      {
+        "hash": -1906733079,
+        "hiddenValue": -1182224904,
+        "currentCryptoKey": 1556371222
+      }
+    ],
+    "campaignBossRewards": [
+      {
+        "hash": -860017727,
+        "hiddenValue": -655876868,
+        "currentCryptoKey": 1819545203
+      },
+      {
+        "hash": -1906733079,
+        "hiddenValue": -323932678,
+        "currentCryptoKey": 1985517287
+      },
+      {
+        "hash": 1536620857,
+        "hiddenValue": -40610794,
+        "currentCryptoKey": 2127177887
+      }
+    ],
+    "campaignFinaBossRewards": [
+      {
+        "hash": 1607826249,
+        "hiddenValue": -419522084,
+        "currentCryptoKey": 1937722244
+      },
+      {
+        "hash": 793113385,
+        "hiddenValue": -1676955164,
+        "currentCryptoKey": 1309007060
+      },
+      {
+        "hash": -240406855,
+        "hiddenValue": -945689588,
+        "currentCryptoKey": 1674636618
+      }
+    ],
+    "survivalBasePerEnemy": {
+      "hash": -996495839,
+      "hiddenValue": -396404076,
+      "currentCryptoKey": 1949281596
+    },
+    "survivalCap": {
+      "hash": 1536620857,
+      "hiddenValue": -1291879446,
+      "currentCryptoKey": 1501543617
+    },
+    "doubledMultiplier": {
+      "hash": -1041988543,
+      "hiddenValue": -732771396,
+      "currentCryptoKey": 1781097951
+    }
+  },
+  "source_controllers": {
+    "ProgressController": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "fileID": 0
+      },
+      "m_PrefabInstance": {
+        "fileID": 0
+      },
+      "m_PrefabAsset": {
+        "fileID": 0
+      },
+      "m_GameObject": {
+        "fileID": 361
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "dc3be1b1e67b9fc3870b2ad3ddaa40a1",
+        "type": 3
+      },
+      "m_Name": null,
+      "m_EditorClassIdentifier": null,
+      "gameWorld": {
+        "fileID": 11400000,
+        "guid": "b793aa1e2cfc715458de4884d9881c61",
+        "type": 2
+      },
+      "rankConfigList": {
+        "fileID": 11400000,
+        "guid": "2dafd054b723dff48947864152b73909",
+        "type": 2
+      },
+      "useTestDataIfMissing": 0
+    },
+    "WalletController": {
+      "m_ObjectHideFlags": 0,
+      "m_CorrespondingSourceObject": {
+        "fileID": 0
+      },
+      "m_PrefabInstance": {
+        "fileID": 0
+      },
+      "m_PrefabAsset": {
+        "fileID": 0
+      },
+      "m_GameObject": {
+        "fileID": 441
+      },
+      "m_Enabled": 1,
+      "m_EditorHideFlags": 0,
+      "m_Script": {
+        "fileID": 11500000,
+        "guid": "a8f794c365d7c393128194dda4cf7e29",
+        "type": 3
+      },
+      "m_Name": null,
+      "m_EditorClassIdentifier": null,
+      "config": {
+        "fileID": 11400000,
+        "guid": "e3346ce8abf4489489826f749ae6784e",
+        "type": 2
+      },
+      "gameWorld": {
+        "fileID": 11400000,
+        "guid": "b793aa1e2cfc715458de4884d9881c61",
+        "type": 2
+      },
+      "useTestGoldIfMissing": 0,
+      "testGoldAmount": 0
+    }
+  },
+  "rank_config": [
+    {
+      "RankStartsAt": 0,
+      "RPGain": 15,
+      "RPLoss": 0
+    },
+    {
+      "RankStartsAt": 50,
+      "RPGain": 15,
+      "RPLoss": 2
+    },
+    {
+      "RankStartsAt": 100,
+      "RPGain": 15,
+      "RPLoss": 2
+    },
+    {
+      "RankStartsAt": 150,
+      "RPGain": 15,
+      "RPLoss": 2
+    },
+    {
+      "RankStartsAt": 200,
+      "RPGain": 15,
+      "RPLoss": 2
+    },
+    {
+      "RankStartsAt": 250,
+      "RPGain": 15,
+      "RPLoss": 2
+    },
+    {
+      "RankStartsAt": 500,
+      "RPGain": 15,
+      "RPLoss": 4
+    },
+    {
+      "RankStartsAt": 750,
+      "RPGain": 15,
+      "RPLoss": 4
+    },
+    {
+      "RankStartsAt": 1000,
+      "RPGain": 15,
+      "RPLoss": 4
+    },
+    {
+      "RankStartsAt": 1250,
+      "RPGain": 15,
+      "RPLoss": 4
+    },
+    {
+      "RankStartsAt": 1500,
+      "RPGain": 15,
+      "RPLoss": 4
+    },
+    {
+      "RankStartsAt": 2200,
+      "RPGain": 15,
+      "RPLoss": 6
+    },
+    {
+      "RankStartsAt": 2900,
+      "RPGain": 15,
+      "RPLoss": 6
+    },
+    {
+      "RankStartsAt": 3600,
+      "RPGain": 15,
+      "RPLoss": 6
+    },
+    {
+      "RankStartsAt": 4300,
+      "RPGain": 15,
+      "RPLoss": 6
+    },
+    {
+      "RankStartsAt": 5000,
+      "RPGain": 15,
+      "RPLoss": 6
+    },
+    {
+      "RankStartsAt": 6500,
+      "RPGain": 15,
+      "RPLoss": 8
+    },
+    {
+      "RankStartsAt": 8000,
+      "RPGain": 15,
+      "RPLoss": 8
+    },
+    {
+      "RankStartsAt": 9500,
+      "RPGain": 15,
+      "RPLoss": 8
+    },
+    {
+      "RankStartsAt": 11000,
+      "RPGain": 15,
+      "RPLoss": 8
+    },
+    {
+      "RankStartsAt": 12500,
+      "RPGain": 15,
+      "RPLoss": 8
+    },
+    {
+      "RankStartsAt": 15000,
+      "RPGain": 15,
+      "RPLoss": 10
+    },
+    {
+      "RankStartsAt": 17500,
+      "RPGain": 15,
+      "RPLoss": 10
+    },
+    {
+      "RankStartsAt": 20000,
+      "RPGain": 15,
+      "RPLoss": 10
+    },
+    {
+      "RankStartsAt": 22500,
+      "RPGain": 15,
+      "RPLoss": 10
+    },
+    {
+      "RankStartsAt": 25000,
+      "RPGain": 15,
+      "RPLoss": 10
+    },
+    {
+      "RankStartsAt": 30000,
+      "RPGain": 15,
+      "RPLoss": 12
+    },
+    {
+      "RankStartsAt": 35000,
+      "RPGain": 15,
+      "RPLoss": 12
+    },
+    {
+      "RankStartsAt": 40000,
+      "RPGain": 15,
+      "RPLoss": 12
+    },
+    {
+      "RankStartsAt": 45000,
+      "RPGain": 15,
+      "RPLoss": 12
+    },
+    {
+      "RankStartsAt": 50000,
+      "RPGain": 15,
+      "RPLoss": 12
+    },
+    {
+      "RankStartsAt": 60000,
+      "RPGain": 15,
+      "RPLoss": 20
+    }
+  ],
+  "rank_source": "Resources/ranked/RankConfigList.asset",
+  "rank_source_sha256": "8792de370ca68ca03df72c60a8c56fcd0cf3a1468970cd689cfe078bcdb282f3",
+  "rank_protected_values": [
+    {
+      "RankStartsAt": {
+        "hash": 0,
+        "hiddenValue": 0,
+        "currentCryptoKey": 0
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -646370865,
+        "currentCryptoKey": 1824298212
+      },
+      "RPLoss": {
+        "hash": 0,
+        "hiddenValue": 0,
+        "currentCryptoKey": 0
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -1611503807,
+        "hiddenValue": -887888966,
+        "currentCryptoKey": 1703539140
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1435006449,
+        "currentCryptoKey": 1429980429
+      },
+      "RPLoss": {
+        "hash": -1041988543,
+        "hiddenValue": -847441622,
+        "currentCryptoKey": 1723762838
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -996495839,
+        "hiddenValue": -1775921512,
+        "currentCryptoKey": 1259522938
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1749890129,
+        "currentCryptoKey": 1272538587
+      },
+      "RPLoss": {
+        "hash": -1041988543,
+        "hiddenValue": 2139733538,
+        "currentCryptoKey": 1069866768
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -381487871,
+        "hiddenValue": -104839386,
+        "currentCryptoKey": 2095063900
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1862559281,
+        "currentCryptoKey": 1216204001
+      },
+      "RPLoss": {
+        "hash": -1041988543,
+        "hiddenValue": -1800588140,
+        "currentCryptoKey": 1247189577
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": 1475337441,
+        "hiddenValue": -187846926,
+        "currentCryptoKey": 2053560285
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1032817201,
+        "currentCryptoKey": 1631075048
+      },
+      "RPLoss": {
+        "hash": -1041988543,
+        "hiddenValue": -595267422,
+        "currentCryptoKey": 1849849936
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -860017727,
+        "hiddenValue": -358394118,
+        "currentCryptoKey": 1968286704
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1630119793,
+        "currentCryptoKey": 1332423745
+      },
+      "RPLoss": {
+        "hash": -1041988543,
+        "hiddenValue": -463070430,
+        "currentCryptoKey": 1915948434
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -1906733079,
+        "hiddenValue": 2052156934,
+        "currentCryptoKey": 1026078717
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1610184625,
+        "currentCryptoKey": 1342391338
+      },
+      "RPLoss": {
+        "hash": 1487138849,
+        "hiddenValue": -1357917754,
+        "currentCryptoKey": 1468524773
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": 1341518865,
+        "hiddenValue": -993322226,
+        "currentCryptoKey": 1650822388
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1859078385,
+        "currentCryptoKey": 1217944456
+      },
+      "RPLoss": {
+        "hash": 1487138849,
+        "hiddenValue": -1409687548,
+        "currentCryptoKey": 1442639872
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": 1536620857,
+        "hiddenValue": -1365982190,
+        "currentCryptoKey": 1464492821
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1662368625,
+        "currentCryptoKey": 1316299335
+      },
+      "RPLoss": {
+        "hash": 1487138849,
+        "hiddenValue": 2109601562,
+        "currentCryptoKey": 1054800779
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": 489905505,
+        "hiddenValue": -596006124,
+        "currentCryptoKey": 1849480027
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -516076913,
+        "currentCryptoKey": 1889445187
+      },
+      "RPLoss": {
+        "hash": 1487138849,
+        "hiddenValue": -628270668,
+        "currentCryptoKey": 1833348316
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": 1607826249,
+        "hiddenValue": -1271727582,
+        "currentCryptoKey": 1511619375
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -627051601,
+        "currentCryptoKey": 1833957847
+      },
+      "RPLoss": {
+        "hash": 1487138849,
+        "hiddenValue": -1331408904,
+        "currentCryptoKey": 1481779194
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": 1259125665,
+        "hiddenValue": -983345948,
+        "currentCryptoKey": 1655811766
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1360023825,
+        "currentCryptoKey": 1467471731
+      },
+      "RPLoss": {
+        "hash": -278701055,
+        "hiddenValue": -201167000,
+        "currentCryptoKey": 2046900147
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": 1764634041,
+        "hiddenValue": -1317245848,
+        "currentCryptoKey": 1488861342
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1577764017,
+        "currentCryptoKey": 1358601642
+      },
+      "RPLoss": {
+        "hash": -278701055,
+        "hiddenValue": -973271114,
+        "currentCryptoKey": 1660848094
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": 1450238353,
+        "hiddenValue": -496520978,
+        "currentCryptoKey": 1899223423
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -662322385,
+        "currentCryptoKey": 1816322457
+      },
+      "RPLoss": {
+        "hash": -278701055,
+        "hiddenValue": -1006548442,
+        "currentCryptoKey": 1644209428
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -2022037471,
+        "hiddenValue": 2145129164,
+        "currentCryptoKey": 1072562560
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -642771345,
+        "currentCryptoKey": 1826097972
+      },
+      "RPLoss": {
+        "hash": -278701055,
+        "hiddenValue": -845557786,
+        "currentCryptoKey": 1724704758
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -240406855,
+        "hiddenValue": 2101285770,
+        "currentCryptoKey": 1050644993
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -910701521,
+        "currentCryptoKey": 1692132881
+      },
+      "RPLoss": {
+        "hash": -278701055,
+        "hiddenValue": -1977816056,
+        "currentCryptoKey": 1158575623
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": 292080041,
+        "hiddenValue": -1717165446,
+        "currentCryptoKey": 1288904107
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -822823825,
+        "currentCryptoKey": 1736071735
+      },
+      "RPLoss": {
+        "hash": -802723615,
+        "hiddenValue": -2053867216,
+        "currentCryptoKey": 1120550044
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -1305636391,
+        "hiddenValue": -1312825464,
+        "currentCryptoKey": 1491073060
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -56343793,
+        "currentCryptoKey": 2119311757
+      },
+      "RPLoss": {
+        "hash": -802723615,
+        "hiddenValue": -1163862000,
+        "currentCryptoKey": 1565552652
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -738844599,
+        "hiddenValue": -242009380,
+        "currentCryptoKey": 2026475232
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -781761233,
+        "currentCryptoKey": 1756603032
+      },
+      "RPLoss": {
+        "hash": -802723615,
+        "hiddenValue": -1905938392,
+        "currentCryptoKey": 1194514456
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": 1386947633,
+        "hiddenValue": -2123148032,
+        "currentCryptoKey": 1085912372
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -188896593,
+        "currentCryptoKey": 2053035351
+      },
+      "RPLoss": {
+        "hash": -802723615,
+        "hiddenValue": -538117908,
+        "currentCryptoKey": 1878424690
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": 609135265,
+        "hiddenValue": -1507537706,
+        "currentCryptoKey": 1393708741
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -849276529,
+        "currentCryptoKey": 1722845376
+      },
+      "RPLoss": {
+        "hash": -802723615,
+        "hiddenValue": 2144860910,
+        "currentCryptoKey": 1072430459
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -390080079,
+        "hiddenValue": -1499808546,
+        "currentCryptoKey": 1397580715
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -797723121,
+        "currentCryptoKey": 1748622095
+      },
+      "RPLoss": {
+        "hash": 1726403777,
+        "hiddenValue": -1415398188,
+        "currentCryptoKey": 1439784557
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -397866879,
+        "hiddenValue": -959011424,
+        "currentCryptoKey": 1667970294
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": 2079926863,
+        "currentCryptoKey": 1039963439
+      },
+      "RPLoss": {
+        "hash": 1726403777,
+        "hiddenValue": -1786082030,
+        "currentCryptoKey": 1254442630
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -1740131183,
+        "hiddenValue": -1414885560,
+        "currentCryptoKey": 1440030900
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1321499441,
+        "currentCryptoKey": 1486733922
+      },
+      "RPLoss": {
+        "hash": 1726403777,
+        "hiddenValue": -613160052,
+        "currentCryptoKey": 1840903627
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -1430734887,
+        "hiddenValue": -694462458,
+        "currentCryptoKey": 1800241813
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1411863729,
+        "currentCryptoKey": 1441551781
+      },
+      "RPLoss": {
+        "hash": 1726403777,
+        "hiddenValue": -1287549900,
+        "currentCryptoKey": 1503708701
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -539753303,
+        "hiddenValue": -1074889164,
+        "currentCryptoKey": 1610026694
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -991382513,
+        "currentCryptoKey": 1651792390
+      },
+      "RPLoss": {
+        "hash": 1726403777,
+        "hiddenValue": -1715016212,
+        "currentCryptoKey": 1289975545
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -1683975031,
+        "hiddenValue": -1631745474,
+        "currentCryptoKey": 1331612295
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1482025265,
+        "currentCryptoKey": 1406471023
+      },
+      "RPLoss": {
+        "hash": -39436127,
+        "hiddenValue": -676454066,
+        "currentCryptoKey": 1809256609
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -277767775,
+        "hiddenValue": -727017794,
+        "currentCryptoKey": 1783957387
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1539935665,
+        "currentCryptoKey": 1377515821
+      },
+      "RPLoss": {
+        "hash": -39436127,
+        "hiddenValue": -1865550164,
+        "currentCryptoKey": 1214708564
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": 842275713,
+        "hiddenValue": -317889726,
+        "currentCryptoKey": 1988558785
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -794731569,
+        "currentCryptoKey": 1750117865
+      },
+      "RPLoss": {
+        "hash": -39436127,
+        "hiddenValue": -40631472,
+        "currentCryptoKey": 2127167906
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": 495505625,
+        "hiddenValue": -2045554706,
+        "currentCryptoKey": 1124687259
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -57426129,
+        "currentCryptoKey": 2118770580
+      },
+      "RPLoss": {
+        "hash": -39436127,
+        "hiddenValue": -33661426,
+        "currentCryptoKey": 2130652929
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -991765063,
+        "hiddenValue": -542450772,
+        "currentCryptoKey": 1876266110
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1388824657,
+        "currentCryptoKey": 1453071327
+      },
+      "RPLoss": {
+        "hash": -39436127,
+        "hiddenValue": -2081747918,
+        "currentCryptoKey": 1106609695
+      }
+    },
+    {
+      "RankStartsAt": {
+        "hash": -1004218703,
+        "hiddenValue": -475853938,
+        "currentCryptoKey": 1909553399
+      },
+      "RPGain": {
+        "hash": -922356079,
+        "hiddenValue": -1145120593,
+        "currentCryptoKey": 1574923347
+      },
+      "RPLoss": {
+        "hash": -1566011103,
+        "hiddenValue": -117662314,
+        "currentCryptoKey": 2088652481
+      }
+    }
+  ],
+  "regions": {
+    "1": {
+      "number_of_levels": 1000,
+      "name": "The British Isles"
+    },
+    "2": {
+      "number_of_levels": 1000,
+      "name": "Holy Roman Empire"
+    },
+    "4": {
+      "number_of_levels": 1000,
+      "name": "Japanese Shogunates"
+    },
+    "3": {
+      "number_of_levels": 1000,
+      "name": "Russian Tsardom"
+    }
+  },
+  "errors": {
+    "missing_progress": {
+      "getter": "ri",
+      "va": "0x35a1324",
+      "index": 450,
+      "offset": 20833,
+      "length": 62,
+      "text": "ProgressController::OnLevelCompleted called before data loaded"
+    },
+    "invalid_stars": {
+      "getter": "rj",
+      "va": "0x35a13cc",
+      "index": 451,
+      "offset": 20895,
+      "length": 54,
+      "text": "ProgressController::OnLevelCompleted invalid stars {0}"
+    },
+    "invalid_level_index": {
+      "getter": "sh",
+      "va": "0x35a238c",
+      "index": 475,
+      "offset": 22257,
+      "length": 55,
+      "text": "RegionProgress::RecordLevelStars invalid levelIndex {0}"
+    },
+    "cannot_skip_level": {
+      "getter": "si",
+      "va": "0x35a2434",
+      "index": 476,
+      "offset": 22312,
+      "length": 93,
+      "text": "RegionProgress::RecordLevelStars cannot skip ahead — levelIndex {0} but Levels.Count is {1}"
+    },
+    "missing_wallet_config": {
+      "getter": "cvk",
+      "va": "0x35dd444",
+      "index": 1908,
+      "offset": 74813,
+      "length": 64,
+      "text": "WalletController::CalculateCampaignReward config is not assigned"
+    },
+    "invalid_reward_stars": {
+      "getter": "cvl",
+      "va": "0x35dd4f0",
+      "index": 1909,
+      "offset": 74877,
+      "length": 59,
+      "text": "WalletController::CalculateCampaignReward invalid stars {0}"
+    },
+    "invalid_gold_delta": {
+      "getter": "cvx",
+      "va": "0x35ddd00",
+      "index": 1921,
+      "offset": 75654,
+      "length": 66,
+      "text": "WalletController::AddGoldInternal rejected non-positive amount {0}"
+    },
+    "invalid_stage": {
+      "getter": "se",
+      "va": "0x35a2194",
+      "index": 472,
+      "offset": 22108,
+      "length": 61,
+      "text": "ProgressHelper::GetLevelType invalid stage={0}, clamping to 0"
+    }
+  },
+  "defaults": {
+    "tutorial_passed": false,
+    "gold_release_player": 0,
+    "campaign_regions": [],
+    "survival_max_waves": 0,
+    "ranked": {
+      "CurrentRankPoints": 0,
+      "ATHRankPoints": 0,
+      "Kills": 0,
+      "Deaths": 0
+    },
+    "applied_grant_ids": [],
+    "selection": {
+      "region": 1,
+      "stage": 0,
+      "level": 1,
+      "seed": 0,
+      "level_type": 0,
+      "shop_region": 1
+    }
+  },
+  "default_evidence": {
+    "progress_data_ctor": "0x365efc0",
+    "wallet_data_ctor": "0x3445e0c",
+    "wallet_load": "0x3445b84",
+    "wallet_editor_test_gold_ctor": "0x3446ef8",
+    "hq_static_ctor": "0x343e960"
+  },
+  "prefs": {
+    "region": "BB_LastVisitedRegion",
+    "stage_prefix": "BB_LastVisitedStage_"
+  }
+}

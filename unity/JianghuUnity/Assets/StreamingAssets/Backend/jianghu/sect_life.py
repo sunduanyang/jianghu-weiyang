@@ -678,11 +678,8 @@ def settle_battle(w, battle, n):
                                              f"晋升比试胜出，经{n['name']}考校确认", event['id'])
         return dict(kind='player_sect_trial_result', summary=text, loot=0, after=after)
     if key == 'sect_hunt':
-        for actor, fighter in zip((w.player, n), battle['fighters']):
-            lost = 1-fighter['vigor']/fighter['vigor_max']
-            if lost > .1:
-                actor['wound'] = dict(remaining=max((actor.get('wound') or {}).get('remaining', 0), 2+round(lost*3)),
-                                      event_id=battle['cause'])
+        from . import crafts
+        crafts.settle_battle(battle, (w.player, n))
         won = battle['winner'] == 0
         c = find_active(w, battle['commission'])
         text = f"{w.player['name']}缉拿{n['name']}，" + ('将其制服。' if won else '未能得手，对方脱身。')

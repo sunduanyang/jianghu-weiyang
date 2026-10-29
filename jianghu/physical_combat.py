@@ -129,6 +129,14 @@ def validate_frame(battle,frame):
     result = dict(engine=ENGINE,version=1,elapsed=number(frame.get('elapsed'),battle['elapsed'],MAX_SECONDS+5,'elapsed'),
         hits=int(number(frame.get('hits'),battle['hits'],10000,'hits')),
         clashes=int(number(frame.get('clashes'),battle['clashes'],1000000,'clashes')),fighters=[])
+    backend = frame.get('physics_backend', 'legacy-physics2d')
+    if backend not in ('legacy-physics2d', 'physics-core-2d'):
+        raise ValueError('物理后端版本不匹配')
+    previous_backend = (battle.get('frame') or {}).get('physics_backend')
+    if previous_backend is not None and backend != previous_backend:
+        raise ValueError('进行中的战局不能切换物理后端')
+    if 'physics_backend' in frame:
+        result['physics_backend'] = backend
     packets=frame.get('fighters')
     if not isinstance(packets,list) or len(packets)!=2:raise ValueError('缺少双方物理状态')
     for fighter_index,(old,p) in enumerate(zip(battle['fighters'],packets)):

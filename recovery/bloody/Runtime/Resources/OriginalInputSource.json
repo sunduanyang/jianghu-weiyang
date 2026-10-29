@@ -1,0 +1,136 @@
+{
+  "source_scene": "Game/Scenes/MainScene.unity",
+  "controls": {
+    "id": 19964,
+    "path": "CanvasAndCamera/Canvas/MainContainer/PlayerControls"
+  },
+  "views": {
+    "screen_left": {
+      "source": {
+        "id": 18123,
+        "path": "CanvasAndCamera/Canvas/MainContainer/PlayerControls/JoystickRight"
+      },
+      "native_nub_field": "NubRight",
+      "background": {
+        "id": 12303,
+        "path": "CanvasAndCamera/Canvas/MainContainer/PlayerControls/JoystickRight/Background"
+      },
+      "handle": {
+        "id": 12300,
+        "path": "CanvasAndCamera/Canvas/MainContainer/PlayerControls/JoystickRight/Background/Handle"
+      },
+      "background_size": {
+        "x": 300.0,
+        "y": 300.0
+      },
+      "handle_range": 1.0,
+      "dead_zone": 0.0,
+      "axis_options": 0,
+      "snap_x": true,
+      "snap_y": true,
+      "move_threshold": 1.0
+    },
+    "screen_right": {
+      "source": {
+        "id": 18121,
+        "path": "CanvasAndCamera/Canvas/MainContainer/PlayerControls/JoystickLeft"
+      },
+      "native_nub_field": "NubLeft",
+      "background": {
+        "id": 12302,
+        "path": "CanvasAndCamera/Canvas/MainContainer/PlayerControls/JoystickLeft/Background"
+      },
+      "handle": {
+        "id": 12301,
+        "path": "CanvasAndCamera/Canvas/MainContainer/PlayerControls/JoystickLeft/Background/Handle"
+      },
+      "background_size": {
+        "x": 300.0,
+        "y": 300.0
+      },
+      "handle_range": 1.0,
+      "dead_zone": 0.0,
+      "axis_options": 0,
+      "snap_x": true,
+      "snap_y": true,
+      "move_threshold": 1.0
+    }
+  },
+  "canvas": {
+    "source": {
+      "id": 10937,
+      "path": "CanvasAndCamera/Canvas"
+    },
+    "scaler": {
+      "id": 21039,
+      "path": "CanvasAndCamera/Canvas"
+    },
+    "scale_mode": 1,
+    "reference_resolution": {
+      "x": 1920.0,
+      "y": 1080.0
+    },
+    "screen_match_mode": 1,
+    "match_width_or_height": 0.5
+  },
+  "tablet_canvas": {
+    "source": {
+      "id": 18789,
+      "path": "CanvasAndCamera/Canvas"
+    },
+    "pc_mode": false,
+    "horizontal_layout_group": {
+      "id": 17310,
+      "path": "CanvasAndCamera/Canvas"
+    },
+    "bottom_offset_elements": [
+      {
+        "id": 12726,
+        "path": "CanvasAndCamera/Canvas/MainContainer/TopBar_MainMenu/TopBarNormalInputContainer/LeftContainer/ChristmasModeContainer"
+      },
+      {
+        "id": 13213,
+        "path": "CanvasAndCamera/Canvas/MainContainer/TopBar_MainMenu/TopBarNormalInputContainer/LeftContainer/ZombieModeContainer"
+      },
+      {
+        "id": 13624,
+        "path": "CanvasAndCamera/Canvas/MainContainer/TopBar_MainMenu/TopBarNormalInputContainer/RightContainer/RemoveAdsContainer"
+      }
+    ],
+    "pc_width": 3000.0,
+    "tablet_width": 2500.0,
+    "aspect_threshold": 1.7777777910232544,
+    "standard_width": 1920,
+    "pc_padding": {
+      "left": -750,
+      "right": -750,
+      "top": 100,
+      "bottom": 100,
+      "offset_y": 250
+    },
+    "tablet_padding": {
+      "left": -250,
+      "right": -250,
+      "top": 120,
+      "bottom": 150,
+      "offset_y": 0
+    },
+    "standard_padding": {
+      "left": 0,
+      "right": 0,
+      "top": 0,
+      "bottom": 0,
+      "offset_y": 50
+    },
+    "native_apply_va": "0x36aefb8"
+  },
+  "options": {
+    "visible": true,
+    "fixed": false,
+    "fixed_threshold": 1000
+  },
+  "network": {
+    "nub_quantization": 1024,
+    "maximum_magnitude": 155.0
+  }
+}

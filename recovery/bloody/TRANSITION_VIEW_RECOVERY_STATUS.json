@@ -1,0 +1,64 @@
+{
+  "scope": "Original mounted TransitionView callbacks, unscaled source clips, animation events and dedicated AudioSource behavior",
+  "source_apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "runtime_source": "Runtime/OriginalTransitionView.cs",
+  "resource": "Runtime/Resources/OriginalTransitionViewSource.json",
+  "resource_folder": "Runtime/Resources/OriginalTransitionView",
+  "exporter": "scripts/export_bloody_transition_view.py",
+  "attach": "OriginalTransitionView.Attach(hudRoot, OriginalArenaTransitionSequence)",
+  "mounted": {
+    "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView",
+    "game_object": 928,
+    "controller_component": 20419,
+    "source_active": true,
+    "animator": 6878,
+    "animator_update_mode": 2,
+    "animancer": 15471,
+    "animancer_action_on_disable": 0,
+    "audio_source": 6674,
+    "nested_canvas_sorting_order": 5000,
+    "source_clips": 3,
+    "source_audio_clips": 6
+  },
+  "native_behavior": {
+    "OnEnable": "Subscribe to TransitionController.OnSwitching and OnSwitched only",
+    "OnDisable": "Remove both event listeners only; the separately mounted Animancer component owns its ActionOnDisable.Stop policy",
+    "OnSwitching_dmu": "Play serialized slideIn clip with fadeDuration0 and FadeMode.FromStart2",
+    "OnSwitched_dmv": "Play serialized slideOut clip with fadeDuration0 and FadeMode.FromStart2",
+    "initialize": "The source field and its zero-duration original clip are retained, but none of the nine methods plays it. Attach does not invent an initialize playback.",
+    "SFX_public_methods": "PlaySlideIn/PlayUnlock/PlaySlideOut/PlayContact are animation-event sound wrappers, not cover-clip entry points",
+    "SFX_order": "Float Random.Range(pitch), AudioSource.pitch assignment, int Random.Range(clip index), float Random.Range(volume), AudioSource.PlayOneShot(clip,volumeScale)",
+    "SFX_properties": "No source.Stop, source.volume assignment, source.loop assignment or reseeding. Source panelsSlideIn volume0 is preserved.",
+    "clip_events": "slideIn emits PlaySlideIn at0.016666668 and PlayContact at0.033333335; slideOut emits PlaySlideOut at0. The serialized PlayUnlock sound has no event in these three clips.",
+    "curves": "Original wooden panels, vignette and loading indicator curves are copied unchanged. slideOut disables root UnityEngine.UI.Image through its original m_Enabled binding and hides the internal MainContainer at0.25 seconds."
+  },
+  "integration_order": [
+    "Build/import the original hierarchy and initialize existing main UI flow first; the generic disable-all-main-children bootstrap would otherwise disable TransitionView",
+    "Construct the actual arena sequence owner, then Attach once. Attach restores the source TransitionView root active state and receives normal Unity OnEnable.",
+    "Keep the outer TransitionView active through mode/round changes. Only its original clip-controlled internal objects close/open.",
+    "Run the first Arena entrance through the same source transition sequence as later entrances. Directly spawning a first Practice skips the source Menu->Arena cover/uncover lifecycle, including the original Image raycast release.",
+    "Runner destruction still clears battle network screens through CanvasAndCamera.ccu; the cover does not substitute for that UI lifecycle."
+  ],
+  "validation": {
+    "script": "scripts/verify_bloody_transition_view.py",
+    "native_transition_view_assertions": 160,
+    "local_sequence_listener_lifecycle_assertions": 2,
+    "asset_assertions": 82,
+    "byte_identical_assets": 9,
+    "curve_paths_verified": 56,
+    "animation_event_receivers_verified": 3,
+    "failures": 0,
+    "whole_runtime_roslyn_exit": 0,
+    "oracle": "output/bloody-full-port-20261028/ai-check/transition-view/native-transition-view-oracle.json",
+    "comparison": "output/bloody-full-port-20261028/ai-check/transition-view/comparison.txt",
+    "assets": "output/bloody-full-port-20261028/ai-check/transition-view/asset-check.json"
+  },
+  "limits": [
+    "Native oracle observes subscription boundaries, clip/fade arguments and actual SFX instructions with bounded RNG/audio/Animancer services. A real Unity animation/raycast/cover comparison remains pending Root's integration run.",
+    "Animancer is represented by an unscaled PlayableGraph using the unchanged original clips. FromStart resets playback to0; the original engine is responsible for evaluating curves and dispatching the retained animation events.",
+    "The helper's graph stop on disable represents the separate mounted Animancer ActionOnDisable0 policy. It is not an additional TransitionView callback requirement.",
+    "The source initialize clip is exported as evidence, not silently executed to compensate for a skipped bootstrap transition.",
+    "No Preview/HUD/UIFlow/Timing or generated active-project files were edited for this component."
+  ],
+  "runtime_parity_verified": false
+}

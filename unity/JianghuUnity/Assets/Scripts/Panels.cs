@@ -12,7 +12,7 @@ public partial class JianghuApp {
     bool fastMode,aiEditing,aiEnabled,aiOllama,aiAutoStart=true;
     string aiUrl="http://127.0.0.1:11435",aiModel="qwen3:4b",aiQueue="2",aiCooldown="1";
     Vector2 itemScroll,detailScroll;
-    public void LoadInventory(){Client.Fetch("/api/inventory",j=>Inventory=j);Client.Fetch("/api/market",j=>Market=j);LoadEquipment();LoadEconomy();}
+    public void LoadInventory(){Client.Fetch("/api/inventory",j=>Inventory=j);Client.Fetch("/api/market",j=>Market=j);LoadCrafts();LoadEquipment();LoadEconomy();}
     void ItemAction(string operation,J item=null,string recipe=null){Client.Act("/api/items",J.O("operation",operation,"item_id",item==null?new J():item["id"],"target",giftTarget,"recipe",recipe),j=>{LoadInventory();if(operation=="use"&&item!=null&&item["art"].Has)Client.Fetch("/api/martial",m=>Martial=m);if(SelectedPerson>=0)SelectPerson(SelectedPerson);});}
     // 人物卷·行囊：装备与随身物品。看他人时只读。
     static readonly string[] BagModes={"装备","行囊"};
@@ -29,8 +29,8 @@ public partial class JianghuApp {
         if(inventoryMode=="装备"){if(InspectingNpc)DrawInspectedEquipment(bag);else DrawEquipment();return;}
         DrawItemBrowser(bag,false);
     }
-    // 江湖卷·市井：货栈买卖、依方制药、各城市集供需。买卖与制药都动用主角自己的行囊。
-    static readonly string[] MarketModes={"货栈","制药","市井供需"};
+    // 江湖卷·市井：货栈买卖、技艺（造诣、锻造、题字、制药、调治）、各城市集供需。买卖与技艺都动用主角自己的行囊。
+    static readonly string[] MarketModes={"货栈","技艺","市井供需"};
     void DrawMarketTab(){
         GUILayout.BeginHorizontal();H("市井百货");GUILayout.FlexibleSpace();
         foreach(string mode in MarketModes)if(GUILayout.Button(mode,marketMode==mode?selected:skin.button,GUILayout.Width(120))){marketMode=mode;selectedItem="";if(mode=="市井供需")LoadEconomy();}
@@ -38,12 +38,12 @@ public partial class JianghuApp {
         GUILayout.EndHorizontal();
         if(marketMode=="市井供需"){DrawEconomy();return;}
         if(!Inventory.Has){T("正在整理行囊…");return;}
-        if(marketMode=="制药"){DrawCrafting(Inventory);return;}
+        if(marketMode=="技艺"){DrawCraftsPanel(Inventory);return;}
         DrawItemBrowser(Inventory,true);
     }
     void DrawCrafting(J bag){
-        mainScroll=GUILayout.BeginScrollView(mainScroll);T("耗用行囊中的药草与2银工费，制得一份成药。",small);
-        foreach(var r in Market["recipes"].A){GUILayout.BeginVertical(card);H(r["name"].S);T(r["description"].S);foreach(var ing in r["ingredients"].D)Metric(ing.Key,ing.Value.S+"份");int needed=r["ingredients"].D.Sum(k=>k.Value.I),owned=bag["items"].A.Count(i=>i["template"].S=="herb");T("行囊药草 "+owned+" / "+needed+"份",small);if(Btn("依方制成",owned>=needed&&bag["wealth"].N>=2&&!W["battle_active"].B))ItemAction("craft",null,r["template"].S);GUILayout.EndVertical();}GUILayout.EndScrollView();
+        mainScroll=GUILayout.BeginScrollView(mainScroll);T("耗用行囊中的药草与2银工费，制得一份成药。医术越高，药力越足；养心丸须医术"+Crafts["brew"]["recipes"].A.Where(x=>x["template"].S=="pill").Select(x=>x["skill"].S).FirstOrDefault()+"。",small);
+        foreach(var r in Market["recipes"].A){GUILayout.BeginVertical(card);H(r["name"].S);T(r["description"].S);foreach(var ing in r["ingredients"].D)Metric(ing.Key,ing.Value.S+"份");int needed=r["ingredients"].D.Sum(k=>k.Value.I),owned=bag["items"].A.Count(i=>i["template"].S=="herb");T("行囊药草 "+owned+" / "+needed+"份",small);string brewWhy=Crafts["brew"]["recipes"].A.Where(x=>x["template"].S==r["template"].S).Select(x=>x["reason"].S).FirstOrDefault()??"";if(brewWhy.Length>0)T(brewWhy,small);if(Btn("依方制成",owned>=needed&&bag["wealth"].N>=2&&brewWhy.Length==0&&!W["battle_active"].B))ItemAction("craft",null,r["template"].S);GUILayout.EndVertical();}GUILayout.EndScrollView();
     }
     // One toolbar for both bags and shops; grade stays on the cards, with automatic sorting.
     void DrawItemBrowser(J bag,bool shop){
@@ -61,7 +61,7 @@ public partial class JianghuApp {
         var categoryOrder=bag["categories"].D.Keys.ToList();
         var list=(shop?Market:bag)["items"].A.Where(i=>i["name"].S.IndexOf(itemQuery,StringComparison.OrdinalIgnoreCase)>=0&&(itemCategory=="全部"||i["category_label"].S==itemCategory))
             .OrderBy(i=>categoryOrder.IndexOf(i["category"].S)).ThenBy(i=>i["grade"].I).ToList();
-        var rows=list.GroupBy(i=>i["template"].S+"/"+i["durability"].S+"/"+i["equipped"].B).Select(group=>{var representative=group.FirstOrDefault(x=>x["id"].S==selectedItem)??group.First();var tile=J.Parse(representative.ToString());tile["stack_count"]=new J(group.Count());return tile;}).ToList();
+        var rows=list.GroupBy(i=>i["template"].S+"/"+i["durability"].S+"/"+i["equipped"].B+"/"+(i["craft"].Has?i["craft"].ToString():"")).Select(group=>{var representative=group.FirstOrDefault(x=>x["id"].S==selectedItem)??group.First();var tile=J.Parse(representative.ToString());tile["stack_count"]=new J(group.Count());return tile;}).ToList();
         GUILayout.FlexibleSpace();GUILayout.Label("共 "+list.Count+" 件",small,GUILayout.Width(90));GUILayout.EndHorizontal();
         if(!readOnly&&!shop&&giftTarget>=0){GUILayout.BeginHorizontal();T("赠物对象："+(W["npcs"].A.FirstOrDefault(n=>n["id"].I==giftTarget)?["name"].S??"请选择人物"),sub);if(GUILayout.Button("取消赠物对象",chip,GUILayout.Width(132)))giftTarget=-1;GUILayout.EndHorizontal();}
         if(!rows.Any(i=>i["id"].S==selectedItem))selectedItem=rows.FirstOrDefault()?["id"].S??"";
@@ -69,7 +69,7 @@ public partial class JianghuApp {
         DrawItemGrid(rows,shop);
         if(rows.Count==0){T("没有符合条件的物品。",sub);if(Btn("查看全部物品")){itemQuery="";itemCategory="全部";selectedItem="";itemScroll=detailScroll=Vector2.zero;}}
         GUILayout.EndScrollView();GUILayout.EndVertical();
-        GUILayout.BeginVertical(GUILayout.Width(402));detailScroll=GUILayout.BeginScrollView(detailScroll,GUILayout.Height(556));var i=rows.FirstOrDefault(x=>x["id"].S==selectedItem);if(i!=null){var qualityStyle=new GUIStyle(sub);TextColor(qualityStyle,Hex(i["grade_color"].S));T(i["grade_name"].S+" · "+i["grade_label"].S+" · "+i["category_label"].S,qualityStyle);H(i["name"].S);T(i["description"].S);if(new[]{"weapon","armor","accessory","tool","manual"}.Contains(i["category"].S))Bar("耐久",i["durability"].N,100);if(i["category"].S=="weapon")foreach(var attribute in bag["weapon_attribute_catalog"].A){string key=attribute["id"].S;if(key!="durability")Metric(attribute["name"].S,Num(i["weapon_attributes"][key])+attribute["unit"].S);}Metric(shop?"购入":"售出",Num(i[shop?"buy_price":"sell_price"])+"银");
+        GUILayout.BeginVertical(GUILayout.Width(402));detailScroll=GUILayout.BeginScrollView(detailScroll,GUILayout.Height(556));var i=rows.FirstOrDefault(x=>x["id"].S==selectedItem);if(i!=null){var qualityStyle=new GUIStyle(sub);TextColor(qualityStyle,Hex(i["grade_color"].S));T(i["grade_name"].S+" · "+i["grade_label"].S+" · "+i["category_label"].S,qualityStyle);H(i["name"].S);if(i["craft_label"].S.Length>0)T(i["craft_label"].S,sub);T(i["description"].S);if(new[]{"weapon","armor","accessory","tool","manual"}.Contains(i["category"].S))Bar("耐久",i["durability"].N,100);if(i["category"].S=="weapon")foreach(var attribute in bag["weapon_attribute_catalog"].A){string key=attribute["id"].S;if(key!="durability")Metric(attribute["name"].S,Num(i["weapon_attributes"][key])+attribute["unit"].S);}Metric(shop?"购入":"售出",Num(i[shop?"buy_price":"sell_price"])+"银");
             foreach(string key in new[]{"defense","income","training","recovery","heal","joy","wound","illness","learning"})if(i[key].Has)Metric(ItemLabels.ContainsKey(key)?ItemLabels[key]:key,Num(i[key]));
             if(i["category"].S=="manual")T(i["art_known"].B?"已掌握此功法，可保留、出售或赠予秘籍。":"使用一本即可永久学会对应功法。",small);
             T("此物来处",sub);T(i["origin"].S);if(i["origin_event"].Has&&Btn("查看初得记录"))OpenEvent(i["origin_event"].I);if(i["last_event"].Has&&Btn("查看最近流转"))OpenEvent(i["last_event"].I);
@@ -205,18 +205,19 @@ public partial class JianghuApp {
         }
         GUILayout.EndArea();
     }
-    // 系统（Esc）：存档、本地模型与调试用的皮影衣橱。
+    // 系统（Esc）：存档、本地模型、调试用的皮影衣橱与关节绑定。
     void DrawSystemScroll(){
         var view=TopView;var tab=(SystemTab)view.Tab;
         BookScreen("系统");
         int pick=BookTabStrip(SystemTabNames,view.Tab);
         if(pick>=0&&pick!=view.Tab)Later(()=>SetTab(pick));
-        Rect area=tab==SystemTab.Puppets?new Rect(200,118,1280,760):new Rect(260,118,1160,760);
+        Rect area=tab==SystemTab.Puppets||tab==SystemTab.Rigging?new Rect(200,118,1280,760):new Rect(260,118,1160,760);
         paperDrawOrigin=area.position;GUILayout.BeginArea(area);
         switch(tab){
             case SystemTab.Saves:DrawSettings();break;
             case SystemTab.Model:DrawAI();break;
             case SystemTab.Puppets:DrawPuppets();break;
+            case SystemTab.Rigging:DrawRigBinder();break;
         }
         GUILayout.EndArea();paperDrawOrigin=Vector2.zero;
     }

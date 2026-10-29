@@ -10,17 +10,19 @@ $ErrorActionPreference = 'Stop'
 $combatExecutable = (Resolve-Path -LiteralPath $Executable).Path
 $combatOutput = [IO.Path]::GetFullPath($Output)
 New-Item -ItemType Directory -Force -Path $combatOutput | Out-Null
+$combatSummaryPath = Join-Path $combatOutput 'summary.json'
 $combatResults = @()
+if (Test-Path -LiteralPath $combatSummaryPath) { $combatResults = @(Get-Content -LiteralPath $combatSummaryPath -Raw | ConvertFrom-Json) }
 foreach ($combatPhase in $Phases) {
     $combatDestination = Join-Path $combatOutput $combatPhase
     if (Test-Path -LiteralPath (Join-Path $combatDestination 'acceptance.json')) {
         throw "Choose a fresh Output directory; $combatPhase already has a result."
     }
     New-Item -ItemType Directory -Force -Path $combatDestination | Out-Null
-    $combatSaveName = if ($combatPhase -in @('resume','city-resume')) { 'reference-mechanics' } elseif ($combatPhase -eq 'injury-resume') { 'injury' } elseif ($combatPhase -eq 'source-program-resume') { 'source-program' } elseif ($combatPhase -eq 'source-rig-resume') { 'source-rig' } elseif ($combatPhase -eq 'reference-port-resume') { 'reference-port' } else { $combatPhase }
+    $combatSaveName = if ($combatPhase -in @('resume','city-resume')) { 'reference-mechanics' } elseif ($combatPhase -eq 'save-bounds-resume') { 'save-bounds' } elseif ($combatPhase -eq 'injury-resume') { 'injury' } elseif ($combatPhase -eq 'source-program-resume') { 'source-program' } elseif ($combatPhase -eq 'source-rig-resume') { 'source-rig' } elseif ($combatPhase -eq 'reference-port-resume') { 'reference-port' } else { $combatPhase }
     $combatSave = Join-Path $combatOutput ('save-' + $combatSaveName)
     New-Item -ItemType Directory -Force -Path $combatSave | Out-Null
-    if ($combatPhase -in @('injury','reference-mechanics','reference','source-program','reference-port','source-rig')) {
+    if ($combatPhase -in @('injury','reference-mechanics','reference','source-program','reference-port','source-rig','save-bounds')) {
         & $Python (Join-Path $PSScriptRoot 'prepare_reference_acceptance.py') --save-dir $combatSave
         if ($LASTEXITCODE -ne 0) { throw "Could not prepare isolated combat fixture: $combatPhase" }
     }

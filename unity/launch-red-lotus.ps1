@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 $trialRoot = Split-Path -Parent $PSScriptRoot
 $trialExe = Join-Path $PSScriptRoot 'Build\RedLotusTrial\江湖未央.exe'
 if (!(Test-Path -LiteralPath $trialExe)) { throw 'The red lotus trial has not been built.' }

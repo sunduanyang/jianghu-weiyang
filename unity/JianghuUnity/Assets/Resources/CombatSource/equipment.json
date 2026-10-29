@@ -78,7 +78,9 @@
       "linear_damping": 0.5,
       "angular_damping": 2.5,
       "counterweight_linear_damping": 0,
-      "counterweight_angular_damping": 0.05
+      "counterweight_angular_damping": 0.05,
+      "impact_speed_threshold": 5.0,
+      "clash_damage_stat": 1.0
     },
     "sabre": {
       "sample_name": "HandItem_Sword_1",
@@ -88,7 +90,9 @@
       "linear_damping": 0,
       "angular_damping": 0.05,
       "counterweight_linear_damping": 0,
-      "counterweight_angular_damping": 0.05
+      "counterweight_angular_damping": 0.05,
+      "impact_speed_threshold": 5.0,
+      "clash_damage_stat": 2.0
     },
     "sword": {
       "sample_name": "HandItem_Sword_1",
@@ -98,7 +102,9 @@
       "linear_damping": 0,
       "angular_damping": 0.05,
       "counterweight_linear_damping": 0,
-      "counterweight_angular_damping": 0.05
+      "counterweight_angular_damping": 0.05,
+      "impact_speed_threshold": 5.0,
+      "clash_damage_stat": 2.0
     },
     "axe": {
       "sample_name": "HandItem_Axe_1",
@@ -108,7 +114,9 @@
       "linear_damping": 0,
       "angular_damping": 0.05,
       "counterweight_linear_damping": 0,
-      "counterweight_angular_damping": 0.05
+      "counterweight_angular_damping": 0.05,
+      "impact_speed_threshold": 5.0,
+      "clash_damage_stat": 2.0
     },
     "mace": {
       "sample_name": "HandItem_Mace_1",
@@ -118,7 +126,9 @@
       "linear_damping": 0,
       "angular_damping": 0.05,
       "counterweight_linear_damping": 0,
-      "counterweight_angular_damping": 0.05
+      "counterweight_angular_damping": 0.05,
+      "impact_speed_threshold": 5.0,
+      "clash_damage_stat": 1.5
     },
     "spear": {
       "sample_name": "HandItem_2HandedSpear_1",
@@ -128,7 +138,9 @@
       "linear_damping": 10,
       "angular_damping": 15,
       "counterweight_linear_damping": 0,
-      "counterweight_angular_damping": 0.05
+      "counterweight_angular_damping": 0.05,
+      "impact_speed_threshold": 5.0,
+      "clash_damage_stat": 5.5
     },
     "greatsword": {
       "sample_name": "HandItem_2HandedSword_1",
@@ -138,7 +150,9 @@
       "linear_damping": 15,
       "angular_damping": 25,
       "counterweight_linear_damping": 0,
-      "counterweight_angular_damping": 0.05
+      "counterweight_angular_damping": 0.05,
+      "impact_speed_threshold": 5.0,
+      "clash_damage_stat": 4.0
     },
     "greataxe": {
       "sample_name": "HandItem_2HandedAxe_1",
@@ -148,7 +162,9 @@
       "linear_damping": 15,
       "angular_damping": 25,
       "counterweight_linear_damping": 0,
-      "counterweight_angular_damping": 0.05
+      "counterweight_angular_damping": 0.05,
+      "impact_speed_threshold": 5.0,
+      "clash_damage_stat": 6.0
     },
     "warhammer": {
       "sample_name": "HandItem_2HandedHammer_1",
@@ -158,7 +174,9 @@
       "linear_damping": 15,
       "angular_damping": 25,
       "counterweight_linear_damping": 0,
-      "counterweight_angular_damping": 0.05
+      "counterweight_angular_damping": 0.05,
+      "impact_speed_threshold": 5.0,
+      "clash_damage_stat": 4.0
     },
     "shield": {
       "sample_name": "HandItem_Shield_1",
@@ -168,7 +186,9 @@
       "linear_damping": 0,
       "angular_damping": 0.05,
       "counterweight_linear_damping": 0,
-      "counterweight_angular_damping": 0.05
+      "counterweight_angular_damping": 0.05,
+      "impact_speed_threshold": 5.0,
+      "clash_damage_stat": 1.0
     }
   },
   "nonarena_override": {
@@ -190,6 +210,7 @@
     "type": 7,
     "hand_item_type": 0,
     "length": 0.25,
+    "impact_speed_threshold": 5.0,
     "body_mass": 1,
     "counterweight_mass": 1,
     "body_gravity": 1.0,

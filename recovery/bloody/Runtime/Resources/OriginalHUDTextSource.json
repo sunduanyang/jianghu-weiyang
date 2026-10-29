@@ -1,0 +1,113 @@
+{
+  "source": "Resources/I2Languages.asset",
+  "source_sha256": "39c1905f706b90dbf81dbfbf462dffe88536aae8343d7d531d5d2e50c709c5a4",
+  "languages": [
+    {
+      "Name": "English",
+      "Code": "en",
+      "Flags": 0
+    },
+    {
+      "Name": "Russian",
+      "Code": "ru",
+      "Flags": 0
+    },
+    {
+      "Name": "Spanish",
+      "Code": "es",
+      "Flags": 0
+    },
+    {
+      "Name": "Indonesian",
+      "Code": "id",
+      "Flags": 0
+    },
+    {
+      "Name": "French (France)",
+      "Code": "fr-FR",
+      "Flags": 0
+    },
+    {
+      "Name": "Portuguese (Brazil)",
+      "Code": "pt-BR",
+      "Flags": 0
+    },
+    {
+      "Name": "Turkish",
+      "Code": "tr",
+      "Flags": 0
+    },
+    {
+      "Name": "Ukrainian",
+      "Code": "uk",
+      "Flags": 0
+    },
+    {
+      "Name": "German",
+      "Code": "de",
+      "Flags": 0
+    },
+    {
+      "Name": "Romanian",
+      "Code": "ro",
+      "Flags": 0
+    },
+    {
+      "Name": "Japanese",
+      "Code": "ja",
+      "Flags": 0
+    }
+  ],
+  "terms": {
+    "UI/ArenaMultiplayer/Player X Won The Round": {
+      "getter": "bxp",
+      "getter_va": "0x35c39bc",
+      "translations": [
+        "{0}\nwon the round!",
+        "{0}\nвыиграл раунд!",
+        "¡{0}\nganó la ronda!",
+        "{0}\nmemenangkan ronde!",
+        "{0}\r\na gagné la manche !",
+        "{0}\nvenceu a rodada!",
+        "{0}\nturu kazandı!",
+        "{0}\nвиграв раунд!",
+        "{0}\nRunde gewonnen!",
+        "{0}\na câstigat runda!",
+        "{0}\nはラウンドを勝った！"
+      ]
+    },
+    "UI/ArenaMultiplayer/Player X Left": {
+      "getter": "bxl",
+      "getter_va": "0x35c371c",
+      "translations": [
+        "{0}\nleft the match...",
+        "{0}\nпокинул матч ...",
+        "{0}\ndejó el partido ...",
+        "{0}\nmeninggalkan pertandingan...",
+        "{0}\na quitté le match...",
+        "{0}\ndeixou o jogo ...",
+        "{0}\nmaçtan ayrıldı...",
+        "{0}\nпокинув матч...",
+        "{0}\ndas Spiel verlassen...",
+        "{0}\na părăsit meciul...",
+        "{0}\nは戦いを離れた..."
+      ]
+    }
+  },
+  "timer_format": {
+    "getter": "bul",
+    "va": "0x35c03ec",
+    "index": 1207,
+    "offset": 50308,
+    "length": 13,
+    "text": "{0:D2}:{1:D2}"
+  },
+  "empty_string": {
+    "getter": "fj",
+    "va": "0x359470c",
+    "index": 139,
+    "offset": 5524,
+    "length": 0,
+    "text": ""
+  }
+}

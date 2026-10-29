@@ -36,7 +36,7 @@ public sealed partial class PhysicsDuel {
             if(!firstGapViolation.Has&&Mathf.Max(player.MaxJointGap(),enemy.MaxJointGap())>=.15f)firstGapViolation=ProbeSourceJointMetrics();
             if(Mathf.Max(p,e)>maxLimit){maxLimit=Mathf.Max(p,e);at=Clock;worst=p>e?player.worstLimitJoint:enemy.worstLimitJoint;}
         }
-        var result=J.O("substeps",steps,"velocity_iterations",Physics2D.velocityIterations,"position_iterations",Physics2D.positionIterations,"baumgarte",Physics2D.baumgarteScale,"ordered_limits_study",Arg("-referenceOrderLimits")=="1","source_mounts_study",Arg("-referenceSourceMounts")=="1","weapon",player.weapon.id,"ticks",ticks,"simulation_seconds",Clock,"wall_seconds",Time.realtimeSinceStartup-start,
+        var result=J.O("physics_backend",PhysicsBackendMetrics(),"substeps",steps,"velocity_iterations",Physics2D.velocityIterations,"position_iterations",Physics2D.positionIterations,"baumgarte",Physics2D.baumgarteScale,"ordered_limits_study",Arg("-referenceOrderLimits")=="1","source_mounts_study",Arg("-referenceSourceMounts")=="1","weapon",player.weapon.id,"ticks",ticks,"simulation_seconds",Clock,"wall_seconds",Time.realtimeSinceStartup-start,
             "max_gap",maxGap,"max_limit",maxLimit,"worst_time",at,"worst_joint",worst,"hits",hits,"player_health",player.health,"enemy_health",enemy.health,"limit_bound_passed",maxGap<.15f&&maxLimit<8,"max_root_x",maxRootX,"arena_bound_passed",maxRootX<6.1f,
             "ai_min_distance",minDistance,"ai_max_distance",maxDistance,"ai_attack_band_ticks",attackBandTicks,"ai_below_minimum_ticks",minimumSpacingTicks,
             "first_limit_violation",firstLimitViolation,"first_gap_violation",firstGapViolation,

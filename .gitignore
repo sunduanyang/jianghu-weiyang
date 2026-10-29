@@ -49,3 +49,6 @@ prototypes/shadow-puppets/validation/
 .idea/
 Thumbs.db
 .DS_Store
+
+# Local standalone recovery copy includes unpacked third-party packages and assets.
+/standalone/

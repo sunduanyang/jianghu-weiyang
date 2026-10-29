@@ -71,6 +71,11 @@ public sealed partial class OriginalRig : MonoBehaviour {
         InitializeAppearance();
         InitializeMotion();
         InitializeAI();
+        // Both imported hand driver children start inactive. The local host
+        // owns the fighter's simulation, so their bodies/joints must join
+        // physics before MovePosition can drive the visible hands.
+        leftHandCOM.gameObject.SetActive(true);
+        rightHandCOM.gameObject.SetActive(true);
     }
     partial void InitializeAppearance();
     partial void InitializeCombat();
@@ -104,8 +109,8 @@ public sealed partial class OriginalRig : MonoBehaviour {
                 if(OriginalKicking)pelvisCOM.MoveRotation(flipped?120:-120);
                 // cll/cln retain the original cross-named hand wiring and the
                 // prior-target MovePosition before the new target is written.
-                if(!leftArmDisabled)DriveHand(rightHandCOM,rightPoint,rightParent,leftHand,rightActive,leftInput);
-                if(!rightArmDisabled)DriveHand(leftHandCOM,leftPoint,leftParent,rightHand,leftActive,rightInput);
+                if(!leftArmDisabled)DriveHand(rightHandCOM,rightPoint,rightParent,leftHand,rightActive,leftInput,desktopLeftPose,desktopLeftAim);
+                if(!rightArmDisabled)DriveHand(leftHandCOM,leftPoint,leftParent,rightHand,leftActive,rightInput,desktopRightPose,desktopRightAim);
             }
             if(!leftLegDisabled)leftFootCOM.MovePosition(leftFootPoint.position);
             if(!rightLegDisabled)rightFootCOM.MovePosition(rightFootPoint.position);
@@ -130,11 +135,11 @@ public sealed partial class OriginalRig : MonoBehaviour {
         // pelvis COM horizontally during a passed-out state.
         if(passedOut)rootBody.MovePosition(new Vector2(pelvisCOM.position.x,rootBody.position.y));
     }
-    void DriveHand(Rigidbody2D driver,Transform target,Transform parent,Rigidbody2D hand,bool active,Vector2 nub) {
+    void DriveHand(Rigidbody2D driver,Transform target,Transform parent,Rigidbody2D hand,bool active,Vector2 nub,bool retainPose,Vector2 retainedAim) {
         driver.MovePosition(target.position);
         float drag=(hand.linearVelocity.x+hand.linearVelocity.y)*.5f>Number("handsDragThreshold")?Number("handsDragWhenActive"):Number("handsDragWhenPassive");
         hand.linearDamping=hand.angularDamping=drag;
-        if(active)target.position=parent.position+new Vector3((nub.x/100+.15f)*(flipped?-1:1),nub.y/100+.25f,0);
+        if(active||retainPose){if(!active)nub=retainedAim;var p=parent.position;target.position=new Vector3(p.x+(nub.x/100+.15f)*(flipped?-1:1),p.y+nub.y/100+.25f,0);}
         else target.localPosition=Vector3.zero;
     }
 }

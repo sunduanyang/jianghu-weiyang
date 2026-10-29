@@ -1,4 +1,4 @@
-from . import combat_attributes, weapons, equipment, martial, martial_catalog
+from . import combat_attributes, weapons, equipment, martial, martial_catalog, crafts
 """Personal possessions: finite instances, engine-priced transfers and event provenance."""
 from copy import deepcopy
 import math
@@ -13,7 +13,7 @@ GRADE_COLOR_NAMES = {9: '灰', 8: '白', 7: '绿', 6: '蓝', 5: '青',
 GRADE_NAMES = {grade: name+'品' for grade, name in zip(range(9, 0, -1), '九八七六五四三二一')}
 CATEGORIES = {'manual': '武功秘籍', 'food': '食品', 'wine': '酒', 'tea': '茶',
               'weapon': '武器', 'shield': '盾牌', 'armor': '护甲', 'accessory': '佩饰', 'tool': '器具',
-              'medicine': '丹药', 'material': '材料'}
+              'medicine': '丹药', 'material': '材料', 'writing': '墨宝'}
 SLOTS = {'weapon': '主手', 'shield': '副手', 'armor': '护甲'}
 CONSUMABLES = ('food', 'wine', 'tea', 'medicine')
 
@@ -101,6 +101,18 @@ CATALOG.update({
     'liangyi_manual': template('两仪玄章', 'manual', 2, 640, '阴阳相济，动静互根，字字关乎深厚内功。', learning=4., requirement=55, pages=6),
 })
 RECIPES = {'salve': {'herb': 2}, 'pill': {'herb': 3}}
+# Written pieces exist only once someone writes them; the trading house never stocks them.
+WRITING_TEMPLATES = {
+    'writing_9': template('习字诗笺', 'writing', 9, 4, '笔画尚生，胜在一片诚意。'),
+    'writing_8': template('题壁短章', 'writing', 8, 8, '数行短句，字迹端正。'),
+    'writing_7': template('行书条幅', 'writing', 7, 16, '行笔流畅，可悬于书斋。'),
+    'writing_6': template('题画扇面', 'writing', 6, 30, '扇面小品，诗画相映。'),
+    'writing_5': template('小楷册页', 'writing', 5, 55, '小楷精整，一册数页，耐人细读。'),
+    'writing_4': template('草书长卷', 'writing', 4, 100, '笔走龙蛇，气韵贯通全卷。'),
+    'writing_3': template('传世法帖', 'writing', 3, 180, '笔意老到，足为后学临摹。'),
+}
+CATALOG.update(WRITING_TEMPLATES)
+CRAFTED_ONLY = frozenset(WRITING_TEMPLATES)
 
 
 def grade_info(grade):
@@ -230,7 +242,7 @@ def initialize(w, legacy=False):
             equipment.normalize(w, owner)
         if w.items.get('version', 1) < 2:
             # Explicit one-time stock registration, never monthly replenishment.
-            known = {i['template'] for i in w.items['objects'].values()} | ORIGINAL_TEMPLATES
+            known = {i['template'] for i in w.items['objects'].values()} | ORIGINAL_TEMPLATES | CRAFTED_ONLY
             added = [create(w, 'market', key, '九品物品目录扩充时登记的货栈新货')
                      for key in CATALOG if key not in known]
             w.items['version'] = 2
@@ -253,6 +265,8 @@ def initialize(w, legacy=False):
     prepare(w.items['market'])
     prepare(w.items['government'])
     for template_id, d in CATALOG.items():
+        if template_id in CRAFTED_ONLY:
+            continue
         for _ in range(4 if d['grade'] >= 7 else 1):
             create(w, 'market', template_id, '货栈开张存货')
     for template_id in ('wood_sword', 'cloth', 'jade', 'salve', 'salve', 'ration', 'herb', 'herb', 'iron'):
@@ -296,22 +310,39 @@ def wear(w, owner, slots, amount=1):
         if item_id:
             item = get(w, owner, item_id)
             before = item['durability']
-            item['durability'] = max(0, before-amount)
+            # A well-tempered blade wears more slowly; ordinary items lose whole points.
+            loss = amount if 'craft' not in item else round(amount*crafts.wear_factor(item), 2)
+            item['durability'] = max(0, round(before-loss, 2))
             if item['durability'] != before:
                 changes.append({'item_id': item_id, 'before': before, 'after': item['durability']})
     return changes
 
 
 def buy_price(item):
-    return round(spec(item)['price'] * (.25 + .75 * item['durability']/100), 2)
+    return round(spec(item)['price'] * crafts.price_factor(item) * (.25 + .75 * item['durability']/100), 2)
 
 
 def sell_price(item):
     return round(buy_price(item)*.55, 2)
 
 
-def repair_price(item):
-    return max(1, math.ceil(spec(item)['price']*(100-item['durability'])/100*.25))
+def repair_price(item, cap=100):
+    return max(1, math.ceil(spec(item)['price']*max(0, cap-item['durability'])/100*.25))
+
+
+def repair_cap(w, owner):
+    """Without forging practice a mend only restores serviceable condition."""
+    return crafts.repair_cap(actor(w, owner))
+
+
+def name(item):
+    craft = item.get('craft') or {}
+    return f"《{craft['title']}》{spec(item)['name']}" if craft.get('kind') == 'writing' else spec(item)['name']
+
+
+def heal_amount(item):
+    craft = item.get('craft') or {}
+    return round(spec(item).get('heal', 0) * (craft.get('potency', 1.) if craft.get('kind') == 'brew' else 1.), 4)
 
 
 def operations(w, owner, item):
@@ -326,7 +357,7 @@ def operations(w, owner, item):
             result.append('unequip')
         elif item['durability'] > 0:
             result.append('equip')
-        if item['durability'] < 100:
+        if item['durability'] < repair_cap(w, owner):
             result.append('repair')
     if d['category'] in CONSUMABLES and (n['health'] < 100 or
             (d.get('wound') and n.get('wound')) or (d.get('illness') and n.get('illness')) or
@@ -339,6 +370,8 @@ def operations(w, owner, item):
 
 def describe(item):
     data = {**deepcopy(item), **spec(item)}
+    data['name'] = name(item)
+    data['craft_label'] = crafts.label(item)
     if data['category'] == 'weapon':
         data['weapon_attributes'] = weapons.attributes(item)
     return data
@@ -351,7 +384,8 @@ def view(w, owner):
         d = spec(item)
         result.append({**describe(item), **grade_info(d['grade']),
                        'category_label': CATEGORIES[d['category']], 'equipped': item['id'] in n['equipment'].values(),
-                       'buy_price': buy_price(item), 'sell_price': sell_price(item), 'repair_price': repair_price(item),
+                       'buy_price': buy_price(item), 'sell_price': sell_price(item),
+                       'repair_price': repair_price(item, repair_cap(w, owner)) if str(owner) not in ('market', 'government') else repair_price(item),
                        'read_progress': n['read_books'].get(item['template'], 0),
                        'art_known': knows(w, owner, d['art']) if d.get('art') and str(owner) not in ('market', 'government') else False,
                        'operations': operations(w, owner, item) if n.get('alive', True) else []})
@@ -403,6 +437,9 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
     if operation == 'craft':
         if recipe not in RECIPES:
             raise ValueError('没有这份制药方')
+        why = crafts.brew_reason(n, recipe)
+        if why:
+            raise ValueError(why)
         for template_id, count in RECIPES[recipe].items():
             found = [i for i in objects(w, owner) if i['template'] == template_id][:count]
             if len(found) < count:
@@ -454,7 +491,7 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
     elif operation == 'use':
         before = n['health']
         joy_before = n.get('mood', {}).get('joy', 0)
-        n['health'] = min(100., n['health']+d.get('heal', 0))
+        n['health'] = min(100., n['health']+heal_amount(item))
         if d.get('wound') and n.get('wound'):
             n['wound']['remaining'] = max(0, n['wound']['remaining']-d['wound'])
         if d.get('illness') and n.get('illness'):
@@ -466,7 +503,8 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
         text = f"{n['name']}使用{d['name']}，恢复{n['health']-before:g}体力" + (f'，喜悦增加{joy_gain:g}' if joy_gain else '') + '。'
         remove(w, item)
     elif operation == 'repair':
-        cost = repair_price(item)
+        cap = repair_cap(w, owner)
+        cost = repair_price(item, cap)
         material = 'iron' if d['category'] in ('weapon', 'armor') else 'timber'
         supply = next((i for i in objects(w, owner) if i['template'] == material), None)
         if n['wealth'] < cost or not supply:
@@ -476,8 +514,10 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
         facts.update(silver=cost, material=deepcopy(supply))
         parents.append(supply.get('last_event'))
         remove(w, supply)
-        item['durability'] = 100
-        text = f"{n['name']}用{CATALOG[material]['name']}修好{d['name']}，支付{cost}银工费。"
+        item['durability'] = max(item['durability'], cap)
+        facts['repair_cap'] = cap
+        text = (f"{n['name']}用{CATALOG[material]['name']}修好{d['name']}，支付{cost}银工费。" if cap >= 100 else
+                f"{n['name']}用{CATALOG[material]['name']}粗略修补{d['name']}至{cap}耐久，支付{cost}银工费；修满须锻造造诣{crafts.SKILLED_REPAIR}。")
     elif operation == 'gift':
         try:
             recipient = w.npcs[int(target)]
@@ -489,14 +529,27 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
             raise ValueError('双方不在同一地点')
         transfer(w, item, recipient['id'])
         people.append(recipient['id'])
+        writing = (item.get('craft') or {}).get('kind') == 'writing'
         if owner == 'player':
             tie = w.player['ties'].setdefault(str(recipient['id']), {'affinity': 0., 'trust': 0.})
-            tie['affinity'] = min(100, tie['affinity']+min(12, 2+d['price']/10))
+            warmth = min(12, 2+d['price']/10)
+            if writing:
+                # A written piece is valued by the reader's learning, and more when it is in the giver's own hand.
+                regard = crafts.appreciation(recipient)
+                own_hand = item['craft']['maker'] == owner
+                warmth = min(16, warmth*regard + (1 if own_hand else 0))
+                facts.update(appreciation=regard, own_hand=own_hand, title=item['craft']['title'])
+            tie['affinity'] = min(100, tie['affinity']+warmth)
             tie['trust'] = min(100, tie['trust']+2)
+            facts['affinity_gain'] = round(warmth, 4)
         else:
             w.link(n, recipient, 5, 2)
         facts['recipient'] = recipient['id']
-        text = f"{n['name']}将{d['name']}赠给{recipient['name']}，物品已实际交付。"
+        if writing:
+            text = (f"{n['name']}将{'亲笔' if item['craft']['maker'] == owner else ''}墨宝{name(item)}赠给{recipient['name']}"
+                    + (f"，{crafts.appreciation_words(facts['appreciation'])}" if owner == 'player' else '') + '。')
+        else:
+            text = f"{n['name']}将{d['name']}赠给{recipient['name']}，物品已实际交付。"
     elif operation == 'craft':
         facts['materials'] = deepcopy(consumed)
         parents = [i.get('last_event') for i in consumed]
@@ -505,6 +558,11 @@ def perform(w, owner, operation, item_id=None, target=None, recipe=None, action=
         n['wealth'] -= 2
         w.items['market']['wealth'] += 2
         item = create(w, owner, recipe, f"{n['name']}依药方制成")
+        strength = crafts.potency(n)
+        if strength > 1:
+            item['craft'] = dict(version=crafts.VERSION, kind='brew', maker=owner, maker_name=n['name'],
+                                 skill=round(crafts.value(n, 'medicine'), 2), potency=strength, month=w.month)
+        facts['practice'] = crafts.practice(n, 'medicine', .6)
         text = f"{n['name']}耗用药草制成{CATALOG[recipe]['name']}，支付2银工费。"
         facts['silver'] = 2
     facts['actor_delta'] = {key: round(n[key]-value, 4) for key, value in actor_before.items()}
@@ -561,6 +619,9 @@ def candidates(w, n):
 def produce(w, n, event):
     """Occasional occupational output, with material/labour costs in the same journal."""
     if (w.month+n['id']) % 6 or len(n['inventory']) >= 9 or n['wealth'] < 2:
+        return
+    # Every other half-year a practised smith forges a blade for the trading house instead.
+    if ((w.month+n['id'])//6) % 2 and crafts.market_forge(w, n, event):
         return
     template_id = {'农人': 'ration', '药师': 'herb', '匠人': 'iron'}.get(n['job'])
     if not template_id:

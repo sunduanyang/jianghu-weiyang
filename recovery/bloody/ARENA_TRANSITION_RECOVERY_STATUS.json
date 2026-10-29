@@ -1,0 +1,64 @@
+{
+  "scope": "Original TransitionController Arena/Menu coroutine decisions and timing with explicit local runner/context owners",
+  "source_apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "runtime_source": "Runtime/OriginalArenaTransitionSequence.cs",
+  "resource": "Runtime/Resources/OriginalArenaTransitionSource.json",
+  "exporter": "scripts/export_bloody_arena_transition.py",
+  "serialized": {
+    "component": 16512,
+    "path": "LocalControllers/TransitionController",
+    "cover_delay_realtime_seconds": 0.35,
+    "ngc_spawn_timeout_unscaled_seconds": 15,
+    "constructor_cover_default_seconds": 0.25,
+    "arena_objects": ["CanvasAndCamera/Canvas/MainContainer/PlayerControls"],
+    "menu_objects": ["Character_Player_Menu", "Character_Player_Menu/PlayerHeadTarget/PlayerInfoDisplayer", "CanvasAndCamera/Canvas/MainContainer/TopBar_MainMenu"]
+  },
+  "arena_coroutine": [
+    "IsTransitioning=true, then synchronous OnSwitching; yield source WaitForSecondsRealtime coverDelay",
+    "If RunnerActive: yield TearDownRunnerCoroutine, then yield null twice; preserve InArena and do not invoke dcn/context events on this branch",
+    "If no active runner: dcn sets InArena=true, toggles source context objects unless batch mode, raises OnSwitchedToArena, then OnContextChanged(true)",
+    "Both paths yield WaitUntil(!hq.InterstitialPlaying); this is not a runner-ready predicate",
+    "Call SpawnRunner(requestedMode); that owner writes GameMode before new runner initialization and emits OnRunnerSpawned",
+    "While NetworkedGameController is absent and elapsed<15, add unscaledDeltaTime and yield null; elapsed does not advance from scaled Time.deltaTime",
+    "If still absent after timeout: yield source Menu transition with LocalGameState.MultiModePicker7, then end outer coroutine",
+    "On controller presence: yield null five times, invoke OnSwitched while IsTransitioning is still true, then clear IsTransitioning"
+  ],
+  "menu_coroutine": "Set transitioning, raise switching, wait coverDelay realtime, always yield teardown, dco sets InArena=false/context objects/menu event/context(false), RequestLocalState(requested), invoke switched, clear transitioning",
+  "runner_teardown_source": {
+    "manual_stop": "TearDownRunnerCoroutine/ei first marks stopRequested=true, then yields cyv/eg",
+    "shutdown": "If runner root exists and contains NetworkRunner: Shutdown(true, reason0, false), then WaitUntil shutdown predicate",
+    "destroyed_event": "Destroy root, clear stored root reference, synchronously invoke OnRunnerDestroyed, yield null one frame, then complete",
+    "total_after_destroy_event": "One frame inside teardown plus two null yields in the Arena outer coroutine before its interstitial wait"
+  },
+  "canvas_round_lifecycle": {
+    "subscription": "CanvasAndCamera.Start subscribes ccu VA0x3416da8 to RunnerSpawner.OnRunnerDestroyed",
+    "retry_gate": "If RunnerSpawner.IsRetrying, ccu skips normal clearing",
+    "normal_clear": "Clear winning-player reference, cache network state0, CancelInvoke winning-player focus, directly SetActive(false) on all non-null networkedPairs.uiScreens, then refresh topbar modules",
+    "reopen": "When the new runner emits Round4, ccs/ccy activates Round and TopBar_InGame under allowed local state None0/Paused10. Tutorial receives real Unity OnDisable/OnEnable through the Round hierarchy.",
+    "minimal_host_interface": "NotifyRunnerDestroyed(false) must synchronously clear all network screens and reset UIFlow/HUD cached network state to0 before new actors are spawned. No reflective lifecycle invocation and no artificial state enum are needed.",
+    "topbar": "cdc only refreshes menu TopBarModule membership; ccr controls camera follow. TopBar_InGame visibility belongs to Round4.uiScreens and its original legacy Appear animation, whose pivotY runs -5 to1 over about0.6667 scaled seconds."
+  },
+  "api": {
+    "construct": "new OriginalArenaTransitionSequence(sourceJ, context, actualInitialInArena)",
+    "enumerators": "CreateToArena(mode), CreateToMenu(localState); host owns StartCoroutine and repeated-request guard while IsTransitioning",
+    "required_context": "RunnerActive, NetworkControllerExists, InterstitialPlaying, TearDownRunner IEnumerator, SpawnRunner(mode), RequestLocalState(state), SetContextObjects(arena)",
+    "events": "OnSwitching, OnSwitched, OnSwitchedToArena, OnSwitchedToMenu, OnContextChanged(bool)",
+    "source_game_mode": "Set mode within SpawnRunner owner, not at the initial transition request"
+  },
+  "validation": {
+    "script": "scripts/verify_bloody_arena_transition.py",
+    "native_arm64_vs_actual_csharp_assertions": 1248,
+    "failures": 0,
+    "whole_runtime_roslyn_exit": 0,
+    "scope": "Actual et/eu MoveNext plus dcn/dco instructions, bounded engine/runner callbacks, iterator states, yielded object type/time, source flags, callback order and bool context argument; old/no-runner, ready/missing NGC, timeout bounds, batch-mode branches",
+    "oracle": "output/bloody-full-port-20261028/ai-check/arena-transition/native-transition-oracle.json",
+    "comparison": "output/bloody-full-port-20261028/ai-check/arena-transition/comparison.txt"
+  },
+  "limits": [
+    "This helper is independent of Preview/HUD/Timing and does not implement Fusion shutdown/reconnect or native scene loading. The local owner must bridge actual actor teardown and emit the source runner/UI events.",
+    "Context callbacks must preserve actual source menu/arena objects where those objects exist. Batch-mode source suppresses object activation only; context flags and events still occur.",
+    "Cover rendering, camera/topbar module refresh, original local-menu navigation and ads/interstitial ownership remain external. Interstitial completion is not synthesized.",
+    "A combined live Practice Pause->Restart run is pending host integration. Coroutine/control-flow checks do not establish whole-game or cross-platform frame equivalence."
+  ],
+  "runtime_parity_verified": false
+}

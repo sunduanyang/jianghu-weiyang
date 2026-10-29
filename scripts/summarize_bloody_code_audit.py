@@ -152,7 +152,7 @@ def main(args):
                   arithmetic_examples=examples, claims_complete_semantic_review=False,
                   claims_one_to_one=False, game_code_changed_by_this_audit=False,
                   finding_ids=[f'A{i:02}' for i in range(1,21)],
-                  findings_report='BLOODY_COMBAT_CODE_AUDIT.md',
+                  findings_report='docs/validation/BLOODY_SOURCE_PORT_VALIDATION.md',
                   limits=['Inventory scope is explicit, not proof that all combat dependencies were found.',
                           'Inventory-only entries have not been semantically reviewed.',
                           'Candidate counterpart files do not certify method-level equivalence.',

@@ -42,7 +42,8 @@ ROLES = {'player_praise': '被称赞的人', 'player_gift': '收到礼物的人'
          'player_sect_counsel': '指点你功课的师父', 'player_sect_guide': '受你指点的同门晚辈',
          'player_sect_recruit': '被引荐入门的人', 'player_join_sect': '引你入门的人',
          'visit_answer': '来找你的人', 'hero_sect_task_failed': '你的师父',
-         'hero_sect_discipline': '你的师父', 'hero_sect_penance': '你的师父'}
+         'hero_sect_discipline': '你的师父', 'hero_sect_penance': '你的师父',
+         'player_treat': '受你诊治的人', 'player_learn_craft': '向你传授技艺的人', 'player_mend': '替你修补器物的匠人'}
 SYSTEM = '''你是武侠世界里的一个具体人物。玩家刚刚对你做了一件事，或做了与你有关的一件事，结果已经由规则结算，不能改变。
 请以你自己的性格、心情、身份和你与玩家的过往，回应这件事：
 attitude从attitudes中选一个最符合你内心的态度。态度不必迎合玩家：冷酷或多疑的人可以对礼物心存戒备，宽厚的人可以不计较冒犯，刚烈的人受辱会记仇。

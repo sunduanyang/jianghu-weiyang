@@ -1,0 +1,1655 @@
+{
+  "source_scene": "Game/Scenes/MainScene.unity",
+  "scope_network_states": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "scope_local_states": [
+    0,
+    10
+  ],
+  "animators": [
+    {
+      "id": 6699,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd",
+      "enabled": true,
+      "update_mode": 2,
+      "culling_mode": 0,
+      "controller": "d350316c300681046994edbcc3f905e1"
+    },
+    {
+      "id": 6700,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_RandomAndFriendly",
+      "enabled": true,
+      "update_mode": 2,
+      "culling_mode": 0,
+      "controller": null
+    },
+    {
+      "id": 6704,
+      "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd",
+      "enabled": true,
+      "update_mode": 2,
+      "culling_mode": 0,
+      "controller": "d350316c300681046994edbcc3f905e1"
+    },
+    {
+      "id": 6708,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Ranked",
+      "enabled": true,
+      "update_mode": 2,
+      "culling_mode": 0,
+      "controller": null
+    },
+    {
+      "id": 6710,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Countdown",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "601d60ce69813124a91bb8e893b00837"
+    },
+    {
+      "id": 6713,
+      "path": "CanvasAndCamera/Canvas/MainContainer/CinematicIntro",
+      "enabled": true,
+      "update_mode": 2,
+      "culling_mode": 0,
+      "controller": "73f4df1f1f8c0a94f8a371e56599da54"
+    },
+    {
+      "id": 6716,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round",
+      "enabled": true,
+      "update_mode": 2,
+      "culling_mode": 0,
+      "controller": "b5ccfdd8ff6583f48962d1c4e263963a"
+    },
+    {
+      "id": 6717,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_RandomAndFriendly",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": null
+    },
+    {
+      "id": 6724,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_OpponentForfeited/Popup/BottomButtonsContainer/Button_Back",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6727,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Campaign/Popup/BottomButtonsContainer/Button_Shop",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6738,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_OpponentForfeited/Popup/BottomButtonsContainer/Button_Next",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6741,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_OpponentForfeited/Popup/ContentContainer/Button_Back",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6754,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/NewItemsUnlockedContainer/NewItemUnlockedContainer/ButtonShopContainer/Button_Shop",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6760,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/CoinsWonContainer/CoinsWonContainer/X2ButonContainer/X2Button",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6780,
+      "path": "CanvasAndCamera/Canvas/MainContainer/PausePanel/Button_Unpause",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6789,
+      "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd/Popups/Popup_RoundEnd/Popup/NextRoundButtonContainer/Button_NextRound",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6802,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "28c74a7fbf7e1834c96a0ac0c5891116"
+    },
+    {
+      "id": 6803,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "28c74a7fbf7e1834c96a0ac0c5891116"
+    },
+    {
+      "id": 6804,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "28c74a7fbf7e1834c96a0ac0c5891116"
+    },
+    {
+      "id": 6809,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/RematchPopup/Waiting/Button_Cancel",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6823,
+      "path": "CanvasAndCamera/Canvas/MainContainer/TopBar_InGame/PauseContainer/Button_Pause",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6824,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_RandomAndFriendly/Popup/BottomButtonsContainer/Button_Rematch",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6825,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Survival/Popup/CoinsWonContainer/CoinsWonContainer/X2ButonContainer/X2Button",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6826,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_RandomAndFriendly/Popup/BottomButtonsContainer/Button_Next",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6831,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_RandomAndFriendly/Popup/BottomButtonsContainer/Button_Rematch",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6832,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Survival/Popup/BottomButtonsContainer/Button_Back",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6833,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_RandomAndFriendly/Popup/BottomButtonsContainer/Button_Back",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6834,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Ranked/Popup/BottomButtonsContainer/Button_Next",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "0d7558465ba10ca43941cb5f03875d65"
+    },
+    {
+      "id": 6835,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Ranked/Popup/BottomButtonsContainer/Button_Back",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "0d7558465ba10ca43941cb5f03875d65"
+    },
+    {
+      "id": 6836,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_RandomAndFriendly/Popup/BottomButtonsContainer/Button_Back",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6839,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Survival/Popup/BottomButtonsContainer/Button_Shop",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6840,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Survival/Popup/BottomButtonsContainer/Button_Restart",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6842,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_RandomAndFriendly/Popup/BottomButtonsContainer/Button_Next",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6844,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_OpponentForfeited",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": null
+    },
+    {
+      "id": 6858,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/BottomButtonsContainer/Button_Restart",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6880,
+      "path": "CanvasAndCamera/Canvas/MainContainer/PausePanel/Panel Container/Button_Restart",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6882,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Campaign/Popup/BottomButtonsContainer/Button_Restart",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6886,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "28c74a7fbf7e1834c96a0ac0c5891116"
+    },
+    {
+      "id": 6898,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/RematchPopup/Challenged/ButtonsContainer/Button_Reject",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6907,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked/Popup/BottomButtonsContainer/Button_Next",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "0d7558465ba10ca43941cb5f03875d65"
+    },
+    {
+      "id": 6911,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Survival/Popup/BottomButtonsContainer/Button_Back",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6916,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_No",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6928,
+      "path": "CanvasAndCamera/Canvas/MainContainer/PausePanel",
+      "enabled": true,
+      "update_mode": 2,
+      "culling_mode": 0,
+      "controller": "9588f9f17111f374da02b00009279f55"
+    },
+    {
+      "id": 6930,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Survival/Popup/BottomButtonsContainer/Button_Next",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6938,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked",
+      "enabled": true,
+      "update_mode": 2,
+      "culling_mode": 0,
+      "controller": null
+    },
+    {
+      "id": 6941,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked/Popup_RankUp/BottomButtonsContainer/Button_Next",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "0d7558465ba10ca43941cb5f03875d65"
+    },
+    {
+      "id": 6952,
+      "path": "CanvasAndCamera/Canvas/MainContainer/PausePanel/Panel Container/Button_Shop",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6953,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/RematchPopup/Challenged/ButtonsContainer/Button_Accept",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6957,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6958,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 6975,
+      "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd/Popups/Popup_RoundEnd",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": null
+    },
+    {
+      "id": 6987,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Campaign/Popup/BottomButtonsContainer/Button_Back",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 7008,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked/Popup_RankUp/NewItemsUnlockedContainer/ButtonShopContainer/Button_Shop",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 7010,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked/Popup_RankUp/BottomButtonsContainer/Button_Back",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "0d7558465ba10ca43941cb5f03875d65"
+    },
+    {
+      "id": 7012,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Campaign",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": null
+    },
+    {
+      "id": 7023,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked/Popup/BottomButtonsContainer/Button_Back",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "0d7558465ba10ca43941cb5f03875d65"
+    },
+    {
+      "id": 7024,
+      "path": "CanvasAndCamera/Canvas/MainContainer/PausePanel/Panel Container/Button_Quit",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 7026,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/AfkOverlay",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "d68a236f8259c70469b93c855d994e1e"
+    },
+    {
+      "id": 7030,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign",
+      "enabled": true,
+      "update_mode": 2,
+      "culling_mode": 0,
+      "controller": null
+    },
+    {
+      "id": 7031,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/BottomButtonsContainer/Button_Next",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 7034,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4/TouchInputContainer/Popup/Content/Button_Yes",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 7039,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Survival",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": null
+    },
+    {
+      "id": 7057,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/BottomButtonsContainer/Button_Back",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 7058,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/ExplainerPopup/Button_ContinueTutorial",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": "6c8ed6f7a87e49643b52819178aea4f2"
+    },
+    {
+      "id": 7065,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Lost_Survival",
+      "enabled": true,
+      "update_mode": 0,
+      "culling_mode": 0,
+      "controller": null
+    }
+  ],
+  "legacy_animations": [
+    {
+      "id": 7068,
+      "path": "CanvasAndCamera/Canvas/MainContainer/TopBar_InGame",
+      "enabled": true,
+      "play_automatically": true,
+      "animate_physics": false,
+      "update_mode": 0
+    },
+    {
+      "id": 7069,
+      "path": "CanvasAndCamera/Canvas/MainContainer/TopBar_InGame/CharacterHUD_Left/StaminaBar_Empty/StaminaBar_Background/StaminaBar_Flash",
+      "enabled": true,
+      "play_automatically": true,
+      "animate_physics": false,
+      "update_mode": 0
+    },
+    {
+      "id": 7073,
+      "path": "CanvasAndCamera/Canvas/MainContainer/TopBar_InGame/CharacterHUD_Right/StaminaBar_Empty/StaminaBar_Background/StaminaBar_Flash",
+      "enabled": true,
+      "play_automatically": true,
+      "animate_physics": false,
+      "update_mode": 0
+    },
+    {
+      "id": 7075,
+      "path": "CanvasAndCamera/Canvas/MainContainer/TopBar_InGame/CharacterHUD_Right/Text_Name_Right",
+      "enabled": true,
+      "play_automatically": false,
+      "animate_physics": false,
+      "update_mode": 0
+    },
+    {
+      "id": 7098,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2/TouchInputContainer/HandsContainerContainer/HandsContainer",
+      "enabled": true,
+      "play_automatically": true,
+      "animate_physics": false,
+      "update_mode": 0
+    },
+    {
+      "id": 7105,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/Star 2/Star_Filled",
+      "enabled": true,
+      "play_automatically": true,
+      "animate_physics": false,
+      "update_mode": 0
+    },
+    {
+      "id": 7120,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/Star 1/Star_Filled",
+      "enabled": true,
+      "play_automatically": true,
+      "animate_physics": false,
+      "update_mode": 0
+    },
+    {
+      "id": 7139,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1/TouchInputContainer/HandsContainerContainer/HandsContainer",
+      "enabled": true,
+      "play_automatically": true,
+      "animate_physics": false,
+      "update_mode": 0
+    },
+    {
+      "id": 7147,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3/TouchInputContainer/HandsContainerContainer/HandsContainer",
+      "enabled": true,
+      "play_automatically": true,
+      "animate_physics": false,
+      "update_mode": 0
+    },
+    {
+      "id": 7155,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Ranked/Popup_RankUp/RankedBadge/RankedBadge_Sheen",
+      "enabled": true,
+      "play_automatically": true,
+      "animate_physics": false,
+      "update_mode": 0
+    },
+    {
+      "id": 7164,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd/Popups/VerdictPopup_Won_Campaign/Popup/Star 3/Star_Filled",
+      "enabled": true,
+      "play_automatically": true,
+      "animate_physics": false,
+      "update_mode": 0
+    }
+  ],
+  "transitions": [
+    {
+      "id": 16347,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd",
+      "enabled": true,
+      "root_path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd",
+      "animator_path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd"
+    },
+    {
+      "id": 16481,
+      "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd",
+      "enabled": true,
+      "root_path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd",
+      "animator_path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd"
+    },
+    {
+      "id": 16580,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Countdown",
+      "enabled": true,
+      "root_path": "CanvasAndCamera/Canvas/MainContainer/Countdown",
+      "animator_path": "CanvasAndCamera/Canvas/MainContainer/Countdown"
+    },
+    {
+      "id": 16664,
+      "path": "CanvasAndCamera/Canvas/MainContainer/CinematicIntro",
+      "enabled": true,
+      "root_path": "CanvasAndCamera/Canvas/MainContainer/CinematicIntro",
+      "animator_path": "CanvasAndCamera/Canvas/MainContainer/CinematicIntro"
+    },
+    {
+      "id": 16695,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round",
+      "enabled": true,
+      "root_path": "CanvasAndCamera/Canvas/MainContainer/Round",
+      "animator_path": "CanvasAndCamera/Canvas/MainContainer/Round"
+    },
+    {
+      "id": 18063,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1",
+      "enabled": true,
+      "root_path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1",
+      "animator_path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 1"
+    },
+    {
+      "id": 18067,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2",
+      "enabled": true,
+      "root_path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2",
+      "animator_path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 2"
+    },
+    {
+      "id": 18074,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3",
+      "enabled": true,
+      "root_path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3",
+      "animator_path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 3"
+    },
+    {
+      "id": 21990,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/AfkOverlay",
+      "enabled": true,
+      "root_path": "CanvasAndCamera/Canvas/MainContainer/Round/AfkOverlay",
+      "animator_path": "CanvasAndCamera/Canvas/MainContainer/Round/AfkOverlay"
+    },
+    {
+      "id": 22091,
+      "path": "CanvasAndCamera/Canvas/MainContainer/PausePanel",
+      "enabled": true,
+      "root_path": "CanvasAndCamera/Canvas/MainContainer/PausePanel",
+      "animator_path": "CanvasAndCamera/Canvas/MainContainer/PausePanel"
+    },
+    {
+      "id": 22178,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4",
+      "enabled": true,
+      "root_path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4",
+      "animator_path": "CanvasAndCamera/Canvas/MainContainer/Round/PracticeController/TutorialContainer/Step 4"
+    }
+  ],
+  "time_relays": [
+    {
+      "id": 16346,
+      "path": "CanvasAndCamera/Canvas/MainContainer/MatchEnd",
+      "enabled": true
+    },
+    {
+      "id": 16480,
+      "path": "CanvasAndCamera/Canvas/MainContainer/RoundEnd",
+      "enabled": true
+    },
+    {
+      "id": 16581,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Countdown",
+      "enabled": true
+    },
+    {
+      "id": 16663,
+      "path": "CanvasAndCamera/Canvas/MainContainer/CinematicIntro",
+      "enabled": true
+    },
+    {
+      "id": 16694,
+      "path": "CanvasAndCamera/Canvas/MainContainer/Round",
+      "enabled": true
+    }
+  ],
+  "assets": {
+    "d350316c300681046994edbcc3f905e1": {
+      "name": "RoundOrMatchAnimator",
+      "path": "AnimatorOverrideController/RoundOrMatchAnimator.overrideController",
+      "sha256": "3663b0fe1b4e3f0279e68c8d2f775ed3507a8a81d349724457658603419b86cd"
+    },
+    "f212c7f772677f8469efd8749baed25d": {
+      "name": "UITAnimator",
+      "path": "AnimatorController/UITAnimator.controller",
+      "sha256": "d7c73c26b4ae5047674f623036313724c550e602c9d8ad16d9c4088467832e5b"
+    },
+    "c723a1c2822532b41ab355088eb779cf": {
+      "name": "UIT_EnterDelayed",
+      "path": "AnimationClip/UIT_EnterDelayed.anim",
+      "sha256": "9768faab51b124018f2778022a8930ec8d132ca44260d35f221fdb90e7366419"
+    },
+    "80f536cb7a8a1f040b33f3510717bddf": {
+      "name": "UIT_Exit",
+      "path": "AnimationClip/UIT_Exit.anim",
+      "sha256": "ae5a3869cc0902c7797a690f7df35b9f5920380ce9680b36a61773ca17c69084"
+    },
+    "ff508d052f2e4024a9726e5c922c39b0": {
+      "name": "UIT_Enter",
+      "path": "AnimationClip/UIT_Enter.anim",
+      "sha256": "d80fd8b17460928beaac0bc146003ffd07c43cbeccab7d223382fe0f8f647824"
+    },
+    "2b80f0fc6efe23b4bad0958ed1ca9bb0": {
+      "name": "RoundOrMatchEnd_Exit",
+      "path": "AnimationClip/RoundOrMatchEnd_Exit.anim",
+      "sha256": "c45ddda6413cb15da429eac3ed3c70f5fed612ccaf3ad5dc086cc137b457f6b2"
+    },
+    "6bd73ffee043f6346898498a9a7429eb": {
+      "name": "RoundOrMatchEnd_Enter",
+      "path": "AnimationClip/RoundOrMatchEnd_Enter.anim",
+      "sha256": "e6c70f2ae247e4020767615400cde4e129f3a2a6ea17b3dc0eede7142bff37df"
+    },
+    "601d60ce69813124a91bb8e893b00837": {
+      "name": "CountdownAnimator",
+      "path": "AnimatorOverrideController/CountdownAnimator.overrideController",
+      "sha256": "eb43344e86a006872df14b824a3360c439e2b87bef620f71a98c7d4d7bf3002b"
+    },
+    "bec84350a412d1d4db466fdede920b52": {
+      "name": "Countdown_Exit",
+      "path": "AnimationClip/Countdown_Exit.anim",
+      "sha256": "3dd0667af7d93c16247d9021c10d49614888687bbe8c293cc1d158e9640a98cc"
+    },
+    "39aef2f1d2e2d684aa5a71689235c301": {
+      "name": "Countdown_Enter",
+      "path": "AnimationClip/Countdown_Enter.anim",
+      "sha256": "04fd0ad9940407f2795d08c0d39aa12b1c98929e861ec64d6e4741ea1a610242"
+    },
+    "73f4df1f1f8c0a94f8a371e56599da54": {
+      "name": "CinematicIntroAnimator",
+      "path": "AnimatorOverrideController/CinematicIntroAnimator.overrideController",
+      "sha256": "7e1097b7a931416838bb1ab26931f09b932fddf608fdf350f52fc71a09449a4b"
+    },
+    "c5d0896b95f45904f90a59b0e8ccddfc": {
+      "name": "CinematicIntro_Exit",
+      "path": "AnimationClip/CinematicIntro_Exit.anim",
+      "sha256": "2ea657b28a7165876fce98454718b18fc07ba3578d1ebfb481bb0c1245c6e6c7"
+    },
+    "fc622420701013a41b9ae62e60e261b1": {
+      "name": "CinematicIntro_Enter",
+      "path": "AnimationClip/CinematicIntro_Enter.anim",
+      "sha256": "414165918009341811ce4837e4a6a2c6ea29d6d01357b7cb7e1b43d115e3786b"
+    },
+    "b5ccfdd8ff6583f48962d1c4e263963a": {
+      "name": "RoundAnimator",
+      "path": "AnimatorOverrideController/RoundAnimator.overrideController",
+      "sha256": "64f740d53208d3a1d242fba41f2ff0a86ba3e1279d95abb060e93df45b6fa39e"
+    },
+    "73a4d9f737979da448b7300eb0bdf025": {
+      "name": "Round_Exit",
+      "path": "AnimationClip/Round_Exit.anim",
+      "sha256": "5e467cc3323ec0a9cabbb06187ff096281a319f127d9624ec93a9dc9d9321b9b"
+    },
+    "22b696d631922b1419ce71c4b3afc295": {
+      "name": "Round_Enter",
+      "path": "AnimationClip/Round_Enter.anim",
+      "sha256": "a41457b6c6e2a23917c92cbf0e4e84d2fd253b43a4e3123246fe5237902a0b61"
+    },
+    "6c8ed6f7a87e49643b52819178aea4f2": {
+      "name": "Button",
+      "path": "AnimatorController/Button.controller",
+      "sha256": "c53defb1fbffe0675efda736ad65a6a446afd68d233b331da5ea5c3110d26312"
+    },
+    "a5c5e4cfc53bc904c8fcef831e47513a": {
+      "name": "Normal_2",
+      "path": "AnimationClip/Normal_2.anim",
+      "sha256": "65983e50f8d590000770c38b5d7171ff8adeedcc6ce19fb545364c78836d7ca9"
+    },
+    "222ee37453c575f40a9966a5d657c3d9": {
+      "name": "Highlighted_9",
+      "path": "AnimationClip/Highlighted_9.anim",
+      "sha256": "500ff1febeeb3051000d20d5c3c9e88855861c4aef339b9f8938c42a6572e5ba"
+    },
+    "8cda7d53542f2d74583d2bc031ccb16a": {
+      "name": "Pressed",
+      "path": "AnimationClip/Pressed.anim",
+      "sha256": "1aeaca7b6c26bbe7c524c10b6437446ee2bc2e375452b5d88d6e662c398ce7be"
+    },
+    "4d0e0fd5b1ad6044c9fd824cd05657a7": {
+      "name": "Selected_9",
+      "path": "AnimationClip/Selected_9.anim",
+      "sha256": "90285b5bc33f3418485739dbb481347ea4dde8de1ca40cfd587b85d24718a38a"
+    },
+    "fc6ee2bd1b0f6ad49b1505bf3991d00c": {
+      "name": "Disabled_0",
+      "path": "AnimationClip/Disabled_0.anim",
+      "sha256": "78df8027b6b4a62b367c6b8a5157e73e79463e72d1c838737ac18fb45e85bd1d"
+    },
+    "28c74a7fbf7e1834c96a0ac0c5891116": {
+      "name": "TutorialPartAnimator",
+      "path": "AnimatorOverrideController/TutorialPartAnimator.overrideController",
+      "sha256": "5ffb344b8cd6ecef90217e7b9114c7b15d8ad7687cb90ed5cc38a4d095086493"
+    },
+    "ee11223745cd8284da60351ba042e481": {
+      "name": "TutorialPart_Exit",
+      "path": "AnimationClip/TutorialPart_Exit.anim",
+      "sha256": "cff307afa8425b09e215e9f9152455dab03419bf60360328cf046f961086a8fe"
+    },
+    "355d9e057ba16674ea912da92ed6042f": {
+      "name": "TutorialPart_Enter",
+      "path": "AnimationClip/TutorialPart_Enter.anim",
+      "sha256": "1694ed10e70334d2bb494824942aeb94a93140afe1fec3d62ebfc62ae496f629"
+    },
+    "0d7558465ba10ca43941cb5f03875d65": {
+      "name": "ButtonMatchEndPopups",
+      "path": "AnimatorController/ButtonMatchEndPopups.controller",
+      "sha256": "110c05d47d5d5e156cc83794efe0ba025fe3514739dcf78491101292bf2e2357"
+    },
+    "a606d4a5709ddde4784f12e85587b535": {
+      "name": "Normal_5",
+      "path": "AnimationClip/Normal_5.anim",
+      "sha256": "b2e8b3fdf3083001c3bf4566cfb1e605af6b78490eb5ea98b683925a9fd7bdbd"
+    },
+    "bf47c4bdb49edbf4ba510c7b94c02db9": {
+      "name": "Highlighted_12",
+      "path": "AnimationClip/Highlighted_12.anim",
+      "sha256": "a83d4ab26d691a1ee08110bd6ea8ce35023a7554f99754d43695e8d3e26be84d"
+    },
+    "1821786155af9494ab22ea6bc72e78fb": {
+      "name": "Pressed_2",
+      "path": "AnimationClip/Pressed_2.anim",
+      "sha256": "178feaf6fc5acd72c7cfcec6717286fbf5c71c6c49006c36b267937adcbe2480"
+    },
+    "f3ca741ef4997974c91f53696734f06f": {
+      "name": "Selected_12",
+      "path": "AnimationClip/Selected_12.anim",
+      "sha256": "3cab06372a8e85e5e32cde3b486058af0c2ca8cf7988ad12e9eadeb20843b28f"
+    },
+    "7aa0a6eb75463454e8470f5f00f7b03d": {
+      "name": "Disabled_3",
+      "path": "AnimationClip/Disabled_3.anim",
+      "sha256": "d2a91713ba923df59c416ea553cfc5602bdf886ed2837cf9fb05a98216795535"
+    },
+    "9588f9f17111f374da02b00009279f55": {
+      "name": "PausePanelAnimator",
+      "path": "AnimatorOverrideController/PausePanelAnimator.overrideController",
+      "sha256": "7c5647491583a60319d4331d9919ffba720957c6b57e403b5f2a172734b688d6"
+    },
+    "602489fc43422664984dbb25cd31aad5": {
+      "name": "PausePanel_Exit",
+      "path": "AnimationClip/PausePanel_Exit.anim",
+      "sha256": "2f4bf92ec188b67fafffa6efe7df0279e117586b105efeade50e773f60457f53"
+    },
+    "53b91cb08008c224bb2c466b69825e86": {
+      "name": "PausePanel_Enter",
+      "path": "AnimationClip/PausePanel_Enter.anim",
+      "sha256": "e5a0a1f5c014159a5993f32320caf9236e4026fc6bcc8633a192c5f24fcb1e67"
+    },
+    "d68a236f8259c70469b93c855d994e1e": {
+      "name": "AFKContainerAnimator",
+      "path": "AnimatorOverrideController/AFKContainerAnimator.overrideController",
+      "sha256": "b121854c5916042b9dbd1d1ae7fac53d5d8cd0d0d594eecf52734f4b7b4790f6"
+    },
+    "8c65923a285bebd4eac01a7af3b656c5": {
+      "name": "AFKContainer_Enter",
+      "path": "AnimationClip/AFKContainer_Enter.anim",
+      "sha256": "e9d58759c832913bac442fa532e26be2295e9fba173bf9d6645f97378205215a"
+    },
+    "2c5b028f62f79c84483de482f6c5d095": {
+      "name": "AFKContainer_Exit",
+      "path": "AnimationClip/AFKContainer_Exit.anim",
+      "sha256": "b6bfb2021431eb12e34d316fb1f30ff4bb45f45214907b592823f9e611acce0a"
+    },
+    "2f632b97026bdec4bb9030b31ba40ee6": {
+      "name": "TopBar_InGame_Appear",
+      "path": "AnimationClip/TopBar_InGame_Appear.anim",
+      "sha256": "f1e5e7edbc4b1e7227d9d8d3045c68e38806b6cc31cb49f1371d69a9dcba8fff"
+    },
+    "e24aef3fb5f935140a21629d6d2c43d4": {
+      "name": "StaminaBar_Flash",
+      "path": "AnimationClip/StaminaBar_Flash.anim",
+      "sha256": "2dd8edc704f73e8d9ed32acf871b956017e03839512d20cf009b002042b1f755"
+    },
+    "893b6153d1cdbdb40a2198f89d8c91be": {
+      "name": "SpecialBossProfileNameUrlFlash",
+      "path": "AnimationClip/SpecialBossProfileNameUrlFlash.anim",
+      "sha256": "cd39263df85943445eb73c479b43035cfa73750e85d5142a99f1335f6b0502c4"
+    },
+    "742c335d618dbc04bb24145d1513a5e1": {
+      "name": "TutorialHands_Movement",
+      "path": "AnimationClip/TutorialHands_Movement.anim",
+      "sha256": "9eb78e5efd5cddfeb80f8490c9f05383a20ba4fc213c9902e1d0330e413fe597"
+    },
+    "3184deb5e684506499a3520761132af4": {
+      "name": "Star_Award",
+      "path": "AnimationClip/Star_Award.anim",
+      "sha256": "d1f51470e0d5bb265f264cfdf82f681d651967e8b496905239b5a3c96a28d06d"
+    },
+    "7051545c0141df14287fe1313fda3518": {
+      "name": "TutorialHands_Hands",
+      "path": "AnimationClip/TutorialHands_Hands.anim",
+      "sha256": "9e8e0fb670ac8ca0fd0e18af047a29fbf365f987057fbe1d14e394dfb8bcb398"
+    },
+    "caf08f8365d76cc4b9939f6a8423ba82": {
+      "name": "TutorialHands_Kick",
+      "path": "AnimationClip/TutorialHands_Kick.anim",
+      "sha256": "34174ceb9ad4405c17744a6a6f0d9157f0dbe09178645bd024bb4388d68057d0"
+    },
+    "a6068a46197b2364fb03b1cdaa979a2b": {
+      "name": "RankBadge_Sheen",
+      "path": "AnimationClip/RankBadge_Sheen.anim",
+      "sha256": "59839d4d64bc866857a2a5b0fb7f722cc26ed5bd51cf2b0340900f0af79490ff"
+    }
+  },
+  "clips": {
+    "c723a1c2822532b41ab355088eb779cf": {
+      "name": "UIT_EnterDelayed",
+      "events": [],
+      "legacy": false
+    },
+    "80f536cb7a8a1f040b33f3510717bddf": {
+      "name": "UIT_Exit",
+      "events": [],
+      "legacy": false
+    },
+    "ff508d052f2e4024a9726e5c922c39b0": {
+      "name": "UIT_Enter",
+      "events": [],
+      "legacy": false
+    },
+    "2b80f0fc6efe23b4bad0958ed1ca9bb0": {
+      "name": "RoundOrMatchEnd_Exit",
+      "events": [
+        {
+          "time": 0,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        }
+      ],
+      "legacy": false
+    },
+    "6bd73ffee043f6346898498a9a7429eb": {
+      "name": "RoundOrMatchEnd_Enter",
+      "events": [
+        {
+          "time": 0,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.016666668,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.9,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.033333335,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.8,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.05,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.7,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.06666667,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.6,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.083333336,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.5,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.1,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.4,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.11666667,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.3,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.13333334,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.2,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.15,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 2,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 2,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.2,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 2.0166667,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.4,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 2.0333333,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.6,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 2.05,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.8,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 2.0666666,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 2.5,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        }
+      ],
+      "legacy": false
+    },
+    "bec84350a412d1d4db466fdede920b52": {
+      "name": "Countdown_Exit",
+      "events": [
+        {
+          "time": 0,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.083333336,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.16666667,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.25,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.33333334,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.41666666,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.5,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.5833333,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        }
+      ],
+      "legacy": false
+    },
+    "39aef2f1d2e2d684aa5a71689235c301": {
+      "name": "Countdown_Enter",
+      "events": [
+        {
+          "time": 0,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.033333335,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.06666667,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.1,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.13333334,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.16666667,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        }
+      ],
+      "legacy": false
+    },
+    "c5d0896b95f45904f90a59b0e8ccddfc": {
+      "name": "CinematicIntro_Exit",
+      "events": [
+        {
+          "time": 0,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.2,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.016666668,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.4,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.033333335,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.6,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.05,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.8,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.06666667,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.3166666,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        }
+      ],
+      "legacy": false
+    },
+    "fc622420701013a41b9ae62e60e261b1": {
+      "name": "CinematicIntro_Enter",
+      "events": [
+        {
+          "time": 0,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 2,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.083333336,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.5,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.1,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.4,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.11666667,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.3,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.13333334,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.2,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.15,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.1,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 3,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0.1,
+          "intParameter": 0,
+          "messageOptions": 0
+        }
+      ],
+      "legacy": false
+    },
+    "73a4d9f737979da448b7300eb0bdf025": {
+      "name": "Round_Exit",
+      "events": [],
+      "legacy": false
+    },
+    "22b696d631922b1419ce71c4b3afc295": {
+      "name": "Round_Enter",
+      "events": [
+        {
+          "time": 0.5,
+          "functionName": "RelayTimeScale",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 1,
+          "intParameter": 0,
+          "messageOptions": 0
+        }
+      ],
+      "legacy": false
+    },
+    "a5c5e4cfc53bc904c8fcef831e47513a": {
+      "name": "Normal",
+      "events": [],
+      "legacy": false
+    },
+    "222ee37453c575f40a9966a5d657c3d9": {
+      "name": "Highlighted",
+      "events": [],
+      "legacy": false
+    },
+    "8cda7d53542f2d74583d2bc031ccb16a": {
+      "name": "Pressed",
+      "events": [],
+      "legacy": false
+    },
+    "4d0e0fd5b1ad6044c9fd824cd05657a7": {
+      "name": "Selected",
+      "events": [],
+      "legacy": false
+    },
+    "fc6ee2bd1b0f6ad49b1505bf3991d00c": {
+      "name": "Disabled",
+      "events": [],
+      "legacy": false
+    },
+    "ee11223745cd8284da60351ba042e481": {
+      "name": "TutorialPart_Exit",
+      "events": [],
+      "legacy": false
+    },
+    "355d9e057ba16674ea912da92ed6042f": {
+      "name": "TutorialPart_Enter",
+      "events": [],
+      "legacy": false
+    },
+    "a606d4a5709ddde4784f12e85587b535": {
+      "name": "Normal",
+      "events": [],
+      "legacy": false
+    },
+    "bf47c4bdb49edbf4ba510c7b94c02db9": {
+      "name": "Highlighted",
+      "events": [],
+      "legacy": false
+    },
+    "1821786155af9494ab22ea6bc72e78fb": {
+      "name": "Pressed",
+      "events": [],
+      "legacy": false
+    },
+    "f3ca741ef4997974c91f53696734f06f": {
+      "name": "Selected",
+      "events": [],
+      "legacy": false
+    },
+    "7aa0a6eb75463454e8470f5f00f7b03d": {
+      "name": "Disabled",
+      "events": [],
+      "legacy": false
+    },
+    "602489fc43422664984dbb25cd31aad5": {
+      "name": "PausePanel_Exit",
+      "events": [],
+      "legacy": false
+    },
+    "53b91cb08008c224bb2c466b69825e86": {
+      "name": "PausePanel_Enter",
+      "events": [],
+      "legacy": false
+    },
+    "8c65923a285bebd4eac01a7af3b656c5": {
+      "name": "AFKContainer_Enter",
+      "events": [],
+      "legacy": false
+    },
+    "2c5b028f62f79c84483de482f6c5d095": {
+      "name": "AFKContainer_Exit",
+      "events": [],
+      "legacy": false
+    },
+    "2f632b97026bdec4bb9030b31ba40ee6": {
+      "name": "TopBar_InGame_Appear",
+      "events": [],
+      "legacy": true
+    },
+    "e24aef3fb5f935140a21629d6d2c43d4": {
+      "name": "StaminaBar_Flash",
+      "events": [],
+      "legacy": true
+    },
+    "893b6153d1cdbdb40a2198f89d8c91be": {
+      "name": "SpecialBossProfileNameUrlFlash",
+      "events": [],
+      "legacy": true
+    },
+    "742c335d618dbc04bb24145d1513a5e1": {
+      "name": "TutorialHands_Movement",
+      "events": [],
+      "legacy": true
+    },
+    "3184deb5e684506499a3520761132af4": {
+      "name": "Star_Award",
+      "events": [],
+      "legacy": true
+    },
+    "7051545c0141df14287fe1313fda3518": {
+      "name": "TutorialHands_Hands",
+      "events": [],
+      "legacy": true
+    },
+    "caf08f8365d76cc4b9939f6a8423ba82": {
+      "name": "TutorialHands_Kick",
+      "events": [],
+      "legacy": true
+    },
+    "a6068a46197b2364fb03b1cdaa979a2b": {
+      "name": "RankBadge_Sheen",
+      "events": [],
+      "legacy": true
+    }
+  },
+  "event_functions": [
+    "RelayTimeScale"
+  ],
+  "enter_trigger": "Enter",
+  "enter_delayed_trigger": "EnterDelayed",
+  "exit_trigger": "Exit"
+}

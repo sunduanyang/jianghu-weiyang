@@ -28,6 +28,12 @@ public sealed partial class PhysicsBattleSmoke:MonoBehaviour {
         Check("companion ready",client!=null&&client.Ready&&client.World.Has);if(client==null||!client.Ready){Finish();yield break;}
         yield return Call("/api/ai/config",J.O("enabled",false));
         if(!client.World["hero"]["created"].B){yield return Call("/api/hero",client.HeroBody("create","name","物理验收","sex","男","age",24,"place",client.World["hero"]["place"]));yield return client.Refresh();}
+        if(phase=="backend-comparison"){
+            yield return AuditBackendComparison();Check("no runtime errors",errors.Count==0,new J(errors.Select(e=>new J(e)).ToList()));Finish();yield break;
+        }
+        if(phase=="core-query"){
+            yield return AuditCoreQueries();Check("no runtime errors",errors.Count==0,new J(errors.Select(e=>new J(e)).ToList()));Finish();yield break;
+        }
         if(phase=="source-rig"||phase=="source-rig-resume"){
             yield return AuditSourceRig(phase=="source-rig-resume");
             Check("no runtime errors",errors.Count==0,new J(errors.Select(e=>new J(e)).ToList()));Finish();yield break;
@@ -44,7 +50,7 @@ public sealed partial class PhysicsBattleSmoke:MonoBehaviour {
             yield return AuditSourceProgram(phase=="source-program-resume");
             Check("no runtime errors",errors.Count==0,new J(errors.Select(e=>new J(e)).ToList()));Finish();yield break;
         }
-        if(phase=="reference-stress")yield return AuditReferenceStress();else if(phase=="reference-mechanics")yield return AuditReferenceMechanics();else if(phase=="round-reset")yield return AuditRoundReset();else if(phase=="save-bounds"||phase=="save-bounds-resume")yield return AuditSaveBounds(phase=="save-bounds-resume");else if(phase=="binds")yield return AuditBinds();else if(phase=="reference")yield return AuditReference();else if(phase=="weapons")yield return AuditWeapons();else if(phase=="pace")yield return AuditPace();else if(phase=="martial")yield return AuditMartial();else if(phase=="mouse")yield return AuditMouse();else if(phase=="attributes")yield return AuditAttributes();else if(phase=="kinetic")yield return AuditKinetic();else if(phase=="feel")yield return AuditFeel();else if(phase=="rigs")yield return AuditRigs();else if(phase=="city-resume")yield return Resume(false);else if(phase=="resume")yield return Resume();else yield return Open(phase=="fists");
+        if(phase=="guard")yield return AuditGuard();else if(phase=="reference-stress")yield return AuditReferenceStress();else if(phase=="reference-mechanics")yield return AuditReferenceMechanics();else if(phase=="round-reset")yield return AuditRoundReset();else if(phase=="save-bounds"||phase=="save-bounds-resume")yield return AuditSaveBounds(phase=="save-bounds-resume");else if(phase=="binds")yield return AuditBinds();else if(phase=="reference")yield return AuditReference();else if(phase=="weapons")yield return AuditWeapons();else if(phase=="pace")yield return AuditPace();else if(phase=="martial")yield return AuditMartial();else if(phase=="mouse")yield return AuditMouse();else if(phase=="attributes")yield return AuditAttributes();else if(phase=="kinetic")yield return AuditKinetic();else if(phase=="feel")yield return AuditFeel();else if(phase=="rigs")yield return AuditRigs();else if(phase=="city-resume")yield return Resume(false);else if(phase=="resume")yield return Resume();else yield return Open(phase=="fists");
         Check("no runtime errors",errors.Count==0,new J(errors.Select(e=>new J(e)).ToList()));
         Finish();
     }

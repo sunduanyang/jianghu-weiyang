@@ -16,18 +16,23 @@ Get-Content unity/Build/active-build.txt
 
 首次启动按当前规则建立新世界。通过「系统 → 存档」查看实际数据库路径、另起世界或导入旧档。导入会创建副本；测试和试玩使用独立的 `-saveDir`。
 
+人物图鉴、骨骼与贴图查看、物理格斗试玩、本地模型和历史美术试玩统一从 **开发工具.bat** 选择；日常游玩使用 **启动Unity版.bat**，编辑工程使用 **用Unity打开.bat**。
+
 ## 主要玩法
 
 - **人物与时间**：创建主角后在本月行动，结束本月时由 NPC 执行各自行动，再进入下月。人物资料中的身份、家计、人情、筹划与年谱来自真实世界记录。
 - **交互**：点击人物进入交互界面，查看条件与行动力消耗后办理赠礼、交易、请教、亲近或敌对事项。查看 NPC 行囊只展示对方物品；赠物和装备操作明确使用主角自己的行囊。
-- **地图**：天下地图选择地区并确认真实相邻路线；精力不足时由玩家决定是否过月继续。城中有舆图、长卷和地格视图，支持缩放与移动；地格支持 WASD 和双击行走。过河采用自然浅滩。
+- **地图**：天下地图选择地区并确认真实相邻路线；精力不足时由玩家决定是否过月继续。城中保留舆图与长卷：舆图支持缩放、拖动和按目的地行走，Esc 停止；长路线可按本月剩余行动力先走一段，过月后继续，途中位置自动保存。双击聚落展开长卷查看设施与在场之人。舆图只展示本地聚落、城门与步道，跨地区远行在天下地图发起。过河采用自然浅滩。
 - **行囊与装备**：类别、名称搜索和重置用于筛选，物品自动排列。装备只有主手、副手、护甲三槽；双手兵器暂时停用盾牌，停用或损坏装备不继续提供防护或产生战斗磨损。
-- **门派与社会**：门派九品和社会九品表示不同身份。升降依真实任职、履职、经营与判决，保留事件前因。具体制度见[人物品阶升降](RANK_PROGRESSION.md)。
-- **武学与秘籍**：14 派共 126 门功法，目录见[九品武学设计](MARTIAL_NINE_GRADES_DESIGN.md)。从人物交互「修习 → 请教」取得实体秘籍后，仍须在自己的行囊使用；学习消耗一册，已经学会的功法不重复叠加，身份或门派改变后保留。
+- **门派与社会**：门派九品和社会九品表示不同身份。升降依真实任职、履职、经营与判决，保留事件前因。具体制度见[人物品阶升降](docs/design/RANK_PROGRESSION.md)。
+- **技艺**：锻造、医术、诗书三门，造诣与匠人、药师、书生的营生熟练度是同一个数。锻造的取向与火候改变兵器的质量、操控与压盾，进入正式物理战斗；抢夺、袭击留下的部位伤由医术诊治，切磋不留伤；墨宝赠人，懂行的人更珍视。不懂锻造只能把兵器修到 70 耐久。入口在「江湖 → 市井 → 技艺」与人物交互的学艺、诊治、请人修补。详见[技艺系统](docs/design/CRAFTS_DESIGN.md)。
+- **武学与秘籍**：14 派共 126 门功法，目录见[九品武学设计](docs/design/MARTIAL_NINE_GRADES_DESIGN.md)。从人物交互「修习 → 请教」取得实体秘籍后，仍须在自己的行囊使用；学习消耗一册，已经学会的功法不重复叠加，身份或门派改变后保留。
 - **物理交手**：切磋、抢夺、袭击共用正式战斗实现。新切磋按独立对局重置本场状态；暂离与恢复保留已有战局，其他敌对交手按世界规则处理。操作以客户端 H 帮助为准。
 - **社会模拟**：家户、婚姻、生育死亡、经营与互济按月推进。NPC 的长期筹划通过实际合法行动执行，知晓程度与声望按城镇传播；研究实验中的统计数字不作为每个存档的保证。
 
-人物头像、交谈立像与战斗共用保存的外貌身份。原创皮影以指定拆分原件绑定，整身效果图用于视觉对照；技术原则见[贴图与骨骼绑定研究](BLOODY_BINDING_STUDY.md)。
+人物头像、交谈立像与战斗共用保存的外貌身份。原创皮影以指定拆分原件绑定，整身效果图用于视觉对照；技术原则见[贴图与骨骼绑定研究](docs/research/BLOODY_BINDING_STUDY.md)。
+
+「系统 → 关节绑定」可导入拆件图、手动标记关节、预览布娃娃，并设为切磋外观。操作与数据格式见[关节绑定说明](docs/design/JOINT_BINDING.md)。
 
 ## 可选本地模型
 
@@ -37,7 +42,7 @@ Get-Content unity/Build/active-build.txt
 python scripts/setup_model.py
 ```
 
-安装后可运行 **启动本地模型.bat**，或在「系统 → 本地模型」中启用。模型和运行时统一由 `.runtime/manifest.json` 指定；当前安装清单使用 Qwen3.5 4B Q4_K_M 与 llama.cpp，服务名称为 `qwen3.5:4b`。非 NVIDIA 设备可按安装脚本选择 Vulkan：
+安装后可运行 **开发工具.bat → 启动本地模型**，或在「系统 → 本地模型」中启用。模型和运行时统一由 `.runtime/manifest.json` 指定；当前安装清单使用 Qwen3.5 4B Q4_K_M 与 llama.cpp，服务名称为 `qwen3.5:4b`。非 NVIDIA 设备可按安装脚本选择 Vulkan：
 
 ```powershell
 python scripts/setup_model.py --backend vulkan
@@ -51,12 +56,13 @@ python scripts/setup_model.py --backend vulkan
 | --- | --- |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | 源码位置、后端同步、资源重建、构建与提交 |
 | [unity/README.md](unity/README.md) | Unity 工程入口、启动选择和独立存档 |
-| [VALIDATION.md](VALIDATION.md) | 日常验证方法、已有证据入口与已知失败 |
-| [MARTIAL_NINE_GRADES_DESIGN.md](MARTIAL_NINE_GRADES_DESIGN.md) | 武学目录、能力加成与制度设计 |
-| [RANK_PROGRESSION.md](RANK_PROGRESSION.md) | 门派与社会身份升降 |
-| [BLOODY_BINDING_STUDY.md](BLOODY_BINDING_STUDY.md) | 固定 UV、刚柔分区、关节覆盖与绑定矩阵 |
-| [BLOODY_SOURCE_PORT_VALIDATION.md](BLOODY_SOURCE_PORT_VALIDATION.md) | 正式战斗源图接入、存档契约与未通过项目 |
-| [BLOODY_FULL_PORT_STATUS.md](BLOODY_FULL_PORT_STATUS.md) | 独立恢复工程的位置、来源和复现 |
+| [docs/validation/README.md](docs/validation/README.md) | 日常验证方法、已有证据入口与已知失败 |
+| [docs/design/MARTIAL_NINE_GRADES_DESIGN.md](docs/design/MARTIAL_NINE_GRADES_DESIGN.md) | 武学目录、能力加成与制度设计 |
+| [docs/design/RANK_PROGRESSION.md](docs/design/RANK_PROGRESSION.md) | 门派与社会身份升降 |
+| [docs/design/CRAFTS_DESIGN.md](docs/design/CRAFTS_DESIGN.md) | 锻造、医术、诗书的规则、接口与后续计划 |
+| [docs/research/BLOODY_BINDING_STUDY.md](docs/research/BLOODY_BINDING_STUDY.md) | 固定 UV、刚柔分区、关节覆盖与绑定矩阵 |
+| [docs/validation/BLOODY_SOURCE_PORT_VALIDATION.md](docs/validation/BLOODY_SOURCE_PORT_VALIDATION.md) | 正式战斗源图接入、存档契约与未通过项目 |
+| [docs/research/BLOODY_FULL_PORT_STATUS.md](docs/research/BLOODY_FULL_PORT_STATUS.md) | 独立恢复工程的位置、来源和复现 |
 | [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) | 第三方工具、字体、地图与美术来源 |
 
 `jianghu/` 是规则源文件，Unity 的 `Assets/StreamingAssets/Backend/jianghu/` 是同步副本。原画在 `art/`，原生与规则测试在 `tests/`，原始验收数据在 `validation/`；本地构建、工具、模型、存档与运行输出不随公开源码发布。

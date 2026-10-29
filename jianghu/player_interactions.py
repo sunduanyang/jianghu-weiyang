@@ -2,7 +2,7 @@
 from copy import deepcopy
 import math
 
-from . import combat_attributes, demography, items, martial, martial_manuals, organizations, player_social, protagonist, reactions, sect_life
+from . import combat_attributes, crafts, demography, items, martial, martial_manuals, organizations, player_social, protagonist, reactions, sect_life
 from . import physical_combat as combat
 
 CATALOG = (
@@ -19,6 +19,9 @@ CATALOG = (
     ('assault', '袭击', 4, 3, '发起真实物理战斗，损失10声望并结下仇怨；双方承受实际损伤，袭击本身不产生战利品。'),
     ('trade', '交易', 5, 1, '与对方买卖未装备的实物；按明示价格交换物品与银两，每成交一件耗1行动力。'),
     ('join_sect', '拜入门派', 5, 4, '由此门派三品及以上人物引收入门，成为九品弟子；消耗4行动力。'),
+    ('learn_craft', '学艺', 2, 2, '付2银向对方学其最擅长的一门技艺；对方造诣须达15且高出你5以上。'),
+    ('treat', '诊治', 5, 2, '以你的医术为对方调治最重的伤处；接骨须医术25。交情随疗效增进，医术随之精进。'),
+    ('mend', '请人修补', 5, 1, '付工钱请懂锻造的人将你耗损最重的兵器或衣甲修满，对方自备料。'),
 )
 BY_ID = {row[0]: row for row in CATALOG}
 HOSTILE = {'steal', 'rob', 'assault'}
@@ -105,6 +108,26 @@ def reason(w, n, action):
             return '对方未对你怀有婚恋之意'
         if r.get('affinity', 0) < 60 or r.get('trust', 0) < 40:
             return '结亲需要情分60、信任40'
+    if action == 'learn_craft':
+        craft = crafts.best(n)
+        if n['age_months'] < 192:
+            return '对方年纪尚轻，无从传艺'
+        if r.get('affinity', 0) <= -20:
+            return '对方与你不睦，不愿传艺'
+        if crafts.value(n, craft) < max(15, crafts.value(w.player, craft)+5):
+            return '对方没有胜过你的技艺可传'
+        if w.player['wealth'] < 2:
+            return '需要2银学费'
+    if action == 'treat' and not crafts.needs_care(n):
+        return '对方眼下没有需要调治的伤病'
+    if action == 'mend':
+        if crafts.value(n, 'forging') < crafts.SKILLED_REPAIR or n['age_months'] < 192:
+            return f'对方锻造造诣不足{crafts.SKILLED_REPAIR}'
+        item = crafts.mend_target(w)
+        if item is None:
+            return '没有需要修补的兵器或衣甲'
+        if w.player['wealth'] < crafts.mend_price(item):
+            return f'需要{crafts.mend_price(item)}银工钱'
     if action == 'teach':
         mine = h.get('faction')
         if (mine is not None and n['faction'] is not None and n['faction'] != mine
@@ -248,6 +271,38 @@ def perform(w, body):
         item['last_event'] = result['id']
     elif key == 'teach':
         result = martial_manuals.request(w, 'player', n['id'], art)
+    elif key == 'learn_craft':
+        craft = crafts.best(n)
+        w.player['wealth'] = round(w.player['wealth']-2, 4); n['wealth'] = round(n['wealth']+2, 4)
+        growth = crafts.gain(w.player, craft, crafts.teaching_gain(n, craft))
+        change_tie(r, 2, 2)
+        text = f"{name}付2银向{target}学习{crafts.NAMES[craft]}，造诣增长{growth['gain']:.2f}。"
+        result = event(w, n, key, text, dict(craft=craft, teacher_skill=crafts.value(n, craft), payment=2, practice=growth))
+    elif key == 'treat':
+        salve = next((i for i in loose(w, 'player') if i['template'] == 'salve'), None)
+        care = crafts.treat(w.player, n, 1.3 if salve else 1.)
+        if salve:
+            care['salve'] = deepcopy(salve); items.remove(w, salve)
+        care['practice'] = crafts.practice(w.player, 'medicine', 1.)
+        part = care['part']
+        warmth = 3 + (6 if part and part['outcome'] in ('set', 'treated') else 1 if part else 2)
+        change_tie(r, warmth, 3)
+        n['mood']['joy'] = min(30., n['mood']['joy']+2)
+        text = f"{name}为{target}诊治，对方恢复{care['healing']:g}体力"
+        if part:
+            text += '，' + {'relieved': f"{part['part_name']}骨伤未能接正，只得止痛", 'set': f"接正{part['part_name']}骨伤",
+                            'treated': f"处理{part['part_name']}伤处"}[part['outcome']]
+        text += ('，敷用一份金疮药' if salve else '') + '。'
+        result = event(w, n, key, text, dict(care=care, affinity_gain=warmth))
+    elif key == 'mend':
+        item = crafts.mend_target(w); price = crafts.mend_price(item); before = item['durability']
+        w.player['wealth'] = round(w.player['wealth']-price, 4); n['wealth'] = round(n['wealth']+price, 4)
+        item['durability'] = 100
+        growth = crafts.practice(n, 'forging', .3)
+        change_tie(r, 1, 1)
+        text = f"{name}付{price}银请{target}修补{items.name(item)}，耐久由{before:g}修至100。"
+        result = event(w, n, key, text, dict(item_id=item['id'], before=before, after=100, silver=price, practice=growth))
+        item['last_event'] = result['id']
     elif key in {'spar', 'rob', 'assault'}:
         spar = key == 'spar'
         martial.sync_actor(w, w.player, True); martial.sync_actor(w, n)
@@ -326,10 +381,7 @@ def settle_hostile(w, battle, n):
     if key == 'rob' and battle['winner'] == 0:
         loot = round(min(n['wealth'], battle.get('loot_cap', 0)), 4)
         n['wealth'] = round(n['wealth']-loot, 4); w.player['wealth'] = round(w.player['wealth']+loot, 4)
-    for actor, fighter in zip((w.player, n), battle['fighters']):
-        lost = 1-fighter['vigor']/fighter['vigor_max']
-        if lost > .1:
-            actor['wound'] = dict(remaining=max(actor.get('wound', {}).get('remaining', 0) if actor.get('wound') else 0, 2+round(lost*3)), event_id=battle['cause'])
+    crafts.settle_battle(battle, (w.player, n))
     result = '双方未分胜负' if battle['winner'] is None else battle['fighters'][battle['winner']]['name']+'胜出'
     text = f"{w.player['name']}与{n['name']}因{'抢夺' if key == 'rob' else '袭击'}交手，{result}。"
     text += f'夺得{loot:g}银。' if loot else '未获得战利品。'

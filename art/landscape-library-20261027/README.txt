@@ -9,5 +9,5 @@ runtime-catalog.jpg：带名称和占地的预览目录。
 地图从合并素材中挑选28种，细节较多的奇峰、丹霞、梯田等占2×2，简洁草坡、疏林、水面和雪原占1×1。
 不单独使用未选中的熔岩盆地、泥滩等图；所有原图仍保存在本目录。
 
-运行图由 unity/import_landscape_library.py 统一投影和透明边缘，位于 Unity 的 Resources/CityBiomes/。
+运行图原由 unity/import_landscape_library.py 导出到 Unity 的 Resources/CityBiomes/。2026-10-29 删除城中地格视图后，运行图与导入脚本一并移除；本目录原图与清单按存档保留。后端仍沿用这些素材编号生成 terrain_tiles 与地块区域。
 城镇素材保持原来的1、4、9格聚落包，每个地区为一个9格城市、一个4格城镇、两个1格村落。

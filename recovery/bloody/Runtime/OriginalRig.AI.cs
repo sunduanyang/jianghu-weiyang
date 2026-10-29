@@ -20,12 +20,15 @@ public sealed partial class OriginalRig {
     public bool OriginalAIProceduralStrikes {get;set;}
     public string OriginalAILeftClip=>aiLeft==null?"":aiLeft.CurrentClip;
     public string OriginalAIRightClip=>aiRight==null?"":aiRight.CurrentClip;
+    // CharacterExpressions/VoiceSFX is a distinct original subsystem. Its
+    // subscriber must preserve its own authority, cooldown and random draws.
+    public event Action<bool> OriginalAIChargeRequested;
     OriginalAIExecution aiExecution;
     OriginalHandAnimations aiLeft,aiRight,aiDouble;
     J aiSource;
     Transform aiNubLeft,aiNubRight,aiAimOrigin,aiNearestThreat,aiPlayerShieldCOM;
     bool aiRelentless,aiWeaponLeft,aiWeaponRight,aiShieldLeft,aiShieldRight,aiTwoHanded;
-    bool aiAttacking,aiCanMove=true,aiKickSequence,aiStarted,aiStopped;
+    bool aiAttacking,aiCanMove=true,aiKickSequence,aiStarted,aiStopped,aiUpdatesDisabled;
     bool aiStrikeLeft,aiStrikeRight,aiGuardLeft,aiGuardRight,aiGuardActiveLeft,aiGuardActiveRight;
     Vector2 aiAggressionRange,aiPersonaTime,aiDodgeDuration,aiDoubleDelay,aiKickDelay,aiKickJitter;
     Vector2 aiPrevLeft,aiPrevRight,aiStrikeNubLeft,aiStrikeNubRight,aiGuardNubLeft,aiGuardNubRight;
@@ -48,6 +51,8 @@ public sealed partial class OriginalRig {
     Coroutine AIRun(IEnumerator routine)=>aiExecution==null||aiStopped?null:aiExecution.StartCoroutine(routine);
 
     partial void InitializeAI() {
+        InitializeStartup();
+        InitializeExpressions();
         if(human)return;
         aiSource=source["controllers"]["CharacterEnemyAI"][0]["data"];
         if(!aiSource.Has)return;
@@ -60,7 +65,7 @@ public sealed partial class OriginalRig {
         aiDoubleDelay=AIVector(aiSource["aiDoubleTapDelay"]);aiKickDelay=AIVector(aiSource["aiKickPairDelay"]);aiKickJitter=AIVector(aiSource["aiKickSideJitter"]);aiCrossGap=AINumber("minCrossSideWalkGap");aiKickCooldown=AINumber("kickCooldown");
         OriginalAIState=(OriginalAIStates)aiSource["AIState"].I;
         aiNubLeft=ResolveTransform(aiSource["nubLeft"]);aiNubRight=ResolveTransform(aiSource["nubRight"]);aiAimOrigin=ResolveTransform(aiSource["aimOrigin"]);
-        var clips=new Dictionary<string,AnimationClip>();
+        var clips=OriginalHandAnimations.LoadOriginalClips();
         foreach(var animation in GetComponentsInChildren<Animation>(true))foreach(AnimationState state in animation)if(state.clip!=null)clips[state.clip.name]=state.clip;
         foreach(var entry in source["controllers"]["AIHandsInputRelayer"].A) {
             var data=entry["data"];var target=ResolveTransform(data["m_GameObject"]);
@@ -70,6 +75,7 @@ public sealed partial class OriginalRig {
             if(entry["id"].S==aiSource["InputRelayer_Double"]["id"].S)aiDouble=relay;
         }
         aiExecution=gameObject.AddComponent<OriginalAIExecution>();
+        aiExecution.relays=new[]{aiLeft,aiRight,aiDouble};
         // Start 0x342a154 schedules equipment properties at .5 and loops at 1.
         Invoke(nameof(SetOriginalAIWeaponProperties),.5f);Invoke(nameof(StartOriginalAICoroutines),1f);
     }
@@ -79,18 +85,24 @@ public sealed partial class OriginalRig {
     // the independently recovered config applier, never synthesized here.
     public void SetOriginalAIWeaponProperties() {
         if(human||aiSource==null||opponent==null)return;
-        aiWeaponLeft=leftItem!=null&&!leftItem.isShield&&!leftItem.twoHanded;
-        aiWeaponRight=rightItem!=null&&!rightItem.isShield&&!rightItem.twoHanded;
-        aiShieldLeft=leftItem!=null&&leftItem.isShield&&!leftItem.dropped;
-        aiShieldRight=rightItem!=null&&rightItem.isShield&&!rightItem.dropped;
+        bool singleLeft=leftItem!=null&&!leftItem.twoHanded,singleRight=rightItem!=null&&!rightItem.twoHanded;
+        aiWeaponLeft=singleLeft&&leftItem.OriginalEquipmentType==6;
+        aiWeaponRight=singleRight&&rightItem.OriginalEquipmentType==6;
+        // Source flags inspect the populated weapon/shield mount. A Type7
+        // None still sets its category0 bundle, but Name="Nothing" suppresses
+        // the shield flag (0x342b488, native getter eb 0x35930bc).
+        aiShieldLeft=singleLeft&&leftItem.OriginalUsesShieldMount&&leftItem.config["Name"].S!="Nothing"&&!leftItem.dropped;
+        aiShieldRight=singleRight&&rightItem.OriginalUsesShieldMount&&rightItem.config["Name"].S!="Nothing"&&!rightItem.dropped;
         aiTwoHanded=doubleHanded;
         float length=0;
-        if(leftItem!=null) {
-            aiCategoryLeft=leftItem.category;aiLeft.SetBundle(false,leftItem.category);
+        if(singleLeft) {
+            if(aiWeaponLeft)aiCategoryLeft=leftItem.category;
+            aiLeft.SetBundle(false,leftItem.category);
             if(aiWeaponLeft)length=Mathf.Max(length,leftItem.length);
         }
-        if(rightItem!=null) {
-            aiCategoryRight=rightItem.category;aiRight.SetBundle(false,rightItem.category);
+        if(singleRight) {
+            if(aiWeaponRight)aiCategoryRight=rightItem.category;
+            aiRight.SetBundle(false,rightItem.category);
             if(aiWeaponRight)length=Mathf.Max(length,rightItem.length);
         }
         if(aiTwoHanded) {
@@ -99,13 +111,11 @@ public sealed partial class OriginalRig {
         }
         if(length>0)aiAttackRange=length+.1f;
         aiMinDistance=aiAttackRange*aiMinSpacing;aiPreferredDistance=aiAttackRange*aiPreferredSpacing;
-        OriginalAIPlayerWeaponCOM=AIItemBody(opponent.leftItem,false)??AIItemBody(opponent.rightItem,false);
-        aiPlayerShieldCOM=AIItemBody(opponent.leftItem,true)??AIItemBody(opponent.rightItem,true);
+        // Native0x342ba08..0x342ba30 copies applier caches as stored after
+        // its ordered ApplyLeft/Right or Apply2H, including Chest fallback.
+        OriginalAIPlayerWeaponCOM=opponent.OriginalEquipmentWeaponCOM;
+        aiPlayerShieldCOM=opponent.OriginalEquipmentShieldCOM;
         AIRefreshThreat();
-    }
-    static Transform AIItemBody(OriginalItem item,bool shield) {
-        if(item==null||item.isShield!=shield)return null;
-        return item.counterweightBody!=null?item.counterweightBody.transform:item.itemBody!=null?item.itemBody.transform:item.transform;
     }
     void StartOriginalAICoroutines() {
         if(aiStopped||aiStarted)return;
@@ -113,6 +123,10 @@ public sealed partial class OriginalRig {
         aiStarted=true;AIRollAggression();AIRun(AIStateLoop());AIRun(AIActionLoop());AIRun(AIReactiveLoop());
     }
     public void StartOriginalPullBackward(){if(!human)AIRun(AIPullBackward());}
+    // CharacterVitality.cmu disables the AI Behaviour. Unity keeps its
+    // coroutines and Invoke calls alive when enabled=false; retain their
+    // original scheduling/random side effects until object disposal.
+    public void DisableOriginalAIUpdates(){if(!human)aiUpdatesDisabled=true;}
     public void StopOriginalAI() {
         if(human)return;aiStopped=true;
         CancelInvoke(nameof(SetOriginalAIWeaponProperties));CancelInvoke(nameof(StartOriginalAICoroutines));CancelInvoke(nameof(OriginalAIEnableMove));CancelInvoke(nameof(OriginalAIAttackLeft));
@@ -124,7 +138,7 @@ public sealed partial class OriginalRig {
     // Update 0x342a4ac: parent legacy animation + child nub values remain
     // separate. Do not clamp these AI vectors as a virtual joystick input.
     partial void UpdateAI() {
-        if(human||aiSource==null||aiStopped||!AIValid)return;
+        if(human||aiSource==null||aiStopped||aiUpdatesDisabled||!AIValid)return;
         AIReadActivity();
         if(Time.time>=aiThreatRefresh){aiThreatRefresh=Time.time+1;AIRefreshThreat();}
         aiGuardLeft=aiGuardRight=aiGuardActiveLeft=aiGuardActiveRight=false;
@@ -381,6 +395,7 @@ public sealed partial class OriginalRig {
             aiDodgeDeadline=0;
             if(leftArmDisabled||rightArmDisabled){aiWeaponLeft=aiWeaponRight=true;aiShieldLeft=aiShieldRight=false;}
             AIRefreshAttackDirection();
+            OriginalAIChargeRequested?.Invoke(true); // CharacterExpressions.Charge, 0x342e8ac.
             if(Random.value<.5f*AIUnit){yield return new WaitForSeconds(Random.Range(.06f,.14f));aiAttackDirection=aiAttackDirection==1?2:1;}
             if(OriginalAIProceduralStrikes) {
                 if(aiTwoHanded)yield return AIRun(AIProceduralStrike(OriginalStrikeHand.Double));
@@ -450,7 +465,3 @@ public sealed partial class OriginalRig {
         aiLeft.Defending=aiRight.Defending=false;
     }
 }
-
-// CharacterEnemyAI originally has its own MonoBehaviour coroutine scope;
-// keep that scope distinct from the recovered CharacterMover and vitality.
-public sealed class OriginalAIExecution : MonoBehaviour { }

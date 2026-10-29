@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-30",
+  "pr": 30,
+  "pr_head": "51291b676cbd334d61ab55899e4cb9f2e681e1d2",
+  "change": "Remove tile view, preserve local-only atlas, and allow destination walking across monthly budgets.",
+  "build": {
+    "name": "MapNoTiles20261030Final",
+    "previous": "Current",
+    "rollback": "Current",
+    "unity": "6000.6.7f1",
+    "assembly_sha256": "db20ec04f4a06c2808ecded7874e24f47c590c6c30721d586af1c53e7a1a2972",
+    "executable_sha256": "9806abde4a406ed68647e9505852c49f6aa72a372f4f084e2aa2821affea57a2",
+    "log": "output/map-no-tiles-20261030/build-release.log"
+  },
+  "rules": {
+    "passed": 736,
+    "log": "output/map-no-tiles-20261030/rules.log"
+  },
+  "native": {
+    "passed": 828,
+    "runs": {
+      "journey-first-release": {
+        "checks": 11,
+        "passed": true,
+        "path": "output/map-no-tiles-20261030/journey-first-release/city-journey.json",
+        "sha256": "ddce4083980caed6d8433c1961ca426e0d1bc6da7a799c53af8ede42845feb59"
+      },
+      "journey-resume-release": {
+        "checks": 12,
+        "passed": true,
+        "path": "output/map-no-tiles-20261030/journey-resume-release/city-journey.json",
+        "sha256": "38658fbd9f0c13a3cafaabae27ea79b4824da500fd3992d47f763930506f4d55"
+      },
+      "walk-native-release": {
+        "checks": 20,
+        "passed": true,
+        "path": "output/map-no-tiles-20261030/walk-native-release/acceptance.json",
+        "sha256": "6fb966c032ff76952e89aca36148c849b41f648cdeec1c88d47a120a17d59eaf"
+      },
+      "atlas-native-release": {
+        "checks": 44,
+        "passed": true,
+        "path": "output/map-no-tiles-20261030/atlas-native-release/city-atlas.json",
+        "sha256": "fe35e43b3d965bf5e367835b5e068681625c682694700d19ca91af055f624ae0"
+      },
+      "city-native-release": {
+        "checks": 329,
+        "passed": true,
+        "path": "output/map-no-tiles-20261030/city-native-release/acceptance.json",
+        "sha256": "a8093337f27d71358e24a7bb3c629f67b49178bd9fb9be55122069632fe1ff4e"
+      },
+      "settlement-native-release": {
+        "checks": 203,
+        "passed": true,
+        "path": "output/map-no-tiles-20261030/settlement-native-release/acceptance.json",
+        "sha256": "6687bf69dbbc3cd33cb13e7dd620630d61b2ab6a73d177caaa071b13490fcfd4"
+      },
+      "local-life-native-release": {
+        "checks": 109,
+        "passed": true,
+        "path": "output/map-no-tiles-20261030/local-life-native-release/acceptance.json",
+        "sha256": "299ad745138d098155633d31d3f110541b4b2853b560cefa6265f4de92a8e47b"
+      },
+      "travel-native-release": {
+        "checks": 19,
+        "passed": true,
+        "path": "output/map-no-tiles-20261030/travel-native-release/world-travel.json",
+        "sha256": "d403f785cf6b8e860e1f0263f863cb0b6f4bedf08eba7f6614d9dc1d3798cf98"
+      },
+      "interaction-native-release": {
+        "checks": 81,
+        "passed": true,
+        "path": "output/map-no-tiles-20261030/interaction-native-release/acceptance.json",
+        "sha256": "cbe4792afda51c912654079b3eddc59fd4d89ed155842ab0a013fb7a9afae57f"
+      }
+    }
+  },
+  "preservation": {
+    "production_files_compared": 117,
+    "production_drift_after_probe_fixes": [],
+    "personal_save_used": false,
+    "backend_save_format_unchanged": true,
+    "world_travel_entry_only_on_world_map": true
+  },
+  "regression": {
+    "seed": 42,
+    "place": 24,
+    "target": "settlement_2",
+    "total_cost": 35,
+    "first_month_spent": 30,
+    "remaining_after_restart": 5,
+    "manual_month_end": true
+  },
+  "initial_probe_repairs": [
+    "Stop/reroute input gets a frame after a committed step.",
+    "Launch at a distinct size so hidden-window swapchains repaint.",
+    "Sect visitors may have no actions.",
+    "Layout counts depend on registered population tiers.",
+    "Fixtures start compact to avoid an unrelated old-map activation migration."
+  ],
+  "screenshot": "validation/screenshots/map-no-tiles-20261030.png",
+  "visual_verified": true,
+  "launcher": {
+    "passed": true,
+    "checks": 11,
+    "path": "output/map-no-tiles-20261030/launcher-native/city-journey.json",
+    "sha256": "48c9360b82a800a08ae122af7492c8978c4874c210eab4f455653e8fb304ef31"
+  }
+}

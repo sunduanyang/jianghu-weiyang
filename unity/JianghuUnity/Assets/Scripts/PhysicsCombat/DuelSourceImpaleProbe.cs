@@ -21,7 +21,7 @@ public sealed partial class PhysicsDuel {
                 enemy.FreezeSourceImpalementProbe(organ.shape,player.sword.shape,false);
                 Physics2D.SyncTransforms();
                 player.sword.rb.position+=(Vector2)organ.shape.bounds.center-(Vector2)player.sword.shape.bounds.center;
-                Physics2D.SyncTransforms();combatPhysics.Simulate(1f/60);
+                Physics2D.SyncTransforms();SimulateCombat(1f/60);
                 cases.Add(J.O("case",name,"trigger_events",organ.TriggerEnterCount,"health",enemy.health,"accumulated",enemy.SourceAccumulatedDamage,
                     "stage",enemy.SourceImpalementStage,"joint",player.SourceWeaponImpaling("Near"),"masks",organ.MasksVisible));
                 if(name=="threshold")cases[cases.Count-1]["phases"]=enemy.ProbeSourceImpalementPhases(player);

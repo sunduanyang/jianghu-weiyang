@@ -37,7 +37,7 @@ public class LocalLifeSmoke : MonoBehaviour {
     }
     IEnumerator Run(){
         int month=client.World["month"].I;string events=client.World["events"].S,hero=client.World["hero"].ToString();
-        int homes=0,present=0,ordinary=0,sects=0;var people=new HashSet<int>();
+        int homes=0,present=0,ordinary=0,sects=0,prosperous=0;var people=new HashSet<int>();
         foreach(var place in client.World["locations"].A){
             J city=new J();yield return client.Request("/api/city?place="+place["id"].I,null,j=>city=j);
             var towns=city["settlements"].A;var residents=towns.SelectMany(t=>t["home_residents"].A).ToList();
@@ -45,20 +45,21 @@ public class LocalLifeSmoke : MonoBehaviour {
             Check("census and presence cover region "+place["name"].S,residents.Count==city["population"].I&&visitors.Count==city["population"].I);
             Check("home census unique "+place["name"].S,residents.All(p=>people.Add(p["id"].I)));
             homes+=residents.Count;present+=visitors.Count;ordinary+=towns.Count(t=>t["kind"].S!="sect");sects+=towns.Count(t=>t["kind"].S=="sect");
+            if(city["settlement_layout"]["tier"].S=="prosperous")prosperous++;
         }
         Check("all living people have one home and one current presence",homes==client.World["population"].I&&present==homes);
-        Check("approved layout retained",ordinary==111&&sects==14&&client.World["locations"].A.Count==49);
+        Check("approved layout retained",ordinary==client.World["locations"].A.Count*2+prosperous&&sects==14&&client.World["locations"].A.Count==49);
         yield return client.Refresh();Check("browsing preserves saved progress",client.World["month"].I==month&&client.World["events"].S==events&&client.World["hero"].ToString()==hero);
         Screen.SetResolution(1280,800,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.3f);Screen.SetResolution(1680,960,FullScreenMode.Windowed);
         int placeId=client.World["hero"]["place"].I;
         yield return app.CityLoadForSmoke(placeId);
-        Check("selected cells show real positions before simulation",app.ValidateCityPeopleForSmoke(out J before),before);
+        Check("settlement rosters show real positions before simulation",app.ValidateCitySettlementRostersForSmoke(out J before),before);
         bool advanced=false;yield return client.Request("/api/hero",client.HeroBody("end_turn"),j=>advanced=true);yield return client.Refresh();
         Check("isolated world advances one month",advanced&&client.World["month"].I==month+1);
         yield return app.CityLoadForSmoke(placeId);
-        Check("selected cells show real weekly positions",app.ValidateCityPeopleForSmoke(out J after),after);
+        Check("settlement rosters show real weekly positions",app.ValidateCitySettlementRostersForSmoke(out J after),after);
         var site=app.City["settlements"].A.First(t=>t["kind"].S=="village"||t["kind"].S=="town");
-        app.CityPeopleSelectForSmoke(site["row"].I,site["col"].I);app.GoStage(Stage.City,false);
+        app.CityPickSettlementForSmoke(site["id"].S);app.GoStage(Stage.City,false);
         yield return Capture("settlement-homes-and-presence");
         int person=site["home_residents"].A.First()["id"].I;app.SelectPerson(person);
         float deadline=Time.realtimeSinceStartup+15;while((!app.Person.Has||app.Person["id"].I!=person)&&Time.realtimeSinceStartup<deadline)yield return null;

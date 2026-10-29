@@ -1,0 +1,179 @@
+{
+  "scope": "Read-only review of current camera against bounded original ARM64, serialized source and verdict images. No production camera edit; no full camera/runtime/image parity or process stability claim.",
+  "reviewed_file": "D:\\Desktop\\新新游戏\\recovery\\bloody\\Runtime\\OriginalCameraFraming.cs",
+  "reviewed_sha256": "3e026e158eff6d46708853f9cc824e136fd97b9b135beaf8135e4308d1cfa0df",
+  "native_validation": {
+    "script": "scripts/audit_bloody_camera.py",
+    "result": "output/bloody-full-port-20261028/camera-review/native-camera-audit.json",
+    "cases": 120,
+    "failures": 0,
+    "limits": "Object lookup, strings, native delegates, camera/UI method boundaries and Unity Invoke are bounded observation hooks. ccr, FocusWinner, Positioner.OnEnable, Canvas.ccs and blend lookup branch instructions execute intact. The actual Unity scaled-time scheduler and Cinemachine camera pipeline are not run by this oracle."
+  },
+  "original_fields": {
+    "CanvasAndCamera.localPlayerFollowCameras": "0x30",
+    "CanvasAndCamera.jjf_networkState": "0x60",
+    "CanvasAndCamera.jjg_localState": "0x64",
+    "CanvasAndCamera.jjl_winningPlayer": "0x80",
+    "NetworkPlayer.cameraTarget": "0x80",
+    "NetworkPlayer.winnerCameraTarget": "0x88",
+    "CameraTargetPositioner.jkt_stickyDeathFlag": "0x30"
+  },
+  "configured_follow_cameras": [
+    "CanvasAndCamera/CinemachineCameras/InGame_Camera_Round",
+    "CanvasAndCamera/CinemachineCameras/InGame_Camera_Paused"
+  ],
+  "network_cameras": [
+    {
+      "state": 0,
+      "camera": "CanvasAndCamera/CinemachineCameras/InGame_Camera_Countdown"
+    },
+    {
+      "state": 1,
+      "camera": "CanvasAndCamera/CinemachineCameras/InGame_Camera_Countdown"
+    },
+    {
+      "state": 2,
+      "camera": "CanvasAndCamera/CinemachineCameras/InGame_Camera_CinematicIntro"
+    },
+    {
+      "state": 3,
+      "camera": "CanvasAndCamera/CinemachineCameras/InGame_Camera_Countdown"
+    },
+    {
+      "state": 4,
+      "camera": "CanvasAndCamera/CinemachineCameras/InGame_Camera_Round"
+    },
+    {
+      "state": 5,
+      "camera": "CanvasAndCamera/CinemachineCameras/InGame_Camera_Round"
+    },
+    {
+      "state": 6,
+      "camera": "CanvasAndCamera/CinemachineCameras/InGame_Camera_Round"
+    }
+  ],
+  "confirmed_findings": [
+    {
+      "id": "winner_target_lifecycle",
+      "current": "LateUpdate always rediscovers first human rig and its normal CameraTarget; there is no winner cache, initial loser focus or delayed winner target.",
+      "source_methods": [
+        "CanvasAndCamera.Start 0x3415220",
+        "CanvasAndCamera.ccr 0x34156cc length0x250",
+        "CanvasAndCamera.FocusCamerasOnWinningPlayer 0x341591c length0x90",
+        "CanvasAndCamera.ccw 0x34159ac",
+        "CanvasAndCamera.ccv 0x3417078",
+        "CanvasAndCamera.ccu 0x3416da8"
+      ],
+      "source_behavior": [
+        "Local player registration sets both Round and Paused Follow/LookAt to local normal CameraTarget.",
+        "OnRoundEnded(localWon,true) caches winner, immediately focuses loser normal CameraTarget, invokes FocusCamerasOnWinningPlayer after .625 scaled seconds.",
+        "OnMatchEnded(localWon,false) has the same immediate loser target, but schedules winner focus only when localWon. A normal Campaign loss stays on local loser normal target.",
+        "If no opponent exists, use local as winningPlayer and immediately focus its WinnerCameraTarget.",
+        "FocusCamerasOnWinningPlayer uses NetworkPlayer.winnerCameraTarget, not normal CameraTarget.",
+        "OnRunnerDestroyed when IsRetrying is false clears winner cache and cancels pending FocusCamerasOnWinningPlayer Invoke.",
+        "Pause selects the Paused camera without resetting the shared target; delayed Invoke follows Unity scaled-time behavior."
+      ],
+      "source_target_poses": {
+        "normal_child": "CameraTarget localPosition (0.35,0,0)",
+        "winner_child": "WinnerCameraTarget localPosition (0,0,0)",
+        "both_children": "Direct children of each original rig root; winner target is not a new chest-attached approximation."
+      },
+      "impact": "Natural Campaign loss in Build17 alone cannot exercise the missing victory and RoundEnd branches."
+    },
+    {
+      "id": "passed_out_wrongly_moves_target",
+      "current": "LateUpdate moves human normal target to chest.x when dead OR passedOut.",
+      "source_methods": [
+        "CameraTargetPositioner.OnEnable 0x341b974 length0x90",
+        "CameraTargetPositioner.OnDisable 0x341ba04 length0x90",
+        "CharacterVitality.add_OnDeathEvent 0x350ca10",
+        "CameraTargetPositioner.cea 0x341ba94",
+        "CameraTargetPositioner.Update 0x341baa0"
+      ],
+      "source_behavior": [
+        "Only OnDeathEvent is subscribed; OnPassedOutEvent is not subscribed.",
+        "cea makes a sticky bool true. OnEnable does not clear it.",
+        "After death, normal target follows original Bone_Chest.x, keeps its current target world y, sets z0.",
+        "Source positioner exists on every original rig normal target; changing to an enemy loser requires that enemy target positioner too."
+      ],
+      "impact": "A pass-out can move the current human camera earlier than source, and an enemy loser cannot be tracked correctly by a human-only update."
+    },
+    {
+      "id": "practice_camera_reset",
+      "current": "CinematicIntro to Round always selects a 1.5s source blend; no explicit source Brain.ResetState call.",
+      "source_methods": [
+        "CanvasAndCamera.ccs 0x3415ac8 length0x1cc",
+        "CinemachineBrain.ResetState 0x63ea098",
+        "CameraBlendStack.ResetRootFrame 0x640df50",
+        "CinemachineBlend.ClearBlend 0x6412b38"
+      ],
+      "source_behavior": [
+        "After network camera activation, if newState4 and GameMode2 call brain.ResetState().",
+        "This clears root blend state; treating Practice like an uninterrupted ordinary CinematicIntro to Round blend is incomplete.",
+        "Other modes retain their configured phase transition blends."
+      ],
+      "impact": "Practice entry/restart differs even with the same serialized FOV and offsets."
+    },
+    {
+      "id": "custom_blend_precedence",
+      "current": "SelectCamera takes the last matching entry.",
+      "source_methods": [
+        "CinemachineBlenderSettings.GetBlendForVirtualCameras 0x6413b90 length0x224"
+      ],
+      "source_behavior": [
+        "First exact From+To wins immediately.",
+        "Otherwise first ANY->specific To wins, then first specific From->ANY, then last ANY->ANY, then default."
+      ],
+      "actual_important_mismatches": [
+        {
+          "from": "InGame_Camera_Round",
+          "to": "InGame_Camera_Paused",
+          "source": "Custom .5s",
+          "current": "Cut"
+        },
+        {
+          "from": "InGame_Camera_Paused",
+          "to": "InGame_Camera_CinematicIntro",
+          "source": "Cut",
+          "current": "Custom .5s"
+        }
+      ],
+      "all_configured_selection_mismatches": 6
+    }
+  ],
+  "confirmed_current_matches": [
+    "States4/5/6 all select the same Round camera; state5/6 need no separate verdict lens.",
+    "Only Round and Paused are listed in source localPlayerFollowCameras. CinematicIntro and Countdown track Environment.",
+    "Brain IgnoreTimeScale=true, UpdateMethod=LateUpdate1 and BlendUpdateMethod=LateUpdate1 support unscaled camera damping/blend time even while Invoke uses scaled time.",
+    "CinematicIntro->Round source custom blend is1.5s; CinematicIntro->Countdown1s; Countdown->Round2s.",
+    "CameraLensModifier framingAnchor is null on all four configured arena cameras, so dsn returns without screen-position adjustment with current source serialization."
+  ],
+  "minimal_independent_api_suggestion": {
+    "class": "OriginalCameraTargets (suggestion only, not added)",
+    "context": "Bind explicit local rig and an opponent resolver; use existing original CameraTarget and WinnerCameraTarget transforms.",
+    "members": [
+      "Transform FollowTarget { get; }",
+      "Transform LookAtTarget { get; }",
+      "void OnLocalPlayerRegistered(OriginalRig local)",
+      "void OnRoundEnded(bool localWon) // source second bool=true",
+      "void OnMatchEnded(bool localWon) // source second bool=false",
+      "void FocusCamerasOnWinningPlayer() // Unity Invoke after .625 scaled seconds",
+      "void OnRunnerDestroyed(bool retrying)",
+      "void OnRigDeath(OriginalRig rig) // sticky source normal-target positioner; no OnPassOut subscription"
+    ],
+    "phase_boundary": "OriginalCameraFraming reads shared target for Round/Paused, source environment target otherwise; add OnNetworkStateChanged(oldState,newState,mode) hook for source Practice brain reset. Pause should not overwrite shared target."
+  },
+  "image_evidence": {
+    "source": "output/bloody-full-port-20261028/apk-reference36-live/verdict-status.png",
+    "unity": "output/bloody-full-port-20261028/campaign-match-replay-17/verdict/original-camera-with-hud.png",
+    "source_video": "output/bloody-full-port-20261028/apk-reference36-live/natural-verdict.mp4",
+    "video_frame_decode": "Decoded and visually inspected requested seeks 0,30,60,90,120,150,178 seconds; frame provenance in output/bloody-full-port-20261028/camera-review/source-video-frame-manifest.json.",
+    "interpretation": "Both images show a loss popup and local corpse, which is consistent with native loss target retention. Distinct actual actor positions and UI sizes do not justify changing lens or offsets from screenshots.",
+    "video_observation": "120/150/178s keep local corpse/background framing while enemy moves right, consistent with native Campaign-loss branch retaining local loser normal target. This does not validate local win or RoundEnd camera transitions."
+  },
+  "remaining_limits": [
+    "Current hand-coded position damping and camera blend approximations do not establish full Cinemachine pipeline parity, including source InheritPosition hint8, per-camera cache and interrupted blends.",
+    "Native target branches are verified with bounded hooks; actual source Unity Invoke delay, Pause/resume interactions and local win/round loss live camera behavior still need player-run coverage.",
+    "No FOV, offset, source data, APK or active Unity project was modified."
+  ]
+}

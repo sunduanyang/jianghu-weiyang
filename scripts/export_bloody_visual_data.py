@@ -8,6 +8,7 @@ import hashlib
 import json
 import re
 import struct
+from types import SimpleNamespace
 from pathlib import Path
 
 import UnityPy
@@ -25,6 +26,21 @@ def main():
     env=UnityPy.load(str(original/'serialized'))
     files={f.name:f for f in env.files.values()}
     generator=TypeTreeGenerator('6000.4.0f1');generator.load_local_dll_folder(str(original/'dummy-attributes'))
+    import UnityPy.helpers.TypeTreeHelper as helper
+    source_ref_lookup=helper.get_ref_type_node
+    def ref_lookup(reference,file):
+        try:return source_ref_lookup(reference,file)
+        except ValueError:
+            typ=reference['type'];assembly=typ['asm'];name=(typ['ns']+'.' if typ['ns'] else '')+typ['class']
+            if not name:return None
+            node=generator.get_nodes_up(assembly if assembly.endswith('.dll') else assembly+'.dll',name)
+            # get_nodes_up targets MonoBehaviour roots. Managed-reference
+            # payloads serialize only the managed fields, without Unity's
+            # m_GameObject/enable/script/name object header.
+            node.m_Children=[c for c in node.m_Children if c.m_Name not in ['m_GameObject','m_Enabled','m_Script','m_Name']]
+            file.ref_types.append(SimpleNamespace(m_ClassName=typ['class'],m_NameSpace=typ['ns'],m_AssemblyName=assembly,node=node))
+            return node
+    helper.get_ref_type_node=ref_lookup
     nodes={}
     dependencies=json.loads((folder/'dependencies.json').read_text())
     all_asset_paths=collections.defaultdict(list)
@@ -76,11 +92,20 @@ def main():
         if identity in asset_refs:return identity
         record=dict(source=dict(file=obj.assets_file.name,id=obj.path_id),type=obj.type.name)
         if identity in scene_paths:record['scene_path']=scene_paths[identity]
-        if obj.type.name in ['Texture2D','Material','Mesh','Sprite','GameObject','AnimationClip','PhysicsMaterial2D']:
+        if obj.type.name=='MonoBehaviour':
+            script=obj.read(check_read=False).m_Script
+            if script.m_PathID and script.read().m_ClassName=='SpriteShape':
+                data=obj.read_typetree(check_read=False);record['name']=data['m_Name']
+                record['asset_paths']=[p for p in all_asset_paths.get(data['m_Name'],[]) if p.endswith('.asset')] or ['Assets/MonoBehaviour/'+data['m_Name']+'.asset']
+        if obj.type.name in ['AudioSource','ParticleSystem']:
+            data=obj.read_typetree();go=obj.assets_file.objects[data['m_GameObject']['m_PathID']].read_typetree()
+            components=[c['component']['m_PathID'] for c in go['m_Component'] if obj.assets_file.objects[c['component']['m_PathID']].type.name==obj.type.name]
+            record['component_index']=components.index(obj.path_id)
+        if obj.type.name in ['Texture2D','Material','Mesh','Sprite','GameObject','AnimationClip','PhysicsMaterial2D','AudioClip']:
             data=obj.read_typetree();name=data.get('m_Name','')
             record['name']=name
             candidates=all_asset_paths.get(name,[])
-            extension={'Texture2D':'.png','Material':'.mat','Mesh':'.asset','Sprite':'.asset','GameObject':'.prefab','AnimationClip':'.anim','PhysicsMaterial2D':'.physicsMaterial2D'}[obj.type.name]
+            extension={'Texture2D':'.png','Material':'.mat','Mesh':'.asset','Sprite':'.asset','GameObject':'.prefab','AnimationClip':'.anim','PhysicsMaterial2D':'.physicsMaterial2D','AudioClip':'.ogg'}[obj.type.name]
             candidates=[p for p in candidates if p.endswith(extension)]
             record['asset_paths']=candidates
             if obj.type.name=='Texture2D':record.update(width=data['m_Width'],height=data['m_Height'],filter=data['m_TextureSettings']['m_FilterMode'])
@@ -106,7 +131,8 @@ def main():
         armor.append(record)
 
     rig_records={}
-    wanted={'CwPaintableMeshTexture','CwPaintableMesh','CwMaterialCloner','CharacterConfigApplier','SkirtBonesAnimator'}
+    wanted={'CwPaintableMeshTexture','CwPaintableMesh','CwMaterialCloner','CharacterConfigApplier','SkirtBonesAnimator',
+            'CharacterExpressions','CharacterImpactFeed','ImpactSFX','FootstepsSFX','VoiceSFX','DamageDecalPainter'}
     for name,rig in dependencies['rigs'].items():
         file=files[name];objects=rig['objects'];transforms=rig['transforms']
         go_to_t={str(t['m_GameObject']['m_PathID']):k for k,t in transforms.items()}
@@ -120,6 +146,15 @@ def main():
             if not s.m_PathID or s.read().m_ClassName not in wanted:continue
             cls,data=typed(obj)
             record=dict(id=obj.path_id,script=cls,path=path(go_to_t[str(data['m_GameObject']['m_PathID'])]),data=data)
+            bindings={}
+            def bind(value,key):
+                if isinstance(value,dict):
+                    if 'm_PathID'in value:bindings[key]=asset(file,value)
+                    else:
+                        for k,v in value.items():bind(v,key+'.'+k if key else k)
+                elif isinstance(value,list):
+                    for i,v in enumerate(value):bind(v,key+f'[{i}]')
+            bind(data,'');record['assets']=bindings
             if cls=='CwPaintableMeshTexture':record['texture']=asset(file,data['texture'])
             if cls=='CharacterConfigApplier':
                 record['textures']={k:asset(file,v) for k,v in data.items() if isinstance(v,dict) and 'm_PathID'in v and ('Texture' in k or 'texture' in k) and v['m_FileID']!=0}
@@ -127,8 +162,12 @@ def main():
         rig_records[name]=records
 
     scene_records=[]
-    wanted={'EnvironmentCustomizer','TimeOfDayController','GameWorld','WeatherManager','CustomizeEnviroProp','RegionConfiguration','TopRimRendererFeature',
-            'UniversalRenderPipelineAsset','Renderer2DData','Light2D'}
+    wanted={'EnvironmentCustomizer','TimeOfDayController','GameWorld','WeatherManager','LightningFlash','CustomizeEnviroProp','RegionConfiguration','TopRimRendererFeature','FlipViewRendererFeature',
+            'UniversalRenderPipelineAsset','Renderer2DData','Light2D','CameraLensModifier','CameraTargetPositioner','CameraAspectRatioFOV','CanvasAndCamera',
+            'CinemachineCamera','CinemachinePositionComposer','CinemachineGroupFraming','CinemachineTargetGroup','CinemachineBrain',
+            'VFXAndDecalManager','CwPaintDecal','CwPaintableMeshTexture','CwPaintableMesh','CwMaterialCloner','BloodOnTheGroundCustomizer','AudioObject',
+            'CustomizeGroundSpriteShapes','CinemachineBlenderSettings','StopAndPlayAmbienceLoop','AudioAmbienceFadeIn','AudioAndMusicManager'}
+    wanted.update({'BystanderCustomization','BystanderMovement','BystandersController','LightActivator'})
     for file in files.values():
         for obj in file.objects.values():
             if obj.type.name!='MonoBehaviour':continue
@@ -152,9 +191,17 @@ def main():
     for file in files.values():
         for obj in file.objects.values():
             if obj.type.name=='PhysicsMaterial2D':asset(file,dict(m_FileID=0,m_PathID=obj.path_id))
+    # All Sprite references, including older scene/rig records, use retained
+    # source identity. Duplicate display names must never select an asset.
+    from export_bloody_sprite_bindings import bind_sprites
+    bind_sprites(root,files,asset_refs)
     result=dict(source_apk_sha256=dependencies['source_apk_sha256'],armor=armor,rigs=rig_records,scene=scene_records,assets=asset_refs,
                 runtime_parity_verified=False)
-    target=folder/'original-visual-catalog.json';target.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+    target=folder/'original-visual-catalog.json'
+    temporary=target.with_suffix('.json.tmp');temporary.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+    from export_bloody_environment_hierarchy import main as add_environment_hierarchy
+    add_environment_hierarchy(temporary)
+    temporary.replace(target)
     print(json.dumps(dict(armor=len(armor),rigs={k:len(v) for k,v in rig_records.items()},scene=len(scene_records),assets=len(asset_refs),unresolved_assets=sum(not x.get('asset_paths') for x in asset_refs.values() if x['type']in ['Texture2D','Material','Mesh','Sprite','GameObject','AnimationClip']))))
 
 

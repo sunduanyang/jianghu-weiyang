@@ -1,0 +1,3371 @@
+{
+  "source_apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "source_component": 20419,
+  "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView",
+  "source_active": true,
+  "data": {
+    "m_ObjectHideFlags": 0,
+    "m_CorrespondingSourceObject": {
+      "fileID": 0,
+      "path": null
+    },
+    "m_PrefabInstance": {
+      "fileID": 0,
+      "path": null
+    },
+    "m_PrefabAsset": {
+      "fileID": 0,
+      "path": null
+    },
+    "m_GameObject": {
+      "fileID": 928,
+      "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+    },
+    "m_Enabled": 1,
+    "m_EditorHideFlags": 0,
+    "m_Script": {
+      "fileID": 11500000,
+      "guid": "252e49750d1acd02be6cfd20f5723a4d",
+      "type": 3,
+      "path": null
+    },
+    "m_Name": null,
+    "m_EditorClassIdentifier": null,
+    "animancer": {
+      "fileID": 15471,
+      "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+    },
+    "initialize": {
+      "fileID": 7400000,
+      "guid": "bfb3e5d2bdf91c0418e1e70b09aed8a5",
+      "type": 2,
+      "path": null
+    },
+    "slideIn": {
+      "fileID": 7400000,
+      "guid": "b8f5fc8820e62e140a3c5b0171dc77fe",
+      "type": 2,
+      "path": null
+    },
+    "slideOut": {
+      "fileID": 7400000,
+      "guid": "0ce0d0d3a306bf347bfb30879d304c95",
+      "type": 2,
+      "path": null
+    },
+    "panelsSlideIn": {
+      "fileID": 11400000,
+      "guid": "b29afebe6e85f004f88aa2b6e1a43403",
+      "type": 2,
+      "path": null
+    },
+    "panelsUnlock": {
+      "fileID": 11400000,
+      "guid": "bff88385e37fe904a9602af19549ab7f",
+      "type": 2,
+      "path": null
+    },
+    "panelsSlideOut": {
+      "fileID": 11400000,
+      "guid": "68f1e6e0bcc6d5f4dbd60b8cf3364549",
+      "type": 2,
+      "path": null
+    },
+    "panelsContact": {
+      "fileID": 11400000,
+      "guid": "5158b1daef0911b44a321584bf71984f",
+      "type": 2,
+      "path": null
+    },
+    "audioSource": {
+      "fileID": 6674,
+      "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+    }
+  },
+  "animancer": {
+    "m_ObjectHideFlags": 0,
+    "m_CorrespondingSourceObject": {
+      "fileID": 0,
+      "path": null
+    },
+    "m_PrefabInstance": {
+      "fileID": 0,
+      "path": null
+    },
+    "m_PrefabAsset": {
+      "fileID": 0,
+      "path": null
+    },
+    "m_GameObject": {
+      "fileID": 928,
+      "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+    },
+    "m_Enabled": 1,
+    "m_EditorHideFlags": 0,
+    "m_Script": {
+      "fileID": -536417829,
+      "guid": "e86e0641b240220728c5623a6ebf19e0",
+      "type": 3,
+      "path": null
+    },
+    "m_Name": null,
+    "m_EditorClassIdentifier": null,
+    "_Animator": {
+      "fileID": 6878,
+      "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+    },
+    "_ActionOnDisable": 0
+  },
+  "animator": {
+    "serializedVersion": 7,
+    "m_ObjectHideFlags": 0,
+    "m_CorrespondingSourceObject": {
+      "fileID": 0,
+      "path": null
+    },
+    "m_PrefabInstance": {
+      "fileID": 0,
+      "path": null
+    },
+    "m_PrefabAsset": {
+      "fileID": 0,
+      "path": null
+    },
+    "m_GameObject": {
+      "fileID": 928,
+      "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+    },
+    "m_Enabled": 1,
+    "m_Avatar": {
+      "fileID": 0,
+      "path": null
+    },
+    "m_Controller": {
+      "fileID": 0,
+      "path": null
+    },
+    "m_CullingMode": 0,
+    "m_UpdateMode": 2,
+    "m_ApplyRootMotion": 0,
+    "m_LinearVelocityBlending": 0,
+    "m_StabilizeFeet": 0,
+    "m_AnimatePhysics": 0,
+    "m_WarningMessage": null,
+    "m_HasTransformHierarchy": 1,
+    "m_AllowConstantClipSamplingOptimization": 1,
+    "m_KeepAnimatorStateOnDisable": 0,
+    "m_WriteDefaultValuesOnDisable": 0
+  },
+  "host_components": [
+    {
+      "id": 12747,
+      "kind": "RectTransform",
+      "data": {
+        "serializedVersion": 2,
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 928,
+          "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+        },
+        "m_LocalRotation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        },
+        "m_LocalPosition": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_LocalScale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "m_ConstrainProportionsScale": 0,
+        "m_Children": [
+          {
+            "fileID": 11578,
+            "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer"
+          }
+        ],
+        "m_Father": {
+          "fileID": 14626,
+          "path": "CanvasAndCamera/Canvas/MainContainer"
+        },
+        "m_LocalEulerAnglesHint": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "m_AnchorMin": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchorMax": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "m_AnchoredPosition": {
+          "x": 0,
+          "y": 0
+        },
+        "m_SizeDelta": {
+          "x": 0,
+          "y": 0
+        },
+        "m_Pivot": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      }
+    },
+    {
+      "id": 8036,
+      "kind": "CanvasRenderer",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 928,
+          "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+        },
+        "m_CullTransparentMesh": 0
+      }
+    },
+    {
+      "id": 10880,
+      "kind": "Canvas",
+      "data": {
+        "serializedVersion": 3,
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 928,
+          "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+        },
+        "m_Enabled": 1,
+        "m_RenderMode": 0,
+        "m_Camera": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PlaneDistance": 100,
+        "m_PixelPerfect": 0,
+        "m_ReceivesEvents": 1,
+        "m_OverrideSorting": 1,
+        "m_OverridePixelPerfect": 0,
+        "m_SortingBucketNormalizedSize": 0,
+        "m_VertexColorAlwaysGammaSpace": 0,
+        "m_UseReflectionProbes": 0,
+        "m_AdditionalShaderChannelsFlag": 25,
+        "m_UpdateRectTransformForStandalone": 0,
+        "m_SortingLayerID": 1937360937,
+        "m_SortingOrder": 5000,
+        "m_TargetDisplay": 0
+      }
+    },
+    {
+      "id": 20419,
+      "kind": "MonoBehaviour",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 928,
+          "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 11500000,
+          "guid": "252e49750d1acd02be6cfd20f5723a4d",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "animancer": {
+          "fileID": 15471,
+          "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+        },
+        "initialize": {
+          "fileID": 7400000,
+          "guid": "bfb3e5d2bdf91c0418e1e70b09aed8a5",
+          "type": 2,
+          "path": null
+        },
+        "slideIn": {
+          "fileID": 7400000,
+          "guid": "b8f5fc8820e62e140a3c5b0171dc77fe",
+          "type": 2,
+          "path": null
+        },
+        "slideOut": {
+          "fileID": 7400000,
+          "guid": "0ce0d0d3a306bf347bfb30879d304c95",
+          "type": 2,
+          "path": null
+        },
+        "panelsSlideIn": {
+          "fileID": 11400000,
+          "guid": "b29afebe6e85f004f88aa2b6e1a43403",
+          "type": 2,
+          "path": null
+        },
+        "panelsUnlock": {
+          "fileID": 11400000,
+          "guid": "bff88385e37fe904a9602af19549ab7f",
+          "type": 2,
+          "path": null
+        },
+        "panelsSlideOut": {
+          "fileID": 11400000,
+          "guid": "68f1e6e0bcc6d5f4dbd60b8cf3364549",
+          "type": 2,
+          "path": null
+        },
+        "panelsContact": {
+          "fileID": 11400000,
+          "guid": "5158b1daef0911b44a321584bf71984f",
+          "type": 2,
+          "path": null
+        },
+        "audioSource": {
+          "fileID": 6674,
+          "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+        }
+      }
+    },
+    {
+      "id": 20802,
+      "kind": "MonoBehaviour",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 928,
+          "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": -765806418,
+          "guid": "d3e719b59ab71ba3f6b398058c866280",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "m_Material": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_Color": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 0
+        },
+        "m_RaycastTarget": 1,
+        "m_RaycastPadding": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 0
+        },
+        "m_Maskable": 1,
+        "m_OnCullStateChanged": {
+          "m_PersistentCalls": {
+            "m_Calls": []
+          }
+        },
+        "m_Sprite": {
+          "fileID": 21300000,
+          "guid": "5e96b81426c299840856d1fece902529",
+          "type": 2,
+          "path": null
+        },
+        "m_Type": 0,
+        "m_PreserveAspect": 0,
+        "m_FillCenter": 1,
+        "m_FillMethod": 4,
+        "m_FillAmount": 1,
+        "m_FillClockwise": 1,
+        "m_FillOrigin": 0,
+        "m_UseSpriteMesh": 0,
+        "m_PixelsPerUnitMultiplier": 1
+      }
+    },
+    {
+      "id": 19672,
+      "kind": "MonoBehaviour",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 928,
+          "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 1301386320,
+          "guid": "d3e719b59ab71ba3f6b398058c866280",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "m_IgnoreReversedGraphics": 1,
+        "m_BlockingObjects": 0,
+        "m_BlockingMask": {
+          "serializedVersion": 2,
+          "m_Bits": 4294967295
+        }
+      }
+    },
+    {
+      "id": 15385,
+      "kind": "CanvasGroup",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 928,
+          "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+        },
+        "m_Enabled": 0,
+        "m_Alpha": 0,
+        "m_Interactable": 1,
+        "m_BlocksRaycasts": 1,
+        "m_IgnoreParentGroups": 0
+      }
+    },
+    {
+      "id": 6674,
+      "kind": "AudioSource",
+      "data": {
+        "serializedVersion": 4,
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 928,
+          "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+        },
+        "m_Enabled": 1,
+        "OutputAudioMixerGroup": {
+          "fileID": 24300034,
+          "guid": "8e1ba5d453a1f1b4e80822b2d9917e60",
+          "type": 2,
+          "path": null
+        },
+        "m_audioClip": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_Resource": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PlayOnAwake": 0,
+        "m_Volume": 1,
+        "m_Pitch": 1,
+        "Loop": 0,
+        "Mute": 0,
+        "Spatialize": 0,
+        "SpatializePostEffects": 0,
+        "Priority": 128,
+        "DopplerLevel": 1,
+        "MinDistance": 1,
+        "MaxDistance": 500,
+        "Pan2D": 0,
+        "rolloffMode": 0,
+        "BypassEffects": 0,
+        "BypassListenerEffects": 0,
+        "BypassReverbZones": 0,
+        "rolloffCustomCurve": {
+          "serializedVersion": 2,
+          "m_Curve": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 0,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 1,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 0,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "panLevelCustomCurve": {
+          "serializedVersion": 2,
+          "m_Curve": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 0,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "spreadCustomCurve": {
+          "serializedVersion": 2,
+          "m_Curve": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 0,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        },
+        "reverbZoneMixCustomCurve": {
+          "serializedVersion": 2,
+          "m_Curve": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 0,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ],
+          "m_PreInfinity": 2,
+          "m_PostInfinity": 2,
+          "m_RotationOrder": 4
+        }
+      }
+    },
+    {
+      "id": 20923,
+      "kind": "MonoBehaviour",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 928,
+          "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": 1980459831,
+          "guid": "d3e719b59ab71ba3f6b398058c866280",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "m_UiScaleMode": 1,
+        "m_ReferencePixelsPerUnit": 100,
+        "m_ScaleFactor": 1,
+        "m_ReferenceResolution": {
+          "x": 2000,
+          "y": 1080
+        },
+        "m_ScreenMatchMode": 1,
+        "m_MatchWidthOrHeight": 0.5,
+        "m_PhysicalUnit": 3,
+        "m_FallbackScreenDPI": 96,
+        "m_DefaultSpriteDPI": 96,
+        "m_DynamicPixelsPerUnit": 1,
+        "m_PresetInfoIsWorld": 0
+      }
+    },
+    {
+      "id": 6878,
+      "kind": "Animator",
+      "data": {
+        "serializedVersion": 7,
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 928,
+          "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+        },
+        "m_Enabled": 1,
+        "m_Avatar": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_Controller": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_CullingMode": 0,
+        "m_UpdateMode": 2,
+        "m_ApplyRootMotion": 0,
+        "m_LinearVelocityBlending": 0,
+        "m_StabilizeFeet": 0,
+        "m_AnimatePhysics": 0,
+        "m_WarningMessage": null,
+        "m_HasTransformHierarchy": 1,
+        "m_AllowConstantClipSamplingOptimization": 1,
+        "m_KeepAnimatorStateOnDisable": 0,
+        "m_WriteDefaultValuesOnDisable": 0
+      }
+    },
+    {
+      "id": 15471,
+      "kind": "MonoBehaviour",
+      "data": {
+        "m_ObjectHideFlags": 0,
+        "m_CorrespondingSourceObject": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabInstance": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_PrefabAsset": {
+          "fileID": 0,
+          "path": null
+        },
+        "m_GameObject": {
+          "fileID": 928,
+          "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+        },
+        "m_Enabled": 1,
+        "m_EditorHideFlags": 0,
+        "m_Script": {
+          "fileID": -536417829,
+          "guid": "e86e0641b240220728c5623a6ebf19e0",
+          "type": 3,
+          "path": null
+        },
+        "m_Name": null,
+        "m_EditorClassIdentifier": null,
+        "_Animator": {
+          "fileID": 6878,
+          "path": "CanvasAndCamera/Canvas/MainContainer/TransitionView"
+        },
+        "_ActionOnDisable": 0
+      }
+    }
+  ],
+  "source_node_paths": [
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/LeftSide",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/Vignette/QuarterCircle_3",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/Vignette/BlackFill_Left",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/Vignette/BlackFill_Bottom",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/Vignette",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/RightSide/RoundPiece_FG",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/RightSide/RoundPiece_FG/LoadingBar_Filled",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/Vignette/BlackFill_Top",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/Vignette/QuarterCircle_1",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/Vignette/QuarterCircle_2",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/RightSide/RoundPiece_FG/LoadingBar",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/Vignette/BlackFill_Right",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/RightSide",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/RightSide/MetalParts",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/LeftSide/MetalParts",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/RightSide/WoodPanel",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/LeftSide/RoundPiece_BG",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/Vignette/QuarterCircle_4",
+    "CanvasAndCamera/Canvas/MainContainer/TransitionView/MainContainer/LeftSide/WoodPanel"
+  ],
+  "clips": {
+    "initialize": {
+      "name": "TransitionScreen_Initialize",
+      "source": "AnimationClip/TransitionScreen_Initialize.anim",
+      "resource": "OriginalTransitionView/TransitionScreen_Initialize",
+      "sha256": "557bfd5b4fc94fcd1e948e469d5658c3775924cb2672b47f913b4dce1133e1c9",
+      "events": [],
+      "duration": 0,
+      "legacy": false,
+      "curves": [
+        {
+          "path": "MainContainer",
+          "attribute": "m_IsActive",
+          "class_id": 1,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": null,
+          "attribute": "m_Enabled",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        }
+      ]
+    },
+    "slideIn": {
+      "name": "TransitionScreen_SlideIn",
+      "source": "AnimationClip/TransitionScreen_SlideIn.anim",
+      "resource": "OriginalTransitionView/TransitionScreen_SlideIn",
+      "sha256": "0904d2fe0ccce75cd79897106260ac9b8bbc8a7926f17da3455b7d04262b3780",
+      "events": [
+        {
+          "time": 0.016666668,
+          "functionName": "PlaySlideIn",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0,
+          "intParameter": 0,
+          "messageOptions": 0
+        },
+        {
+          "time": 0.033333335,
+          "functionName": "PlayContact",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0,
+          "intParameter": 0,
+          "messageOptions": 0
+        }
+      ],
+      "duration": 0.41666666,
+      "legacy": false,
+      "curves": [
+        {
+          "path": "MainContainer/LeftSide",
+          "attribute": "m_IsActive",
+          "class_id": 1,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide",
+          "attribute": "m_Pivot.x",
+          "class_id": 224,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 1.8106079,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 1,
+              "inSlope": 1.7393759e-06,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/MetalParts",
+          "attribute": "m_Color.r",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.61647755,
+              "inSlope": 3.9594224e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/MetalParts",
+          "attribute": "m_Color.g",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.61647755,
+              "inSlope": 3.9594224e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/MetalParts",
+          "attribute": "m_Color.b",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.61647755,
+              "inSlope": 3.9594224e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/RoundPiece_BG",
+          "attribute": "m_Color.r",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.61647755,
+              "inSlope": 3.9594224e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/RoundPiece_BG",
+          "attribute": "m_Color.g",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.61647755,
+              "inSlope": 3.9594224e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/RoundPiece_BG",
+          "attribute": "m_Color.b",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.61647755,
+              "inSlope": 3.9594224e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/WoodPanel",
+          "attribute": "m_Color.r",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.7,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.4245933,
+              "inSlope": 5.909586e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.4245933,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/WoodPanel",
+          "attribute": "m_Color.g",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.7,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.4245933,
+              "inSlope": 5.909586e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.4245933,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/WoodPanel",
+          "attribute": "m_Color.b",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.7,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.4245933,
+              "inSlope": 5.909586e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.4245933,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide",
+          "attribute": "m_IsActive",
+          "class_id": 1,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide",
+          "attribute": "m_Pivot.x",
+          "class_id": 224,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": -0.7954407,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": -2.220446e-15,
+              "inSlope": -1.7068305e-06,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/MetalParts",
+          "attribute": "m_Color.r",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.61647755,
+              "inSlope": 3.9594224e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/MetalParts",
+          "attribute": "m_Color.g",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.61647755,
+              "inSlope": 3.9594224e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/MetalParts",
+          "attribute": "m_Color.b",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.61647755,
+              "inSlope": 3.9594224e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/RoundPiece_FG",
+          "attribute": "m_Color.r",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.61647755,
+              "inSlope": 3.9594224e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/RoundPiece_FG",
+          "attribute": "m_Color.g",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.61647755,
+              "inSlope": 3.9594224e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/RoundPiece_FG",
+          "attribute": "m_Color.b",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.61647755,
+              "inSlope": 3.9594224e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/WoodPanel",
+          "attribute": "m_Color.r",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.7,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.4245933,
+              "inSlope": 5.909586e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.4245933,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/WoodPanel",
+          "attribute": "m_Color.g",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.7,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.4245933,
+              "inSlope": 5.909586e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.4245933,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/WoodPanel",
+          "attribute": "m_Color.b",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.7,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.4245933,
+              "inSlope": 5.909586e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.4245933,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/Vignette",
+          "attribute": "m_Alpha",
+          "class_id": 225,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.033333335,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 0.9883546,
+              "inSlope": -4.208722e-06,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 0.9883546,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/Vignette",
+          "attribute": "m_IsActive",
+          "class_id": 1,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer",
+          "attribute": "m_IsActive",
+          "class_id": 1,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/RoundPiece_FG/LoadingBar_Filled",
+          "attribute": "m_IsActive",
+          "class_id": 1,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": "Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.16666667,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.41666666,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/RoundPiece_FG/LoadingBar_Filled",
+          "attribute": "m_FillAmount",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0.16666667,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": 12.000001,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 1,
+              "inSlope": 12.000001,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        }
+      ]
+    },
+    "slideOut": {
+      "name": "TransitionScreen_SlideOut",
+      "source": "AnimationClip/TransitionScreen_SlideOut.anim",
+      "resource": "OriginalTransitionView/TransitionScreen_SlideOut",
+      "sha256": "46c603a40e71c6cbd14e4329b760ddc0627311185a05c2e4fbf02addeeb7a2b7",
+      "events": [
+        {
+          "time": 0,
+          "functionName": "PlaySlideOut",
+          "data": null,
+          "objectReferenceParameter": {
+            "fileID": 0
+          },
+          "floatParameter": 0,
+          "intParameter": 0,
+          "messageOptions": 0
+        }
+      ],
+      "duration": 0.5,
+      "legacy": false,
+      "curves": [
+        {
+          "path": null,
+          "attribute": "m_Enabled",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide",
+          "attribute": "m_IsActive",
+          "class_id": 1,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": "Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide",
+          "attribute": "m_Pivot.x",
+          "class_id": 224,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 2,
+              "inSlope": 9.008927,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 2,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/MetalParts",
+          "attribute": "m_Color.r",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/MetalParts",
+          "attribute": "m_Color.g",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/MetalParts",
+          "attribute": "m_Color.b",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/RoundPiece_BG",
+          "attribute": "m_Color.r",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/RoundPiece_BG",
+          "attribute": "m_Color.g",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/RoundPiece_BG",
+          "attribute": "m_Color.b",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/WoodPanel",
+          "attribute": "m_Color.r",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.4245933,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0.7,
+              "inSlope": -2.3841858e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.7,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/WoodPanel",
+          "attribute": "m_Color.g",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.4245933,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0.7,
+              "inSlope": -2.3841858e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.7,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/LeftSide/WoodPanel",
+          "attribute": "m_Color.b",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.4245933,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0.7,
+              "inSlope": -2.3841858e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.7,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide",
+          "attribute": "m_IsActive",
+          "class_id": 1,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": "Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide",
+          "attribute": "m_Pivot.x",
+          "class_id": 224,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": -1,
+              "inSlope": -9.00089,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": -1,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/MetalParts",
+          "attribute": "m_Color.r",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/MetalParts",
+          "attribute": "m_Color.g",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/MetalParts",
+          "attribute": "m_Color.b",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.801,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/WoodPanel",
+          "attribute": "m_Color.r",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.4245933,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0.7,
+              "inSlope": -2.3841858e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.7,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/WoodPanel",
+          "attribute": "m_Color.g",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.4245933,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0.7,
+              "inSlope": -2.3841858e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.7,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/WoodPanel",
+          "attribute": "m_Color.b",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.4245933,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0.7,
+              "inSlope": -2.3841858e-07,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.7,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/Vignette",
+          "attribute": "m_Alpha",
+          "class_id": 225,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.9883546,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.083333336,
+              "value": 4.6359173e-08,
+              "inSlope": 2.1207788e-06,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/Vignette",
+          "attribute": "m_IsActive",
+          "class_id": 1,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer",
+          "attribute": "m_IsActive",
+          "class_id": 1,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": "Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.25,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": "-Infinity",
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/RoundPiece_FG/LoadingBar_Filled",
+          "attribute": "m_IsActive",
+          "class_id": 1,
+          "script": {
+            "fileID": 0
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 1,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/RoundPiece_FG",
+          "attribute": "m_Color.r",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/RoundPiece_FG",
+          "attribute": "m_Color.g",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        },
+        {
+          "path": "MainContainer/RightSide/RoundPiece_FG",
+          "attribute": "m_Color.b",
+          "class_id": 114,
+          "script": {
+            "fileID": -765806418,
+            "guid": "d3e719b59ab71ba3f6b398058c866280",
+            "type": 3
+          },
+          "keys": [
+            {
+              "serializedVersion": 3,
+              "time": 0,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            },
+            {
+              "serializedVersion": 3,
+              "time": 0.5,
+              "value": 0.61647755,
+              "inSlope": 0,
+              "outSlope": 0,
+              "tangentMode": 1,
+              "weightedMode": 0,
+              "inWeight": 0.33333334,
+              "outWeight": 0.33333334
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "audio": {
+    "e3c3360881b89ec49a858a500952c22e": {
+      "name": "TransitionScreen_SlideIn_1",
+      "source": "AudioClip/TransitionScreen_SlideIn_1.ogg",
+      "resource": "OriginalTransitionView/TransitionScreen_SlideIn_1",
+      "sha256": "a6997b5f9f3a15f08d5b25a64fd190c40adf315a15b7986442791acd356b6a40"
+    },
+    "17dd681f0f8e7694fb2a742b818d3430": {
+      "name": "TransitionScreen_Unlock_4",
+      "source": "AudioClip/TransitionScreen_Unlock_4.ogg",
+      "resource": "OriginalTransitionView/TransitionScreen_Unlock_4",
+      "sha256": "db32d0f7a05c9a2c8244e8537e7eba1ccaee16c5452403da18dbdfd56c249911"
+    },
+    "6994cd36840e69849aceccf7f2fcbf50": {
+      "name": "TransitionScreen_SlideOut_1",
+      "source": "AudioClip/TransitionScreen_SlideOut_1.ogg",
+      "resource": "OriginalTransitionView/TransitionScreen_SlideOut_1",
+      "sha256": "2d9d721e9a8e8c2d00f871dcfbb3235b5f660e260f1078e9fcedb153a2809d4b"
+    },
+    "cd8c7a19da6b0cc419c5d2f82f5c677e": {
+      "name": "TransitionScreen_SlideOut_2",
+      "source": "AudioClip/TransitionScreen_SlideOut_2.ogg",
+      "resource": "OriginalTransitionView/TransitionScreen_SlideOut_2",
+      "sha256": "98ce272b186ac53c358126a8d59f2b8b3768dd76ac4e7ae1d67e9cf625f6c73c"
+    },
+    "0ed47f801a8f8a64d8b75499ff36179a": {
+      "name": "TransitionScreen_SlideOut_3",
+      "source": "AudioClip/TransitionScreen_SlideOut_3.ogg",
+      "resource": "OriginalTransitionView/TransitionScreen_SlideOut_3",
+      "sha256": "b72784119f5293485a4cb6e3c8918bdaa8cbaa4516ea67bc9a409b708a515d64"
+    },
+    "84094fddd6b10794f8f59e3ab02b0f59": {
+      "name": "TransitionScreen_Contact_2",
+      "source": "AudioClip/TransitionScreen_Contact_2.ogg",
+      "resource": "OriginalTransitionView/TransitionScreen_Contact_2",
+      "sha256": "58097f607680818c6059cf73d3acb0e4ac43b05698e130452677a8b82f8f7985"
+    }
+  },
+  "audio_objects": {
+    "panelsSlideIn": {
+      "m_Name": "AudioObject_TransitionScreen_SlideIn",
+      "loop": 0,
+      "pitch": {
+        "min": 0.75,
+        "max": 0.85
+      },
+      "volume": {
+        "min": 0,
+        "max": 0
+      },
+      "clips": [
+        "e3c3360881b89ec49a858a500952c22e"
+      ],
+      "source": "MonoBehaviour/AudioObject_TransitionScreen_SlideIn.asset"
+    },
+    "panelsUnlock": {
+      "m_Name": "AudioObject_TransitionScreen_Unlock",
+      "loop": 0,
+      "pitch": {
+        "min": 0.7,
+        "max": 0.75
+      },
+      "volume": {
+        "min": 0.25,
+        "max": 0.25
+      },
+      "clips": [
+        "17dd681f0f8e7694fb2a742b818d3430"
+      ],
+      "source": "MonoBehaviour/AudioObject_TransitionScreen_Unlock.asset"
+    },
+    "panelsSlideOut": {
+      "m_Name": "AudioObject_TransitionScreen_SlideOut",
+      "loop": 0,
+      "pitch": {
+        "min": 0.95,
+        "max": 1.05
+      },
+      "volume": {
+        "min": 0.35,
+        "max": 0.35
+      },
+      "clips": [
+        "6994cd36840e69849aceccf7f2fcbf50",
+        "cd8c7a19da6b0cc419c5d2f82f5c677e",
+        "0ed47f801a8f8a64d8b75499ff36179a"
+      ],
+      "source": "MonoBehaviour/AudioObject_TransitionScreen_SlideOut.asset"
+    },
+    "panelsContact": {
+      "m_Name": "AudioObject_TransitionScreen_Contact",
+      "loop": 0,
+      "pitch": {
+        "min": 1,
+        "max": 1
+      },
+      "volume": {
+        "min": 0.65,
+        "max": 0.65
+      },
+      "clips": [
+        "84094fddd6b10794f8f59e3ab02b0f59"
+      ],
+      "source": "MonoBehaviour/AudioObject_TransitionScreen_Contact.asset"
+    }
+  },
+  "initialize_usage": "Retained source field and clip. None of the nine source methods plays initialize; Attach does not fabricate that call.",
+  "audio_rng_order": [
+    "pitch_float_range",
+    "clip_int_range",
+    "volume_float_range",
+    "PlayOneShot_volumeScale"
+  ],
+  "source_play_fade": {
+    "duration": 0,
+    "mode": 2
+  }
+}

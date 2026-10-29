@@ -1,0 +1,92 @@
+{
+  "source_apk_sha256": "c9e4a52874f18c58363d976194227d68a699173d72925d22da34a75d0993f2ba",
+  "source_scene": "Game/Scenes/MainScene.unity",
+  "source_scene_sha256": "6cc1af4bb23b1b13df00b9d7dd93a0712b44be6d61b8d23b0684cb07cc7ad88b",
+  "source_component": 16512,
+  "path": "LocalControllers/TransitionController",
+  "data": {
+    "m_ObjectHideFlags": 0,
+    "m_CorrespondingSourceObject": {
+      "fileID": 0
+    },
+    "m_PrefabInstance": {
+      "fileID": 0
+    },
+    "m_PrefabAsset": {
+      "fileID": 0
+    },
+    "m_GameObject": {
+      "fileID": 318
+    },
+    "m_Enabled": 1,
+    "m_EditorHideFlags": 0,
+    "m_Script": {
+      "fileID": 11500000,
+      "guid": "9be9a62a62cd4266683cfa4349dd32a5",
+      "type": 3
+    },
+    "m_Name": null,
+    "m_EditorClassIdentifier": null,
+    "menuObjects": [
+      {
+        "fileID": 711
+      },
+      {
+        "fileID": 3271
+      },
+      {
+        "fileID": 4267
+      }
+    ],
+    "arenaObjects": [
+      {
+        "fileID": 4700
+      }
+    ],
+    "ngcSpawnTimeout": 15,
+    "coverDelay": 0.35
+  },
+  "cover_delay": 0.35,
+  "network_controller_spawn_timeout": 15,
+  "menu_objects": [
+    {
+      "reference": {
+        "fileID": 711
+      },
+      "path": "Character_Player_Menu"
+    },
+    {
+      "reference": {
+        "fileID": 3271
+      },
+      "path": "Character_Player_Menu/PlayerHeadTarget/PlayerInfoDisplayer"
+    },
+    {
+      "reference": {
+        "fileID": 4267
+      },
+      "path": "CanvasAndCamera/Canvas/MainContainer/TopBar_MainMenu"
+    }
+  ],
+  "arena_objects": [
+    {
+      "reference": {
+        "fileID": 4700
+      },
+      "path": "CanvasAndCamera/Canvas/MainContainer/PlayerControls"
+    }
+  ],
+  "enum_notes": "No Loading/Preparing value exists in original LocalGameState or NetworkedGameState. The intermediate lifecycle is cover -> runner teardown/event -> context switch -> new runner state events.",
+  "source_ctor_defaults": {
+    "cover_delay": 0.25,
+    "network_controller_spawn_timeout": 15
+  },
+  "source_native": {
+    "arena_move_next": "0x368a3f8",
+    "menu_move_next": "0x368a9a8",
+    "arena_context": "0x368a0c4",
+    "menu_context": "0x368a1d4",
+    "interstitial_predicate": "0x368a364",
+    "runner_destroyed_ui": "0x3416da8"
+  }
+}

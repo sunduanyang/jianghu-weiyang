@@ -37,7 +37,7 @@ public partial class JianghuApp {
             TalkTo(a);yield return WaitForCharacter(a);
             until=Time.realtimeSinceStartup+15;while(!InteractionDataReady&&Time.realtimeSinceStartup<until)yield return null;
             check("legacy talk entry opens the same new six-category screen",TopIs(ViewKind.Interaction)&&InteractionConversationOpen&&views.Count==1&&InteractionCategories.Length==6);
-            check("all six old conversation topics and twelve direct actions remain",interactionData["conversations"].A.Count==6&&interactionData["actions"].A.Count==12);
+            check("all six old conversation topics and fifteen direct actions remain",interactionData["conversations"].A.Count==6&&interactionData["actions"].A.Count==15);
             check("conversation preserves actual favors and introductions",InteractionSocial["favors"].A.Count>0&&InteractionSocial["introductions"].A.Count>0);
             interactionChoice="";SetTab(0);yield return CharacterPicture(output,"01-talk-categories");
             SetTab(5);yield return CharacterPicture(output,"02-services");ChooseInteraction("social:ask_aid");

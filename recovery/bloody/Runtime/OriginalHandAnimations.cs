@@ -12,6 +12,7 @@ public sealed class OriginalHandAnimations : MonoBehaviour {
     public string CurrentClip { get; private set; }
     OriginalRig owner;
     Animation animationSource;
+    Transform guardTarget;
     Dictionary<string,AnimationClip> clips;
     string[] attackUp=Array.Empty<string>(),attackDown=Array.Empty<string>();
     Vector3 rest;
@@ -22,6 +23,7 @@ public sealed class OriginalHandAnimations : MonoBehaviour {
     public void Initialize(OriginalRig rig,J data,Dictionary<string,AnimationClip> allClips) {
         owner=rig;clips=allClips;animationSource=rig.Resolve<Animation>(data["MainAnimation"]);
         Defending=data["Defending"].B;
+        attackUp=Names(data["AnimNames_AttackUp"]);attackDown=Names(data["AnimNames_AttackDown"]);
         // Start, 0x3417d28: both stored positions include the original +.15 X.
         rest=transform.localPosition+Vector3.right*.15f;guardX=rest.x;
         initialized=true;Invoke(nameof(StartDefendingCoroutine),1f);
@@ -37,6 +39,18 @@ public sealed class OriginalHandAnimations : MonoBehaviour {
         }
     }
     static J bundles;
+    public static Dictionary<string,AnimationClip> LoadOriginalClips() {
+        var source=Resources.Load<TextAsset>("OriginalAIClips");
+        if(source==null)throw new InvalidOperationException("OriginalAIClips source manifest missing");
+        var result=new Dictionary<string,AnimationClip>();
+        foreach(var entry in J.Parse(source.text).D) {
+            var clip=Resources.Load<AnimationClip>(entry.Value["resource"].S);
+            if(clip==null)throw new InvalidOperationException("Original AI clip resource missing: "+entry.Value["source"].S+" at "+entry.Value["resource"].S);
+            if(clip.name!=entry.Key)throw new InvalidOperationException("Original AI clip identity mismatch: "+entry.Key+" / "+clip.name);
+            result.Add(entry.Key,clip);
+        }
+        return result;
+    }
     static J Bundles {get {if(bundles==null)bundles=J.Parse(Resources.Load<TextAsset>("OriginalAIBundles").text);return bundles;}}
     static string[] Names(J list) {var result=new List<string>();foreach(var n in list.A)result.Add(n.S);return result.ToArray();}
     // Attack, 0x341884c. The native icall is AnimationState.set_time,
@@ -62,6 +76,7 @@ public sealed class OriginalHandAnimations : MonoBehaviour {
     void StartDefendingCoroutine() {
         if(!initialized||owner==null)return;
         if(owner.OriginalAIPlayerWeaponCOM==null){Invoke(nameof(StartDefendingCoroutine),.5f);return;}
+        guardTarget=owner.OriginalAIPlayerWeaponCOM;
         StartCoroutine(Defend());
     }
     IEnumerator Defend() {
@@ -73,7 +88,7 @@ public sealed class OriginalHandAnimations : MonoBehaviour {
             } else {
                 Stop();
                 Tween(new Vector3(guardX,0,0),1,Random.Range(reaction/2.5f,reaction),true);
-                var target=owner.OriginalAIPlayerWeaponCOM;
+                var target=guardTarget;
                 if(target!=null)Tween(new Vector3(0,target.position.y+Random.Range(-.1f,.1f),0),2,Random.Range(reaction/2.5f,reaction),true,true);
             }
             yield return new WaitForSeconds(Random.Range(reaction*.5f,reaction*2));
@@ -83,7 +98,7 @@ public sealed class OriginalHandAnimations : MonoBehaviour {
         // 0x36f3e6c is DOMoveY, while 0x36f4390 is DOLocalMoveX.
         motions.Add(new Motion{start=world?transform.position:transform.localPosition,target=target,axes=axes,duration=duration,outCirc=outCirc,world=world});
     }
-    void Update() {
+    public void AdvanceOriginalTweens() {
         // DOTween's default easing is OutQuad. Guard X/Y tweens explicitly
         // select Ease.OutCirc (21). New tweens are evaluated last as originally.
         for(int i=0;i<motions.Count;) {

@@ -44,9 +44,9 @@ public sealed partial class PhysicsDuel {
                 float servoError=Mathf.DeltaAngle(rb.rotation,target);
                 float parentSpeed=joint.connectedBody==null?0:joint.connectedBody.angularVelocity;
                 if(joint.useLimits) {
-                    float desiredJoint=joint.jointAngle-servoError;
+                    float desiredJoint=joint.CombatJointAngle()-servoError;
                     desiredJoint=Mathf.Clamp(desiredJoint,joint.limits.min+1,joint.limits.max-1);
-                    servoError=joint.jointAngle-desiredJoint;
+                    servoError=joint.CombatJointAngle()-desiredJoint;
                 }
                 joint.useMotor=true;
                 // Unity's positive 2D hinge speed rotates its owning body
@@ -54,7 +54,7 @@ public sealed partial class PhysicsDuel {
                 float speedLimit=360*Mathf.Clamp(speedScale,.15f,1.6f);
                 float speed=Mathf.Clamp(parentSpeed-servoError*frequency*3.5f,-speedLimit,speedLimit);
                 if(joint.useLimits) {
-                    speed=Mathf.Clamp(speed,-Mathf.Max(0,joint.jointAngle-joint.limits.min-1)*.75f/Time.fixedDeltaTime,Mathf.Max(0,joint.limits.max-joint.jointAngle-1)*.75f/Time.fixedDeltaTime);
+                    speed=Mathf.Clamp(speed,-Mathf.Max(0,joint.CombatJointAngle()-joint.limits.min-1)*.75f/Time.fixedDeltaTime,Mathf.Max(0,joint.limits.max-joint.CombatJointAngle()-1)*.75f/Time.fixedDeltaTime);
                 }
                 joint.motor=new JointMotor2D {motorSpeed=speed,maxMotorTorque=torqueLimit*strength};
                 return;
@@ -64,7 +64,7 @@ public sealed partial class PhysicsDuel {
             float velocity=rb.angularVelocity*Mathf.Deg2Rad;
             float acceleration=(kp*(error-velocity*dt)-kd*velocity)/(1+kd*dt+kp*dt*dt);
             float torque=Mathf.Clamp(Mathf.Max(rb.inertia,driveInertia)*acceleration,-torqueLimit,torqueLimit)*strength;
-            rb.AddTorque(torque);
+            rb.CombatAddTorque(torque);
         }
     }
 

@@ -36,7 +36,7 @@ public sealed partial class PhysicsDuel {
         Physics2D.SyncTransforms();
         for(int step=0;step<40;step++){
             rb.linearVelocity=Vector2.right*speed;weapon.SampleVelocity();body.SampleVelocity();
-            Clock+=Time.fixedDeltaTime;physicsStep++;combatPhysics.Simulate(Time.fixedDeltaTime);ResolveContacts();
+            Clock+=Time.fixedDeltaTime;physicsStep++;SimulateCombat(Time.fixedDeltaTime);ResolveContacts();
         }
         float first=1000-enemy.health;int firstHits=hits-before;
         int firstContactEvents=observed.events;
@@ -44,10 +44,10 @@ public sealed partial class PhysicsDuel {
         bool firstDetached=ReferenceCombat&&enemy.ReferenceSevered(partKey);
         // Leave contact, then hit again without paying / generating a gesture.
         rb.position=new Vector2(-.5f,4);rb.linearVelocity=Vector2.zero;
-        for(int step=0;testRecontact&&step<15;step++){Clock+=Time.fixedDeltaTime;physicsStep++;weapon.SampleVelocity();combatPhysics.Simulate(Time.fixedDeltaTime);ResolveContacts();}
+        for(int step=0;testRecontact&&step<15;step++){Clock+=Time.fixedDeltaTime;physicsStep++;weapon.SampleVelocity();SimulateCombat(Time.fixedDeltaTime);ResolveContacts();}
         for(int step=0;testRecontact&&step<40;step++){
             rb.linearVelocity=Vector2.right*speed;weapon.SampleVelocity();body.SampleVelocity();
-            Clock+=Time.fixedDeltaTime;physicsStep++;combatPhysics.Simulate(Time.fixedDeltaTime);ResolveContacts();
+            Clock+=Time.fixedDeltaTime;physicsStep++;SimulateCombat(Time.fixedDeltaTime);ResolveContacts();
         }
         var armor=DuelSourceEquipment.Armor(enemy.SourceEquipmentPacket,partKey);
         var material=DuelSourceEquipment.Surface(profile,false,shieldStrike);
@@ -71,5 +71,6 @@ public sealed partial class PhysicsDuel {
 // Acceptance-only observer; it does not calculate damage or alter contacts.
 public sealed class DuelImpactContactTrace : MonoBehaviour {
     public int events;public float firstSpeed;
-    void OnCollisionEnter2D(Collision2D collision){if(collision.contactCount==0)return;if(events++==0)firstSpeed=collision.GetContact(0).relativeVelocity.magnitude;}
+    void OnCollisionEnter2D(Collision2D collision){RecordCore(new DuelCollision(collision));}
+    public void RecordCore(DuelCollision collision){if(collision.contactCount==0)return;if(events++==0)firstSpeed=collision.GetContact(0).relativeVelocity.magnitude;}
 }

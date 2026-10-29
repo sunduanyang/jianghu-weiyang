@@ -7,12 +7,18 @@ using UnityEngine;
 public sealed partial class PhysicsDuel {
     // ReferenceContact delegates here. This is the shared formal entry for
     // sparring, robbery and assault; the separate preview is not involved.
-    void SourceEquipmentContact(DuelContact weapon,DuelContact other,Collision2D collision){
+    void SourceEquipmentContact(DuelContact weapon,DuelContact other,DuelCollision collision){
         if(referenceBindProbe){if(referenceProbeCollecting&&weapon.owner==player&&weapon.limb==player.sword&&other.owner==enemy&&(referenceProbeBody?other.kind!="sword"&&other.kind!="shield":other.limb==enemy.sword))referenceProbeContactEvents++;return;}
         if(!Live||weapon.owner==other.owner||collision.contactCount==0||weapon.owner.health<=0)return;
         if(weapon.kind!="sword"&&weapon.kind!="shield")return;
         var c=collision.GetContact(0);Vector2 velocity=c.relativeVelocity;float speed=velocity.magnitude;
-        if(other.kind=="sword"||other.kind=="shield"){if(speed>15&&Clock-weapon.owner.lastClash>.1f){weapon.owner.lastClash=Clock;blocks++;Impact(c.point,true,speed);}return;}
+        if(UseCorePhysics&&Arg("-coreContactTrace")=="1"&&collision.otherCollider.name=="kinetic probe")Debug.Log("CORE_CONTACT_TRACE "+J.O("speed",speed,"time",Clock,"live",Live,"own",weapon.kind,"other",other.kind,"other_health",other.owner.health,"part",other.limb.key));
+        if(other.kind=="sword"||other.kind=="shield"){
+            if(!referenceContactBaseline)weapon.owner.ReceiveSourceItemClash(weapon.limb,weapon.kind=="shield"&&weapon.owner.HasShield,other.owner,other.limb,other.kind=="shield"&&other.owner.HasShield,speed,collision.relativeVelocity.magnitude);
+            RecordGuardContact(weapon,other,speed);
+            float threshold=referenceContactBaseline?15:DuelSourceEquipment.ItemImpactThreshold(weapon.limb.strikeProfile??weapon.owner.weapon,weapon.kind=="shield"&&weapon.owner.HasShield);
+            if(speed>=threshold&&Clock-weapon.owner.lastClash>.1f){weapon.owner.lastClash=Clock;blocks++;Impact(c.point,true,speed);}return;
+        }
         var spec=weapon.limb.strikeProfile??weapon.owner.weapon;
         bool shield=weapon.kind=="shield"&&weapon.owner.HasShield;
         bool handle=collision.otherCollider!=weapon.limb.shape;
@@ -23,10 +29,21 @@ public sealed partial class PhysicsDuel {
         var armor=DuelSourceEquipment.Armor(other.owner.SourceEquipmentPacket,other.limb.key);
         var damage=DuelSourceEquipment.CalculateDamage(spec,velocity,armor,material,shield,weapon.owner.damageScale,weapon.owner.SourceNothingActive);
         float dealt=other.owner.ApplyReferenceDamage(other.limb.key,damage.local,c.point,material,damage.knockback);
-        if(dealt<=0)return;hits++;weapon.owner.landedHits++;weapon.owner.lastHit=Clock;strongestImpact=Mathf.Max(strongestImpact,speed);if(other.kind=="head")headHits++;
+        if(dealt<=0)return;RecordGuardBodyHit(weapon,other,handle);hits++;weapon.owner.landedHits++;weapon.owner.lastHit=Clock;strongestImpact=Mathf.Max(strongestImpact,speed);if(other.kind=="head")headHits++;
         Impact(c.point,false,dealt);floating.Add(new FloatingText{p=c.point,value=Mathf.CeilToInt(dealt).ToString(),life=.85f,color=vermilion});
     }
     public sealed partial class Fighter {
+        public float SourceClashStaminaSpent {get;private set;}
+        internal void ReceiveSourceItemClash(Limb item,bool isShield,Fighter attacker,Limb incoming,bool incomingShield,float contactSpeed,float relativeLinearSpeed){
+            var spec=item.strikeProfile??weapon;
+            if(contactSpeed<DuelSourceEquipment.ItemImpactThreshold(spec,isShield))return;
+            // SourcePrefab_HandItem.OnCollisionEnter2D 0x363f08c and the
+            // original equipment subscriptions: both shield events pay the
+            // incoming item's D-weighted stamina cost, capped at 2.5.
+            float cost=Mathf.Min(2.5f,relativeLinearSpeed*DuelSourceEquipment.ClashDamageStat(incoming.strikeProfile??attacker.weapon,incomingShield)/50);
+            if(isShield){SourceClashStaminaSpent+=ConsumeReferenceStamina(cost);if(relativeLinearSpeed>.5f)item.rb.linearVelocity=incoming.rb.linearVelocity;}
+            if(incomingShield)SourceClashStaminaSpent+=ConsumeReferenceStamina(cost);
+        }
         internal J SourceEquipmentPacket=>game.Campaign?game.campaign.battle["fighters"][human?0:1]:new J();
         public void BindEquipmentImpaleMaterials(){
             void Bind(Limb item,string slot,bool isShield){
@@ -81,7 +98,7 @@ public sealed partial class PhysicsDuel {
             float low=sourceRig?Mathf.Min(first,second):first,high=sourceRig?Mathf.Max(first,second):second;
             return Mathf.Max(0,low-angle,angle-high);
         }
-        float MeasuredLimitError(HingeJoint2D joint)=>LimitExcess(joint.jointAngle,joint.limits.min,joint.limits.max,SourceRigActive);
+        float MeasuredLimitError(HingeJoint2D joint)=>LimitExcess(joint.CombatJointAngle(),joint.limits.min,joint.limits.max,SourceRigActive);
         public void DrawSourceRig(bool debug){
             foreach(var pair in referenceBones){
                 var l=pair.Value;Color color=human?new Color(.35f,.53f,.51f):new Color(.64f,.38f,.30f);if(severed.Contains(pair.Key))color*=.65f;if(game.Clock<hitTint)color=new Color(.9f,.36f,.24f);

@@ -98,6 +98,9 @@ def income(n, place=None, profession=None):
     gross = (p['base'] + experience(n, profession)*.09) * p['demand'][place_archetype(n['place'] if place is None else place)] * aptitude
     if profession in ('镖师', '猎户'):
         gross += combat_attributes.rating(n)*.035
+    from . import crafts
+    if profession == n['career']['profession']:
+        gross *= crafts.work_capacity(n)
     return round(gross * (.45 if n['age_months'] < 192 else 1), 4)
 
 

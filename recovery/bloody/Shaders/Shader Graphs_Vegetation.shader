@@ -28,7 +28,6 @@ HLSLPROGRAM
 #pragma multi_compile _ USE_SHAPE_LIGHT_TYPE_3
 #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/Core2D.hlsl"
 #if !defined(USE_SHAPE_LIGHT_TYPE_0) && !defined(USE_SHAPE_LIGHT_TYPE_1) && !defined(USE_SHAPE_LIGHT_TYPE_2) && !defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 sampler2D _MainTex;
@@ -38,7 +37,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -68,10 +67,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -268,6 +267,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float u_xlat1;
@@ -461,7 +464,6 @@ bool u_xlatb20;
 
 #endif
 #if !defined(USE_SHAPE_LIGHT_TYPE_0) && !defined(USE_SHAPE_LIGHT_TYPE_1) && !defined(USE_SHAPE_LIGHT_TYPE_2) && defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 float2 _ShapeLightBlendFactors3;
@@ -476,7 +478,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -506,10 +508,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -706,6 +708,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float2 u_xlat1;
@@ -917,7 +923,6 @@ bool u_xlatb26;
 
 #endif
 #if !defined(USE_SHAPE_LIGHT_TYPE_0) && !defined(USE_SHAPE_LIGHT_TYPE_1) && defined(USE_SHAPE_LIGHT_TYPE_2) && !defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 float2 _ShapeLightBlendFactors2;
@@ -932,7 +937,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -962,10 +967,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -1162,6 +1167,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float2 u_xlat1;
@@ -1373,7 +1382,6 @@ bool u_xlatb26;
 
 #endif
 #if !defined(USE_SHAPE_LIGHT_TYPE_0) && !defined(USE_SHAPE_LIGHT_TYPE_1) && defined(USE_SHAPE_LIGHT_TYPE_2) && defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 float2 _ShapeLightBlendFactors2;
@@ -1392,7 +1400,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -1422,10 +1430,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -1622,6 +1630,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float2 u_xlat1;
@@ -1845,7 +1857,6 @@ float u_xlat16_33;
 
 #endif
 #if !defined(USE_SHAPE_LIGHT_TYPE_0) && defined(USE_SHAPE_LIGHT_TYPE_1) && !defined(USE_SHAPE_LIGHT_TYPE_2) && !defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 float2 _ShapeLightBlendFactors1;
@@ -1860,7 +1871,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -1890,10 +1901,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -2090,6 +2101,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float2 u_xlat1;
@@ -2301,7 +2316,6 @@ bool u_xlatb26;
 
 #endif
 #if !defined(USE_SHAPE_LIGHT_TYPE_0) && defined(USE_SHAPE_LIGHT_TYPE_1) && !defined(USE_SHAPE_LIGHT_TYPE_2) && defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 float2 _ShapeLightBlendFactors1;
@@ -2320,7 +2334,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -2350,10 +2364,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -2550,6 +2564,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float2 u_xlat1;
@@ -2773,7 +2791,6 @@ float u_xlat16_33;
 
 #endif
 #if !defined(USE_SHAPE_LIGHT_TYPE_0) && defined(USE_SHAPE_LIGHT_TYPE_1) && defined(USE_SHAPE_LIGHT_TYPE_2) && !defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 float2 _ShapeLightBlendFactors1;
@@ -2792,7 +2809,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -2822,10 +2839,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -3022,6 +3039,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float2 u_xlat1;
@@ -3245,7 +3266,6 @@ float u_xlat16_33;
 
 #endif
 #if !defined(USE_SHAPE_LIGHT_TYPE_0) && defined(USE_SHAPE_LIGHT_TYPE_1) && defined(USE_SHAPE_LIGHT_TYPE_2) && defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 float2 _ShapeLightBlendFactors1;
@@ -3268,7 +3288,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -3298,10 +3318,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -3498,6 +3518,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float2 u_xlat1;
@@ -3731,7 +3755,6 @@ float u_xlat16_36;
 
 #endif
 #if defined(USE_SHAPE_LIGHT_TYPE_0) && !defined(USE_SHAPE_LIGHT_TYPE_1) && !defined(USE_SHAPE_LIGHT_TYPE_2) && !defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 float2 _ShapeLightBlendFactors0;
@@ -3746,7 +3769,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -3776,10 +3799,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -3976,6 +3999,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float2 u_xlat1;
@@ -4187,7 +4214,6 @@ bool u_xlatb26;
 
 #endif
 #if defined(USE_SHAPE_LIGHT_TYPE_0) && !defined(USE_SHAPE_LIGHT_TYPE_1) && !defined(USE_SHAPE_LIGHT_TYPE_2) && defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 float2 _ShapeLightBlendFactors0;
@@ -4206,7 +4232,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -4236,10 +4262,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -4436,6 +4462,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float2 u_xlat1;
@@ -4659,7 +4689,6 @@ float u_xlat16_33;
 
 #endif
 #if defined(USE_SHAPE_LIGHT_TYPE_0) && !defined(USE_SHAPE_LIGHT_TYPE_1) && defined(USE_SHAPE_LIGHT_TYPE_2) && !defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 float2 _ShapeLightBlendFactors0;
@@ -4678,7 +4707,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -4708,10 +4737,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -4908,6 +4937,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float2 u_xlat1;
@@ -5131,7 +5164,6 @@ float u_xlat16_33;
 
 #endif
 #if defined(USE_SHAPE_LIGHT_TYPE_0) && !defined(USE_SHAPE_LIGHT_TYPE_1) && defined(USE_SHAPE_LIGHT_TYPE_2) && defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 float2 _ShapeLightBlendFactors0;
@@ -5154,7 +5186,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -5184,10 +5216,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -5384,6 +5416,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float2 u_xlat1;
@@ -5617,7 +5653,6 @@ float u_xlat16_36;
 
 #endif
 #if defined(USE_SHAPE_LIGHT_TYPE_0) && defined(USE_SHAPE_LIGHT_TYPE_1) && !defined(USE_SHAPE_LIGHT_TYPE_2) && !defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 float2 _ShapeLightBlendFactors0;
@@ -5636,7 +5671,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -5666,10 +5701,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -5866,6 +5901,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float2 u_xlat1;
@@ -6089,7 +6128,6 @@ float u_xlat16_33;
 
 #endif
 #if defined(USE_SHAPE_LIGHT_TYPE_0) && defined(USE_SHAPE_LIGHT_TYPE_1) && !defined(USE_SHAPE_LIGHT_TYPE_2) && defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 float2 _ShapeLightBlendFactors0;
@@ -6112,7 +6150,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -6142,10 +6180,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -6342,6 +6380,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float2 u_xlat1;
@@ -6575,7 +6617,6 @@ float u_xlat16_36;
 
 #endif
 #if defined(USE_SHAPE_LIGHT_TYPE_0) && defined(USE_SHAPE_LIGHT_TYPE_1) && defined(USE_SHAPE_LIGHT_TYPE_2) && !defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 float2 _ShapeLightBlendFactors0;
@@ -6598,7 +6639,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -6628,10 +6669,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -6828,6 +6869,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float2 u_xlat1;
@@ -7061,7 +7106,6 @@ float u_xlat16_36;
 
 #endif
 #if defined(USE_SHAPE_LIGHT_TYPE_0) && defined(USE_SHAPE_LIGHT_TYPE_1) && defined(USE_SHAPE_LIGHT_TYPE_2) && defined(USE_SHAPE_LIGHT_TYPE_3)
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 float2 _ShapeLightBlendFactors0;
@@ -7088,7 +7132,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -7118,10 +7162,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -7318,6 +7362,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 float4 u_xlat16_0;
 float2 u_xlat1;
@@ -7574,7 +7622,6 @@ HLSLPROGRAM
 #pragma target 3.5
 
 #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/Core2D.hlsl"
-float4 _TimeParameters;
 float _WindForce;
 sampler2D _MainTex;
 bool2 greaterThanEqual(float2 a,float2 b){return a>=b;}
@@ -7583,7 +7630,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float4 vs_INTERP2:TEXCOORD2;
@@ -7612,10 +7659,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -7813,6 +7860,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float3 u_xlat16_0;
 float u_xlat16_1;
 
@@ -7838,7 +7889,6 @@ HLSLPROGRAM
 #pragma target 3.5
 
 #include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/Core2D.hlsl"
-float4 _TimeParameters;
 float4 _RendererColor;
 float _WindForce;
 sampler2D _MainTex;
@@ -7848,7 +7898,7 @@ bool3 greaterThanEqual(float3 a,float3 b){return a>=b;}
 bool3 lessThan(float3 a,float3 b){return a<b;}
 bool4 greaterThanEqual(float4 a,float4 b){return a>=b;}
 bool4 lessThan(float4 a,float4 b){return a<b;}
-struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 color:COLOR; };
+struct appdata { float4 vertex:POSITION;float3 normal:NORMAL;float4 tangent:TANGENT;float4 texcoord:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 uv3:TEXCOORD3;float4 color:COLOR; };
 struct varying { float4 vertex:SV_POSITION;float4 vs_INTERP0:TEXCOORD0;
 float4 vs_INTERP1:TEXCOORD1;
 float3 vs_INTERP2:TEXCOORD2; };
@@ -7875,10 +7925,10 @@ bool u_xlatb17;
 
     u_xlat0.x = _TimeParameters.x * _WindForce;
     u_xlat0.x = u_xlat0.x * 0.25;
-    u_xlat5.xy = input.vertex.xyz.xy * unity_SpriteProps.xy;
+    u_xlat5.xy = input.vertex.xy * unity_SpriteProps.xy;
     u_xlat1.xyz = u_xlat5.yyy * transpose(unity_ObjectToWorld)[1].xyz;
     u_xlat5.xyz = transpose(unity_ObjectToWorld)[0].xyz * u_xlat5.xxx + u_xlat1.xyz;
-    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.xyz.zzz + u_xlat5.xyz;
+    u_xlat5.xyz = transpose(unity_ObjectToWorld)[2].xyz * input.vertex.zzz + u_xlat5.xyz;
     u_xlat5.xyz = u_xlat5.xyz + transpose(unity_ObjectToWorld)[3].xyz;
     u_xlat1.xy = u_xlat5.xx * float2(2.5,7.5) + u_xlat0.xx;
     u_xlat1.xy = u_xlat1.xy * float2(2.5,2.5);
@@ -8063,6 +8113,10 @@ bool u_xlatb17;
 
 }
 float4 frag(varying input):SV_Target { float4 result=0;
+float4 sourceFragCoord=input.vertex;
+#if UNITY_UV_STARTS_AT_TOP
+sourceFragCoord.y=_ScreenParams.y-sourceFragCoord.y;
+#endif
 float4 u_xlat0;
 bool u_xlatb0;
 float4 u_xlat1;

@@ -121,10 +121,6 @@ def prepare(backend_only=False, bundle_python=False, include_local_save=False):
     import bake_ui
     bake_ui.bake_ui()
     bake_ui.bake_atlas()
-    import import_city_biomes
-    import_city_biomes.main()
-    import import_city_settlements
-    import_city_settlements.main()
     import bake_paper_cast
     bake_paper_cast.bake()
     if bundle_python:
