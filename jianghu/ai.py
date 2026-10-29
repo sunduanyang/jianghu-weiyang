@@ -149,6 +149,20 @@ player_memory_id引用已提供的最近玩家往来，memory_ids只引用本人
 只输出给定JSON schema的简短摘要，不输出长篇推演。'''
 
 
+def participation(world):
+    """Pure: how much of what people are doing right now was decided or voiced by the model."""
+    alive = [n for n in world.npcs.values() if n['alive']]
+    contacted = [n for n in alive if npc_attention.contact(world, n)]
+    def model_plan(n):
+        return (n.get('plan') or {}).get('source') == 'AI'
+    m = world.metrics
+    return dict(model_undertakings=sum(model_plan(n) and n['plan'].get('intent') in undertakings.KINDS for n in alive),
+                contacted_people=len(contacted),
+                contacted_model_led=sum(model_plan(n) or llm_policy.current(world, n) is not None for n in contacted),
+                undertakings_chosen=m.get('ai_undertakings_chosen', 0), undertakings_kept=m.get('ai_undertakings_kept', 0),
+                reactions_completed=m.get('player_reactions', 0))
+
+
 class ModelRequestError(RuntimeError):
     def __init__(self,message,count,usage):
         super().__init__(message);self.request_count=count;self.usage=usage
@@ -626,7 +640,7 @@ class AIManager:
                 continue
             self.stats['busy'] = True
             thinking=ctx.get('_thinking',{})
-            self.stats.update(current_npc=ctx['npc_id'],current_name=ctx['self']['name'],current_stage='准备模型',current_depth=thinking.get('label','日常思考'))
+            self.stats.update(current_npc=ctx['npc_id'],current_name=(ctx.get('self') or ctx.get('teller') or {}).get('name',''),current_stage='准备模型',current_depth=thinking.get('label','日常思考'))
             sent=[0]
             def on_request(stage):
                 sent[0]+=1;self.stats['calls']+=1;self.stats['current_stage']=stage

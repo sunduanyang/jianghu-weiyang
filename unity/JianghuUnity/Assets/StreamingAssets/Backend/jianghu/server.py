@@ -7,7 +7,7 @@ import time
 import traceback
 from urllib.parse import parse_qs, urlparse
 
-from .ai import AIManager, DEFAULT_CONFIG, continuous_config
+from .ai import AIManager, DEFAULT_CONFIG, continuous_config, participation
 from .engine import World
 from .store import Store
 from . import reactions
@@ -93,6 +93,7 @@ class Game:
         self.ai.stats['plan_executions']=self.world.metrics.get('ai_executed_actions',0)
         self.ai.stats['policy_actions']=self.world.metrics.get('ai_policy_actions',0)
         self.ai.stats['policy_ranking_changes']=self.world.metrics.get('ai_policy_ranking_changes',0)
+        self.ai.stats.update(participation(self.world))
         return {**self.world.summary(), 'ai': self.ai.view(), 'job': self.job.copy(),
                 'autoplay': self.autoplay, 'database': str(self.path),
                 'ai_budget_wait': False,
