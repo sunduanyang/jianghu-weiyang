@@ -16,7 +16,7 @@ class PlayerFirstTurnTests(unittest.TestCase):
         place = w.npcs[1]['place']
         for n in w.npcs.values():
             n.update(place=place, age_months=360, health=100., time_left=4)
-            n['traits'].update(loyalty=90., compassion=90.)
+            n['traits'].update(integrity=90., kindness=90.)
         w.reindex()
         protagonist.perform(w, dict(action='create', name='先行人', age=24, sex='女', place=place, month=0, revision=0))
         self.n=w.npcs[1]
@@ -45,9 +45,9 @@ class PlayerFirstTurnTests(unittest.TestCase):
         self.act('praise');self.act('teach',art=art)
         self.assertEqual(n['monthly_actions'],[]);self.assertEqual(n['time_left'],4)
         weeks=[];execute=w.execute
-        def run(actor,action):
+        def run(actor,action,legal=None):
             if actor['id']==1:weeks.append(w.phase)
-            return execute(actor,action)
+            return execute(actor,action,legal=legal)
         with patch.object(w,'choose',side_effect=lambda actor,actions:next(a for a in actions if a['kind']=='rest')),patch.object(w,'execute',side_effect=run):
             self.end()
         self.assertEqual(weeks,[1,2,3,4])

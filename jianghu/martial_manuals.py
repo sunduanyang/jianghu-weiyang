@@ -2,6 +2,20 @@
 from . import items, martial, martial_catalog, social, player_social
 
 
+# NPCs seek out a new art at most once in this many months (the player is limited by action points).
+REQUEST_MONTHS = 6
+
+
+def unlearned(w, pupil):
+    """Whether the pupil still carries a manual for an art they have not learned."""
+    arts = [items.spec(i).get('art') for i in items.objects(w, pupil['id'])]
+    arts = [a for a in arts if a]
+    if not arts:
+        return False
+    known = (martial.resolve(w, pupil) or {}).get('known', [])
+    return any(a not in known for a in arts)
+
+
 def held(w, owner, art_id):
     return any(items.spec(i).get('art') == art_id for i in items.objects(w, owner))
 
@@ -31,6 +45,10 @@ def reason(w, owner, teacher, art_id):
     key = f"{teacher['id']}:{art_id}"
     if not player and pupil['martial'].get('requests', {}).get(key) == w.month:
         return '本月已向这位老师求取过此秘籍'
+    if not player and unlearned(w, pupil):
+        return '行囊中尚有未曾研习的秘籍，先学会再求新的'
+    if not player and not window_open(w, pupil):
+        return f'近{REQUEST_MONTHS}个月内已求过师，先把所学练熟'
     if player and h['points'] < 2:
         return '求师需要2行动力'
     if not player and (pupil['time_left'] < 1 or not social.available(w, pupil)):
@@ -46,11 +64,24 @@ def offers(w, teacher):
                  reason=reason(w, 'player', teacher, key)) for key in known]
 
 
+def window_open(w, pupil):
+    """Whether enough months have passed since this NPC last asked anyone for an art."""
+    return w.month - max(pupil['martial'].get('requests', {}).values(), default=-99) >= REQUEST_MONTHS
+
+
+def ready(w, pupil):
+    """Pupil-side conditions an NPC must meet before asking anyone for a new art."""
+    return window_open(w, pupil) and pupil['time_left'] >= 1 and not unlearned(w, pupil)
+
+
 def candidates(w, pupil, teacher):
     if pupil['age_months'] < 120 or pupil['relationships'].get(str(teacher['id']), {}).get('affinity', 0) < 6:
         return []
+    if not ready(w, pupil):
+        return []
     known = (martial.resolve(w, teacher) or {}).get('known', [])
-    for key in sorted(known, key=lambda k: (-martial_catalog.ARTS[k]['grade'], k)):
+    mine = set((martial.resolve(w, pupil) or {}).get('known', []))
+    for key in sorted((k for k in known if k not in mine), key=lambda k: (-martial_catalog.ARTS[k]['grade'], k)):
         if not reason(w, pupil['id'], teacher, key):
             return [dict(id=f"seek_teacher:{teacher['id']}:{key}", kind='seek_teacher',
                          target=teacher['id'], art=key,
@@ -68,8 +99,13 @@ def request(w, owner, teacher_id, art_id, action=None):
     relation = (w.player['ties'].get(str(teacher_id), {}) if player else
                 pupil['relationships'].get(str(teacher_id), {}))
     accepted = (relation.get('affinity', 0) > -10 and relation.get('trust', 0) > -10 and
-                teacher['traits']['loyalty'] + teacher['traits']['compassion'] + relation.get('affinity', 0) >= 65)
-    facts = dict(teacher=teacher_id, pupil=str(owner), art=art_id, accepted=accepted, npc_time_cost=0 if player else 1)
+                teacher['traits']['integrity'] + teacher['traits']['kindness'] + relation.get('affinity', 0) >= 65)
+    # A formal master in the pupil's own sect passes on that sect's arts.
+    from . import sect_life
+    lineage = player and (sect_life.master(w) or {}).get('id') == teacher_id and relation.get('affinity', 0) > -10
+    accepted = accepted or lineage
+    facts = dict(teacher=teacher_id, pupil=str(owner), art=art_id, accepted=accepted, npc_time_cost=0 if player else 1,
+                 lineage=bool(lineage))
     if action:
         facts.update(action=action['id'], actor=pupil['id'], decision_source=pupil['choice_source'], time_cost=action['time_cost'])
     item = None

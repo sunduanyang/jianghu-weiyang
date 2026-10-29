@@ -52,8 +52,10 @@ public partial class JianghuApp {
             if(epoch!=socialNetworkEpoch||FocusPersonId!=id||SelectedPerson!=id)return;
             if(j["player_social"]["revision"].I<InteractionSocial["revision"].I)return;
             bool wasPending=InteractionSocial["pending"].B;
+            bool reactionWas=Person["player_reactions"].A.Any(r=>r["status"].S=="pending");
             Person=j;ApplySocialSnapshot(id,j["player_social"]);
             if(wasPending&&!j["player_social"]["pending"].B){StartCoroutine(Client.Refresh());if(TopIs(ViewKind.Interaction))LoadInteraction();}
+            else if(reactionWas&&!j["player_reactions"].A.Any(r=>r["status"].S=="pending")&&TopIs(ViewKind.Interaction))LoadInteraction();
         },false);
         conversationPolling=false;
     }
@@ -144,6 +146,7 @@ public partial class JianghuApp {
         if(request==null){T("对方拒绝请求后，可在这里选择一种性格继续说服。",sub);T("刚正 · 仁善 · 中庸 · 叛逆 · 唯我",text);T("台词会结合原请求与对方说出的拒绝理由拟定，每种性格都可能成功或被拒绝。",small);return;}
         T("你："+request["text"].S,small);T(CharacterName+"："+request["reply"].S,text);
         if(request["can_persuade"].B)T("选择一句继续说服 · 回应耗1行动力 · 对方仍可拒绝",small);
+        if(social["stance"].Has)T("对方处世立场："+social["stance"]["label"].S+"。"+social["stance"]["text"].S+"与之相合的说法较易入耳，但不保证成功。",small);
         else if(request["can_retry_options"].B){
             T(request["options_error"].S,small);
             if(Btn("重新拟定五种说服方式",Paused&&W["ai"]["config"]["enabled"].B))Later(()=>Persuade(request["id"].I));
@@ -151,7 +154,8 @@ public partial class JianghuApp {
         var style=new GUIStyle(rowStyle){wordWrap=true,fontSize=16,alignment=TextAnchor.MiddleLeft,padding=new RectOffset(12,12,8,8)};
         foreach(var option in request["persuasion_options"].A){
             bool selectedOption=!request["selected_option"].Has||request["selected_option"].S==option["id"].S;
-            string line="【"+option["label"].S+"】 "+option["text"].S;
+            bool fits=social["stance"]["key"].S==option["id"].S;
+            string line="【"+option["label"].S+(fits?" · 相合":"")+"】 "+option["text"].S;
             float height=Mathf.Max(50,style.CalcHeight(new GUIContent(line),InteractionPanel.width-100));
             bool previous=GUI.enabled;GUI.enabled=previous&&request["can_persuade"].B&&selectedOption&&Paused&&!Client.Busy&&W["ai"]["config"]["enabled"].B;
             if(GUILayout.Button(line,style,GUILayout.MinHeight(height))){int requestId=request["id"].I;string optionId=option["id"].S;Later(()=>Persuade(requestId,optionId));}

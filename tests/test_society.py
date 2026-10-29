@@ -176,7 +176,7 @@ class SocietyTests(unittest.TestCase):
         n, leader = self.adult(w, faction=0), self.adult(w, faction=0)
         w.factions[0]['leader'] = leader['id']
         w.link(n, leader, -65, -50)
-        n['traits']['loyalty'] = 20
+        n['traits']['integrity'] = 20
         actions = w.legal_actions(n)
         leave = next(a for a in actions if a['kind'] == 'leave_faction')
         work = next(a for a in actions if a['kind'] == 'work')

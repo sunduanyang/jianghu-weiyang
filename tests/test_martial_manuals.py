@@ -18,7 +18,7 @@ class MartialManualTests(unittest.TestCase):
     def teacher(self, w, school='shaolin'):
         n = w.make_npc(place=45)
         n.update(age_months=360, health=100., time_left=4)
-        n['traits'].update(loyalty=80., compassion=80.)
+        n['traits'].update(integrity=80., kindness=80.)
         key = next(k for k in martial_catalog.SCHOOL_ARTS[school] if not items.knows(w, 'player', k))
         n['martial']['learned'] = [key]
         w.set_goal(n, 'mastery', initial=True)
@@ -103,7 +103,7 @@ class MartialManualTests(unittest.TestCase):
 
     def test_refusal_costs_player_ap_without_npc_time_or_monthly_cooldown(self):
         w = self.world(); teacher, key = self.teacher(w)
-        teacher['traits'].update(loyalty=0., compassion=0.)
+        teacher['traits'].update(integrity=0., kindness=0.)
         total = len(w.items['objects'])
         e = manuals.request(w, 'player', teacher['id'], key)
         self.assertFalse(e['facts']['accepted'])

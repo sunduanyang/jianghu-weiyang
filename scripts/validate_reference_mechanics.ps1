@@ -17,10 +17,10 @@ foreach ($combatPhase in $Phases) {
         throw "Choose a fresh Output directory; $combatPhase already has a result."
     }
     New-Item -ItemType Directory -Force -Path $combatDestination | Out-Null
-    $combatSaveName = if ($combatPhase -in @('resume','city-resume')) { 'reference-mechanics' } elseif ($combatPhase -eq 'injury-resume') { 'injury' } elseif ($combatPhase -eq 'source-program-resume') { 'source-program' } elseif ($combatPhase -eq 'reference-port-resume') { 'reference-port' } else { $combatPhase }
+    $combatSaveName = if ($combatPhase -in @('resume','city-resume')) { 'reference-mechanics' } elseif ($combatPhase -eq 'injury-resume') { 'injury' } elseif ($combatPhase -eq 'source-program-resume') { 'source-program' } elseif ($combatPhase -eq 'source-rig-resume') { 'source-rig' } elseif ($combatPhase -eq 'reference-port-resume') { 'reference-port' } else { $combatPhase }
     $combatSave = Join-Path $combatOutput ('save-' + $combatSaveName)
     New-Item -ItemType Directory -Force -Path $combatSave | Out-Null
-    if ($combatPhase -in @('injury','reference-mechanics','reference','source-program','reference-port')) {
+    if ($combatPhase -in @('injury','reference-mechanics','reference','source-program','reference-port','source-rig')) {
         & $Python (Join-Path $PSScriptRoot 'prepare_reference_acceptance.py') --save-dir $combatSave
         if ($LASTEXITCODE -ne 0) { throw "Could not prepare isolated combat fixture: $combatPhase" }
     }
@@ -45,7 +45,7 @@ foreach ($combatPhase in $Phases) {
     Write-Output ("{0}: {1}, {2} checks" -f $combatPhase,$combatResult.passed,@($combatResult.checks).Count)
     if (!$combatResult.passed) {
         $combatResult.checks | Where-Object { !$_.passed } | ForEach-Object {
-            [ordered]@{ check=$_.check; facts=($_.facts | Select-Object * -ExcludeProperty path,samples,windup,impact) }
+            [ordered]@{ check=$_.check; facts=($_.facts | Select-Object * -ExcludeProperty path,samples,windup,impact,ai_samples) }
         } | ConvertTo-Json -Depth 6 | Write-Output
         throw "Native acceptance failed: $combatPhase"
     }

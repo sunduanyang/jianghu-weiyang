@@ -12,7 +12,7 @@ class InteractionActionPointTests(unittest.TestCase):
         protagonist.perform(w,dict(action='create',name='往来人',sex='女',age=24,place=45,month=0,revision=0))
         self.n=n=w.make_npc(place=45)
         n.update(age_months=360,health=100.,wealth=100.,time_left=0)
-        n['traits'].update(loyalty=80.,compassion=80.,sociability=80.)
+        n['traits'].update(integrity=80.,kindness=80.,sociability=80.)
         n['mood'].update(anger=0.,joy=0.)
         n['monthly_actions']=[dict(id='work:self',kind='work',month=0,week=1,time_cost=4,event_id=n['last_event'])]
         w.set_goal(n,'mastery',initial=True);w.reindex()

@@ -5,11 +5,11 @@ using UnityEngine;
 public sealed partial class PhysicsDuel {
     public sealed partial class Fighter {
         CharacterRenderer characterRenderer;
+        CharacterPose characterBindingPose;
         public string CharacterAppearanceId=>skin["appearance_id"].S;
         public J CharacterRenderFacts()=>characterRenderer?.Probe()??J.O();
-        bool TryDrawCharacterModules(bool debug){
-            string id=skin["appearance_id"].S;if(!CharacterLook.IsId(id))return false;
-            if(characterRenderer==null){characterRenderer=new CharacterRenderer(1024,root.transform,CharacterArt.Look(id).Art);root.AddComponent<ProductionCharacterLifetime>().Release=characterRenderer.Dispose;}
+        public void CaptureCharacterBindingPose(){characterBindingPose=CharacterModulePose().Snapshot();}
+        CharacterPose CharacterModulePose(){
             var pose=new CharacterPose{Left=facing<0};Vector2 origin=new Vector2(Hip.x,0);
             foreach(string key in new[]{"pelvis","torso","head","upperNear","forearmNear","handNear","upperFar","forearmFar","handFar","thighNear","shinNear","footNear","thighFar","shinFar","footFar"}){
                 var bone=limbs[key];pose.Add(key,bone.A-origin,bone.B-origin);
@@ -23,6 +23,13 @@ public sealed partial class PhysicsDuel {
                 pose.Add("belly",a,mid);pose.Add("torso",mid,b);pose.Add("neck",b,head.A-origin);
             }
             foreach(string side in new[]{"Near","Far"}){var foot=limbs["foot"+side];Vector2 ankle=Limb.BodyPoint(foot.rb,foot.joint.anchor)-origin;if(side=="Near")pose.FootNear=ankle;else pose.FootFar=ankle;}
+            return pose;
+        }
+        bool TryDrawCharacterModules(bool debug){
+            string id=skin["appearance_id"].S;if(!CharacterLook.IsId(id))return false;
+            if(characterRenderer==null){characterRenderer=new CharacterRenderer(1024,root.transform,CharacterArt.Look(id).Art);root.AddComponent<ProductionCharacterLifetime>().Release=characterRenderer.Dispose;}
+            var pose=CharacterModulePose();pose.BindPose=characterBindingPose;
+            Vector2 origin=new Vector2(Hip.x,0);
             float scale=Reference?1:.5f;
             if(Event.current.type==EventType.Repaint)characterRenderer.Render(CharacterArt.Look(id),pose,scale,true);
             if(shield!=null&&HasShield)DrawWeapon(shield,true);

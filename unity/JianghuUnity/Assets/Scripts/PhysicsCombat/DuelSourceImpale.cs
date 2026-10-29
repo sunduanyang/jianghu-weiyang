@@ -4,7 +4,7 @@ using System.Linq;
 using Jianghu;
 using UnityEngine;
 
-// Native addresses and source graph IDs are documented in SOURCE_IMPALEMENT_PORT.md.
+// Port state and save contracts are documented in BLOODY_SOURCE_PORT_VALIDATION.md.
 public sealed partial class PhysicsDuel {
     public sealed partial class Fighter {
         const float SourceImpaleInitialWait=.025f,SourceImpaleMaskWait=.25f;
@@ -82,6 +82,19 @@ public sealed partial class PhysicsDuel {
             var joint=item.rb.gameObject.AddComponent<FixedJoint2D>();joint.enabled=false;
             joint.autoConfigureConnectedAnchor=true;joint.anchor=Vector2.zero;joint.enableCollision=false;joint.frequency=0;joint.dampingRatio=0;
             sourceImpaleJoints[slot]=joint;
+        }
+        // Source item importers should preserve the serialized impaling joint
+        // itself. If only numeric data is imported, apply it with Configure.
+        public void BindSourceImpaleJoint(string slot,FixedJoint2D sourceJoint){
+            if(sourceJoint==null||slot!="Near"&&slot!="Far")throw new ArgumentException("Invalid source impalement joint");
+            if(sourceImpaleJoints.TryGetValue(slot,out var previous)&&previous!=null&&previous!=sourceJoint){previous.enabled=false;UnityEngine.Object.Destroy(previous);}
+            sourceJoint.enabled=false;sourceImpaleJoints[slot]=sourceJoint;
+        }
+        public void ConfigureSourceImpaleJoint(string slot,J data){
+            if(!sourceImpaleJoints.TryGetValue(slot,out var joint)||joint==null||data==null||!data.Has)throw new ArgumentException("Missing source impalement joint data");
+            joint.enabled=false;joint.anchor=new Vector2((float)data["m_Anchor"]["x"].N,(float)data["m_Anchor"]["y"].N);
+            joint.autoConfigureConnectedAnchor=data["m_AutoConfigureConnectedAnchor"].B;joint.enableCollision=data["m_EnableCollision"].B;
+            joint.frequency=(float)data["m_Frequency"].N;joint.dampingRatio=(float)data["m_DampingRatio"].N;
         }
         public bool SourceWeaponImpaling(string slot)=>sourceImpaleJoints.TryGetValue(slot,out var joint)&&joint!=null&&joint.enabled;
         void ResetSourceImpactWindow(){sourceAccumulatedDamage=0;}
@@ -161,9 +174,10 @@ public sealed class DuelSourceImpaleOrgan:MonoBehaviour {
     [NonSerialized] public Collider2D shape;
     [NonSerialized] public GameObject[] masks=Array.Empty<GameObject>();
     public string key,linked;
+    public int TriggerEnterCount {get;private set;}
     public bool MasksVisible {get;private set;}
     public void SetMasks(bool visible){MasksVisible=visible;foreach(var mask in masks)if(mask!=null)mask.SetActive(visible);}
-    void OnTriggerEnter2D(Collider2D other){if(owner!=null&&shape!=null&&shape.enabled)owner.ReceiveSourceOrganOverlap(this,other);}
+    void OnTriggerEnter2D(Collider2D other){TriggerEnterCount++;if(owner!=null&&shape!=null&&shape.enabled)owner.ReceiveSourceOrganOverlap(this,other);}
     void OnDisable(){owner?.ClearSourceImpalement();}
 }
 public sealed class DuelSourceImpaleWeapon:MonoBehaviour {

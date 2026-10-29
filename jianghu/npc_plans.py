@@ -1,7 +1,7 @@
 from . import combat_attributes
 """Bounded task decomposition; only the existing engine executes consequences."""
 from copy import deepcopy
-from . import careers, sect_ranks, llm_policy, npc_attention
+from . import careers, sect_ranks, llm_policy, npc_attention, temperament, undertakings
 
 VERSION = 1
 
@@ -13,9 +13,9 @@ def role(w, n):
         return dict(key='official', label=n['office']+'公务', duties=['public_service', 'report'])
     if n['faction'] is not None:
         grade = sect_ranks.standing(w.factions[n['faction']], n)['grade']
-        key, label, duties = (('leader', '主持门务', ['faction_guide', 'duty', 'donate_relief']) if grade == 1 else
-                              ('elder', '传艺护持', ['faction_guide', 'teach', 'duty']) if grade <= 4 else
-                              ('steward', '门中修业', ['seek_teacher', 'work']) if grade <= 6 else
+        key, label, duties = (('leader', '主持门务', ['sect_service', 'duty', 'donate_relief']) if grade == 1 else
+                              ('elder', '传艺护持', ['sect_service', 'duty']) if grade <= 4 else
+                              ('steward', '门中修业', ['sect_service', 'seek_teacher', 'work']) if grade <= 6 else
                               ('disciple', '入门求学', ['seek_teacher', 'work']))
         return dict(key=key, label=label, duties=duties)
     if n.get('social_status'):
@@ -34,7 +34,7 @@ def adjustment(w, n, a):
     if a['kind'] not in profile['duties']:
         return 0.
     # A duty is a preference, never permission or immunity from personality.
-    return 7. + n['traits']['loyalty'] * .025 if profile['key'] in ('official', 'leader', 'elder', 'steward', 'disciple') else 5.
+    return 7. + n['traits']['integrity'] * .025 if profile['key'] in ('official', 'leader', 'elder', 'steward', 'disciple') else 5.
 
 
 def close(w, n, status, reason, event_id=None):
@@ -51,19 +51,26 @@ def close(w, n, status, reason, event_id=None):
     if p.get('intent', 'sequence') != 'sequence':
         key = 'workflows_completed' if status == '完成' else 'workflows_interrupted'
         w.metrics[key] = w.metrics.get(key, 0) + 1
+    if p.get('intent') in undertakings.KINDS:
+        row = w.metrics.setdefault('undertakings', {}).setdefault(p['intent'], dict(started=0, completed=0, interrupted=0))
+        row['completed' if status == '完成' else 'interrupted'] += 1
     n['plan'] = None
 
 
 def start(w, n, intent, title, steps, **data):
     n['plan_revision'] = n.get('plan_revision', 0) + 1
     n['plan'] = dict(version=VERSION, revision=n['plan_revision'], source='规则', created=w.month,
-                     until=w.month + 18, intent=intent, title=title, reason=title,
+                     until=w.month + (undertakings.MONTHS if intent in undertakings.KINDS else 18), intent=intent, title=title, reason=title,
                      goal=n['goal']['kind'], place=n['place'], faction=n['faction'],
                      steps=steps, completed=[], status='执行中', blocker='',
                      horizon='依真实条件逐步完成，费用与周次在执行时结算', **data)
     w.metrics['plans_started'] = w.metrics.get('plans_started', 0) + 1
     if intent != 'sequence':
         w.metrics['workflows_started'] = w.metrics.get('workflows_started', 0) + 1
+    if intent in undertakings.KINDS:
+        n['plan'].update(last_progress=w.month, last_step=None)
+        row = w.metrics.setdefault('undertakings', {}).setdefault(intent, dict(started=0, completed=0, interrupted=0))
+        row['started'] += 1
 
 
 def tutor_for(w, n, profession):
@@ -76,25 +83,33 @@ def tutor_for(w, n, profession):
 
 def career_target(w, n):
     if (n['age_months'] < 192 or n['office'] or n['faction'] is not None or n.get('social_status')
-            or w.month - n['career']['last_change'] < 24):
+            or w.month - n['career']['last_change'] < 24 or n['career'].get('income_ema') is None
+            or not careers.review_month(w, n)):
         return None
     options = []
     for job, p in careers.PROFESSIONS.items():
         if job == n['career']['profession'] or careers.place_archetype(n['place']) not in p['places']:
             continue
-        from . import economics
-        gain = (economics.expected_income(w, n, job) - economics.expected_income(w, n)) if economics.active(w) else careers.income(n, profession=job) - careers.income(n)
-        if gain < 1.5 or p.get('martial', 0) > combat_attributes.rating(n) + 3:
+        gain = careers.switch_gain(w, n, job)
+        if gain < 1.5 or p.get('martial', 0) > combat_attributes.rating(n):
             continue
         tutor = tutor_for(w, n, job) if careers.experience(n, job) < p['entry'] else None
         if careers.experience(n, job) < p['entry'] and tutor is None:
             continue
-        options.append((gain * 8 - p['cost'] * .15 + n['traits'][p['trait']] * .025, job, tutor))
+        options.append((gain * 8 - p['cost'] * .15 + temperament.lean(n, p['trait']) * .025, job, tutor))
     return max(options, key=lambda x: (x[0], x[1]))[1:] if options else None
 
 
 def begin(w, n, chosen):
     profile = role(w, n)
+    # A long undertaking is considered at most once a month, when no plan is held.
+    if n.get('undertaking_review') != w.month and w.month >= n.get('undertaking_declined_until', -1):
+        n['undertaking_review'] = w.month
+        found = undertakings.propose(w, n)
+        if found:
+            intent, title, data = found
+            start(w, n, intent, title, [], **data)
+            return
     if n['goal']['kind'] == 'wealth' and chosen['kind'] in ('work', 'learn_trade', 'change_job'):
         target = career_target(w, n)
         if target:
@@ -122,10 +137,17 @@ def resolve(w, n, actions):
     p = n.get('plan')
     if not p:
         return None
+    intent = p.get('intent', 'sequence')
+    if intent in undertakings.KINDS:
+        done = undertakings.achieved(w, n, p)
+        if done:
+            close(w, n, '完成', done, n['last_event'])
+            return None
     if w.month > p['until']:
         close(w, n, '中断', '计划期限已到，重新审视处境')
         return None
-    if p.get('version') and (p['goal'] != n['goal']['kind'] or p['place'] != n['place'] or p['faction'] != n['faction']):
+    moved = p.get('place', n['place']) != n['place'] and intent != 'journey'
+    if p.get('version') and (p['goal'] != n['goal']['kind'] or moved or p['faction'] != n['faction']):
         close(w, n, '中断', '心愿、所在地点或门派发生变化')
         return None
     by_id = {a['id']: a for a in actions}
@@ -133,7 +155,8 @@ def resolve(w, n, actions):
     def pick(kind, predicate=lambda a: True):
         return next((a for a in actions if a['kind'] == kind and predicate(a)), None)
     choice = None
-    intent = p.get('intent', 'sequence')
+    if intent in undertakings.KINDS:
+        return undertake(w, n, p, actions)
     if intent == 'career_change':
         job = p['profession']; spec = careers.PROFESSIONS[job]
         if n['career']['profession'] == job:
@@ -148,7 +171,9 @@ def resolve(w, n, actions):
         if n['wealth'] < max(8, fee):
             choice = pick('work')
         elif combat_attributes.rating(n) < spec.get('martial', 0):
-            choice = pick('train')
+            # Practice is retired, so an unmet martial entry bar cannot be trained away.
+            close(w, n, '中断', '战斗能力不足以入行'+job)
+            return None
         elif careers.experience(n, job) < spec['entry']:
             tutor = w.npcs.get(p.get('tutor'))
             if not tutor or not tutor['alive'] or tutor['place'] != n['place'] or tutor['career']['profession'] != job:
@@ -170,6 +195,39 @@ def resolve(w, n, actions):
             return blocked(w, n, '本周时间或合作对象的时段不足，等待下次机会')
     if choice is None:
         return blocked(w, n, '当前条件不满足或目标对象无法接触')
+    p.update(status='执行中', blocker='', next_action=choice['label'], next_id=choice['id'], blocked_since=None)
+    return choice
+
+
+def interim(w, n, p, actions):
+    """Between monthly steps, a model-chosen undertaking runs the model's own short plan."""
+    steps = p.get('interim') or []
+    if not steps or w.month > p.get('interim_until', -1):
+        p.pop('interim', None)
+        return None
+    by_id = {a['id']: a for a in actions}
+    choice = next((by_id[i] for i in steps if i in by_id), None)
+    if choice:
+        p.update(next_id=choice['id'], interim_active=True)
+    return choice
+
+
+def undertake(w, n, p, actions):
+    p['interim_active'] = False
+    if p.get('last_step') == w.month:
+        p.update(status='执行中', blocker='本月已推进一步，其余时间照常过日子', next_id=None)
+        return interim(w, n, p, actions)
+    if w.month - p['last_progress'] >= undertakings.PATIENCE:
+        close(w, n, '中断', '半年未有进展，暂且放下')
+        return None
+    verdict = undertakings.step(w, n, p, actions)
+    if verdict[0] == 'close':
+        close(w, n, '中断', verdict[1])
+        return None
+    if verdict[0] == 'wait':
+        p.update(status='等待时机', blocker=verdict[1], next_id=None)
+        return interim(w, n, p, actions)
+    choice = verdict[1]
     p.update(status='执行中', blocker='', next_action=choice['label'], next_id=choice['id'], blocked_since=None)
     return choice
 
@@ -199,7 +257,13 @@ def choose(w, n, actions):
         if n['plan'].get('policy_origin'):
             n['decision'].update(policy_influence=True,policy_title=n['plan']['policy_origin']['title'])
         return chosen
-    scored = [(w.score(n, a) + w.rng.uniform(-9, 9), a) for a in actions]
+    # One impulse per KIND of deed per decision: a long list of possible victims must
+    # not multiply the temptation to steal, while each kind keeps its best target.
+    impulse = {}
+    for a in actions:
+        if a['kind'] not in impulse:
+            impulse[a['kind']] = w.rng.uniform(-9, 9)
+    scored = [(w.score(n, a) + impulse[a['kind']], a) for a in actions]
     chosen = max(scored, key=lambda row: row[0])[1]
     baseline=max(scored,key=lambda row:row[0]-llm_policy.adjustment(w,n,row[1]))[1]
     policy=llm_policy.current(w,n) if llm_policy.participates(w,n,actions) else None
@@ -222,6 +286,13 @@ def choose(w, n, actions):
 
 def record(w, n, a, event):
     p = n.get('plan')
+    if p and p.get('interim_active') and n.get('choice_source') == p['source'] and p.get('next_id') == a['id']:
+        # A model-planned errand between undertaking steps: account for it, not for the pursuit.
+        p['interim'].remove(a['id'])
+        p.update(interim_active=False, next_id=None)
+        p['completed'] = (p.get('completed', []) + [dict(action=a['label'], id=a['id'], month=w.month,
+                                                         event_id=event['id'], interim=True)])[-12:]
+        return
     if not p or n.get('choice_source') != p['source'] or p.get('next_id') != a['id'] or p.get('status') != '执行中':
         return
     p['completed'] = (p.get('completed', []) + [dict(action=a['label'], id=a['id'], month=w.month, event_id=event['id'])])[-12:]
@@ -229,6 +300,11 @@ def record(w, n, a, event):
         p['steps'].pop(0)
         if not p['steps']:
             close(w, n, '完成', '已完成安排的行动', event['id'])
+    elif p.get('intent') in undertakings.KINDS:
+        p.update(last_step=w.month, last_progress=w.month)
+        ended = undertakings.after(w, n, p, a, event)
+        if ended and n.get('plan') is p:
+            close(w, n, ended[0], ended[1], event['id'])
     elif p.get('intent') == 'career_change' and n['career']['profession'] == p['profession']:
         close(w, n, '完成', '已置办生计并转入'+p['profession'], event['id'])
     elif (p.get('intent') == 'sect_training' and n['contribution'] >= p['target_contribution']
@@ -250,6 +326,10 @@ def view(w, n):
             p['next_description'] = ('办差积累贡献至'+str(p['target_contribution']) if n['contribution'] < p['target_contribution'] else
                                      '备足请益费用与生活余银' if n['wealth'] < 8 else
                                      '练好基本功，达到武学12' if combat_attributes.rating(n) < 12 else '向同门请益或继续习武')
+        elif p.get('intent') in undertakings.KINDS:
+            p['next_description'] = undertakings.describe(w, n, p)
+            p['undertaking'] = undertakings.KINDS[p['intent']]
+            p['chosen_by'] = '本地模型选定' if p.get('source') == 'AI' else '依心愿按规则拟定'
         else:
             p['next_description'] = p.get('next_action', '按约定步骤继续，执行前再核对条件')
     return dict(version=VERSION, role=role(w, n), current=p, decision=deepcopy(n.get('decision')),life_policy=llm_policy.view(w,n),

@@ -28,11 +28,11 @@ public sealed partial class PhysicsDuel {
     readonly List<GameObject> fixtures=new List<GameObject>();
 
     void RememberPhysicsSettings(){priorFixedStep=Time.fixedDeltaTime;priorTimeScale=Time.timeScale;priorTargetFps=Application.targetFrameRate;priorGravity=Physics2D.gravity;priorVelocityIterations=Physics2D.velocityIterations;priorPositionIterations=Physics2D.positionIterations;priorContactOffset=Physics2D.defaultContactOffset;priorLinearCorrection=Physics2D.maxLinearCorrection;priorAngularCorrection=Physics2D.maxAngularCorrection;priorTranslationSpeed=Physics2D.maxTranslationSpeed;priorRotationSpeed=Physics2D.maxRotationSpeed;priorBaumgarte=Physics2D.baumgarteScale;priorTOI=Physics2D.baumgarteTOIScale;}
-    public void PauseCampaign(){paused=true;Time.timeScale=0;controls.ReleaseAll(true);player.ClearMouseCapture();enemy.ClearMouseCapture();}
+    public void PauseCampaign(){player?.SourceAIClockPaused(true);enemy?.SourceAIClockPaused(true);paused=true;Time.timeScale=0;controls.ReleaseAll(true);player.ClearMouseCapture();enemy.ClearMouseCapture();}
     public void ActivateCampaign(){CampaignHidden=false;Application.targetFrameRate=90;PauseCampaign();}
     public void DeactivateCampaign(){PauseCampaign();CampaignHidden=true;Application.targetFrameRate=priorTargetFps;Time.timeScale=1;}
     void CampaignCommand(string command){PauseCampaign();campaign.command?.Invoke(command);}
-    public void RunCampaign(bool run){paused=!run;help=false;Time.timeScale=run?1:0;}
+    public void RunCampaign(bool run){player?.SourceAIClockPaused(!run);enemy?.SourceAIClockPaused(!run);paused=!run;help=false;Time.timeScale=run?1:0;}
     public void CampaignTestPad(bool primary,Vector2 direction){
         if(GameClient.Arg("-physicalCombatSmoke").Length==0)throw new InvalidOperationException("Test input requires isolated acceptance mode");
         int id=primary?7001:7002;var pad=primary?controls.right:controls.left;
@@ -46,14 +46,16 @@ public sealed partial class PhysicsDuel {
         try{int ticks=Mathf.RoundToInt(seconds/Time.fixedDeltaTime);for(int i=0;i<ticks;i++)SimulateFighters();elapsed=Clock;}
         finally{fixtureMode=previousFixture;}
     }
-    public J CaptureCampaign()=>J.O("engine","unity-physics2d-v09","version",1,"elapsed",elapsed,"hits",hits,"clashes",blocks,
+    public J CaptureCampaign()=>J.O("engine","unity-physics2d-v09","version",1,"elapsed",ReferenceCombat?(double)Clock:elapsed,"hits",hits,"clashes",blocks,
         "fighters",new J(new List<J>{player.CapturePhysicalState(),enemy.CapturePhysicalState()}));
     void RestoreCampaign(J frame){
         if(!frame.Has)return;
         elapsed=(float)frame["elapsed"].N;hits=frame["hits"].I;blocks=frame["clashes"].I;
         Clock=elapsed;
         player.RestorePhysicalState(frame["fighters"][0]);enemy.RestorePhysicalState(frame["fighters"][1]);
+        player.ResolveSourceImpalement();enemy.ResolveSourceImpalement();
         Physics2D.SyncTransforms();
+        player.FinishSourceRigRestore();enemy.FinishSourceRigRestore();
     }
     public void RestoreCampaignForSmoke(J frame){if(!IsSmoke)throw new InvalidOperationException("Restore probe requires acceptance mode");RestoreCampaign(frame);}
     void DrawCampaignPanel(){
@@ -71,7 +73,7 @@ public sealed partial class PhysicsDuel {
         if(Button(new Rect(560,575,480,43),finished?"重试结算":"保存战局"))CampaignCommand(finished?"complete":"checkpoint");
     }
     void OnDestroy(){
-        if(player!=null)Destroy(player.root);if(enemy!=null)Destroy(enemy.root);
+        if(player!=null){player.ReleaseSourceRig();Destroy(player.root);}if(enemy!=null){enemy.ReleaseSourceRig();Destroy(enemy.root);}
         Time.fixedDeltaTime=priorFixedStep;Time.timeScale=priorTimeScale;Application.targetFrameRate=priorTargetFps;Physics2D.gravity=priorGravity;
         Physics2D.velocityIterations=priorVelocityIterations;Physics2D.positionIterations=priorPositionIterations;Physics2D.defaultContactOffset=priorContactOffset;
         Physics2D.maxLinearCorrection=priorLinearCorrection;Physics2D.maxAngularCorrection=priorAngularCorrection;Physics2D.maxTranslationSpeed=priorTranslationSpeed;Physics2D.maxRotationSpeed=priorRotationSpeed;Physics2D.baumgarteScale=priorBaumgarte;Physics2D.baumgarteTOIScale=priorTOI;

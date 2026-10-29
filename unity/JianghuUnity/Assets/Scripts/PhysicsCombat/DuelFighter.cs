@@ -104,6 +104,7 @@ public sealed partial class PhysicsDuel {
             weight=limbs.Values.Select(l=>l.rb).Distinct().Sum(rb=>rb.mass);
             pelvis.driveInertia=weapon.TwoHanded?.60f:.30f;
             foreach(var limb in limbs.Values)limb.SampleVelocity();
+            CaptureCharacterBindingPose();
         }
         Vector2 Local(J point)=>new Vector2((float)point[0].N*facing,-(float)point[1].N)*scale;
         Limb Make(string key,Vector2 a,Vector2 b,float width,float mass,string kind) {
@@ -334,8 +335,8 @@ public sealed partial class PhysicsDuel {
             float along=(upper*upper-lower*lower+len*len)/(2*len),bend=Mathf.Sqrt(Mathf.Max(0,upper*upper-along*along));
             knee=a+axis*along+new Vector2(-axis.y,axis.x)*bend*pole;tip=a+axis*len;
         }
-        public float MaxJointGap(){float gap=0;foreach(var j in root.GetComponentsInChildren<AnchoredJoint2D>())if(j.enabled){float value=Vector2.Distance(Limb.BodyPoint(j.GetComponent<Rigidbody2D>(),j.anchor),Limb.BodyPoint(j.connectedBody,j.connectedAnchor));if(value>gap){gap=value;worstJoint=j.name;}}return gap;}
+        public float MaxJointGap(){var connected=SourceRigActive?SourceLiveBodies():null;float gap=0;foreach(var j in root.GetComponentsInChildren<AnchoredJoint2D>())if(j.enabled&&(connected==null||InSourceLiveComponent(j,connected))){float value=MeasuredJointGap(j);if(value>gap){gap=value;worstJoint=j.name;}}return gap;}
         public string worstLimitJoint="";
-        public float MaxLimitError(){float e=0;foreach(var j in root.GetComponentsInChildren<HingeJoint2D>())if(j.enabled&&j.useLimits){float v=Mathf.Max(j.limits.min-j.jointAngle,j.jointAngle-j.limits.max);e=Mathf.Max(e,v);if(v>worstLimit){worstLimit=v;worstLimitJoint=j.name+" angle="+j.jointAngle+" limits="+j.limits.min+","+j.limits.max;}}return e;}
+        public float MaxLimitError(){var connected=SourceRigActive?SourceLiveBodies():null;float e=0;foreach(var j in root.GetComponentsInChildren<HingeJoint2D>())if(j.enabled&&j.useLimits&&(connected==null||InSourceLiveComponent(j,connected))){float v=MeasuredLimitError(j);e=Mathf.Max(e,v);if(v>worstLimit){worstLimit=v;worstLimitJoint=j.name+" angle="+j.jointAngle+" limits="+j.limits.min+","+j.limits.max;}}return e;}
     }
 }

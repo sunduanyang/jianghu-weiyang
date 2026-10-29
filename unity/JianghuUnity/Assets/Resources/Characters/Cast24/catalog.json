@@ -1,0 +1,197 @@
+{
+  "version": 1,
+  "characters": [
+    {
+      "id": "m-youth-farmer",
+      "asset": "cast24-m-youth-farmer",
+      "label": "农家青年",
+      "number": 1,
+      "parts": 17,
+      "source_sha256": "dbdc7b3cd4ef82dd4f3e3b35ab18947fb160ab271779a402af3869232b4a88d2"
+    },
+    {
+      "id": "f-youth-farmer",
+      "asset": "cast24-f-youth-farmer",
+      "label": "农家姑娘",
+      "number": 2,
+      "parts": 17,
+      "source_sha256": "bbf962151cfc6dced1132f4168ac70141604b8cc66445f65552e55cda6fbcbd7"
+    },
+    {
+      "id": "m-middle-farmer",
+      "asset": "cast24-m-middle-farmer",
+      "label": "中年农人",
+      "number": 3,
+      "parts": 17,
+      "source_sha256": "6ed2e5232905e595ebcbba85ee740c4f02bfec7c7d592319509a750d5742fc0f"
+    },
+    {
+      "id": "f-middle-farmer",
+      "asset": "cast24-f-middle-farmer",
+      "label": "中年农妇",
+      "number": 4,
+      "parts": 17,
+      "source_sha256": "ce7bb2b9613d899988a84e23957949f86ae93ec72644caae9edfc927530a1db5"
+    },
+    {
+      "id": "m-elder",
+      "asset": "cast24-m-elder",
+      "label": "老翁",
+      "number": 5,
+      "parts": 17,
+      "source_sha256": "bee1b72ac1bf5d5696ea2995cabe042b3a071df7f7be28c36b24ae94aa813ce3"
+    },
+    {
+      "id": "f-elder",
+      "asset": "cast24-f-elder",
+      "label": "老妪",
+      "number": 6,
+      "parts": 17,
+      "source_sha256": "6ab5235b2b95b7a0915124a1e89447c2566bcb31bc2e3bdcbdddd391dea8e52c"
+    },
+    {
+      "id": "m-child",
+      "asset": "cast24-m-child",
+      "label": "男童",
+      "number": 7,
+      "parts": 17,
+      "source_sha256": "737db08c70e05cab5b8ceeed80f09e1c225e9f51282f1c1ed95aee4579216de0"
+    },
+    {
+      "id": "f-child",
+      "asset": "cast24-f-child",
+      "label": "女童",
+      "number": 8,
+      "parts": 17,
+      "source_sha256": "248c6fafebaf5fbea0177c23474c56e7f4ae2e44616e03e10adf7dbdd4093a0d"
+    },
+    {
+      "id": "m-scholar",
+      "asset": "cast24-m-scholar",
+      "label": "书生",
+      "number": 9,
+      "parts": 17,
+      "source_sha256": "67cfddc7a847d2f2cd9bfdc695203216809c22eee8a58c18f62e41a8e5eaeb60"
+    },
+    {
+      "id": "f-scholar",
+      "asset": "cast24-f-scholar",
+      "label": "书香女子",
+      "number": 10,
+      "parts": 17,
+      "source_sha256": "407c89b55d9084c94e396d8f8cf24fdfeed441ea26f81e9854e4e18257229419"
+    },
+    {
+      "id": "m-merchant",
+      "asset": "cast24-m-merchant",
+      "label": "行商",
+      "number": 11,
+      "parts": 17,
+      "source_sha256": "2fdf36f97456bee91501de6cfa58283f69b088b09aff32d07772bf61bebfd170"
+    },
+    {
+      "id": "f-merchant",
+      "asset": "cast24-f-merchant",
+      "label": "女商人",
+      "number": 12,
+      "parts": 17,
+      "source_sha256": "cc131d8ca297db8941e2db889f78f294031b3124081ba98bc3bfc07cba185ef8"
+    },
+    {
+      "id": "m-escort",
+      "asset": "cast24-m-escort",
+      "label": "镖师",
+      "number": 13,
+      "parts": 17,
+      "source_sha256": "613d682be1612f2c60ea878b295722e18204df2c6eb34bcc1e8ca57df9c0509f"
+    },
+    {
+      "id": "f-escort",
+      "asset": "cast24-f-escort",
+      "label": "女镖师",
+      "number": 14,
+      "parts": 17,
+      "source_sha256": "63d8053a304e72861bf2b0030b58c65c65946cec166298ff96f278ea8fb3d997"
+    },
+    {
+      "id": "m-fisher",
+      "asset": "cast24-m-fisher",
+      "label": "渔人",
+      "number": 15,
+      "parts": 17,
+      "source_sha256": "a95a2be90ddfa2a5d7c932e98015bb7a03a448e89bd174017d3bd42487ea4cce"
+    },
+    {
+      "id": "m-hunter",
+      "asset": "cast24-m-hunter",
+      "label": "猎户",
+      "number": 16,
+      "parts": 17,
+      "source_sha256": "a0a5e742cfba787ea78785d41b536e509fa80a7c057b72863df58f3eee4f988a"
+    },
+    {
+      "id": "m-artisan",
+      "asset": "cast24-m-artisan",
+      "label": "匠人",
+      "number": 17,
+      "parts": 17,
+      "source_sha256": "f720ff00e2f0c67a948678507c11de9d8e57f07d4a9074061983550272100ae1"
+    },
+    {
+      "id": "f-healer",
+      "asset": "cast24-f-healer",
+      "label": "女药师",
+      "number": 18,
+      "parts": 17,
+      "source_sha256": "453026e21b8528131e0b0c5b4d3fd618b65c877c6246a4c527a3290c685fd1c2"
+    },
+    {
+      "id": "m-performer",
+      "asset": "cast24-m-performer",
+      "label": "戏伶",
+      "number": 19,
+      "parts": 17,
+      "source_sha256": "05d6ee083ca7fa3316ba19ec7cd19913acfe0522c67c2f5a19fd98a1fedeff1a"
+    },
+    {
+      "id": "m-daoist",
+      "asset": "cast24-m-daoist",
+      "label": "道士",
+      "number": 20,
+      "parts": 17,
+      "source_sha256": "a50e3b46a615a4d5b8494a9d1573071c0049248f8e468872cddad73a5bcc9103"
+    },
+    {
+      "id": "m-monk",
+      "asset": "cast24-m-monk",
+      "label": "僧人",
+      "number": 21,
+      "parts": 17,
+      "source_sha256": "2c31b14dda19f78aafc65776d74eff45db74ad45c7e2d35924c540b4a4f66059"
+    },
+    {
+      "id": "m-official",
+      "asset": "cast24-m-official",
+      "label": "官员",
+      "number": 22,
+      "parts": 17,
+      "source_sha256": "c1e3205db4dda5286b6426a61d7d8acbf8b32cb9254db54981aeb521ddae2771"
+    },
+    {
+      "id": "m-beggar",
+      "asset": "cast24-m-beggar",
+      "label": "乞丐",
+      "number": 23,
+      "parts": 17,
+      "source_sha256": "a6993e945a8a163590faacb98a96e87d8f6e22f87673c1c755ae6043138bb8c7"
+    },
+    {
+      "id": "f-swordswoman",
+      "asset": "cast24-f-swordswoman",
+      "label": "女侠",
+      "number": 24,
+      "parts": 17,
+      "source_sha256": "1b3587be33cb539bbf274b6bdd04d3d1bb37b7187d2d1fc916b35ac95446160d"
+    }
+  ]
+}

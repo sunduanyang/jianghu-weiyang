@@ -1,4 +1,4 @@
-from . import combat_attributes
+from . import combat_attributes, fame
 """Separate territorial governments with real people, balanced treasuries and evidence-based cases."""
 from .demography import infect
 from . import social
@@ -76,8 +76,8 @@ def appoint(w, g=None):
                 g.setdefault('departed', {})[office] = current['id']
             continue
         def merit(n):
-            return n['reputation'] + n['contribution']*.15 + n['traits']['loyalty']*.25 + (
-                combat_attributes.rating(n)*.5 if office == '捕头' else n['traits']['compassion']*.2 if office == '县令' else n['traits']['caution']*.2)
+            return fame.local(n) + n['contribution']*.15 + n['traits']['integrity']*.25 + (
+                combat_attributes.rating(n)*.5 if office == '捕头' else n['traits']['kindness']*.2 if office == '县令' else (100-n['traits']['boldness'])*.2)
         chosen = max(candidates, key=lambda n: (merit(n), -n['id']))
         old = current['id'] if current else g.get('departed', {}).pop(office, None)
         if current:
@@ -180,6 +180,7 @@ def monthly(w, g=None):
         case.update({'status': '已判决', 'judgment': e['id'], 'restitution': restitution})
         record(g, e)
         g['closed_cases'] += 1
+    public_works(w, g)
     holders = [i for i in g['offices'].values() if i and w.npcs[i]['alive']]
     if holders and g['fund'] >= len(holders):
         for i in holders:
@@ -188,6 +189,43 @@ def monthly(w, g=None):
         g['expenses'] += len(holders)
         w.emit('stipend', holders, f"{g['name']}向在任官吏各发放俸银1银。", .1,
                facts={'payments': {str(i): 1 for i in holders}, 'treasury_after': round(g['fund'], 4)})
+
+
+WORKS_WAGE = 3.
+
+
+def treasury_float(w, g):
+    """What a court keeps in hand: a base plus a share per resident of its towns."""
+    places = {p['id'] for p in w.active_places if territory.owner(w, p['id']) == g['country']}
+    people = sum(len(w.residents.get(p, [])) for p in places)
+    return 40. + 2. * people, places
+
+
+def public_works(w, g):
+    """以工代赈: a court holding more than its float hires poor able adults for a week of
+    roadwork, dykes or patrols, paying real wages from the treasury."""
+    reserve, places = treasury_float(w, g)
+    budget = round((g['fund'] - reserve) * .15, 4)
+    if budget < WORKS_WAGE:
+        return None
+    workers = sorted((n for p in places for n in (w.npcs[i] for i in w.residents.get(p, []))
+                      if n['alive'] and 192 <= n['age_months'] <= 720 and n['health'] > 30 and n['wealth'] < 15
+                      and not n.get('office') and n['time_left'] >= 1),
+                     key=lambda n: (n['wealth'], n['id']))[:int(budget // WORKS_WAGE)]
+    if not workers:
+        return None
+    paid = WORKS_WAGE * len(workers)
+    g['fund'] = round(g['fund'] - paid, 4); g['expenses'] = round(g['expenses'] + paid, 4)
+    for n in workers:
+        n['wealth'] = round(n['wealth'] + WORKS_WAGE, 4)
+        n['time_left'] -= 1
+    g['security'] = min(.95, g['security'] + .002 * len(workers) / max(1, len(places)))
+    e = w.emit('public_works', [n['id'] for n in workers],
+               f"{g['name']}以工代赈，雇{len(workers)}名贫困百姓修路筑堤一周，各付工钱{WORKS_WAGE:g}银。", .4,
+               [g['last_event']], {'wage': WORKS_WAGE, 'workers': [n['id'] for n in workers], 'paid': paid,
+                                   'reserve': round(reserve, 4), 'treasury_after': round(g['fund'], 4)})
+    record(g, e)
+    return e
 
 
 def annual(w, g=None):
@@ -218,13 +256,13 @@ def annual(w, g=None):
         if previous != policy or g['policy_since'] is None:
             g['policy_since'] = w.month
         g['tax_rate'] = ({'relief': .06, 'security': .11, 'health': .09}.get(policy)
-                         or round(max(.05, min(.15, .07+(100-t['compassion'])*.0006)), 4))
+                         or round(max(.05, min(.15, .07+(100-t['kindness'])*.0006)), 4))
         budget = min(g['fund']*.2, max(12, population*.15))
         g['fund'] -= budget
         from . import economics
         seats = [p['id'] for p in w.active_places if territory.owner(w, p['id']) == g['country']]
         if seats:
-            economics.fee(w, seats[0], budget)
+            economics.fee(w, seats[0], budget, 'transport')
         g['expenses'] += budget
         improvement = .12 * min(1, budget/max(12, population*.15))
         share = POLICIES[policy]['security_share']

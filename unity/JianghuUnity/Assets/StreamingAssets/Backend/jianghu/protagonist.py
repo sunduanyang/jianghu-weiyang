@@ -156,8 +156,14 @@ def view(w):
              position_name=area['name'] if area else node['name'] if node else city_maps.TERRAIN[city['rows'][h['row']][h['col']]],
              turn=w.month-h['started_month']+1 if h['created'] else 1,
              connections=connections(w), membership=organizations.player_membership(w), identity=player_identity(w),
-             journal=[e for i in reversed(h['records'][-8:]) if (e := w.store.event(i))])
+             journal=[e for i in reversed(h['records'][-8:]) if (e := w.store.event(i))],
+             visits=visits_view(w))
     return h
+
+
+def visits_view(w):
+    from . import visits
+    return visits.view(w)
 
 
 def record(w, kind, text, facts, causes=()):
@@ -256,7 +262,7 @@ def perform(w, body, defer_end_turn=None):
                    dict(place=place, origin=origin, destination=[row, col], path=path, points=cost))
         elif isinstance(action, str) and action.startswith('sect_'):
             from . import organizations
-            organizations.player_action(w, action, integer(body.get('faction'), '门派'))
+            organizations.player_action(w, action, integer(body.get('faction'), '门派'), body.get('choice'))
         elif action == 'end_turn':
             if defer_end_turn is not None:return defer_end_turn()
             record(w, 'hero_end_turn', f"{w.player['name']}结束本月行程，江湖推移一月。",

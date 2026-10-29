@@ -64,8 +64,10 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
         if(FindAnyObjectByType<AudioListener>()==null)gameObject.AddComponent<AudioListener>();
         strikeSound = Tone(false); blockSound = Tone(true);
         StaticBox("地面",new Vector2(0,-.3f),new Vector2(22,.6f));
-        StaticBox("左界",new Vector2(-6.15f,3),new Vector2(.3f,8));
-        StaticBox("右界",new Vector2(6.15f,3),new Vector2(.3f,8));
+        // Keep the same inner faces at +/-6. The source passed-out follow
+        // motor can move up to 100 m/s; a thin discrete wall lets it tunnel.
+        StaticBox("左界",new Vector2(-7.5f,3),new Vector2(3,8));
+        StaticBox("右界",new Vector2(7.5f,3),new Vector2(3,8));
         smoke=GameClient.Arg("-physicalCombatSmoke").Length>0||GameClient.Arg("-interactionGameplaySmoke").Length>0;
         ResetRound();
         if(Campaign){
@@ -89,8 +91,8 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
         ConfigureReferencePhysics();
         hits=blocks=headHits=0;strongestImpact=0;
         controls.ReleaseAll();
-        if(player!=null){player.root.SetActive(false);Destroy(player.root);}
-        if(enemy!=null){enemy.root.SetActive(false);Destroy(enemy.root);}
+        if(player!=null){player.ReleaseSourceRig();player.root.SetActive(false);Destroy(player.root);}
+        if(enemy!=null){enemy.ReleaseSourceRig();enemy.root.SetActive(false);Destroy(enemy.root);}
         contacts.Clear();
         queuedContacts.Clear();clashes.Clear();colliderIds.Clear();nextColliderId=0;
         DuelWeapon playerSpec=Campaign?DuelWeapon.CampaignWeapon(campaign.battle["fighters"][0]["weapon"]):DuelWeapon.All[playerWeaponIndex];
@@ -108,6 +110,7 @@ public sealed partial class PhysicsDuel : MonoBehaviour {
     }
     void Begin(bool practice) { training=practice; started=true; help=false; round=1;wins=losses=0;ResetRound(); }
     void Update() {
+        bool freezeAI=!Live||CampaignHidden;player?.SourceAIClockPaused(freezeAI);enemy?.SourceAIClockPaused(freezeAI);
         if(CampaignHidden)return;
         if(!smoke&&!ModularTrial) {
             if(!Campaign&&Input.GetKeyDown(KeyCode.Return)){if(armory)ApplyArmory();else if(!started)Begin(false);}

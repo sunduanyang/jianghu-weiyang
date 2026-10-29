@@ -127,7 +127,8 @@ public partial class JianghuApp {
         GUI.Label(new Rect(plate.x+18,plate.y+56,plate.width-36,26),identity,sub);
         string life=(!player&&!actor["alive"].B)?"已故":(actor["age_months"].I/12)+"岁";
         string job=actor["job"].S;
-        GUI.Label(new Rect(plate.x+18,plate.y+86,plate.width-36,24),life+(job.Length>0?" · "+job:"")+" · 心情 "+MoodWord(actor),small);
+        string stance=player?"":actor["temperament_view"]["stance_label"].Has?" · "+actor["temperament_view"]["stance_label"].S:actor["stance"].Has?" · "+actor["stance"].S:"";
+        GUI.Label(new Rect(plate.x+18,plate.y+86,plate.width-36,24),life+(job.Length>0?" · "+job:"")+stance+" · 心情 "+MoodWord(actor),small);
         var relation=actor["player_relation"];
         string detail=player?"银两 "+Num(W["player"]["wealth"])+" · 声望 "+Num(W["player"]["reputation"]):relation.Has?"情分 "+Num(relation["affinity"])+" · 信任 "+Num(relation["trust"]):"";
         if(!player){string bond=relation["married"].B?"配偶":relation["sworn"].B?"义亲":relation["confidant"].B?"知交":"";if(bond.Length>0)detail=bond+" · "+detail;}

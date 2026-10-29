@@ -1,0 +1,140 @@
+{
+  "date": "2026-10-29",
+  "branch": "codex/integrate-claude-20261029",
+  "integrated_prs": [
+    10,
+    11,
+    12
+  ],
+  "integration_head": "fc07dd8a05c3da3d683064fb804d36896de9bca3",
+  "rules": {
+    "passed": true,
+    "tests": 632,
+    "seconds": 265.366
+  },
+  "windows_build": {
+    "passed": true,
+    "name": "ClaudeIntegrated20261029",
+    "unity": "6000.6.7f1",
+    "graphics": "Direct3D11",
+    "csharp_inputs_unchanged": 159,
+    "backend_modules_equal": true
+  },
+  "prior_active_build": "NaturalProportions20261029",
+  "active_build": "ClaudeIntegrated20261029",
+  "preexisting_files_identical_immediately_after_merge": 418,
+  "native": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated fixture ready",
+        "passed": true
+      },
+      {
+        "check": "live personality has stance and five new axes",
+        "passed": true
+      },
+      {
+        "check": "personality detail keeps the selected person",
+        "passed": true
+      },
+      {
+        "check": "native sect page receives duties precepts and relations",
+        "passed": true
+      },
+      {
+        "check": "promotion trial is enabled in the live combat category",
+        "passed": true
+      },
+      {
+        "check": "sect_trial enters the formal native physical arena",
+        "passed": true
+      },
+      {
+        "check": "sect_trial uses both source rigs and correct spar policy",
+        "passed": true
+      },
+      {
+        "check": "sect_trial saves a physical checkpoint",
+        "passed": true
+      },
+      {
+        "check": "sect_trial returns to its original person while unresolved",
+        "passed": true
+      },
+      {
+        "check": "sect_trial resumes the same paused physical battle",
+        "passed": true
+      },
+      {
+        "check": "sect_trial detects native victory after acceptance damage",
+        "passed": true
+      },
+      {
+        "check": "sect_trial settles and returns to the same person",
+        "passed": true
+      },
+      {
+        "check": "winning trial promotes exactly one grade",
+        "passed": true
+      },
+      {
+        "check": "hunt is accepted from the current real commission board",
+        "passed": true
+      },
+      {
+        "check": "hunt target exposes enabled sect errand interaction",
+        "passed": true
+      },
+      {
+        "check": "sect_hunt enters the formal native physical arena",
+        "passed": true
+      },
+      {
+        "check": "sect_hunt uses both source rigs and correct spar policy",
+        "passed": true
+      },
+      {
+        "check": "sect_hunt saves a physical checkpoint",
+        "passed": true
+      },
+      {
+        "check": "sect_hunt returns to its original person while unresolved",
+        "passed": true
+      },
+      {
+        "check": "sect_hunt resumes the same paused physical battle",
+        "passed": true
+      },
+      {
+        "check": "sect_hunt detects native victory after acceptance damage",
+        "passed": true
+      },
+      {
+        "check": "sect_hunt settles and returns to the same person",
+        "passed": true
+      },
+      {
+        "check": "successful hunt removes the active commission",
+        "passed": true
+      },
+      {
+        "check": "hunt pays five real silver from sect treasury",
+        "passed": true
+      },
+      {
+        "check": "acceptance preserves month and never invokes a model",
+        "passed": true
+      },
+      {
+        "check": "no native errors or exceptions",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "screenshot_requested": false,
+    "screenshot_count": 0,
+    "visual_verified": false,
+    "limitation": "Functional acceptance only; screenshots are opt-in and require separate visual review. Victories use explicit acceptance-only native damage injection; no balance or model-quality claim."
+  }
+}

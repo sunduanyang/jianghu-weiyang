@@ -24,7 +24,7 @@
     "damage": "effective_D = 16 * game_damage_coefficient - 15; base D=1; negative values intentionally preserve ratios",
     "mass": "source category masses multiplied by game mass / profile base mass",
     "armor": "one campaign armor slot maps to one covered layer, not three duplicated layers",
-    "unarmed": "game fallback only, D=.1; APK has no equivalent unarmed item",
+    "unarmed": "source Nothing numeric shape/body/counterweight; Type=7 controls COM/arm props while HandItemType=0 controls cqe masses; AI still filters Nothing",
     "shield": "existing wood_shield maps to ordinary source shield D=1, WoodBlunt"
   },
   "profiles": {
@@ -68,6 +68,145 @@
       "base_mass": 2.35,
       "base_damage": 1.42
     }
+  },
+  "held_profiles": {
+    "dagger": {
+      "sample_name": "HandItem_Dagger_1",
+      "sample_item_id": 197,
+      "body_gravity": 1,
+      "counterweight_gravity": 1,
+      "linear_damping": 0.5,
+      "angular_damping": 2.5,
+      "counterweight_linear_damping": 0,
+      "counterweight_angular_damping": 0.05
+    },
+    "sabre": {
+      "sample_name": "HandItem_Sword_1",
+      "sample_item_id": 246,
+      "body_gravity": 1,
+      "counterweight_gravity": 1,
+      "linear_damping": 0,
+      "angular_damping": 0.05,
+      "counterweight_linear_damping": 0,
+      "counterweight_angular_damping": 0.05
+    },
+    "sword": {
+      "sample_name": "HandItem_Sword_1",
+      "sample_item_id": 246,
+      "body_gravity": 1,
+      "counterweight_gravity": 1,
+      "linear_damping": 0,
+      "angular_damping": 0.05,
+      "counterweight_linear_damping": 0,
+      "counterweight_angular_damping": 0.05
+    },
+    "axe": {
+      "sample_name": "HandItem_Axe_1",
+      "sample_item_id": 187,
+      "body_gravity": 1,
+      "counterweight_gravity": 1,
+      "linear_damping": 0,
+      "angular_damping": 0.05,
+      "counterweight_linear_damping": 0,
+      "counterweight_angular_damping": 0.05
+    },
+    "mace": {
+      "sample_name": "HandItem_Mace_1",
+      "sample_item_id": 212,
+      "body_gravity": 1,
+      "counterweight_gravity": 1,
+      "linear_damping": 0,
+      "angular_damping": 0.05,
+      "counterweight_linear_damping": 0,
+      "counterweight_angular_damping": 0.05
+    },
+    "spear": {
+      "sample_name": "HandItem_2HandedSpear_1",
+      "sample_item_id": 178,
+      "body_gravity": 1,
+      "counterweight_gravity": 1,
+      "linear_damping": 10,
+      "angular_damping": 15,
+      "counterweight_linear_damping": 0,
+      "counterweight_angular_damping": 0.05
+    },
+    "greatsword": {
+      "sample_name": "HandItem_2HandedSword_1",
+      "sample_item_id": 182,
+      "body_gravity": 1,
+      "counterweight_gravity": 1,
+      "linear_damping": 15,
+      "angular_damping": 25,
+      "counterweight_linear_damping": 0,
+      "counterweight_angular_damping": 0.05
+    },
+    "greataxe": {
+      "sample_name": "HandItem_2HandedAxe_1",
+      "sample_item_id": 168,
+      "body_gravity": 1,
+      "counterweight_gravity": 1,
+      "linear_damping": 15,
+      "angular_damping": 25,
+      "counterweight_linear_damping": 0,
+      "counterweight_angular_damping": 0.05
+    },
+    "warhammer": {
+      "sample_name": "HandItem_2HandedHammer_1",
+      "sample_item_id": 173,
+      "body_gravity": 1,
+      "counterweight_gravity": 1,
+      "linear_damping": 15,
+      "angular_damping": 25,
+      "counterweight_linear_damping": 0,
+      "counterweight_angular_damping": 0.05
+    },
+    "shield": {
+      "sample_name": "HandItem_Shield_1",
+      "sample_item_id": 216,
+      "body_gravity": 1,
+      "counterweight_gravity": 1,
+      "linear_damping": 0,
+      "angular_damping": 0.05,
+      "counterweight_linear_damping": 0,
+      "counterweight_angular_damping": 0.05
+    }
+  },
+  "nonarena_override": {
+    "condition": "!Application.isBatchMode && !TransitionController.InArena && !IsFlailHead",
+    "body_gravity": -1,
+    "counterweight_gravity": -5,
+    "linear_damping": 50,
+    "angular_damping": 100,
+    "flag_getter_va": "0x36893fc",
+    "flag_static_offset": 8,
+    "initialization_window": "SpawnRunner precedes InArena=true; first equipment OnEnable timing remains unverified dynamically"
+  },
+  "nothing": {
+    "source": {
+      "file": "sharedassets0.assets",
+      "id": 273502
+    },
+    "name": "Nothing",
+    "type": 7,
+    "hand_item_type": 0,
+    "length": 0.25,
+    "body_mass": 1,
+    "counterweight_mass": 1,
+    "body_gravity": 1.0,
+    "counterweight_gravity": 1.0,
+    "linear_damping": 0.5,
+    "angular_damping": 2.5,
+    "counterweight_linear_damping": 0.0,
+    "counterweight_angular_damping": 0.05000000074505806,
+    "body_sleep_mode": 0,
+    "counterweight_sleep_mode": 1,
+    "body_interpolation": 1,
+    "counterweight_interpolation": 0,
+    "radius": 0.059922490268945694,
+    "counterweight_radius": 0.05000000074505806,
+    "surface": "WoodBlunt",
+    "mass_evidence": "SourcePrefab_HandItem.cqe 0x363e0d8, HandItemType=0 single-handed; serialized counterweight .25 is overwritten to 1",
+    "slot_evidence": "CharacterConfigApplier.ApplyHandItemLeft/Right Type=7: handCOMShieldMass + cez(shield=true); not a shield attack in AI"
   },
   "weapons": {
     "wood_sword": {

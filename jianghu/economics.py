@@ -135,13 +135,63 @@ def initialize(w):
     return True
 
 
-def fee(w, place, amount):
+# Markets keep a working float. Above it, a cash-rich market narrows its spread:
+# it pays producers more and charges households less, so silver returns to people.
+# The bid never reaches the ask (at most 94% against at least 95% of list), so no
+# one can buy from a market and sell straight back to it at a profit.
+BASE_BID = .85
+MAX_BID = .94
+MAX_DISCOUNT = .05
+
+
+def float_needed(m):
+    # Targets and list prices only change at the start of a month; the value is cached then.
+    cached = m.get('float')
+    return cached if cached is not None else max(20., sum(m['target'][g] * m['prices'][g] for g in GOODS))
+
+
+def liquidity(m):
+    return m['cash'] / float_needed(m)
+
+
+def surplus(m):
+    return max(0., liquidity(m) - 1.)
+
+
+def bid(m, g):
+    """What the market pays a seller per unit."""
+    return m['prices'][g] * min(MAX_BID, BASE_BID + surplus(m) * .15)
+
+
+def ask(m, g):
+    """What a buyer pays the market per unit."""
+    return m['prices'][g] * (1 - min(MAX_DISCOUNT, surplus(m) * .05))
+
+
+WHOLESALE = .95
+
+
+def wholesale(m, g):
+    """Merchants deal in bulk at close to the list price, without the retail spread."""
+    return m['prices'][g] * WHOLESALE
+
+
+def fee(w, place, amount, service=None):
+    """Silver paid into a town market. When it pays for a service (an escort, a performance,
+    medicine for a patient) the market's purchased capacity is used up accordingly, so the
+    providers it bought from were paid for real work."""
     if active(w) and amount:
-        market(w, place)['cash'] += amount
+        m = market(w, place)
+        if service:
+            units = quantity(min(m['stock'][service], amount / max(.0001, ask(m, service))))
+            if units:
+                m['stock'][service] = q(m['stock'][service] - units)
+                state(w)['consumed'][service] += units; m['used'][service] += units
+        m['cash'] += amount
 
 
 def buy(w, who, good, amount, reserve=0.):
-    n = actor(w, who); life = prepare(n); m = market(w, place_of(w, who)); price = m['prices'][good]
+    n = actor(w, who); life = prepare(n); m = market(w, place_of(w, who)); price = ask(m, good)
     amount = quantity(min(amount, m['stock'][good], max(0., n['wealth'] - reserve) / price))
     cost = round(amount * price, 4)
     n['wealth'] -= cost; m['cash'] += cost; m['stock'][good] = q(m['stock'][good] - amount)
@@ -153,7 +203,7 @@ def buy(w, who, good, amount, reserve=0.):
 
 def sell(w, who, good, amount):
     n = actor(w, who); life = prepare(n); m = market(w, place_of(w, who))
-    price = m['prices'][good] * .85
+    price = bid(m, good)
     room = max(0., m['target'][good] * (1.2 if GOODS[good][2] == 1 else 3) - m['stock'][good])
     amount = quantity(min(amount, life['stock'][good], room, m['cash'] / price))
     value = round(amount * price, 4)
@@ -166,13 +216,22 @@ def sell(w, who, good, amount):
     return amount, value
 
 
+def room(m, g, expecting=False):
+    """How much of a good the market will still buy. Services spoil monthly, so a person
+    weighing a trade expects last month's competing supply to return."""
+    stock = m['stock'][g]
+    if expecting and GOODS[g][2] == 1:
+        stock = max(stock, m.get('last_made', {}).get(g, 0.))
+    return max(0., m['target'][g] * (1.2 if GOODS[g][2] == 1 else 3) - stock)
+
+
 def recipe(w, n, profession=None):
     job = profession or n['career']['profession']; m = market(w, n['place'])
     choices = RECIPES.get(job, [])
     def score(row):
         outputs, inputs = row
-        revenue = sum(min(amount, max(0., m['target'][g]*(1.2 if GOODS[g][2] == 1 else 3) - m['stock'][g])) * m['prices'][g] * .85 for g, amount in outputs.items())
-        cost = sum(max(0., amount - prepare(n)['stock'][g]) * m['prices'][g] for g, amount in inputs.items())
+        revenue = sum(min(amount, room(m, g)) * bid(m, g) for g, amount in outputs.items())
+        cost = sum(max(0., amount - prepare(n)['stock'][g]) * ask(m, g) for g, amount in inputs.items())
         feasible = all(prepare(n)['stock'][g] + m['stock'][g] >= amount for g, amount in inputs.items())
         return revenue - cost if feasible else -10000
     return max(choices, key=score) if choices else ({}, {})
@@ -187,9 +246,9 @@ def expected_income(w, n, profession=None):
     m = market(w, n['place'])
     if any(prepare(n)['stock'][g] + m['stock'][g] < amount for g, amount in inputs.items()):
         return 0.
-    revenue = min(m['cash'], sum(min(amount, max(0., m['target'][g] * (1.2 if GOODS[g][2] == 1 else 3) - m['stock'][g]))
-                                * m['prices'][g] * .85 for g, amount in outputs.items()))
-    cost = sum(max(0., amount - prepare(n)['stock'][g]) * m['prices'][g] for g, amount in inputs.items())
+    revenue = min(m['cash'], sum(min(amount, room(m, g, expecting=profession is not None)) * bid(m, g)
+                                for g, amount in outputs.items()))
+    cost = sum(max(0., amount - prepare(n)['stock'][g]) * ask(m, g) for g, amount in inputs.items())
     return max(0., revenue - cost)
 
 
@@ -206,13 +265,13 @@ def routes(w, n):
             for g in GOODS:
                 if GOODS[g][2] == 1:
                     continue
-                spread = destination['prices'][g] * .85 - origin['prices'][g]
+                spread = wholesale(destination, g) - origin['prices'][g]
                 if spread <= 0:
                     continue
                 amount = quantity(min(16., max(0., origin['stock'][g] - origin['target'][g]),
                                  max(0., destination['target'][g] * 2 - destination['stock'][g]),
                                  max(0., n['wealth'] - 4 - toll - freight) / origin['prices'][g],
-                                 destination['cash'] / (destination['prices'][g] * .85)))
+                                 destination['cash'] / wholesale(destination, g)))
                 profit = amount * spread - toll - freight
                 if amount >= .1 and profit > .25:
                     options.append(dict(origin=a, destination=b, good=g, quantity=amount, toll=toll, freight=freight, profit=profit))
@@ -225,10 +284,11 @@ def haul(w, n):
         return dict(gross=0., tax=0., produced={}, sold={}, inputs={}, note='暂无能覆盖盘缠与关税的邻城货路')
     trip = max(options, key=lambda t: t['profit']); a, b, g = trip['origin'], trip['destination'], trip['good']
     origin, destination = market(w, a), market(w, b); amount = trip['quantity']
-    purchase = round(amount * origin['prices'][g], 4); sale = round(amount * destination['prices'][g] * .85, 4)
+    purchase = round(amount * origin['prices'][g], 4); sale = round(amount * wholesale(destination, g), 4)
     freight, toll = round(trip['freight'], 4), trip['toll']
     n['wealth'] += sale - purchase - freight - toll
-    origin['cash'] += purchase + freight; destination['cash'] -= sale
+    origin['cash'] += purchase; destination['cash'] -= sale
+    fee(w, a, freight, 'transport')
     origin['stock'][g] = q(origin['stock'][g] - amount); destination['stock'][g] = q(destination['stock'][g] + amount)
     government = w.governments[territory.owner(w, b)]; government['fund'] += toll; government['revenue'] += toll
     politics.record_crossing(w, dict(origin_country=territory.owner(w, a), destination_country=territory.owner(w, b), toll=toll))
@@ -267,7 +327,7 @@ def work(w, n):
     required = {g: q(amount * factor) for g, amount in inputs.items()} if produced else {}
     if any(life['stock'][g] + m['stock'][g] < amount for g, amount in required.items()):
         return dict(gross=0., tax=0., produced={}, sold={}, inputs={}, note='原料不足，未能开工')
-    cost = sum(max(0., amount - life['stock'][g]) * m['prices'][g] for g, amount in required.items())
+    cost = sum(max(0., amount - life['stock'][g]) * ask(m, g) for g, amount in required.items())
     if cost > max(0., n['wealth'] - 2):
         return dict(gross=0., tax=0., produced={}, sold={}, inputs={}, note='备料银两不足，未能开工')
     spent = 0.
@@ -309,12 +369,15 @@ def begin_month(w):
     for p in w.active_places:
         m = market(w, p['id']); m['target'] = targets(w, p['id'])
         prior_supply = m['made'].copy()
+        m['last_made'] = prior_supply
+        m['float'] = None
         for key in ('made', 'used', 'lost'):
             m[key] = {g: 0. for g in GOODS}
         for g in GOODS:
             cover = (prior_supply[g] if GOODS[g][2] == 1 else m['stock'][g]) / max(.1, m['target'][g])
             target_price = GOODS[g][1] * max(.65, min(2.4, 1.65 - cover * .35))
             m['prices'][g] = round(max(GOODS[g][1]*.65, min(GOODS[g][1]*2.4, m['prices'][g]*.75 + target_price*.25)), 4)
+        m['float'] = float_needed(m)
     for n in list(w.npcs.values()) + [w.player]:
         life = prepare(n); life['last_needs'] = deepcopy(life['needs'])
         life.update(income=0., expenses=0., month=w.month, needs={})
@@ -323,7 +386,7 @@ def begin_month(w):
 def consume(w, who, category, amount, payer, reserve=0.):
     n = actor(w, who); life = prepare(n); supplier = actor(w, payer); other = prepare(supplier)
     m = market(w, place_of(w, who)); goods = FOOD if category == 'food' else (category,)
-    goods = sorted(goods, key=lambda g: m['prices'][g])
+    goods = sorted(goods, key=lambda g: ask(m, g))
     remaining = amount; paid = 0.; used = {}; payments = {}
     # Draw on all household food alternatives before spending new silver.
     for g in goods:
@@ -333,10 +396,11 @@ def consume(w, who, category, amount, payer, reserve=0.):
     wallets = [(payer, supplier, other)] + ([(who, n, life)] if other is not life else [])
     for g in goods:
         for wallet_id, wallet, wallet_life in wallets:
-            amount_bought = quantity(min(remaining, m['stock'][g], max(0.,wallet['wealth']-reserve) / m['prices'][g]))
-            cost = round(amount_bought * m['prices'][g], 4)
+            unit = ask(m, g)
+            amount_bought = quantity(min(remaining, m['stock'][g], max(0.,wallet['wealth']-reserve) / unit))
+            cost = round(amount_bought * unit, 4)
             if cost > max(0.,wallet['wealth']-reserve) + 1e-8:
-                amount_bought = max(0., amount_bought - .0001); cost = round(amount_bought*m['prices'][g], 4)
+                amount_bought = max(0., amount_bought - .0001); cost = round(amount_bought*unit, 4)
             wallet['wealth'] -= cost; m['cash'] += cost; m['stock'][g] = q(m['stock'][g] - amount_bought)
             paid += cost; wallet_life['expenses'] += cost; remaining = q(remaining - amount_bought); used[g] += amount_bought
             if cost:
@@ -391,6 +455,7 @@ def close_month(w):
                        .15 if not food_missing else .65, [n.get('last_event')],
                        dict(month=w.month, needs=deepcopy(life['needs']), payer=str(payers[who]), paid=round(paid, 4)))
         life['records'] = (life['records'] + [event['id']])[-12:]
+    spend_gaming_surplus(w)
     # Perishable goods and unused service capacity are explicitly written off.
     holders = [(m['stock'], m) for m in state(w)['markets'].values()]
     holders += [(prepare(n)['stock'], market(w,n['place'])) for n in w.npcs.values() if n['alive']]
@@ -400,6 +465,25 @@ def close_month(w):
             lost = round(stock[g]*rate, 4); stock[g] = q(stock[g]-lost); state(w)['spoiled'][g] += lost
             if m:
                 m['lost'][g] += lost
+
+
+GAMING_FLOAT = 300.
+
+
+def spend_gaming_surplus(w):
+    """Gaming houses pay rent, servants and suppliers: half of any takings above their float
+    goes into the town markets by population, where the market spread returns it to people."""
+    spare = round((w.economy['gaming_house'] - GAMING_FLOAT) * .5, 4)
+    if spare <= 0:
+        return 0.
+    sites = [(p['id'], max(1, len(w.residents.get(p['id'], [])))) for p in w.active_places]
+    total = sum(c for _, c in sites); paid = 0.
+    for i, (place, count) in enumerate(sites):
+        part = round(spare * count / total, 4) if i < len(sites)-1 else round(spare - paid, 4)
+        market(w, place)['cash'] += part; paid += part
+    w.economy['gaming_house'] = round(w.economy['gaming_house'] - paid, 4)
+    state(w)['gaming_spent'] = round(state(w).get('gaming_spent', 0.) + paid, 4)
+    return paid
 
 
 def inherit(w, n, heirs):
@@ -427,7 +511,8 @@ def view(w, place=None, who=None):
     result = dict(enabled=True, version=VERSION, place=place, name=w.place_name(place), cash=round(m['cash'], 4),
         since=state(w)['since'], month=w.month,
         towns=[dict(id=p['id'], name=p['name']) for p in w.active_places],
-        goods=[dict(id=g, name=label, price=m['prices'][g], sell_price=round(m['prices'][g]*.85,4), stock=m['stock'][g],
+        liquidity=round(liquidity(m), 4),
+        goods=[dict(id=g, name=label, price=round(ask(m, g), 4), sell_price=round(bid(m, g), 4), list_price=m['prices'][g], stock=m['stock'][g],
                     target=m['target'][g], produced=m['made'][g], consumed=m['used'][g], spoiled=m['lost'][g]) for g,(label,_,_) in GOODS.items()])
     if who is not None:
         result['household'] = deepcopy(prepare(actor(w, who)))

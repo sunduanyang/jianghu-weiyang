@@ -11,14 +11,13 @@ from . import demography, government, items, appearance
 from . import social
 from . import politics, territory
 from .atlas import PLACES, FACTIONS, COUNTRIES, ROUTES, NEIGHBORS, MAP_VERSION, ERA
-from . import careers, social_ranks
+from . import careers, social_ranks, undertakings, fame, visits, turning, creed
 from . import martial, martial_manuals, physical_combat as combat, player_interactions, player_social
-from . import city_maps, relationships, organizations, protagonist, settlements, society
+from . import city_maps, relationships, organizations, protagonist, settlements, society, temperament, goals
 from . import npc_plans, npc_memory, economics, rank_progression, local_life, llm_policy, npc_attention
 
-TRAITS = {'compassion': '仁厚', 'ambition': '进取', 'caution': '谨慎',
-          'sociability': '外向', 'loyalty': '忠诚', **social.EXTRA_TRAITS}
-BELIEFS = {'trust': '人可相托', 'justice': '善有善报', 'tradition': '传承有益'}
+TRAITS = dict(temperament.NAMES)
+BELIEFS = dict(temperament.OUTLOOK_NAMES)
 DESIRES = {'wealth': '安家立业', 'mastery': '武学有成', 'belonging': '有所归属',
            'renown': '名动一方', 'freedom': '行遍江湖', 'revenge': '讨回公道'}
 ACTIONS = {'work': '谋生', 'train': '习武', 'rest': '休养', 'befriend': '结交',
@@ -158,7 +157,11 @@ class World:
 
     def make_npc(self, parents=None, place=None):
         i = len(self.npcs) + 1
-        traits = {k: self.rng.uniform(15, 85) for k in TRAITS}
+        # Eight legacy draws are still taken so the shared random sequence is unchanged;
+        # temperament itself comes from temperament.draw / inherit below.
+        for _ in range(8):
+            self.rng.uniform(15, 85)
+        traits = dict.fromkeys(temperament.KEYS, 50.)
         name = FAMILY[(i - 1) % len(FAMILY)] + GIVEN[((i - 1) // len(FAMILY) + (i - 1) * 7) % len(GIVEN)]
         if parents:
             family_parent = next((self.npcs[p] for p in parents if self.npcs[p]['sex'] == '男'), self.npcs[parents[0]])
@@ -181,7 +184,7 @@ class World:
              'job': self.rng.choice(JOBS), 'wealth': round(self.rng.uniform(20, 95), 2) if not parents else 0.,
              'skill': self.rng.uniform(4, 32) if age > 180 else 2., 'health': 100., 'reputation': 0.,
              'traits': traits, 'initial_traits': traits.copy(), 'mood': {'joy': 0., 'anger': 0., 'fear': 0.},
-             'beliefs': {'trust': self.rng.uniform(.35, .8), 'justice': self.rng.uniform(.3, .8), 'tradition': .6},
+             'beliefs': {'trust': self.rng.uniform(35, 80), 'justice': self.rng.uniform(30, 80), 'tradition': 60.},
              'desires': {}, 'relationships': {}, 'knowledge': {}, 'memories': [],
              'parents': parents or [], 'children': [], 'spouse': None, 'mentor': None, 'faction': None,
              'contribution': 0., 'goal': None, 'past_goals': [], 'plan': None, 'last_action': None,
@@ -191,17 +194,16 @@ class World:
         n['cooldowns'] = {}
         if age < 192:
             n['job'] = '幼童' if age < 120 else '学徒'
-        n['desires'] = {
-            'wealth': clamp(35 + traits['caution'] * .45 + self.rng.uniform(-20, 20)),
-            'mastery': clamp(30 + traits['ambition'] * .5 + self.rng.uniform(-30, 30)),
-            'belonging': clamp(20 + traits['sociability'] * .65 + self.rng.uniform(-20, 20)),
-            'renown': clamp(traits['ambition'] * .85 + self.rng.uniform(-10, 15)),
-            'freedom': clamp(85 - traits['caution'] * .65 + self.rng.uniform(-20, 20)), 'revenge': 0.}
+        noise = (self.rng.uniform(-20, 20), self.rng.uniform(-30, 30), self.rng.uniform(-20, 20),
+                 self.rng.uniform(-10, 15), self.rng.uniform(-20, 20))
         if parents:
-            for k in TRAITS:
-                n['traits'][k] = clamp(sum(self.npcs[p]['traits'][k] for p in parents) / len(parents)
-                                        + self.rng.uniform(-16, 16))
-            n['initial_traits'] = n['traits'].copy()
+            for _ in range(8):
+                self.rng.uniform(-16, 16)
+            temperament.inherit(self, n, [self.npcs[p] for p in parents])
+        else:
+            key, n['traits'], n['beliefs'] = temperament.draw(self.seed, i, n['job'])
+            n.update(initial_traits=dict(n['traits']), temperament_version=temperament.VERSION, archetype=key)
+        n['desires'] = temperament.base_desires(n['traits'], noise)
         self.npcs[i] = n
         appearance.prepare(self, n, inherit=bool(parents))
         demography.initialize(self, n)
@@ -297,9 +299,9 @@ class World:
                 continue
             prior_beliefs = n['beliefs'].copy()
             subjective, changes = self.interpret(n, event, tone)
-            changes += [{'axis': k, 'domain': 'belief', 'delta': round((v-prior_beliefs[k])*100, 5),
+            changes += [{'axis': k, 'domain': 'belief', 'delta': round(v-prior_beliefs[k], 5),
                          'event_id': event['id'], 'source': '经历塑造信念'}
-                        for k, v in n['beliefs'].items() if abs(v-prior_beliefs[k]) > .000001]
+                        for k, v in n['beliefs'].items() if abs(v-prior_beliefs[k]) > .0001]
             memory = {'event_id': event['id'], 'month': self.month, 'fact': summary,
                       'interpretation': subjective, 'salience': importance, 'changes': changes,
                       'source': '亲历', 'ai': False}
@@ -321,12 +323,15 @@ class World:
             for i in people:
                 careers.sync_identity(self, self.npcs[i], event['id'])
         rank_progression.on_event(self, event)
+        goals.on_event(self, event)
         npc_attention.record(self,event)
+        turning.note(self, event)
         return event
 
     def drift(self, n, axis, requested, major=False, event_id=None, source='经历累积'):
         # Total trait movement is capped per month, with extra plasticity only at turning points.
-        cap = 1.2 if major else .28
+        # Turning points (betrayal, bereavement, marriage, disaster) can visibly reshape a person.
+        cap = 2.5 if major else .28
         remaining = max(0, cap - n['drift_month'].get(axis, 0))
         delta = max(-remaining, min(remaining, requested))
         before = n['traits'][axis]
@@ -351,20 +356,20 @@ class World:
                          'pregnancy', 'recovery', 'government_relief', 'judgment', 'guardianship',
                          'household_support', 'community_relief', 'donate_relief', 'neighbor_care')
         negative = k in ('betrayal', 'duel', 'death', 'disaster', 'loss', 'rejection', 'illness', 'accident', 'epidemic')
-        if k in ('work', 'trade', 'train', 'duty'):
+        if k in ('work', 'trade', 'train', 'duty', 'sect_service'):
             # Small repeated feedback has an observable cumulative effect over decades.
             # These proposals depend on this person's existing interpretation/disposition.
             if k == 'trade':
                 success = e['facts'].get('success', True)
-                axis = 'ambition' if success and t['ambition'] > 45 else 'caution'
-                amount = .006 if success else .014
-                text = ('各有所求，眼下合作对我有利。' if success and t['greed']>55 else
-                        '往来守信，合作比独行更有余地。' if success and b['trust'] > .5 else
-                        '这笔买卖有赚有赔，下次须算清风险。' if not success and t['caution'] > 50 else
+                axis = 'ambition' if success and t['ambition'] > 45 else 'boldness'
+                amount = .006 if success else -.014
+                text = ('各有所求，眼下合作对我有利。' if success and t['kindness']<45 else
+                        '往来守信，合作比独行更有余地。' if success and b['trust'] > 50 else
+                        '这笔买卖有赚有赔，下次须算清风险。' if not success and t['boldness'] < 50 else
                         '一时得失不足定终身，还得看长远。')
-                b['trust'] = clamp(b['trust'] + (.0015 if success else -.003), 0, 1)
+                b['trust'] = clamp(b['trust'] + (.15 if success else -.3))
             elif k == 'work':
-                axis, amount = ('compassion', -.012) if n['pressure']>35 and t['compassion']<55 else (
+                axis, amount = ('kindness', -.012) if n['pressure']>35 and t['kindness']<55 else (
                     ('ambition', -.004) if t['ambition']<35 else ('ambition', .004))
                 text = '连自家的生计都难顾，哪有余力管旁人。' if n['pressure']>35 else (
                     '够自己过日子就好，不必事事争先。' if t['ambition']<35 else '眼下的积累，是往后选择的底气。')
@@ -372,45 +377,47 @@ class World:
                 axis, amount = 'ambition', .012
                 text = '武学不负日积月累，急不得，也停不得。'
             else:
-                axis, amount = ('loyalty', .007) if t['loyalty']>50 else ('honesty', -.004)
-                text = '共同做事，才知道这份组织之约值多少。' if t['loyalty']>50 else '出了这份力，总得为自己换些门路。'
+                axis, amount = ('integrity', .007) if t['integrity']>50 else ('integrity', -.004)
+                text = '共同做事，才知道这份组织之约值多少。' if t['integrity']>50 else '出了这份力，总得为自己换些门路。'
             changes.append(self.drift(n, axis, amount, event_id=e['id']))
         elif k in ('aid', 'household_support', 'community_relief', 'neighbor_care', 'donate_relief'):
             receiver = e['facts'].get('receiver') == n['id']
             text = ('危难时仍有人相助，我愿再信人一次。' if receiver else
-                    '江湖情义需要有人先付出。' if t['compassion'] > 50 else '结一份善缘，往后或有所助。')
-            b['trust'] = clamp(b['trust'] + (.025 if receiver else .008), 0, 1)
-            changes.append(self.drift(n, 'compassion', .08 if t['compassion'] > 50 else .025, event_id=e['id']))
+                    '江湖情义需要有人先付出。' if t['kindness'] > 50 else '结一份善缘，往后或有所助。')
+            b['trust'] = clamp(b['trust'] + (2.5 if receiver else .8))
+            changes.append(self.drift(n, 'kindness', .08 if t['kindness'] > 50 else .025, event_id=e['id']))
         elif k in ('betrayal', 'loss'):
             culprit = e['facts'].get('offender') == n['id']
             text = ('银钱到手，却损了情义。' if culprit else
-                    '轻信让人付出代价，下回须留一手。' if t['caution'] > 50 else '此事伤人，但不能因此疑尽天下人。')
+                    '轻信让人付出代价，下回须留一手。' if t['boldness'] < 50 else '此事伤人，但不能因此疑尽天下人。')
             if not culprit:
-                b['trust'] = clamp(b['trust'] - (.11 if k == 'betrayal' else .04) * (1.3 - t['compassion']/200), 0, 1)
-                changes.append(self.drift(n, 'caution', .7 if k == 'betrayal' else .1, k == 'betrayal', e['id']))
-                grievance = 30+(100-t['compassion'])*.6+t['ambition']*.12
+                b['trust'] = clamp(b['trust'] - (11 if k == 'betrayal' else 4) * (1.3 - t['kindness']/200))
+                changes.append(self.drift(n, 'boldness', -1.4 if k == 'betrayal' else -.1, k == 'betrayal', e['id']))
+                grievance = 30+(100-t['kindness'])*.6+t['ambition']*.12
                 n['desires']['revenge'] = clamp(n['desires']['revenge'] + (grievance if k == 'betrayal' else 4))
                 if k == 'betrayal':
                     n['grievance_cause'] = e['id']
         elif k == 'death':
-            text = '生死无常，更要守住眼前之人。' if t['loyalty'] > 50 else '此后的人生，需另寻支点。'
-            changes.append(self.drift(n, 'loyalty', .5 if t['loyalty'] > 50 else -.25, True, e['id']))
+            text = '生死无常，更要守住眼前之人。' if t['integrity'] > 50 else '此后的人生，需另寻支点。'
+            changes.append(self.drift(n, 'integrity', 1. if t['integrity'] > 50 else -.5, True, e['id']))
             n['desires']['belonging'] = clamp(n['desires']['belonging'] + 6)
         elif k == 'disaster':
-            text = '世事难料，先备余粮才安心。' if t['caution'] > 50 else '邻里都受了难，须设法相扶。'
-            changes.append(self.drift(n, 'caution' if t['caution'] > 50 else 'compassion', .45, True, e['id']))
+            text = '世事难料，先备余粮才安心。' if t['boldness'] < 50 else '邻里都受了难，须设法相扶。'
+            changes.append(self.drift(n, 'boldness', -.9, True, e['id']) if t['boldness'] < 50 else
+                           self.drift(n, 'kindness', .9, True, e['id']))
             n['desires']['wealth'] = clamp(n['desires']['wealth'] + 3)
         elif k == 'duel':
             won = e['facts'].get('winner') == n['id']
-            text = ('苦练终有回响，尚须自持。' if t['loyalty'] > 50 else '强者才有话语权。') if won else (
+            text = ('苦练终有回响，尚须自持。' if t['integrity'] > 50 else '强者才有话语权。') if won else (
                 '一时之败，须用长久苦练补上。' if t['ambition'] > 50 else '逞强的代价，值得记住。')
-            changes.append(self.drift(n, 'ambition' if t['ambition'] > 50 else 'caution', .18, event_id=e['id']))
+            changes.append(self.drift(n, 'ambition', .18, event_id=e['id']) if t['ambition'] > 50 else
+                           self.drift(n, 'boldness', -.18, event_id=e['id']))
         elif k in ('teaching', 'mentor'):
             text = '技艺由人传人，前路便不再孤单。'
-            b['tradition'] = clamp(b['tradition'] + .008, 0, 1)
+            b['tradition'] = clamp(b['tradition'] + .8)
         elif k == 'marriage':
             text = '从此有所牵挂，取舍不再只为自己。'
-            changes.append(self.drift(n, 'loyalty', .5, True, e['id']))
+            changes.append(self.drift(n, 'integrity', 1., True, e['id']))
         elif k == 'birth':
             text = '新生命让未来有了分量。' if n['age_months'] > 0 else '在亲人的照料中开始人生。'
         elif k == 'census':
@@ -418,8 +425,8 @@ class World:
         elif k == 'goal_complete':
             text = '多年的付出有了回报，也该想想下一程。'
         elif k in ('government_relief', 'judgment'):
-            text = '公家若能护住百姓，日子便多一分依靠。' if b['justice'] > .5 else '此事得了帮助，往后还得看官府如何行事。'
-            b['justice'] = clamp(b['justice']+.015, 0, 1)
+            text = '公家若能护住百姓，日子便多一分依靠。' if b['justice'] > 50 else '此事得了帮助，往后还得看官府如何行事。'
+            b['justice'] = clamp(b['justice']+1.5)
         elif k in ('illness', 'accident', 'epidemic'):
             text = '性命有时比前程更紧要，须调整眼前打算。'
         else:
@@ -427,14 +434,15 @@ class World:
         if positive:
             n['mood']['joy'] = clamp(n['mood']['joy'] + e['importance'] * 24, -100, 100)
         if negative:
-            n['mood']['anger'] = clamp(n['mood']['anger'] + e['importance'] * (100-t['compassion']) / 4)
-            n['mood']['fear'] = clamp(n['mood']['fear'] + e['importance'] * t['caution'] / 5)
+            n['mood']['anger'] = clamp(n['mood']['anger'] + e['importance'] * (100-t['kindness']+t['boldness']) / 8)
+            n['mood']['fear'] = clamp(n['mood']['fear'] + e['importance'] * (100-t['boldness']) / 5)
             n['mood']['joy'] = clamp(n['mood']['joy'] - e['importance'] * 20, -100, 100)
         return text, [c for c in changes if c]
 
-    def best_goal(self, n):
-        options = self.goal_options(n)
-        return max(options, key=lambda k: n['desires'][k] + self.rng.uniform(-8, 8))
+    def best_goal(self, n, exclude=()):
+        options = [k for k in self.goal_options(n) if k not in exclude] or ['wealth']
+        # A creed's dream weighs in; the random draw is unchanged.
+        return max(options, key=lambda k: n['desires'][k] + creed.dream_bonus(n, k) + self.rng.uniform(-8, 8))
 
     def goal_options(self, n):
         keys = ['wealth', 'belonging', 'freedom']
@@ -453,16 +461,15 @@ class World:
         if old:
             n['past_goals'].append({**old, 'ended': self.month})
             n['past_goals'] = n['past_goals'][-15:]
-        targets = {'wealth': n['wealth'] + max(400, n['wealth']*.7), 'mastery': min(95, combat_attributes.rating(n) + 35),
-                   'belonging': 1, 'renown': min(90, n['reputation'] + 45), 'freedom': n['moves'] + 9,
-                   'revenge': 1}
         n['goal'] = {'kind': key, 'title': DESIRES[key], 'since': self.month,
-                     'horizon_years': self.rng.randint(5, 20), 'target': targets[key],
-                     'cause': cause, 'progress': 0., 'status': '追求中', 'minimum_months': 48}
+                     'horizon_years': self.rng.randint(5, 20), 'target': 1.,
+                     'cause': cause, 'progress': 0., 'status': '追求中', 'minimum_months': goals.MINIMUM_MONTHS}
+        goals.prepare(self, n, n['goal'], cause)
         n['last_goal_change'] = self.month
         if not initial:
-            self.emit('goal_change', [n['id']], f"{n['name']}将人生重心转向「{DESIRES[key]}」。", .6,
-                      [cause], {'previous': old['kind'] if old else None, 'goal': key})
+            self.emit('goal_change', [n['id']], f"{n['name']}将人生重心转向「{n['goal']['title']}」。", .6,
+                      [cause], {'previous': old['kind'] if old else None, 'goal': key,
+                                'against': n['goal'].get('against'), 'target': n['goal']['target']})
         n['plan'] = None
 
     def update_goal(self, n):
@@ -470,21 +477,32 @@ class World:
         if not g:
             self.set_goal(n, self.best_goal(n), n['last_event'])
             return
+        goals.upgrade(self, n)
+        goals.monthly(self, n)
         k = g['kind']
-        value = {'wealth': n['wealth'], 'mastery': combat_attributes.rating(n),
-                 'belonging': 1. if n['spouse'] or sum(r['affinity'] > 50 for r in n['relationships'].values()) >= 3 else 0.,
-                 'renown': n['reputation'], 'freedom': n['moves'],
-                 'revenge': 1. if any(m['event_id'] > (g['cause'] or 0) and '讨回' in m['fact'] for m in n['memories']) else 0.}[k]
-        g['progress'] = clamp(value / max(.1, g['target']), 0, 1)
-        if g['progress'] >= 1 and self.month - g['since'] >= g.get('minimum_months', 48):
+        value = goals.value(self, n, g)
+        g['progress'] = round(goals.progress(self, n, g), 4)
+        if g['progress'] >= 1 and self.month - g['since'] >= g.get('minimum_months', goals.MINIMUM_MONTHS):
             g['status'] = '已达成'
-            e = self.emit('goal_complete', [n['id']], f"{n['name']}经过{(self.month-g['since'])/12:.1f}年追求，"
-                          f"达成人生目标「{g['title']}」。", .85, [g['cause'], n['last_event']],
-                          {'goal': k, 'target': g['target'], 'actual': round(value, 2)})
+            settled = g.get('resolved')
+            text = (f"{n['name']}{settled['text']}，「{g['title']}」的心愿了结。" if settled else
+                    f"{n['name']}经过{(self.month-g['since'])/12:.1f}年追求，达成人生目标「{g['title']}」。")
+            e = self.emit('goal_complete', [n['id']], text, .85,
+                          [g['cause'], settled['event_id'] if settled else None, n['last_event']],
+                          {'goal': k, 'target': g['target'], 'actual': round(value, 2), 'start': g.get('start'),
+                           'resolution': settled['how'] if settled else None, 'against': g.get('against')})
             self.metrics['goals_completed'] += 1
-            n['desires'][k] = clamp(n['desires'][k] - 14)
-            self.set_goal(n, self.best_goal(n), e['id'])
-        elif (self.month - n['last_goal_change'] >= 24 and
+            if (n.get('plan') or {}).get('intent') in undertakings.KINDS:
+                npc_plans.close(self, n, '完成', '心愿已经达成', e['id'])
+            n['desires'][k] = clamp(n['desires'][k] - (40 if k == 'revenge' else 14))
+            self.set_goal(n, self.best_goal(n, exclude=('revenge',) if k == 'revenge' else ()), e['id'])
+        elif goals.letting_go(n) and self.month - g['since'] >= 6:
+            e = self.emit('grudge_released', [n['id']] + ([g['against']] if g.get('against') in self.npcs else []),
+                          f"{n['name']}日久心淡，放下了与{g.get('against_name') or '旧人'}的旧怨。", .6,
+                          [g['cause'], n['last_event']], {'against': g.get('against'), 'revenge_desire': n['desires']['revenge']})
+            self.metrics['grudges_released'] = self.metrics.get('grudges_released', 0) + 1
+            self.set_goal(n, self.best_goal(n, exclude=('revenge',)), e['id'])
+        elif (self.month - n['last_goal_change'] >= 12 and n['desires']['revenge'] >= 55 and
               n['desires']['revenge'] > n['desires'][k] + 8 and
               'revenge' in self.goal_options(n) and k != 'revenge'):
             self.set_goal(n, 'revenge', n.get('grievance_cause') or n['last_event'])
@@ -524,6 +542,11 @@ class World:
         # Leave room for new acquaintances as old generations die and young people grow up.
         visible_new = [i for i in known if i in strangers]
         visible = own_rank[:6] + visible_new[:2]
+        # The person a long undertaking is about stays in view while both are in town.
+        focus = undertakings.focus(n)
+        if focus is not None and focus not in visible and focus in self.npcs and self.npcs[focus]['alive'] \
+                and self.npcs[focus]['place'] == n['place']:
+            visible.append(focus)
         for i in visible:
             q = self.npcs[i]
             actions += martial_manuals.candidates(self, n, q)
@@ -611,19 +634,19 @@ class World:
                  'train': 9 + t['ambition']*.06,
                  'befriend': t['sociability']*.16,
                  'court': 13 + t['sociability']*.1,
-                 'propose': 22, 'aid': t['compassion']*.36-6,
-                 'trade': 20, 'betray': t['ambition']*.25-t['loyalty']*.36-t['compassion']*.2
-                 + (30 if t['loyalty'] < 38 and t['ambition'] > 55 else 0),
-                 'duel': t['ambition']*.2-t['caution']*.16,
+                 'propose': 22, 'aid': t['kindness']*.36-6,
+                 'trade': 20, 'betray': t['ambition']*.25-t['integrity']*.36-t['kindness']*.2
+                 + (30 if t['integrity'] < 38 and t['ambition'] > 55 else 0),
+                 'duel': t['ambition']*.2-(100-t['boldness'])*.16,
                  'seek_teacher': 28+(20 if g == 'mastery' else 0),
-                 'mentor': 18, 'teach': t['loyalty']*.18 + t['compassion']*.1,
-                 'join': 18+n['beliefs']['tradition']*4,
-                 'duty': 12+t['loyalty']*.1, 'travel': (100-t['caution'])*.08,
+                 'mentor': 18, 'teach': t['integrity']*.18 + t['kindness']*.1,
+                 'join': 18+n['beliefs']['tradition']*.04,
+                 'duty': 12+t['integrity']*.1, 'travel': t['boldness']*.08,
                  'rumor': 4+t['sociability']*.08,
-                 'family': 20+t['loyalty']*.15,
+                 'family': 20+t['integrity']*.15,
                  'treatment': 45+(100-n['health'])*.5 + (20 if n['illness'] else 0),
-                 'report': 15+n['beliefs']['justice']*22+t['caution']*.2,
-                 'public_service': 15+t['loyalty']*.15}.get(k, 0)
+                 'report': 15+n['beliefs']['justice']*.22+(100-t['boldness'])*.2,
+                 'public_service': 15+t['integrity']*.15}.get(k, 0)
         if k in ('change_job', 'learn_trade'):
             score = careers.score(self, n, a)
         if k in relationships.LABELS:
@@ -658,7 +681,7 @@ class World:
             score += (9-observed.get('identity_grade', 9))*t['ambition']*.02
             score += 2 if observed.get('job') == n['job'] else 0
         if k == 'travel' and n['spouse']:
-            score -= t['loyalty']*.22
+            score -= t['integrity']*.22
         if k == 'travel' and (n['pregnancy'] or any(self.npcs[i]['alive'] and self.npcs[i]['age_months'] < 72 for i in n['children'])):
             score -= 18
         if k == 'befriend' and not n['spouse'] and not n.get('player_spouse') and 216 <= n['age_months'] <= 480:
@@ -675,16 +698,17 @@ class World:
                   'revenge': {'report': 30}}.get(g, {}).get(k, 0)
         if n['wealth'] < 10 and k != 'work' and not (k == 'travel' and a.get('migration')):
             score -= 35
-        return score + social.adjustment(self,n,a) + npc_plans.adjustment(self, n, a) + rank_progression.adjustment(self,n,a) + local_life.adjustment(self,n,a) + llm_policy.adjustment(self,n,a)
+        return score + social.adjustment(self,n,a) + npc_plans.adjustment(self, n, a) + rank_progression.adjustment(self,n,a) + local_life.adjustment(self,n,a) + llm_policy.adjustment(self,n,a) + creed.adjustment(self,n,a)
 
     def choose(self, n, actions):
         return npc_plans.choose(self, n, actions)
 
-    def execute(self, n, action):
+    def execute(self, n, action, legal=None):
         if str(action.get('id','')).partition(':')[0] in martial.RETIRED_ACTIONS:
             return None
-        # Reject any caller supplied action not in the engine's CURRENT legal set.
-        a = next((a for a in self.legal_actions(n) if a['id'] == action.get('id')), None)
+        # Reject any caller supplied action not in the engine's CURRENT legal set. The month loop
+        # passes the set it has just computed for this decision; every other caller is re-checked.
+        a = next((a for a in (legal if legal is not None else self.legal_actions(n)) if a['id'] == action.get('id')), None)
         if a is None:
             self.metrics['invalid_actions'] += 1
             return None
@@ -737,6 +761,7 @@ class World:
                 n['wealth'] += earn
                 tax = government.tax(self, n, earn) if n['age_months'] >= 192 else 0
             practice = careers.gain(n, n['career']['profession'], .4)
+            careers.note_income(n, earn)
             facts.update({'career_practice': practice, 'gross_income': earn, 'tax': tax,
                           'tax_country': territory.owner(self, n['place'])})
             n['health'] = clamp(n['health'] - self.rng.uniform(.5, 2))
@@ -787,7 +812,7 @@ class World:
             self.residents[i].append(n['id'])
             people += demography.follow_guardian(self, n, old)
             n['wealth'] -= a['cost']
-            economics.fee(self, old, a['fare'])
+            economics.fee(self, old, a['fare'], 'transport')
             destination_government = self.governments[a['destination_country']]
             destination_government['fund'] += a['toll']
             destination_government['revenue'] += a['toll']
@@ -829,7 +854,7 @@ class World:
         elif k == 'public_service':
             g = government.office_government(self, n)
             g['fund'] -= 4
-            economics.fee(self, n['place'], 4)
+            economics.fee(self, n['place'], 4, 'transport')
             g['expenses'] += 4
             g['security'] = min(.95, g['security']+.015)
             g['sanitation'] = min(.95, g['sanitation']+.01)
@@ -857,7 +882,7 @@ class World:
             r = self.relation(n, i)
             parents.append(r['last_event'])
             if k == 'befriend':
-                fit = 1 - abs(n['traits']['loyalty'] - q['traits']['loyalty'])/130
+                fit = 1 - abs(n['traits']['integrity'] - q['traits']['integrity'])/130
                 gain = self.rng.uniform(4, 9)*fit
                 self.link(n, q, gain, 2)
                 kind, imp = 'friendship', .35
@@ -957,8 +982,7 @@ class World:
                 text, imp = f"{name}因旧怨向{q['name']}挑战，{result}。", .8
                 facts.update({'winner': winner['id'] if winner else None, 'loser': loser['id'] if loser else None})
             elif k == 'mentor':
-                qloyal = q['traits']['loyalty']
-                accepted = qloyal + q['traits']['compassion'] > 65
+                accepted = q['traits']['integrity'] + q['traits']['kindness'] > 65
                 if accepted:
                     n['mentor'] = i
                     self.link(n, q, 9, 8, label='师徒')
@@ -1017,7 +1041,7 @@ class World:
                                          'source':'回应合作','time_cost':1,'role':'合营伙伴'})
             city_maps.record_action(self,q,a,e)
         if k == 'duel':
-            n['cooldowns'][a['id']]=self.month+max(2,int(n['traits']['caution']/15))
+            n['cooldowns'][a['id']]=self.month+max(2,int((100-n['traits']['boldness'])/15))
             for actor, f in zip((n, q), bout['fighters']):
                 if f['outer_wounds'] + f['inner_wounds'] > 0:
                     actor['wound'] = {'remaining': 5, 'event_id': e['id'],
@@ -1124,8 +1148,10 @@ class World:
                     continue
                 actions=self.legal_actions(n)
                 if actions:
-                    self.execute(n,self.choose(n,actions))
+                    self.execute(n,self.choose(n,actions),legal=actions)
         self.phase=0
+        fame.monthly(self)
+        visits.monthly(self)
         if economics.active(self):
             economics.close_month(self)
             for n in list(self.npcs.values()):
@@ -1429,6 +1455,8 @@ class World:
                 self.player['protagonist']['records'].append(e['id'])
                 tie.update(last_event=e['id'], last_contact=self.month)
                 tie['encounter_records'] = (tie.get('encounter_records', [])+[e['id']])[-24:]
+                if hostile.get('after'):
+                    hostile['after'](e)
         self.battle = b
         self.checkpoint()
         return self.martial_view()
@@ -1470,6 +1498,7 @@ class World:
                 n['last_review_attempt']=min(n.get('last_review_attempt',self.month-1),self.month-1)
                 if self.npc_attention:self.npc_attention['attempts'].pop(str(n['id']),None)
             n['ai_pending'] = False
+            temperament.migrate(self, n)
             demography.initialize(self, n)
             social.initialize(self,n)
             society.prepare(self, n)
@@ -1563,7 +1592,7 @@ class World:
                                   'generation', 'office', 'office_country', 'pregnancy', 'illness', 'death')},
                 'combat_rating': combat_attributes.rating(n), 'profession': n['career']['profession'], 'career_level': careers.level(n)[1],
                 'identity': careers.identity(self, n), 'appearance': n['appearance'],
-                'appearance_view': appearance.view(n)}
+                'appearance_view': appearance.view(n), 'stance': temperament.STANCES[temperament.stance(n)][0]}
 
     def summary(self):
         living = [n for n in self.npcs.values() if n['alive']]
@@ -1607,7 +1636,17 @@ class World:
         from . import player_social
         n = deepcopy(self.npcs[npc_id])
         n['appearance_view'] = appearance.view(n)
+        n['temperament_view'] = temperament.view(self.npcs[npc_id])
+        n['goal_view'] = goals.view(self, self.npcs[npc_id])
         n['planning_view'] = npc_plans.view(self, self.npcs[npc_id])
+        n['fame_view'] = fame.view(self, self.npcs[npc_id])
+        from . import reactions
+        n['player_reactions'] = reactions.view(self, npc_id)
+        from . import persona
+        n['voice_view'] = persona.view(self, self.npcs[npc_id])
+        n['impression_view'] = persona.impression(self, self.npcs[npc_id])
+        n['turning_view'] = turning.view(self, self.npcs[npc_id])
+        n['creed_view'] = creed.view(self, self.npcs[npc_id])
         n['recalled_memories'] = npc_memory.retrieve(self, self.npcs[npc_id])
         n['career_view'] = careers.view(self, self.npcs[npc_id])
         n['social_view'] = society.person_view(self, self.npcs[npc_id])
@@ -1631,9 +1670,10 @@ class World:
         return n
 
     def faction_detail(self, faction_id):
+        from . import sect_life
         f = self.factions[faction_id]
         members = [n for n in self.npcs.values() if n['alive'] and n['faction'] == f['id']]
-        return {**organizations.view(self, f),
+        return {**organizations.view(self, f), 'sect_life': sect_life.view(self, f),
                 'martial_curriculum': martial.martial_catalog.school_view(f['key']),
                 'player_options': organizations.player_options(self, faction_id),
                 'player_membership': organizations.player_membership(self),

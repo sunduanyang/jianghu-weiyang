@@ -1,0 +1,220 @@
+{
+  "passed": true,
+  "date": "2026-10-29",
+  "source_head": "10eb6f118abbf056a962dbbaac6487650538290d",
+  "prs": [
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ],
+  "regression": {
+    "tests": 670,
+    "passed": true,
+    "seconds": 615.752
+  },
+  "native_checks": 28,
+  "native": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated native world ready",
+        "passed": true
+      },
+      {
+        "check": "new world contains households and two acceptance actors",
+        "passed": true
+      },
+      {
+        "check": "local model disabled",
+        "passed": true
+      },
+      {
+        "check": "registered parentage reaches the native person data",
+        "passed": true
+      },
+      {
+        "check": "long undertaking has its name next step and real target",
+        "passed": true
+      },
+      {
+        "check": "undertaking target opens the correct person",
+        "passed": true
+      },
+      {
+        "check": "recent-person switch restores the undertaking owner",
+        "passed": true
+      },
+      {
+        "check": "town fame reaches the bundled backend and native client",
+        "passed": true
+      },
+      {
+        "check": "market quotes use the new bid ask and list prices",
+        "passed": true
+      },
+      {
+        "check": "inspecting plans fame and households preserves calendar and events",
+        "passed": true
+      },
+      {
+        "check": "actual native end turn advances one month",
+        "passed": true
+      },
+      {
+        "check": "the named undertaking advances once through real engine actions",
+        "passed": true
+      },
+      {
+        "check": "monthly fame propagation changes the town recognition data",
+        "passed": true
+      },
+      {
+        "check": "government treasuries balance after the new public works rules",
+        "passed": true
+      },
+      {
+        "check": "acceptance never invokes a model",
+        "passed": true
+      },
+      {
+        "check": "no native errors or exceptions",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "capture_requested": true,
+    "visual_verified": false
+  },
+  "cold_restart": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated native world ready",
+        "passed": true
+      },
+      {
+        "check": "new world contains households and two acceptance actors",
+        "passed": true
+      },
+      {
+        "check": "local model disabled",
+        "passed": true
+      },
+      {
+        "check": "registered parentage reaches the native person data",
+        "passed": true
+      },
+      {
+        "check": "town fame reaches the bundled backend and native client",
+        "passed": true
+      },
+      {
+        "check": "market quotes use the new bid ask and list prices",
+        "passed": true
+      },
+      {
+        "check": "inspecting plans fame and households preserves calendar and events",
+        "passed": true
+      },
+      {
+        "check": "cold restart preserves the progressed month",
+        "passed": true
+      },
+      {
+        "check": "cold restart preserves named plan and completed actions",
+        "passed": true
+      },
+      {
+        "check": "cold restart preserves all town recognition shares",
+        "passed": true
+      },
+      {
+        "check": "acceptance never invokes a model",
+        "passed": true
+      },
+      {
+        "check": "no native errors or exceptions",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "capture_requested": false,
+    "visual_verified": false
+  },
+  "legacy_compatibility": {
+    "passed": true,
+    "checks": {
+      "prior_isolated_save_available": true,
+      "month_preserved": true,
+      "population_preserved": true,
+      "families_relationships_wealth_preserved": true,
+      "initial_households_not_retroactively_registered": true
+    },
+    "source": "D:\\Desktop\\新新游戏\\output\\claude-integration-20261029-final-save\\world.sqlite",
+    "tested_copy": "D:\\Desktop\\新新游戏\\output\\claude-pr13-18-20261029\\legacy-save\\world.sqlite"
+  },
+  "month_audit": {
+    "passed": true,
+    "checks": {
+      "cash_residual_after_fixture_capital_zero": true,
+      "no_negative_stock": true,
+      "no_negative_market_cash": true,
+      "total_silver_preserved": true,
+      "sect_treasury_balances": true
+    },
+    "month": 1,
+    "raw_audit": {
+      "cash": 163126.05,
+      "cash_residual": 200.0,
+      "goods_residuals": {
+        "grain": -0.0,
+        "fish": -0.0,
+        "meat": -0.0,
+        "fiber": -0.0,
+        "cloth": 0.0,
+        "herb": -0.0,
+        "medicine": 0.0,
+        "timber": 0.0,
+        "iron": 0.0,
+        "tools": -0.0,
+        "study": 0.0,
+        "leisure": -0.0,
+        "transport": 0.0
+      },
+      "negative_stock": false,
+      "negative_market_cash": false
+    },
+    "explicit_fixture_capital": 200.0,
+    "adjusted_cash_residual": 0.0,
+    "note": "The two injected acceptance actors contribute 200 silver after opening accounts; raw residual is compared against this explicit fixture input."
+  },
+  "build_integrity": {
+    "input_count": 231,
+    "changed_during_build": [],
+    "bundled_backend_files": 68,
+    "bundled_mismatches": []
+  },
+  "merge_integrity": {
+    "head": "10eb6f118abbf056a962dbbaac6487650538290d",
+    "preserved_files": 816,
+    "missing": [],
+    "differences": []
+  },
+  "visual_review": {
+    "reviewed": true,
+    "screenshots": [
+      "validation/screenshots/claude-society-undertaking-20261029.png",
+      "validation/screenshots/claude-society-fame-20261029.png"
+    ],
+    "scope": "Long undertaking and town fame UI, inspected rendered captures."
+  },
+  "build": "D:\\Desktop\\新新游戏\\unity\\Build\\ClaudeSociety20261029Final\\江湖未央.exe",
+  "launcher_selection": "ClaudeSociety20261029Final",
+  "limitations": [
+    "No rerun of the upstream 36/60-month comparisons.",
+    "No combat balance or all-skin visual claim."
+  ]
+}

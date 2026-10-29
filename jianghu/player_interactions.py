@@ -2,7 +2,7 @@
 from copy import deepcopy
 import math
 
-from . import combat_attributes, demography, items, martial, martial_manuals, organizations, player_social, protagonist
+from . import combat_attributes, demography, items, martial, martial_manuals, organizations, player_social, protagonist, reactions, sect_life
 from . import physical_combat as combat
 
 CATALOG = (
@@ -43,8 +43,13 @@ def loose(w, owner):
     return [i for i in items.objects(w, owner) if i['id'] not in equipped]
 
 
+def points(w, n, action):
+    return sect_life.interaction_points(w, n, action) if action in sect_life.INTERACTIONS else BY_ID[action][3]
+
+
 def reason(w, n, action):
-    if action not in BY_ID:
+    sect = action in sect_life.INTERACTIONS
+    if action not in BY_ID and not sect:
         return '未知人物交互'
     h = w.player['protagonist']; r = player_social.tie(w, n['id'])
     if not n['alive']:
@@ -55,10 +60,14 @@ def reason(w, n, action):
         return '请先结束当前交手'
     if h['place'] != n['place']:
         return '请先前往对方所在地区'
-    if h['points'] < BY_ID[action][3]:
-        return f'需要{BY_ID[action][3]}行动力'
+    if h['points'] < points(w, n, action):
+        return f'需要{points(w, n, action)}行动力'
     if any(player_social.is_pending(row) for row in player_social.state(w)['requests']):
         return '请等待当前交谈回应'
+    if sect:
+        if action not in {row[0] for row in sect_life.interaction_rows(w, n)}:
+            return '此门派事项不适用于对方'
+        return sect_life.interaction_reason(w, n, action)
     if action == 'join_sect':
         return organizations.player_join_reason(w, n)
     if action in HOSTILE | {'spar', 'marry'} and min(h['age_months'], n['age_months']) < 216:
@@ -97,6 +106,10 @@ def reason(w, n, action):
         if r.get('affinity', 0) < 60 or r.get('trust', 0) < 40:
             return '结亲需要情分60、信任40'
     if action == 'teach':
+        mine = h.get('faction')
+        if (mine is not None and n['faction'] is not None and n['faction'] != mine
+                and sect_life.relation(w, mine, n['faction']) <= -30):
+            return '两派交恶，对方不愿传艺'
         offers = martial_manuals.offers(w, n)
         if not any(not offer['reason'] for offer in offers):
             return next((o['reason'] for o in offers), '对方暂无可传授的功法')
@@ -106,7 +119,7 @@ def reason(w, n, action):
 def theft_chance(w, n):
     own = combat_attributes.ratings(w.player); other = combat_attributes.ratings(n)
     return round(max(.1, min(.9, .5 + (own['dexterity']+own['footwork']-other['dexterity']-other['footwork'])/300
-                              + (50-n['traits']['caution'])/250)), 3)
+                              + (n['traits']['boldness']-50)/250)), 3)
 
 
 def goods(w, owner, operation=None):
@@ -129,10 +142,11 @@ def view(w, npc_id):
                           description=description, mode='conversation', listed=key != 'swear',
                           enabled=not social['reason'], reason=social['reason'])
                      for key, label, category, description in CONVERSATIONS]
-    actions = [dict(id=key, label=label, category=category, points=points, description=description,
+    rows = [row for row in CATALOG if row[0] != 'join_sect' or organizations.recruiting_faction(w, n) is not None]
+    rows += sect_life.interaction_rows(w, n)
+    actions = [dict(id=key, label=label, category=category, points=cost, description=description,
                     reason=(why := reason(w, n, key)), enabled=not why)
-               for key, label, category, points, description in CATALOG
-               if key != 'join_sect' or organizations.recruiting_faction(w, n) is not None]
+               for key, label, category, cost, description in rows]
     sell = goods(w, 'player', 'sell')
     for row in sell:
         row['reason'] = '对方余银不足' if n['wealth'] < row['price'] else ''
@@ -141,6 +155,7 @@ def view(w, npc_id):
                 gifts=goods(w, 'player'), buy=goods(w, npc_id, 'buy'), sell=sell,
                 steal=goods(w, npc_id), manual_offers=martial_manuals.offers(w, n),
                 theft_chance=theft_chance(w, n), player_wealth=w.player['wealth'], npc_wealth=n['wealth'],
+                reactions=reactions.view(w, npc_id),
                 relationship=deepcopy(r), records=[e for i in reversed(r.get('encounter_records', [])[-8:]) if (e := w.store.event(i))])
 
 
@@ -167,7 +182,7 @@ def perform(w, body):
     if not isinstance(body, dict) or set(body)-allowed:
         raise ValueError('人物交互只接受既定事项与物品编号')
     n = npc(w, body.get('npc_id')); key = body.get('action'); h = w.player['protagonist']
-    if not isinstance(key, str) or key not in BY_ID:
+    if not isinstance(key, str) or key not in BY_ID and key not in sect_life.INTERACTIONS:
         raise ValueError('未知人物交互')
     if (protagonist.integer(body.get('revision'), '行程版本') != h['revision'] or
             protagonist.integer(body.get('month'), '月份') != w.month):
@@ -199,6 +214,18 @@ def perform(w, body):
     if key == 'steal' and item is None and n['wealth'] <= 0:
         raise ValueError('对方没有余银可偷取，请选择一件物品')
 
+    if key in sect_life.INTERACTIONS:
+        result, battle = sect_life.perform_interaction(w, n, key)
+        h['revision'] += 1
+        r = w.player['ties'].setdefault(str(n['id']), dict(affinity=0., trust=0.))
+        r['encounter_records'] = (r.get('encounter_records', [])+[result['id']])[-24:]
+        if battle:
+            w.battle = battle
+        w.checkpoint()
+        response = dict(event=result, interaction=view(w, n['id']))
+        if battle:
+            response['martial'] = w.martial_view()
+        return response
     r = w.player['ties'].setdefault(str(n['id']), dict(affinity=0., trust=0.))
     name = w.player['name']; target = n['name']; aware = True
     if key == 'join_sect':
@@ -208,6 +235,7 @@ def perform(w, body):
         result = event(w, n, key, text, dict(actor='player', faction=f['id'], key=f['key'],
                                            recruiter=n['id'], recruiter_grade=organizations.rank(w, n)['grade']))
         organizations.record(f, result)
+        sect_life.on_join(w, f, result)
         martial.sync_actor(w, w.player, True)
     elif key == 'gift':
         result = items.perform(w, 'player', 'gift', item['id'], n['id'])
@@ -236,7 +264,7 @@ def perform(w, body):
         battle['cause'] = result['id']; w.battle = battle
     elif key == 'steal':
         success = w.rng.random() < theft_chance(w, n)
-        aware = not success or w.rng.random() < n['traits']['caution']/200
+        aware = not success or w.rng.random() < (100-n['traits']['boldness'])/200
         amount = 0.
         if success:
             if item:
@@ -253,7 +281,7 @@ def perform(w, body):
         if item and success:
             item['last_event'] = result['id']
     else:
-        accepted = n['mood']['anger'] < 65 and (r.get('affinity', 0)+r.get('trust', 0)+n['traits']['loyalty']+n['traits']['sociability'] >= 100)
+        accepted = n['mood']['anger'] < 65 and (r.get('affinity', 0)+r.get('trust', 0)+n['traits']['integrity']+n['traits']['sociability'] >= 100)
         if key == 'praise':
             accepted = n['mood']['anger'] < 65 and r.get('affinity', 0) > -40
             change_tie(r, 4 if accepted else -1, 2 if accepted else 0)
@@ -274,6 +302,8 @@ def perform(w, body):
             label = BY_ID[key][1]
             text = f"{name}向{target}提出{label}，"+('对方应允，双方郑重定下约定。' if accepted else '对方此刻不愿应允，婉拒了这份邀约。')
         result = event(w, n, key, text, dict(accepted=accepted))
+    if key in sect_life.SEVERITY:
+        sect_life.after_hostile(w, key, n, result, aware)
     if key != 'teach':
         h['points'] -= BY_ID[key][3]
     h['revision'] += 1
@@ -288,6 +318,8 @@ def perform(w, body):
 def settle_hostile(w, battle, n):
     """Called once by the existing battle settlement, including after reload."""
     key = battle.get('encounter')
+    if key in ('sect_trial', 'sect_hunt'):
+        return sect_life.settle_battle(w, battle, n)
     if key not in {'rob', 'assault'}:
         return None
     loot = 0.

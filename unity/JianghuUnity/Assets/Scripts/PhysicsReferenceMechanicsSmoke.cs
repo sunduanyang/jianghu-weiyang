@@ -20,6 +20,8 @@ public sealed partial class PhysicsBattleSmoke {
             var row=arena.ProbeReferenceStress(steps);rows.Add(row);File.WriteAllText(Path.Combine(output,"solver-measurements.json"),new J(rows).ToString());
             Check("solver measurement completed "+weapon.id+" / "+steps,row["ticks"].I>0&&row["max_gap"].N<1,row);yield return null;
             if(!comparison)Check("production solver keeps active joint limits "+weapon.id,row["limit_bound_passed"].B,row);
+            if(!comparison)Check("formal arena contains active roots "+weapon.id,row["arena_bound_passed"].B,J.O("max_root_x",row["max_root_x"]));
+            if(!comparison&&weapon.id!="unarmed")Check("held weapon and visible handle remain attached "+weapon.id,row["held_grip_samples"].I>100&&row["maximum_held_grip_gap"].N<.03&&row["maximum_visible_weapon_handle_gap"].N<.03,J.O("samples",row["held_grip_samples"],"joint_gap",row["maximum_held_grip_gap"],"visible_handle_gap",row["maximum_visible_weapon_handle_gap"]));
         }
         yield return SceneManager.UnloadSceneAsync(scene);app.enabled=true;Time.timeScale=1;
     }
@@ -34,8 +36,34 @@ public sealed partial class PhysicsBattleSmoke {
         foreach(float speed in new[]{19.9f,20f,21f,30f}){
             var p=arena.ProbeImpact(sword,speed,"body",true);
             Check("shield actual collider damage threshold "+speed,Mathf.Abs((float)(p["damage"].N-p["expected"].N))<.001f,p);
-            Check("shield sustained contact and separated recontact "+speed,p["first_hits"].I==(speed>20?1:0)&&p["second_hits"].I==(speed>20?1:0),p);
+            Check("shield sustained contact and separated recontact "+speed,p["first_hits"].I==(speed>=20?1:0)&&p["second_hits"].I==(speed>=20?1:0),p);
+            Check("shield fixture reports actual contacts even below damage threshold "+speed,p["first_contact_events"].I>0&&p["second_contact_events"].I>0,p);
         }
+        // The fixture still delivers REAL Physics2D collider contacts to the
+        // shipping collector. Neither the result nor its injury mode is set
+        // by the probe; only the expected arithmetic uses the shared adapter.
+        foreach(float speed in new[]{14.9f,15f,20f}){
+            var p=arena.ProbeImpact(DuelWeapon.Fist,speed,"body");
+            Check("Nothing actual source damage threshold "+speed,p["threshold"].N==15&&p["surface"].S=="WoodBlunt"&&System.Math.Abs(p["damage"].N-p["expected"].N)<.001,p);
+            Check("Nothing real contact delivery "+speed,p["first_contact_events"].I>0&&p["second_contact_events"].I>0&&p["first_hits"].I==(speed>=15?1:0)&&p["second_hits"].I==(speed>=15?1:0),p);
+        }
+        var wood=DuelWeapon.CampaignWeapon(J.O("id","sword","name","枣木剑","template_id","wood_sword","mass",.45,"cost",7,"handling",1.08,"damage",.8,"pressure",.8,"distance",1.95));
+        foreach(var spec in new[]{sword,wood})foreach(float speed in new[]{14.9f,15f,19.9f,20f,30f}){
+            var p=arena.ProbeImpact(spec,speed,"body");
+            Check("actual blade or wood threshold "+spec.name+" "+speed,Mathf.Abs((float)(p["damage"].N-p["expected"].N))<.001f,p);
+            int accepted=speed>=p["threshold"].N?1:0;
+            Check("actual blade or wood separated recontact "+spec.name+" "+speed,p["first_hits"].I==accepted&&p["second_hits"].I==accepted,p);
+            Check("blade or wood fixture retains actual collision delivery "+spec.name+" "+speed,p["first_contact_events"].I>0&&p["second_contact_events"].I>0,p);
+        }
+        var woodInjury=arena.ProbeImpact(wood,90,"forearmNear",false,null,false);
+        Check("actual wood sword collision bashes without severing",woodInjury["surface"].S=="WoodBlunt"&&woodInjury["first_hits"].I==1&&woodInjury["first_part_mode"].I==(int)DuelReferenceRules.PartMode.Bashed&&!woodInjury["first_detached"].B&&Mathf.Abs((float)(woodInjury["damage"].N-woodInjury["expected"].N))<.001f,woodInjury);
+        var cloth=J.O("template_id","cloth","defense",1,"durability",100);
+        var protectedBody=arena.ProbeImpact(sword,30,"body",false,cloth);
+        var bareHead=arena.ProbeImpact(sword,30,"head",false,cloth);
+        var brokenBody=arena.ProbeImpact(sword,30,"body",false,J.O("template_id","cloth","defense",1,"durability",0));
+        Check("actual armor collision uses covered torso defense",protectedBody["armor_defense"].N==1&&Mathf.Abs((float)(protectedBody["damage"].N-protectedBody["expected"].N))<.001f,protectedBody);
+        Check("actual armor collision gives no free helmet",bareHead["armor_defense"].N==0&&Mathf.Abs((float)(bareHead["damage"].N-bareHead["expected"].N))<.001f,bareHead);
+        Check("actual broken armor collision loses protection",brokenBody["armor_defense"].N==0&&Mathf.Abs((float)(brokenBody["damage"].N-protectedBody["damage"].N)-.35f)<.001f&&Mathf.Abs((float)(brokenBody["damage"].N-brokenBody["expected"].N))<.001f,brokenBody);
         arena.campaign.battle["fighters"]=new J(new List<J>{ReferenceFighter(DuelWeapon.Fist),ReferenceFighter(DuelWeapon.Fist)});
         arena.ResetRound();arena.player.testOverride=arena.enemy.testOverride=true;arena.RunCampaign(true);
         yield return new WaitForSecondsRealtime(.6f);arena.PauseCampaign();

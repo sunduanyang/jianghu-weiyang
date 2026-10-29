@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-29",
+  "build": "Cast24Bound20261029",
+  "native_checks": 541,
+  "native_failed": 0,
+  "runtime_errors": 0,
+  "pose_frames": 576,
+  "characters": 24,
+  "independent_complete_parts": 408,
+  "independent_runtime_parts": 408,
+  "source_archive_sha256": "200a9dfce0d7b652b4321c487a6ba12804fc30ea42c4d39aa6b63b0fef6b09ec",
+  "source_pixel_validation": true,
+  "shoe_checks": 48,
+  "maximum_sole_error_world": 0.0007608864,
+  "gpu_channel_tolerance": "1/255; exact source PNG pixels, mesh bits and material parameters",
+  "paused_physics_exactly_equal": true,
+  "production_physics_files_edited_by_this_task": [],
+  "parallel_physics_changes_since_initial_snapshot": [
+    {
+      "Path": "D:\\Desktop\\新新游戏\\unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelReference.cs",
+      "Initial": "8132E9531CECBD57131DCDC3C8D10465938E7226113C1D30FC52E9189A134F9E",
+      "Current": "DE9DACB8FE66525367168E19C4A1D1D169FCBF409BF028EE0053E247117D2528",
+      "Modified": "2026-10-29T16:35:01.6653782+08:00"
+    },
+    {
+      "Path": "D:\\Desktop\\新新游戏\\unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelReferenceMechanicsProbe.cs",
+      "Initial": "0CD398ADB93C6D68DA8ED6626ECF2F6003B03B04223949426C346DD888EA3C76",
+      "Current": "220434D578B6BFC21FAC5891E3495DF7C22FDEF1230BA53A483F7CB5F103EFB6",
+      "Modified": "2026-10-29T16:11:13.8539842+08:00"
+    },
+    {
+      "Path": "D:\\Desktop\\新新游戏\\unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelSourceImpale.cs",
+      "Initial": "934B403206C241690ED3003CB47EB949CA012D9210CDEF09D1A6D313D0B33986",
+      "Current": "57F783758FECF11100F7416E2BF49E696C1A11C86976EC8697D7EC33950FDE26",
+      "Modified": "2026-10-29T16:03:53.9642609+08:00"
+    },
+    {
+      "Path": "D:\\Desktop\\新新游戏\\unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelSourceRigBridge.cs",
+      "Initial": "ED2E12E28996721E8400639C4936C293320901F6A4BD15B85B195E5394E58BEB",
+      "Current": "3106EEE52E7CBFA2B126CE9C9A69A798E860BB622D50279B3BE5DDD6758A2D85",
+      "Modified": "2026-10-29T15:58:04.4166963+08:00"
+    },
+    {
+      "Path": "D:\\Desktop\\新新游戏\\unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelSourceRigProbe.cs",
+      "Initial": "37613B674346A99D2B0C3675708FD2BFED4C0F904FE429080461E92FAF455E54",
+      "Current": "2B7F686973700E1C658C5C1D6B93D3EBFB9E67B84D1F8E69CB3BAAFCD2E19CD0",
+      "Modified": "2026-10-29T15:59:06.784524+08:00"
+    }
+  ],
+  "build_inputs": 598,
+  "post_build_nonbinding_source_edits_preserved": [
+    {
+      "Path": "D:\\Desktop\\新新游戏\\unity\\JianghuUnity\\Assets\\Scripts\\InteractionGameplaySmoke.cs",
+      "AtBuild": "239F68F21A4FA26B87021F6CC8DB7852CCF1FF6BFA9E4871A3512276F496DCF4",
+      "Current": "25C69B1C4A29BCD62E2895C6DB3A50854C3DDEA4F9073F353DED3216EC0FEBE1"
+    },
+    {
+      "Path": "D:\\Desktop\\新新游戏\\unity\\JianghuUnity\\Assets\\Scripts\\PhysicsReferenceMechanicsSmoke.cs",
+      "AtBuild": "303AE0AB535FA9E6946A75EF314DAA987DA9FEAB47C588F8393B0605253BFB28",
+      "Current": "C9805F8721C0BCE84983FCE4294B075553FA8A7A6F82FF70101F0FFBFC13F667"
+    },
+    {
+      "Path": "D:\\Desktop\\新新游戏\\unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelReference.cs",
+      "AtBuild": "8132E9531CECBD57131DCDC3C8D10465938E7226113C1D30FC52E9189A134F9E",
+      "Current": "DE9DACB8FE66525367168E19C4A1D1D169FCBF409BF028EE0053E247117D2528"
+    }
+  ],
+  "production_character_sources": [
+    "CharacterRenderer.cs",
+    "CharacterLook.cs",
+    "CharacterArt.cs",
+    "CharacterCastCatalog.cs",
+    "CharacterCast24Showcase.cs"
+  ],
+  "assembly_sha256": "10154A3D4493FE9AD870D4363E066EB1B5C0822DE9FEDE4FA9261F2F54DA2118",
+  "verified_showcase_launch": {
+    "ProcessId": 43068,
+    "ExecutablePath": "D:\\Desktop\\新新游戏\\unity\\Build\\Cast24Bound20261029\\江湖未央.exe",
+    "CommandLine": "\"D:\\Desktop\\新新游戏\\unity\\Build\\Cast24Bound20261029\\江湖未央.exe\" -force-d3d11 -screen-fullscreen 0 -screen-width 1680 -screen-height 1000 -saveDir \"D:\\Desktop\\新新游戏\\unity\\..\\output\\cast24-binding-20261029\\showcase-save\" -cast24Showcase 1 -logFile \"D:\\Desktop\\新新游戏\\unity\\..\\output\\cast24-binding-20261029\\showcase-Cast24Bound20261029.log\" "
+  },
+  "showcase_ready_24": true
+}

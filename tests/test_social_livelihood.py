@@ -19,7 +19,7 @@ class SocialLivelihoodTests(unittest.TestCase):
         n = w.make_npc(place=place)
         n.update(age_months=360, wealth=100., health=100.)
         update_actor(n, values)
-        n['traits'].update(compassion=80., loyalty=80.)
+        n['traits'].update(kindness=80., integrity=80.)
         w.set_goal(n, 'belonging', initial=True)
         w.reindex()
         return n
@@ -77,7 +77,7 @@ class SocialLivelihoodTests(unittest.TestCase):
                 elif condition == 'hostile':
                     w.link(parent, child, -60, -60)
                 elif condition == 'unwilling':
-                    parent['traits'].update(compassion=10, loyalty=10)
+                    parent['traits'].update(kindness=10, integrity=10)
                 else:
                     parent['alive'] = False
                 w.reindex()
@@ -299,10 +299,10 @@ class SocialLivelihoodTests(unittest.TestCase):
         for a, b in ((parent, friend), (friend, parent)):
             w.relation(a, b['id'])['sworn'] = True
         parent['alive'] = False
-        friend['traits']['compassion'] = 20
+        friend['traits']['kindness'] = 20
         demography.households(w)
         self.assertIsNone(young['guardian'])
-        friend['traits']['compassion'] = 80
+        friend['traits']['kindness'] = 80
         demography.households(w)
         self.assertEqual(young['guardian'], friend['id'])
 

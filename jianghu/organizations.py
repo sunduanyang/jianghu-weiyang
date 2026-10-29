@@ -3,10 +3,11 @@ from . import combat_attributes
 from . import martial, relationships, sect_ranks, npc_plans
 from .atlas import PLACES
 
-LABELS = {'faction_study': '门中请益', 'faction_guide': '同门授业', 'leave_faction': '辞别门派'}
+LABELS = {'faction_study': '门中请益', 'faction_guide': '同门授业', 'leave_faction': '辞别门派',
+          'sect_service': '门中履职'}
 STATE_FIELDS = ('leader', 'fund', 'opening_fund', 'account_since', 'revenue', 'expenses',
                 'tasks_completed', 'leader_since', 'leader_review_since', 'vacancy_previous',
-                'vacancy_event', 'last_event', 'records')
+                'vacancy_event', 'last_event', 'records', 'relations')
 
 
 def initialize(w):
@@ -14,7 +15,8 @@ def initialize(w):
         # Legacy funds become an opening balance; no historical income is invented.
         defaults = dict(opening_fund=f['fund'], account_since=w.month, revenue=0., expenses=0.,
                         tasks_completed=0, leader_since=None, leader_review_since=w.month,
-                        vacancy_previous=None, vacancy_event=None, last_event=None, records=[])
+                        vacancy_previous=None, vacancy_event=None, last_event=None, records=[],
+                        relations={})
         for k, v in defaults.items():
             f.setdefault(k, v)
 
@@ -31,6 +33,18 @@ def rank(w, n):
     return sect_ranks.standing(w.factions[n['faction']], n)
 
 
+def float_needed(w, f):
+    """Silver a sect keeps in hand before paying stipends and relief out of its treasury."""
+    cache = getattr(w, '_sect_members', None)
+    if not cache or cache[0] != (w.month, len(w.npcs)):
+        counts = {}
+        for n in w.npcs.values():
+            if n['alive'] and n['faction'] is not None:
+                counts[n['faction']] = counts.get(n['faction'], 0) + 1
+        cache = w._sect_members = ((w.month, len(w.npcs)), counts)
+    return 60. + 4. * cache[1].get(f['id'], 0)
+
+
 def record(f, e):
     f['last_event'] = e['id']
     f['records'] = (f['records'] + [e['id']])[-24:]
@@ -45,6 +59,10 @@ def candidates(w, n, planning=False):
         options.append(dict(id=f"{kind}:{f['id']}", kind=kind, target=f['id'],
                             label=f'{LABELS[kind]} · {detail}', **extra))
     add('leave_faction', f['name'])
+    if n['age_months'] >= 192 and n['health'] > 30:
+        # Ordinary duty is the service evidence monthly assessment requires.
+        at_seat = f['place'] == n['place']
+        add('sect_service', f"{f['duty'] if at_seat else '在外传讯护持'}（一周）", at_seat=at_seat)
     if f['place'] != n['place'] or n['age_months'] < 192:
         return options
     if rank(w, n)['grade'] <= 4 and n['health'] > 45 and combat_attributes.rating(n) >= 25:
@@ -73,14 +91,17 @@ def score(w, n, a):
     if a['kind'] == 'leave_faction':
         leader = w.factions[n['faction']]['leader']
         resentment = max(0, -n['relationships'].get(str(leader), {}).get('affinity', 0))
-        return (-20 + (100 - n['traits']['loyalty']) * .15
+        return (-20 + (100 - n['traits']['integrity']) * .15
                 + (35 + min(30, resentment * .3) if leader != n['id'] and resentment > 25 else 0)
-                + (15 if n['beliefs']['tradition'] < .3 else 0))
+                + (15 if n['beliefs']['tradition'] < 30 else 0))
+    if a['kind'] == 'sect_service':
+        return (13 + n['traits']['integrity'] * .12 + (4 if a.get('at_seat') else 0)
+                + (14 if n['goal']['kind'] == 'renown' else 0))
     if a['kind'] == 'faction_study':
         return 16 + n['traits']['ambition'] * .1 + (25 if n['goal']['kind'] == 'mastery' else 0)
     if a['kind'] == 'faction_guide':
-        return 15 + n['traits']['loyalty'] * .1 + n['traits']['compassion'] * .08
-    return (16 + n['traits']['loyalty'] * .1 + max(0, 30 - n['wealth']) * .3
+        return 15 + n['traits']['integrity'] * .1 + n['traits']['kindness'] * .08
+    return (16 + n['traits']['integrity'] * .1 + max(0, 30 - n['wealth']) * .3
             + (20 if n['goal']['kind'] == 'renown' else 0))
 
 
@@ -93,7 +114,21 @@ def execute(w, n, a, facts):
     facts['faction'] = f['id']
     if kind not in LABELS:
         raise ValueError('门派事项已移除或不存在')
-    if kind == 'faction_study':
+    if kind == 'sect_service':
+        at_seat = f['place'] == n['place']
+        gain = 1. if at_seat else .5
+        n['contribution'] += gain
+        n['reputation'] = min(100., n['reputation'] + .3)
+        # A sect with silver to spare pays a small stipend for duty, from its real treasury.
+        stipend = 1. if f['fund'] - 1. >= float_needed(w, f) else 0.
+        if stipend:
+            f['fund'] = round(f['fund'] - stipend, 4); f['expenses'] = round(f['expenses'] + stipend, 4)
+            n['wealth'] = round(n['wealth'] + stipend, 4)
+        facts.update(accepted=True, contribution=gain, at_seat=at_seat, duty=f['duty'], stipend=stipend)
+        f['tasks_completed'] += 1
+        text = (f"{n['name']}在{f['seat_name']}{f['duty']}，记门中贡献{gain:g}" if at_seat else
+                f"{n['name']}在外为{f['name']}传讯护持，记门中贡献{gain:g}") + (f"，领津贴{stipend:g}银。" if stipend else "。")
+    elif kind == 'faction_study':
         q = w.npcs[a['tutor']] if a.get('tutor') else None
         if q:
             people.append(q['id'])
@@ -224,8 +259,30 @@ def elect(w, f, annual=False):
 
 
 def monthly(w):
+    from . import sect_life
     for f in w.factions:
         elect(w, f)
+    if w.month % 3 == 0:
+        for f in w.factions:
+            relieve(w, f, 6., 15.)
+    sect_life.monthly(w)
+
+
+def relieve(w, f, amount, below):
+    """Quarterly relief for struggling members while the treasury is above its working float."""
+    reserve = float_needed(w, f)
+    needy = sorted((n for n in w.npcs.values() if n['alive'] and n['faction'] == f['id'] and n['wealth'] < below),
+                   key=lambda n: (n['wealth'], n['id']))
+    for n in needy:
+        if f['fund'] - amount < reserve:
+            break
+        f['fund'] = round(f['fund'] - amount, 4); f['expenses'] = round(f['expenses'] + amount, 4)
+        n['wealth'] = round(n['wealth'] + amount, 4)
+        people = list(dict.fromkeys([n['id']] + ([f['leader']] if f['leader'] and f['leader'] > 0 else [])))
+        e = w.emit('faction_aid', people, f"{f['name']}以库中余银{amount:g}两接济门人{n['name']}。", .55,
+                   [n['last_event'], f['last_event']], {'faction': f['id'], 'receiver': n['id'], 'silver': amount,
+                                                       'reserve': round(reserve, 4), 'quarterly': True})
+        record(f, e)
 
 
 def annual(w):
@@ -298,7 +355,7 @@ def player_join_reason(w, recruiter):
 
 
 def player_options(w, faction_id):
-    from . import city_maps
+    from . import city_maps, sect_life
     h = w.player['protagonist']; f = w.factions[faction_id]
     city = city_maps._world_layout(w, h['place'])
     area = city_maps.city_regions.area_at(city, h['row'], h['col'])
@@ -317,36 +374,39 @@ def player_options(w, faction_id):
             reason = '银两不足'
         result.append(dict(action='sect_'+action, faction=faction_id, label=label,
                            points=points, enabled=not reason, reason=reason))
-    return result
+    # Commissions and penance come first on the page; donation and leaving stay last.
+    return sect_life.options(w, f) + result
 
 
-def player_action(w, action, faction_id):
-    from . import protagonist
+def player_action(w, action, faction_id, choice=None):
+    from . import protagonist, sect_life
     if type(faction_id) is not int or not 0 <= faction_id < len(w.factions):
         raise ValueError('门派不存在')
-    option = next((o for o in player_options(w, faction_id) if o['action'] == action), None)
+    if choice is not None and not isinstance(choice, str):
+        raise ValueError('差事编号无效')
+    option = next((o for o in player_options(w, faction_id) if o['action'] == action
+                   and o.get('choice') == choice), None)
     if option is None:
-        raise ValueError('当前门派身份不允许此操作')
+        raise ValueError('当前门派身份不允许此操作' if choice is None else '差事已变化，请刷新门派页')
     if not option['enabled']:
         raise ValueError(option['reason'])
     h = w.player['protagonist']; f = w.factions[faction_id]
+    if 'choice' in option:
+        event, points = sect_life.perform_option(w, f, action, choice)
+        h['points'] -= points
+        return event
     kind = action.removeprefix('sect_'); facts = dict(faction=faction_id, key=f['key'], points=option['points'])
     if kind == 'donate':
         w.player['wealth'] -= 4; f['fund'] += 4; f['revenue'] += 4
         h['contribution'] += 1.5
         facts.update(payment=4, contribution=1.5)
         text = f"{w.player['name']}向{f['name']}捐助4银，积累贡献1.5点。"
+        event = protagonist.record(w, 'hero_'+action, text, facts)
+        record(f, event)
     else:
-        h['membership_history'].append(dict(faction=faction_id, name=f['name'], since=h['faction_since'],
-                                            until=w.month, contribution=h['contribution']))
-        h.update(faction=None, faction_since=None, contribution=0., faction_rejoin_after=w.month+12)
-        text = f"{w.player['name']}辞别{f['name']}，一年后方可另择门派。"
+        event = sect_life.depart(w, f)
     h['points'] -= option['points']
     if h.get('sect_activity_month') != w.month:
         h['sect_activity_month'] = w.month; h['sect_counts'] = {}
     h['sect_counts'][kind] = h['sect_counts'].get(kind, 0)+1
-    event = protagonist.record(w, 'hero_'+action, text, facts)
-    record(f, event)
-    if kind=='leave' and f['leader']==-1:
-        f.update(leader=None,vacancy_previous=-1,vacancy_event=event['id'])
-        elect(w,f)
+    return event

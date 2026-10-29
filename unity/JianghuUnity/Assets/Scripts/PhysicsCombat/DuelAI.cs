@@ -24,7 +24,8 @@ public sealed partial class PhysicsDuel {
             if(aiRandom!=null)return;
             int seed=game.Campaign?game.campaign.battle["seed"].I:42;
             foreach(char c in weapon.id)seed=unchecked(seed*31+c);
-            aiRandom=new System.Random(seed^(human?7919:104729));
+            seed^=human?7919:104729;
+            aiRandom=Reference?(System.Random)new SourceAIRandom(seed):new System.Random(seed);
             if(Reference){aiSourceAggression=1;InitializeSourceAI();return;}
             // CharacterEnemyAI.cik truncates a float Range(1,5).
             aiSourceAggression=Mathf.Clamp((int)AIRandom(1,5),1,5);
@@ -158,12 +159,13 @@ public sealed partial class PhysicsDuel {
         // Physical hierarchy adapter only. The source AI supplies metre-valued
         // animation parents and independent child nub offsets.
         Vector2 SourceAIWorldHandTarget(string side,Vector2 parent,Vector2 nub){
-            Vector2 result=mover.position+new Vector2(facing*(parent.x+nub.x-.025f),parent.y+nub.y+.435f);
+            Vector2 result=mover.position+new Vector2(facing*(parent.x+nub.x/100+.125f),parent.y+nub.y/100+.685f);
             if(ReferenceDowned)result+=pelvis.B-(mover.position+new Vector2(0,.935f));
             return result;
         }
         Vector2 SourceParentFromHand(string side){var p=referenceHands[side].target-mover.position;if(ReferenceDowned)p-=pelvis.B-(mover.position+new Vector2(0,.935f));return new Vector2(p.x/facing-.125f,p.y-.685f);}
         J CaptureSourceMotion(){
+            if(sourceAIInitialized&&aiStarted)return CaptureSourceAICompatibilityMotion();
             // Pausing releases input captures; it must retain an NPC's
             // in-flight animation so a cold restart resumes the same sample.
             bool active=aiPhase==AIPhase.Strike&&aiSourceAttack!=null&&(!human||game.CampaignAutoplay);
@@ -177,6 +179,7 @@ public sealed partial class PhysicsDuel {
             aiSourceAttack=DuelSourceMotion.Named(state["clip"].S);aiSourceStart=(float)state["time"].N;aiSourceAt=game.Clock;aiOffAttack=state["off"].B;
             aiDriving=true;AITransition(AIPhase.Strike,Mathf.Max(0,aiSourceAttack.duration-aiSourceStart));
             if(aiOffAttack)aiOff=Vector2.one;else aiMain=Vector2.one;if(weapon.TwoHanded)aiOff=Vector2.one;
+            RestoreSourceAILegacyMotion(state);
         }
     }
 }

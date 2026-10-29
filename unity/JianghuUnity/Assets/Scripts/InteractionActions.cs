@@ -39,6 +39,8 @@ public partial class JianghuApp {
             var social=InteractionSocial;var latest=social["requests"].A.LastOrDefault();
             string message=interactionResult.Length>0?interactionResult:latest!=null?(latest["status"].S=="pending"?"对方正在斟酌你的话……":latest["reply"].S.Length>0?CharacterName+"："+latest["reply"].S:greeting):greeting;
             GUI.Label(new Rect(r.x+24,r.y+14,r.width-48,76),message,new GUIStyle(centerTitle){fontSize=18,wordWrap=true});
+            if(CharacterReady&&Person["player_reactions"].A.Any(x=>x["status"].S=="pending"))
+                GUI.Label(new Rect(r.x+24,r.y+84,r.width-48,20),CharacterName+"神色微动，心里正在掂量这件事……",centerSmall);
             if(Client.Error.Length>0)GUI.Label(new Rect(r.x+20,r.yMax-36,r.width-210,28),Client.Error,small);
             if(GUI.Button(new Rect(r.xMax-174,r.yMax-38,154,28),"交谈记录与说服  ›",chip))Later(()=>ChooseInteraction("social:talk"));
             return;

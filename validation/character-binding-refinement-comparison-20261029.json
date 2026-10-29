@@ -1,0 +1,257 @@
+{
+  "date": "2026-10-29",
+  "build": "BindingRefined20261029",
+  "production_files": [
+    "CharacterRenderer.cs",
+    "CharacterSkinStrain.cs"
+  ],
+  "source_files_in_build_snapshot": 162,
+  "source_files_unchanged_at_immediate_build_completion": 162,
+  "preserved_later_source_edits_not_in_this_build": [
+    {
+      "Path": "D:\\Desktop\\新新游戏\\unity\\JianghuUnity\\Assets\\Scripts\\ClaudeSocietySmoke.cs",
+      "BuildHash": "0A968697300FDD95119A66ECDC8EB340F432BD5236FF5D0E84B823D9FD4F0A4D",
+      "CurrentHash": "779DDCF07B3831DF500CFC0789FD60BC223C49B41ABA2D6E2041739F2DE4435A",
+      "Modified": "2026-10-29T14:24:06.5758532+08:00"
+    },
+    {
+      "Path": "D:\\Desktop\\新新游戏\\unity\\JianghuUnity\\Assets\\Scripts\\GameClient.cs",
+      "BuildHash": "334D8ECDB29835FD95157CBFA62FC50F2D6D60AB42652127076B4CAC553C3B16",
+      "CurrentHash": "4C7E399803E3EB709BE7043D69526681CF96AF2F736BFCAEF3336564F39F6133",
+      "Modified": "2026-10-29T14:27:28.8123046+08:00"
+    }
+  ],
+  "replay_skeleton_inputs_exactly_equal": true,
+  "replay_physics_before_after_exactly_equal": true,
+  "art_and_proportions_files_unchanged": 5,
+  "parallel_physics_changes_since_initial_snapshot": [
+    {
+      "Path": "D:\\Desktop\\新新游戏\\unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelReference.cs",
+      "Initial": "F84BF1C295865866491EEFA9228B3991C6F61B5E37A26CCFF751496E21E846DB",
+      "Current": "8132E9531CECBD57131DCDC3C8D10465938E7226113C1D30FC52E9189A134F9E",
+      "Modified": "2026-10-29T02:10:07.8785753+08:00"
+    },
+    {
+      "Path": "D:\\Desktop\\新新游戏\\unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelReferenceMechanicsProbe.cs",
+      "Initial": "6D6CF738DBA9479DDF8203F92335AC087EA0785DADC8DE51ED6806E1723A4851",
+      "Current": "0CD398ADB93C6D68DA8ED6626ECF2F6003B03B04223949426C346DD888EA3C76",
+      "Modified": "2026-10-29T02:10:07.882765+08:00"
+    },
+    {
+      "Path": "D:\\Desktop\\新新游戏\\unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelSourceEquipment.cs",
+      "Initial": "79320B0727AFF830855C8EB4DAB65BA8E3A465AEEB369B9F8E044D7E8E188ACB",
+      "Current": "B2572364ADF3BD4A7046094B5330294C9738DB68130F4046EE30DDEB6D7C02E5",
+      "Modified": "2026-10-29T01:54:16.9551152+08:00"
+    },
+    {
+      "Path": "D:\\Desktop\\新新游戏\\unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelSourceEquipmentContact.cs",
+      "Initial": "84657C09799D887961E77614AB9C5C9F843804B7AAD68F31B03BE65DA9532D7C",
+      "Current": "4EE4B49A030643D79849F8633FD48746F1200F29AEA49D34A863EED8C73C6C29",
+      "Modified": "2026-10-29T01:54:16.9591683+08:00"
+    },
+    {
+      "Path": "D:\\Desktop\\新新游戏\\unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelSourceRigBridge.cs",
+      "Initial": "B48F4CEDE87A6FCA52579F6E20B33809D0EA417C68A0E3D1432D584F5FF2DD98",
+      "Current": "ED2E12E28996721E8400639C4936C293320901F6A4BD15B85B195E5394E58BEB",
+      "Modified": "2026-10-29T02:10:07.8755689+08:00"
+    }
+  ],
+  "baseline": {
+    "allocation": {
+      "iterations_per_mode": 720,
+      "allocated_bytes_fit_all": 7593984,
+      "allocated_bytes_fixed_frame": 7446528,
+      "bytes_per_frame_fit_all": 10547.2,
+      "bytes_per_frame_fixed_frame": 10342.4,
+      "limit_bytes_per_frame": 256,
+      "warmup_frames": 240,
+      "input_poses_preallocated": true,
+      "draw": false,
+      "rebind_count_before": 0,
+      "rebind_count_after": 0,
+      "measurement": {
+        "method": "Profiler.GetMonoUsedSizeLong with GC disabled",
+        "supported": true,
+        "calibration_object_bytes": 65536,
+        "thread_counter_calibration_delta": 0,
+        "thread_counter_supported": false,
+        "mono_heap_calibration_delta": 69632,
+        "mono_heap_supported": true,
+        "scope": "global managed used heap; synchronous Renderer.Render calls only; collection disabled only inside measured interval and restored in finally"
+      }
+    },
+    "checks": 76,
+    "failed": 54,
+    "strain": {
+      "pose_samples": 4040,
+      "actual_mesh": {
+        "minimum_principal_stretch": 0.133154147546109,
+        "maximum_principal_stretch": 2.38534125988146,
+        "rigid_stretch_error": 1.24810759516425E-05,
+        "maximum_vertex_step_world": 0.0754077285528183,
+        "triangles": 2779520,
+        "flexible_triangles": 981720,
+        "inverted_triangles": 0,
+        "finite": true,
+        "topology_unchanged": true,
+        "worst_triangle": "head-neck:274"
+      }
+    }
+  },
+  "refined": {
+    "allocation": {
+      "iterations_per_mode_and_facing": 720,
+      "facings": [
+        {
+          "left": false,
+          "allocated_bytes_fit_all": 0,
+          "allocated_bytes_fixed_frame": 0,
+          "bytes_per_frame_fit_all": 0,
+          "bytes_per_frame_fixed_frame": 0,
+          "rebind_count_before": 7,
+          "rebind_count_after": 7
+        },
+        {
+          "left": true,
+          "allocated_bytes_fit_all": 0,
+          "allocated_bytes_fixed_frame": 0,
+          "bytes_per_frame_fit_all": 0,
+          "bytes_per_frame_fixed_frame": 0,
+          "rebind_count_before": 8,
+          "rebind_count_after": 8
+        }
+      ],
+      "bytes_per_frame_fit_all": 0,
+      "bytes_per_frame_fixed_frame": 0,
+      "limit_bytes_per_frame": 256,
+      "warmup_frames_per_facing": 240,
+      "input_poses_preallocated": true,
+      "draw": false,
+      "measurement": {
+        "method": "Profiler.GetMonoUsedSizeLong with GC disabled",
+        "supported": true,
+        "calibration_object_bytes": 65536,
+        "thread_counter_calibration_delta": 0,
+        "thread_counter_supported": false,
+        "mono_heap_calibration_delta": 69632,
+        "mono_heap_supported": true,
+        "scope": "global managed used heap; synchronous Renderer.Render calls only; collection disabled only inside measured interval and restored in finally"
+      }
+    },
+    "checks": 76,
+    "failed": 0,
+    "strain": {
+      "pose_samples": 4040,
+      "actual_mesh": {
+        "minimum_principal_stretch": 0.651749936054395,
+        "maximum_principal_stretch": 1.34820853623227,
+        "rigid_stretch_error": 1.24810759516425E-05,
+        "maximum_vertex_step_world": 0.0754077285528183,
+        "triangles": 2779520,
+        "flexible_triangles": 981720,
+        "inverted_triangles": 0,
+        "finite": true,
+        "topology_unchanged": true,
+        "worst_triangle": "head-neck:275"
+      }
+    }
+  },
+  "proportions": {
+    "pass": true,
+    "checks": 205
+  },
+  "characters": {
+    "pass": true,
+    "checks": 14
+  },
+  "binding": {
+    "checks": 129,
+    "failed": 1,
+    "retained_failure": {
+      "check": "formal skeleton weapon grips and drawn hand tips remain connected",
+      "pass": false,
+      "facts": {
+        "maximum_physical_joint_gap_world": 0.07474144,
+        "maximum_physical_grip_error_world": 0.7156035,
+        "maximum_drawn_hand_tip_to_physical_tip_world": 1.685874E-07,
+        "worst_grip": {
+          "source_rig": true,
+          "source_template": "c0b154b0ebaf72f4fa139b4e3cf363e9",
+          "weapon": "sword",
+          "two_handed": false,
+          "shield": false,
+          "primary_error": 0.7156035,
+          "support_error": 0,
+          "near_hand_tip": {
+            "x": 2.061955,
+            "y": 0.5447097
+          },
+          "far_hand_tip": {
+            "x": 2.015067,
+            "y": 0.5346913
+          },
+          "visible_weapon_grip": {
+            "x": 2.766648,
+            "y": 0.4313469
+          },
+          "joints": [
+            {
+              "grip": "primary",
+              "enabled": true,
+              "own": "Bone_HandL",
+              "connected": "sword",
+              "anchor": {
+                "x": -0.075,
+                "y": 0
+              },
+              "connected_anchor": {
+                "x": 0.01084055,
+                "y": -0.5169951
+              },
+              "scaled_physics_gap": 0.7156035,
+              "transform_gap": 0.7156038,
+              "own_lossy_scale": {
+                "x": -1,
+                "y": 1
+              },
+              "connected_lossy_scale": {
+                "x": 1,
+                "y": 1
+              }
+            },
+            {
+              "grip": "offhand",
+              "enabled": true,
+              "own": "Bone_HandR",
+              "connected": "shield",
+              "anchor": {
+                "x": -0.075,
+                "y": 0
+              },
+              "connected_anchor": {
+                "x": 0,
+                "y": 0
+              },
+              "scaled_physics_gap": 3.998619E-05,
+              "transform_gap": 4.025079E-05,
+              "own_lossy_scale": {
+                "x": 1,
+                "y": -1
+              },
+              "connected_lossy_scale": {
+                "x": 1,
+                "y": 1
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "verified_launch": {
+    "ProcessId": 36888,
+    "ExecutablePath": "D:\\Desktop\\新新游戏\\unity\\Build\\BindingRefined20261029\\江湖未央.exe",
+    "CommandLine": "\"D:\\Desktop\\新新游戏\\unity\\Build\\BindingRefined20261029\\江湖未央.exe\" -force-d3d11 -screen-fullscreen 0 -screen-width 1680 -screen-height 1000 -saveDir \"D:\\Desktop\\新新游戏\\unity\\..\\output\\character-modules\\showcase\" -characterShowcase 1 -logFile \"D:\\Desktop\\新新游戏\\unity\\..\\output\\character-modules\\showcase-BindingRefined20261029-player.log\""
+  },
+  "final_managed_assembly_sha256": "FFC46483B4F192E3D19AC71CF86657C13FAF287A7677DD86A11DE22A142AA1F6"
+}

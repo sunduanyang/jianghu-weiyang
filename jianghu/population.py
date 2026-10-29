@@ -1,3 +1,4 @@
+from . import temperament
 from . import combat_attributes
 """Seed a playable cast from geography and the two nine-grade systems.
 
@@ -57,8 +58,9 @@ def trade(w, n, job):
 
 def job_weights(place):
     p = PLACES[place]
-    weights = {'农人': 34, '行商': 12, '药师': 6, '匠人': 13, '镖师': 6,
-               '渔人': 5, '猎户': 5, '书生': 6, '艺人': 6, '短工': 7}
+    # Shares follow what households actually need each month (food first, few services).
+    weights = {'农人': 40, '行商': 9, '药师': 3, '匠人': 13, '镖师': 3,
+               '渔人': 5, '猎户': 5, '书生': 4, '艺人': 4, '短工': 6}
     if p['kind'] in ('port', 'island'):
         weights.update(渔人=32, 行商=22, 农人=18, 猎户=1)
     elif p['country'] in (2, 5, 9):
@@ -82,6 +84,8 @@ def civil(w, place, job=None, years=None, title=None):
     weights = job_weights(place)
     job = job or w.rng.choices(list(weights), list(weights.values()))[0]
     trade(w, n, job)
+    # Temperament follows the life the person actually leads (own stream; world RNG untouched).
+    temperament.assign(w, n, job)
     if title:
         n['social_status'] = dict(title=title, country=PLACES[place]['country'],
                                   since=w.month, source='九品世界期初身份')
@@ -96,6 +100,27 @@ def civil(w, place, job=None, years=None, title=None):
     else:
         n['wealth'] = round(w.rng.uniform(20, 95), 2)
     return n
+
+
+# How members of each tradition earn a living: temple fields, herb gardens, escorts,
+# street trades. Drawn from a stream keyed by seed and person; the world RNG is untouched.
+SECT_TRADES = {
+    '佛门': {'农人': 5, '药师': 1, '匠人': 2, '镖师': 1},
+    '道门': {'农人': 4, '药师': 1, '书生': 1, '镖师': 1},
+    '帮会': {'短工': 3, '艺人': 2, '行商': 2, '镖师': 1},
+    '剑派': {'镖师': 2, '猎户': 2, '农人': 2},
+    '武人集团': {'镖师': 4, '匠人': 2, '农人': 2},
+    '部族武帐': {'猎户': 3, '镖师': 2, '农人': 2},
+    '祖灵信仰': {'药师': 1, '农人': 3, '猎户': 2},
+    '萨满信仰': {'药师': 1, '猎户': 3, '农人': 2},
+}
+
+
+def sect_trade(w, f, n):
+    import hashlib, random
+    weights = SECT_TRADES.get(f['tradition'], {'农人': 2, '镖师': 1})
+    digest = hashlib.sha256(f"{w.seed}:{n['id']}:sect-trade-v1".encode()).digest()
+    return random.Random(int.from_bytes(digest[:8], 'big')).choices(list(weights), list(weights.values()))[0]
 
 
 def school(w, f, count):
@@ -115,7 +140,8 @@ def school(w, f, count):
                  combat_attributes={'version': combat_attributes.VERSION, 'baseline_version': combat_attributes.TUNING['version'], 'base': dict.fromkeys(combat_attributes.KEYS,
                      round(w.rng.uniform(required_ability, min(95, required_ability + 12)), 2))},
                  reputation=w.rng.uniform(max(0, 40 - grade * 5), max(2, 65 - grade * 6)))
-        trade(w, n, '药师' if f['public_axis'] == 'sanitation' else '镖师' if grade <= 7 else '农人')
+        trade(w, n, sect_trade(w, f, n))
+        temperament.assign(w, n, n['career']['profession'], f['tradition'])
         if grade == 1:
             f.update(leader=n['id'], leader_since=w.month, leader_review_since=w.month)
         members.append(n)
@@ -157,14 +183,20 @@ def seed(w, total):
             civil(w, hub, job, years, title)
         for _ in range(count - len(specs)):
             civil(w, hub)
-    # Declare initial guardianship, without fabricating parentage or marriages.
+    # Register the households and acquaintances that exist at the start (no past events);
+    # children without a registered family then receive an initial guardian as before.
+    from . import households
+    by_place = {}
+    for n in w.npcs.values():
+        by_place.setdefault(n['place'], []).append(n)
+    household_summary = households.register(w, by_place)
     for p in sites:
         local = [n for n in w.npcs.values() if n['place'] == p['id']]
         adults = [n for n in local if n['faction'] is None and n['age_months'] >= 360
-                  and n['wealth'] >= 20 and n['traits']['compassion'] + n['traits']['loyalty'] >= 60]
+                  and n['wealth'] >= 20 and n['traits']['kindness'] + n['traits']['integrity'] >= 60]
         if not adults:
             adults = [n for n in local if n['age_months'] >= 360]
-        for i, n in enumerate(q for q in local if q['age_months'] < 192):
+        for i, n in enumerate(q for q in local if q['age_months'] < 192 and not q['parents']):
             if adults:
                 guardian = adults[i % len(adults)]
                 n['guardian'] = guardian['id']
@@ -179,7 +211,8 @@ def seed(w, total):
             w.know(n, w.npcs[int(other)])
     w.population_generation = dict(version=VERSION, month=w.month, requested=total,
                                    sect_population=sect_total, civil_population=total - sect_total,
-                                   initial_condition=True, household_basis='期初监护登记，不补造亲生谱系')
+                                   initial_condition=True, households=household_summary,
+                                   household_basis='期初登记婚姻、亲子与乡里旧识，不补写过往事件；其余未成年人期初登记监护')
 
 
 def place_member(w, n, event_id):

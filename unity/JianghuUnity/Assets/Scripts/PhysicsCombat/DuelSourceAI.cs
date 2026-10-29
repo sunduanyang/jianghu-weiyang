@@ -24,11 +24,16 @@ public sealed partial class PhysicsDuel {
     public string SourceAIPersonality=>aiPersona.ToString();
     public int SourceAIWalkTaps {get;private set;}
     public int SourceAIKickSchedules {get;private set;}
+    public float SourceAIWeaponLengthMetres {get;set;}=-1;
+    public Transform SourceAIWeaponMount {get;set;}
+    public Transform SourceAIShieldCOM {get;set;}
     SourceHandRelay aiLeft,aiRight,aiDouble;
     Fighter sourceOpponent;
     Transform aiAimOrigin,aiNearestThreat,aiPlayerShieldCOM;
-    bool sourceAIInitialized,aiRelentless=true,aiWeaponLeft,aiWeaponRight,aiShieldLeft,aiShieldRight,aiTwoHanded;
-    bool aiAttacking,aiCanMove=true,aiKickSequence,aiStarted,aiStopped;
+    Transform sourcePointLeft,sourcePointRight,sourceParentSpace;
+    bool sourceAIInitialized,aiEquipmentConfigured,aiRelentless=true,aiWeaponLeft,aiWeaponRight,aiShieldLeft,aiShieldRight,aiTwoHanded;
+    bool aiAttacking,aiCanMove=true,aiKickSequence,aiStarted,aiStopped,sourceLegacyResume;
+    float sourceLegacyWait;
     bool aiStrikeLeft,aiStrikeRight,aiGuardLeft,aiGuardRight,aiGuardActiveLeft,aiGuardActiveRight,sourceLeftActive,sourceRightActive;
     readonly Vector2 aiAggressionRange=new Vector2(1,5),aiPersonaTime=new Vector2(2.5f,6),aiDodgeDuration=new Vector2(.25f,.5f),aiDoubleDelay=new Vector2(.05f,.15f),aiKickDelay=new Vector2(.05f,.15f),aiKickJitter=new Vector2(0,.15f);
     Vector2 aiPrevLeft,aiPrevRight,aiStrikeNubLeft,aiStrikeNubRight,aiGuardNubLeft,aiGuardNubRight,sourceNubLeft,sourceNubRight;
@@ -60,33 +65,51 @@ public sealed partial class PhysicsDuel {
         aiLeft=new SourceHandRelay(this,false,new Vector2(.3230000138f,.5640000105f));
         aiRight=new SourceHandRelay(this,false,new Vector2(.0480000079f,.5640000105f));
         aiDouble=new SourceHandRelay(this,true,Vector2.zero);
-        aiSourceParentNear=aiRight.parent;aiSourceParentFar=aiLeft.parent;
+        aiSourceParentNear=aiLeft.parent;aiSourceParentFar=aiRight.parent;
+    }
+    public void BindSourceAITargets(Transform aimOrigin,Transform pointLeft,Transform pointRight,Transform parentLeft,Transform parentRight){
+        InitializeAI();InitializeSourceAI();aiAimOrigin=aimOrigin;
+        sourcePointLeft=pointLeft;sourcePointRight=pointRight;sourceParentSpace=parentLeft==null?null:parentLeft.parent;
+        if(!aiStarted){if(parentLeft!=null)aiLeft.SetInitialParent(parentLeft.localPosition);if(parentRight!=null)aiRight.SetInitialParent(parentRight.localPosition);}
     }
     void SetSourceAIWeaponProperties() {
+        aiEquipmentConfigured=true;
         // The game has one main item plus an optional shield. Retain source
         // slot flags rather than pretending a second weapon exists.
-        aiTwoHanded=weapon.TwoHanded;aiWeaponRight=!aiTwoHanded;
-        aiWeaponLeft=false;aiShieldLeft=HasShield&&!aiTwoHanded;aiShieldRight=false;
-        aiCategoryLeft=8;aiCategoryRight=SourceItemCategory;aiCategoryDouble=SourceItemCategory;
-        aiAttackRange=SourceAIWeaponLength+.1f;
+        aiTwoHanded=weapon.TwoHanded;aiWeaponLeft=!aiTwoHanded&&weapon.id!="unarmed";
+        aiWeaponRight=false;aiShieldRight=HasShield&&!aiTwoHanded;aiShieldLeft=false;
+        aiCategoryRight=8;aiCategoryLeft=SourceItemCategory;aiCategoryDouble=SourceItemCategory;
+        aiAttackRange=SourceAIWeaponLength>0?SourceAIWeaponLength+.1f:2;
         aiMinDistance=aiAttackRange*aiMinSpacing;aiPreferredDistance=aiAttackRange*aiPreferredSpacing;
         AIRefreshThreat();
     }
     int SourceItemCategory=>SourceItemType=="Dagger"?0:SourceItemType=="Sword"?1:SourceItemType=="Axe"?2:SourceItemType=="Mace"?3:SourceItemType=="Hammer"?4:SourceItemType=="Spear"?7:6;
-    // Item length is an RPG catalog adapter until native items are mounted.
-    float SourceAIWeaponLength=>Mathf.Max(0,weapon.distance);
+    // The source consumes Item.Length, not the RPG's root-to-root strategy
+    // distance. Until original items are mounted, bridge the current item's
+    // actual total geometry (tip + tail), whose dimensions are in metres.
+    float SourceAIWeaponLength=>SourceAIWeaponLengthMetres>=0?SourceAIWeaponLengthMetres:weapon.id=="unarmed"?0:Mathf.Max(0,weapon.Length);
     Vector2 SourceAIObservedNub(bool left) {
-        if(sourceAIInitialized)return left?sourceNubLeft:sourceNubRight;
+        if(sourceAIInitialized&&aiDriving)return left?sourceNubLeft:sourceNubRight;
         bool held;return ReferenceStick(left?"Far":"Near",out held);
     }
     void ReadSourceAI(Fighter target,bool passive) {
+        sourceAIFrame++;
         InitializeSourceAI();sourceOpponent=target;aiDriving=true;swordControl=false;brace=false;
+        // AI.Update reads the actual child point values left by the previous
+        // native mover tick; guard/strike/suppression then override them.
+        if(sourcePointLeft!=null)sourceNubLeft=sourcePointLeft.localPosition;
+        if(sourcePointRight!=null)sourceNubRight=sourcePointRight.localPosition;
         aiSourceDt=Mathf.Max(0,game.Clock-aiLastSourceFrame);aiLastSourceFrame=game.Clock;
         if(health<=0){aiMain=aiOff=Vector2.zero;move=0;return;}
         if(passive){aiMain=aiOff=Vector2.zero;move=0;shieldControl=false;return;}
-        if(!aiStarted&&game.Clock>=aiInitializeAt+.5f)SetSourceAIWeaponProperties();
+        if(!aiEquipmentConfigured&&game.Clock>=aiInitializeAt+.5f)SetSourceAIWeaponProperties();
         if(!aiStarted&&game.Clock>=aiInitializeAt+1) {
             aiStarted=true;AIRollAggression();AIRun(AIStateLoop());AIRun(AIActionLoop());AIRun(AIReactiveLoop());
+            AIRun(aiLeft.Defend());AIRun(aiRight.Defend());AIRun(aiDouble.Defend());
+        }
+        if(sourceLegacyResume){
+            sourceLegacyResume=false;AIRun(AIResumeLegacyMotion(sourceLegacyWait));
+            AIRun(AIStateLoop());AIRun(AIActionLoop());AIRun(AIReactiveLoop());
             AIRun(aiLeft.Defend());AIRun(aiRight.Defend());AIRun(aiDouble.Defend());
         }
         AIReadActivity();
@@ -98,20 +121,26 @@ public sealed partial class PhysicsDuel {
         bool suppressRight=!aiStrikeRight&&!aiGuardRight&&game.Clock<aiSuppressRight;
         if(suppressLeft)sourceNubLeft=Vector2.zero;else if(aiStrikeLeft)sourceNubLeft=aiStrikeNubLeft;else if(aiGuardLeft)sourceNubLeft=aiGuardNubLeft;
         if(suppressRight)sourceNubRight=Vector2.zero;else if(aiStrikeRight)sourceNubRight=aiStrikeNubRight;else if(aiGuardRight)sourceNubRight=aiGuardNubRight;
+        if(sourcePointLeft!=null&&(suppressLeft||aiStrikeLeft||aiGuardLeft))sourcePointLeft.localPosition=sourceNubLeft;
+        if(sourcePointRight!=null&&(suppressRight||aiStrikeRight||aiGuardRight))sourcePointRight.localPosition=sourceNubRight;
         sourceLeftActive=!suppressLeft&&(aiStrikeLeft||aiGuardActiveLeft||aiAttacking&&(aiWeaponLeft||aiTwoHanded));
         sourceRightActive=!suppressRight&&(aiStrikeRight||aiGuardActiveRight||aiAttacking&&(aiWeaponRight||aiTwoHanded));
-        aiMain=sourceRightActive?Vector2.one:Vector2.zero;aiOff=sourceLeftActive?Vector2.one:Vector2.zero;
-        shieldControl=sourceLeftActive;move=game.Clock<aiMoveUntil?aiMoveDirection:0;
-        aiSourceParentNear=aiRight.parent;aiSourceParentFar=aiLeft.parent;
+        aiMain=sourceLeftActive?Vector2.one:Vector2.zero;aiOff=sourceRightActive?Vector2.one:Vector2.zero;
+        shieldControl=sourceRightActive;move=game.Clock<aiMoveUntil?aiMoveDirection:0;
+        aiSourceParentNear=aiLeft.parent;aiSourceParentFar=aiRight.parent;
         // Preserve a restored/in-flight motion's valid level until the new
         // scheduler has actually rolled its first aggression value.
         if(aiStarted)aiSourceAggression=Mathf.Clamp((int)aiAggression,1,5);
     }
-    bool TrySourceAITarget(string side,out Vector2 parent,out Vector2 nub) {
-        parent=Vector2.zero;nub=Vector2.zero;
+    public bool SourceAIHandCommand(string side,out Vector2 parent,out Vector2 nub,out bool active) {
+        parent=Vector2.zero;nub=Vector2.zero;active=false;
         if(!sourceAIInitialized||!aiStarted||!aiDriving)return false;
-        bool left=side=="Far";parent=left?aiLeft.parent:aiRight.parent;nub=left?sourceNubLeft:sourceNubRight;return true;
+        bool near=side=="Near";parent=near?aiLeft.parent:aiRight.parent;
+        // Native cll/cln cross-wire point input and active-side flags.
+        nub=near?sourceNubRight:sourceNubLeft;
+        active=near?sourceLeftActive:sourceRightActive;return true;
     }
+    bool TrySourceAITarget(string side,out Vector2 parent,out Vector2 nub)=>SourceAIHandCommand(side,out parent,out nub,out _);
     IEnumerator AIDelayedLeft(float delay){yield return new SourceWait(delay);SourceAIAttackLeft();}
     // cik 0x342bc14; cil 0x342bdcc; cim/cin 0x342be5c/0x342be98.
     void AIRollAggression(){aiAggression=Mathf.Clamp((int)AIRandom(aiAggressionRange),1,5);aiAggressionUnit=aiRelentless?(aiAggression-1)*.25f:0;}
@@ -137,9 +166,9 @@ public sealed partial class PhysicsDuel {
         aiNearestThreat=null;
         if(sourceOpponent==null)return;
         if(sourceOpponent.weapon.id!="unarmed"&&sourceOpponent.primaryGrip!=null&&sourceOpponent.primaryGrip.enabled)
-            aiNearestThreat=sourceOpponent.sword.rb.transform;
+            aiNearestThreat=sourceOpponent.SourceAIWeaponMount!=null?sourceOpponent.SourceAIWeaponMount:sourceOpponent.sword.rb.transform;
         SourceAIPlayerWeaponCOM=aiNearestThreat;
-        aiPlayerShieldCOM=sourceOpponent.HasShield&&sourceOpponent.shield!=null&&sourceOpponent.offhandGrip!=null&&sourceOpponent.offhandGrip.enabled?sourceOpponent.shield.rb.transform:null;
+        aiPlayerShieldCOM=sourceOpponent.HasShield&&sourceOpponent.shield!=null&&sourceOpponent.offhandGrip!=null&&sourceOpponent.offhandGrip.enabled?(sourceOpponent.SourceAIShieldCOM!=null?sourceOpponent.SourceAIShieldCOM:sourceOpponent.shield.rb.transform):null;
     }
     // cjc 0x342add0 and cjd 0x342af00.
     bool AIShieldStateBlocked=>SourceAIState==SourceAIStates.Attacking||SourceAIState==SourceAIStates.Cowering||SourceAIState==SourceAIStates.EnjoyingTheVictory;
@@ -178,7 +207,7 @@ public sealed partial class PhysicsDuel {
     }
     // cjm/cjo 0x342ca4c/0x342ccec.
     int AIChooseDirection() {
-        Transform target=sourceOpponent.referenceBodies["chestCOM"].transform;
+        Transform target=sourceOpponent.torso.rb.transform;
         if(target==null)return AIRange(1,3);
         float high=AIExposure(target.position.y+.5f),low=AIExposure(target.position.y-.4f);
         int preferred=low<=high?1:2,other=high<low?1:2;
@@ -190,13 +219,13 @@ public sealed partial class PhysicsDuel {
         if(aiPlayerShieldCOM!=null)aiShieldY=aiPlayerShieldCOM.position.y;
         if(sourceOpponent.PassedOut)aiAttackDirection=1;
         else if(sourceOpponent.SourceAILeftArmDisabled||sourceOpponent.SourceAIRightArmDisabled) {
-            SourceAIPlayerWeaponCOM=sourceOpponent.referenceBodies["chestCOM"].transform;aiPlayerShieldCOM=SourceAIPlayerWeaponCOM;
+            SourceAIPlayerWeaponCOM=sourceOpponent.torso.rb.transform;aiPlayerShieldCOM=SourceAIPlayerWeaponCOM;
             aiAttackDirection=AIRange(1,3);
         } else aiAttackDirection=AIChooseDirection();
     }
     // cjr 0x342cfb0.
     Vector3 AIProceduralTarget() {
-        Vector3 target=sourceOpponent!=null?(sourceOpponent.referenceBodies["chestCOM"].position):mover.position;
+        Vector3 target=sourceOpponent!=null?(sourceOpponent.torso.rb.position):mover.position;
         float threatOffset=(aiNearestThreat!=null?aiThreatY:target.y)-target.y;
         float y=target.y-threatOffset+(aiAttackDirection==1?.5f:-.4f);
         if(aiNearestThreat!=null) {
@@ -217,9 +246,11 @@ public sealed partial class PhysicsDuel {
         if(direction<0)aiSuppressLeft=game.Clock+delay+.05f;else aiSuppressRight=game.Clock+delay+.05f;
         SourceAIMoveTap(direction<0);yield return new SourceWait(delay,true);SourceAIMoveTap(direction<0);
     }
-    // ciw/cix, ca/cc: nested iterator preserves a coroutine yield boundary.
-    IEnumerator AIToward(){yield return AIWalk(AISignedDistance>0?-1:1);}
-    IEnumerator AIAway(){yield return AIWalk(AISignedDistance>0?1:-1);}
+    // Resolve allocation types through ELF relocations + metadata, not method
+    // address order: cji→ca(-1), cjj→cc(+1). Thus ciw closes world distance.
+    // The nested iterator preserves the original coroutine yield boundary.
+    IEnumerator AICiw(){yield return AIWalk(AISignedDistance>0?-1:1);}
+    IEnumerator AICix(){yield return AIWalk(AISignedDistance>0?1:-1);}
     // cjl / bz.MoveNext 0x342d4b8: exact four alternating UI taps.
     IEnumerator AIKick() {
         if(aiKickSequence||game.Clock<aiKickDeadline)yield break;
@@ -235,23 +266,23 @@ public sealed partial class PhysicsDuel {
         if(!AIValid)return;AIChoosePersonality();
         if(game.Clock>=aiKickDeadline&&AIWallDistance<aiWallX&&AIDistance<aiKickRange&&stamina>20) {
             int[] thresholds={95,90,80,70,40};int index=(int)aiAggression-1,threshold=index>=0&&index<5?thresholds[index]:50;
-            if(AIRange(0,100)>threshold){AIRun(AIKick());AIRun(AIAway());}
+            if(AIRange(0,100)>threshold){AIRun(AIKick());AIRun(AICix());}
         }
         if(SourceAIState==SourceAIStates.Attacking||SourceAIState==SourceAIStates.Withdrawing||SourceAIState==SourceAIStates.Cowering||!aiCanMove)return;
         aiCanMove=false;aiCanMoveAt=game.Clock+Mathf.Lerp(.3f,.1f,AIUnit);
         if(SourceAIState==SourceAIStates.Defending)AISetWeaponDefending(true);
         if(AIWallDistance>=aiWallX)SourceAIState=SourceAIStates.GoingBerserk;
-        else if(game.Clock<aiDodgeDeadline||AIDistance<aiMinDistance)AIRun(AIAway());
+        else if(game.Clock<aiDodgeDeadline||AIDistance<aiMinDistance)AIRun(AICix());
         else {
             float desired=(aiPersona==SourcePersona.Bully?aiAttackRange*Mathf.Lerp(.75f,aiMinSpacing,AIUnit):aiPreferredDistance)*AIRange(.94f,1.08f);
-            if(AIDistance>desired)AIRun(AIToward());
+            if(AIDistance>desired)AIRun(AICiw());
             else {
                 float value=AIValue;
                 if(aiPersona==SourcePersona.Bully) {
-                    if(aiOpponentActivity<.2f&&value<.55f)AIRun(AIToward());else if(value>.85f)AIRun(AIAway());
+                    if(aiOpponentActivity<.2f&&value<.55f)AIRun(AICiw());else if(value>.85f)AIRun(AICix());
                 } else {
                     float probability=.2f+.3f*AIUnit;
-                    if(value<probability)AIRun(AIToward());else if(value<probability+.3f)AIRun(AIAway());
+                    if(value<probability)AIRun(AICiw());else if(value<probability+.3f)AIRun(AICix());
                 }
             }
         }
@@ -277,14 +308,14 @@ public sealed partial class PhysicsDuel {
             switch(SourceAIState) {
                 case SourceAIStates.Attacking:AIRun(AIAttack());break;
                 case SourceAIStates.Cowering:
-                    for(int i=0;i<5&&AIValid;i++){AIRun(AIAway());yield return new SourceWait(AIRange(.25f,.75f));}
+                    for(int i=0;i<5&&AIValid;i++){AIRun(AICix());yield return new SourceWait(AIRange(.25f,.75f));}
                     break;
                 case SourceAIStates.GoingBerserk:
                     int count=Mathf.RoundToInt(3+AIUnit*3);
-                    for(int i=0;i<count&&AIValid;i++){AIRun(AIToward());yield return new SourceWait(Mathf.Lerp(.45f,.15f,AIUnit));}
+                    for(int i=0;i<count&&AIValid;i++){AIRun(AICiw());yield return new SourceWait(Mathf.Lerp(.45f,.15f,AIUnit));}
                     if(AIValid)AIRun(AIAttack());break;
                 case SourceAIStates.EnjoyingTheVictory:
-                    SourceStopJobs();AIRun(AIVictory());yield break;
+                    SourceStopDecisionJobs();AIRun(AIVictory());yield break;
             }
             float delay=SourceAIState==SourceAIStates.GoingBerserk?AIRange(aiAggression*.125f,aiAggression/3):AIReactionDelay();
             float deadline=game.Clock+delay;while(game.Clock<deadline&&AIValid)yield return null;
@@ -300,14 +331,14 @@ public sealed partial class PhysicsDuel {
                 float activity=aiOpponentActivity,distance=AIDistance,threshold=AIStaminaThreshold,high=Mathf.Lerp(.65f,.32f,AIUnit);
                 if(activity>high&&previous<=high&&!aiAttacking) {
                     if(aiPersona==SourcePersona.Matador&&AIValue<Mathf.Lerp(.7f,.3f,AIUnit)) {
-                        aiDodgeDeadline=game.Clock+AIRandom(aiDodgeDuration);AISetWeaponDefending(true);AIRun(AIAway());AIRun(AIDodgeCounter());
+                        aiDodgeDeadline=game.Clock+AIRandom(aiDodgeDuration);AISetWeaponDefending(true);AIRun(AICix());AIRun(AIDodgeCounter());
                     } else if(distance<aiAttackRange&&stamina>threshold&&AIInBand&&AIValue<Mathf.Lerp(.4f,.95f,AIUnit)) {
                         SourceAIState=SourceAIStates.Attacking;AIRun(AIAttack());
                     } else AISetWeaponDefending(true);
                 } else if(activity<high*.4f&&previous>=high*.4f&&stamina>threshold&&!aiAttacking) {
                     aiDodgeDeadline=0;
                     if(AIInBand){SourceAIState=SourceAIStates.Attacking;AIRun(AIAttack());}
-                    else if(AIDistance>aiAttackRange){AIRun(AIToward());SourceAIState=SourceAIStates.Attacking;}
+                    else if(AIDistance>aiAttackRange){AIRun(AICiw());SourceAIState=SourceAIStates.Attacking;}
                 } else if(activity<.1f&&distance<aiAttackRange&&!aiAttacking&&stamina>20) {
                     aiIdleTime+=step;
                     if(aiIdleTime>1.4f-AIUnit) {
@@ -319,7 +350,7 @@ public sealed partial class PhysicsDuel {
                 distance=AIDistance;
                 if(!aiAttacking&&distance>=aiMinDistance&&distance<=aiAttackRange*1.25f&&stamina>threshold&&game.Clock>=aiDodgeDeadline&&SourceAIState!=SourceAIStates.Cowering&&SourceAIState!=SourceAIStates.EnjoyingTheVictory) {
                     float chance=(.03f+.72f*Mathf.Min(aiAggressionUnit*aiAggressionUnit,1))*(aiPersona==SourcePersona.Bully?1.3f:1)*(AIVulnerable?1.5f:1);
-                    if(AIValue<chance){if(distance>aiAttackRange)AIRun(AIToward());SourceAIState=SourceAIStates.Attacking;AIRun(AIAttack());}
+                    if(AIValue<chance){if(distance>aiAttackRange)AIRun(AICiw());SourceAIState=SourceAIStates.Attacking;AIRun(AIAttack());}
                 }
                 previous=activity;
             }
@@ -331,7 +362,7 @@ public sealed partial class PhysicsDuel {
         yield return new SourceWait(AIRandom(aiDodgeDuration));
         if(!AIValid||aiAttacking||AIValue>.35f+.6f*AIUnit)yield break;
         aiDodgeDeadline=0;
-        if(AIDistance>aiAttackRange){AIRun(AIToward());yield return new SourceWait(Mathf.Lerp(.25f,.08f,AIUnit));}
+        if(AIDistance>aiAttackRange){AIRun(AICiw());yield return new SourceWait(Mathf.Lerp(.25f,.08f,AIUnit));}
         if(AIValid&&!aiAttacking&&stamina>AIStaminaThreshold){SourceAIState=SourceAIStates.Attacking;AIRun(AIAttack());}
     }
     // cjp / cf.MoveNext 0x342df28. Early-abort and follow-up re-entry retain
@@ -340,9 +371,13 @@ public sealed partial class PhysicsDuel {
         if(aiAttacking)yield break;aiAttacking=true;
         if(!AIValid){aiAttacking=false;yield break;}
         bool execute=stamina>=AIStaminaThreshold&&AIValue>=AIAbortChance;
+        // cf 0x342e0c8 / 0x342e104 branch directly to 0x342e400:
+        // low stamina / aborted draws start pull-back immediately. They do
+        // not enter the completed-strike repeat calculation below.
+        if(!execute){AIRun(AIPullBackward());yield break;}
         if(execute) {
             if(!sourceOpponent.PassedOut&&AIWallDistance<aiWallX&&AIDistance<aiMinDistance) {
-                aiAttacking=false;AIRun(AIAway());
+                aiAttacking=false;AIRun(AICix());
                 if(game.Clock>=aiKickDeadline&&stamina>25&&AIValue<.25f-.2f*AIUnit)AIRun(AIKick());
                 yield break;
             }
@@ -372,13 +407,13 @@ public sealed partial class PhysicsDuel {
         }
         if(!AIValid){aiAttacking=false;yield break;}
         AIRewind();
-        float repeatChance=(aiPersona==SourcePersona.Matador?.2f+.55f*AIUnit:.4f+.55f*AIUnit)/Mathf.Max(.01f,aiRetreatBoost);
+        float repeatChance=(aiPersona==SourcePersona.Matador?.2f+.55f*AIUnit:.4f+.5499999523f*AIUnit)/Mathf.Max(.01f,aiRetreatBoost);
         if(AIValue<repeatChance&&AIDistance<aiAttackRange+.5f&&stamina>AIStaminaThreshold) {
             yield return new SourceWait(AIRange(.85f,1.15f)*Mathf.Lerp(.3f,.06f,AIUnit));
             aiAttacking=false;if(AIValid){SourceAIState=SourceAIStates.Attacking;AIRun(AIAttack());}yield break;
         }
         aiAttacking=false;SourceAIState=SourceAIStates.Defending;
-        if(AIDistance<aiMinDistance)AIRun(AIAway());
+        if(AIDistance<aiMinDistance)AIRun(AICix());
         if(AIValue<AIAbortChance)AIRun(AIPullBackward());
     }
     // cjs / ch.MoveNext 0x342eccc, cv 0x35142c8..0x3516050.
@@ -405,7 +440,7 @@ public sealed partial class PhysicsDuel {
         AIRewind();SourceAIState=AIWallDistance<=aiWallX?SourceAIStates.Defending:SourceAIStates.GoingBerserk;
         yield return new SourceWait(AIRange(.8f,1.2f)*(1-.75f*AIUnit));
         if(AIValid) {
-            if(AIWallDistance<=aiWallX)AIRun(AIAway());else AIRun(AIWalk(mover.position.x<=0?1:-1));
+            if(AIWallDistance<=aiWallX)AIRun(AICix());else AIRun(AIWalk(mover.position.x<=0?1:-1));
             aiAttacking=false;
         }
     }

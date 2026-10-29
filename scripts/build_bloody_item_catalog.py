@@ -4,6 +4,7 @@ Native ObscuredBool.Decrypt at ELF VA 0x32e4d58 is (hidden - key) XOR key;
 the old V0 XOR-only routine is a different method and must not be substituted.
 """
 import collections
+import copy
 import json
 import math
 import struct
@@ -73,10 +74,35 @@ def main():
         catalog.append(dict(name=name,source=item['source'],item_id=data['itemId'],
             resource='sourceprefabs/handitem/'+name,label=data['Name'],category=data['HandItemType'],
             two_handed=two,blunt=blunt,stats=values,fields=resolve(data)))
+    # Two serialized entries are already-equipped scene instances of a named
+    # resource (Dagger_5 / Shield_21), with an extra joint to a character hand.
+    # Loading Resources/name instantiates the shared-assets prefab, not that
+    # scene instance. Retain every source entry, but map its runtime fields to
+    # the actual standalone root; keep the instance fields as evidence.
+    grouped=collections.defaultdict(list)
+    for record in catalog:grouped[record['resource']].append(record)
+    aliases=[]
+    for resource,rows in grouped.items():
+        roots=[]
+        for record in rows:
+            objects,transforms,go_to_t,_=graphs[record['source']['file']]
+            root_t=go_to_t[record['fields']['m_GameObject']['id']]
+            if transforms[root_t]['m_Father']['m_PathID']==0:roots.append(record)
+        if len(rows)>1 and len(roots)!=1:raise ValueError('Ambiguous standalone resource: '+resource)
+        runtime=roots[0] if roots else rows[0]
+        for record in rows:
+            record['runtime_source']=copy.deepcopy(runtime['source'])
+            if record is runtime:continue
+            record['serialized_instance_fields']=copy.deepcopy(record['fields'])
+            record['resource_alias']=True
+            for key in ['item_id','label','category','two_handed','blunt','stats','fields']:
+                record[key]=copy.deepcopy(runtime[key])
+            aliases.append(dict(resource=resource,serialized_source=record['source'],runtime_source=runtime['source']))
     ids=collections.Counter(x['item_id'] for x in catalog)
     result=dict(source_apk_sha256=dependencies['source_apk_sha256'],items=catalog,
         bool_decrypt_va='0x32e4d58',float_decrypt_va='0x32ec260',
         skipped=skipped,duplicate_item_ids={str(k):v for k,v in ids.items() if v>1},
+        serialized_roots=len(catalog),distinct_resources=len(grouped),resource_aliases=aliases,
         runtime_port_complete=False)
     output=root/'output/bloody-full-port-20261028/original-item-catalog.json'
     output.write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')

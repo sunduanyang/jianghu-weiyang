@@ -40,6 +40,7 @@ public sealed partial class PhysicsDuel {
         }
         void ApplyReferenceDeathStage(int stage){
             referenceDeathStage=stage;
+            if(SourceRigActive){ApplySourceRigDeathStage(stage);return;}
             switch(stage){
                 case 1:
                     kickUntil=game.Clock;if(kickShape!=null)kickShape.enabled=false;

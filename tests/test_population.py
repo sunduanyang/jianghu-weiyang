@@ -60,7 +60,11 @@ class PopulationTests(unittest.TestCase):
             self.assertEqual(n['birth_month'], w.month - n['age_months'])
             if n['age_months'] < 192:
                 g = w.npcs[n['guardian']]
-                self.assertGreaterEqual(g['age_months'], 360)
+                # A registered parent raises their own child; otherwise an adult of 30+ is appointed.
+                if g['id'] in n['parents']:
+                    self.assertGreaterEqual(g['age_months'] - n['age_months'], 17*12)
+                else:
+                    self.assertGreaterEqual(g['age_months'], 360)
                 self.assertEqual(g['place'], n['place'])
                 self.assertFalse(n.get('social_status'))
             else:

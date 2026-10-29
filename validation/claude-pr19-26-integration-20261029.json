@@ -1,0 +1,275 @@
+{
+  "passed": true,
+  "date": "2026-10-29",
+  "source_head": "234098c272610a5bb4312b871a45f35806dd337c",
+  "prs": [
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ],
+  "regression": {
+    "tests": 712,
+    "passed": true,
+    "seconds": 828.278,
+    "log": "output\\claude-pr19-26-20261029\\unittest.log"
+  },
+  "native_checks": 43,
+  "native": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated native world ready",
+        "passed": true
+      },
+      {
+        "check": "model disabled for deterministic native acceptance",
+        "passed": true
+      },
+      {
+        "check": "model selected undertaking reaches native client with its named target",
+        "passed": true
+      },
+      {
+        "check": "turning point reaches native thinking view",
+        "passed": true
+      },
+      {
+        "check": "model creed and voice reach native character view",
+        "passed": true
+      },
+      {
+        "check": "close tie reveals the persisted impression",
+        "passed": true
+      },
+      {
+        "check": "validated character response reaches native client",
+        "passed": true
+      },
+      {
+        "check": "model participation counters reach system page",
+        "passed": true
+      },
+      {
+        "check": "inspecting new character data preserves time and event count",
+        "passed": true
+      },
+      {
+        "check": "real visitor and choices reach protagonist page",
+        "passed": true
+      },
+      {
+        "check": "stale visit response is rejected",
+        "passed": true
+      },
+      {
+        "check": "rejected answer changes neither silver nor calendar",
+        "passed": true
+      },
+      {
+        "check": "native visit response settles once through the real endpoint",
+        "passed": true
+      },
+      {
+        "check": "visit silver reaches the correct NPC",
+        "passed": true
+      },
+      {
+        "check": "duplicate visit answer is rejected",
+        "passed": true
+      },
+      {
+        "check": "acceptance never invokes a model",
+        "passed": true
+      },
+      {
+        "check": "no native errors or exceptions",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "cold_restart": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated native world ready",
+        "passed": true
+      },
+      {
+        "check": "model disabled for deterministic native acceptance",
+        "passed": true
+      },
+      {
+        "check": "model selected undertaking reaches native client with its named target",
+        "passed": true
+      },
+      {
+        "check": "turning point reaches native thinking view",
+        "passed": true
+      },
+      {
+        "check": "model creed and voice reach native character view",
+        "passed": true
+      },
+      {
+        "check": "close tie reveals the persisted impression",
+        "passed": true
+      },
+      {
+        "check": "validated character response reaches native client",
+        "passed": true
+      },
+      {
+        "check": "model participation counters reach system page",
+        "passed": true
+      },
+      {
+        "check": "inspecting new character data preserves time and event count",
+        "passed": true
+      },
+      {
+        "check": "cold restart preserves answered visit",
+        "passed": true
+      },
+      {
+        "check": "cold restart preserves settled player silver",
+        "passed": true
+      },
+      {
+        "check": "acceptance never invokes a model",
+        "passed": true
+      },
+      {
+        "check": "no native errors or exceptions",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "default_launcher_restart": {
+    "passed": true,
+    "checks": [
+      {
+        "check": "isolated native world ready",
+        "passed": true
+      },
+      {
+        "check": "model disabled for deterministic native acceptance",
+        "passed": true
+      },
+      {
+        "check": "model selected undertaking reaches native client with its named target",
+        "passed": true
+      },
+      {
+        "check": "turning point reaches native thinking view",
+        "passed": true
+      },
+      {
+        "check": "model creed and voice reach native character view",
+        "passed": true
+      },
+      {
+        "check": "close tie reveals the persisted impression",
+        "passed": true
+      },
+      {
+        "check": "validated character response reaches native client",
+        "passed": true
+      },
+      {
+        "check": "model participation counters reach system page",
+        "passed": true
+      },
+      {
+        "check": "inspecting new character data preserves time and event count",
+        "passed": true
+      },
+      {
+        "check": "cold restart preserves answered visit",
+        "passed": true
+      },
+      {
+        "check": "cold restart preserves settled player silver",
+        "passed": true
+      },
+      {
+        "check": "acceptance never invokes a model",
+        "passed": true
+      },
+      {
+        "check": "no native errors or exceptions",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "legacy_compatibility": {
+    "passed": true,
+    "checks": {
+      "month_unchanged": true,
+      "population_unchanged": true,
+      "player_wealth_unchanged": true,
+      "new_fields_queryable": true
+    },
+    "tested_copy": "D:\\Desktop\\新新游戏\\output\\claude-pr19-26-20261029\\legacy-save\\world.sqlite"
+  },
+  "build_integrity": {
+    "build_inputs": 510,
+    "changed_during_build": [],
+    "backend_files": 73,
+    "bundled_mismatches": [],
+    "executable_exists": true
+  },
+  "merge_integrity": {
+    "head": "234098c272610a5bb4312b871a45f35806dd337c",
+    "preserved": 171,
+    "concurrent_changes": []
+  },
+  "real_model": {
+    "model": "qwen3.5:4b",
+    "backend": "llamacpp CUDA",
+    "passed_stages": [
+      "lean_first_creed",
+      "voice",
+      "reaction_impression",
+      "visit_opening_with_natural_player_name"
+    ],
+    "evidence": "output\\claude-pr19-26-20261029\\real-model.json",
+    "note": "One controlled local example per stage. Initial visit test player name contained banned word 模型 and was rejected; ordinary in-world name passed. No speed or long-run quality benchmark."
+  },
+  "visual_review": {
+    "reviewed": true,
+    "screenshots": [
+      "validation\\screenshots\\claude-npc-undertaking-turning-20261029.png",
+      "validation\\screenshots\\claude-npc-visits-20261029.png"
+    ],
+    "computer_use_review": "Opened new build with isolated save; actual UI scrolling confirmed 人生信条 / 说话 / 他怎么看你 labels and contents display without overlaps."
+  },
+  "build": "D:\\Desktop\\新新游戏\\unity\\Build\\ClaudeNpc20261029\\江湖未央.exe",
+  "launcher_selection": "ClaudeNpc20261029",
+  "previous_build": "CombatHandsHeadFixed20261029",
+  "preserved_local_work": "All 171 non-overlapping tracked local modifications/deletions retained at merge. README and two server files backed up and reconciled; build includes local character and combat changes present at build start.",
+  "concurrent_source_changes_after_build": [
+    "unity\\JianghuUnity\\Assets\\Scripts\\InteractionGameplaySmoke.cs",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsBindSmoke.cs",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelBindProbe.cs",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelReference.cs"
+  ],
+  "source_snapshot_note": "Build-input hashes remained unchanged through build completion and the post-build integrity check. A separate ongoing task later edited the listed combat sources; those later edits remain untouched and are outside this validated artifact.",
+  "attempt_notes": [
+    "Initial pytest collected tooling under output; discarded in favor of documented unittest discover -s tests.",
+    "First isolated fixture omitted initial goals for two added actors; corrected fixture passed.",
+    "Hidden-window captures unavailable; visible-window native rerun captured real UI and passed."
+  ],
+  "limitations": [
+    "No rerun of upstream multi-year simulation comparisons.",
+    "No new claim about combat balance, long replay stability, or all-character art quality.",
+    "Already running game sessions continue using their loaded build until restarted."
+  ]
+}

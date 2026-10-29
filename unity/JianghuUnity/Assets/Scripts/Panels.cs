@@ -113,11 +113,11 @@ public partial class JianghuApp {
         GUILayout.BeginVertical(GUILayout.Width(665));mainScroll=GUILayout.BeginScrollView(mainScroll);if(Institution.Has){H(Institution["name"].S);T(Institution["ethos"].S);if(Institution["government"].Has){var g=Institution["government"];Metric("国库",Num(g["fund"])+"银");Metric("现行施政",g["policy"].S);Metric("税率",(g["tax_rate"].N*100).ToString("0.#")+"%");Metric("治安 / 公医",Num(g["security"])+" / "+Num(g["sanitation"]));DrawNationalRanks(Institution["rank_system"]);Details("国库收支与民政",g);Details("边境往来",Institution["border_activity"]);Details("外交关系",Institution["relations"]);foreach(var p in Institution["places"].A)if(Btn("城镇 · "+p["name"].S)){int place=p["id"].I;Later(()=>{SelectedPlace=place;GoStage(Stage.World);});}}
             else{Metric("传承",Institution["tradition"].S+" · "+Institution["art"].S);Metric("驻地",Institution["place_name"].S+" · "+Institution["seat_name"].S+" · 独立9格");T(Institution["basis"].S,small);
                 if(Institution["leader_name"].Has)Metric("现任主持",Institution["leader_name"].S);
+                var membership=Institution["player_membership"];if(membership.Has)T("主角身份 · "+membership["name"].S+" "+membership["grade_label"].S+" "+membership["title"].S+" · 贡献"+Num(membership["contribution"]),sub);
+                if(Btn("查看门派驻地 ›")){int seat=Institution["place"].I;Later(()=>{SelectedPlace=seat;GoStage(Stage.City);});}
+                DrawSectLife(Institution["sect_life"],Institution["player_options"],Institution["id"]);
                 DrawSectRanks(Institution["rank_system"]);
                 H("门派九品武学");DrawRankArts(Institution["martial_curriculum"]["arts"]);
-                var membership=Institution["player_membership"];if(membership.Has)T("主角身份 · "+membership["name"].S+" "+membership["grade_label"].S+" "+membership["title"].S+" · 贡献"+Num(membership["contribution"]),sub);
-                foreach(var option in Institution["player_options"].A){if(Btn(option["label"].S+" / "+option["points"].S+"行动力",Paused&&option["enabled"].B))HeroAction(option["action"].S,"faction",Institution["id"]);if(!option["enabled"].B)T(option["reason"].S,small);}
-                if(Btn("查看门派驻地 ›")){int seat=Institution["place"].I;Later(()=>{SelectedPlace=seat;GoStage(Stage.City);});}
                 Metric("库银",Num(Institution["fund"])+"银");Metric("收入 / 支出",Num(Institution["revenue"])+" / "+Num(Institution["expenses"]));foreach(var n in Institution["roster"].A){int member=n["id"].I;if(GUILayout.Button(n["name"].S+" · "+n["rank"]["grade_label"].S+" "+n["rank"]["title"].S+" · 贡献"+Num(n["contribution"]),chip))Later(()=>ViewPerson(member));}}
             DrawEventList(Institution["events"]);
         }else T("择一方势力，查看其成员、民政与收支。");GUILayout.EndScrollView();GUILayout.EndVertical();GUILayout.EndHorizontal();
@@ -145,6 +145,12 @@ public partial class JianghuApp {
         Metric("模型计划实际执行",W["ai"]["plan_executions"].S+"步");
         Metric("模型方针参与行动",W["ai"]["policy_actions"].S+"次");
         Metric("方针改变候选排序",W["ai"]["policy_ranking_changes"].S+"次");
+        Metric("模型选定的长期筹划",W["ai"]["model_undertakings"].S+"项进行中 · 累计选定"+W["ai"]["undertakings_chosen"].S+"次、继续"+W["ai"]["undertakings_kept"].S+"次");
+        Metric("与你来往的人中由模型主导",W["ai"]["contacted_model_led"].S+" / "+W["ai"]["contacted_people"].S+"人");
+        Metric("人物回应",W["ai"]["reactions_completed"].S+"次");
+        Metric("已定口吻的人物",W["ai"]["voices"].S+"人");
+        Metric("已写人生信条的人物",W["ai"]["creeds"].S+"人");
+        Metric("简短决定 / 人生转折已想 · 待想",W["ai"]["lean_decisions"].S+" / "+W["ai"]["turning_decided"].S+" · "+W["ai"]["turning_pending"].S+"人");
         if(W["ai"]["last_error"].S.Length>0)T("最近模型状态："+W["ai"]["last_error"].S,small);
         GUILayout.EndScrollView();
     }

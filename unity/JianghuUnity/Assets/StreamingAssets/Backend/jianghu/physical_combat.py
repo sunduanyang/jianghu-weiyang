@@ -4,7 +4,7 @@ import json
 import math
 from pathlib import Path
 import random
-from . import martial, combat_attributes, weapons, physical_reference
+from . import martial, combat_attributes, weapons, physical_reference, physical_impalement
 
 RULESET, ENGINE, MAX_SECONDS = 4, 'unity-physics2d-v09', 180
 PROFILES = weapons.PROFILES
@@ -20,17 +20,24 @@ def equipment(w, owner):
     item = items.get(w, owner, item_id) if item_id else None
     spec = items.spec(item) if item and item['durability'] > 0 else None
     weapon = weapons.profile(item) if spec else {**PROFILES['unarmed'], 'id': 'unarmed'}
+    weapon['template_id'] = item['template'] if spec else ''
     profile = weapon['id']
     shield_id = actor['equipment'].get('shield')
     shield = items.get(w, owner, shield_id) if shield_id else None
     has_shield = bool(shield and shield['durability'] > 0 and not PROFILES[profile]['support_grip'])
+    armor_id = actor['equipment'].get('armor')
+    armor = items.get(w, owner, armor_id) if armor_id else None
+    armor_packet = (dict(template_id=armor['template'], defense=items.spec(armor).get('defense', 0),
+                         durability=armor['durability']) if armor else {})
     return {**gear, 'weapon_profile':profile, 'weapon_name':spec['name'] if spec else '徒手',
-            'weapon_item':item_id if spec else None, 'weapon':weapon, 'shield':has_shield}
+            'weapon_item':item_id if spec else None, 'weapon':weapon, 'shield':has_shield,
+            'armor':armor_packet}
 
 def fighter(actor, key, gear=None, *, fresh=False):
     gear = gear or {}
     profile = gear.get('weapon_profile', 'unarmed')
     weapon = {**gear.get('weapon', PROFILES[profile]), 'id':profile,
+              'template_id':gear.get('weapon', {}).get('template_id', ''),
               'name':gear.get('weapon_name', PROFILES[profile]['name'])}
     hero = actor.get('protagonist', {})
     abilities = combat_attributes.view(actor, gear)
@@ -44,6 +51,7 @@ def fighter(actor, key, gear=None, *, fresh=False):
             'tuning_version':combat_attributes.TUNING['version'], 'weapon_version':weapons.VERSION,
             'combat_parameters':params, 'physique':abilities['physique'],
             'weapon':weapon, 'shield':bool(gear.get('shield')), 'weapon_item':gear.get('weapon_item'),
+            'armor':deepcopy(gear.get('armor', {})),
             'damage_scale':params['damage_scale'], 'handling_scale':params['handling_scale'],
             'damage_reduction':params['damage_reduction'],
             'hits':0, 'damage_dealt':0., 'motion_spent':0., 'attack_count':0,
@@ -63,14 +71,24 @@ def upgrade_tuning(w):
     b = w.battle
     if not b or b.get('status') != 'active' or b.get('settled') or b.get('ruleset') != RULESET:
         return False
-    changed = False
+    changed = retuned = False
     for side, old in enumerate(b['fighters']):
-        if (old.get('tuning_version', 1) >= combat_attributes.TUNING['version']
-                and old.get('weapon_version', 0) >= weapons.VERSION):
+        tuning_current = (old.get('tuning_version', 1) >= combat_attributes.TUNING['version']
+                          and old.get('weapon_version', 0) >= weapons.VERSION)
+        if tuning_current and 'armor' in old and 'template_id' in old.get('weapon', {}):
             continue
         owner = 'player' if side == 0 else old['id']
         actor = w.player if side == 0 else w.npcs[owner]
         current = fighter(actor, old['id'], equipment(w, owner),fresh=b.get('spar',True))
+        if tuning_current:
+            # New packet identities are metadata, not a retuning. Preserve
+            # every in-flight resource/body/AI value in an older active save.
+            if 'template_id' not in old['weapon']:
+                old['weapon']['template_id'] = (current['weapon']['template_id']
+                    if current['weapon_item'] == old.get('weapon_item') else '')
+            old.setdefault('armor', current['armor'])
+            changed = True
+            continue
         health_ratio = current['vigor_max']/max(.001, old['vigor_max'])
         stamina_ratio = current['stamina_max']/max(.001, old.get('stamina_max',100.))
         balance_ratio = current['balance_max']/max(.001, old.get('balance_max',100.))
@@ -78,7 +96,7 @@ def upgrade_tuning(w):
         old['stamina'] = round(old['stamina']*stamina_ratio,4)
         old['outer_wounds'] = round(old.get('outer_wounds',0)*health_ratio,4)
         for key in ('vigor_max','stamina_max','balance_max','attribute_version','tuning_version',
-                    'weapon_version','weapon','weapon_item','shield',
+                    'weapon_version','weapon','weapon_item','shield','armor',
                     'combat_ratings','combat_parameters','damage_scale','handling_scale','damage_reduction'):
             old[key] = current[key]
         if b.get('frame'):
@@ -86,8 +104,8 @@ def upgrade_tuning(w):
             packet['health'] = round(packet['health']*health_ratio,4)
             packet['stamina'] = round(packet['stamina']*stamina_ratio,4)
             packet['balance'] = round(packet['balance']*balance_ratio,4)
-        changed = True
-    if changed:
+        changed = retuned = True
+    if retuned:
         for side,f in enumerate(b['fighters']):
             other = b['fighters'][1-side]
             f['damage_dealt'] = round(other['vigor_max']-other['vigor'],4)
@@ -143,8 +161,10 @@ def validate_frame(battle,frame):
                 f'fighters[{fighter_index}].feet.'+side))
         if reference:
             previous = ((battle.get('frame') or {}).get('fighters') or [{}, {}])[fighter_index].get('reference', {})
-            clean['reference'] = physical_reference.validate(p.get('reference'), old, previous, number, fields)
+            clean['reference'] = physical_reference.validate(p.get('reference'), old, previous, number, fields,
+                                                               human=fighter_index == 0)
         result['fighters'].append(clean)
+    physical_impalement.validate_links(result['fighters'])
     if result['hits']!=sum(int(f['landed_hits']) for f in result['fighters']):raise ValueError('命中计数不一致')
     for i in (0,1):
         if result['fighters'][i]['health']<battle['fighters'][i]['vigor']-.01 and result['fighters'][1-i]['landed_hits']<=0:

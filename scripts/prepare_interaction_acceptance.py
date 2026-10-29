@@ -26,7 +26,7 @@ def main():
         ids=[]
         for label in ('甲','乙','丙'):
             n=w.make_npc(place=45);n.update(name='验收'+label,age_months=360,health=100.,wealth=200.,time_left=4,spouse=None,orientation='皆可')
-            n['traits'].update(loyalty=90.,sociability=90.,compassion=90.,caution=50.)
+            n['traits'].update(integrity=90.,sociability=90.,kindness=90.,boldness=50.)
             n['mood'].update(anger=0.,joy=0.)
             w.set_goal(n,'mastery',initial=True)
             art=next(k for k in martial_catalog.ARTS if not items.knows(w,'player',k))

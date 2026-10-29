@@ -8,10 +8,25 @@ import shutil
 import sqlite3
 import re
 import sys
+import time
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / 'unity' / 'JianghuUnity'
+
+
+def copy_backend_file(source, target):
+    # Unity's just-exited importer can briefly retain a Windows file mapping.
+    # Retry that transient lock; do not launch a build with a partial package.
+    for attempt in range(12):
+        try:
+            shutil.copy2(source, target)
+            return
+        except OSError as error:
+            if (os.name != 'nt' or getattr(error, 'winerror', None) not in (32, 33, 1224)
+                    or attempt == 11):
+                raise
+            time.sleep(.25)
 
 
 def bundle_runtime(assets):
@@ -47,7 +62,13 @@ def prepare(backend_only=False, bundle_python=False, include_local_save=False):
     for source in sorted(p for p in (ROOT / 'jianghu').iterdir() if p.suffix in ('.py', '.json')):
         target = backend / 'jianghu' / source.name
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, target)
+        copy_backend_file(source, target)
+    # Numeric source-rig whitelists are executable validator dependencies.
+    # Include only package data, never workspace saves/caches.
+    for source in sorted((ROOT / 'jianghu' / 'data').rglob('*.json')):
+        target = backend / 'jianghu' / 'data' / source.relative_to(ROOT / 'jianghu' / 'data')
+        target.parent.mkdir(parents=True, exist_ok=True)
+        copy_backend_file(source, target)
     for retired in ('combat.py', 'combat_flow.py', 'combat_realtime.py'):
         old = backend / 'jianghu' / retired
         if old.exists(): old.unlink()

@@ -1,4 +1,6 @@
 """Versioned state for the independently implemented reference combat rig."""
+from . import physical_source_ai, physical_source_rig, physical_impalement, physical_kick_receiver, physical_source_shape
+
 PROFILE = 'bloody-reference-v1'
 # Snapshot bounds are independent of the visible arena. A disarmed weapon or
 # severed part can clear its walls and keep travelling/falling at the engine's
@@ -15,14 +17,16 @@ PARTS = {'head': 70, 'neck': 70, 'belly': 100, 'torso': 100, 'pelvis': 100,
             [('upper', 30), ('forearm', 30), ('hand', 50), ('thigh', 40), ('shin', 40), ('foot', 40)]}}
 
 
-def weight_keys(fighter):
+def weight_keys(fighter, source_equipment=False):
+    if source_equipment:
+        return {'Near'} if fighter['weapon']['support_grip'] else {'Near', 'Far'}
     keys = {'Near'} if fighter['weapon']['id'] != 'unarmed' else set()
     if fighter.get('shield') and not fighter['weapon']['support_grip']:
         keys.add('Far')
     return keys
 
 
-def validate(data, old, previous, number, fields):
+def validate(data, old, previous, number, fields, *, human=None):
     if not isinstance(data, dict) or data.get('profile') != PROFILE:
         raise ValueError('参考骨架状态缺失或版本不匹配')
     result = dict(profile=PROFILE, **fields(data, [
@@ -31,6 +35,26 @@ def validate(data, old, previous, number, fields):
     if not isinstance(data.get('wake_pending'), bool):
         raise ValueError('起身状态格式不合法')
     result['wake_pending'] = data['wake_pending']
+    if 'source_equipment' in data or 'source_equipment' in previous:
+        equipment = data.get('source_equipment')
+        if (not isinstance(equipment, dict) or set(equipment) != {'version', 'nothing_template'}
+                or type(equipment.get('version')) is not int or equipment['version'] != 1
+                or equipment.get('nothing_template') != 'sharedassets0.assets:273502'
+                or 'source_rig' not in data or data.get('weapon_rig') != 1):
+            raise ValueError('原作空手装备状态不匹配')
+        result['source_equipment'] = dict(equipment)
+    if 'source_shape' in data or 'source_shape' in previous:
+        result['source_shape'] = physical_source_shape.validate(data.get('source_shape'), previous.get('source_shape'))
+    if 'source_ai' in data or 'source_ai' in previous:
+        result['source_ai'] = physical_source_ai.validate(data.get('source_ai'), previous.get('source_ai'))
+    for tag, validator in (('source_rig', physical_source_rig.validate),
+                           ('source_impalement', physical_impalement.validate)):
+        if tag not in data and tag not in previous:
+            continue
+        options = {'human': human} if tag == 'source_rig' else {}
+        state = validator(data.get(tag), previous.get(tag), number, fields, **options)
+        if state is not None:
+            result[tag] = state
     if 'source_motion' in data or 'source_motion' in previous:
         motion=data.get('source_motion')
         if (not isinstance(motion,dict) or type(motion.get('version')) is not int
@@ -100,6 +124,10 @@ def validate(data, old, previous, number, fields):
             raise ValueError('踢击状态版本或标记不合法')
         result['kick_state'] = dict(version=1, paid=kick['paid'], **fields(kick, [
             ('kicked_left', 0, .501), ('immunity_left', 0, .501)], 'reference.kick_state'))
+        receiver = physical_kick_receiver.validate(kick.get('source_receiver'),
+            previous.get('kick_state', {}).get('source_receiver'), number)
+        if receiver is not None:
+            result['kick_state']['source_receiver'] = receiver
     bodies = data.get('bodies')
     if (not isinstance(bodies, list) or len(bodies) != len(EXTRA_BODIES)
             or any(not isinstance(b, dict) for b in bodies)
@@ -114,7 +142,7 @@ def validate(data, old, previous, number, fields):
         if type(data.get('weapon_rig')) is not int or data['weapon_rig'] != 1:
             raise ValueError('武器配重状态版本不匹配')
         weights = data.get('weights')
-        expected = weight_keys(old)
+        expected = weight_keys(old, 'source_equipment' in result)
         if (not isinstance(weights, list) or len(weights) != len(expected)
                 or any(not isinstance(b, dict) for b in weights)
                 or {b.get('key') for b in weights} != expected):

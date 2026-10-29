@@ -16,7 +16,7 @@ public sealed partial class PhysicsDuel {
             return side=="Near"?primary:primary+ReadyDirection*weapon.supportGrip;
         }
         public Vector2 SupportGripPoint=>sword.WorldPoint(weapon.Local(new Vector2(0,gripSpacing),facing));
-        public float SupportGripError=>supportJoint==null?0:Vector2.Distance(limbs["handFar"].B,SupportGripPoint);
+        public float SupportGripError=>supportJoint==null?0:SourceRigActive?MeasuredJointGap(supportJoint):Vector2.Distance(limbs["handFar"].B,SupportGripPoint);
         void AttachSupportHand() {
             gripSpacing=weapon.supportGrip;
             Limb hand=limbs["handFar"];

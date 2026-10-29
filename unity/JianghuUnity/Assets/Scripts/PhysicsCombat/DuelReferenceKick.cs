@@ -7,8 +7,10 @@ public sealed partial class PhysicsDuel {
         const float KickDuration=.5f,KickWindup=.2f,KickForce=1350;
         bool kickPaid;
         float kickedUntil=-10,kickImmunityUntil=-10;
+        int sourceKickReceiverStage;
+        float sourceKickReceiverAt;
         CapsuleCollider2D kickShape;
-        public bool ReferenceBeingKicked=>Reference&&game.Clock<kickedUntil;
+        public bool ReferenceBeingKicked=>Reference&&(SourceRigActive?sourceKickReceiverStage!=0:game.Clock<kickedUntil);
         public bool ReferenceKickActive=>ReferenceKicking&&kickPaid&&!PassedOut&&!ReferenceDowned&&health>0;
         void BuildReferenceKick(){
             // Separate trigger and receiver, as in the reference prefab.
@@ -27,12 +29,13 @@ public sealed partial class PhysicsDuel {
             kickUntil=game.Clock+KickDuration;kickPaid=false;return true;
         }
         void UpdateReferenceKick(){
+            TickSourceKickReceiver();
             if((health<=0||PassedOut||ReferenceDowned)&&ReferenceKicking)kickUntil=game.Clock;
             if(ReferenceKicking&&!kickPaid&&game.Clock>=kickUntil-KickDuration+KickWindup){
                 kickPaid=true;ConsumeReferenceStamina(10);
                 if(stamina<=0){exhaustedUntil=game.Clock+3;kickUntil=game.Clock;}
             }
-            if(kickShape!=null)kickShape.enabled=ReferenceKickActive;
+            if(kickShape!=null){kickShape.enabled=ReferenceKickActive;if(SourceRigActive&&kickShape.gameObject.activeSelf!=ReferenceKickActive)kickShape.gameObject.SetActive(ReferenceKickActive);}
         }
         Vector2 ReferenceKickFoot(string side){
             float t=KickDuration-(kickUntil-game.Clock);
@@ -49,6 +52,7 @@ public sealed partial class PhysicsDuel {
         }
         public bool ReceiveReferenceKick(Fighter attacker){
             if(!Reference||attacker==this||!game.Live||!attacker.ReferenceKickActive||health<=0||game.Clock<kickImmunityUntil)return false;
+            if(SourceRigActive)return ReceiveSourceRigKick(attacker);
             kickImmunityUntil=kickedUntil=game.Clock+.5f;
             float vertical=mover.linearVelocity.y;
             mover.linearVelocity=pelvis.rb.linearVelocity=Vector2.zero;
@@ -61,14 +65,47 @@ public sealed partial class PhysicsDuel {
             game.hits++;attacker.landedHits++;attacker.lastHit=game.Clock;
             game.Impact(pelvis.rb.position,false,dealt);return true;
         }
-        J CaptureReferenceKick()=>J.O("version",1,"paid",kickPaid,"kicked_left",Mathf.Max(0,kickedUntil-game.Clock),"immunity_left",Mathf.Max(0,kickImmunityUntil-game.Clock));
+        bool ReceiveSourceRigKick(Fighter attacker){
+            var config=sourceRig.Source("KickReceiver");var baseBody=sourceRig.Resolve<Rigidbody2D>(config["baseRigidbody2D"]);var pelvisBody=sourceRig.Resolve<Rigidbody2D>(config["pelvisRigidbody2D"]);
+            float vertical=baseBody.linearVelocity.y;
+            Vector2 force=new Vector2((config["flipped"].B?1:-1)*(float)config["kickForce"].N,vertical);
+            baseBody.linearVelocity=pelvisBody.linearVelocity=Vector2.zero;
+            // Native OnTriggerEnter2D uses AddForce(Vector2), Force mode. Its
+            // one 60 Hz force application is represented as an impulse so the
+            // host's extra contact substeps cannot divide the source push.
+            Vector2 impulse=force/60;baseBody.AddForce(impulse,ForceMode2D.Impulse);
+            if(PassedOut)pelvisBody.AddForce(impulse*20,ForceMode2D.Impulse);
+            float dealt=ApplyReferenceGlobalDamage(1);kickImmunityUntil=game.Clock+.5f;
+            sourceKickReceiverStage=1;sourceKickReceiverAt=game.Clock+(float)config["timeUntilDampingStart"].N;
+            kickedUntil=sourceKickReceiverAt+(float)config["timeUntilDampingReset"].N;
+            game.hits++;attacker.landedHits++;attacker.lastHit=game.Clock;game.Impact(pelvisBody.position,false,dealt);return true;
+        }
+        void TickSourceKickReceiver(){
+            if(!SourceRigActive||sourceKickReceiverStage==0||game.referenceSubstep!=0||game.Clock<sourceKickReceiverAt)return;
+            if(sourceKickReceiverStage==1){sourceKickReceiverStage=2;sourceKickReceiverAt=game.Clock+(float)sourceRig.Source("KickReceiver")["timeUntilDampingReset"].N;kickedUntil=sourceKickReceiverAt;}
+            else{sourceKickReceiverStage=0;sourceKickReceiverAt=0;kickedUntil=game.Clock;}
+            // KickReceiver/ct.MoveNext has two WaitForSeconds but no damping
+            // writes. dampingWhenKicked and cached OnEnable damping are unused
+            // in the supplied executable and must not invent an extra force.
+        }
+        J CaptureReferenceKick(){
+            var state=J.O("version",1,"paid",kickPaid,"kicked_left",Mathf.Max(0,kickedUntil-game.Clock),"immunity_left",Mathf.Max(0,kickImmunityUntil-game.Clock));
+            if(SourceRigActive)state["source_receiver"]=J.O("version",1,"stage",sourceKickReceiverStage,"wait",sourceKickReceiverStage==0?0:Mathf.Max(0,sourceKickReceiverAt-game.Clock));
+            return state;
+        }
         void RestoreReferenceKick(J s){
             var state=s["kick_state"];
             // Legacy active kicks predate a cost/receiver. Do not retroactively
             // charge a kick whose saved pose is already past its windup.
             kickPaid=state.Has?state["paid"].B:(float)s["kick_left"].N<=KickDuration-KickWindup;
             kickedUntil=game.Clock+(float)state["kicked_left"].N;kickImmunityUntil=game.Clock+(float)state["immunity_left"].N;
-            if(kickShape!=null)kickShape.enabled=ReferenceKickActive;
+            if(SourceRigActive){
+                var receiver=state["source_receiver"];float left=(float)state["kicked_left"].N,second=(float)sourceRig.Source("KickReceiver")["timeUntilDampingReset"].N;
+                sourceKickReceiverStage=receiver.Has?receiver["stage"].I:left>second?1:left>0?2:0;
+                float wait=receiver.Has?(float)receiver["wait"].N:sourceKickReceiverStage==1?left-second:left;
+                sourceKickReceiverAt=sourceKickReceiverStage==0?0:game.Clock+wait;
+            }
+            if(kickShape!=null){kickShape.enabled=ReferenceKickActive;if(SourceRigActive&&kickShape.gameObject.activeSelf!=ReferenceKickActive)kickShape.gameObject.SetActive(ReferenceKickActive);}
         }
     }
 }

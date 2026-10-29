@@ -16,7 +16,7 @@ def proposal(ctx, **kwargs):
     return {**{'action_id': ctx['allowed_actions'][0]['id'], 'plan': [ctx['allowed_actions'][0]['id']],
             'goal': ctx['self']['goal']['kind'], 'reason': '依据亲历选择',
             'reflection': {'event_ids': [ctx['memories'][0]['event_id']], 'interpretation': '我会记住此事。',
-                           'trait': 'caution', 'direction': 1, 'belief': 'trust', 'belief_direction': -1}}, **kwargs}
+                           'trait': 'boldness', 'direction': -1, 'belief': 'trust', 'belief_direction': -1}}, **kwargs}
 
 
 class SimulationTests(unittest.TestCase):
@@ -30,12 +30,22 @@ class SimulationTests(unittest.TestCase):
             a.month_step();b.month_step()
         self.assertEqual(a.npcs,b.npcs)
         self.assertEqual(a.rng.getstate(),b.rng.getstate())
+        # A pursuit only changes for a real reason: it was fulfilled, a grudge was put down,
+        # or a crime against this person turned them toward revenge.
         for i,n in a.npcs.items():
-            if i not in first or n['goal']['kind']==first[i]:continue
+            if i not in first or not n['past_goals']:continue
             cause=a.store.event(n['goal']['cause'])
-            self.assertIn(cause['kind'],social.CRIMES)
-            self.assertEqual(cause['facts']['victim'],i)
-            self.assertGreaterEqual(n['past_goals'][0]['ended']-n['past_goals'][0]['since'],24)
+            past=n['past_goals'][-1];held=past['ended']-past['since']
+            if cause['kind']=='goal_complete':
+                self.assertEqual(cause['people'],[i])
+                self.assertGreaterEqual(held,0 if past['kind']=='revenge' else 12)
+            elif cause['kind']=='grudge_released':
+                self.assertEqual(past['kind'],'revenge');self.assertGreaterEqual(held,6)
+            else:
+                self.assertEqual(n['goal']['kind'],'revenge')
+                self.assertIn(cause['kind'],social.CRIMES)
+                self.assertEqual(cause['facts']['victim'],i)
+                self.assertGreaterEqual(held,12)
 
     def test_save_reload_continues_same_world(self):
         with tempfile.TemporaryDirectory() as d:
@@ -73,14 +83,15 @@ class SimulationTests(unittest.TestCase):
 
     def test_personality_inertia_and_subjective_differences(self):
         w=self.world();a,b=w.npcs[1],w.npcs[2]
-        a['traits']['caution']=90;b['traits']['caution']=10
+        a['traits']['boldness']=10;b['traits']['boldness']=90
         before=deepcopy(a['traits'])
         e=w.emit('disaster',[1,2],'同地遭遇水患。',.92)
         self.assertNotEqual(a['memories'][-1]['interpretation'],b['memories'][-1]['interpretation'])
-        self.assertLessEqual(max(abs(a['traits'][k]-before[k]) for k in TRAITS),1.2)
+        # Turning points may move a temperament axis by at most 2.5 per month.
+        self.assertLessEqual(max(abs(a['traits'][k]-before[k]) for k in TRAITS),2.5)
         self.assertEqual(a['memories'][-1]['event_id'],b['memories'][-1]['event_id'])
         for _ in range(20):w.emit('disaster',[1],'反复遭遇水患。',.92)
-        self.assertLessEqual(a['traits']['caution']-before['caution'],1.2001)
+        self.assertLessEqual(before['boldness']-a['traits']['boldness'],2.5001)
 
     def test_private_fact_cannot_enter_victims_context(self):
         w=self.world();secret=w.emit('secret_theft',[1],'甲暗中拿了乙的钱。',.5,facts={'secret':True})
@@ -102,13 +113,13 @@ class SimulationTests(unittest.TestCase):
     def test_ai_plan_real_action_and_bounded_psychology(self):
         w=self.world();n=next(n for n in w.npcs.values() if n['age_months']>=216)
         ctx=context_for(w,n);choice=next(a['id'] for a in ctx['allowed_actions'] if a['kind']=='work')
-        r=proposal(ctx,action_id=choice,plan=[choice]);old=n['traits']['caution']
+        r=proposal(ctx,action_id=choice,plan=[choice]);old=n['traits']['boldness']
         self.assertTrue(apply_decision(w,ctx,r)[0])
         self.assertEqual(n['plan']['source'],'AI')
-        self.assertLess(abs(n['traits']['caution']-old),.3)
-        reflected=n['traits']['caution']
+        self.assertLess(abs(n['traits']['boldness']-old),.3)
+        reflected=n['traits']['boldness']
         self.assertTrue(apply_decision(w,ctx,r)[0])
-        self.assertEqual(n['traits']['caution'],reflected)
+        self.assertEqual(n['traits']['boldness'],reflected)
         action=w.choose(n,w.legal_actions(n));self.assertEqual(action['id'],choice)
         wealth=n['wealth'];e=w.execute(n,action)
         self.assertGreater(n['wealth'],wealth);self.assertEqual(e['facts']['action'],choice)
@@ -145,7 +156,7 @@ class SimulationTests(unittest.TestCase):
 
     def test_betrayal_can_redirect_a_long_life_and_leave_a_cause(self):
         w=self.world();n,q=w.npcs[1],w.npcs[2]
-        n['traits']['compassion']=10;n['traits']['ambition']=85
+        n['traits']['kindness']=10;n['traits']['ambition']=85
         w.month=48;n['last_goal_change']=0;n['desires'][n['goal']['kind']]=45
         w.link(n,q,-65,-80)
         e=w.emit('betrayal',[1,2],'乙侵吞了甲的托银，行迹败露。',.95,

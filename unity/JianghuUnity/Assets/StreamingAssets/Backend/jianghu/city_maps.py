@@ -400,7 +400,7 @@ def venue(w, n, action):
         wanted = 'gate'
     elif kind == 'work':
         wanted = WORK_PLACES.get(n['job'], 'residence')
-    elif kind in ('join','duty','train','teach','mentor','duel','faction_task','faction_study','faction_guide'):
+    elif kind in ('join','duty','train','teach','mentor','duel','faction_task','faction_study','faction_guide','sect_service'):
         faction = f"faction_{n['faction']}"
         wanted = faction if faction in ids else 'training'
     elif kind in ('public_service','report','embezzle'):

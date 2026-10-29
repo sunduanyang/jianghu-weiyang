@@ -24,6 +24,12 @@ public partial class JianghuApp {
         }
         if(current.Has){
             T(current["title"].Has?current["title"].S:current["reason"].S,sub);
+            if(current["undertaking"].Has){
+                T("长期筹划 · "+current["undertaking"].S+" · "+current["chosen_by"].S+" · 每月推进一步，条件不足时等待",small);
+                if(current["ai_reason"].Has&&current["ai_reason"].S.Length>0)T("本人取舍："+current["ai_reason"].S,small);
+                if(current["interim"].Has&&current["interim"].A.Count>0)T("其余周次另有"+current["interim"].A.Count+"项模型安排的日常事务",small);
+                if(current["target_name"].Has&&current["target"].Has&&Btn("查看对象 · "+current["target_name"].S))ViewPerson(current["target"].I,PersonTab.Overview);
+            }
             Metric("进展",current["status"].S);T("接下来："+current["next_description"].S);
             if(current["blocker"].S.Length>0)T("眼前阻碍："+current["blocker"].S,small);
             foreach(var step in current["completed"].A.TakeLast(3)){
@@ -31,6 +37,12 @@ public partial class JianghuApp {
                 if(step["event_id"].Has&&Btn("追溯这次行动"))OpenEvent(step["event_id"].I);
             }
         }else T("尚无待办计划，下一次行动时依处境安排。",small);
+        var turns=Person["turning_view"];
+        if(turns.Has&&(turns["history"].A.Count>0||turns["pending"].A.Count>0)){
+            T("人生转折",sub);
+            foreach(var t in turns["pending"].A)T("尚在心头 · "+t["role_label"].S+" · "+t["summary"].S,small);
+            foreach(var t in turns["history"].A.Take(3)){T(t["stance_label"].S+" · "+t["summary"].S,small);if(t["note"].S.Length>0)T("心声："+t["note"].S,small);}
+        }
         if(decision.Has){T("最近取舍",sub);T(decision["reason"].S);if(decision["policy_influence"].B)T("遵循模型方针："+decision["policy_title"].S,small);T("采取："+decision["action"].S,small);}
         if(view["history"].A.Count>0){
             T("此前打算",sub);
