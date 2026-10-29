@@ -11,7 +11,7 @@ from . import demography, government, items, appearance
 from . import social
 from . import politics, territory
 from .atlas import PLACES, FACTIONS, COUNTRIES, ROUTES, NEIGHBORS, MAP_VERSION, ERA
-from . import careers, social_ranks, undertakings, fame, visits, turning
+from . import careers, social_ranks, undertakings, fame, visits, turning, creed
 from . import martial, martial_manuals, physical_combat as combat, player_interactions, player_social
 from . import city_maps, relationships, organizations, protagonist, settlements, society, temperament, goals
 from . import npc_plans, npc_memory, economics, rank_progression, local_life, llm_policy, npc_attention
@@ -441,7 +441,8 @@ class World:
 
     def best_goal(self, n, exclude=()):
         options = [k for k in self.goal_options(n) if k not in exclude] or ['wealth']
-        return max(options, key=lambda k: n['desires'][k] + self.rng.uniform(-8, 8))
+        # A creed's dream weighs in; the random draw is unchanged.
+        return max(options, key=lambda k: n['desires'][k] + creed.dream_bonus(n, k) + self.rng.uniform(-8, 8))
 
     def goal_options(self, n):
         keys = ['wealth', 'belonging', 'freedom']
@@ -697,7 +698,7 @@ class World:
                   'revenge': {'report': 30}}.get(g, {}).get(k, 0)
         if n['wealth'] < 10 and k != 'work' and not (k == 'travel' and a.get('migration')):
             score -= 35
-        return score + social.adjustment(self,n,a) + npc_plans.adjustment(self, n, a) + rank_progression.adjustment(self,n,a) + local_life.adjustment(self,n,a) + llm_policy.adjustment(self,n,a)
+        return score + social.adjustment(self,n,a) + npc_plans.adjustment(self, n, a) + rank_progression.adjustment(self,n,a) + local_life.adjustment(self,n,a) + llm_policy.adjustment(self,n,a) + creed.adjustment(self,n,a)
 
     def choose(self, n, actions):
         return npc_plans.choose(self, n, actions)
@@ -1645,6 +1646,7 @@ class World:
         n['voice_view'] = persona.view(self, self.npcs[npc_id])
         n['impression_view'] = persona.impression(self, self.npcs[npc_id])
         n['turning_view'] = turning.view(self, self.npcs[npc_id])
+        n['creed_view'] = creed.view(self, self.npcs[npc_id])
         n['recalled_memories'] = npc_memory.retrieve(self, self.npcs[npc_id])
         n['career_view'] = careers.view(self, self.npcs[npc_id])
         n['social_view'] = society.person_view(self, self.npcs[npc_id])

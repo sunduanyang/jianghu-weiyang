@@ -149,7 +149,8 @@ def on_event(w, e):
 def monthly(w, n):
     """Grudges fade; kind people let go sooner. Returns a forgiveness resolution when it happens."""
     t = n['traits']
-    fade = .985 - t['kindness'] * .0002
+    from . import creed
+    fade = min(1., (.985 - t['kindness'] * .0002) * creed.grudge_fade(n))
     n['desires']['revenge'] = round(n['desires']['revenge'] * fade, 4)
     g = n.get('goal')
     if g and g['kind'] == 'revenge' and not g.get('resolved'):
