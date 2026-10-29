@@ -35,8 +35,6 @@ public partial class JianghuApp {
     int mapLastClickPlace=-1;float mapLastClickAt=-10;Vector2 mapLastClickPosition;
     readonly List<KeyValuePair<Rect,int>> worldMapTargets=new List<KeyValuePair<Rect,int>>();
     Vector2 worldMapOffset;float worldMapScale;
-    int chosenRow=-1,chosenCol=-1,originRow=-1,originCol=-1;
-    string cityKind="全部聚落";
     void InitMap(){
         if(geography.Has)return;geography=J.Parse(Resources.Load<TextAsset>("geography").text);landMask=Resources.Load<Texture2D>("Map/land");
         foreach(var c in geography["cells"].A){mapMasks[c["place"].I]=Resources.Load<Texture2D>("Map/cell-"+c["place"].S);if(c["area"].Has)cellAnchors[c["place"].I]=new Vector3((float)c["cx"].N,(float)c["cy"].N,(float)c["area"].N);}

@@ -4,24 +4,18 @@ using System.Linq;
 using UnityEngine;
 
 namespace Jianghu {
-// 城中的三种看法：
+// 城中的两种看法：
 //   舆图 — 本地区的聚落、出入口与相邻城镇画成节点，驿道、步道与航路连线，地形退为底色；
-//   长卷 — 一处聚落的营生设施沿街展开，在场之人站在各处门前（CityScroll.cs）；
-//   地格 — 原 30×30 行走图，保留给需要逐格查看的人。
-// 三者读同一份 /api/city 数据，行走与远行仍走原有的寻路和 /api/hero，不另立规则。
-public enum CityMode { Atlas, Scroll, Tiles }
+//   长卷 — 一处聚落的营生设施沿街展开，在场之人站在各处门前（CityScroll.cs）。
+// 两者读同一份 /api/city 数据，行走与远行仍走原有的寻路和 /api/hero，不另立规则。
+public enum CityMode { Atlas, Scroll }
 
 public partial class JianghuApp {
-    // Smoke runs predate the atlas and photograph the tile board; they keep it as their default.
-    CityMode cityMode=CityDefaultMode();
-    static CityMode CityDefaultMode(){
-        foreach(var arg in Environment.GetCommandLineArgs())
-            if(arg.StartsWith("-")&&arg.IndexOf("smoke",StringComparison.OrdinalIgnoreCase)>=0&&arg!="-cityAtlasSmokeDir")return CityMode.Tiles;
-        return CityMode.Atlas;
-    }
-    // Settlements carry the footprints the atlas needs; very old layouts without them stay on tiles.
+    CityMode cityMode=CityMode.Atlas;
+    // Settlements carry the footprints the atlas needs. Saves migrate to the current
+    // layout version on load, so a city without them is reported rather than drawn.
     bool CityAtlasReady=>City.Has&&City["settlements"].A.Count>0&&City["rows"].A.Count==City["size"].I;
-    CityMode CityModeShown=>cityMode!=CityMode.Tiles&&!CityAtlasReady?CityMode.Tiles:cityMode;
+    CityMode CityModeShown=>cityMode;
     Rect CitySheetRect=>new Rect(CityHudRect.x,CityHudRect.y+6,CityHudRect.width,CityHudRect.height-10);
     Rect CityAtlasViewport=>CityViewport;
 
@@ -63,6 +57,7 @@ public partial class JianghuApp {
     static readonly string[] FacilityOrder={"gate","palace","government","market","inn","dock","clinic","workshop","training","school","temple","faction","residence","granary","garden"};
     static int FacilityRank(string kind){int i=Array.IndexOf(FacilityOrder,kind);return i<0?FacilityOrder.Length:i;}
     List<J> CityFacilities(string site)=>City["nodes"].A.Where(n=>n["settlement_id"].S==site).OrderBy(n=>FacilityRank(n["kind"].S)).ToList();
+    static bool CityHasService(J site,string service)=>site["kind"].S==service||site["services"].A.Any(s=>s.S==service);
     static int SiteSize(J site)=>Mathf.Max(1,site["footprint"]["size"].Has?site["footprint"]["size"].I:1);
     static Vector2Int SiteCorner(J site)=>site["footprint"].Has?new Vector2Int(site["footprint"]["row"].I,site["footprint"]["col"].I):new Vector2Int(site["row"].I,site["col"].I);
     static Vector2 SiteCenter(J site){int size=SiteSize(site);var c=SiteCorner(site);return new Vector2(c.x+(size-1)*.5f,c.y+(size-1)*.5f);}
@@ -76,7 +71,14 @@ public partial class JianghuApp {
         foreach(var site in CitySettlementsList)if(SiteContains(site,HeroTile))return "s:"+site["id"].S;
         return "";
     }}
-    // Tile-space position of the hero (row, col), following the step animation.
+    // A readable name for a grid cell in status lines: the gate, the landing or the settlement around it.
+    string CityPlaceLabel(Vector2Int at){
+        var gate=CityGateNode;if(gate.Has&&gate["row"].I==at.x&&gate["col"].I==at.y)return gate["name"].S;
+        var dock=CityDockNode;if(dock.Has&&dock["row"].I==at.x&&dock["col"].I==at.y)return dock["name"].S;
+        foreach(var site in CitySettlementsList)if(SiteContains(site,at))return site["name"].S;
+        return "此处";
+    }
+    // Grid position of the hero (row, col), following the step animation.
     Vector2 HeroTileFloat=>cityStepAnimating?Vector2.Lerp(new Vector2(cityStepFrom.x,cityStepFrom.y),new Vector2(cityStepTo.x,cityStepTo.y),cityStepProgress):new Vector2(Hero["row"].I,Hero["col"].I);
     int CityWalkCost(Vector2Int target){EnsureCityRoutes();return cityCosts.TryGetValue(target,out int cost)?cost:-1;}
     J CityConnection(int place){
@@ -99,7 +101,7 @@ public partial class JianghuApp {
     void SetCityMode(CityMode mode){
         if(mode==CityMode.Scroll&&!CitySettlement(cityScrollSite).Has)CityAtlasReset();
         if(mode==CityMode.Scroll&&cityAtlasPick.StartsWith("s:")&&cityAtlasPick.Substring(2)!=cityScrollSite)OpenCityScroll(cityAtlasPick.Substring(2));
-        cityMode=mode;cityPointerDown=false;cityScrollDragging=false;cityAtlasDragging=false;
+        cityMode=mode;cityScrollDragging=false;cityAtlasDragging=false;
     }
 
     // ---------------------------------------------------------------- terrain wash
@@ -514,16 +516,14 @@ public partial class JianghuApp {
     string CityFacilityName(string id){if(string.IsNullOrEmpty(id))return "";var n=City["nodes"].A.FirstOrDefault(x=>x["id"].S==id);return n!=null?n["name"].S:"";}
 
     // ---------------------------------------------------------------- toolbar
-    // Returns the width used by the 舆图 / 长卷 / 地格 switch at the start of the toolbar.
+    // Returns the width used by the 舆图 / 长卷 switch at the start of the toolbar.
     float DrawCityModeTabs(float x,float y){
-        bool ready=CityAtlasReady;
-        GUI.enabled=!cityLoading&&ready;
+        GUI.enabled=!cityLoading&&CityAtlasReady;
         if(CityTool(new Rect(x,y,52,28),"舆图",CityModeShown==CityMode.Atlas))SetCityMode(CityMode.Atlas);
         if(CityTool(new Rect(x+54,y,52,28),"长卷",CityModeShown==CityMode.Scroll))SetCityMode(CityMode.Scroll);
         GUI.enabled=!cityLoading;
-        if(CityTool(new Rect(x+108,y,52,28),"地格",CityModeShown==CityMode.Tiles))SetCityMode(CityMode.Tiles);
-        GUI.Label(new Rect(x+162,y+4,14,20),"|",centerSmall);
-        return 176;
+        GUI.Label(new Rect(x+108,y+4,14,20),"|",centerSmall);
+        return 122;
     }
     void DrawCityAtlasTools(float left,float y,Rect r){
         if(CityModeShown==CityMode.Atlas){

@@ -52,13 +52,13 @@ public class LocalLifeSmoke : MonoBehaviour {
         Screen.SetResolution(1280,800,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.3f);Screen.SetResolution(1680,960,FullScreenMode.Windowed);
         int placeId=client.World["hero"]["place"].I;
         yield return app.CityLoadForSmoke(placeId);
-        Check("selected cells show real positions before simulation",app.ValidateCityPeopleForSmoke(out J before),before);
+        Check("settlement rosters show real positions before simulation",app.ValidateCitySettlementRostersForSmoke(out J before),before);
         bool advanced=false;yield return client.Request("/api/hero",client.HeroBody("end_turn"),j=>advanced=true);yield return client.Refresh();
         Check("isolated world advances one month",advanced&&client.World["month"].I==month+1);
         yield return app.CityLoadForSmoke(placeId);
-        Check("selected cells show real weekly positions",app.ValidateCityPeopleForSmoke(out J after),after);
+        Check("settlement rosters show real weekly positions",app.ValidateCitySettlementRostersForSmoke(out J after),after);
         var site=app.City["settlements"].A.First(t=>t["kind"].S=="village"||t["kind"].S=="town");
-        app.CityPeopleSelectForSmoke(site["row"].I,site["col"].I);app.GoStage(Stage.City,false);
+        app.CityPickSettlementForSmoke(site["id"].S);app.GoStage(Stage.City,false);
         yield return Capture("settlement-homes-and-presence");
         int person=site["home_residents"].A.First()["id"].I;app.SelectPerson(person);
         float deadline=Time.realtimeSinceStartup+15;while((!app.Person.Has||app.Person["id"].I!=person)&&Time.realtimeSinceStartup<deadline)yield return null;

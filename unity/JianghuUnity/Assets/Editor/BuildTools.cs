@@ -55,14 +55,6 @@ public static class BuildTools {
             }
         }
         string output=GameClient.Arg("-buildOutput",Path.GetFullPath(Path.Combine(Application.dataPath,"../../Build/Current/江湖未央.exe")));Directory.CreateDirectory(Path.GetDirectoryName(output));
-        foreach(string guid in AssetDatabase.FindAssets("t:Texture2D",new[]{"Assets/Resources/CityBiomes"})){
-            var importer=AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid)) as TextureImporter;
-            if(importer!=null){importer.textureCompression=TextureImporterCompression.Uncompressed;importer.mipmapEnabled=true;importer.alphaIsTransparency=true;importer.wrapMode=TextureWrapMode.Clamp;importer.maxTextureSize=512;importer.SaveAndReimport();}
-        }
-        foreach(string guid in AssetDatabase.FindAssets("t:Texture2D",new[]{"Assets/Resources/CitySettlements"})){
-            var importer=AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid)) as TextureImporter;
-            if(importer!=null){importer.textureCompression=TextureImporterCompression.Uncompressed;importer.mipmapEnabled=true;importer.alphaIsTransparency=true;importer.wrapMode=TextureWrapMode.Clamp;importer.maxTextureSize=1024;importer.SaveAndReimport();}
-        }
         var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions{scenes=new[]{"Assets/Scenes/Jianghu.unity"},locationPathName=output,target=BuildTarget.StandaloneWindows64,options=BuildOptions.None});
         if(report.summary.result!=BuildResult.Succeeded)throw new Exception("Windows build failed: "+report.summary.result);
         Debug.Log("JIANGHU_BUILD_OK "+output+" bytes="+report.summary.totalSize);

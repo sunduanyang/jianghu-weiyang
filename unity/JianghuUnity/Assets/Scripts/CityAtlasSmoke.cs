@@ -49,7 +49,6 @@ public class CityAtlasSmoke : MonoBehaviour {
         if(client.World["hero"]["created"].B&&!places.Contains(client.World["hero"]["place"].I))places.Insert(0,client.World["hero"]["place"].I);
         foreach(int place in places){
             yield return app.CityLoadForSmoke(place);
-            // The unloaded map deliberately falls back to tiles; check the default after its data arrives.
             if(place==places[0])Check("舆图 is the default city view",app.CityModeForSmoke==CityMode.Atlas);
             app.SetCityModeForSmoke(CityMode.Atlas);
             yield return new WaitForSecondsRealtime(.3f);
@@ -69,9 +68,6 @@ public class CityAtlasSmoke : MonoBehaviour {
                 Check("scroll lists the facilities of "+site+" at "+place,app.ValidateCityScroll(out J scroll),scroll);
                 yield return Capture("scroll-"+place+"-"+site);
             }
-            app.SetCityModeForSmoke(CityMode.Tiles);yield return new WaitForSecondsRealtime(.3f);
-            Check("地格 remains available: "+place,app.CityModeForSmoke==CityMode.Tiles);
-            yield return Capture("tiles-"+place);
             app.SetCityModeForSmoke(CityMode.Atlas);
         }
         yield return client.Refresh();
@@ -82,6 +78,8 @@ public class CityAtlasSmoke : MonoBehaviour {
 public partial class JianghuApp {
     public CityMode CityModeForSmoke=>CityModeShown;
     public void SetCityModeForSmoke(CityMode mode)=>SetCityMode(mode);
+    // Pick a settlement on the 舆图 as a click would, opening its people in the left roster.
+    public void CityPickSettlementForSmoke(string site){SetCityMode(CityMode.Atlas);cityAtlasPick="s:"+site;rosterMode="此地";rosterOpen=true;rosterScroll=Vector2.zero;mainScroll=Vector2.zero;}
     public void SetCityAtlasCameraForSmoke(float zoom){CityAtlasFullView();CityAtlasZoomAt(zoom,CityAtlasViewport.center);if(zoom>1)cityAtlasPan=new Vector2(37,-29);}
     public bool ValidateCityAtlasCamera(out J facts){
         float savedZoom=cityAtlasZoom;Vector2 savedPan=cityAtlasPan;Rect sheet=CityAtlasViewport;
