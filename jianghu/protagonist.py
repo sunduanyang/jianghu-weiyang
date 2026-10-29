@@ -156,8 +156,14 @@ def view(w):
              position_name=area['name'] if area else node['name'] if node else city_maps.TERRAIN[city['rows'][h['row']][h['col']]],
              turn=w.month-h['started_month']+1 if h['created'] else 1,
              connections=connections(w), membership=organizations.player_membership(w), identity=player_identity(w),
-             journal=[e for i in reversed(h['records'][-8:]) if (e := w.store.event(i))])
+             journal=[e for i in reversed(h['records'][-8:]) if (e := w.store.event(i))],
+             visits=visits_view(w))
     return h
+
+
+def visits_view(w):
+    from . import visits
+    return visits.view(w)
 
 
 def record(w, kind, text, facts, causes=()):
