@@ -52,14 +52,15 @@ class LeanThinkingTests(unittest.TestCase):
         self.assertLess(short, 5000); self.assertLess(short * 2, full)
         self.assertLessEqual(len(wire['allowed_actions']), ai.LEAN_ACTIONS)
         self.assertIn('own_life', wire); self.assertNotIn('baseline_action', wire)
-        self.assertEqual(set(ai.lean_schema(ctx)['required']), {'action_id', 'goal', 'note', 'undertaking'})
+        # The first thought about someone also writes their creed (tests/test_creed.py).
+        self.assertEqual(set(ai.lean_schema(ctx)['required']), {'action_id', 'goal', 'note', 'undertaking', 'creed'})
         captured = []
         def complete(model, messages, schema, budget, stage):
             captured.append((budget, stage, schema))
             return lean_answer(ctx), '{}', dict(prompt_tokens=900, completion_tokens=30), 1.
         with patch.object(ai.LocalModel, 'complete', complete):
             result, _, usage, _ = ai.LocalModel(ai.continuous_config()).request(ctx)
-        self.assertEqual((captured[0][0], captured[0][1]), (120, '简短决定'))
+        self.assertEqual((captured[0][0], captured[0][1]), (230, '简短决定'))
         self.assertEqual(usage['request_count'], 1)
         self.assertEqual(result['plan'], [result['action_id']])
         # People the player deals with keep the full request.

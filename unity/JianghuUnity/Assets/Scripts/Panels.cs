@@ -149,6 +149,7 @@ public partial class JianghuApp {
         Metric("与你来往的人中由模型主导",W["ai"]["contacted_model_led"].S+" / "+W["ai"]["contacted_people"].S+"人");
         Metric("人物回应",W["ai"]["reactions_completed"].S+"次");
         Metric("已定口吻的人物",W["ai"]["voices"].S+"人");
+        Metric("已写人生信条的人物",W["ai"]["creeds"].S+"人");
         Metric("简短决定 / 人生转折已想 · 待想",W["ai"]["lean_decisions"].S+" / "+W["ai"]["turning_decided"].S+" · "+W["ai"]["turning_pending"].S+"人");
         if(W["ai"]["last_error"].S.Length>0)T("最近模型状态："+W["ai"]["last_error"].S,small);
         GUILayout.EndScrollView();
