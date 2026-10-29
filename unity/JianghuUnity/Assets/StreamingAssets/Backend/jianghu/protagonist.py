@@ -156,14 +156,8 @@ def view(w):
              position_name=area['name'] if area else node['name'] if node else city_maps.TERRAIN[city['rows'][h['row']][h['col']]],
              turn=w.month-h['started_month']+1 if h['created'] else 1,
              connections=connections(w), membership=organizations.player_membership(w), identity=player_identity(w),
-             journal=[e for i in reversed(h['records'][-8:]) if (e := w.store.event(i))],
-             hearsay=hearsay_view(w))
+             journal=[e for i in reversed(h['records'][-8:]) if (e := w.store.event(i))])
     return h
-
-
-def hearsay_view(w):
-    from . import hearsay
-    return hearsay.view(w)
 
 
 def record(w, kind, text, facts, causes=()):

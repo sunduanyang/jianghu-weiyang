@@ -103,7 +103,6 @@ public partial class JianghuApp {
         mainScroll=GUILayout.BeginScrollView(mainScroll);
         DrawEventList(Hero["journal"]);
         if(Hero["journal"].A.Count==0)T("尚无记事。",small);
-        DrawHearsay(Hero["hearsay"]);
         GUILayout.EndScrollView();
         GUILayout.EndArea();
     }
@@ -116,16 +115,6 @@ public partial class JianghuApp {
         DrawTemperamentDetail(Person["temperament_view"],Person["goal_view"].Has?Person["goal_view"]:Person["goal"]);
         DrawFame(Person["fame_view"]);
         Details("记忆与理解",Person["memories"]);
-    }
-    // 江湖传闻：近处的事先传到，远处的事晚些才听说；有本地人转述时用其口吻。
-    void DrawHearsay(J rumors){
-        if(!rumors.Has||rumors.A.Count==0)return;
-        GUILayout.Space(8);T("江湖传闻",sub);
-        foreach(var r in rumors.A){
-            T(r["text"].S,small);
-            T((r["hops"].I==0?"出自本地":"出自"+r["origin_name"].S+" · 隔"+r["hops"].I+"城传来")+(r["told"].B?" · 本地人转述":""),small);
-            if(Btn("追溯此事"))OpenEvent(r["event_id"].I);
-        }
     }
     // 名声所及：声望是所作所为，各城镇知道多少不同。
     void DrawFame(J fv){

@@ -10,7 +10,7 @@ from urllib.parse import parse_qs, urlparse
 from .ai import AIManager, DEFAULT_CONFIG, continuous_config, participation
 from .engine import World
 from .store import Store
-from . import hearsay, reactions
+from . import reactions
 from . import items, equipment, territory, city_maps, government, protagonist, economics, rank_progression, llm_policy, npc_attention, player_social, player_interactions
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -32,7 +32,7 @@ class Game:
         self.ai = AIManager(config)
         self.world = World(seed, population, Store(path), compact=True, population_profile=True, market_economy=True,rank_assessments=True)
         self.ai.restore_stats(self.world.store)
-        if player_social.recover(self.world) | reactions.recover(self.world) | hearsay.recover(self.world):self.world.checkpoint()
+        if player_social.recover(self.world) | reactions.recover(self.world):self.world.checkpoint()
         self.job = {'remaining': 0, 'total': 0, 'completed': 0, 'fast': True, 'label': '已暂停', 'error': ''}
         self.next_step = 0
         self.autoplay = False
