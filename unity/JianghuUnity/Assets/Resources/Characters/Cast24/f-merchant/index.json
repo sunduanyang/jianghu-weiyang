@@ -1,0 +1,1564 @@
+{
+  "version": 1,
+  "profile": "cast24-rigid-parts-v1",
+  "preserve_source_colour": true,
+  "single_head": true,
+  "literal_source_parts": true,
+  "body_meshes": [
+    {
+      "part": {
+        "id": "neck",
+        "bone": "neck",
+        "layer": 36,
+        "size": [
+          112,
+          138
+        ],
+        "pivot": [
+          72.8,
+          95.22
+        ],
+        "tip": [
+          56.0,
+          30.36
+        ],
+        "breadth": 1,
+        "texture": "parts/02-neck",
+        "source_number": 0,
+        "source_rect": [
+          732,
+          179,
+          112,
+          138
+        ],
+        "source_component": 2
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          112,
+          0
+        ],
+        [
+          0,
+          138
+        ],
+        [
+          112,
+          138
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "neck"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "part": {
+        "id": "torso",
+        "bone": "torso",
+        "layer": 40,
+        "size": [
+          246,
+          272
+        ],
+        "pivot": [
+          150.06,
+          247.52
+        ],
+        "tip": [
+          150.06,
+          21.76
+        ],
+        "breadth": 1,
+        "texture": "parts/03-torso",
+        "source_number": 0,
+        "source_rect": [
+          859,
+          118,
+          246,
+          272
+        ],
+        "source_component": 3
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          246,
+          0
+        ],
+        [
+          0,
+          272
+        ],
+        [
+          246,
+          272
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "torso"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "part": {
+        "id": "belly",
+        "bone": "belly",
+        "layer": 41,
+        "size": [
+          223,
+          247
+        ],
+        "pivot": [
+          111.5,
+          227.24
+        ],
+        "tip": [
+          111.5,
+          19.76
+        ],
+        "breadth": 1,
+        "texture": "parts/04-belly",
+        "source_number": 0,
+        "source_rect": [
+          1107,
+          160,
+          223,
+          247
+        ],
+        "source_component": 4
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          223,
+          0
+        ],
+        [
+          0,
+          247
+        ],
+        [
+          223,
+          247
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "belly"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "part": {
+        "id": "pelvis",
+        "bone": "pelvis",
+        "layer": 44,
+        "size": [
+          209,
+          240
+        ],
+        "pivot": [
+          104.5,
+          14.4
+        ],
+        "tip": [
+          104.5,
+          225.6
+        ],
+        "breadth": 1,
+        "texture": "parts/05-pelvis",
+        "source_number": 0,
+        "source_rect": [
+          1322,
+          157,
+          209,
+          240
+        ],
+        "source_component": 5
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          209,
+          0
+        ],
+        [
+          0,
+          240
+        ],
+        [
+          209,
+          240
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "pelvis"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "part": {
+        "id": "near-upper-arm",
+        "bone": "upperNear",
+        "layer": 50,
+        "size": [
+          173,
+          231
+        ],
+        "pivot": [
+          57.09,
+          27.72
+        ],
+        "tip": [
+          126.29,
+          203.28
+        ],
+        "breadth": 1,
+        "texture": "parts/06-near-upper-arm",
+        "source_number": 0,
+        "source_rect": [
+          506,
+          399,
+          173,
+          231
+        ],
+        "source_component": 6
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          173,
+          0
+        ],
+        [
+          0,
+          231
+        ],
+        [
+          173,
+          231
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "upperNear"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "part": {
+        "id": "near-forearm",
+        "bone": "forearmNear",
+        "layer": 51,
+        "size": [
+          179,
+          185
+        ],
+        "pivot": [
+          21.48,
+          29.6
+        ],
+        "tip": [
+          157.52,
+          149.85
+        ],
+        "breadth": 1,
+        "texture": "parts/07-near-forearm",
+        "source_number": 0,
+        "source_rect": [
+          680,
+          443,
+          179,
+          185
+        ],
+        "source_component": 7
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          179,
+          0
+        ],
+        [
+          0,
+          185
+        ],
+        [
+          179,
+          185
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "forearmNear"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "part": {
+        "id": "near-hand",
+        "bone": "handNear",
+        "layer": 52,
+        "size": [
+          134,
+          81
+        ],
+        "pivot": [
+          65.0,
+          34.0
+        ],
+        "tip": [
+          126.0,
+          34.0
+        ],
+        "breadth": 1,
+        "texture": "parts/08-near-hand",
+        "source_number": 0,
+        "source_rect": [
+          865,
+          500,
+          134,
+          81
+        ],
+        "source_component": 8
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          134,
+          0
+        ],
+        [
+          0,
+          81
+        ],
+        [
+          134,
+          81
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "handNear"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "part": {
+        "id": "far-upper-arm",
+        "bone": "upperFar",
+        "layer": 20,
+        "size": [
+          173,
+          222
+        ],
+        "pivot": [
+          57.09,
+          26.64
+        ],
+        "tip": [
+          126.29,
+          195.36
+        ],
+        "breadth": 1,
+        "texture": "parts/09-far-upper-arm",
+        "source_number": 0,
+        "source_rect": [
+          1031,
+          408,
+          173,
+          222
+        ],
+        "source_component": 9
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          173,
+          0
+        ],
+        [
+          0,
+          222
+        ],
+        [
+          173,
+          222
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "upperFar"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "part": {
+        "id": "far-forearm",
+        "bone": "forearmFar",
+        "layer": 21,
+        "size": [
+          182,
+          164
+        ],
+        "pivot": [
+          21.84,
+          26.24
+        ],
+        "tip": [
+          160.16,
+          132.84
+        ],
+        "breadth": 1,
+        "texture": "parts/10-far-forearm",
+        "source_number": 0,
+        "source_rect": [
+          1202,
+          461,
+          182,
+          164
+        ],
+        "source_component": 10
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          182,
+          0
+        ],
+        [
+          0,
+          164
+        ],
+        [
+          182,
+          164
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "forearmFar"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "part": {
+        "id": "far-hand",
+        "bone": "handFar",
+        "layer": 22,
+        "size": [
+          125,
+          80
+        ],
+        "pivot": [
+          60.0,
+          34.0
+        ],
+        "tip": [
+          118.0,
+          34.0
+        ],
+        "breadth": 1,
+        "texture": "parts/11-far-hand",
+        "source_number": 0,
+        "source_rect": [
+          1391,
+          502,
+          125,
+          80
+        ],
+        "source_component": 11
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          125,
+          0
+        ],
+        [
+          0,
+          80
+        ],
+        [
+          125,
+          80
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "handFar"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "part": {
+        "id": "near-thigh",
+        "bone": "thighNear",
+        "layer": 43,
+        "size": [
+          195,
+          232
+        ],
+        "pivot": [
+          97.5,
+          6.96
+        ],
+        "tip": [
+          97.5,
+          130.1513
+        ],
+        "breadth": 1,
+        "texture": "parts/12-near-thigh",
+        "source_number": 0,
+        "source_rect": [
+          463,
+          634,
+          195,
+          351
+        ],
+        "source_component": 12,
+        "primary_bone": "pelvis"
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          195,
+          0
+        ],
+        [
+          0,
+          232
+        ],
+        [
+          195,
+          232
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "pelvis"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "part": {
+        "id": "near-shin",
+        "bone": "shinNear",
+        "layer": 30,
+        "size": [
+          125,
+          208
+        ],
+        "pivot": [
+          62.5,
+          12.48
+        ],
+        "tip": [
+          62.5,
+          195.52
+        ],
+        "breadth": 1,
+        "texture": "parts/13-near-shin",
+        "source_number": 0,
+        "source_rect": [
+          676,
+          704,
+          125,
+          260
+        ],
+        "source_component": 13
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          125,
+          0
+        ],
+        [
+          0,
+          208
+        ],
+        [
+          125,
+          208
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "shinNear"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "part": {
+        "id": "near-foot",
+        "bone": "footNear",
+        "layer": 32,
+        "size": [
+          170,
+          131
+        ],
+        "pivot": [
+          45.9,
+          44.9828
+        ],
+        "tip": [
+          159.8,
+          110.04
+        ],
+        "breadth": 1,
+        "texture": "parts/14-near-foot",
+        "source_number": 0,
+        "source_rect": [
+          828,
+          843,
+          170,
+          131
+        ],
+        "source_component": 14,
+        "heel_pivot": [
+          13.6,
+          102.18
+        ]
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          170,
+          0
+        ],
+        [
+          0,
+          131
+        ],
+        [
+          170,
+          131
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "footNear"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "part": {
+        "id": "far-thigh",
+        "bone": "thighFar",
+        "layer": 24,
+        "size": [
+          199,
+          234
+        ],
+        "pivot": [
+          99.5,
+          7.02
+        ],
+        "tip": [
+          99.5,
+          131.2733
+        ],
+        "breadth": 1,
+        "texture": "parts/15-far-thigh",
+        "source_number": 0,
+        "source_rect": [
+          986,
+          629,
+          199,
+          355
+        ],
+        "source_component": 15,
+        "primary_bone": "pelvis"
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          199,
+          0
+        ],
+        [
+          0,
+          234
+        ],
+        [
+          199,
+          234
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "pelvis"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "part": {
+        "id": "far-shin",
+        "bone": "shinFar",
+        "layer": 10,
+        "size": [
+          116,
+          219
+        ],
+        "pivot": [
+          58.0,
+          13.14
+        ],
+        "tip": [
+          58.0,
+          205.86
+        ],
+        "breadth": 1,
+        "texture": "parts/16-far-shin",
+        "source_number": 0,
+        "source_rect": [
+          1209,
+          691,
+          116,
+          274
+        ],
+        "source_component": 16
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          116,
+          0
+        ],
+        [
+          0,
+          219
+        ],
+        [
+          116,
+          219
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "shinFar"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "part": {
+        "id": "far-foot",
+        "bone": "footFar",
+        "layer": 12,
+        "size": [
+          169,
+          126
+        ],
+        "pivot": [
+          45.63,
+          41.1232
+        ],
+        "tip": [
+          158.86,
+          105.84
+        ],
+        "breadth": 1,
+        "texture": "parts/17-far-foot",
+        "source_number": 0,
+        "source_rect": [
+          1353,
+          842,
+          169,
+          126
+        ],
+        "source_component": 17,
+        "heel_pivot": [
+          13.52,
+          98.28
+        ]
+      },
+      "vertices": [
+        [
+          0,
+          0
+        ],
+        [
+          169,
+          0
+        ],
+        [
+          0,
+          126
+        ],
+        [
+          169,
+          126
+        ]
+      ],
+      "uv": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "triangles": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        2
+      ],
+      "bones": [
+        "footFar"
+      ],
+      "weights": [
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ]
+    }
+  ],
+  "heads": [
+    {
+      "size": [
+        256,
+        326
+      ],
+      "pivot": [
+        128.42,
+        286.72
+      ],
+      "tip": [
+        128.42,
+        46.96
+      ],
+      "texture": "parts/01-head",
+      "uv": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "mesh": {
+        "vertices": [
+          [
+            0,
+            0
+          ],
+          [
+            256,
+            0
+          ],
+          [
+            0,
+            326
+          ],
+          [
+            256,
+            326
+          ]
+        ],
+        "triangles": [
+          0,
+          1,
+          2,
+          1,
+          3,
+          2
+        ]
+      },
+      "neck_start": 336,
+      "neck_center": 128.0,
+      "neck_end": 346,
+      "neck_width": 1,
+      "face_rects": {
+        "eyes": [
+          197.12,
+          127.14,
+          20.48,
+          14.67
+        ],
+        "brows": [
+          194.56,
+          110.84,
+          23.04,
+          11.410000000000002
+        ],
+        "lips": [
+          225.28,
+          182.56000000000003,
+          15.36,
+          8.15
+        ]
+      },
+      "baked_features": true,
+      "source_number": 0,
+      "source_component": 1
+    }
+  ],
+  "head_layer": 35,
+  "collar_layer": 40,
+  "source_sha256": "cc131d8ca297db8941e2db889f78f294031b3124081ba98bc3bfc07cba185ef8",
+  "bound_source_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ],
+  "notes": [
+    "Source component labels and assembled example are excluded.",
+    "17 separate source crops are exported; runtime clips remove duplicate lower boot drawings.",
+    "Long garment panels hang rigidly from pelvis; no simulation or skeleton dimensions are modified."
+  ]
+}

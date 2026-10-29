@@ -52,13 +52,16 @@ public sealed partial class PhysicsDuel {
             }
         }
         void DrawCollider(Collider2D c) {
+            if(c==null)return;
+            Color color=c.gameObject.layer==10||c.gameObject.layer==15||c.gameObject.layer==16||c.gameObject.layer==17?new Color(.85f,.23f,.10f,.85f):new Color(.1f,.48f,.6f,.7f);
+            void Outline(Vector2[] path){for(int i=0;i<path.Length;i++)game.Line(ScreenPoint(c.transform.TransformPoint(path[i])),ScreenPoint(c.transform.TransformPoint(path[(i+1)%path.Length])),1.5f,color);}
             Vector2[] points;
-            if(c is PolygonCollider2D p)points=p.points;
+            if(c is PolygonCollider2D p){for(int path=0;path<p.pathCount;path++)Outline(p.GetPath(path).Select(point=>point+p.offset).ToArray());return;}
             else if(c is BoxCollider2D b){Vector2 h=b.size/2;points=new[]{b.offset+new Vector2(-h.x,-h.y),b.offset+new Vector2(h.x,-h.y),b.offset+h,b.offset+new Vector2(-h.x,h.y)};}
-            else if(c is CapsuleCollider2D cap){float r=cap.size.x/2,half=Mathf.Max(0,cap.size.y/2-r);points=new Vector2[20];for(int i=0;i<20;i++){float a=(i*18)*Mathf.Deg2Rad;points[i]=cap.offset+new Vector2(Mathf.Cos(a)*r,Mathf.Sin(a)*r+(i<=10?half:-half));}}
+            else if(c is CapsuleCollider2D cap){bool vertical=cap.direction==CapsuleDirection2D.Vertical;float r=Mathf.Min(cap.size.x,cap.size.y)/2,half=Mathf.Max(0,(vertical?cap.size.y:cap.size.x)/2-r);points=new Vector2[24];for(int i=0;i<points.Length;i++){float a=i*Mathf.PI*2/points.Length,x=Mathf.Cos(a),y=Mathf.Sin(a);points[i]=cap.offset+new Vector2(x*r+(vertical?0:x>=0?half:-half),y*r+(vertical?y>=0?half:-half:0));}}
+            else if(c is CircleCollider2D circle){points=new Vector2[24];for(int i=0;i<points.Length;i++){float angle=i*Mathf.PI*2/points.Length;points[i]=circle.offset+new Vector2(Mathf.Cos(angle),Mathf.Sin(angle))*circle.radius;}}
             else return;
-            Color color=c.gameObject.layer==10?new Color(.85f,.23f,.10f,.85f):new Color(.1f,.48f,.6f,.7f);
-            for(int i=0;i<points.Length;i++)game.Line(ScreenPoint(c.transform.TransformPoint(points[i])),ScreenPoint(c.transform.TransformPoint(points[(i+1)%points.Length])),1.5f,color);
+            Outline(points);
         }
         void DrawPart(J part,Vector2 anchor,float angle,float fit) {
             Matrix4x4 old=GUI.matrix;Color oldColor=GUI.color;

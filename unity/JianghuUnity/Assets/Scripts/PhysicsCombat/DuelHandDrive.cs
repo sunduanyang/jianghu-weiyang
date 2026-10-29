@@ -10,7 +10,7 @@ public sealed partial class PhysicsDuel {
         // Filter the requested pose once. Fatigue limits muscles, never this
         // input target's travel speed or a second extension / heading filter.
         float HandInputBlend=>1-Mathf.Exp(-Time.fixedDeltaTime/.022f);
-        public float PrimaryGripError=>primaryGrip==null||!primaryGrip.enabled?0:Vector2.Distance(Limb.BodyPoint(primaryGrip.attachedRigidbody,primaryGrip.anchor),Limb.BodyPoint(primaryGrip.connectedBody,primaryGrip.connectedAnchor));
+        public float PrimaryGripError=>MeasuredJointGap(primaryGrip);
         public float PrimaryGripAngleError=>Mathf.Abs(Mathf.DeltaAngle(sword.rb.rotation-limbs["handNear"].rb.rotation,-primaryGrip.referenceAngle));
         public float HandTargetError(string side)=>Vector2.Distance(limbs["hand"+side].A,handTargets[side].target);
         public J HandPoseState(string side) {

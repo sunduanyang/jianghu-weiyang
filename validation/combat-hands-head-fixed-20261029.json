@@ -1,0 +1,399 @@
+{
+  "date": "2026-10-29",
+  "build": "unity\\Build\\CombatHandsHeadFixed20261029\\江湖未央.exe",
+  "build_completed_local": "2026-10-29T16:40:44+08:00",
+  "default_marker": "unity/Build/active-build.txt",
+  "fixes": [
+    "source held weapons use Discrete collision stepping like source hands",
+    "head visual bone starts at neck hinge and extends 0.30m toward crown; removed old -0.16m base offset",
+    "source and previous formal graphs use client 50/60 solver iterations; source remains 60Hz, one substep"
+  ],
+  "solver_adaptation": {
+    "original_serialized_iterations": [
+      10,
+      10
+    ],
+    "runtime_client_iterations": [
+      50,
+      60
+    ],
+    "original_resource_unchanged": true
+  },
+  "native": {
+    "formal_binding": {
+      "passed": true,
+      "checks": 122,
+      "path": "output\\combat-hands-head-fixed-20261029\\mesh\\character-binding-native.json"
+    },
+    "three_formal_encounters": {
+      "passed": true,
+      "checks": 81,
+      "path": "output\\combat-hands-head-fixed-20261029\\formal\\acceptance.json"
+    },
+    "source_rig": {
+      "passed": true,
+      "checks": 97,
+      "path": "output\\combat-hands-head-fixed-20261029\\source\\source-rig\\acceptance.json"
+    },
+    "cold_restart": {
+      "passed": true,
+      "checks": 17,
+      "path": "output\\combat-hands-head-fixed-20261029\\source\\source-rig-resume\\acceptance.json"
+    },
+    "actual_bat_launcher": {
+      "passed": true,
+      "checks": 122,
+      "path": "output\\combat-hands-head-fixed-20261029\\launcher\\character-binding-native.json"
+    }
+  },
+  "formal_binding_metrics": {
+    "maximum_physical_joint_gap_world": 0.004657981,
+    "maximum_physical_grip_error_world": 0.001949137,
+    "maximum_drawn_hand_tip_to_physical_tip_world": 2.665601e-07,
+    "maximum_visible_weapon_handle_to_hand_world": 0.002336266,
+    "worst_grip": {
+      "source_rig": true,
+      "source_template": "00af04d95140a4b44ac8453d91c032ea",
+      "weapon": "sword",
+      "two_handed": false,
+      "shield": false,
+      "primary_error": 0.001949137,
+      "support_error": 0,
+      "near_hand_tip": {
+        "x": 1.041333,
+        "y": 0.9351618
+      },
+      "far_hand_tip": {
+        "x": 1.272112,
+        "y": 0.5807669
+      },
+      "visible_weapon_grip": {
+        "x": 1.043573,
+        "y": 0.935827
+      },
+      "joints": [
+        {
+          "grip": "primary",
+          "enabled": true,
+          "own": "Bone_HandL",
+          "connected": "sword",
+          "anchor": {
+            "x": -0.075,
+            "y": 0
+          },
+          "connected_anchor": {
+            "x": -0.01084055,
+            "y": -0.5169951
+          },
+          "scaled_physics_gap": 0.001949137,
+          "transform_gap": 0.001949251,
+          "own_lossy_scale": {
+            "x": 1.000001,
+            "y": 1.000001
+          },
+          "connected_lossy_scale": {
+            "x": 1,
+            "y": 1
+          }
+        },
+        {
+          "grip": "offhand",
+          "enabled": true,
+          "own": "Bone_HandR",
+          "connected": "shield",
+          "anchor": {
+            "x": -0.075,
+            "y": 0
+          },
+          "connected_anchor": {
+            "x": 0,
+            "y": 0
+          },
+          "scaled_physics_gap": 7.890359e-06,
+          "transform_gap": 7.996802e-06,
+          "own_lossy_scale": {
+            "x": -1,
+            "y": -1
+          },
+          "connected_lossy_scale": {
+            "x": 1,
+            "y": 1
+          }
+        }
+      ]
+    }
+  },
+  "long_stress": {
+    "overall_passed": false,
+    "passed_checks": 34,
+    "total_checks": 43,
+    "held_weapon_checks_passed": 9,
+    "minimum_held_samples_per_weapon": 10017,
+    "max_held_grip_gap_m": 0.01187271,
+    "max_visible_weapon_handle_gap_m": 0.01147521,
+    "failed_checks": [
+      "production solver keeps active joint limits dagger",
+      "production solver keeps active joint limits sabre",
+      "production solver keeps active joint limits sword",
+      "production solver keeps active joint limits axe",
+      "production solver keeps active joint limits mace",
+      "production solver keeps active joint limits spear",
+      "production solver keeps active joint limits greatsword",
+      "production solver keeps active joint limits greataxe",
+      "production solver keeps active joint limits warhammer"
+    ],
+    "unchanged_thresholds": {
+      "joint_gap_m": 0.15,
+      "joint_limit_excess_degrees": 8,
+      "held_grip_m": 0.03,
+      "visible_handle_m": 0.03
+    },
+    "measurements": [
+      {
+        "weapon": "unarmed",
+        "substeps": 1,
+        "velocity_iterations": 50,
+        "position_iterations": 60,
+        "simulation_seconds": 180.0002,
+        "ticks": 10740,
+        "held_grip_samples": 0,
+        "maximum_held_grip_gap": 0,
+        "maximum_visible_weapon_handle_gap": 0,
+        "max_gap": 0.006181159,
+        "max_limit": 3.756966,
+        "limit_bound_passed": true
+      },
+      {
+        "weapon": "dagger",
+        "substeps": 1,
+        "velocity_iterations": 50,
+        "position_iterations": 60,
+        "simulation_seconds": 180.0002,
+        "ticks": 10740,
+        "held_grip_samples": 21480,
+        "maximum_held_grip_gap": 0.01187247,
+        "maximum_visible_weapon_handle_gap": 0.01147521,
+        "max_gap": 0.01187247,
+        "max_limit": 43.95221,
+        "limit_bound_passed": false
+      },
+      {
+        "weapon": "sabre",
+        "substeps": 1,
+        "velocity_iterations": 50,
+        "position_iterations": 60,
+        "simulation_seconds": 180.0002,
+        "ticks": 10740,
+        "held_grip_samples": 21480,
+        "maximum_held_grip_gap": 0.008622851,
+        "maximum_visible_weapon_handle_gap": 0.01032474,
+        "max_gap": 0.01022097,
+        "max_limit": 29.3868,
+        "limit_bound_passed": false
+      },
+      {
+        "weapon": "sword",
+        "substeps": 1,
+        "velocity_iterations": 50,
+        "position_iterations": 60,
+        "simulation_seconds": 139.3934,
+        "ticks": 8303,
+        "held_grip_samples": 15218,
+        "maximum_held_grip_gap": 0.008651799,
+        "maximum_visible_weapon_handle_gap": 0.01035392,
+        "max_gap": 0.01403537,
+        "max_limit": 19.66756,
+        "limit_bound_passed": false
+      },
+      {
+        "weapon": "axe",
+        "substeps": 1,
+        "velocity_iterations": 50,
+        "position_iterations": 60,
+        "simulation_seconds": 158.5054,
+        "ticks": 9450,
+        "held_grip_samples": 18899,
+        "maximum_held_grip_gap": 0.009246074,
+        "maximum_visible_weapon_handle_gap": 0.01038925,
+        "max_gap": 0.01244105,
+        "max_limit": 31.30664,
+        "limit_bound_passed": false
+      },
+      {
+        "weapon": "mace",
+        "substeps": 1,
+        "velocity_iterations": 50,
+        "position_iterations": 60,
+        "simulation_seconds": 111.2259,
+        "ticks": 6613,
+        "held_grip_samples": 13225,
+        "maximum_held_grip_gap": 0.004733716,
+        "maximum_visible_weapon_handle_gap": 0.00567551,
+        "max_gap": 0.01336559,
+        "max_limit": 17.05593,
+        "limit_bound_passed": false
+      },
+      {
+        "weapon": "spear",
+        "substeps": 1,
+        "velocity_iterations": 50,
+        "position_iterations": 60,
+        "simulation_seconds": 94.57239,
+        "ticks": 5614,
+        "held_grip_samples": 11227,
+        "maximum_held_grip_gap": 0.01140858,
+        "maximum_visible_weapon_handle_gap": 0.009737549,
+        "max_gap": 0.02677792,
+        "max_limit": 27.00522,
+        "limit_bound_passed": false
+      },
+      {
+        "weapon": "greatsword",
+        "substeps": 1,
+        "velocity_iterations": 50,
+        "position_iterations": 60,
+        "simulation_seconds": 180.0002,
+        "ticks": 10740,
+        "held_grip_samples": 21480,
+        "maximum_held_grip_gap": 0.01156669,
+        "maximum_visible_weapon_handle_gap": 0.01115255,
+        "max_gap": 0.01736039,
+        "max_limit": 39.78754,
+        "limit_bound_passed": false
+      },
+      {
+        "weapon": "greataxe",
+        "substeps": 1,
+        "velocity_iterations": 50,
+        "position_iterations": 60,
+        "simulation_seconds": 84.4869,
+        "ticks": 5009,
+        "held_grip_samples": 10017,
+        "maximum_held_grip_gap": 0.01187271,
+        "maximum_visible_weapon_handle_gap": 0.00997912,
+        "max_gap": 0.01481389,
+        "max_limit": 24.76249,
+        "limit_bound_passed": false
+      },
+      {
+        "weapon": "warhammer",
+        "substeps": 1,
+        "velocity_iterations": 50,
+        "position_iterations": 60,
+        "simulation_seconds": 180.0002,
+        "ticks": 10740,
+        "held_grip_samples": 21480,
+        "maximum_held_grip_gap": 0.01093951,
+        "maximum_visible_weapon_handle_gap": 0.01010894,
+        "max_gap": 0.01504922,
+        "max_limit": 55.40747,
+        "limit_bound_passed": false
+      }
+    ],
+    "path": "output\\combat-hands-head-fixed-20261029\\stress\\reference-stress"
+  },
+  "scope_boundary": "Formal scope includes shared real meshes and formal source combat; excludes pre-existing non-reference legacy prototype with zero-length neck under current Cast24 art. Full legacy prototype pass is not claimed.",
+  "visual_evidence": "output\\combat-hands-head-fixed-20261029\\mesh\\03-motion-47.png",
+  "backend_snapshot_sha256": {
+    "ai.py": "c42727f067e1a2a0f2433330e82bf0519b11ec992ade23efdb2b10ddf7b1ced4",
+    "appearance.py": "b59ad89faab2a4f220b97b4b7868382cd0025125158d067fc4d94a6c4d3f1ce6",
+    "atlas.py": "1a3b569c200e041a8d8a379ba3a4fb2bc5e697d6f658d9ce5037fac654cab74d",
+    "atlas_expansion.py": "43d059c4f2a16e5aecc784ecbc20c77ec83230d3ced1f1221e89c46a950e2f69",
+    "atlas_migration.py": "c8f548da1c80323f57a999bfdebe5caf98bf29784fdc0d12021d2a61c72d4b5c",
+    "careers.py": "a1a89600e2a4ff175c93f38431cb45671880ef0c85c4224538e354f55546adfd",
+    "city_biomes.py": "9cc647c6192e4110dbef61035298e473f73128845b511f4a14a310929d338639",
+    "city_gardens.py": "465dc249dca3812f348ee8273b414f302bc8953143c8cdfc5e079d76fcf794fe",
+    "city_landscape.py": "fbe3a70ace9a4c40d84ece63eddc6b52364d13737fa0957324f41480d2c550b9",
+    "city_maps.py": "24fba902c874d95775f5498e36e9dc5110f372e023878374fd3b745dea811258",
+    "city_plans.py": "48cb31a3f7355449314e7c1936a6405b419dc7d8d176a774b085beb291659548",
+    "city_regions.py": "443590725c6742bb155869da3553fd9bb7474b3cbbae9965647275f2bc4e157a",
+    "combat_attributes.py": "93922786908a5b74d1c1af0e1613c2cd30771a6f0b3ec88173102f6421454558",
+    "deliberation.py": "4ce4a9195556e79a074caaeecdcd0131ca48d17f49138eebf1f41eca18656935",
+    "demography.py": "d1a46428ceb788b95b86707c8905d9cb084424630b75d4d8c444b0a0c5e196f4",
+    "economics.py": "06d6fa700e0f3a3404f6521f0085a91798f02fb401f140b3a0164762003fb5ce",
+    "engine.py": "7c7b9f77b7755fa2c5acd221f73a96c745abc99db1556a9defadece7765c9fe0",
+    "equipment.py": "3fcbce12523ab82367441d78592fec53afce4e5004d19e7d21ec7c5fc517da75",
+    "fame.py": "f8913f9d2dfa4c470b75be752428121d32c670b7511193fc4d9ca5483cd089dd",
+    "goals.py": "6cbd01c2897e1b16c900db9d65ad8dfedf3ef03d41273dbe6a5b27ded5dffce2",
+    "government.py": "0fbcbe77315afd2480ffdd59acd86ee37a4c51906101cc945702e2634a3b999f",
+    "historical_map.py": "1e08af6fe6bc9ad9d2b0e5e429d71461acfe412b9c7ead175cdc6186aeea809e",
+    "households.py": "7de7b96a776cf89f82b835bdb7d5531cccbfc3fa8eb45a80b978ba74c5350742",
+    "items.py": "c744833124478fd0c7130f71a6f020fd13ee557f823360beef640237b5c2d4db",
+    "llm_policy.py": "2bb9824410750a8ba21eab917401188be97b1f7a3c0f7297e69425e9f8cf416a",
+    "local_life.py": "1f52285a706dd1f046bbc802611b0f8bd74f1db934e32089b0ecdcffd51ad875",
+    "martial.py": "702d8c7a7b34a57cd41fc4e0b4627d56db6601f138dde9f67dc3959ba2d12456",
+    "martial_catalog.py": "c5dbd71bc1d8fea5e9be8b11d7fe26d885730972300c74567ca08d17f44857ac",
+    "martial_manuals.py": "c1d96965108de93d84a7ceb127a9fc3a242a82d8864b3f8ad44e9ddac7d1172b",
+    "model_service.py": "27443ee7bcb23191d752033c03933158f3f6584ed129cd83492977a8d5ca2c9e",
+    "npc_attention.py": "de32ec2c54887b1af76887a10500194bc7f5944cbbe450d235aba1401ac82f91",
+    "npc_memory.py": "eb5bfa500b8c0b094d59d1043ddf57d910c08ea7082bc2c9ff8d56e3fa2fb701",
+    "npc_plans.py": "f821f60705b279535a003e035dcfb04ac89bc52cbe30a9032104447356783956",
+    "organizations.py": "27a35a3bbf5f07103f2ee3be1f6668c4749bb0bc24f55e22567e128cf7fab966",
+    "physical_combat.py": "987ee0159ce465dccb3798d0b8925b9ed380e0bc8b5ce9eb22c8c5731320b6e3",
+    "physical_impalement.py": "6721f7bdc667146b250f7d4edaf657e10d5cfad0d6876bf547ee51897f39af03",
+    "physical_kick_receiver.py": "f4559783da256d3d113115cf2e3cc3241d05ceb8262a81a3e04098bec7379098",
+    "physical_reference.py": "3f16709d7f91b17bd9e6210fa8a68840b7923618672d7a4dc2a039ae05f608b7",
+    "physical_source_ai.py": "a961bddc3f414290e9878926da8ffc89899f9563d16047eacb0f8125e58cfef0",
+    "physical_source_rig.py": "1c02b50bc33809afd7b5cdedd68adb55abe571f9da12097fa72266f35167d1ef",
+    "physical_source_shape.py": "7f1ed3d170dcde80fd13c1d3ae9c99d8b2704e207983ebb4203f16c9cc27472b",
+    "player_interactions.py": "798618df4752d7b6348a61f23b61b7163abb8bc8e099740722ea5d2a5abbcb47",
+    "player_social.py": "c6338bbe757530336e81c07b151c89f9cd0d5432ee6408136fed0d466613cd9c",
+    "politics.py": "643ac2df5b8e23f1d3c751f1bec641792333671e14e9b612e0409de027772d0e",
+    "population.py": "00627cd7f4730f54980c9d7511c5dbe71a7aea218229f73366ad816581d0d674",
+    "protagonist.py": "c3eb058003c3e1f18e3259dc0a063c1e8443a78026da6325deaec093bb7ace06",
+    "rank_progression.py": "4974bcab76e072f7fb70e9bec716300051d4b88f3a2434b2ab398efbcaa1a030",
+    "relationships.py": "2c1a403a43c7469147d0a9ec9d38dbab86b2c70b5ed8ed23637b43dcf171ae67",
+    "sect_catalog.py": "e98d0cf449f29524832c0e34102a2ad685cf73b9d3e36988d205e4755ad522a5",
+    "sect_life.py": "e534c249891c3ea388d6012f346184d8d1eebd05e78a163cfd63ca14ce9736df",
+    "sect_migration.py": "70e88b2259ab2b8a885c21bb60ce08206097e58c6c208f186540bb097e7dca93",
+    "sect_ranks.py": "2dae287b61520c1699ce8aa7d423d64673ef16dfaafd13aaa67c8e14eafcea9e",
+    "server.py": "a84b5357b2fad6c7ab2e8eee1569f61b3d25b1b78c001a6f7c7883625b3cdc7c",
+    "settlements.py": "3654534a829f9082f05b6ef6b585155c463004bfeab733ab586d6e89993fee1f",
+    "social.py": "832782abbb5707c1a220120043b14a30cba3fb7cf931803c33121797ff49c40c",
+    "social_ranks.py": "d732f47e8d65506a25b96fec70730394ba3000ce6e7fb1843f0a52e99fb990f5",
+    "society.py": "2523554399510fe39b6bb8b487306901f565aa3abe76be57a56821d7782cb14d",
+    "store.py": "b98ca0fe845953a0b14623587da2a98ffcd0bcd8cd8a438cc3823343a09f50d4",
+    "temperament.py": "c361cccc8bf55ab73d8aebda170cb5d323a688b62588598157f394e8b0a45389",
+    "territory.py": "f4bac713250a0623ea308359afe697897bf4b251ea1722b761ee13c75d24ad27",
+    "undertakings.py": "ce8e5212a139b1c74b37bf0dd274fe46accee4df286309ec595d7110fe1e78f9",
+    "weapons.py": "802a5c0c40e9e4b851cd5cd12e19d3a699533a5c3efc230b0be55c05246fd1cf",
+    "__init__.py": "fa4bb541ffb1012e31431d164c85942d7e66419ef2c01b38bcb64e142969b8d7"
+  },
+  "concurrent_work_boundary": {
+    "note": "All 63 current backend files matched the build during verification before subsequent shared-workspace changes at 16:50. Later AI/social changes are separate work; these files were not overwritten or injected into this tested build.",
+    "later_source_drift": [
+      "jianghu\\ai.py",
+      "jianghu\\creed.py",
+      "jianghu\\engine.py",
+      "jianghu\\goals.py",
+      "jianghu\\npc_plans.py",
+      "jianghu\\persona.py",
+      "jianghu\\player_interactions.py",
+      "jianghu\\player_social.py",
+      "jianghu\\protagonist.py",
+      "jianghu\\reactions.py",
+      "jianghu\\server.py",
+      "jianghu\\turning.py",
+      "jianghu\\undertakings.py",
+      "jianghu\\visits.py"
+    ]
+  },
+  "launcher_verification": {
+    "entry": "启动Unity版.bat",
+    "observed_pid": 48060,
+    "observed_executable": "D:\\Desktop\\新新游戏\\unity\\Build\\CombatHandsHeadFixed20261029\\江湖未央.exe",
+    "save_dir": "D:\\Desktop\\新新游戏\\output\\combat-hands-head-fixed-20261029\\launcher-save",
+    "normal_user_save_used": false
+  },
+  "fingerprints_sha256": {
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelSourceRigBridge.cs": "3106eee52e7cbfa2b126ce9c9a69a798e860bb622d50279b3be5ddd6758a2d85",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelReference.cs": "de9dacb8fe66525367168e19c4a1d1d169fcbf409bf028ee0053e247117d2528",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelSourceRigProbe.cs": "2b7f686973700e1c658c5c1d6b93d3ebfb9e67b84d1f8e69cb3baafcd2e19cd0",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsSourceRigSmoke.cs": "ed5c80559e846d372e44990f12e66a55c029520cce80baa89d696c8790cf0283",
+    "unity\\JianghuUnity\\Assets\\Scripts\\CharacterBindingSmoke.cs": "5dde764fc9f03f99084409edf8f14ac8d9c12e1bcbe49936e588adb412f38004",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsCombat\\DuelReferenceMechanicsProbe.cs": "220434d578b6bfc21fac5891e3495df7c22fdef1230ba53a483f7cb5f103efb6",
+    "unity\\JianghuUnity\\Assets\\Scripts\\PhysicsReferenceMechanicsSmoke.cs": "c9805f8721c0bce84983fce4294b075553fa8a7a6f82ff70101f0ffbfc13f667",
+    "unity\\JianghuUnity\\Assets\\Scripts\\InteractionGameplaySmoke.cs": "25c69b1c4a29bcd62e2895c6db3a50854c3ddea4f9073f353ded3216ec0febe1",
+    "unity\\Build\\CombatHandsHeadFixed20261029\\江湖未央_Data\\Managed\\Assembly-CSharp.dll": "b767a7437f6a9158a105e070d535f05ca277c803b9eb9fab91ec6b1c5016eb2c"
+  }
+}

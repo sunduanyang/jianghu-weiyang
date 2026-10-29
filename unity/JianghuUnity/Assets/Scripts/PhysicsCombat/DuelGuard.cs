@@ -3,7 +3,7 @@ using UnityEngine;
 
 public sealed partial class PhysicsDuel {
     readonly RaycastHit2D[] guardRays=new RaycastHit2D[32];
-    readonly ContactFilter2D guardFilter=new ContactFilter2D {useLayerMask=true,layerMask=1<<10,useTriggers=false};
+    readonly ContactFilter2D guardFilter=new ContactFilter2D {useLayerMask=true,layerMask=(1<<10)|(1<<15)|(1<<16)|(1<<17),useTriggers=false};
     public int exposedGuardHits;
 
     bool GuardOccludes(HitPacket hit) {

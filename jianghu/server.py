@@ -237,7 +237,11 @@ def handler_for(game):
                     self.json_response({'error': '拒绝跨来源修改'}, 403)
                     return
                 length = int(self.headers.get('Content-Length', 0))
-                if length > 16000:
+                # Complete source-physics checkpoints include both exact rig
+                # graphs and bounded coroutine state. Other requests retain
+                # the small cap; battle frames still pass strict validators.
+                limit = 1024 * 1024 if self.path == '/api/battle' else 16000
+                if length < 0 or length > limit:
                     raise ValueError('请求过长')
                 body = json.loads(self.rfile.read(length) or b'{}')
                 with game.lock:

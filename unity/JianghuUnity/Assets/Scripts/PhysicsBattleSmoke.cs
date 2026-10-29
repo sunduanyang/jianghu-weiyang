@@ -28,6 +28,10 @@ public sealed partial class PhysicsBattleSmoke:MonoBehaviour {
         Check("companion ready",client!=null&&client.Ready&&client.World.Has);if(client==null||!client.Ready){Finish();yield break;}
         yield return Call("/api/ai/config",J.O("enabled",false));
         if(!client.World["hero"]["created"].B){yield return Call("/api/hero",client.HeroBody("create","name","物理验收","sex","男","age",24,"place",client.World["hero"]["place"]));yield return client.Refresh();}
+        if(phase=="source-rig"||phase=="source-rig-resume"){
+            yield return AuditSourceRig(phase=="source-rig-resume");
+            Check("no runtime errors",errors.Count==0,new J(errors.Select(e=>new J(e)).ToList()));Finish();yield break;
+        }
         if(phase=="injury"||phase=="injury-resume"){
             yield return AuditInjury(phase=="injury-resume");
             Check("no runtime errors",errors.Count==0,new J(errors.Select(e=>new J(e)).ToList()));Finish();yield break;

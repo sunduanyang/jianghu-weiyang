@@ -23,9 +23,9 @@ public sealed partial class PhysicsDuel {
         }
         void TickReferenceVitality(float dt){
             if(health<=0)return;
-            if(PassedOut){stamina=0;return;}
+            if(PassedOut){if(SourceRigActive&&!sourceWasLimp)SetReferenceLimp(true);stamina=0;return;}
             if(exhaustedUntil>0){exhaustedUntil=-10;stamina=DuelReferenceRules.WakeStamina;recoveryUntil=game.Clock+1;SetReferenceLimp(false);}
-            if(stamina<=0){exhaustedUntil=game.Clock+3;stamina=0;return;}
+            if(stamina<=0){exhaustedUntil=game.Clock+3;stamina=0;if(SourceRigActive&&!sourceWasLimp)SetReferenceLimp(true);return;}
             stamina=Mathf.Min(maxStamina,stamina+20*dt);
         }
         void TickReferenceBleeding(){
@@ -47,6 +47,7 @@ public sealed partial class PhysicsDuel {
             return true;
         }
         void SetReferenceLimp(bool limp){
+            if(SourceRigActive){SetSourceRigLimp(limp);return;}
             foreach(var pair in referenceBones){
                 string key=pair.Key;var body=pair.Value.rb;bool detached=severed.Contains(key);
                 Vector3 props=limp||detached?DuelReferenceRules.RelaxedPhysics(key,health<=0||detached):referenceNormalPhysics[key];
@@ -71,6 +72,7 @@ public sealed partial class PhysicsDuel {
         void SetReferencePartMode(string key,DuelReferenceRules.PartMode mode){
             if(mode==DuelReferenceRules.PartMode.None||referencePartModes[key]!=DuelReferenceRules.PartMode.None)return;
             referencePartModes[key]=mode;
+            if(SourceRigActive){ApplySourcePartMode(key,mode);return;}
             if(mode==DuelReferenceRules.PartMode.Severed)SeverReference(key);
             if(key.StartsWith("upper")||key.StartsWith("forearm")||key.StartsWith("hand"))DisableReferenceArm(key.EndsWith("Near")?"Near":"Far",mode!=DuelReferenceRules.PartMode.Bashed);
             if(key.StartsWith("thigh")||key.StartsWith("shin")||key.StartsWith("foot")){
@@ -85,14 +87,15 @@ public sealed partial class PhysicsDuel {
         public float ApplyReferenceDamage(string key,float damage,Vector2 point,DuelReferenceRules.Surface surface,float knockback){
             if(!partHealth.ContainsKey(key)||severed.Contains(key)||health<=0||referencePartModes[key]==DuelReferenceRules.PartMode.Pierced)return 0;
             if(referencePartModes[key]==DuelReferenceRules.PartMode.None)partHealth[key]=Mathf.Max(0,partHealth[key]-damage);
-            float requestedGlobal=damage*(key=="head"||key=="neck"?.75f:.35f);
+            float requestedGlobal=damage*(SourceRigActive?(float)sourceParts[key]["overallDamageMultiplier"].N:key=="head"||key=="neck"?.75f:.35f);
             float global=ApplyReferenceGlobalDamage(requestedGlobal);
             // OnHandItemImpact_Authoritative accumulates the requested global
             // damage after applying it, including damage beyond remaining HP.
             AccumulateSourceImpact(requestedGlobal);
             mover.AddForce(new Vector2(-facing*knockback*.01f*game.referenceSteps,0));
             bool vital=key=="head"||key=="neck";
-            if(partHealth[key]<=0&&(!vital||health<20)&&key!="pelvis"&&key!="belly"&&key!="torso")SetReferencePartMode(key,DuelReferenceRules.ModeFor(surface));
+            bool canDisable=SourceRigActive?(sourceParts[key]["bodyPartType"].I==0?health<20:sourceParts[key]["severable"].B):(!vital||health<20)&&key!="pelvis"&&key!="belly"&&key!="torso";
+            if(partHealth[key]<=0&&canDisable)SetReferencePartMode(key,DuelReferenceRules.ModeFor(surface));
             return global;
         }
         J CaptureReferenceCore(){

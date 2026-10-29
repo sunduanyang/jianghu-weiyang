@@ -12,6 +12,7 @@ public static class CharacterArt {
     static readonly Dictionary<string,J> metadata=new Dictionary<string,J>();
     static CharacterRenderer studio;
     static string studioArt="";
+    static readonly Dictionary<string,CharacterRenderer> studios=new Dictionary<string,CharacterRenderer>();
     static long bytes,tick;
     static readonly Rect BodyUV=new Rect(.25f,.04f,.50f,.84f),BustUV=new Rect(.27f,.40f,.46f,.42f);
     public static J LastFigureSampling {get;private set;}=J.O();
@@ -27,9 +28,12 @@ public static class CharacterArt {
     static Texture Capture(string id,string clip,float phase,bool left,string view,int width,int height){
         int step=clip=="walk"?(int)(Mathf.Repeat(phase,1)*24):0;
         width=Mathf.Clamp(width,32,2048);height=Mathf.Clamp(height,32,2048);
-        string key=id+":"+clip+":"+step+":"+left+":"+view+":"+width+"x"+height;
+        var look=Look(id);
+        string key=id+":"+look.Art+":"+clip+":"+step+":"+left+":"+view+":"+width+"x"+height;
         if(images.TryGetValue(key,out var entry)){entry.Used=++tick;return entry.Texture;}
-        var look=Look(id);if(studio==null||studioArt!=look.Art){studio?.Dispose();studio=new CharacterRenderer(256,asset:look.Art);studioArt=look.Art;}studio.Render(look,CharacterPose.Sample(clip,step/24f,left),look.DisplayScale,draw:false);
+        if(studio==null||studioArt!=look.Art){if(!studios.TryGetValue(look.Art,out studio)){studio=new CharacterRenderer(256,asset:look.Art);studios.Add(look.Art,studio);}studioArt=look.Art;}
+        var pose=CharacterPose.Sample(clip,step/24f,left);pose.BindPose=CharacterPose.Sample("bind",0,left);
+        studio.Render(look,pose,look.DisplayScale,draw:false);
         Rect uv=view=="portrait"?studio.PortraitUV:view=="bust"?BustUV:view=="body"?BodyUV:new Rect(0,0,1,1);
         var texture=new RenderTexture(width,height,0,RenderTextureFormat.ARGB32){name="Character cache "+key,filterMode=FilterMode.Bilinear,wrapMode=TextureWrapMode.Clamp};texture.Create();
         studio.RenderCrop(texture,uv);
@@ -49,8 +53,8 @@ public static class CharacterArt {
         LastFigureSampling=J.O("draw_width",pixels.x,"draw_height",pixels.y,"raster_width",texture.width,"raster_height",texture.height,"crop_before_raster",true,"bust",bust);
         var prior=GUI.color;GUI.color=tint??Color.white;GUI.DrawTexture(target,texture,ScaleMode.StretchToFill,true);GUI.color=prior;
     }
-    public static J Facts()=>J.O("textures",images.Count,"bytes",bytes,"budget",Budget,"shared_studio_renderers",studio==null?0:1,"head_modules",CharacterRenderer.Catalog["heads"].A.Count);
+    public static J Facts()=>J.O("textures",images.Count,"bytes",bytes,"budget",Budget,"shared_studio_renderers",studios.Count,"head_modules",CharacterRenderer.Catalog["heads"].A.Count,"cast24",CharacterCastCatalog.Facts());
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void Reset(){foreach(var e in images.Values){if(e.Texture!=null){e.Texture.Release();UnityEngine.Object.Destroy(e.Texture);}}images.Clear();looks.Clear();metadata.Clear();studio?.Dispose();studio=null;bytes=tick=0;}
+    static void Reset(){foreach(var e in images.Values){if(e.Texture!=null){e.Texture.Release();UnityEngine.Object.Destroy(e.Texture);}}images.Clear();looks.Clear();metadata.Clear();foreach(var renderer in studios.Values)renderer.Dispose();studios.Clear();studio=null;studioArt="";bytes=tick=0;}
 }
 }

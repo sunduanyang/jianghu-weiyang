@@ -2,6 +2,11 @@ __pycache__/
 *.pyc
 .runtime/
 data/
+!/jianghu/data/
+!/jianghu/data/source_rig_schema.json
+!/unity/JianghuUnity/Assets/StreamingAssets/Backend/jianghu/data/
+!/unity/JianghuUnity/Assets/StreamingAssets/Backend/jianghu/data/source_rig_schema.json
+!/unity/JianghuUnity/Assets/StreamingAssets/Backend/jianghu/data/source_rig_schema.json.meta
 reports/
 output/
 /tmp/
@@ -13,7 +18,7 @@ unity/JianghuUnity/obj/
 unity/JianghuUnity/UserSettings/
 unity/Build/
 unity/BloodyBastardsRecovery/
-/Build/BloodyBastardsRecovery/
+/Build/
 unity/validation/
 unity/api-fixtures.json
 unity/*.log

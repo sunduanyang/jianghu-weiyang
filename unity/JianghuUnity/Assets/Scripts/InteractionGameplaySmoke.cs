@@ -64,8 +64,14 @@ public partial class JianghuApp {
                     yield return null;
                     check(action+" runs the normal game campaign without demo entry",arena.Campaign&&enabled&&GameClient.Arg("-referenceCombat").Length==0);
                     check(action+" uses improved mechanics for both fighters",arena.ReferenceCombat&&arena.player.Reference&&arena.enemy.Reference&&Martial["battle"]["fighters"].A.All(f=>f["physics_profile"].S==PhysicsDuel.ReferenceProfile));
-                    int expectedSteps=arena.player.weapon.id!="unarmed"||arena.enemy.weapon.id!="unarmed"||arena.player.HasShield||arena.enemy.HasShield?16:8;
-                    check(action+" uses the calibrated solver in the game",arena.CombatSolverSubsteps==expectedSteps&&Mathf.Abs(Time.fixedDeltaTime-1f/60)<.000001f);
+                    bool sourceGraphs=arena.player.SourceRigActive&&arena.enemy.SourceRigActive;
+                    check(action+" runs both complete source graphs through the formal encounter",sourceGraphs);
+                    int expectedSteps=sourceGraphs?1:arena.player.weapon.id!="unarmed"||arena.enemy.weapon.id!="unarmed"||arena.player.HasShield||arena.enemy.HasShield?16:8;
+                    check(action+" uses the formal constraint solver in the game",sourceGraphs&&arena.CombatSolverSubsteps==expectedSteps&&Physics2D.velocityIterations==50&&Physics2D.positionIterations==60&&Mathf.Abs(Time.fixedDeltaTime-1f/60)<.000001f);
+                    var formalSpecs=Martial["battle"]["fighters"];
+                    var formalFighters=new[]{arena.player,arena.enemy};
+                    check(action+" delivers exact weapon identities and armor records to source equipment",Enumerable.Range(0,2).All(i=>FormalSourceEquipmentValid(formalSpecs[i],formalFighters[i])));
+                    File.WriteAllText(Path.Combine(output,"combat-"+action+"-equipment.json"),formalSpecs.ToString());
                     check(action+" loads physical hand and foot driver inertia",new[]{arena.player,arena.enemy}.All(f=>f.ReferenceDriverInertia("handCOMNear")>0&&f.ReferenceDriverInertia("footCOMNear")>0));
                     arena.player.testOverride=arena.enemy.testOverride=true;
                     RunBattleForSmoke(true);bool kicked=arena.player.Dash();
@@ -83,12 +89,21 @@ public partial class JianghuApp {
                     check(action+" saves paid kick and physical drivers through the game backend",saved["fighters"][0]["reference"]["kick_state"]["version"].I==1&&saved["fighters"][0]["reference"]["kick_state"]["paid"].B&&saved["fighters"].A.All(f=>f["reference"]["bodies"].A.Count==10)&&Martial["battle"]["revision"].I>1);
                     check(action+" persists recovered core and bashed limb through formal mode",saved["fighters"].A.All(f=>f["reference"]["core_state"]["version"].I==1)&&saved["fighters"][1]["reference"]["core_state"]["part_modes"]["forearmFar"].I==1&&!saved["fighters"][1]["reference"]["parts"]["forearmFar"]["severed"].B);
                     check(action+" persists source motion and death state in formal mode",saved["fighters"].A.All(f=>f["reference"]["source_motion"]["version"].I==1&&f["reference"]["death_state"]["version"].I==1));
+                    check(action+" saves the complete player source graph through the formal backend",FormalSourceGraphValid(saved["fighters"][0]["reference"],true));
+                    check(action+" saves the complete enemy source graph through the formal backend",FormalSourceGraphValid(saved["fighters"][1]["reference"],false));
+                    check(action+" saves source AI and organ joint state version one for both fighters",saved["fighters"].A.All(f=>f["reference"]["source_ai"]["version"].I==1&&f["reference"]["source_impalement"]["version"].I==1));
+                    check(action+" saves source shape and Nothing equipment versions through the formal backend",saved["fighters"].A.All(f=>f["reference"]["source_shape"]["version"].I==1&&f["reference"]["source_equipment"]["version"].I==1&&f["reference"]["source_equipment"]["nothing_template"].S=="sharedassets0.assets:273502"));
+                    check(action+" preserves physical counterweights for empty hand slots",Enumerable.Range(0,2).All(i=>saved["fighters"][i]["reference"]["weights"].A.Count==(formalFighters[i].weapon.TwoHanded?1:2)));
+                    File.WriteAllText(Path.Combine(output,"combat-"+action+"-frame.json"),saved.ToString());
                     File.WriteAllText(Path.Combine(output,"combat-"+action+"-checkpoint.json"),saved.ToString());
                     yield return SavePhysicsForSmoke("leave");
                     check(action+" can leave an unresolved game battle",TopIs(ViewKind.Interaction)&&FocusPersonId==a&&arena.CampaignHidden&&!Martial["battle"]["settled"].B);
                     OpenBattle();until=Time.realtimeSinceStartup+12;
                     while((PhysicsArena==null||PhysicsArena.CampaignHidden)&&Time.realtimeSinceStartup<until)yield return null;
                     check(action+" returns to the same improved battle with its kick state",PhysicsArena==arena&&arena.paused&&Martial["battle"]["id"].S==session&&arena.CaptureCampaign()["fighters"][0]["reference"]["kick_state"]["paid"].B);
+                    var resumed=arena.CaptureCampaign();
+                    check(action+" keeps both complete source graphs after leaving and reopening",arena.player.SourceRigActive&&arena.enemy.SourceRigActive&&FormalSourceGraphValid(resumed["fighters"][0]["reference"],true)&&FormalSourceGraphValid(resumed["fighters"][1]["reference"],false));
+                    check(action+" keeps source Nothing configuration after returning",arena.player.SourceNothingActive&&arena.enemy.SourceNothingActive&&resumed["fighters"].A.All(f=>f["reference"]["source_equipment"]["version"].I==1));
                     yield return CharacterPicture(output,"06-arena-"+action);
                     yield return SavePhysicsForSmoke("surrender");yield return WaitForCharacter(a);
                     check(action+" settles once and returns to the encounter",TopIs(ViewKind.Interaction)&&FocusPersonId==a&&Martial["battle"]["settled"].B);
@@ -105,6 +120,22 @@ public partial class JianghuApp {
         check("no native exceptions",errors.Count==0);Application.logMessageReceived-=capture;
         bool passed=checks.All(c=>c["passed"].B);File.WriteAllText(Path.Combine(output,"acceptance.json"),J.O("passed",passed,"checks",new J(checks),"errors",new J(errors.Select(s=>new J(s)).ToList())).ToString());
         if(GameClient.Arg("-smokeHold")!="true")Application.Quit(passed?0:2);
+    }
+    static bool FormalSourceGraphValid(J reference,bool human){
+        var graph=reference["source_rig"];
+        string template=human?"00af04d95140a4b44ac8453d91c032ea":"c0b154b0ebaf72f4fa139b4e3cf363e9";
+        Func<J,int,bool> ids=(rows,count)=>rows.A.Count==count&&rows.A.All(row=>row["id"].Has)&&rows.A.Select(row=>row["id"].I).Distinct().Count()==count;
+        return graph["version"].I==1&&graph["template"].S==template&&ids(graph["bodies"],human?34:31)&&ids(graph["joints"],32)&&ids(graph["points"],human?14:13)
+            &&graph["bodies"].A.All(row=>new[]{"mass","drag","angular_drag","gravity","body_type","qx","qy","qz","qw"}.All(key=>row[key].Has))
+            &&graph["joints"].A.All(row=>new[]{"anchor_x","anchor_y","connected_x","connected_y"}.All(key=>row[key].Has));
+    }
+    static bool FormalSourceEquipmentValid(J spec,PhysicsDuel.Fighter fighter){
+        var weapon=spec["weapon"];var armor=spec["armor"];
+        bool weaponIdentity=weapon["template_id"].Has&&(weapon["id"].S=="unarmed"||weapon["template_id"].S.Length>0)&&fighter.weapon.sourceTemplate==weapon["template_id"].S;
+        bool armorFields=armor.Has&&(armor.D.Count==0||armor["template_id"].S.Length>0&&armor["defense"].Has&&armor["durability"].Has&&armor["durability"].N>=0&&armor["durability"].N<=100);
+        float expectedDefense=armor["durability"].N>0?(float)armor["defense"].N:0;
+        return weaponIdentity&&armorFields&&fighter.SourceEquipmentPacket["armor"].ToString()==armor.ToString()
+            &&Mathf.Abs(DuelSourceEquipment.Armor(fighter.SourceEquipmentPacket,"torso").defense-expectedDefense)<.00001f;
     }
     IEnumerator InteractionSubjectForSmoke(int id){
         OpenInteraction(id);yield return WaitForCharacter(id);float until=Time.realtimeSinceStartup+15;

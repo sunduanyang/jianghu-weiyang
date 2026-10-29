@@ -24,21 +24,27 @@ public sealed partial class PhysicsDuel {
     void ConfigureReferencePhysics(){
         var left=Campaign?DuelWeapon.CampaignWeapon(campaign.battle["fighters"][0]["weapon"]):DuelWeapon.All[playerWeaponIndex];
         var right=Campaign?DuelWeapon.CampaignWeapon(campaign.battle["fighters"][1]["weapon"]):DuelWeapon.All[enemyWeaponIndex];
-        int needed=Mathf.Max(ReferenceSolverSteps(left),ReferenceSolverSteps(right));
-        if(Campaign&&(campaign.battle["fighters"][0]["shield"].B||campaign.battle["fighters"][1]["shield"].B))needed=Mathf.Max(needed,16);
+        bool source=ReferenceCombat&&UseSourceRig;
+        int needed=source?1:Mathf.Max(ReferenceSolverSteps(left),ReferenceSolverSteps(right));
+        if(!source&&Campaign&&(campaign.battle["fighters"][0]["shield"].B||campaign.battle["fighters"][1]["shield"].B))needed=Mathf.Max(needed,16);
         referenceSteps=IsSmoke&&int.TryParse(Arg("-referenceSubsteps"),out var measuredSteps)&&measuredSteps>=1&&measuredSteps<=16?measuredSteps:needed;
         Time.fixedDeltaTime=ReferenceCombat?1f/60:1f/120;
         Physics2D.gravity=new Vector2(0,ReferenceCombat?-12.5f:-18);
-        // Additional convergence for the independently authored capsules and
-        // weapon inertias; the reference simulation/input clock stays 60 Hz.
+        // Keep the client's established constraint budget for BOTH graphs.
+        // The recovered prefab settings use 10/10, but their graph plus this
+        // game's held-item geometry needs the same 50/60 budget as the other
+        // formal rig. Contact cadence and recovered body/force values stay.
         Physics2D.velocityIterations=50;
         Physics2D.positionIterations=60;
+        if(IsSmoke&&int.TryParse(Arg("-referenceVelocityIterations"),out var velocityStudy)&&velocityStudy>=1&&velocityStudy<=200)Physics2D.velocityIterations=velocityStudy;
+        if(IsSmoke&&int.TryParse(Arg("-referencePositionIterations"),out var positionStudy)&&positionStudy>=1&&positionStudy<=200)Physics2D.positionIterations=positionStudy;
         Physics2D.maxLinearCorrection=ReferenceCombat?1000:priorLinearCorrection;
         Physics2D.maxAngularCorrection=ReferenceCombat?10:priorAngularCorrection;
         Physics2D.maxTranslationSpeed=ReferenceCombat?100:priorTranslationSpeed;
         Physics2D.maxRotationSpeed=ReferenceCombat?100:priorRotationSpeed;
         Physics2D.baumgarteScale=ReferenceCombat?.005f:priorBaumgarte;
         Physics2D.baumgarteTOIScale=ReferenceCombat?2:priorTOI;
+        if(IsSmoke&&float.TryParse(Arg("-referenceBaumgarte"),System.Globalization.NumberStyles.Float,System.Globalization.CultureInfo.InvariantCulture,out var baumgarteStudy)&&baumgarteStudy>0&&baumgarteStudy<=1)Physics2D.baumgarteScale=baumgarteStudy;
         controls.reference=ReferenceCombat;
         if(ReferenceCombat){
             ReferenceMaterial(bodyMaterial,.5f,.25f);ReferenceMaterial(footMaterial,1,0);ReferenceMaterial(bladeMaterial,.7f,.1f,3);ReferenceMaterial(shieldMaterial,.7f,.1f,3);
@@ -70,14 +76,14 @@ public sealed partial class PhysicsDuel {
         public float ReferenceItemMass=>sword.rb.mass;
         public float ReferenceWeightMass=>referenceWeights.TryGetValue("Near",out var weight)?weight.mass:0;
         public float ReferenceDriverInertia(string key)=>referenceBodies[key].inertia;
-        public float ReferenceWeightGap(){float gap=0;foreach(var rb in referenceWeights.Values){var j=rb.GetComponent<FixedJoint2D>();if(j.enabled&&rb.simulated)gap=Mathf.Max(gap,Vector2.Distance(rb.position,Limb.BodyPoint(j.connectedBody,j.connectedAnchor)));}return gap;}
+        public float ReferenceWeightGap(){if(SourceRigActive)return SourceCounterweightGap();float gap=0;foreach(var rb in referenceWeights.Values){var j=rb.GetComponent<FixedJoint2D>();if(j.enabled&&rb.simulated)gap=Mathf.Max(gap,Vector2.Distance(rb.position,Limb.BodyPoint(j.connectedBody,j.connectedAnchor)));}return gap;}
         public float ReferenceLocalHealth(string key)=>partHealth.TryGetValue(key,out var hp)?hp:0;
         public Vector2 ReferenceHandTarget(string side)=>referenceHands[side].target;
         public bool ReferenceSevered(string key)=>severed.Contains(key);
         bool ReferenceLegDisabled(string side)=>new[]{"thigh","shin","foot"}.Any(p=>severed.Contains(p+side)||referencePartModes[p+side]!=DuelReferenceRules.PartMode.None);
         public bool ReferenceDowned=>Reference&&(ReferenceLegDisabled("Near")||ReferenceLegDisabled("Far"));
         public float ExhaustedLeft=>Mathf.Max(0,exhaustedUntil-game.Clock);
-        public float ReferenceSkeletonGap(){float gap=0;foreach(var l in referenceBones.Values){var j=l.joint;if(j!=null&&j.enabled)gap=Mathf.Max(gap,Vector2.Distance(Limb.BodyPoint(l.rb,j.anchor),Limb.BodyPoint(j.connectedBody,j.connectedAnchor)));}return gap;}
+        public float ReferenceSkeletonGap(){if(SourceRigActive)return SourceSkeletonGap();float gap=0;foreach(var l in referenceBones.Values){var j=l.joint;if(j!=null&&j.enabled)gap=Mathf.Max(gap,Vector2.Distance(Limb.BodyPoint(l.rb,j.anchor),Limb.BodyPoint(j.connectedBody,j.connectedAnchor)));}return gap;}
         public bool ReferenceKicking=>Reference&&game.Clock<kickUntil;
         static float PartMaximum(string key)=>key=="head"||key=="neck"?70:key=="pelvis"||key=="belly"||key=="torso"?100:key.StartsWith("hand")?50:key.StartsWith("upper")||key.StartsWith("forearm")?30:40;
         Limb ReferenceBone(string key,Vector2 a,Vector2 b,float width,float mass,string kind,float drag=5,float spinDrag=5){
@@ -99,6 +105,7 @@ public sealed partial class PhysicsDuel {
             referenceBodies[key]=rb;return rb;
         }
         void BuildReference(float x){
+            if(game.UseSourceRig){BuildSourceRig(x);return;}
             Reference=true;heightScale=bodyMassScale=armSpanScale=1;
             if(!game.Campaign){health=maxHealth=100;stamina=maxStamina=100;}
             Vector2 p=new Vector2(x,0);
@@ -155,12 +162,15 @@ public sealed partial class PhysicsDuel {
             foreach(var pair in referenceHands)pair.Value.anchor=ReferenceEffortBody(pair.Key).position-mover.position;
             BuildReferenceKick();
             BuildReferenceCorpse();
+            BuildSourceImpalement();
+            BindEquipmentImpaleMaterials();
             foreach(var a in colliders)foreach(var b in colliders)if(a!=b)Physics2D.IgnoreCollision(a,b);
             // Match the reference graph: per-body CCD splits the solution at
             // individual impacts and lets a driven hand outrun its rigid grip.
             foreach(var rb in root.GetComponentsInChildren<Rigidbody2D>())rb.collisionDetectionMode=CollisionDetectionMode2D.Discrete;
             referenceSimulatedBodies=root.GetComponentsInChildren<Rigidbody2D>(true);
             foreach(var l in referenceBones.Values)l.SampleVelocity();foreach(var l in limbs.Values)l.SampleVelocity();
+            CaptureCharacterBindingPose();
         }
         public void FinishReferencePhysics(){
             if(!Reference)return;
@@ -191,13 +201,21 @@ public sealed partial class PhysicsDuel {
             return new Vector3(mass,weight,distance);
         }
         void BuildReferenceWeight(string side,Limb item,DuelWeapon spec,bool isShield){
-            if(!isShield&&spec.id=="unarmed")return;
-            Vector3 physics=ReferenceItemPhysics(spec,isShield);float mass=physics.x,weight=physics.y,distance=physics.z;
-            item.rb.mass=mass;item.rb.linearDamping=0;item.rb.angularDamping=.05f;
+            if(!isShield&&spec.id=="unarmed"&&!SourceNothingActive)return;
+            Vector3 physics=ReferenceItemPhysics(spec,isShield);float distance=physics.z;
+            var held=DuelSourceEquipment.Physics(spec,isShield);
+            item.rb.mass=held.bodyMass;item.rb.gravityScale=held.bodyGravity;item.rb.linearDamping=held.linearDamping;item.rb.angularDamping=held.angularDamping;
             Vector2 position=isShield?item.rb.position+new Vector2(facing*.221f,-.022f):item.WorldPoint(spec.Local(new Vector2(0,distance),facing));
+            if(SourceRigActive&&SourceMountStudy&&spec.id!="unarmed"){
+                var grip=isShield?offhandGrip:primaryGrip;position=Limb.BodyPoint(item.rb,grip.connectedAnchor+SourceMountDelta(spec,isShield,"counter_from_primary"));
+            }
             var go=new GameObject("counterweight"+side);go.transform.SetParent(root.transform);go.transform.position=position;go.layer=2;
-            var rb=go.AddComponent<Rigidbody2D>();rb.mass=weight;rb.linearDamping=0;rb.angularDamping=.05f;rb.sleepMode=RigidbodySleepMode2D.NeverSleep;
+            var rb=go.AddComponent<Rigidbody2D>();rb.mass=held.counterweightMass;rb.gravityScale=held.counterweightGravity;rb.linearDamping=held.counterweightLinearDamping;rb.angularDamping=held.counterweightAngularDamping;rb.sleepMode=RigidbodySleepMode2D.NeverSleep;
             var shape=go.AddComponent<CircleCollider2D>();shape.radius=.05f;shape.isTrigger=true;
+            if(SourceNothingActive&&!isShield&&spec.id=="unarmed"){
+                var raw=DuelSourceEquipment.Nothing;go.layer=13;shape.radius=(float)raw["counterweight_radius"].N;shape.isTrigger=false;DuelSourceRig.ApplyLayerCollision(shape);
+                rb.sleepMode=(RigidbodySleepMode2D)raw["counterweight_sleep_mode"].I;rb.interpolation=(RigidbodyInterpolation2D)raw["counterweight_interpolation"].I;
+            }
             var joint=go.AddComponent<FixedJoint2D>();joint.connectedBody=item.rb;joint.autoConfigureConnectedAnchor=false;joint.connectedAnchor=Limb.BodyLocalPoint(item.rb,position);joint.frequency=0;joint.dampingRatio=0;
             referenceWeights[side]=rb;
         }
@@ -208,7 +226,7 @@ public sealed partial class PhysicsDuel {
             // A distant or blocked target must not turn finer contact steps
             // into a faster hand motor. Bound the auxiliary hand's sweep;
             // actual weapon angular velocity and contact impulses stay free.
-            if(body==referenceBodies["handCOMNear"]||body==referenceBodies["handCOMFar"])next=Vector2.MoveTowards(body.position,next,75*Time.fixedDeltaTime/game.referenceSteps);
+            if(!SourceRigActive&&(body==referenceBodies["handCOMNear"]||body==referenceBodies["handCOMFar"]))next=Vector2.MoveTowards(body.position,next,75*Time.fixedDeltaTime/game.referenceSteps);
             body.MovePosition(next);
         }
         void DropReferenceWeight(string side){if(!referenceWeights.TryGetValue(side,out var rb))return;rb.simulated=false;rb.GetComponent<FixedJoint2D>().enabled=false;var item=side=="Near"?sword:shield;item.rb.mass=1;item.rb.gravityScale=1;item.rb.linearDamping=item.rb.angularDamping=.05f;}
@@ -220,7 +238,9 @@ public sealed partial class PhysicsDuel {
             float dt=Time.fixedDeltaTime/game.referenceSteps;
             UpdateReferenceKick();
             ClampReferenceRoot();TickReferenceVitality(dt);TickReferenceBleeding();
+            TickSourceImpalement();
             if(health<=0){TickReferenceDeath();SampleReference();return;}
+            if(SourceRigActive){balance=maxBalance;strength=1;StepSourceRig(active,target,dt);return;}
             if(PassedOut){SetReferenceLimp(true);stamina=0;action="力竭倒地";SampleReference();return;}
             balance=maxBalance;strength=1;
             float command=active&&!ReferenceKicking&&!ReferenceBeingKicked?move:0;
@@ -300,6 +320,7 @@ public sealed partial class PhysicsDuel {
         float ConsumeReferenceStamina(float amount){if(health<=0||PassedOut||game.Clock<recoveryUntil)return 0;float paid=Mathf.Min(stamina,amount);stamina-=paid;return paid;}
         void SampleReference(){foreach(var l in referenceBones.Values.Concat(limbs.Values).Distinct()){peakAngularSpeed=Mathf.Max(peakAngularSpeed,Mathf.Abs(l.rb.angularVelocity));peakSpeed=Mathf.Max(peakSpeed,l.rb.linearVelocity.magnitude);l.SampleVelocity();}}
         void SeverReference(string key){
+            if(SourceRigActive){SeverSourceRig(key);return;}
             if(severed.Contains(key))return;var rootPart=referenceBones[key];
             if(rootPart.joint!=null)rootPart.joint.enabled=false;
             // Only the struck hinge is cut. Child hinges remain connected to
@@ -320,6 +341,7 @@ public sealed partial class PhysicsDuel {
             return DuelReferenceRules.CalculateDamage(id,twoHanded,velocity,damageStat,armor,handle?DuelReferenceRules.Surface.WoodHandle:DuelReferenceRules.Surface.MetalBlade,shield).local;
         }
         void DrawReference(bool debug){
+            if(SourceRigActive){DrawSourceRig(debug);return;}
             foreach(var pair in referenceBones){var l=pair.Value;Color c=human?new Color(.35f,.53f,.51f):new Color(.64f,.38f,.30f);if(severed.Contains(pair.Key))c*=.65f;if(game.Clock<hitTint)c=new Color(.9f,.36f,.24f);float width=((CapsuleCollider2D)l.shape).size.x*Unit;game.Line(ScreenPoint(l.A),ScreenPoint(l.B),width,c);game.Circle(ScreenPoint(l.A),Vector2.one*width,c);game.Circle(ScreenPoint(l.B),Vector2.one*width,c);if(debug)DrawCollider(l.shape);}
             if(shield!=null&&HasShield)DrawWeapon(shield,true);if(weapon.id!="unarmed")DrawWeapon(sword,false);
             if(debug)foreach(var h in referenceHands.Values)game.Circle(ScreenPoint(h.target),Vector2.one*9,new Color(.9f,.7f,.1f,.8f));
@@ -327,11 +349,14 @@ public sealed partial class PhysicsDuel {
         J CaptureReference(){
             var parts=J.O();foreach(var p in partHealth)parts[p.Key]=J.O("health",p.Value,"severed",severed.Contains(p.Key));
             var hands=J.O();foreach(var p in referenceHands){var h=p.Value;hands[p.Key]=J.O("anchor_x",h.anchor.x,"anchor_y",h.anchor.y,"target_x",h.target.x,"target_y",h.target.y,"heat",h.heat,"drain",h.drain);}
-            return J.O("profile",ReferenceProfile,"exhausted_left",ExhaustedLeft,"recovering_left",Mathf.Max(0,recoveryUntil-game.Clock),"wake_pending",exhaustedUntil>0,"effort_tick",effortTick,"walk_phase",walkPhase,"kick_left",Mathf.Max(0,kickUntil-game.Clock),"kick_state",CaptureReferenceKick(),"core_state",CaptureReferenceCore(),"source_motion",CaptureSourceMotion(),"death_state",CaptureReferenceDeath(),"parts",parts,"hands",hands,
+            var state=J.O("profile",ReferenceProfile,"exhausted_left",ExhaustedLeft,"recovering_left",Mathf.Max(0,recoveryUntil-game.Clock),"wake_pending",exhaustedUntil>0,"effort_tick",effortTick,"walk_phase",walkPhase,"kick_left",Mathf.Max(0,kickUntil-game.Clock),"kick_state",CaptureReferenceKick(),"core_state",CaptureReferenceCore(),"source_motion",CaptureSourceMotion(),"source_ai",CaptureSourceAI(),"source_impalement",CaptureSourceImpalement(),"death_state",CaptureReferenceDeath(),"parts",parts,"hands",hands,
                 "weapon_rig",1,"weights",new J(referenceWeights.Select(p=>J.O("key",p.Key,"x",p.Value.position.x,"y",p.Value.position.y,"angle",p.Value.rotation,"vx",p.Value.linearVelocity.x,"vy",p.Value.linearVelocity.y,"spin",p.Value.angularVelocity)).ToList()),
                 "bodies",new J(referenceBodies.Select(p=>J.O("key",p.Key,"x",p.Value.position.x,"y",p.Value.position.y,"angle",p.Value.rotation,"vx",p.Value.linearVelocity.x,"vy",p.Value.linearVelocity.y,"spin",p.Value.angularVelocity)).ToList()));
+            if(SourceRigActive){state["source_rig"]=CaptureSourceRig();state["source_shape"]=J.O("version",1,"config",CaptureSourceBodyShape());}
+            if(SourceNothingActive)state["source_equipment"]=J.O("version",1,"nothing_template","sharedassets0.assets:273502");return state;
         }
         void RestoreReference(J s){
+            if(SourceRigActive&&s["source_shape"].Has){ConfigureSourceBodyShape(s["source_shape"]["config"]);Physics2D.SyncTransforms();}
             foreach(var p in s["bodies"].A){var rb=referenceBodies[p["key"].S];rb.position=new Vector2((float)p["x"].N,(float)p["y"].N);rb.rotation=(float)p["angle"].N;rb.linearVelocity=new Vector2((float)p["vx"].N,(float)p["vy"].N);rb.angularVelocity=(float)p["spin"].N;}
             if(s["weapon_rig"].I==1){foreach(var p in s["weights"].A){var rb=referenceWeights[p["key"].S];rb.position=new Vector2((float)p["x"].N,(float)p["y"].N);rb.rotation=(float)p["angle"].N;rb.linearVelocity=new Vector2((float)p["vx"].N,(float)p["vy"].N);rb.angularVelocity=(float)p["spin"].N;}}
             else foreach(var rb in referenceWeights.Values){var j=rb.GetComponent<FixedJoint2D>();rb.position=Limb.BodyPoint(j.connectedBody,j.connectedAnchor);rb.rotation=j.connectedBody.rotation;rb.linearVelocity=j.connectedBody.GetPointVelocity(rb.position);rb.angularVelocity=j.connectedBody.angularVelocity;}
@@ -340,28 +365,12 @@ public sealed partial class PhysicsDuel {
             exhaustedUntil=s["wake_pending"].B?game.Clock+Mathf.Max(.00001f,(float)s["exhausted_left"].N):-10;recoveryUntil=game.Clock+(float)s["recovering_left"].N;effortTick=(float)s["effort_tick"].N;walkPhase=(float)s["walk_phase"].N;kickUntil=game.Clock+(float)s["kick_left"].N;
             RestoreReferenceKick(s);
             RestoreSourceMotion(s["source_motion"]);
+            RestoreSourceAI(s["source_ai"]);
             if(health>0)SetReferenceLimp(PassedOut);
-            RestoreReferenceDeath(s["death_state"]);SampleReference();
+            RestoreReferenceDeath(s["death_state"]);RestoreSourceRig(s["source_rig"]);RestoreSourceImpalement(s["source_impalement"]);SampleReference();
         }
     }
     void ReferenceContact(DuelContact weapon,DuelContact other,Collision2D collision){
-        if(referenceBindProbe){if(referenceProbeCollecting&&weapon.owner==player&&weapon.limb==player.sword&&other.owner==enemy&&(referenceProbeBody?other.kind!="sword"&&other.kind!="shield":other.limb==enemy.sword))referenceProbeContactEvents++;return;}
-        if(!Live||weapon.owner==other.owner||collision.contactCount==0||weapon.owner.health<=0)return;
-        if(weapon.kind!="sword"&&weapon.kind!="shield")return;
-        var c=collision.GetContact(0);Vector2 velocity=c.relativeVelocity;float speed=velocity.magnitude;
-        if(other.kind=="sword"||other.kind=="shield"){if(speed>15&&Clock-weapon.owner.lastClash>.1f){weapon.owner.lastClash=Clock;blocks++;Impact(c.point,true,speed);}return;}
-        bool handle=collision.otherCollider!=weapon.limb.shape;
-        var spec=weapon.limb.strikeProfile??weapon.owner.weapon;
-        bool shield=weapon.kind=="shield"&&weapon.owner.HasShield;
-        bool sharp=!shield&&spec.id!="unarmed"&&spec.id!="mace"&&spec.id!="warhammer";
-        var material=handle?(spec.id=="axe"||spec.id=="greataxe"||spec.id=="spear"||spec.id=="mace"||spec.id=="warhammer"?DuelReferenceRules.Surface.WoodHandle:DuelReferenceRules.Surface.MetalHandle):sharp?DuelReferenceRules.Surface.MetalBlade:DuelReferenceRules.Surface.MetalBlunt;
-        float threshold=(sharp?15:20)*(handle?.5f:1);
-        if(speed<=threshold){rejectedRestContacts++;return;}
-        if(!other.owner.AcceptReferenceImpact(other.limb.key))return;
-        float stat=shield?1:spec.id=="unarmed"?.1f:spec.damage;
-        var damage=DuelReferenceRules.CalculateDamage(spec.id,spec.TwoHanded,velocity,stat,other.owner.damageReduction*10,material,shield);
-        float dealt=other.owner.ApplyReferenceDamage(other.limb.key,damage.local,c.point,material,damage.knockback);
-        if(dealt<=0)return;hits++;weapon.owner.landedHits++;weapon.owner.lastHit=Clock;strongestImpact=Mathf.Max(strongestImpact,speed);if(other.kind=="head")headHits++;
-        Impact(c.point,false,dealt);floating.Add(new FloatingText{p=c.point,value=Mathf.CeilToInt(dealt).ToString(),life=.85f,color=vermilion});
+        SourceEquipmentContact(weapon,other,collision);
     }
 }

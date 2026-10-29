@@ -9,11 +9,33 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / 'unity/JianghuUnity/Assets/Resources/CombatSource/equipment.json'
+# Actual serialized component properties for explicitly named low-tier samples.
+# cqe replaces their masses, but InArena=true leaves these properties intact.
+HELD_SAMPLES = {
+    'dagger': ('HandItem_Dagger_1', 197, .5, 2.5),
+    'sabre': ('HandItem_Sword_1', 246, 0, .05),
+    'sword': ('HandItem_Sword_1', 246, 0, .05),
+    'axe': ('HandItem_Axe_1', 187, 0, .05),
+    'mace': ('HandItem_Mace_1', 212, 0, .05),
+    'spear': ('HandItem_2HandedSpear_1', 178, 10, 15),
+    'greatsword': ('HandItem_2HandedSword_1', 182, 15, 25),
+    'greataxe': ('HandItem_2HandedAxe_1', 168, 15, 25),
+    'warhammer': ('HandItem_2HandedHammer_1', 173, 15, 25),
+    'shield': ('HandItem_Shield_1', 216, 0, .05),
+}
 
 
 def build():
     catalog = json.loads((ROOT / 'jianghu/weapon_catalog.json').read_text(encoding='utf-8'))
     profiles = json.loads((ROOT / 'jianghu/physical_profiles.json').read_text(encoding='utf-8'))
+    source = json.loads((ROOT / 'output/bloody-full-port-20261028/source-combat-data.json').read_text(encoding='utf-8'))
+    nothing = next(x for x in source['items'] if x['source']==dict(file='sharedassets0.assets',id=273502))
+    graph = source['item_graphs']['sharedassets0.assets']
+    physics = {x['id']:x['data'] for x in graph['physics']}
+    base = physics[nothing['data']['ItemBaseRigidbody2D']['m_PathID']]
+    counter = physics[nothing['data']['CounterweightRigidbody2D']['m_PathID']]
+    circle = physics[149137]
+    assert nothing['data']['Name']=='Nothing' and nothing['data']['Type']==7 and nothing['data']['HandItemType']==0
     weapons = {}
     for key, row in catalog.items():
         profile = row['profile']
@@ -32,9 +54,25 @@ def build():
         adaptation=dict(damage='effective_D = 16 * game_damage_coefficient - 15; base D=1; negative values intentionally preserve ratios',
             mass='source category masses multiplied by game mass / profile base mass',
             armor='one campaign armor slot maps to one covered layer, not three duplicated layers',
-            unarmed='game fallback only, D=.1; APK has no equivalent unarmed item',
+            unarmed='source Nothing numeric shape/body/counterweight; Type=7 controls COM/arm props while HandItemType=0 controls cqe masses; AI still filters Nothing',
             shield='existing wood_shield maps to ordinary source shield D=1, WoodBlunt'),
         profiles={key: dict(base_mass=row['mass'], base_damage=row['damage']) for key, row in profiles.items()},
+        held_profiles={key: dict(sample_name=row[0], sample_item_id=row[1],
+            body_gravity=1, counterweight_gravity=1, linear_damping=row[2], angular_damping=row[3],
+            counterweight_linear_damping=0, counterweight_angular_damping=.05) for key,row in HELD_SAMPLES.items()},
+        nonarena_override=dict(condition='!Application.isBatchMode && !TransitionController.InArena && !IsFlailHead',
+            body_gravity=-1, counterweight_gravity=-5, linear_damping=50, angular_damping=100,
+            flag_getter_va='0x36893fc', flag_static_offset=8,
+            initialization_window='SpawnRunner precedes InArena=true; first equipment OnEnable timing remains unverified dynamically'),
+        nothing=dict(source=nothing['source'], name='Nothing', type=7, hand_item_type=0, length=nothing['data']['Length'],
+            body_mass=1, counterweight_mass=1, body_gravity=base['m_GravityScale'], counterweight_gravity=counter['m_GravityScale'],
+            linear_damping=base['m_LinearDamping'], angular_damping=base['m_AngularDamping'],
+            counterweight_linear_damping=counter['m_LinearDamping'], counterweight_angular_damping=counter['m_AngularDamping'],
+            body_sleep_mode=base['m_SleepingMode'],counterweight_sleep_mode=counter['m_SleepingMode'],
+            body_interpolation=base['m_Interpolate'],counterweight_interpolation=counter['m_Interpolate'],
+            radius=circle['m_Radius'],counterweight_radius=physics[149288]['m_Radius'],surface='WoodBlunt',
+            mass_evidence='SourcePrefab_HandItem.cqe 0x363e0d8, HandItemType=0 single-handed; serialized counterweight .25 is overwritten to 1',
+            slot_evidence='CharacterConfigApplier.ApplyHandItemLeft/Right Type=7: handCOMShieldMass + cez(shield=true); not a shield attack in AI'),
         weapons=weapons,
         armor={
             'cloth': dict(material=1, defense=1, coverage=['torso','belly','pelvis','upper','forearm']),

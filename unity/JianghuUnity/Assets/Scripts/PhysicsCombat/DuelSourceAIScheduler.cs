@@ -15,18 +15,50 @@ public sealed partial class PhysicsDuel {
             public readonly Stack<IEnumerator> stack=new Stack<IEnumerator>();
             public SourceJob child;
             public float due;
-            public bool realtime,done;
+            public bool realtime,done,relayScope;
+            public int lastFrame=-1;
         }
         readonly List<SourceJob> sourceJobs=new List<SourceJob>();
-        float SourceRealtime=>game.fixtureMode?game.Clock:Time.unscaledTime;
+        int sourceAIFrame;
+        // A logical realtime domain prevents fixture Clock and the process's
+        // unscaledTime epoch from being mixed in saved coroutine deadlines.
+        // Persist only the logical value; raw clock anchors belong to this
+        // process and are rebuilt on restore.
+        float sourceRealtimeValue,sourceRealtimeRaw;
+        bool sourceRealtimeReady,sourceRealtimeFixture,sourceRealtimePaused;
+        float SourceRawTime(bool fixture)=>fixture?game.Clock:Time.unscaledTime;
+        void SynchronizeSourceRealtime(){
+            if(!sourceRealtimeReady){
+                sourceRealtimeValue=game.Clock;sourceRealtimeFixture=game.fixtureMode;
+                sourceRealtimeRaw=SourceRawTime(sourceRealtimeFixture);sourceRealtimePaused=game.paused;sourceRealtimeReady=true;return;
+            }
+            // Read the OLD domain first, including a final fixture physics
+            // step since the last AI read. Then change only the raw anchor.
+            float oldNow=SourceRawTime(sourceRealtimeFixture);
+            if(!sourceRealtimePaused)sourceRealtimeValue+=Mathf.Max(0,oldNow-sourceRealtimeRaw);
+            sourceRealtimeFixture=game.fixtureMode;sourceRealtimeRaw=SourceRawTime(sourceRealtimeFixture);
+        }
+        float SourceRealtime {get{SynchronizeSourceRealtime();return sourceRealtimeValue;}}
+        public void SourceAIClockPaused(bool pause){
+            if(!sourceAIInitialized)return;
+            SynchronizeSourceRealtime();sourceRealtimePaused=pause;
+            sourceRealtimeRaw=SourceRawTime(sourceRealtimeFixture);
+        }
+        public void RebaseSourceAIClock(){if(sourceAIInitialized)SynchronizeSourceRealtime();}
+        void RestoreSourceRealtimeAnchor(bool hasLogicalValue){
+            if(!hasLogicalValue)sourceRealtimeValue=game.Clock;
+            sourceRealtimeFixture=game.fixtureMode;sourceRealtimeRaw=SourceRawTime(sourceRealtimeFixture);
+            sourceRealtimePaused=game.paused;sourceRealtimeReady=true;
+        }
         SourceJob AIRun(IEnumerator routine){
             if(aiStopped||routine==null)return null;
-            var job=new SourceJob();job.stack.Push(routine);sourceJobs.Add(job);ResumeSourceJob(job);return job;
+            var job=new SourceJob{relayScope=routine.GetType().DeclaringType==typeof(SourceHandRelay)};job.stack.Push(routine);sourceJobs.Add(job);ResumeSourceJob(job);return job;
         }
         void ResumeSourceJob(SourceJob job){
             if(job.done)return;
             if(job.child!=null){if(!job.child.done)return;job.child=null;}
             if((job.realtime?SourceRealtime:game.Clock)<job.due)return;
+            job.lastFrame=sourceAIFrame;
             while(job.stack.Count>0){
                 var current=job.stack.Peek();
                 if(!current.MoveNext()){job.stack.Pop();continue;}
@@ -43,10 +75,15 @@ public sealed partial class PhysicsDuel {
             // created while resuming already ran their first segment; do not
             // advance them a second time in this same frame.
             var frame=sourceJobs.ToArray();
-            foreach(var job in frame)if(!job.done)ResumeSourceJob(job);
+            foreach(var job in frame)if(!job.done&&job.lastFrame!=sourceAIFrame)ResumeSourceJob(job);
             sourceJobs.RemoveAll(j=>j.done);
         }
         void SourceStopJobs(){foreach(var job in sourceJobs)job.done=true;sourceJobs.Clear();}
+        void SourceStopDecisionJobs(){
+            // CharacterEnemyAI.StopAllCoroutines does not stop the separate
+            // AIHandsInputRelayer MonoBehaviour coroutine scopes.
+            foreach(var job in sourceJobs)if(!job.relayScope)job.done=true;
+        }
 
         // CharacterMover.clu 0x3435e18: source tap recognizer at 60 Hz.
         // Fusion input ticks are replaced by the shared duel clock; this is
@@ -54,8 +91,10 @@ public sealed partial class PhysicsDuel {
         int sourceTapLeft=-1000,sourceTapRight=-1000,sourceDoubleLeft=-1000,sourceDoubleRight=-1000;
         float aiMoveUntil;
         int aiMoveDirection;
+        public Action<bool> SourceAIMoveTapHandler {get;set;}
         void SourceAIMoveTap(bool left){
             SourceAIWalkTaps++;
+            if(SourceAIMoveTapHandler!=null){SourceAIMoveTapHandler(left);return;}
             int tick=Mathf.RoundToInt(game.Clock*60);
             if(left){if(tick-sourceTapLeft<=21)sourceDoubleLeft=tick;sourceTapLeft=tick;}
             else{if(tick-sourceTapRight<=21)sourceDoubleRight=tick;sourceTapRight=tick;}
@@ -73,16 +112,20 @@ public sealed partial class PhysicsDuel {
         sealed class SourceHandRelay {
             readonly Fighter owner;
             readonly bool both;
-            readonly Vector2 rest;
+            Vector2 rest;
             public Vector2 parent;
             public bool Defending,enabled=true;
             DuelSourceMotion.Motion clip;
             float clipAt,clipOffset;
             bool playing;
             public string CurrentClip=>clip==null?"":clip.name;
+            public bool Playing=>playing;
+            public float ClipTime=>clip==null?0:Mathf.Clamp(clipOffset+owner.game.Clock-clipAt,0,clip.duration);
+            public void ResumeClip(DuelSourceMotion.Motion motion,float time){clip=motion;clipOffset=time;clipAt=owner.game.Clock;playing=true;}
             sealed class Tween {public Vector2 start,target;public float at,duration;public int axes;public bool circ,worldY;}
             readonly List<Tween> tweens=new List<Tween>();
             public SourceHandRelay(Fighter owner,bool both,Vector2 parent){this.owner=owner;this.both=both;this.parent=parent;rest=parent+Vector2.right*.15f;}
+            public void SetInitialParent(Vector2 value){parent=value;rest=value+Vector2.right*.15f;}
             public void Attack(int direction,float aggression){
                 // Native Attack draws the time offset before the bundle index.
                 Stop();Defending=false;
@@ -93,6 +136,7 @@ public sealed partial class PhysicsDuel {
                 clipAt=owner.game.Clock;playing=true;owner.aiAttacks++;
             }
             public void Stop(){playing=false;}
+            public void clipForProbe(DuelSourceMotion.Motion motion){clip=motion;clipOffset=0;clipAt=owner.game.Clock;playing=true;}
             public void Rewind(){if(clip!=null){clipOffset=0;clipAt=owner.game.Clock;Sample(0);}}
             public void Update(float dt){
                 if(enabled&&playing&&clip!=null){
@@ -121,9 +165,8 @@ public sealed partial class PhysicsDuel {
                 tweens.Add(new Tween{start=start,target=target,axes=axes,duration=duration,circ=circ,worldY=worldY,at=owner.game.Clock});
             }
             public IEnumerator Defend(){
+                while(owner.AIValid&&owner.SourceAIPlayerWeaponCOM==null)yield return new SourceWait(.5f);
                 while(owner.AIValid){
-                    // StartDefendingCoroutine retries while no weapon COM.
-                    if(owner.SourceAIPlayerWeaponCOM==null){yield return new SourceWait(.5f);continue;}
                     float reaction=owner.SourceAIReactionTime;
                     yield return new SourceWait(owner.AIRandom(reaction*.5f,reaction));
                     if(!Defending)AddTween(rest,3,owner.AIRandom(reaction*.5f,reaction*2),false);
@@ -135,9 +178,24 @@ public sealed partial class PhysicsDuel {
                     yield return new SourceWait(owner.AIRandom(reaction*.5f,reaction*2));
                 }
             }
+            public J Capture(){
+                var activeTweens=new List<J>();foreach(var tween in tweens)activeTweens.Add(J.O("start",SourceValue(tween.start,typeof(Vector2)),"target",SourceValue(tween.target,typeof(Vector2)),"age",(double)(owner.game.Clock-tween.at),"duration",(double)tween.duration,"axes",tween.axes,"circ",tween.circ,"world_y",tween.worldY));
+                return J.O("parent",SourceValue(parent,typeof(Vector2)),"rest",SourceValue(rest,typeof(Vector2)),"defending",Defending,"enabled",enabled,"playing",playing,"clip",CurrentClip,
+                    "time",SourceValue(clip==null?0:clipOffset+owner.game.Clock-clipAt,typeof(float)),
+                    "offset",SourceValue(clipOffset,typeof(float)),"started_at",SourceValue(clipAt,typeof(float)),"tweens",new J(activeTweens));
+            }
+            public void Restore(J data,float clockShift){
+                parent=(Vector2)RestoreSourceValue(data["parent"],typeof(Vector2));rest=(Vector2)RestoreSourceValue(data["rest"],typeof(Vector2));Defending=data["defending"].B;enabled=data["enabled"].B;playing=data["playing"].B;
+                // Preserve the two original operands. Replacing them with an
+                // elapsed float rebased at this checkpoint changes later
+                // curve samples through floating-point reassociation.
+                clip=data["clip"].S.Length==0?null:DuelSourceMotion.Named(data["clip"].S);
+                clipOffset=(float)data["offset"].N;clipAt=(float)data["started_at"].N+clockShift;
+                tweens.Clear();foreach(var item in data["tweens"].A)tweens.Add(new Tween{start=(Vector2)RestoreSourceValue(item["start"],typeof(Vector2)),target=(Vector2)RestoreSourceValue(item["target"],typeof(Vector2)),at=owner.game.Clock-(float)item["age"].N,duration=(float)item["duration"].N,axes=item["axes"].I,circ=item["circ"].B,worldY=item["world_y"].B});
+            }
         }
         // World-Y defensive tween conversion is kept next to other physical
         // bridge values, separate from the native target/decision calculations.
-        float SourceAIParentOriginY=>SourceAIWorldHandTarget("Near",Vector2.zero,Vector2.zero).y;
+        float SourceAIParentOriginY=>sourceParentSpace!=null?sourceParentSpace.position.y:SourceAIWorldHandTarget("Near",Vector2.zero,Vector2.zero).y-.25f;
     }
 }

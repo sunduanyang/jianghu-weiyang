@@ -56,7 +56,10 @@ public class GameClient : MonoBehaviour {
     static string Q(string s)=>"\""+s.Replace("\"", "")+"\"";
     public IEnumerator Request(string path,J body,Action<J> done,bool report=true) {
         using(var req=new UnityWebRequest(url+path,body==null?"GET":"POST")) {
-            req.downloadHandler=new DownloadHandlerBuffer();req.timeout=60;
+            // A full-population month and its SQLite checkpoint can outlast a
+            // normal interaction. State reads wait behind that same world lock.
+            bool monthEnd=path=="/api/hero"&&body!=null&&body["action"].S=="end_turn";
+            req.downloadHandler=new DownloadHandlerBuffer();req.timeout=monthEnd||path=="/api/state"?180:60;
             req.SetRequestHeader("X-Unity-Session",session);
             if(body!=null){req.uploadHandler=new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(body.ToString()));req.SetRequestHeader("Content-Type","application/json");}
             yield return req.SendWebRequest();

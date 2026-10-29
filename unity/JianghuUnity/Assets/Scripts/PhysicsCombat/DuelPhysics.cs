@@ -12,6 +12,8 @@ public sealed partial class PhysicsDuel {
         public HingeJoint2D joint;
         public float length, targetAngle,driveInertia;
         public DuelWeapon strikeProfile;
+        public bool sourceEndpoints;
+        public Vector2 sourceA,sourceB;
         public Vector2 preVelocity;
         public float preSpin;
         public float lastGroundContact=-10;
@@ -28,8 +30,8 @@ public sealed partial class PhysicsDuel {
             Vector2 local=BodyLocalPoint(rb,world);
             return frame!=null&&frame!=rb.transform?Rotate(local-(Vector2)frame.localPosition,-frame.localEulerAngles.z):local;
         }
-        public Vector2 A => WorldPoint(new Vector2(0,-length/2));
-        public Vector2 B => WorldPoint(new Vector2(0,length/2));
+        public Vector2 A => sourceEndpoints?BodyPoint(rb,sourceA):WorldPoint(new Vector2(0,-length/2));
+        public Vector2 B => sourceEndpoints?BodyPoint(rb,sourceB):WorldPoint(new Vector2(0,length/2));
         public Vector2 VelocityAt(Vector2 point) {
             Vector2 r=point-rb.worldCenterOfMass;
             return preVelocity+new Vector2(-r.y,r.x)*preSpin;
