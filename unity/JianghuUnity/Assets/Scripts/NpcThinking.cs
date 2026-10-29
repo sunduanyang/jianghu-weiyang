@@ -25,7 +25,9 @@ public partial class JianghuApp {
         if(current.Has){
             T(current["title"].Has?current["title"].S:current["reason"].S,sub);
             if(current["undertaking"].Has){
-                T("长期筹划 · "+current["undertaking"].S+" · 每月推进一步，条件不足时等待",small);
+                T("长期筹划 · "+current["undertaking"].S+" · "+current["chosen_by"].S+" · 每月推进一步，条件不足时等待",small);
+                if(current["ai_reason"].Has&&current["ai_reason"].S.Length>0)T("本人取舍："+current["ai_reason"].S,small);
+                if(current["interim"].Has&&current["interim"].A.Count>0)T("其余周次另有"+current["interim"].A.Count+"项模型安排的日常事务",small);
                 if(current["target_name"].Has&&current["target"].Has&&Btn("查看对象 · "+current["target_name"].S))ViewPerson(current["target"].I,PersonTab.Overview);
             }
             Metric("进展",current["status"].S);T("接下来："+current["next_description"].S);

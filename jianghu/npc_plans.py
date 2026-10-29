@@ -103,7 +103,7 @@ def career_target(w, n):
 def begin(w, n, chosen):
     profile = role(w, n)
     # A long undertaking is considered at most once a month, when no plan is held.
-    if n.get('undertaking_review') != w.month:
+    if n.get('undertaking_review') != w.month and w.month >= n.get('undertaking_declined_until', -1):
         n['undertaking_review'] = w.month
         found = undertakings.propose(w, n)
         if found:
@@ -199,10 +199,24 @@ def resolve(w, n, actions):
     return choice
 
 
+def interim(w, n, p, actions):
+    """Between monthly steps, a model-chosen undertaking runs the model's own short plan."""
+    steps = p.get('interim') or []
+    if not steps or w.month > p.get('interim_until', -1):
+        p.pop('interim', None)
+        return None
+    by_id = {a['id']: a for a in actions}
+    choice = next((by_id[i] for i in steps if i in by_id), None)
+    if choice:
+        p.update(next_id=choice['id'], interim_active=True)
+    return choice
+
+
 def undertake(w, n, p, actions):
+    p['interim_active'] = False
     if p.get('last_step') == w.month:
         p.update(status='执行中', blocker='本月已推进一步，其余时间照常过日子', next_id=None)
-        return None
+        return interim(w, n, p, actions)
     if w.month - p['last_progress'] >= undertakings.PATIENCE:
         close(w, n, '中断', '半年未有进展，暂且放下')
         return None
@@ -211,8 +225,8 @@ def undertake(w, n, p, actions):
         close(w, n, '中断', verdict[1])
         return None
     if verdict[0] == 'wait':
-        p.update(status='等待时机', blocker=verdict[1])
-        return None
+        p.update(status='等待时机', blocker=verdict[1], next_id=None)
+        return interim(w, n, p, actions)
     choice = verdict[1]
     p.update(status='执行中', blocker='', next_action=choice['label'], next_id=choice['id'], blocked_since=None)
     return choice
@@ -272,6 +286,13 @@ def choose(w, n, actions):
 
 def record(w, n, a, event):
     p = n.get('plan')
+    if p and p.get('interim_active') and n.get('choice_source') == p['source'] and p.get('next_id') == a['id']:
+        # A model-planned errand between undertaking steps: account for it, not for the pursuit.
+        p['interim'].remove(a['id'])
+        p.update(interim_active=False, next_id=None)
+        p['completed'] = (p.get('completed', []) + [dict(action=a['label'], id=a['id'], month=w.month,
+                                                         event_id=event['id'], interim=True)])[-12:]
+        return
     if not p or n.get('choice_source') != p['source'] or p.get('next_id') != a['id'] or p.get('status') != '执行中':
         return
     p['completed'] = (p.get('completed', []) + [dict(action=a['label'], id=a['id'], month=w.month, event_id=event['id'])])[-12:]
@@ -308,6 +329,7 @@ def view(w, n):
         elif p.get('intent') in undertakings.KINDS:
             p['next_description'] = undertakings.describe(w, n, p)
             p['undertaking'] = undertakings.KINDS[p['intent']]
+            p['chosen_by'] = '本地模型选定' if p.get('source') == 'AI' else '依心愿按规则拟定'
         else:
             p['next_description'] = p.get('next_action', '按约定步骤继续，执行前再核对条件')
     return dict(version=VERSION, role=role(w, n), current=p, decision=deepcopy(n.get('decision')),life_policy=llm_policy.view(w,n),
