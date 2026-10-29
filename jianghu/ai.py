@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 from .engine import TRAITS, BELIEFS, DESIRES
 from . import temperament
 from . import items
-from . import careers, npc_memory, npc_plans, economics, rank_progression, local_life, llm_policy, npc_attention, deliberation, player_social, undertakings
+from . import careers, npc_memory, npc_plans, economics, rank_progression, local_life, llm_policy, npc_attention, deliberation, player_social, undertakings, reactions
 from .model_service import ModelService, MODEL_ID
 
 DEFAULT_CONFIG = {'enabled': False, 'backend': 'llamacpp', 'url': 'http://127.0.0.1:11435',
@@ -421,6 +421,7 @@ class AIManager:
         self.jobs, self.done = queue.PriorityQueue(maxsize=128), queue.Queue()
         self.pending = set()
         self.dialogue_pending = set()
+        self.reaction_pending = set()
         self.pending_contexts={};self.priority_requests=set();self.priority_streak=0
         self.submitted_months = {}
         self.service=ModelService()
@@ -439,6 +440,22 @@ class AIManager:
         self.focus_id=None
         self.priority_requests.clear();self.pending_contexts.clear();self.priority_streak=0
         self.dialogue_pending.clear()
+        self.reaction_pending.clear()
+
+    def react(self, world, since_id):
+        """Queue in-character answers to what the player just did (outcomes are already settled)."""
+        if not self.config['enabled']:
+            return 0
+        count = 0
+        for ctx in reactions.queue(world, since_id):
+            if self.jobs.full():
+                reactions.fail(world, ctx, '模型队列暂满，这次往来没有留下回应')
+                continue
+            self.serial += 1
+            self.reaction_pending.add(ctx['_row'])
+            self.jobs.put_nowait((0, self.serial, ctx, self.config.copy()))
+            count += 1
+        return count
 
     def interact(self, world, npc_id, action, text, revision, mode='request', request_id=None, option_id=None):
         if not self.config['enabled']:
@@ -470,8 +487,9 @@ class AIManager:
         while True:
             try:entries.append(self.jobs.get_nowait());self.jobs.task_done()
             except queue.Empty:break
-        choice=next((i for i,e in enumerate(entries) if not e[2].get('_interaction') and e[2]['npc_id']==npc_id),None)
-        if choice is None:choice=next((i for i in reversed(range(len(entries))) if entries[i][0]>0),None)
+        background=lambda e:not e[2].get('_interaction') and not e[2].get('_reaction')
+        choice=next((i for i,e in enumerate(entries) if background(e) and e[2]['npc_id']==npc_id),None)
+        if choice is None:choice=next((i for i in reversed(range(len(entries))) if entries[i][0]>0 and background(entries[i])),None)
         for i,item in enumerate(entries):
             if i==choice:self.release_queued(world,item[2]);self.stats['queue_refreshed']+=1
             else:self.jobs.put_nowait(item)
@@ -487,6 +505,14 @@ class AIManager:
             try:item=self.jobs.get_nowait()
             except queue.Empty:break
             _,_,ctx,_=item;n=world.npcs.get(ctx['npc_id'])
+            if ctx.get('_reaction'):
+                row=reactions.row(world,ctx['_row'])
+                if self.config['enabled'] and n and n['alive'] and row and row['status']=='pending' and world.month-ctx['month']<=1:
+                    keep.append(item)
+                else:
+                    reactions.fail(world,ctx,'处境或模型设置已改变');self.reaction_pending.discard(ctx['_row']);dropped+=1
+                self.jobs.task_done()
+                continue
             if ctx.get('_interaction'):
                 row = player_social.request_row(world,ctx)
                 snapshot=ctx.get('_fingerprint') if ctx.get('_options_only') else (row or {}).get('fingerprint')
@@ -607,7 +633,8 @@ class AIManager:
             started = time.perf_counter()
             try:
                 model = LocalModel(config,self.service,on_request)
-                result, ms, usage, raw = model.interact(ctx) if ctx.get('_interaction') else model.request(ctx)
+                result, ms, usage, raw = (model.interact(ctx) if ctx.get('_interaction') else
+                                          reactions.model_request(model, ctx) if ctx.get('_reaction') else model.request(ctx))
                 if not sent[0]:self.stats['calls']+=usage.get('request_count',1)
                 self.stats['successes'] += 1
                 self.stats['latency_ms'] += ms
@@ -636,6 +663,18 @@ class AIManager:
             except queue.Empty:
                 break
             collected = True
+            if ctx.get('_reaction'):
+                self.reaction_pending.discard(ctx['_row'])
+                if result is None or not self.config['enabled']:
+                    reactions.fail(world,ctx,'模型已关闭' if not self.config['enabled'] else '本地模型未能完成回应')
+                    applied,reason=False,'未取得回应'
+                else:
+                    applied,reason=reactions.apply(world,ctx,result)
+                if not applied:self.stats['rejected']+=1
+                world.store.log_ai(dict(month=world.month,npc_id=ctx['npc_id'],task='player_reaction',
+                                        context=ctx,response=result,**meta,applied=applied,validation=reason))
+                changed=True
+                continue
             if ctx.get('_interaction'):
                 self.dialogue_pending.discard(ctx['_request_id'])
                 if result is None or not self.config['enabled']:
@@ -706,6 +745,7 @@ class AIManager:
 
     def view(self):
         return {**self.stats, 'queued': self.jobs.qsize(), 'pending': len(self.pending), 'dialogue_pending':len(self.dialogue_pending),
+                'reaction_pending':len(self.reaction_pending),
                 'managed_model':bool(self.service.process is not None and self.service.process.poll() is None),
                 'average_ms': self.stats['latency_ms']/max(1, self.stats['successes']),
                 'config': self.config,

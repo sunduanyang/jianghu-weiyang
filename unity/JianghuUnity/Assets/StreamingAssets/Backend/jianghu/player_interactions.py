@@ -2,7 +2,7 @@
 from copy import deepcopy
 import math
 
-from . import combat_attributes, demography, items, martial, martial_manuals, organizations, player_social, protagonist, sect_life
+from . import combat_attributes, demography, items, martial, martial_manuals, organizations, player_social, protagonist, reactions, sect_life
 from . import physical_combat as combat
 
 CATALOG = (
@@ -155,6 +155,7 @@ def view(w, npc_id):
                 gifts=goods(w, 'player'), buy=goods(w, npc_id, 'buy'), sell=sell,
                 steal=goods(w, npc_id), manual_offers=martial_manuals.offers(w, n),
                 theft_chance=theft_chance(w, n), player_wealth=w.player['wealth'], npc_wealth=n['wealth'],
+                reactions=reactions.view(w, npc_id),
                 relationship=deepcopy(r), records=[e for i in reversed(r.get('encounter_records', [])[-8:]) if (e := w.store.event(i))])
 
 
