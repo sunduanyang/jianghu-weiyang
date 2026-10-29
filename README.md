@@ -23,6 +23,7 @@ Get-Content unity/Build/active-build.txt
 - **地图**：天下地图选择地区并确认真实相邻路线；精力不足时由玩家决定是否过月继续。城中有舆图、长卷和地格视图，支持缩放与移动；地格支持 WASD 和双击行走。过河采用自然浅滩。
 - **行囊与装备**：类别、名称搜索和重置用于筛选，物品自动排列。装备只有主手、副手、护甲三槽；双手兵器暂时停用盾牌，停用或损坏装备不继续提供防护或产生战斗磨损。
 - **门派与社会**：门派九品和社会九品表示不同身份。升降依真实任职、履职、经营与判决，保留事件前因。具体制度见[人物品阶升降](RANK_PROGRESSION.md)。
+- **技艺**：锻造、医术、诗书三门，造诣与匠人、药师、书生的营生熟练度是同一个数。锻造的取向与火候改变兵器的质量、操控与压盾，进入正式物理战斗；抢夺、袭击留下的部位伤由医术诊治，切磋不留伤；墨宝赠人，懂行的人更珍视。不懂锻造只能把兵器修到 70 耐久。入口在「江湖 → 市井 → 技艺」与人物交互的学艺、诊治、请人修补。详见[技艺系统](CRAFTS_DESIGN.md)。
 - **武学与秘籍**：14 派共 126 门功法，目录见[九品武学设计](MARTIAL_NINE_GRADES_DESIGN.md)。从人物交互「修习 → 请教」取得实体秘籍后，仍须在自己的行囊使用；学习消耗一册，已经学会的功法不重复叠加，身份或门派改变后保留。
 - **物理交手**：切磋、抢夺、袭击共用正式战斗实现。新切磋按独立对局重置本场状态；暂离与恢复保留已有战局，其他敌对交手按世界规则处理。操作以客户端 H 帮助为准。
 - **社会模拟**：家户、婚姻、生育死亡、经营与互济按月推进。NPC 的长期筹划通过实际合法行动执行，知晓程度与声望按城镇传播；研究实验中的统计数字不作为每个存档的保证。
@@ -54,6 +55,7 @@ python scripts/setup_model.py --backend vulkan
 | [VALIDATION.md](VALIDATION.md) | 日常验证方法、已有证据入口与已知失败 |
 | [MARTIAL_NINE_GRADES_DESIGN.md](MARTIAL_NINE_GRADES_DESIGN.md) | 武学目录、能力加成与制度设计 |
 | [RANK_PROGRESSION.md](RANK_PROGRESSION.md) | 门派与社会身份升降 |
+| [CRAFTS_DESIGN.md](CRAFTS_DESIGN.md) | 锻造、医术、诗书的规则、接口与后续计划 |
 | [BLOODY_BINDING_STUDY.md](BLOODY_BINDING_STUDY.md) | 固定 UV、刚柔分区、关节覆盖与绑定矩阵 |
 | [BLOODY_SOURCE_PORT_VALIDATION.md](BLOODY_SOURCE_PORT_VALIDATION.md) | 正式战斗源图接入、存档契约与未通过项目 |
 | [BLOODY_FULL_PORT_STATUS.md](BLOODY_FULL_PORT_STATUS.md) | 独立恢复工程的位置、来源和复现 |

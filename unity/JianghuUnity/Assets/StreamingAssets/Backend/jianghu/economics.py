@@ -309,6 +309,8 @@ def work(w, n):
         return result
     life = prepare(n); m = market(w, n['place']); outputs, inputs = recipe(w, n)
     factor = min(1.5, .85 + careers.experience(n) * .006)
+    from . import crafts
+    factor *= crafts.work_capacity(n)
     last = life.get('last_needs', {})
     for category, penalty in (('food', .25), ('tools', .15), ('cloth', .08)):
         previous = last.get(category, {})

@@ -11,7 +11,7 @@ from .ai import AIManager, DEFAULT_CONFIG, continuous_config, participation
 from .engine import World
 from .store import Store
 from . import reactions, visits
-from . import items, equipment, territory, city_maps, government, protagonist, economics, rank_progression, llm_policy, npc_attention, player_social, player_interactions
+from . import crafts, items, equipment, territory, city_maps, government, protagonist, economics, rank_progression, llm_policy, npc_attention, player_social, player_interactions
 
 ROOT = Path(__file__).resolve().parents[1]
 # Requests where the player acts on a person; new events there may earn an in-character answer.
@@ -216,6 +216,8 @@ def handler_for(game):
                             data = equipment.view(game.world, 'player')
                         elif path == '/api/market':
                             data = items.market_view(game.world)
+                        elif path == '/api/crafts':
+                            data = crafts.view(game.world)
                         elif path == '/api/economy':
                             place = int(query['place'][0]) if 'place' in query else None
                             if place is not None and str(place) not in economics.state(game.world)['markets']:
@@ -299,6 +301,10 @@ def handler_for(game):
                         game.world.checkpoint()
                         if self.path == '/api/equipment':
                             data = {**equipment.view(game.world, 'player'), 'last_event': data['id']}
+                    elif self.path == '/api/crafts':
+                        if game.autoplay or game.job['remaining']:
+                            raise ValueError('请先暂停江湖，再操持技艺')
+                        data = crafts.perform(game.world, body)
                     elif self.path == '/api/economy':
                         if game.autoplay or game.job['remaining']:
                             raise ValueError('请先暂停世界推演，再安排行程')

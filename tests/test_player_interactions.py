@@ -42,10 +42,10 @@ class PlayerInteractionTests(unittest.TestCase):
         self.assertEqual(self.w.export(), before)
         self.assertEqual(self.w.store.count(), count)
 
-    def test_view_is_read_only_and_all_twelve_actions_have_requirements(self):
+    def test_view_is_read_only_and_all_fifteen_actions_have_requirements(self):
         before=deepcopy(self.w.export()); count=self.w.store.count()
         view=encounters.view(self.w, self.n['id'])
-        self.assertEqual(len(view['actions']), 12)
+        self.assertEqual(len(view['actions']), 15)
         self.assertEqual(self.w.export(), before); self.assertEqual(self.w.store.count(), count)
         self.assertFalse(next(a for a in view['actions'] if a['id']=='marry')['enabled'])
 
@@ -123,7 +123,7 @@ class PlayerInteractionTests(unittest.TestCase):
             return urlopen(Request(root+'/api/interaction',data=json.dumps(body).encode(),headers={'Content-Type':'application/json'}),timeout=10)
         try:
             with urlopen(root+f'/api/interaction?npc={self.n["id"]}',timeout=10) as response:
-                self.assertEqual(len(json.load(response)['actions']),12)
+                self.assertEqual(len(json.load(response)['actions']),15)
             body=self.body('praise')
             with post(body) as response:self.assertTrue(json.load(response)['event']['facts']['accepted'])
             self.assertEqual(self.relation()['affinity'],4)

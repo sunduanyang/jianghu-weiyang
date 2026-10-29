@@ -15,10 +15,10 @@ class IntegratedConversationTests(unittest.TestCase):
         result=base.decision(ctx,'refuse');result['persuasion_options']=persuasion.five_options()
         self.assertTrue(player_social.apply(w,ctx,result)[0]);return player_social.request_row(w,ctx)
 
-    def test_unified_view_preserves_six_conversation_topics_and_twelve_direct_actions(self):
+    def test_unified_view_preserves_six_conversation_topics_and_fifteen_direct_actions(self):
         w=self.world();before=deepcopy(w.export());events=w.store.count()
         v=player_interactions.view(w,1)
-        self.assertEqual(len(v['actions']),12)
+        self.assertEqual(len(v['actions']),15)
         self.assertEqual({r['action'] for r in v['conversations']},set(player_social.ACTIONS))
         self.assertEqual([r['label'] for r in v['conversations'] if r['listed'] and r['category']==0],['闲叙近况','赔礼和解'])
         self.assertEqual([r['label'] for r in v['conversations'] if r['listed'] and r['category']==5],['求助盘缠','请其引荐','接济或回报'])
