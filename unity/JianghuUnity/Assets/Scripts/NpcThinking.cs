@@ -37,6 +37,12 @@ public partial class JianghuApp {
                 if(step["event_id"].Has&&Btn("追溯这次行动"))OpenEvent(step["event_id"].I);
             }
         }else T("尚无待办计划，下一次行动时依处境安排。",small);
+        var turns=Person["turning_view"];
+        if(turns.Has&&(turns["history"].A.Count>0||turns["pending"].A.Count>0)){
+            T("人生转折",sub);
+            foreach(var t in turns["pending"].A)T("尚在心头 · "+t["role_label"].S+" · "+t["summary"].S,small);
+            foreach(var t in turns["history"].A.Take(3)){T(t["stance_label"].S+" · "+t["summary"].S,small);if(t["note"].S.Length>0)T("心声："+t["note"].S,small);}
+        }
         if(decision.Has){T("最近取舍",sub);T(decision["reason"].S);if(decision["policy_influence"].B)T("遵循模型方针："+decision["policy_title"].S,small);T("采取："+decision["action"].S,small);}
         if(view["history"].A.Count>0){
             T("此前打算",sub);

@@ -10,12 +10,12 @@ from urllib.parse import urlparse
 from .engine import TRAITS, BELIEFS, DESIRES
 from . import temperament
 from . import items
-from . import careers, npc_memory, npc_plans, economics, rank_progression, local_life, llm_policy, npc_attention, deliberation, player_social, undertakings, reactions, persona, visits
+from . import careers, npc_memory, npc_plans, economics, rank_progression, local_life, llm_policy, npc_attention, deliberation, player_social, undertakings, reactions, persona, visits, turning
 from .model_service import ModelService, MODEL_ID
 
 DEFAULT_CONFIG = {'enabled': False, 'backend': 'llamacpp', 'url': 'http://127.0.0.1:11435',
                   'model': MODEL_ID, 'cooldown_months': 1,
-                  'queue_limit': 2, 'timeout': 80, 'max_tokens': 600,
+                  'queue_limit': 2, 'timeout': 80, 'max_tokens': 600, 'lean_tokens': 120,
                   'config_version':6, 'context_size':8192, 'auto_start':True,
                   'deep_max_tokens':1000,'assessment_tokens':700}
 
@@ -88,13 +88,14 @@ def context_for(world, n, thinking=None):
             'memories': [{k: m[k] for k in ('event_id', 'fact', 'interpretation', 'source', 'salience')} for m in memories],
             'allowed_actions': options, 'allowed_goals': goal_options,
             'undertakings': undertakings.options(world, n, goal_options),
+            'own_life': persona.life(world, n), 'sex': n['sex'],
             'time_budget':4,'baseline_action':ranked[0]['id'] if ranked else None}
 
 
 def response_schema(ctx):
     ids = [a['id'] for a in ctx['allowed_actions']]
     event_ids = [m['event_id'] for m in ctx['memories']]
-    return with_undertaking(ctx, {'type': 'object', 'properties': {
+    return with_turning(ctx, with_undertaking(ctx, {'type': 'object', 'properties': {
         'action_id': {'type': 'string', 'enum': ids},
         'plan': {'type': 'array', 'items': {'type': 'string', 'enum': ids}, 'minItems': 1, 'maxItems': 4},
         'goal': {'type': 'string', 'enum': ctx['allowed_goals']},
@@ -116,7 +117,15 @@ def response_schema(ctx):
             'belief_direction': {'type': 'integer', 'enum': [-1, 0, 1]}},
             'required': ['event_ids', 'interpretation', 'trait', 'direction', 'belief', 'belief_direction'],
             'additionalProperties': False}},
-        'required': ['action_id', 'plan', 'goal', 'reason', 'reflection','life_policy'], 'additionalProperties': False})
+        'required': ['action_id', 'plan', 'goal', 'reason', 'reflection','life_policy'], 'additionalProperties': False}))
+
+
+def with_turning(ctx, schema):
+    """When the thought is about a turning point, the answer also says how the person faces it."""
+    if ctx.get('turning_point'):
+        schema['properties']['stance'] = {'type': 'string', 'enum': [s['id'] for s in ctx['turning_point']['stances']]}
+        schema['required'] = schema['required'] + ['stance']
+    return schema
 
 
 def with_undertaking(ctx, schema):
@@ -132,6 +141,7 @@ SYSTEM = '''你是武侠社会模拟中的一个具体人物，按自己的性�
 plan包含第一项action_id，安排未来数周的2至4个具体行动，每月有4个时间点，工作或远行耗2点，其他通常1点，可跨月续用。
 life_policy是你未来一年的生活方针，title写具体取舍；priorities选1至4类当前可行行动，weight正值表示优先、负值表示克制。它会持续影响你日常行动的选择，身份、职业或所在地改变后重新考虑。
 undertakings是你此刻可以立下的长远筹划，每项写明对象与它服务的心愿（goal）：追求某人成家、向某人讨回公道、拜某人学艺、出门远游、行善立名。选一项，规则会每月替你推进一步，持续数月；keep表示继续手上的筹划，none表示暂不立长远筹划。所选筹划的goal必须与你的goal一致。plan安排的是筹划之外、其余周次的日常事务。
+turning_point若存在，是你人生中刚发生的转折：从其stances中选一个你面对它的方式填入stance，reason写你此刻的心声。
 settlement_life包含你的固定住所、工地与目前位置。考虑通勤、家人、生计储备与合作对象是否有空。财产与物资必须实际支付；你只能提出行动与偏好，不能宣称尚未执行的事情已经完成。
 self.temperament是你的处世立场和五项性格（仁厚↔冷酷、信义↔诡诈、刚烈↔谨慎、进取↔淡泊、合群↔孤僻），traits与beliefs是对应的0至100数值，50居中。冷酷者看重自身得失，诡诈者可能欺瞒背约，刚烈者遇事好斗也会报复，重信义者也可能护短。不要把所有人塑造成善人，也不要无视一个重信义人物的底线强行作恶。
 需要考虑风险和可见处境；可以自利、妥协、退让、算计或照顾他人，不追求道德评分。reason只写自己的取舍，不写泛泛劝善。
@@ -162,8 +172,80 @@ def participation(world):
                 contacted_model_led=sum(model_plan(n) or llm_policy.current(world, n) is not None for n in contacted),
                 undertakings_chosen=m.get('ai_undertakings_chosen', 0), undertakings_kept=m.get('ai_undertakings_kept', 0),
                 reactions_completed=m.get('player_reactions', 0),
+                lean_decisions=m.get('ai_lean_applied', 0), turning_decided=m.get('turning_points_decided', 0),
+                turning_pending=sum(bool(turning.pending(world, n)) for n in alive),
                 voices=sum(bool(n.get('voice')) for n in alive),
                 visit_openings=m.get('visit_openings', 0))
+
+
+LEAN_SYSTEM = '''你是武侠社会中的一个具体人物，按自己的性格、处境、心愿和亲历作一次简短决定。只输出给定JSON。
+action_id：从allowed_actions选你眼下要做的事；goal：从allowed_goals选你的人生心愿；
+undertaking：从undertakings选一项长远筹划（keep继续手上的，none暂不立），所选筹划的goal必须与goal一致，规则会每月替你推进；
+note：一句二十字以内的心声，写你此刻真实的念头，不写套话。
+turning_point若存在，是你人生中刚发生的转折，stance从其stances中选你面对它的方式，note就写你对这件事的心声。
+冷酷、诡诈或刚烈的人不必行善，宽厚守信的人也有底线；所有内容只能来自给定资料，不编造人物和往事。'''
+LEAN_ACTIONS = 10
+
+
+def turning_context(world, n, t):
+    """A thought about one turning point: the person may reconsider their wish and pursuit."""
+    ctx = context_for(world, n, npc_attention.profile(world, n))
+    ctx['allowed_goals'] = world.goal_options(n)
+    ctx['undertakings'] = undertakings.options(world, n, ctx['allowed_goals'])
+    ctx['turning_point'] = turning.context(world, n, t)
+    return ctx
+
+
+def lean(ctx):
+    """People without player contact or high standing get the short request."""
+    return (ctx.get('_thinking') or {}).get('level', 'standard') == 'standard'
+
+
+def lean_wire(ctx):
+    """A few thousand characters instead of fourteen thousand: only what this one decision needs."""
+    s = ctx['self']
+    plan = ctx.get('current_plan') or {}
+    wire = dict(
+        self=dict(name=s['name'], age=s['age_months'] // 12, sex=ctx.get('sex'), job=s['job'],
+                  wealth=round(s['wealth']), health=round(s['health']), temperament=s.get('temperament'),
+                  goal=(s.get('goal') or {}).get('title'), office=s.get('office')),
+        responsibilities=ctx.get('responsibilities', {}).get('label') if isinstance(ctx.get('responsibilities'), dict)
+        else ctx.get('responsibilities'),
+        current_plan={k: plan[k] for k in ('title', 'intent', 'status', 'blocker') if k in plan} if plan else None,
+        own_life={k: v for k, v in (ctx.get('own_life') or {}).items() if k != 'names'},
+        memories=[dict(fact=m['fact'], my_view=m.get('interpretation', '')) for m in ctx['memories'][:3]],
+        allowed_actions=[dict(id=a['id'], label=a['label']) for a in ctx['allowed_actions'][:LEAN_ACTIONS]],
+        allowed_goals=ctx['allowed_goals'],
+        undertakings=[dict(id=u['id'], label=u['label'], goal=u['goal']) for u in ctx.get('undertakings') or []])
+    if ctx.get('turning_point'):
+        tp = ctx['turning_point']
+        wire['turning_point'] = dict(summary=tp['summary'], role=tp['role'], months_ago=tp['months_ago'],
+                                     stances=[dict(id=x['id'], label=x['label'], meaning=x['meaning']) for x in tp['stances']])
+    return wire
+
+
+def lean_schema(ctx):
+    ids = [a['id'] for a in ctx['allowed_actions'][:LEAN_ACTIONS]]
+    schema = {'type': 'object', 'properties': {
+        'action_id': {'type': 'string', 'enum': ids},
+        'goal': {'type': 'string', 'enum': ctx['allowed_goals']},
+        'note': {'type': 'string', 'minLength': 2, 'maxLength': 24}},
+        'required': ['action_id', 'goal', 'note'], 'additionalProperties': False}
+    return with_turning(ctx, with_undertaking(ctx, schema))
+
+
+def expand(ctx, value):
+    """Turn a short answer into the full proposal shape that apply_decision validates."""
+    value = value if isinstance(value, dict) else {}
+    action = value.get('action_id')
+    full = dict(action_id=action, plan=[action] if action else [], goal=value.get('goal'), reason=value.get('note', ''),
+                life_policy=None,
+                reflection=dict(event_ids=[], interpretation='', trait='none', direction=0, belief='none', belief_direction=0),
+                _lean=True)
+    for key in ('undertaking', 'stance'):
+        if key in value:
+            full[key] = value[key]
+    return full
 
 
 class ModelRequestError(RuntimeError):
@@ -211,11 +293,26 @@ class LocalModel:
     def interact(self, ctx):
         return player_social.model_request(self, ctx)
 
+    def lean_request(self, ctx):
+        """One short request: a compact situation in, a few ids and one line out."""
+        try:
+            if self.service:
+                self.service.ensure(self.config)
+            messages = [dict(role='system', content=LEAN_SYSTEM),
+                        dict(role='user', content=json.dumps(lean_wire(ctx), ensure_ascii=False, separators=(',', ':')))]
+            value, raw, usage, ms = self.complete(messages, lean_schema(ctx), self.config.get('lean_tokens', 120), '简短决定')
+        except Exception as error:
+            raise ModelRequestError(str(error), 1, {}) from error
+        usage = dict(usage, request_count=1, stages=[dict(stage='简短决定', latency_ms=ms, **usage)])
+        return expand(ctx, value), ms, usage, raw
+
     def request(self, ctx):
         c = self.config
         parsed = urlparse(c['url'])
         if parsed.hostname not in ('localhost', '127.0.0.1', '::1') or parsed.scheme != 'http':
             raise ValueError('模型只允许连接本机HTTP地址')
+        if lean(ctx):
+            return self.lean_request(ctx)
         # Each HTTP request contains ONE person's knowledge. Rule recommendations remain
         # in the audit record and are not shown as an anchoring hint to the model.
         wire={k:v for k,v in ctx.items() if k != 'baseline_action' and not k.startswith('_')}
@@ -347,6 +444,13 @@ def apply_decision(world, ctx, result):
                           if undertakings.option_id(row[0], row[2]) == pick), None)
             if fresh is None:
                 return False, '所选长期筹划的条件已经改变'
+    # A proposal without a stance (an older answer shape) leaves the turning point for later.
+    tp = ctx.get('turning_point') if 'stance' in result else None
+    if tp:
+        if result.get('stance') not in {s['id'] for s in tp['stances']}:
+            return False, '面对转折的方式无效'
+        if not any(t['event_id'] == tp['event_id'] for t in turning.pending(world, n)):
+            return False, '这次转折已经处理或已过期'
     # All validation finishes before any world mutation.
     if result['goal'] != n['goal']['kind']:
         if result['goal'] not in world.goal_options(n):
@@ -423,6 +527,10 @@ def apply_decision(world, ctx, result):
     captured=set(ctx.get('_trigger_events',n['trigger_events']))
     n['trigger_events']=[i for i in n['trigger_events'] if i not in captured]
     n['review_urgency']=.85 if n['trigger_events'] else .1
+    if tp:
+        turning.resolve(world, n, tp['event_id'], result['stance'], reason)
+    if result.get('_lean'):
+        world.metrics['ai_lean_applied'] = world.metrics.get('ai_lean_applied', 0) + 1
     world.metrics['ai_applied'] += 1
     if chosen_u and chosen_u['intent']:
         key = 'ai_undertakings_kept' if chosen_u['id'] == 'keep' else 'ai_undertakings_chosen'
@@ -614,6 +722,19 @@ class AIManager:
         if force_id:available=min(1,available)
         if available<=0:return 0
         conversing={r['npc_id'] for r in player_social.state(world)['requests'] if player_social.is_pending(r)}
+        turned=0
+        if force_id is None and not self.priority_requests:
+            # Turning points in people's lives take the next slots, before ordinary rotation;
+            # at most half of them, so the rotation still reaches everyone else.
+            for n,t in turning.queue(world,exclude=set(self.pending)|conversing,limit=max(1,available//2)):
+                if len(self.pending)>=min(128,self.config['queue_limit']):break
+                ctx=turning_context(world,n,t)
+                if not ctx['allowed_actions']:continue
+                self.enqueue(world,n,ctx,1);turned+=1
+            available-=turned
+            if available<=0:
+                self.stats['scheduled']+=turned
+                return turned
         candidates = [n for n in world.npcs.values() if (npc_attention.eligible(world,n) or n['alive'] and n['id'] in self.priority_requests)
                       and n['id'] not in self.pending and n['id'] not in conversing and
                       (n['id'] in self.priority_requests or npc_attention.expedited(world,n) or
@@ -653,7 +774,7 @@ class AIManager:
                 if reserve:reserved.add(n['id'])
                 ordered.append(n);seen.add(n['id'])
             candidates=ordered
-        count = 0
+        count = turned
         for n in candidates[:available]:
             if len(self.pending) >= min(128, self.config['queue_limit']):
                 break
@@ -680,6 +801,17 @@ class AIManager:
         self.stats['eligible']=sum(npc_attention.eligible(world,n) for n in world.npcs.values())
         self.stats['coverage']=sum(n['alive'] and n['last_ai_review'] is not None for n in world.npcs.values())
         return count
+
+    def enqueue(self, world, n, ctx, tier):
+        ctx['_previous_attempt']=n['last_review_attempt']
+        self.pending.add(n['id'])
+        self.pending_contexts[n['id']]=ctx
+        npc_attention.mark_attempt(world,n,ctx)
+        self.submitted_months[n['id']] = world.month
+        n['ai_pending'] = True
+        n['last_review_attempt']=world.month
+        self.serial+=1
+        self.jobs.put_nowait((tier,self.serial,ctx,self.config.copy()))
 
     def worker(self):
         while not self.closed:
