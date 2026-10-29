@@ -40,7 +40,8 @@ ROLES = {'player_praise': '被称赞的人', 'player_gift': '收到礼物的人'
          'manual_teaching': '被请教的老师', 'player_sect_trial_result': '晋升比试的考官',
          'hero_sect_task': '派下差事的人', 'player_sect_apprentice': '被拜为师父的人',
          'player_sect_counsel': '指点你功课的师父', 'player_sect_guide': '受你指点的同门晚辈',
-         'player_sect_recruit': '被引荐入门的人', 'player_join_sect': '引你入门的人', 'hero_sect_task_failed': '你的师父',
+         'player_sect_recruit': '被引荐入门的人', 'player_join_sect': '引你入门的人',
+         'visit_answer': '来找你的人', 'hero_sect_task_failed': '你的师父',
          'hero_sect_discipline': '你的师父', 'hero_sect_penance': '你的师父'}
 SYSTEM = '''你是武侠世界里的一个具体人物。玩家刚刚对你做了一件事，或做了与你有关的一件事，结果已经由规则结算，不能改变。
 请以你自己的性格、心情、身份和你与玩家的过往，回应这件事：
@@ -67,6 +68,10 @@ def fits(kind, facts):
         return FAVOURABLE if facts.get('accepted') else REFUSED
     if kind in ('player_insult', 'player_rob_result', 'player_assault_result', 'hero_sect_discipline', 'hero_sect_task_failed'):
         return HURTFUL
+    if kind == 'visit_answer':
+        if facts.get('favourable'):
+            return FAVOURABLE
+        return HURTFUL if facts.get('choice') == 'defy' else REFUSED
     if kind == 'player_duel':
         return ('grateful', 'noted', 'indifferent', 'resentful')
     if kind == 'player_steal':

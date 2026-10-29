@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 from .engine import TRAITS, BELIEFS, DESIRES
 from . import temperament
 from . import items
-from . import careers, npc_memory, npc_plans, economics, rank_progression, local_life, llm_policy, npc_attention, deliberation, player_social, undertakings, reactions, persona
+from . import careers, npc_memory, npc_plans, economics, rank_progression, local_life, llm_policy, npc_attention, deliberation, player_social, undertakings, reactions, persona, visits
 from .model_service import ModelService, MODEL_ID
 
 DEFAULT_CONFIG = {'enabled': False, 'backend': 'llamacpp', 'url': 'http://127.0.0.1:11435',
@@ -161,7 +161,8 @@ def participation(world):
                 contacted_model_led=sum(model_plan(n) or llm_policy.current(world, n) is not None for n in contacted),
                 undertakings_chosen=m.get('ai_undertakings_chosen', 0), undertakings_kept=m.get('ai_undertakings_kept', 0),
                 reactions_completed=m.get('player_reactions', 0),
-                voices=sum(bool(n.get('voice')) for n in alive))
+                voices=sum(bool(n.get('voice')) for n in alive),
+                visit_openings=m.get('visit_openings', 0))
 
 
 class ModelRequestError(RuntimeError):
@@ -438,6 +439,7 @@ class AIManager:
         self.dialogue_pending = set()
         self.reaction_pending = set()
         self.voice_pending = set()
+        self.visit_pending = set()
         self.pending_contexts={};self.priority_requests=set();self.priority_streak=0
         self.submitted_months = {}
         self.service=ModelService()
@@ -458,6 +460,21 @@ class AIManager:
         self.dialogue_pending.clear()
         self.reaction_pending.clear()
         self.voice_pending.clear()
+        self.visit_pending.clear()
+
+    def write_visit(self, world):
+        """Keep one waiting visit's opening words being written in the visitor's own voice."""
+        if not self.config['enabled'] or self.visit_pending or self.jobs.full():
+            return 0
+        found = visits.next_to_write(world)
+        if not found:
+            return 0
+        visit, ctx = found
+        visit['writing'] = True
+        self.visit_pending.add(ctx['_row'])
+        self.serial += 1
+        self.jobs.put_nowait((0, self.serial, ctx, self.config.copy()))
+        return 1
 
     def give_voice(self, world, npc_id):
         """Once per person: after a first exchange with the player, let the model settle how they speak."""
@@ -515,7 +532,7 @@ class AIManager:
         while True:
             try:entries.append(self.jobs.get_nowait());self.jobs.task_done()
             except queue.Empty:break
-        background=lambda e:not e[2].get('_interaction') and not e[2].get('_reaction') and not e[2].get('_voice')
+        background=lambda e:not e[2].get('_interaction') and not e[2].get('_reaction') and not e[2].get('_voice') and not e[2].get('_visit')
         choice=next((i for i,e in enumerate(entries) if background(e) and e[2]['npc_id']==npc_id),None)
         if choice is None:choice=next((i for i in reversed(range(len(entries))) if entries[i][0]>0 and background(entries[i])),None)
         for i,item in enumerate(entries):
@@ -533,6 +550,14 @@ class AIManager:
             try:item=self.jobs.get_nowait()
             except queue.Empty:break
             _,_,ctx,_=item;n=world.npcs.get(ctx['npc_id'])
+            if ctx.get('_visit'):
+                visit=visits.row(world,ctx['_row'])
+                if self.config['enabled'] and visit and visit['status']=='pending':keep.append(item)
+                else:
+                    if visit:visit.pop('writing',None)
+                    self.visit_pending.discard(ctx['_row']);dropped+=1
+                self.jobs.task_done()
+                continue
             if ctx.get('_voice'):
                 if self.config['enabled'] and n and persona.needs_voice(n):keep.append(item)
                 else:self.voice_pending.discard(ctx['npc_id']);dropped+=1
@@ -583,6 +608,7 @@ class AIManager:
             if not self.config['enabled']:self.priority_requests.clear()
             return 0
         if world.battle and world.battle.get('status')=='active':return 0
+        if force_id is None:self.write_visit(world)
         available=min(128,self.config['queue_limit'])-len(self.pending)
         if force_id:available=min(1,available)
         if available<=0:return 0
@@ -668,7 +694,8 @@ class AIManager:
                 model = LocalModel(config,self.service,on_request)
                 result, ms, usage, raw = (model.interact(ctx) if ctx.get('_interaction') else
                                           reactions.model_request(model, ctx) if ctx.get('_reaction') else
-                                          persona.voice_request(model, ctx) if ctx.get('_voice') else model.request(ctx))
+                                          persona.voice_request(model, ctx) if ctx.get('_voice') else
+                                          visits.model_request(model, ctx) if ctx.get('_visit') else model.request(ctx))
                 if not sent[0]:self.stats['calls']+=usage.get('request_count',1)
                 self.stats['successes'] += 1
                 self.stats['latency_ms'] += ms
@@ -697,6 +724,19 @@ class AIManager:
             except queue.Empty:
                 break
             collected = True
+            if ctx.get('_visit'):
+                self.visit_pending.discard(ctx['_row'])
+                if result is not None and self.config['enabled']:
+                    applied,reason=visits.apply(world,ctx,result)
+                else:
+                    visit=visits.row(world,ctx['_row'])
+                    if visit:visit.pop('writing',None);visit['attempts']=visit.get('attempts',0)+1
+                    applied,reason=False,'未取得来访开口'
+                if not applied:self.stats['rejected']+=1
+                world.store.log_ai(dict(month=world.month,npc_id=ctx['npc_id'],task='visit',
+                                        context=ctx,response=result,**meta,applied=applied,validation=reason))
+                changed=True
+                continue
             if ctx.get('_voice'):
                 self.voice_pending.discard(ctx['npc_id'])
                 applied,reason=(persona.apply_voice(world,ctx,result) if result is not None and self.config['enabled']
@@ -791,7 +831,7 @@ class AIManager:
 
     def view(self):
         return {**self.stats, 'queued': self.jobs.qsize(), 'pending': len(self.pending), 'dialogue_pending':len(self.dialogue_pending),
-                'reaction_pending':len(self.reaction_pending),'voice_pending':len(self.voice_pending),
+                'reaction_pending':len(self.reaction_pending),'voice_pending':len(self.voice_pending),'visit_pending':len(self.visit_pending),
                 'managed_model':bool(self.service.process is not None and self.service.process.poll() is None),
                 'average_ms': self.stats['latency_ms']/max(1, self.stats['successes']),
                 'config': self.config,

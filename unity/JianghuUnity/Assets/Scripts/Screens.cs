@@ -99,8 +99,10 @@ public partial class JianghuApp {
         if(Btn("武学与调养"))Later(()=>SetTab((int)PersonTab.Martial));
         if(Btn("品阶进退"))Later(()=>SetTab((int)PersonTab.Character));
         GUILayout.EndHorizontal();
-        GUILayout.Space(8);T("近来经历",sub);
+        GUILayout.Space(8);
         mainScroll=GUILayout.BeginScrollView(mainScroll);
+        DrawVisits(Hero["visits"]);
+        T("近来经历",sub);
         DrawEventList(Hero["journal"]);
         if(Hero["journal"].A.Count==0)T("尚无记事。",small);
         GUILayout.EndScrollView();
@@ -116,6 +118,27 @@ public partial class JianghuApp {
         if(Person["voice_view"].Has){H("说话");T(Person["voice_view"]["text"].S,small);if(Person["voice_view"]["source"].S=="规则")T("尚未与你深谈，口吻按身份与性情推定。",small);}
         DrawFame(Person["fame_view"]);
         Details("记忆与理解",Person["memories"]);
+    }
+    // 来访：认识你的人为真实的缘由来找你；回应从既定选项中选，结果由规则结算。
+    void DrawVisits(J visits){
+        if(!visits.Has||visits.A.Count==0)return;
+        T("有人来找你",sub);
+        foreach(var v in visits.A){
+            T(v["label"].S+" · "+v["npc_name"].S,text);
+            T(v["opening"].S,small);
+            if(!v["here"].B){T("对方已不在此地，下月底前回到"+v["npc_name"].S+"所在之处再答复。",small);continue;}
+            GUILayout.BeginHorizontal();
+            foreach(var c in v["choices"].A){
+                bool was=GUI.enabled;GUI.enabled=was&&c["enabled"].B&&!Client.Busy;
+                int id=v["id"].I;string choice=c["id"].S;
+                if(Btn(c["label"].S))Later(()=>Client.Act("/api/visit",J.O("visit_id",id,"choice",choice,"revision",Hero["revision"].I,"month",W["month"].I),j=>StartCoroutine(Client.Refresh())));
+                GUI.enabled=was;
+            }
+            GUILayout.EndHorizontal();
+            if(Btn("见见"+v["npc_name"].S))Later(()=>ViewPerson(v["npc_id"].I,PersonTab.Overview));
+            GUILayout.Space(6);
+        }
+        GUILayout.Space(6);
     }
     // 名声所及：声望是所作所为，各城镇知道多少不同。
     void DrawFame(J fv){

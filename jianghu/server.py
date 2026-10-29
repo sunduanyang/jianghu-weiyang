@@ -10,12 +10,12 @@ from urllib.parse import parse_qs, urlparse
 from .ai import AIManager, DEFAULT_CONFIG, continuous_config, participation
 from .engine import World
 from .store import Store
-from . import reactions
+from . import reactions, visits
 from . import items, equipment, territory, city_maps, government, protagonist, economics, rank_progression, llm_policy, npc_attention, player_social, player_interactions
 
 ROOT = Path(__file__).resolve().parents[1]
 # Requests where the player acts on a person; new events there may earn an in-character answer.
-REACTING_PATHS = ('/api/interaction', '/api/items', '/api/ranks', '/api/battle')
+REACTING_PATHS = ('/api/interaction', '/api/items', '/api/ranks', '/api/battle', '/api/visit')
 
 
 class Game:
@@ -32,7 +32,7 @@ class Game:
         self.ai = AIManager(config)
         self.world = World(seed, population, Store(path), compact=True, population_profile=True, market_economy=True,rank_assessments=True)
         self.ai.restore_stats(self.world.store)
-        if player_social.recover(self.world) | reactions.recover(self.world):self.world.checkpoint()
+        if player_social.recover(self.world) | reactions.recover(self.world) | visits.recover(self.world):self.world.checkpoint()
         self.job = {'remaining': 0, 'total': 0, 'completed': 0, 'fast': True, 'label': '已暂停', 'error': ''}
         self.next_step = 0
         self.autoplay = False
@@ -255,6 +255,10 @@ def handler_for(game):
                         if game.autoplay or game.job['remaining']:
                             raise ValueError('请先暂停世界推演，再与人物往来')
                         data = player_interactions.perform(game.world, body)
+                    elif self.path == '/api/visit':
+                        if game.autoplay or game.job['remaining']:
+                            raise ValueError('请先暂停江湖，再接待来访')
+                        data = visits.answer(game.world, body)
                     elif self.path == '/api/intervene':
                         if body.get('action')=='talk' or body.get('text',''):
                             raise ValueError('自由交谈已关闭，请在人物页选择请求或说服选项')
