@@ -37,10 +37,10 @@ def single(n):
     return not n['spouse'] and not n.get('player_spouse')
 
 
-def suitor(w, n):
-    """The local person this one would court: mutually attracted, unattached, not kin, not estranged."""
+def suitors(w, n, limit=1):
+    """Local people this one could court, best first: mutually attracted, unattached, not kin, not estranged."""
     if not single(n) or not 18*12 <= n['age_months'] <= 50*12:
-        return None
+        return []
     rows = []
     for q in local(w, n):
         if not single(q) or q['age_months'] < 18*12 or abs(q['age_months'] - n['age_months']) > 15*12:
@@ -49,7 +49,12 @@ def suitor(w, n):
         if r.get('affinity', 0) < -5 or w.close_kin(n, q) or not (demography.attracted(n, q) and demography.attracted(q, n)):
             continue
         rows.append((r.get('romance', 0) + r.get('affinity', 0)*.5 - abs(q['age_months'] - n['age_months'])/6, -q['id'], q))
-    return max(rows, key=lambda row: row[:2])[2] if rows else None
+    return [row[2] for row in sorted(rows, key=lambda row: row[:2], reverse=True)[:limit]]
+
+
+def suitor(w, n):
+    found = suitors(w, n)
+    return found[0] if found else None
 
 
 def settled_family(w, n):
@@ -63,17 +68,25 @@ def known_arts(w, n):
     return set((martial.resolve(w, n) or {}).get('known', []))
 
 
-def teacher(w, n):
-    """A known local who knows an art this person lacks; friends first."""
+def teachers(w, n, limit=1):
+    """Known locals who know an art this person lacks; friends first."""
     mine = known_arts(w, n)
     rows = sorted(((r['affinity'], int(k)) for k, r in n['relationships'].items()
                    if r['affinity'] > -5 and int(k) in w.npcs), reverse=True)
+    found = []
     for affinity, i in rows[:8]:
         q = w.npcs[i]
         if (q['alive'] and q['place'] == n['place'] and q['age_months'] >= 192 and q['health'] > 30
                 and known_arts(w, q) - mine):
-            return q
-    return None
+            found.append(q)
+            if len(found) >= limit:
+                break
+    return found
+
+
+def teacher(w, n):
+    found = teachers(w, n)
+    return found[0] if found else None
 
 
 def unlearned_manual(w, n):
@@ -87,34 +100,67 @@ def unlearned_manual(w, n):
     return None
 
 
-def propose(w, n):
-    """The undertaking this person's goal suggests right now, or None."""
+def candidates(w, n, k, limit=1):
+    """Undertakings a goal of kind `k` makes possible right now, best first: [(intent, title, data)]."""
     g = n.get('goal') or {}
-    k = g.get('kind')
     if n['age_months'] < 16*12 or n['health'] < 45:
-        return None
+        return []
     if k == 'belonging':
-        q = suitor(w, n)
-        if q:
-            return 'courtship', f"追求{q['name']}，求结连理", dict(target=q['id'], target_name=q['name'], rebuffs=0)
-    elif k == 'revenge' and not g.get('resolved') and g.get('against') in w.npcs and w.npcs[g['against']]['alive']:
-        q = w.npcs[g['against']]
-        return 'grudge', f"向{q['name']}讨回公道", dict(target=q['id'], target_name=q['name'])
-    elif k == 'mastery':
+        return [('courtship', f"追求{q['name']}，求结连理", dict(target=q['id'], target_name=q['name'], rebuffs=0))
+                for q in suitors(w, n, limit)]
+    if k == 'revenge':
+        # A grudge names its person; only the grudge actually held can be pressed.
+        if (g.get('kind') == 'revenge' and not g.get('resolved') and g.get('against') in w.npcs
+                and w.npcs[g['against']]['alive']):
+            q = w.npcs[g['against']]
+            return [('grudge', f"向{q['name']}讨回公道", dict(target=q['id'], target_name=q['name']))]
+        return []
+    if k == 'mastery':
         learned = len(n['martial'].get('learned', []))
         if unlearned_manual(w, n):
-            return 'study', '研习行囊中的秘籍', dict(target=None, start_learned=learned, rebuffs=0)
+            return [('study', '研习行囊中的秘籍', dict(target=None, start_learned=learned, rebuffs=0))]
         # A new teacher is sought only once the pupil may ask for an art again.
-        q = teacher(w, n) if martial_manuals.window_open(w, n) else None
-        if q:
-            return 'study', f"拜访{q['name']}求学武艺", dict(target=q['id'], target_name=q['name'],
-                                                        start_learned=learned, rebuffs=0)
-    elif k == 'freedom' and n['wealth'] >= JOURNEY_SAVINGS and not n['pregnancy'] and not settled_family(w, n):
-        return 'journey', '出门远游，见识未曾到过的地方', dict(
-            target=None, start_visited=len(set(n.get('visited_places', [n['place']]))))
-    elif k == 'renown':
-        return 'standing', f'行善积德，在乡里立下名声（{STANDING_DEEDS}件善举）', dict(target=None, deeds=0)
-    return None
+        found = teachers(w, n, limit) if martial_manuals.window_open(w, n) else []
+        return [('study', f"拜访{q['name']}求学武艺", dict(target=q['id'], target_name=q['name'],
+                                                        start_learned=learned, rebuffs=0)) for q in found]
+    if k == 'freedom' and n['wealth'] >= JOURNEY_SAVINGS and not n['pregnancy'] and not settled_family(w, n):
+        return [('journey', '出门远游，见识未曾到过的地方',
+                 dict(target=None, start_visited=len(set(n.get('visited_places', [n['place']])))))]
+    if k == 'renown':
+        return [('standing', f'行善积德，在乡里立下名声（{STANDING_DEEDS}件善举）', dict(target=None, deeds=0))]
+    return []
+
+
+def propose(w, n):
+    """The undertaking this person's goal suggests right now, or None."""
+    found = candidates(w, n, (n.get('goal') or {}).get('kind'))
+    return found[0] if found else None
+
+
+def option_id(intent, data):
+    return f"{intent}:{data['target']}" if data.get('target') is not None else intent
+
+
+def options(w, n, goal_kinds, limit=3):
+    """Pure: the undertakings a model may choose between, for each goal it may hold.
+
+    Each option names its goal; choosing one means pursuing that goal. 'keep' continues a
+    current undertaking and 'none' sets long pursuits aside for now.
+    """
+    rows = []
+    p = n.get('plan') or {}
+    if p.get('intent') in KINDS:
+        rows.append(dict(id='keep', intent=p['intent'], goal=p['goal'], title=p['title'],
+                         label='继续：'+p['title'], target=p.get('target')))
+    for k in goal_kinds:
+        for intent, title, data in candidates(w, n, k, limit):
+            oid = option_id(intent, data)
+            if not any(r['id'] == oid for r in rows) and not (rows and rows[0]['id'] == 'keep' and
+                                                              option_id(p['intent'], p) == oid):
+                rows.append(dict(id=oid, intent=intent, goal=k, title=title, label=KINDS[intent]+'：'+title,
+                                 target=data.get('target'), data=data))
+    rows.append(dict(id='none', intent=None, goal=None, title='暂不立长远筹划', label='暂不立长远筹划，按眼前安排行事', target=None))
+    return rows
 
 
 def focus(n):

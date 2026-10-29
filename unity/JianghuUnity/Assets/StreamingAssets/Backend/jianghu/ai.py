@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 from .engine import TRAITS, BELIEFS, DESIRES
 from . import temperament
 from . import items
-from . import careers, npc_memory, npc_plans, economics, rank_progression, local_life, llm_policy, npc_attention, deliberation, player_social
+from . import careers, npc_memory, npc_plans, economics, rank_progression, local_life, llm_policy, npc_attention, deliberation, player_social, undertakings
 from .model_service import ModelService, MODEL_ID
 
 DEFAULT_CONFIG = {'enabled': False, 'backend': 'llamacpp', 'url': 'http://127.0.0.1:11435',
@@ -87,13 +87,14 @@ def context_for(world, n, thinking=None):
                               for i, r in contacts],
             'memories': [{k: m[k] for k in ('event_id', 'fact', 'interpretation', 'source', 'salience')} for m in memories],
             'allowed_actions': options, 'allowed_goals': goal_options,
+            'undertakings': undertakings.options(world, n, goal_options),
             'time_budget':4,'baseline_action':ranked[0]['id'] if ranked else None}
 
 
 def response_schema(ctx):
     ids = [a['id'] for a in ctx['allowed_actions']]
     event_ids = [m['event_id'] for m in ctx['memories']]
-    return {'type': 'object', 'properties': {
+    return with_undertaking(ctx, {'type': 'object', 'properties': {
         'action_id': {'type': 'string', 'enum': ids},
         'plan': {'type': 'array', 'items': {'type': 'string', 'enum': ids}, 'minItems': 1, 'maxItems': 4},
         'goal': {'type': 'string', 'enum': ctx['allowed_goals']},
@@ -115,13 +116,22 @@ def response_schema(ctx):
             'belief_direction': {'type': 'integer', 'enum': [-1, 0, 1]}},
             'required': ['event_ids', 'interpretation', 'trait', 'direction', 'belief', 'belief_direction'],
             'additionalProperties': False}},
-        'required': ['action_id', 'plan', 'goal', 'reason', 'reflection','life_policy'], 'additionalProperties': False}
+        'required': ['action_id', 'plan', 'goal', 'reason', 'reflection','life_policy'], 'additionalProperties': False})
+
+
+def with_undertaking(ctx, schema):
+    """Add the long-pursuit choice when the context offers one (older contexts do not)."""
+    if ctx.get('undertakings'):
+        schema['properties']['undertaking'] = {'type': 'string', 'enum': [u['id'] for u in ctx['undertakings']]}
+        schema['required'] = schema['required'] + ['undertaking']
+    return schema
 
 
 SYSTEM = '''你是武侠社会模拟中的一个具体人物，按自己的性格、利益、欲望和亲历记忆决策。
 输出符合给定JSON schema的对象。action_id和plan只能选allowed_actions中的id；goal只能选allowed_goals。
 plan包含第一项action_id，安排未来数周的2至4个具体行动，每月有4个时间点，工作或远行耗2点，其他通常1点，可跨月续用。
 life_policy是你未来一年的生活方针，title写具体取舍；priorities选1至4类当前可行行动，weight正值表示优先、负值表示克制。它会持续影响你日常行动的选择，身份、职业或所在地改变后重新考虑。
+undertakings是你此刻可以立下的长远筹划，每项写明对象与它服务的心愿（goal）：追求某人成家、向某人讨回公道、拜某人学艺、出门远游、行善立名。选一项，规则会每月替你推进一步，持续数月；keep表示继续手上的筹划，none表示暂不立长远筹划。所选筹划的goal必须与你的goal一致。plan安排的是筹划之外、其余周次的日常事务。
 settlement_life包含你的固定住所、工地与目前位置。考虑通勤、家人、生计储备与合作对象是否有空。财产与物资必须实际支付；你只能提出行动与偏好，不能宣称尚未执行的事情已经完成。
 self.temperament是你的处世立场和五项性格（仁厚↔冷酷、信义↔诡诈、刚烈↔谨慎、进取↔淡泊、合群↔孤僻），traits与beliefs是对应的0至100数值，50居中。冷酷者看重自身得失，诡诈者可能欺瞒背约，刚烈者遇事好斗也会报复，重信义者也可能护短。不要把所有人塑造成善人，也不要无视一个重信义人物的底线强行作恶。
 需要考虑风险和可见处境；可以自利、妥协、退让、算计或照顾他人，不追求道德评分。reason只写自己的取舍，不写泛泛劝善。
@@ -217,6 +227,8 @@ class LocalModel:
             wire['player_contact']=dict(wire['player_contact'])
             wire['player_contact']['memories']=[{k:m[k] for k in ('event_id','fact','interpretation','source')} for m in wire['player_contact']['memories']]
         wire['allowed_actions']=[{k:a[k] for k in ('id','label','time_cost')} for a in ctx['allowed_actions']]
+        if ctx.get('undertakings'):
+            wire['undertakings']=[{k:u[k] for k in ('id','label','goal')} for u in ctx['undertakings']]
         stages=[];attempts=0;started=time.perf_counter()
         def send(messages,schema,budget,stage):
             nonlocal attempts
@@ -300,18 +312,50 @@ def apply_decision(world, ctx, result):
     review=result.get('_deep_review')
     if review is not None and (not deliberation.valid(ctx,review) or action not in {r['action_id'] for r in review['alternatives']}):
         return False,'深思评估与最终行动不匹配'
+    offered_u = {u['id']: u for u in ctx.get('undertakings') or []}
+    chosen_u, fresh = None, None
+    if offered_u:
+        pick = result.get('undertaking', 'keep' if 'keep' in offered_u else 'none')
+        if pick not in offered_u:
+            return False, '长期筹划不在可选范围内'
+        chosen_u = offered_u[pick]
+        if chosen_u['goal'] is not None and chosen_u['goal'] != result['goal']:
+            return False, '所选长期筹划与心愿不一致'
+        if pick == 'keep':
+            p = n.get('plan') or {}
+            if p.get('intent') != chosen_u['intent'] or p.get('target') != chosen_u['target']:
+                return False, '手上的长期筹划已经结束或改变'
+        elif chosen_u['intent']:
+            fresh = next((row for row in undertakings.candidates(world, n, chosen_u['goal'], 3)
+                          if undertakings.option_id(row[0], row[2]) == pick), None)
+            if fresh is None:
+                return False, '所选长期筹划的条件已经改变'
     # All validation finishes before any world mutation.
     if result['goal'] != n['goal']['kind']:
         if result['goal'] not in world.goal_options(n):
             return False, '环境变化使目标失效'
         world.set_goal(n, result['goal'], n['last_event'])
     steps = ([action] if plan[0]!=action else [])+[a for a in plan if a in current]
-    if n.get('plan'):
-        npc_plans.close(world, n, '调整', '采用新的模型提案')
-    n['plan'] = {'source': 'AI', 'created': world.month, 'until': world.month+2,
-                 'status': '执行中', 'completed': [], 'title': str(result.get('reason', ''))[:220],
-                 'steps': steps[:4], 'horizon': '未来数周，依时间预算跨月续用',
-                 'reason': str(result.get('reason', ''))[:220]}
+    reason = str(result.get('reason', ''))[:220]
+    if chosen_u and chosen_u['id'] == 'keep':
+        # The model keeps its long pursuit; its short plan fills the other weeks.
+        n['plan'].update(source='AI', ai_reason=reason, interim=steps[:4], interim_until=world.month+2)
+    elif chosen_u and chosen_u['intent']:
+        if n.get('plan'):
+            npc_plans.close(world, n, '调整', '采用模型选定的长期筹划')
+        intent, title, data = fresh
+        npc_plans.start(world, n, intent, title, [], **data)
+        n['plan'].update(source='AI', ai_reason=reason, interim=steps[:4], interim_until=world.month+2)
+    else:
+        if chosen_u:
+            # Setting long pursuits aside is respected for a season before the rules propose one again.
+            n['undertaking_declined_until'] = world.month + 3
+        if n.get('plan'):
+            npc_plans.close(world, n, '调整', '采用新的模型提案')
+        n['plan'] = {'source': 'AI', 'created': world.month, 'until': world.month+2,
+                     'status': '执行中', 'completed': [], 'title': reason,
+                     'steps': steps[:4], 'horizon': '未来数周，依时间预算跨月续用',
+                     'reason': reason}
     llm_policy.apply(world,n,ctx,result.get('life_policy'))
     if review:
         reviewed_signature=deepcopy(ctx['_attention_signature']);reviewed_signature['month']=world.month
@@ -353,7 +397,8 @@ def apply_decision(world, ctx, result):
                 current.update(memories[i])
         n['reflected'] = (n['reflected']+eligible)[-160:]
     n['reviews'].append({'month': world.month, 'source': 'AI', 'action_id': action,
-                         'baseline': ctx['baseline_action'], 'reason': n['plan']['reason'],
+                         'baseline': ctx['baseline_action'], 'reason': reason,
+                         'undertaking': chosen_u['id'] if chosen_u else None,
                          'event_ids': event_ids, 'actual_changes': actual_changes})
     n['reviews'] = n['reviews'][-20:]
     n['last_review']=world.month
@@ -362,6 +407,9 @@ def apply_decision(world, ctx, result):
     n['trigger_events']=[i for i in n['trigger_events'] if i not in captured]
     n['review_urgency']=.85 if n['trigger_events'] else .1
     world.metrics['ai_applied'] += 1
+    if chosen_u and chosen_u['intent']:
+        key = 'ai_undertakings_kept' if chosen_u['id'] == 'keep' else 'ai_undertakings_chosen'
+        world.metrics[key] = world.metrics.get(key, 0) + 1
     if action != ctx['baseline_action']:
         world.metrics['ai_changed_actions'] += 1
     return True, '计划已采用；心理变化经过限幅结算'
