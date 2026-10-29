@@ -20,6 +20,8 @@ from . import persona, temperament
 
 VERSION = 1
 PER_MONTH = 2
+PERSON_GAP = 3   # months before the same person comes again
+KIND_GAP = 6     # months before the same person comes for the same reason
 KINDS = {'ask_help': '登门求助', 'thanks': '登门道谢', 'invite': '相邀叙旧', 'confront': '上门寻衅',
          'warn': '好意示警', 'summon': '师父召见'}
 SYSTEM = '''你是武侠世界里的一个具体人物，此刻主动来找玩家。reason写明你来的真实缘由，choices是玩家可以作出的回应。
@@ -129,14 +131,16 @@ def monthly(w):
     if s['last_month'] == w.month:
         return []
     s['last_month'] = w.month
-    busy = {r['npc_id'] for r in pending(w)}
+    busy = {r['npc_id'] for r in pending(w)} | {r['npc_id'] for r in s['rows'] if w.month - r['month'] < PERSON_GAP}
+    recent_kinds = {(r['npc_id'], r['kind']) for r in s['rows'] if w.month - r['month'] < KIND_GAP}
     found = []
     for i in w.residents.get(h['place'], []):
         n = w.npcs.get(i)
         if not n or not n['alive'] or n['id'] in busy or str(n['id']) not in w.player['ties']:
             continue
         for row in reasons(w, n):
-            found.append((row[0], n['id'], n, row))
+            if (n['id'], row[1]) not in recent_kinds:
+                found.append((row[0], n['id'], n, row))
     made, seen = [], set()
     for priority, _, n, row in sorted(found, key=lambda x: (-x[0], x[1])):
         if len(made) >= PER_MONTH:

@@ -261,6 +261,15 @@ def apply_voice(w, ctx, result):
     return True, '口吻已定'
 
 
+def impression(w, n):
+    """Pure: this person's running view of the player, shown once the two are close enough to tell."""
+    r = w.player['ties'].get(str(n['id']), {})
+    close = r.get('affinity', 0) >= 40 or r.get('confidant') or r.get('sworn') or r.get('married')
+    text = (r.get('impression') or {}).get('text')
+    return dict(visible=bool(close and text), text=text if close else None,
+                hint=('尚未从往来中看出他怎么看你' if not text else '交情尚浅，看不透他心里怎么看你') if not (close and text) else '')
+
+
 def view(w, n):
     card = voice(w, n)
     phrases = '、'.join('「' + p + '」' for p in card['phrases'])

@@ -106,3 +106,48 @@ class PersonaTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class ImpressionTests(unittest.TestCase):
+    def setUp(self):
+        self.w = w = World(population=0, compact=True, durable=False)
+        self.addCleanup(w.store.close)
+        self.place = w.active_places[0]['id']
+        protagonist.perform(w, dict(action='create', name='沈行舟', sex='男', age=24, place=self.place,
+                                    month=w.month, revision=0))
+        self.n = n = w.make_npc(place=self.place)
+        n.update(age_months=360, wealth=40., health=100., faction=None, office=None, spouse=None)
+        w.set_goal(n, 'wealth', initial=True); w.reindex()
+
+    def react(self, impression):
+        from jianghu import player_interactions
+        since = self.w.store.next_id
+        player_interactions.perform(self.w, dict(npc_id=self.n['id'], action='praise',
+                                                 revision=self.w.player['protagonist']['revision'], month=self.w.month))
+        [ctx] = reactions.queue(self.w, since)
+        result = dict(attitude=ctx['attitudes'][0]['id'], reply='多谢夸奖。', thought='此人嘴甜。', impression=impression)
+        self.assertTrue(reactions.apply(self.w, ctx, result)[0])
+        return ctx
+
+    def test_each_reaction_updates_the_running_view_and_later_prompts_carry_it(self):
+        first = self.react('嘴甜的年轻人，不知根底')
+        self.assertIsNone(first['previous_impression'])
+        second = self.react('嘴甜，倒也真心')
+        self.assertEqual(second['previous_impression'], '嘴甜的年轻人，不知根底')
+        tie = self.w.player['ties'][str(self.n['id'])]
+        self.assertEqual(tie['impression']['text'], '嘴甜，倒也真心')
+        conv = player_social.start(self.w, self.n['id'], 'talk', '', player_social.state(self.w)['revision'])
+        self.assertEqual(conv['relationship']['impression']['text'], '嘴甜，倒也真心')
+        self.assertNotIn('impression', player_social.options_context(conv, dict(choice_id='refuse'), '不行')['relationship'])
+        ctx = ai.context_for(self.w, self.n)
+        self.assertEqual(ctx['player_contact']['relationship']['impression']['text'], '嘴甜，倒也真心')
+
+    def test_the_view_shows_only_once_close(self):
+        self.react('嘴甜的年轻人，不知根底')
+        hidden = persona.impression(self.w, self.n)
+        self.assertFalse(hidden['visible']); self.assertIsNone(hidden['text']); self.assertTrue(hidden['hint'])
+        self.w.player['ties'][str(self.n['id'])]['affinity'] = 45.
+        shown = persona.impression(self.w, self.n)
+        self.assertEqual((shown['visible'], shown['text']), (True, '嘴甜的年轻人，不知根底'))
+        self.assertFalse(reactions.valid(dict(attitudes=[dict(id='noted')], _name_guard=[]),
+                                         dict(attitude='noted', reply='好。', thought='嗯，好。', impression='ok')))
