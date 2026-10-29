@@ -113,6 +113,7 @@ public partial class JianghuApp {
         DrawRankProgress(Person["rank_progression"],false);
         Details("各业本领",Person["career_view"],true);Details("可学营生",Person["career_options"]);Details("旧业履历",Person["career"]);
         DrawTemperamentDetail(Person["temperament_view"],Person["goal_view"].Has?Person["goal_view"]:Person["goal"]);
+        if(Person["voice_view"].Has){H("说话");T(Person["voice_view"]["text"].S,small);if(Person["voice_view"]["source"].S=="规则")T("尚未与你深谈，口吻按身份与性情推定。",small);}
         DrawFame(Person["fame_view"]);
         Details("记忆与理解",Person["memories"]);
     }
