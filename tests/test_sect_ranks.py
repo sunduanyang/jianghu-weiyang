@@ -21,13 +21,13 @@ class SectRankTests(unittest.TestCase):
         w.set_goal(n, 'mastery', initial=True); w.reindex()
         return n
 
-    def test_fourteen_profiles_each_have_nine_distinct_titles(self):
-        self.assertEqual(len(FACTIONS), 14)
+    def test_eight_profiles_each_have_nine_distinct_titles(self):
+        self.assertEqual(len(FACTIONS), 8)
         for f in FACTIONS:
             self.assertEqual(len(f['ranks']), 9, f['name'])
             self.assertEqual(len(set(f['ranks'])), 9, f['name'])
-        self.assertEqual([FACTIONS[i]['ranks'][0] for i in (0, 1, 2, 12, 13)],
-                         ['掌门', '帮主', '方丈', '主祭', '大萨满'])
+        self.assertEqual([f['ranks'][0] for f in FACTIONS],
+                         ['方丈', '掌门', '掌门', '掌门', '帮主', '教主', '教主', '法王'])
 
     def test_every_grade_is_reachable_for_each_school_and_leader_is_first(self):
         w = self.w
@@ -65,12 +65,12 @@ class SectRankTests(unittest.TestCase):
             self.assertEqual(social_ranks.player_identity(w)['grade'], grade)
 
     def test_census_lists_empty_grades_and_counts_each_member_and_player_once(self):
-        w = self.w; f = w.factions[12]
-        leader = self.member(12); self.member(12); dead = self.member(12)
+        w = self.w; f = w.factions[7]
+        leader = self.member(7); self.member(7); dead = self.member(7)
         f['leader'] = leader['id']; w.die(dead, 'old_age')
-        h = w.player['protagonist']; h.update(created=True, faction=12, contribution=0.)
+        h = w.player['protagonist']; h.update(created=True, faction=7, contribution=0.)
         before = deepcopy(w.export()); events = w.store.count()
-        view = w.faction_detail(12); rows = view['rank_system']['grades']
+        view = w.faction_detail(7); rows = view['rank_system']['grades']
         self.assertEqual([row['grade'] for row in rows], list(range(1, 10)))
         self.assertEqual((rows[0]['population'], rows[8]['population']), (1, 2))
         self.assertEqual(sum(row['population'] for row in rows), view['members'])
@@ -99,7 +99,7 @@ class SectRankTests(unittest.TestCase):
         recruiter = self.member(contribution=35., skill=45.)
         player_interactions.perform(w, dict(action='join_sect', npc_id=recruiter['id'], revision=h['revision'], month=w.month))
         self.assertEqual(organizations.player_membership(w)['grade'], 9)
-        self.assertIn('九品记名弟子', w.store.event(h['records'][-1])['summary'])
+        self.assertIn('九品入寺弟子', w.store.event(h['records'][-1])['summary'])
         perform('sect_donate')
         self.assertEqual(organizations.player_membership(w)['grade'], 8)
 

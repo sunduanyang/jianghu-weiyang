@@ -12,11 +12,11 @@ class MartialManualTests(unittest.TestCase):
     def world(self):
         w = World(42, 0, durable=False)
         self.addCleanup(w.store.close)
-        protagonist.perform(w, dict(action='create', revision=0, month=0, name='习武人', sex='女', age=24, place=45))
+        protagonist.perform(w, dict(action='create', revision=0, month=0, name='习武人', sex='女', age=24, place=0))
         return w
 
     def teacher(self, w, school='shaolin'):
-        n = w.make_npc(place=45)
+        n = w.make_npc(place=0)
         n.update(age_months=360, health=100., time_left=4)
         n['traits'].update(integrity=80., kindness=80.)
         key = next(k for k in martial_catalog.SCHOOL_ARTS[school] if not items.knows(w, 'player', k))
@@ -29,7 +29,7 @@ class MartialManualTests(unittest.TestCase):
     def book(self, w, key, owner='player'):
         return items.create(w, owner, items.MANUAL_TEMPLATES[key], '测试秘籍')
 
-    def test_all_126_current_arts_have_matching_grade_and_description(self):
+    def test_all_current_arts_have_matching_grade_and_description(self):
         self.assertEqual(set(items.MANUAL_TEMPLATES), set(martial_catalog.ARTS))
         for key, template_id in items.MANUAL_TEMPLATES.items():
             d = items.CATALOG[template_id]
@@ -118,7 +118,7 @@ class MartialManualTests(unittest.TestCase):
 
     def test_invalid_requests_are_atomic(self):
         w = self.world(); teacher, key = self.teacher(w)
-        cases = [dict(art='missing'), dict(art=[]), dict(teacher=9999), dict(place=0), dict(alive=False),
+        cases = [dict(art='missing'), dict(art=[]), dict(teacher=9999), dict(place=1), dict(alive=False),
                  dict(points=1)]
         for case in cases:
             baseline = deepcopy(w.export())
@@ -134,7 +134,7 @@ class MartialManualTests(unittest.TestCase):
 
     def test_npc_seeks_then_autonomously_uses_the_received_manual(self):
         w = self.world(); teacher, key = self.teacher(w)
-        pupil = w.make_npc(place=45); pupil.update(age_months=300, health=100., wealth=80.)
+        pupil = w.make_npc(place=0); pupil.update(age_months=300, health=100., wealth=80.)
         w.set_goal(pupil, 'mastery', initial=True)
         w.link(pupil, teacher, 30, 30); w.reindex()
         choices = manuals.candidates(w, pupil, teacher)
@@ -158,7 +158,7 @@ class MartialManualTests(unittest.TestCase):
         w.items.pop('manual_catalog')
         rng = w.rng.getstate(); month = w.month; before = len(w.items['objects'])
         self.assertTrue(items.initialize(w, legacy=True))
-        self.assertEqual(len(w.items['objects']), before+126)
+        self.assertEqual(len(w.items['objects']), before+len(martial_catalog.ARTS))
         self.assertEqual(w.rng.getstate(), rng); self.assertEqual(w.month, month)
         self.assertIn(book['id'], w.items['objects'])
         self.assertFalse(items.initialize(w, legacy=True))

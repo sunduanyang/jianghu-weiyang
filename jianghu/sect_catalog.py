@@ -1,61 +1,69 @@
-"""The fourteen approved traditions; locations resolve in atlas, never in saves."""
+"""The eight sects of the jianghu: one per region, split into 正、中、邪 camps.
 
-VERSION = 1
+Names follow traditions the whole wuxia genre shares (or historical orders such as
+the Manichaean 明教) rather than devices owned by any single novel. Locations resolve
+in atlas, never in saves.
+"""
+
+VERSION = 2
+
+ALIGNMENTS = {'正': '正道', '中': '中立', '邪': '邪道'}
+
+# Standing feuds. 'bitter' pairs are open enemies; 'rival' pairs share a camp but
+# compete for the same leadership of the martial world.
+FEUDS = {
+    ('shaolin', 'mingjiao'): dict(kind='bitter', value=-30., note='佛门正统与“吃菜事魔”的明教势同水火'),
+    ('emei', 'wudu'): dict(kind='bitter', value=-30., note='川滇相邻，峨眉与五毒教争夺西南'),
+    ('huashan', 'mizong'): dict(kind='bitter', value=-30., note='关中是挡在河西密宗东进路上的门户'),
+    ('shaolin', 'wudang'): dict(kind='rival', value=-22., note='同为正道泰斗，暗中争夺武林盟主之位'),
+}
 
 
 def school(key, name, home, seat, ethos, tradition, ranks, duty, art, art_name,
-           prototype, basis, focus='mastery', public_axis='security'):
+           prototype, basis, alignment, weight, focus='mastery', public_axis='security'):
     if len(ranks) != 9 or len(set(ranks)) != 9:
         raise ValueError(name+'须提供一至九品的九个不同称谓')
+    if alignment not in ALIGNMENTS:
+        raise ValueError(name+'须属正、中、邪之一')
     return dict(key=key, name=name, home=home, seat_name=seat, ethos=ethos,
                 tradition=tradition, ranks=ranks, duty=duty, art_id=art,
                 art=art_name, prototype=prototype, basis=basis, focus=focus,
-                public_axis=public_axis, kind='sect')
+                public_axis=public_axis, alignment=alignment,
+                alignment_label=ALIGNMENTS[alignment], weight=weight, kind='sect')
 
 
 SCHOOLS = [
-    school('wudang', '武当派', '武当山', '武当山门', '以柔克刚，清修济世', '道门',
-           ['掌门', '护法长老', '长老', '堂主', '执事', '真传弟子', '内门弟子', '外门弟子', '记名弟子'], '巡山护民', 'wudang_sword', '武当剑法',
-           'river_sword', '武侠小说中的武当传承；采用跨时代江湖设定。'),
-    school('beggars', '丐帮', '江陵府', '君山总舵', '扶危济困，四海同心', '帮会',
-           ['帮主', '传功长老', '执法长老', '总舵主', '分舵主', '七袋弟子', '五袋弟子', '三袋弟子', '一袋弟子'], '赈济行旅', 'beggar_staff', '打狗棒法',
-           'reed_cut', '《射雕英雄传》《神雕侠侣》；君山归入江陵府区域。', 'belonging'),
-    school('shaolin', '少林寺', '嵩山', '少林寺山门', '禅武合一，护持众生', '佛门',
+    school('shaolin', '少林寺', '洛阳', '嵩山少林寺', '禅武合一，护持众生', '佛门',
            ['方丈', '护法首座', '堂院首座', '监院', '执事', '亲传弟子', '内院弟子', '外院弟子', '入寺弟子'], '护寺济民', 'shaolin_fist', '罗汉拳',
-           'bridge_fist', '历史寺院与武侠小说中的禅武传统。'),
-    school('quanzhen', '全真教', '京兆府', '终南山道院', '清静修真，守正济世', '道门',
-           ['掌教', '护法真人', '长老', '院主', '执事', '真传弟子', '入室弟子', '道院弟子', '记名弟子'], '护送香客', 'quanzhen_sword', '全真剑法',
-           'reed_cut', '历史全真教与《射雕英雄传》；终南驻地为游戏安排。'),
-    school('yipin', '一品堂', '兴庆府', '一品堂武馆', '兼收诸艺，奉约护国', '武人集团',
-           ['堂主', '大供奉', '供奉', '统领', '执事', '亲卫武士', '内堂武士', '外堂武士', '入堂武士'], '巡城护卫', 'yipin_palm', '一品擒拿手',
-           'wave_palm', '《天龙八部》中的西夏武人组织；传授招式为游戏创作。'),
-    school('tianshan', '天山派', '阿力麻里', '天山剑庐', '冰雪砺剑，行侠西域', '剑派',
-           ['掌门', '护法长老', '长老', '堂主', '执事', '真传弟子', '内门弟子', '外门弟子', '记名弟子'], '护送山道行旅', 'tianshan_sword', '天山剑法',
-           'river_sword', '梁羽生天山系列小说；采用跨时代江湖设定。'),
-    school('dalun', '大轮寺', '逻些', '大轮寺', '精研武学，护寺守信', '佛门',
-           ['住持', '护法上师', '上师', '经堂首座', '执事', '亲传弟子', '经堂弟子', '护寺弟子', '入寺弟子'], '护寺巡行', 'dalun_palm', '大轮掌',
-           'wave_palm', '《天龙八部》中的寺院；逻些选址与招式为游戏改编。'),
-    school('tianlong', '天龙寺', '大理城', '天龙寺', '礼佛修身，护持乡邦', '佛门',
-           ['住持', '护法长老', '长老', '堂院首座', '执事', '亲传弟子', '内院弟子', '护寺弟子', '入寺弟子'], '护送乡民', 'tianlong_finger', '一阳指',
-           'wave_palm', '《天龙八部》中的大理天龙寺及段氏武学。'),
-    school('bezeklik', '柏孜克里克寺', '高昌城', '柏孜克里克寺院', '护持经藏，善待行旅', '佛门',
-           ['住持', '大经师', '经师', '经堂首座', '执事', '传经弟子', '习经弟子', '护经弟子', '入寺弟子'], '护经济旅', 'bezeklik_staff', '护经杖法',
-           'reed_cut', '取材于高昌回鹘王家寺院；武学和组织玩法为游戏创作。'),
-    school('kereit', '克烈武帐', '土兀剌河营地', '克烈传武帐', '守望部众，重诺善射', '部族武帐',
-           ['帐主', '首席教头', '教头', '统骑', '领骑', '亲帐武士', '精锐武士', '随帐武士', '入帐武士'], '巡牧护旅', 'kereit_bow', '克烈弓术',
-           'river_sword', '取材于克烈部与草原骑射传统；武帐名称和制度为游戏创作。'),
-    school('dobang', '都房', '开京', '都房武馆', '砺武守约，护卫同袍', '武人集团',
-           ['统领', '副统领', '大教头', '队正', '执事', '亲卫武士', '内房武士', '外房武士', '入房武士'], '巡城护卫', 'dobang_blade', '都房刀术',
-           'reed_cut', '取材于高丽武臣私兵组织都房；改编为可加入的武人集团。'),
-    school('kurama', '鞍马寺', '平安京', '鞍马山寺', '山中习武，守护行旅', '佛门',
-           ['住持', '护法首座', '兵法教头', '监院', '执事', '传法僧兵', '内院僧兵', '护寺僧兵', '入寺僧兵'], '巡山护寺', 'kurama_blade', '鞍马刀术',
-           'reed_cut', '取材于鞍马寺僧兵与源义经传说；武学体系为游戏改编。'),
-    school('haidong', '海东祖灵社', '海东聚落', '祖灵公廨', '敬奉祖灵，守护社众', '祖灵信仰',
-           ['主祭', '大祭司', '祭司', '护社统领', '护社长', '传祭人', '习祭人', '护社人', '入社人'], '采药济社', 'haidong_spear', '护社矛术',
-           'river_sword', '参考台湾西南部分族群的祖灵与祭司传统；名称、制度为原创，非1200年同名组织实证。',
-           'belonging', 'sanitation'),
-    school('heishui', '黑水萨满坛', '黑水营地', '黑水神林祭场', '敬畏山川，传承神歌', '萨满信仰',
-           ['大萨满', '传承萨满', '萨满', '护坛统领', '守坛长', '传歌人', '习祭人', '守坛人', '入坛人'], '采药护林', 'heishui_knife', '林海猎刀',
-           'bridge_fist', '参考北方森林族群的自然与祖先崇拜；名称、制度为原创，非1200年同名组织实证。',
-           'belonging', 'sanitation'),
+           'bridge_fist', '嵩山少林寺为历史寺院；禅武传统为武侠通行设定，组织玩法为游戏设计。', '正', 1.6),
+    school('huashan', '华山派', '长安', '华山剑庐', '剑走险峰，守正不阿', '剑派',
+           ['掌门', '护法长老', '长老', '堂主', '执事', '真传弟子', '内门弟子', '外门弟子', '记名弟子'], '护送山道行旅', 'huashan_sword', '华山剑法',
+           'river_sword', '华山为道教名山；华山派为武侠通行门派，剑法名目为游戏设计。', '正', 1.3),
+    school('wudang', '武当派', '襄阳', '武当山门', '以柔克刚，清修济世', '道门',
+           ['掌门', '护法长老', '长老', '堂主', '执事', '真传弟子', '内门弟子', '外门弟子', '记名弟子'], '巡山护民', 'wudang_sword', '武当剑法',
+           'river_sword', '武当山为道教名山；武当派为武侠通行门派，归入襄阳一带为游戏安排。', '正', 1.4),
+    school('emei', '峨眉派', '成都', '峨眉金顶', '佛道兼修，济弱扶倾', '佛门',
+           ['掌门', '护法师太', '长老', '首座', '执事', '亲传弟子', '入室弟子', '俗家弟子', '记名弟子'], '护送香客', 'emei_needle', '峨眉刺法',
+           'reed_cut', '峨眉山为佛教名山；峨眉派为武侠通行门派，峨眉刺为传统短兵。', '正', 1.2),
+    school('beggars', '丐帮', '苏州', '丐帮总舵', '扶危济困，四海同心', '帮会',
+           ['帮主', '传功长老', '执法长老', '总舵主', '分舵主', '七袋弟子', '五袋弟子', '三袋弟子', '一袋弟子'], '赈济行旅', 'beggar_staff', '打狗棒法',
+           'reed_cut', '乞丐帮会为武侠通行设定；总舵设在江南为游戏安排。', '中', 1.8, 'belonging'),
+    school('wudu', '五毒教', '大理', '五毒教坛', '以毒御敌，护佑苗寨', '巫蛊',
+           ['教主', '护法', '长老', '坛主', '香主', '圣使', '内坛弟子', '外坛弟子', '入教弟子'], '采药护寨', 'wudu_palm', '五毒神掌',
+           'wave_palm', '取材于西南苗疆的蛊毒传说与武侠通行的五毒教；名称、制度为游戏设计。', '邪', 1.0,
+           'mastery', 'sanitation'),
+    school('mingjiao', '明教', '泉州', '草庵明尊殿', '明尊在上，患难相恤', '明教',
+           ['教主', '拂多诞', '法堂主', '坛主', '香主', '护法使者', '明使', '听者', '入教听者'], '护送教众', 'mingjiao_blade', '明尊弯刀',
+           'reed_cut', '取材于历史上的摩尼教（明教）；泉州草庵是现存摩尼教遗迹，拂多诞、法堂主、听者为摩尼教旧称，武学为游戏设计。', '邪', 1.2,
+           'belonging'),
+    school('mizong', '西域密宗', '凉州', '凉州白塔寺', '密法修身，降伏外道', '密宗',
+           ['法王', '大上师', '上师', '经堂首座', '执事', '亲传弟子', '经堂弟子', '护法弟子', '入寺弟子'], '护寺巡行', 'mizong_palm', '大手印',
+           'wave_palm', '取材于西夏以来盛行河西的藏传密教，凉州白塔寺为历史寺院；武学与组织为游戏设计。', '邪', 0.9),
 ]
+
+KEYS = [s['key'] for s in SCHOOLS]
+
+
+def feud(a, b):
+    """The standing feud between two sect keys, or None."""
+    return FEUDS.get((a, b)) or FEUDS.get((b, a))

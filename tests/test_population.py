@@ -47,15 +47,15 @@ class PopulationTests(unittest.TestCase):
                 self.assertEqual(w.city_positions[str(n['id'])]['node'], f"faction_{f['id']}")
                 self.assertEqual(n['identity']['system'], 'sect')
         sizes = {f['name']: sum(n['faction'] == f['id'] for n in w.npcs.values()) for f in w.factions}
-        self.assertGreater(sizes['丐帮'], sizes['黑水萨满坛'])
+        self.assertGreater(sizes['丐帮'], sizes['西域密宗'])
 
     def test_geography_livelihood_gates_and_initial_guardians(self):
         w = self.w
         for p in w.active_places:
             self.assertGreater(len(w.residents[p['id']]), 0)
-        self.assertGreater(len(w.residents[45]), len(w.residents[118]))
-        self.assertGreater(population.job_weights(61)['渔人'], population.job_weights(101)['渔人'])
-        self.assertGreater(population.job_weights(101)['猎户'], population.job_weights(61)['猎户'])
+        self.assertGreater(len(w.residents[0]), len(w.residents[7]))  # 洛阳 is larger than 凉州
+        self.assertGreater(population.job_weights(6)['渔人'], population.job_weights(7)['渔人'])
+        self.assertGreater(population.job_weights(7)['猎户'], population.job_weights(6)['猎户'])
         for n in w.npcs.values():
             self.assertEqual(n['birth_month'], w.month - n['age_months'])
             if n['age_months'] < 192:

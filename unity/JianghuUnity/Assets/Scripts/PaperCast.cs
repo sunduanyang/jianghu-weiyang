@@ -42,10 +42,10 @@ public partial class JianghuApp {
         if(age>=60)return prefix+"elder";
         string job=person["job"].S,identity=person["identity"]["title"].S,faction="";
         if(person["faction"].Has)faction=W["factions"].A.FirstOrDefault(f=>f["id"].I==person["faction"].I)?["name"].S??"";
-        if(prefix=="m-"&&(faction.Contains("少林")||faction.Contains("僧")))return "m-monk";
-        if(prefix=="m-"&&(faction.Contains("武当")||faction.Contains("全真")||faction.Contains("道")))return "m-daoist";
+        if(prefix=="m-"&&(faction.Contains("少林")||faction.Contains("密宗")||faction.Contains("僧")))return "m-monk";
+        if(prefix=="m-"&&(faction.Contains("武当")||faction.Contains("华山")||faction.Contains("道")))return "m-daoist";
         if(prefix=="m-"&&faction.Contains("丐"))return "m-beggar";
-        if(identity.Contains("县令")||identity.Contains("长官")||identity.Contains("太守")||identity.Contains("官员"))return prefix=="m-"?"m-official":"f-scholar";
+        if(identity.Contains("县令")||identity.Contains("知府")||identity.Contains("通判")||identity.Contains("长官")||identity.Contains("太守")||identity.Contains("官员"))return prefix=="m-"?"m-official":"f-scholar";
         if(job.Contains("商"))return prefix+"merchant";
         if(job.Contains("书")||job.Contains("学"))return prefix+"scholar";
         if(job.Contains("镖"))return prefix+"escort";

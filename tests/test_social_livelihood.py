@@ -268,7 +268,7 @@ class SocialLivelihoodTests(unittest.TestCase):
 
     def test_accounts_survive_large_map_consolidation(self):
         w = self.world()
-        for i, amount in ((0, 7), (15, 4), (80, 11)):
+        for i, amount in ((0, 7), (3, 4), (7, 11)):
             self.bank(w, i).update(fund=amount, revenue=amount)
         total = sum(c['fund'] for c in w.society['communities'].values())
         w.settlements = settlements.profile()

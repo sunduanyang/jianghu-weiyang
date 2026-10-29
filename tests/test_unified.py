@@ -25,7 +25,7 @@ class UnifiedTests(unittest.TestCase):
             for job in careers.PROFESSIONS:
                 self.assertGreater(careers.income(n, profession=job), 0)
                 self.assertIsInstance(careers.entry_blockers(w, n, job), list)
-        self.assertGreaterEqual(len(PLACES), 150)
+        self.assertEqual(len(PLACES), 8)
 
     def test_item_actions_consume_week_and_enter_the_same_itinerary(self):
         w = self.world()
@@ -43,7 +43,7 @@ class UnifiedTests(unittest.TestCase):
     def test_regional_official_corruption_uses_own_treasury(self):
         w = self.world()
         n = w.npcs[1]
-        n.update(age_months=360, place=14, office='主簿', office_country=1, wealth=60.)
+        n.update(age_months=360, place=1, office='主簿', office_country=1, wealth=60.)
         w.reindex()
         local, song = w.governments[1], w.governments[0]
         local['offices']['主簿'] = 1

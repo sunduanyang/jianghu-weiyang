@@ -159,10 +159,10 @@ class SocietyTests(unittest.TestCase):
 
     def test_progression_requires_both_merit_and_skill_and_has_a_cause(self):
         w = self.world()
-        n = self.adult(w, faction=0, contribution=10.5, skill=25.)
-        other = self.adult(w, faction=0, contribution=50.)
-        w.factions[0]['leader'] = other['id']
-        e = self.action(w, n, 'duty', 0)
+        n = self.adult(w, faction=2, contribution=10.5, skill=25.)  # 武当派
+        other = self.adult(w, faction=2, contribution=50.)
+        w.factions[2]['leader'] = other['id']
+        e = self.action(w, n, 'duty', 2)
         self.assertEqual(organizations.rank(w, n)['title'], '执事')
         rank_event = next(x for x in w.store.history(n['id']) if x['kind'] == 'faction_rank')
         self.assertIn(e['id'], rank_event['causes'])
@@ -221,21 +221,6 @@ class SocietyTests(unittest.TestCase):
             government.annual(w, g)
         self.assertEqual(g['policy'], 'security')
         self.assertEqual(g['tax_rate'], .11)
-
-    def test_real_border_activity_supports_trade_and_is_symmetric(self):
-        w = self.world()
-        a = next(c['id'] for c in w.countries if c['relations'])
-        b = int(next(iter(w.countries[a]['relations'])))
-        w.countries[a]['relations'][str(b)] = w.countries[b]['relations'][str(a)] = '中立'
-        for _ in range(8):
-            politics.record_crossing(w, {'origin_country': a, 'destination_country': b, 'toll': 5})
-        self.assertEqual(w.countries[b]['border_activity'][str(a)]['tariffs'], 40)
-        with patch.object(w.rng, 'random', return_value=0), patch.object(w.rng, 'choice', return_value=(a, b)):
-            politics.annual(w)
-        self.assertEqual(w.countries[a]['relations'][str(b)], '通商')
-        self.assertEqual(w.countries[b]['relations'][str(a)], '通商')
-        self.assertEqual(w.countries[a]['border_activity'], {})
-        self.assertEqual(w.countries[a]['last_year_borders'][str(b)]['crossings'], 8)
 
     def test_player_visits_repeat_and_ties_remain_bounded(self):
         w = self.world()

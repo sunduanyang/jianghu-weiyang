@@ -1,13 +1,18 @@
-"""Rebuild the bundled map; network is used only by this authoring script."""
+"""Rebuild the bundled map; network is used only by this authoring script.
+
+    python scripts/build_map.py --reuse-coast   # keep the stored coastline, re-projecting it if needed
+"""
 import hashlib
 import json
+import re
 from pathlib import Path
 import sys
 import urllib.request
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from jianghu.atlas import COUNTRIES, PLACES, MAP_VERSION, MAP_BOUNDS, project
-from jianghu.historical_map import ERA, TERRITORIES, SONG_JIN_FRONTIER, REGIONS, RIVERS
+from jianghu.atlas import (COUNTRIES, PLACES, MAP_VERSION, MAP_BOUNDS, PROJECTION, LEGACY_PROJECTION,
+                           project, unproject)
+from jianghu.historical_map import ERA, TERRITORIES, REGIONS, RIVERS
 
 URL = 'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_land.geojson'
 
@@ -46,7 +51,7 @@ def build(raw):
                 points = simplify(ring, .016)
                 if len(points) >= 4:
                     land.append(path(points))
-    return {**political_layers(),
+    return {**political_layers(), 'projection': PROJECTION,
             'coastline_source': URL, 'coastline_sha256': hashlib.sha256(raw).hexdigest(),
             'coastline_license': 'Natural Earth public domain', 'land': ' '.join(land)}
 
@@ -74,25 +79,38 @@ def political_layers(places=PLACES):
     for p in places:
         cell = [(-80, -70), (1320, -70), (1320, 830), (-80, 830)]
         for q in places:
-            if p['id'] == q['id'] or p['country'] != q['country']:
+            if p['id'] == q['id']:
                 continue
             a, b = 2*(q['x']-p['x']), 2*(q['y']-p['y'])
             c = q['x']**2+q['y']**2-p['x']**2-p['y']**2
             cell = clip_halfplane(cell, a, b, c)
         cells.append({'place': p['id'], 'native_country': p['country'],
                       'path': 'M'+' L'.join(f'{x:.2f},{y:.2f}' for x, y in cell)+' Z'})
-    return {'map_version': MAP_VERSION, 'era': ERA,
-            'note': '初始范围概略参考1200年；城镇辖区按邻近地点划分，仅为占领玩法的示意单元。',
+    return {'map_version': MAP_VERSION, 'era': ERA, 'projection': PROJECTION,
+            'note': '八个地区按邻近城池划分，范围为示意，并非历史疆界。',
             'viewBox': MAP_BOUNDS, 'cells': cells,
             'territories': territories, 'regions': regions,
-            'frontier': path(SONG_JIN_FRONTIER, False),
             'rivers': [{'name': name, 'path': path(points, False)} for name, points in RIVERS]}
+
+
+def reproject_path(svg, old, new=PROJECTION):
+    """Re-project a stored coastline path from one linear projection to another."""
+    def point(match):
+        x, y = float(match.group(1)), float(match.group(2))
+        nx, ny = project(*unproject(x, y, old), new)
+        return f'{nx},{ny}'
+    return re.sub(r'(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)', point, svg)
 
 
 if __name__ == '__main__':
     target = Path(__file__).resolve().parents[1]/'art'/'world-map'/'geography.json'
     if '--reuse-coast' in sys.argv:
-        data = {**json.loads(target.read_text(encoding='utf-8')), **political_layers()}
+        stored = json.loads(target.read_text(encoding='utf-8'))
+        old = stored.get('projection', LEGACY_PROJECTION)
+        if old != PROJECTION:
+            stored['land'] = reproject_path(stored['land'], old)
+        stored.pop('frontier', None)
+        data = {**stored, **political_layers()}
     else:
         local = Path(sys.argv[1]) if len(sys.argv) > 1 else None
         raw = local.read_bytes() if local else urllib.request.urlopen(URL, timeout=30).read()

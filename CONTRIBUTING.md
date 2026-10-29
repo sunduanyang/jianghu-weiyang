@@ -40,6 +40,14 @@ python unity/bake_paper_cast.py
 python unity/bake_appearance_masks.py
 ```
 
+修改地区、城池、驿道或地图投影（`jianghu/atlas.py`、`jianghu/historical_map.py`）后，依次运行：
+
+```powershell
+python scripts/build_map.py --reuse-coast   # 沿用海岸线，投影变化时自动换算
+python scripts/build_compact_map.py         # 地区划分与驿道
+python unity/prepare.py --map-only          # 同步后端并重绘天下地图与地区底色
+```
+
 城中舆图与长卷的建筑、绢底和节点标记由 `python unity/bake_scroll.py` 生成。只调整界面纹理或舆图画法时，运行 `python unity/bake_ui.py` 即可（`--ui-only` 只重做界面纹理）；重建内置字体子集用 `python unity/build_fonts.py`。
 
 战斗改进必须应用于正式游戏的切磋、抢夺和袭击，共用 `unity/JianghuUnity/Assets/Scripts/PhysicsCombat/`，不得只交付独立试玩。发布前使用普通游戏客户端和独立验收存档，从人物交互实际进入上述战斗，验证新机制、保存、返回和结算，再更新 `unity/Build/active-build.txt`。独立物理试玩通过正式启动器传入 `-referenceCombat 1` 打开，与正式游戏使用同一成品；`demos/PhysicsDuelUnity/` 仅保留历史原型。

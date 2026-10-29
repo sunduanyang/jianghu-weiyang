@@ -1,5 +1,5 @@
 from . import combat_attributes, fame
-"""Separate territorial governments with real people, balanced treasuries and evidence-based cases."""
+"""One 府衙 per region with real people, balanced treasuries and evidence-based cases."""
 from .demography import infect
 from . import social
 from .atlas import PLACES, COUNTRIES
@@ -244,11 +244,11 @@ def annual(w, g=None):
         poor = sum(n['wealth'] < 10 for n in residents) / max(1, population)
         patients = sum(bool(n['illness']) or n['health'] < 55 for n in residents) / max(1, population)
         if patients >= .2:
-            policy, reason = 'health', f'本国病弱占比{patients:.0%}，增拨公医'
+            policy, reason = 'health', f'本地病弱占比{patients:.0%}，增拨公医'
         elif poor >= .3:
-            policy, reason = 'relief', f'本国家资不足10银者占{poor:.0%}，减赋济困'
+            policy, reason = 'relief', f'本地家资不足10银者占{poor:.0%}，减赋济困'
         elif g['security'] < .4:
-            policy, reason = 'security', '本国治安低于40，增拨巡防'
+            policy, reason = 'security', '本地治安低于40，增拨巡防'
         else:
             policy, reason = 'balanced', '民生与治安未达紧急阈值，兼顾巡防公医'
         previous = g['policy']
@@ -292,7 +292,7 @@ def report(w, n, crime_event, extra=None):
     if not crime or crime['kind'] not in social.CRIMES or crime['facts'].get('victim') != n['id']:
         raise ValueError('没有此人实际掌握的受害证据')
     if any(c['crime_event'] == crime_event for court in w.governments for c in court['cases']):
-        raise ValueError('该证据已经立案，不能跨国重复报案')
+        raise ValueError('该证据已经立案，不能在别处府衙重复报案')
     e = w.emit('crime_report', [n['id']], f"{n['name']}携已知的侵吞证据向{g['name']}报案。", .75,
                [crime_event], {'crime_event': crime_event, 'offender': crime['facts']['offender'], **(extra or {})})
     g['cases'].append({'crime_event': crime_event, 'report_event': e['id'], 'month': w.month,

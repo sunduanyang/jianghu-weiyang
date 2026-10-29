@@ -10,10 +10,11 @@ import math
 
 from . import careers, martial, sect_ranks, social_ranks
 from .atlas import PLACES
+from .sect_catalog import SCHOOLS
 
-VERSION = 1
+VERSION = 2
 SECT_SHARE = .28
-SCHOOL_WEIGHTS = (1.2, 1.8, 1.6, 1.3, 1.1, 1., .95, 1., .8, 1.05, 1., .95, .75, .75)
+SCHOOL_WEIGHTS = {s['key']: s['weight'] for s in SCHOOLS}
 GRADE_WEIGHTS = (0, 1, 2, 3, 4, 5, 7, 9, 11)
 AGES = {1: (42, 64), 2: (36, 60), 3: (31, 54), 4: (27, 48),
         5: (23, 44), 6: (20, 38), 7: (18, 32), 8: (16, 27), 9: (12, 24)}
@@ -62,13 +63,15 @@ def job_weights(place):
     weights = {'农人': 40, '行商': 9, '药师': 3, '匠人': 13, '镖师': 3,
                '渔人': 5, '猎户': 5, '书生': 4, '艺人': 4, '短工': 6}
     if p['kind'] in ('port', 'island'):
-        weights.update(渔人=32, 行商=22, 农人=18, 猎户=1)
-    elif p['country'] in (2, 5, 9):
-        weights.update(猎户=28, 农人=23, 渔人=1, 行商=8)
-    elif p['country'] in (3, 4, 7):
-        weights.update(行商=25, 镖师=12, 渔人=0, 猎户=8)
-    elif p['country'] in (0, 6, 8, 10, 11):
-        weights['渔人'] = 14
+        weights.update(渔人=26, 行商=22, 农人=22, 猎户=1)
+    elif p['name'] == '苏州':
+        weights.update(渔人=16, 匠人=20, 行商=14)
+    elif p['name'] == '凉州':
+        weights.update(行商=24, 镖师=12, 渔人=0, 猎户=10)
+    elif p['name'] == '大理':
+        weights.update(猎户=18, 药师=8, 渔人=8)
+    elif p['name'] in ('成都', '襄阳'):
+        weights['渔人'] = 10
     if p['kind'] == 'capital':
         weights['书生'] += 8
         weights['匠人'] += 6
@@ -153,7 +156,7 @@ def seed(w, total):
         raise ValueError('人数不能为负')
     sites = w.active_places
     sect_total = round(total * SECT_SHARE)
-    quotas = apportion(sect_total, SCHOOL_WEIGHTS,
+    quotas = apportion(sect_total, [SCHOOL_WEIGHTS[f['key']] for f in w.factions],
                        [9 if sect_total >= 9 * len(w.factions) else 0] * len(w.factions))
     for f, count in zip(w.factions, quotas):
         school(w, f, count)
@@ -173,12 +176,12 @@ def seed(w, total):
                      ('艺人', 23, None), ('短工', 25, None),
                      (None, 36, None), (None, 40, None), (None, 8, None), (None, 13, None)]
         if hub == capitals[p['country']] and count >= 17:
-            tribal = w.countries[p['country']]['kind'] == '诸部'
-            specs += [('书生', 48, '部族首领' if tribal else '王侯' if p['country'] == 11 else '国主'),
-                      ('书生', 43, '公卿' if tribal else '宰相'), ('镖师', 41, '大将军'),
+            # The local 府衙's senior posts and the city's leading households.
+            specs += [('书生', 48, '知府'), ('书生', 43, '通判'), ('镖师', 41, '兵马都监'),
                       ('书生', 35, '世家家主'), ('行商', 38, '豪商')]
-        elif count >= 30 and p['kind'] in ('city', 'port'):
-            specs.append(('行商', 38, '豪商'))
+        # A large city has more than one gentry family and merchant house.
+        for extra in range(max(0, count - 60) // 50):
+            specs += [('书生', 33 + extra % 9, '乡绅'), ('行商', 34 + extra % 7, '豪商')]
         for job, years, title in specs:
             civil(w, hub, job, years, title)
         for _ in range(count - len(specs)):

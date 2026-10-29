@@ -202,6 +202,60 @@ class SectLifeTests(unittest.TestCase):
         self.assertEqual(self.w.player['wealth'], wealth+5)
         self.assertEqual(self.w.player['reputation'], reputation+3)
 
+    # ----------------------------------------------------------- 正邪
+    def test_camps_and_standing_feuds_set_the_opening_relations(self):
+        key = {f['key']: f['id'] for f in self.w.factions}
+        rel = lambda a, b: sect_life.relation(self.w, key[a], key[b])
+        self.assertEqual(rel('shaolin', 'mingjiao'), rel('mingjiao', 'shaolin'))
+        self.assertEqual(sect_life.relation_label(rel('shaolin', 'mingjiao')), '交恶')      # 宿敌
+        self.assertEqual(sect_life.relation_label(rel('emei', 'wudu')), '交恶')
+        self.assertEqual(sect_life.relation_label(rel('huashan', 'mizong')), '交恶')
+        self.assertEqual(sect_life.relation_label(rel('wudang', 'mingjiao')), '嫌隙')       # 正邪不两立
+        self.assertEqual(sect_life.relation_label(rel('huashan', 'emei')), '和睦')          # 同属正道
+        self.assertLess(rel('shaolin', 'wudang'), rel('huashan', 'wudang'))                 # 争夺盟主
+        self.assertGreater(rel('beggars', 'shaolin'), rel('beggars', 'wudu'))               # 中立偏正
+        view = {r['name']: r for r in sect_life.relations_view(self.w, self.f)}
+        self.assertEqual((view['明教']['feud'], view['明教']['alignment']), ('宿敌', '邪'))
+        self.assertEqual(view['武当派']['feud'], '争雄')
+        self.assertNotIn('feud', view['华山派'])
+
+    def test_feud_commission_is_a_real_battle_against_a_sworn_enemy(self):
+        mingjiao = next(f for f in self.w.factions if f['key'] == 'mingjiao')
+        friend = next(f for f in self.w.factions if f['key'] == 'huashan')
+        self.npc(faction=friend['id'])                     # same camp: never a target
+        foe = self.npc(faction=mingjiao['id'])
+        self.enter_seat(); self.set_grade(7)
+        offers = [c for c in sect_life.board(self.w, self.f) if c['kind'] == 'feud']
+        self.assertEqual([(c['target'], c['other'], c['verb']) for c in offers], [(foe['id'], mingjiao['id'], '除魔')])
+        c = self.accept('feud')
+        before = sect_life.relation(self.w, self.f['id'], mingjiao['id'])
+        wealth, reputation = self.w.player['wealth'], self.w.player['reputation']
+        result = self.interact(foe, 'sect_errand')
+        self.assertIn('martial', result)
+        self.assertFalse(self.w.battle['spar']); self.assertEqual(self.w.battle['encounter'], 'sect_feud')
+        self.reload(); foe = self.w.npcs[foe['id']]
+        self.finish(0)
+        self.assertFalse(sect_life.state(self.w)['commissions'])
+        self.assertEqual(self.w.player['wealth'], wealth+4)
+        self.assertEqual(self.w.player['reputation'], reputation+2)
+        self.assertEqual(sect_life.relation(self.w, self.f['id'], mingjiao['id']), before-3)
+        self.assertTrue(any(e['kind'] == 'player_sect_feud_result' for e in self.w.store.history(foe['id'])))
+
+    def test_npcs_of_sworn_enemy_sects_may_seek_each_other_out(self):
+        mingjiao = next(f for f in self.w.factions if f['key'] == 'mingjiao')
+        a = self.npc(faction=self.f['id']); b = self.npc(faction=mingjiao['id'])
+        self.w.link(a, b, 1, 0); self.w.link(b, a, 1, 0)
+        duel = next(x for x in self.w.legal_actions(a) if x['id'] == f"duel:{b['id']}")
+        self.assertTrue(duel['feud'])
+        before = sect_life.relation(self.w, self.f['id'], mingjiao['id'])
+        e = self.w.execute(a, duel)
+        self.assertTrue(e['facts']['feud'])
+        self.assertEqual(e['facts']['factions'], [self.f['id'], mingjiao['id']])
+        self.assertEqual(sect_life.relation(self.w, self.f['id'], mingjiao['id']), before-.5)
+        ally = self.npc(faction=next(f for f in self.w.factions if f['key'] == 'huashan')['id'])
+        self.w.link(a, ally, 1, 0)
+        self.assertFalse(any(x['id'] == f"duel:{ally['id']}" for x in self.w.legal_actions(a)))
+
     def test_expired_and_abandoned_commissions_cost_contribution(self):
         self.h['contribution'] = 5.
         self.enter_seat(); self.accept('patrol'); self.accept('escort')

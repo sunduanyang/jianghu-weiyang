@@ -50,7 +50,7 @@ public class SettlementLayoutSmoke : MonoBehaviour {
             if(tier=="prosperous")prosperousTotal++;
             if(!examples.ContainsKey(tier)||tier=="prosperous"&&sects.Count>0)examples[tier]=place["id"].I;
         }
-        Check("49 regions remain",client.World["locations"].A.Count==49);
+        Check("8 regions remain",client.World["locations"].A.Count==8);
         int expectedTotal=client.World["locations"].A.Count*2+prosperousTotal;
         Check("registered layout tiers determine the total; 14 sects retained",ordinaryTotal==expectedTotal&&sectTotal==14,J.O("ordinary",ordinaryTotal,"expected",expectedTotal,"sects",sectTotal));
         Check("all living people visible once",people.Count==client.World["population"].I);

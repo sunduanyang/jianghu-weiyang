@@ -77,23 +77,14 @@ def _building_footprints(rows, nodes):
 
 
 def theme_for(p):
-    if p['country'] == 2:
-        return 'steppe'
-    if p['country'] == 9:
-        return 'forest'
-    if p['country'] == 8:
-        return 'island'
+    """Fallback theme for a place without an authored plan (every regional city has one)."""
     if p['kind'] == 'mountain':
         return 'mountain'
     if p['kind'] == 'port':
         return 'port'
-    if p['country'] in (3, 4, 7):
+    if p['name'] == '凉州':
         return 'oasis'
-    if p['country'] == 5:
-        return 'highland'
-    if p['country'] == 11:
-        return 'mountain' if p['name'] == '松本' else 'town'
-    if p['country'] == 0 and p['lat'] < 32:
+    if p['lat'] < 32:
         return 'water'
     return 'capital' if p['kind'] == 'capital' else 'town'
 
@@ -279,8 +270,6 @@ def _layout(seed, place, version=VERSION, compact=False, settlement_tier='genera
                      for kind,name,hint in basic]
     for kind, name, hint in basic:
         if kind not in {n['id'] for n in nodes}:
-            if kind == 'government' and p['country'] in (2,8,9):
-                name = '乡部议事帐' if p['country'] != 8 else '聚落议事屋'
             add(kind, kind, name, hint)
     if 'garden' not in {n['id'] for n in nodes}:
         add('garden', 'garden', '郊野草场' if theme == 'steppe' else '城郊林圃', (1,1))
@@ -491,9 +480,7 @@ def view(w, place):
     for node in city['nodes']:
         node['residents'] = present[node['id']]
         if node['kind'] == 'government':
-            node['description'] = f"现由{owner['name']}管辖，公帑、任官和征税按此归属结算。"
-            if city['occupied']:
-                node['original_name'], node['name'] = node['name'], owner['name']+'驻署'
+            node['description'] = f"{owner['government_name']}所在，{owner['name']}的公帑、任官和征税在此结算。"
         route,cost=access[node['id']]
         node['path'], node['walk_cost'] = list(route),cost
     for town in city.get('settlements',[]):

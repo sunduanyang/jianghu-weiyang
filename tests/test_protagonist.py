@@ -65,15 +65,6 @@ class ProtagonistTests(unittest.TestCase):
         self.assertAlmostEqual(w.player['wealth'], silver-r['silver'])
         self.assertEqual(result['journal'][0]['facts']['origin'], h['place'])
 
-    def test_sea_routes_are_real_edges_with_additional_cost(self):
-        w = self.world()
-        sea = next(r for r in ROUTES if r['sea'])
-        h = self.create(w, place=sea['a'])
-        r = next(r for r in h['connections'] if r['place'] == sea['b'])
-        self.assertTrue(r['sea'])
-        self.assertGreaterEqual(r['points'], 13)
-        self.assertEqual(self.act(w, 'travel', place=sea['b'])['place'], sea['b'])
-
     def test_travel_rejects_non_neighbors_and_insufficient_points_but_needs_no_money(self):
         w = self.world()
         h = self.create(w)

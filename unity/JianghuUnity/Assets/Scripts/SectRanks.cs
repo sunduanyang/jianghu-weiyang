@@ -29,7 +29,8 @@ public partial class JianghuApp {
         T("违犯门规会被记过、扣有效贡献并暂停晋升半年；未请罪的过失累计"+(life["member"].B?life["player"]["expel_at"].S:"6")+"点即逐出门墙。",small);
         T("两派往来",sub);
         foreach(var r in life["relations"].A.Take(4).Concat(life["relations"].A.Skip(4).Where(x=>x["value"].N<=-10)))
-            Metric(r["name"].S,r["label"].S+" · "+Num(r["value"]));
+            Metric(r["name"].S+" · "+r["alignment_label"].S,r["label"].S+" · "+Num(r["value"])+(r["feud"].Has?" · "+r["feud"].S:""));
+        foreach(var r in life["relations"].A.Where(x=>x["feud"].Has))T(r["feud"].S+" · "+r["name"].S+"："+r["feud_note"].S,small);
         if(life["relations"].A.Count>4)Details("全部门派往来",life["relations"]);
     }
     void DrawSectDuties(J me){

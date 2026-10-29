@@ -8,7 +8,7 @@ import traceback
 from urllib.parse import parse_qs, urlparse
 
 from .ai import AIManager, DEFAULT_CONFIG, continuous_config, participation
-from .engine import World
+from .engine import World, LegacyWorldError
 from .store import Store
 from . import reactions, visits
 from . import crafts, items, equipment, territory, city_maps, government, protagonist, economics, rank_progression, llm_policy, npc_attention, player_social, player_interactions
@@ -30,7 +30,17 @@ class Game:
         if model_config is not None:config.update(model_config)
         config=continuous_config(config)
         self.ai = AIManager(config)
-        self.world = World(seed, population, Store(path), compact=True, population_profile=True, market_economy=True,rank_assessments=True)
+        self.legacy_save = None
+        try:
+            self.world = World(seed, population, Store(path), compact=True, population_profile=True, market_economy=True,rank_assessments=True)
+        except LegacyWorldError as error:
+            # The old file stays untouched; the eight-region jianghu starts in a new file beside it.
+            self.legacy_save = dict(path=str(self.path), map_version=error.version, message=str(error))
+            self.path = self.path.parent / f'world-{time.time_ns()}.sqlite'
+            (ROOT / 'data').mkdir(parents=True, exist_ok=True)
+            (ROOT / 'data' / 'active_world.txt').write_text(str(self.path), encoding='utf-8')
+            print(f'{error} 旧档：{self.legacy_save["path"]}；新世界：{self.path}', flush=True)
+            self.world = World(seed, population, Store(self.path), compact=True, population_profile=True, market_economy=True,rank_assessments=True)
         self.ai.restore_stats(self.world.store)
         if player_social.recover(self.world) | reactions.recover(self.world) | visits.recover(self.world):self.world.checkpoint()
         self.job = {'remaining': 0, 'total': 0, 'completed': 0, 'fast': True, 'label': '已暂停', 'error': ''}
@@ -95,7 +105,7 @@ class Game:
         self.ai.stats['policy_ranking_changes']=self.world.metrics.get('ai_policy_ranking_changes',0)
         self.ai.stats.update(participation(self.world))
         return {**self.world.summary(), 'ai': self.ai.view(), 'job': self.job.copy(),
-                'autoplay': self.autoplay, 'database': str(self.path),
+                'autoplay': self.autoplay, 'database': str(self.path), 'legacy_save': self.legacy_save,
                 'ai_budget_wait': False,
                 'world_events': self.world.store.history(limit=25, important=True)}
 
@@ -171,9 +181,6 @@ def handler_for(game):
                             data = game.state()
                         elif path == '/api/martial':
                             data = game.world.martial_view()
-                        elif path == '/api/campaign':
-                            target = int(query.get('place', ['-1'])[0])
-                            data = {'options': territory.attack_options(game.world, target)}
                         elif path == '/api/city':
                             data = city_maps.view(game.world, int(query.get('place', ['-1'])[0]))
                         elif path == '/api/hero':
@@ -317,11 +324,6 @@ def handler_for(game):
                         if game.autoplay or game.job['remaining']:
                             raise ValueError('请先暂停江湖，再调养')
                         data = game.world.martial_action(body.get('action'), body.get('art'))
-                    elif self.path == '/api/campaign':
-                        if game.autoplay or game.job['remaining'] or (game.world.battle and game.world.battle['status'] == 'active'):
-                            raise ValueError('请先暂停江湖并结束切磋，再推演战事')
-                        data = territory.campaign(game.world, body.get('attacker'), body.get('place'), declare=True)
-                        game.world.checkpoint()
                     elif self.path == '/api/battle':
                         data = game.world.battle_action(body.get('battle_id'), body.get('revision'), body.get('action'), body.get('frame'))
                     elif self.path == '/api/ai/config':

@@ -34,7 +34,7 @@ class SocialRankTests(unittest.TestCase):
                 self.assertEqual(careers.identity(self.w, n)['system'], 'nation')
 
     def test_complete_nine_estates_recognize_real_identity_titles(self):
-        for job, expected in [('国主', 1), ('宰相', 2), ('世家子弟', 3), ('乡绅', 4),
+        for job, expected in [('知府', 1), ('通判', 2), ('世家子弟', 3), ('乡绅', 4),
                               ('书生', 5), ('行商', 6), ('匠人', 7), ('农人', 8), ('乞丐', 9)]:
             self.assertEqual(careers.identity(self.w, self.person(job))['grade'], expected)
 
@@ -58,7 +58,7 @@ class SocialRankTests(unittest.TestCase):
         self.assertEqual(careers.identity(self.w, n)['grade'], 9)
 
     def test_children_do_not_inherit_rank_and_apprentices_follow_their_trade(self):
-        parent = self.person('国主')
+        parent = self.person('知府')
         child = self.w.make_npc([parent['id']], 0)
         self.assertEqual(careers.identity(self.w, child)['grade'], 9)
         child.update(age_months=180, job='学徒')

@@ -30,9 +30,9 @@ class MartialCurriculaTests(unittest.TestCase):
         n['combat_attributes']['base']=dict.fromkeys(attributes.KEYS,ability)
         martial.sync_actor(w,n)
 
-    def test_catalog_has_126_unique_selective_grade_scaled_arts(self):
-        self.assertEqual(len(catalog.ARTS),126)
-        self.assertEqual(len({a['name'] for a in catalog.ARTS.values()}),126)
+    def test_catalog_has_72_unique_selective_grade_scaled_arts(self):
+        self.assertEqual(len(catalog.ARTS),72)
+        self.assertEqual(len({a['name'] for a in catalog.ARTS.values()}),72)
         for school in catalog.catalog():
             self.assertEqual([a['grade'] for a in school['arts']],list(range(1,10)))
             for art in school['arts']:
@@ -40,7 +40,7 @@ class MartialCurriculaTests(unittest.TestCase):
                 self.assertLessEqual(set(art['bonuses']),set(attributes.KEYS))
                 self.assertEqual(sum(art['bonuses'].values()),sum(catalog.BUDGETS[art['grade']]))
 
-    def test_all_fourteen_schools_and_all_nine_membership_grades(self):
+    def test_all_eight_schools_and_all_nine_membership_grades(self):
         w=self.world();n=self.person(w)
         for f in w.factions:
             for grade in range(1,10):
@@ -52,9 +52,9 @@ class MartialCurriculaTests(unittest.TestCase):
                     self.assertEqual({catalog.ARTS[k]['school'] for k in known},{f['key']})
             f['leader']=None
 
-    def test_all_twelve_countries_give_one_exact_grade_art(self):
+    def test_all_eight_regions_give_one_exact_grade_art(self):
         w=self.world()
-        titles=['国主','宰相','世家家主','乡绅','书生','行商','匠人','农人','短工']
+        titles=['知府','通判','世家家主','乡绅','书生','行商','匠人','农人','短工']
         for country in COUNTRIES:
             place=next(p['id'] for p in PLACES if p['country']==country['id'])
             n=self.person(w,place)
@@ -107,8 +107,8 @@ class MartialCurriculaTests(unittest.TestCase):
         w=self.world();n=self.person(w);civil=n['martial']['curriculum']['civil_school']
         self.member(w,n,0,8);self.assertEqual(len(n['martial']['curriculum']['known']),2)
         self.member(w,n,0,3);self.assertEqual(len(n['martial']['curriculum']['known']),7)
-        self.member(w,n,0,9);self.assertEqual(n['martial']['curriculum']['known'],['wudang_g9'])
-        self.member(w,n,2,5);self.assertTrue(all(k.startswith('shaolin_') for k in n['martial']['curriculum']['known']))
+        self.member(w,n,0,9);self.assertEqual(n['martial']['curriculum']['known'],['shaolin_g9'])
+        self.member(w,n,2,5);self.assertTrue(all(k.startswith('wudang_') for k in n['martial']['curriculum']['known']))
         n['faction']=None;martial.sync_actor(w,n)
         self.assertEqual(n['martial']['curriculum']['known'],[f'{civil}_g9'])
 
@@ -116,7 +116,7 @@ class MartialCurriculaTests(unittest.TestCase):
         w=self.world();parent=self.person(w,FACTIONS[2]['place'])
         child=w.make_npc([parent['id']],parent['place'])
         before=deepcopy(child['martial']['curriculum'])
-        child['place']=FACTIONS[9]['place'];martial.sync_actor(w,child)
+        child['place']=FACTIONS[7]['place'];martial.sync_actor(w,child)
         self.assertEqual(child['martial']['curriculum'],before)
 
     def test_views_show_current_entitlements_without_mutating_the_world(self):
@@ -129,7 +129,7 @@ class MartialCurriculaTests(unittest.TestCase):
     def test_player_birthplace_is_creation_choice_and_stays_fixed(self):
         w=self.world();place=FACTIONS[6]['place'];h=w.player['protagonist']
         protagonist.perform(w,dict(action='create',revision=h['revision'],month=w.month,name='验收',sex='女',age=24,place=place))
-        c=deepcopy(w.player['martial']['curriculum']);self.assertEqual(c['origin_country'],5)
+        c=deepcopy(w.player['martial']['curriculum']);self.assertEqual(c['origin_country'],6)
         h['place']=FACTIONS[0]['place'];martial.sync_actor(w,w.player,True)
         self.assertEqual(w.player['martial']['curriculum'],c)
 

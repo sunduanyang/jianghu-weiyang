@@ -82,6 +82,9 @@ def main():
                                 saved = json.loads(row[0]) if row else {}
                                 if not all(k in saved for k in ('npcs', 'month', 'player')):
                                     raise ValueError('存档缺少世界检查点')
+                                from jianghu.atlas import MAP_VERSION
+                                if saved.get('map_version') != MAP_VERSION:
+                                    raise ValueError('此存档来自旧版天下（东亚四十九区），新版江湖分为八个地区，只能另起新世界')
                         replacement = World(42, 800, Store(target), compact=True, market_economy=True,rank_assessments=True)
                         game.world.checkpoint()
                         game.world.store.close()

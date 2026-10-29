@@ -106,7 +106,7 @@ public partial class JianghuApp {
         GUILayout.EndHorizontal();return value;
     }
     void ResetRosterFilters(){
-        query="";countryFilter="全部势力";placeFilter="全部城镇";factionFilter="全部门派";
+        query="";countryFilter="全部地区";placeFilter="全部城镇";factionFilter="全部门派";
         circuitFilter="全部州路";jobFilter="百业";gradeFilter="全部品级";rosterSort="乡籍";includeDead=false;rosterScroll=Vector2.zero;
     }
     void DrawBookStatus(){

@@ -7,7 +7,7 @@ namespace Jianghu {
 public partial class JianghuApp {
     string heroName="沈行舟",heroAge="18",heroSex="男";
     bool creatingHero;
-    J geography=new J(),campaignOptions=new J();
+    J geography=new J();
     readonly Dictionary<int,Texture2D> mapMasks=new Dictionary<int,Texture2D>();
     Texture2D landMask,atlasBase,atlasInk,cityMark,capitalMark,ringMark,pennantMark,compassMark;
     GUIStyle slipStyle,slipCapStyle,slipText,slipTextBold,slipTextCap,siteLabel,siteHalo,countryTitle,countryHalo;
@@ -73,7 +73,7 @@ public partial class JianghuApp {
         }
         return -1;
     }
-    void SelectMapPlace(int id){SelectedPlace=id;campaignOptions=new J();}
+    void SelectMapPlace(int id){SelectedPlace=id;}
     // Dashes continue across the bends of a polyline instead of restarting at every vertex.
     void DashedPolyline(List<Vector2> pts,Func<float,float,Vector2> pos,Color c,float width,float dash,float gap){
         if(Event.current.type!=EventType.Repaint||pts.Count<2)return;float phase=0;
@@ -118,14 +118,11 @@ public partial class JianghuApp {
         GUILayout.Label(p["name"].S,heading);
         GUILayout.Label(Country(p["country"].I)["name"].S+" · "+p["region"].S,small);
         T(Hero["created"].B?(Hero["place"].I==SelectedPlace?"主角所在城镇":"远方城镇 · 查看地图不消耗行动力"):"查看城镇地图，或在此创建主角。",small);
-        Metric("居民",p["population"].S+"人");Metric("守备",Num(p["guard"]));Metric("安定",Num(p["stability"]));
+        Metric("居民",p["population"].S+"人");var sect=W["factions"].A.FirstOrDefault(f=>f["place"].I==SelectedPlace);if(sect!=null)Metric("门派",sect["name"].S+" · "+sect["alignment_label"].S);
         GUILayout.BeginHorizontal();if(Btn("查看城中"))Later(()=>GoStage(Stage.City));if(Btn("所属官府"))OpenInstitution(true,p["country"].I);GUILayout.EndHorizontal();
         if(GUILayout.Button("此地中人 ›",linkStyle)){rosterMode="此地";rosterOpen=true;}
         mainScroll=GUILayout.BeginScrollView(mainScroll);
         DrawTravel();
-        if(Btn("相邻势力攻城推演",Paused))Client.Fetch("/api/campaign?place="+SelectedPlace,j=>campaignOptions=j);
-        foreach(var o in campaignOptions["options"].A){GUILayout.Label(Country(o["attacker"].I)["name"].S+" · 军费"+Num(o["cost"])+"银 · "+o["reason"].S,small);if(Btn("推演攻城 · "+Country(o["attacker"].I)["name"].S,Paused&&o["ready"].B))Client.Act("/api/campaign",J.O("attacker",o["attacker"],"place",SelectedPlace),j=>campaignOptions=new J());}
-        Details("最近战报",W["campaigns"]);
         GUILayout.EndScrollView();GUILayout.EndArea();
     }
     void DrawTravel(){
@@ -168,7 +165,7 @@ public partial class JianghuApp {
             DashedPolyline(pts,pos,sea?new Color(.16f,.36f,.42f,.95f):new Color(.66f,.15f,.09f,.95f),w,sea?9:5,sea?6:3.5f);
         }
         InitMapStyles();
-        // 疆域: each power's name written large across the towns it holds
+        // 地区: each region's name written large across its land
         foreach(var country in W["countries"].A){
             var held=W["locations"].A.Where(p=>p["country"].I==country["id"].I).ToList();if(held.Count==0)continue;
             // centre of the land it holds (area-weighted), falling back to the towns themselves

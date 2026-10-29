@@ -13,8 +13,8 @@ class SectInteractionTests(unittest.TestCase):
         self.w = w = World(91, 0, compact=True, durable=False, rank_assessments=True)
         self.addCleanup(w.store.close)
         protagonist.perform(w, dict(action='create', revision=0, month=0,
-                                   name='入门验收', sex='女', age=24, place=45))
-        self.n = n = w.make_npc(place=45)
+                                   name='入门验收', sex='女', age=24, place=0))
+        self.n = n = w.make_npc(place=0)
         n.update(faction=0, contribution=35., faction_since=0, age_months=360, health=100.)
         set_rating(n, 45.)
         w.set_goal(n, 'mastery', initial=True)

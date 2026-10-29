@@ -9,8 +9,8 @@ from tests.test_player_social import decision
 class InteractionActionPointTests(unittest.TestCase):
     def setUp(self):
         self.w=w=World(42,0,durable=False);self.addCleanup(w.store.close)
-        protagonist.perform(w,dict(action='create',name='往来人',sex='女',age=24,place=45,month=0,revision=0))
-        self.n=n=w.make_npc(place=45)
+        protagonist.perform(w,dict(action='create',name='往来人',sex='女',age=24,place=0,month=0,revision=0))
+        self.n=n=w.make_npc(place=0)
         n.update(age_months=360,health=100.,wealth=100.,time_left=0)
         n['traits'].update(integrity=80.,kindness=80.,sociability=80.)
         n['mood'].update(anger=0.,joy=0.)

@@ -17,14 +17,19 @@ class SectTests(unittest.TestCase):
         self.addCleanup(w.store.close)
         return w
 
-    def test_approved_roster_covers_every_country_with_distinct_traditions(self):
-        self.assertEqual([f['name'] for f in FACTIONS], ['武当派', '丐帮', '少林寺', '全真教', '一品堂',
-            '天山派', '大轮寺', '天龙寺', '柏孜克里克寺', '克烈武帐', '都房', '鞍马寺', '海东祖灵社', '黑水萨满坛'])
-        self.assertEqual({f['country'] for f in FACTIONS}, {c['id'] for c in COUNTRIES})
-        self.assertEqual(len({f['key'] for f in FACTIONS}), 14)
-        self.assertEqual(len({f['art_id'] for f in FACTIONS}), 14)
-        self.assertEqual(FACTIONS[12]['ranks'][0], '主祭')
-        self.assertEqual(FACTIONS[13]['ranks'][0], '大萨满')
+    def test_approved_roster_gives_every_region_one_sect_in_three_camps(self):
+        self.assertEqual([f['name'] for f in FACTIONS], ['少林寺', '华山派', '武当派', '峨眉派', '丐帮',
+                                                         '五毒教', '明教', '西域密宗'])
+        self.assertEqual([f['country'] for f in FACTIONS], [c['id'] for c in COUNTRIES])
+        self.assertEqual(len({f['key'] for f in FACTIONS}), 8)
+        self.assertEqual(len({f['art_id'] for f in FACTIONS}), 8)
+        self.assertEqual([f['alignment'] for f in FACTIONS], ['正', '正', '正', '正', '中', '邪', '邪', '邪'])
+        from jianghu.sect_catalog import FEUDS
+        keys = {f['key'] for f in FACTIONS}
+        self.assertTrue(all(set(pair) <= keys for pair in FEUDS))
+        # every 邪道 sect has one sworn 正道 enemy
+        bitter = [pair for pair, feud in FEUDS.items() if feud['kind'] == 'bitter']
+        self.assertEqual(sorted(b for _, b in bitter), ['mingjiao', 'mizong', 'wudu'])
 
     def test_empty_regions_keep_two_ordinary_settlements_and_independent_local_seats(self):
         w = self.world(); rng = w.rng.getstate(); events = w.store.count()
@@ -63,13 +68,14 @@ class SectTests(unittest.TestCase):
         before = sum(g['fund'] for g in state['governments'])+300
         count = w.store.count(); rng = w.rng.getstate()
         w.restore(state)
-        self.assertEqual(w.npcs[a['id']]['faction'], 0)
-        self.assertEqual(w.factions[0]['fund'], 217.)
-        self.assertEqual(w.factions[0]['leader'], a['id'])
+        wudang = next(f['id'] for f in FACTIONS if f['name'] == '武当派')
+        self.assertEqual(w.npcs[a['id']]['faction'], wudang)
+        self.assertEqual(w.factions[wudang]['fund'], 217.)
+        self.assertEqual(w.factions[wudang]['leader'], a['id'])
         self.assertIsNone(w.npcs[b['id']]['faction'])
         self.assertEqual(w.npcs[b['id']]['contribution'], 0)
         self.assertEqual(w.npcs[b['id']]['membership_history'][-1]['name'], '栖云门')
-        self.assertEqual(w.city_positions[str(a['id'])]['node'], 'faction_0')
+        self.assertEqual(w.city_positions[str(a['id'])]['node'], f'faction_{wudang}')
         self.assertEqual(w.city_positions[str(b['id'])]['node'], 'residence')
         self.assertAlmostEqual(sum(f['fund'] for f in w.factions)+sum(g['fund'] for g in w.governments), before)
         for f in w.factions:
@@ -115,7 +121,7 @@ class SectTests(unittest.TestCase):
         self.assertAlmostEqual(f['fund'], f['opening_fund']+f['revenue']-f['expenses'])
         self.hero_action(w, 'sect_leave')
         self.assertIsNone(h['faction'])
-        self.assertEqual(h['membership_history'][-1]['name'], '武当派')
+        self.assertEqual(h['membership_history'][-1]['name'], '少林寺')
         with self.assertRaisesRegex(ValueError, '一年后'):
             player_interactions.perform(w, dict(action='join_sect', npc_id=elder['id'], revision=h['revision'], month=w.month))
         w.checkpoint(); again = World(store=w.store, compact=True, durable=False)
@@ -123,7 +129,7 @@ class SectTests(unittest.TestCase):
 
     def test_removed_religious_duties_do_not_change_health_and_keep_local_titles(self):
         w = self.world()
-        for fid in (12, 13):
+        for fid in (5, 7):
             f = w.factions[fid]; n = w.make_npc(place=f['place'])
             update_actor(n, age_months=360, health=100., skill=30., faction=fid)
             w.set_goal(n, 'belonging', initial=True); w.reindex()

@@ -172,8 +172,8 @@ class RankProgressionTests(unittest.TestCase):
         self.assertEqual(organizations.rank(loaded,loaded.npcs[n['id']])['grade'],8)
 
     def test_political_titles_require_actual_vacancy_not_merely_money(self):
-        ruler=self.actor(social_status=dict(title='国主',country=0,since=0))
-        minister=self.actor(social_status=dict(title='宰相',country=0,since=0))
+        ruler=self.actor(social_status=dict(title='知府',country=0,since=0))
+        minister=self.actor(social_status=dict(title='通判',country=0,since=0))
         rich=self.actor(wealth=100000.,reputation=100.)
         self.enable();self.tick()
         self.assertEqual(careers.identity(self.w,rich)['grade'],8)
@@ -183,7 +183,7 @@ class RankProgressionTests(unittest.TestCase):
         self.assertEqual(self.w.rank_system['courts']['0']['holders']['ruler'],minister['id'])
 
     def test_minister_appointment_preserves_underlying_estate_on_dismissal(self):
-        old=self.actor(social_status=dict(title='宰相',country=0,since=0))
+        old=self.actor(social_status=dict(title='通判',country=0,since=0))
         candidate=self.actor('书生',social_status=dict(title='乡绅',country=0,since=0))
         victim=self.actor();self.enable();self.w.month=12
         for m in range(7,13):r.mark(candidate['rank_progress'],'public',m)
@@ -194,7 +194,7 @@ class RankProgressionTests(unittest.TestCase):
         self.assertEqual(candidate['social_status']['title'],'乡绅')
 
     def test_extinct_polity_does_not_keep_granting_first_and_second_grades(self):
-        ruler=self.actor(social_status=dict(title='国主',country=0,since=0));self.enable()
+        ruler=self.actor(social_status=dict(title='知府',country=0,since=0));self.enable()
         for p in self.w.active_places:
             if self.w.territory[p['id']]['owner']==0:self.w.territory[p['id']]['owner']=1
         for _ in range(5):self.tick()

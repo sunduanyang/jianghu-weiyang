@@ -57,7 +57,7 @@ public class CityMapSmoke : MonoBehaviour {
             Check("no bridges in the walking grid: "+place["name"].S,app.ValidateNoBridges(out J noBridgeFacts),noBridgeFacts);
         }
         Check("browsing preserves month",client.World["month"].I==month);
-        if(!client.World["hero"]["created"].B){yield return Call("/api/hero",client.HeroBody("create","name","山河行客","sex","男","age",20,"place",45));yield return client.Refresh();}
+        if(!client.World["hero"]["created"].B){yield return Call("/api/hero",client.HeroBody("create","name","山河行客","sex","男","age",20,"place",0));yield return client.Refresh();}
         int home=client.World["hero"]["place"].I;app.SelectedPlace=home;app.GoStage(Stage.City);yield return new WaitForSecondsRealtime(1);
         yield return app.CityLoadForSmoke(home);
         foreach(var size in new[]{new Vector2Int(1280,800),new Vector2Int(1920,1080),new Vector2Int(1680,960)}){
@@ -84,8 +84,8 @@ public class CityMapSmoke : MonoBehaviour {
         foreach(int extent in new[]{20,30})if(examples.TryGetValue(extent,out int example)){
             app.LoadCity(example);yield return new WaitForSecondsRealtime(.5f);app.CitySmokeView();yield return Capture("06-city-size-"+extent);
         }
-        Check("exactly fourteen approved sects",client.World["factions"].A.Count==14);
-        foreach(string key in new[]{"shaolin","haidong","heishui"}){
+        Check("exactly eight sects, one per region",client.World["factions"].A.Count==8&&client.World["factions"].A.Select(f=>f["place"].I).Distinct().Count()==8);
+        foreach(string key in new[]{"shaolin","wudu","mizong"}){
             var sect=client.World["factions"].A.First(f=>f["key"].S==key);
             yield return app.CityLoadForSmoke(sect["place"].I);app.GoStage(Stage.City,false);app.CitySmokeView();
             Check("independent nine-cell seat: "+key,app.City["settlements"].A.Count(s=>s["kind"].S=="sect"&&s["faction"].I==sect["id"].I&&s["footprint"]["size"].I==3)==1);
@@ -102,7 +102,7 @@ public class CityMapSmoke : MonoBehaviour {
     }
     IEnumerator WalkFlow(){
         if(client.World["battle_active"].B)yield return app.CityEndBattleForSmoke();
-        if(!client.World["hero"]["created"].B){yield return Call("/api/hero",client.HeroBody("create","name","行路试客","sex","男","age",20,"place",45));yield return client.Refresh();}
+        if(!client.World["hero"]["created"].B){yield return Call("/api/hero",client.HeroBody("create","name","行路试客","sex","男","age",20,"place",0));yield return client.Refresh();}
         if(client.World["hero"]["points"].I<25){yield return Call("/api/hero",client.HeroBody("end_turn"));yield return client.Refresh();}
         int place=client.World["hero"]["place"].I;app.GoStage(Stage.City);yield return app.CityLoadForSmoke(place);
         Screen.SetResolution(1680,960,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.6f);

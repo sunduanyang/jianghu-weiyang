@@ -7,7 +7,7 @@ public sealed partial class PhysicsBattleSmoke {
     IEnumerator AuditMartial(){
         yield return Call("/api/martial",null,j=>app.Martial=j);
         var m=app.Martial["player"]["martial"];
-        Check("catalog contains fourteen complete nine-grade traditions",app.Martial["catalog"].A.Count==14&&app.Martial["catalog"].A.All(s=>s["arts"].A.Count==9));
+        Check("catalog contains eight complete nine-grade traditions",app.Martial["catalog"].A.Count==8&&app.Martial["catalog"].A.All(s=>s["arts"].A.Count==9));
         Check("fifth-grade player knows grades five through nine",m["curriculum"]["grade"].I==5&&m["arts"].A.Select(a=>a["grade"].I).OrderBy(x=>x).SequenceEqual(new[]{5,6,7,8,9}));
         bool bonuses=m["combat"]["attributes"].A.All(a=>System.Math.Abs(a["value"].N-System.Math.Min(100,a["base"].N+a["bonus"].N))<.001);
         Check("selected passive bonuses reach displayed abilities",bonuses&&m["combat"]["attributes"].A.Any(a=>a["bonus"].N>0));

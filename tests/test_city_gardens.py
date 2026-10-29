@@ -21,7 +21,7 @@ class CityGardenTests(unittest.TestCase):
             self.assertEqual(hashlib.sha256(data).hexdigest(),item['sha256'])
         self.assertEqual(sum('duplicate_of' in f for f in manifest['files']),1)
 
-    def test_version_seven_two_sizes_four_settlements_and_breathing_room(self):
+    def test_version_seven_regional_cities_four_settlements_and_breathing_room(self):
         seen=set();sizes=set()
         for p in PLACES:
             city=city_maps.layout(42,p['id'],7);sizes.add(city['size'])
@@ -33,11 +33,11 @@ class CityGardenTests(unittest.TestCase):
                 seen.add(tile['asset'])
                 self.assertIn(tile['asset'],city_gardens.SELECTED)
                 self.assertEqual(tile['size'],city_gardens.FOOTPRINTS[tile['asset']])
-        self.assertEqual(sizes,{20,30})
-        self.assertTrue({'33-winding-meadow','34-ancient-grove','35-jagged-peaks','37-river-terraces','42-blue-water','43-snowfield'}<=seen)
+        self.assertEqual(sizes,{30})  # every regional city is a large district
+        self.assertTrue({'33-winding-meadow','34-ancient-grove','35-jagged-peaks','37-river-terraces','42-blue-water'}<=seen)
 
-    def test_version_four_small_map_expands_and_retains_the_same_settlement(self):
-        p=next(p for p in PLACES if p['name']=='青溪镇')
+    def test_version_four_map_upgrades_and_retains_the_same_settlement(self):
+        p=next(p for p in PLACES if p['name']=='凉州')
         w=World(population=0,durable=False);self.addCleanup(w.store.close)
         state=deepcopy(w.export());old=city_maps.layout(w.seed,p['id'],4)
         service=next(n for n in old['nodes'] if n['id']=='inn')
@@ -46,7 +46,7 @@ class CityGardenTests(unittest.TestCase):
         w.store.save(state);events=w.store.count()
         restored=World(store=w.store,durable=False);current=city_maps.world_layout(restored,p['id'])
         target=next(n for n in current['nodes'] if n['id']=='inn');hero=restored.player['protagonist']
-        self.assertEqual((old['size'],current['size']),(10,20))
+        self.assertEqual((old['size'],current['size']),(30,30))
         self.assertEqual((hero['row'],hero['col']),(target['row'],target['col']))
         self.assertEqual(hero['points'],state['player']['protagonist']['points'])
         self.assertEqual(w.store.count(),events)

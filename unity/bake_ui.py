@@ -10,6 +10,7 @@ import argparse
 import json
 import math
 import re
+import sys
 import uuid
 from pathlib import Path
 
@@ -18,6 +19,8 @@ from PIL import Image, ImageChops, ImageDraw, ImageFilter
 from scipy import ndimage
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from jianghu.atlas import PROJECTION                       # noqa: E402
 ASSETS = ROOT / 'unity' / 'JianghuUnity' / 'Assets'
 UI = ASSETS / 'Resources' / 'UI'
 MAP = ASSETS / 'Resources' / 'Map'
@@ -856,7 +859,9 @@ def bake_handmade():
 
 # ---------------------------------------------------------------- atlas
 def lonlat(lon, lat):
-    return 25 + (lon - 73) * 16.5, 25 + (54 - lat) * 18.5
+    """The game's map projection (jianghu.atlas.PROJECTION), in 1280x760 map units."""
+    p = PROJECTION
+    return 25 + (lon - p['lon0']) * p['sx'], 25 + (p['lat0'] - lat) * p['sy']
 
 
 # Generalised mountain ranges (lon, lat) for a painted map; not survey data.
@@ -1050,8 +1055,8 @@ def title_cartouche(ink, land_np, k):
     title = cjk_font(40)
     vertical_text(d, bw * .60, 26, '九州山河图', title, rgba(INK, 240), gap=1.12)
     small = cjk_font(17, bold=False)
-    vertical_text(d, bw * .24, 34, '宋金对峙', small, rgba(INK, 210))
-    vertical_text(d, bw * .24, 34 + 17 * 5.2, '列国十二', small, rgba(INK, 210))
+    vertical_text(d, bw * .24, 34, '江湖八方', small, rgba(INK, 210))
+    vertical_text(d, bw * .24, 34 + 17 * 5.2, '八城八派', small, rgba(INK, 210))
     ink.alpha_composite(card, (x0, y0))
     # collector's seal (白文: paper characters cut into vermilion)
     s = 46
@@ -1100,7 +1105,7 @@ def catmull(points, steps=10):
 LAKES = [('洞庭湖', 112.9, 29.25, 26, 14), ('鄱阳湖', 116.3, 29.1, 13, 20), ('太湖', 120.2, 31.2, 13, 11),
          ('青海湖', 100.2, 36.9, 22, 12), ('洱海', 100.2, 25.8, 5, 12), ('滇池', 102.7, 24.85, 7, 11),
          ('巢湖', 117.6, 31.6, 9, 6), ('呼伦湖', 117.4, 49.0, 10, 14), ('兴凯湖', 132.5, 45.0, 16, 12)]
-SEA_NAMES = [('东海', 125.0, 28.8, 56), ('南海', 114.5, 18.8, 56), ('渤海', 120.0, 38.9, 30)]
+SEA_NAMES = [('东海', 124.6, 28.6, 56), ('南海', 115.6, 20.6, 56), ('黄海', 123.6, 35.2, 40), ('渤海', 120.0, 38.9, 30)]
 
 
 def mask_from(paths, W, H, k):
