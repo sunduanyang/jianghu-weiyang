@@ -111,11 +111,12 @@ class RicherLivesTests(unittest.TestCase):
             self.assertTrue(all(1<=week<=4 for week in occupied))
 
     def test_model_request_does_not_include_rule_recommendation_or_other_personas(self):
+        # The full request (people the player deals with); background people get the short one (tests/test_lean_thinking.py).
         w=self.world();ctx=context_for(w,w.npcs[1]);captured=[]
         def fake(request,**kwargs):
             captured.append(json.loads(request.data))
             return io.BytesIO(json.dumps({'choices':[{'message':{'content':'{}'}}],'usage':{}}).encode())
-        with patch('urllib.request.urlopen',side_effect=fake):LocalModel(DEFAULT_CONFIG).request(ctx)
+        with patch('urllib.request.urlopen',side_effect=fake),patch('jianghu.ai.lean',return_value=False):LocalModel(DEFAULT_CONFIG).request(ctx)
         wire=json.loads(captured[0]['messages'][1]['content'])
         self.assertNotIn('baseline_action',wire);self.assertNotIn('npcs',wire);self.assertNotIn('agents',wire)
         self.assertEqual(wire['npc_id'],1)
